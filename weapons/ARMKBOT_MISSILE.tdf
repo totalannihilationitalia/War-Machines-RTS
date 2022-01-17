@@ -1,0 +1,46 @@
+[ARMKBOT_MISSILE]
+{
+	name=Missiles;
+	rendertype=1;
+	lineofsight=1;
+	turret=1;
+	toairweapon=1;
+	canattackground=0;
+	model=missile;
+	range=760;
+	reloadtime=2;
+	weapontimer=5;
+	flighttimer=2;
+	weaponvelocity=850;
+	startvelocity=650;
+	weaponacceleration=141;
+	turnrate=63000;
+	areaofeffect=48;
+	metalpershot=0;
+	soundstart=rocklit1;
+	soundhit=xplosml2;
+	firestarter=70;
+	smokedelay=0.1;
+	texture2=armsmoketrail;
+	guidance=1;
+	tracks=1;
+	selfprop=1;
+	smoketrail=1;
+	tolerance=9000;
+	explosiongenerator=custom:FLASH2;
+	startsmoke=1;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=110;
+		GUNSHIPS=82;
+		HGUNSHIPS=82;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+	}
+}

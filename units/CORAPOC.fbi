@@ -1,0 +1,46 @@
+[UNITINFO]
+	{
+	UnitName=CORAPOC;
+	Side=CORE;
+	Objectname=CORAPOC;
+	Designation=CORAPOC;
+	Name=Apocalypse;
+	Description=Perimeter Defence Turret;
+	FootprintX=2;
+	FootprintZ=2;
+	BuildCostEnergy=17425;
+	BuildCostMetal=3069;
+	MaxDamage=2524;
+	MaxWaterDepth=0;
+	MaxSlope=10;
+	EnergyUse=0;
+	BuildTime=18010;
+	WorkerTime=0;
+	BMcode=0;
+	Builder=0;
+	ThreeD=1;
+	ZBuffer=1;
+	NoAutoFire=0;
+	SightDistance=350;
+	RadarDistance=0;
+	SoundCategory=GUARD;
+	EnergyStorage=200;
+	MetalStorage=0;
+	ExplodeAs=MEDIUM_BUILDINGEX;
+	SelfDestructAs=MEDIUM_BUILDING;
+	Category=ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE;
+	TEDClass=FORT;
+	YardMap=ooooooooo;
+	Corpse=CORAPOC_dead;
+	UnitNumber=1680;
+	firestandorders=1;
+	StandingFireOrder=2;
+	canstop=1;
+	ShootMe=1;
+	downloadable=1;
+	buildangle=8192;
+	Weapon1=CORAPOC_GUN;
+	wpri_badTargetCategory=NOTAIR;
+	BadTargetCategory=NOTAIR;
+	canattack=1;
+	}

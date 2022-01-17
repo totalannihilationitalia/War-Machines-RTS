@@ -1,0 +1,80 @@
+[RAVAGER] //annihilator modified by daryl
+{
+	[searingflame]
+	{
+	class=CSimpleParticleSystem;
+
+		[properties]
+		{
+		alwaysVisible=0;
+		Texture=gunshot;
+
+		colorMap	= 1 1 1 0.04	0.7 0.7 0.8 0.01	0.4 0.4 0.6 0.01;
+
+      		pos 		= 0, 2, 0;
+		gravity		= 0, -0.01, 0;
+	       	emitVector	= 0, 1, 0;
+		emitRot		= 45;
+		emitRotSpread	= 32;
+
+		sizeGrowth	= 5; // non cambia niente
+		sizeMod		= 0.5; //non cambia niente
+
+		airdrag			= 0.8;
+		particleLife		= 3;
+		particleLifeSpread	= 9;
+		numParticles		= 3;
+		particleSpeed		= 6;
+		particleSpeedSpread	= 7;
+		particleSize		= 50; // era 12
+		particleSizeSpread	= 3;
+
+		directional		= 1;
+		useAirLos		= 0;
+		}
+	air=1;
+	unit=1;
+	ground=0;
+	count=1;
+	}
+
+
+	[burnpop]
+{
+	    class=CExpGenSpawner;
+		[properties]
+		{
+		pos=-100 r200, 1, -100 r200; 
+		delay=10 r200;	//non cambia niente	
+		explosionGenerator=custom:LASER_RESIDUALS_PINK; 
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=10;
+	}
+	usedefaultexplosions=0;
+	[GROUNDFLASH]
+	{
+		flashsize=50; //era 17, definisce l'ampiezza del flash a terra.
+		flashalpha=1.6;
+		circlegrowth=3;
+		circlealpha=1;
+		ttl=5;
+		color=0,0.5,1;
+	}
+}
+
+
+[LASER_RESIDUALS_PINK]
+{
+		[groundflash]
+	{
+		flashsize=33;
+		flashalpha=0.6;
+		circlegrowth=0;
+		circlealpha=1;
+		ttl=12;
+		color=0,0.5,1;
+	}
+}

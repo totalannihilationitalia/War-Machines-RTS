@@ -1,0 +1,127 @@
+[ARM_FURIE_HEAD]
+	{
+	ID=217;
+	name=Annihilator Weapon2;
+	rendertype=0;
+	lineofsight=1;
+	turret=1;
+
+	range=600;
+	reloadtime=9;
+	energypershot=100;
+	weaponvelocity=1500;
+	areaofeffect=8;
+
+	soundstart=lasrhvy2;
+	soundhit=xplolrg1;
+
+	firestarter=90;
+	beamweapon=1;
+	color=148;	/* PURPLE */
+	color2=217;
+
+	tolerance=500;
+
+	explosiongaf=fx;
+	explosionart=explode5;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom1;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashsm;
+
+	[DAMAGE]
+		{
+		default=3500;
+		}
+	}
+
+[ARM_FURIE_FIRE]
+	{
+		ID=238;
+		name=Gauss Cannon2;
+		rendertype=4;
+		lineofsight=1;
+		turret=1;
+	
+		range=550;
+		reloadtime=.1;
+		weaponvelocity=450;
+		areaofeffect=8;
+		soundstart=cannon3;
+		soundhit=xplomed2;
+	
+		tolerance=10000;
+	
+		explosiongaf=fx;
+		explosionart=explode5;
+	
+		waterexplosiongaf=fx;
+		waterexplosionart=h2oboom1;
+	
+		lavaexplosiongaf=fx;
+		lavaexplosionart=lavasplashsm;
+	
+		startsmoke=1;
+	
+		[DAMAGE]
+			{
+			default=100;
+			}
+		}
+
+
+
+[ARM_FURIE_ROCKET]
+	{
+	ID=182;
+	name=Heavy Rockets2;
+	rendertype=1;
+	lineofsight=1;
+	vlaunch=1;
+
+	model=fmdmisl;
+
+	range=650;
+	reloadtime=1.1;
+	weapontimer=5;
+	flighttime=15;
+
+	weaponvelocity=550;
+	startvelocity=250;
+	weaponacceleration=200;
+	turnrate=63000;
+	areaofeffect=80;
+	metalpershot=0;
+
+	soundstart=rocklit1;
+	soundhit=xplosml2;
+
+	firestarter=70;
+	smokedelay=.1;
+	guidance=1;
+	tracks=1;
+	selfprop=1;
+	smoketrail=1;
+	tolerance=9000;
+
+	explosiongaf=fx;
+	explosionart=explode3;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2o;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplash;
+
+	startsmoke=1;
+
+	[DAMAGE]
+		{
+		default=131;
+		}
+	}
+
+
+

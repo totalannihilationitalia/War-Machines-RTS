@@ -1,0 +1,46 @@
+[ARM_BERTHACANNON]
+{
+	name=BerthaCannon;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+	range=6200;
+	reloadtime=11;
+	weaponvelocity=1100;
+	energypershot=3000;
+	areaofeffect=192;
+	soundstart=xplonuk4;
+	soundhit=xplonuk1;
+	accuracy=300;
+	aimrate=2500;
+	holdtime=1;
+	leadbonus=0;
+	explosiongenerator=custom:FLASHBIGBUILDING;
+	startsmoke=1;
+	impulsefactor=0.5;
+	impulseboost=0.5;
+	cratermult=0.25;
+	craterboost=0.25;
+	noselfdamage=1;
+
+	rgbcolor=1 0.8 0.5;
+	stages=20;
+	separation=1.45; //0.45
+	alphadecay=0.3;
+	sizedecay=-0.15;
+	nogap=1;
+	size=5;
+	cegTag=vulcanfx;
+	GroundBounce=0;
+	WaterBounce=0;
+	NumBounce=1;
+	BounceSlip=1.01;
+	BounceRebound=0.4;
+	tolerance=500;
+
+
+	[DAMAGE]
+	{
+		default=1625;
+	}
+}

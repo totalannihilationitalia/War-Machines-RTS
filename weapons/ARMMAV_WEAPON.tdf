@@ -1,0 +1,35 @@
+[ARMMAV_WEAPON]
+{
+	name=GaussCannon;
+	rendertype=4;
+	lineofsight=1;
+	turret=1;
+	minbarrelangle=-15;
+	range=365;
+	reloadtime=0.945;
+	weaponvelocity=500;
+	areaofeffect=8;
+	impactonly=1;
+	soundstart=Mavgun2;
+	soundhit=xplomed2;
+	tolerance=4000;
+	explosiongenerator=custom:FLASH1;
+	startsmoke=1;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=280;
+		VTRANS=70;
+		L1FIGHTERS=70;
+		L2FIGHTERS=70;
+		L1BOMBERS=70;
+		L2BOMBERS=70;
+		GUNSHIPS=70;
+		HGUNSHIPS=70;
+		VRADAR=70;
+		VTOL=70;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+	}
+}

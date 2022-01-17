@@ -1,0 +1,22 @@
+[TINY_BUILDINGEX]
+{
+	name=MEX;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+	range=96;
+	reloadtime=3.6;
+	weaponvelocity=70;
+	areaofeffect=16;
+	soundstart=largegun;
+	soundhit=xplosml3;
+	explosiongenerator=custom:FLASH2;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	[DAMAGE]
+	{
+		default=5;
+	}
+}

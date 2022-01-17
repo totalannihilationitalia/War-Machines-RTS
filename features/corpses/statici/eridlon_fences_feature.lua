@@ -1,0 +1,41 @@
+return {
+eridlon_fence_feature =
+  {
+    description = "A small column",
+    blocking = true,
+    damage = 2000,
+    energy = 500,
+    flammable = false,
+--    featureDead ="Station_one_antenna_feature_dead",
+    noselect = false,
+    metal = 200,
+    footprintx = 1,
+    footprintz = 1,
+    object = "eridlon_fence.s3o",
+    reclaimable = true,
+    upright = true,
+--    collisionvolumeoffsets = "0 0 0",
+--    collisionvolumescales = "5 50 5",
+--    collisionvolumetype = "Box",
+  },
+
+eridlon_fence_dx_feature =
+  {
+    description = "A small column",
+    blocking = true,
+    damage = 2000,
+    energy = 500,
+    flammable = false,
+--    featureDead ="Station_one_antenna_feature_dead",
+    noselect = false,
+    metal = 200,
+    footprintx = 1,
+    footprintz = 1,
+    object = "eridlon_fence_dx.s3o",
+    reclaimable = true,
+    upright = true,
+--    collisionvolumeoffsets = "0 0 0",
+--    collisionvolumescales = "5 50 5",
+--    collisionvolumetype = "Box",
+  },
+}

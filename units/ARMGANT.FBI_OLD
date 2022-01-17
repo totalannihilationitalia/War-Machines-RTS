@@ -1,0 +1,68 @@
+[UNITINFO]
+	{
+	UnitName=ARMGANT;
+	Version=1.2;
+	Side=ARM;
+	Objectname=ARMGANT;
+      iconType=building;
+	Designation=ARM-GANT;
+	Name=Tiger Gantry;
+	Description=Builds Tiger;
+	FootprintX=9;
+	FootprintZ=8;
+	BuildCostEnergy=60000;
+      idleAutoHeal=5;
+      idleTime=1800;
+	BuildCostMetal=8000;
+	MaxDamage=16000;
+      //seismicSignature=0;
+	MaxWaterDepth=0;
+	MaxSlope=10;
+	EnergyUse=0;
+	BuildTime=68000;
+	WorkerTime=600;
+	BMcode=0;
+	Builder=1;
+	ThreeD=1;
+	ZBuffer=1;
+	NoAutoFire=0;
+	SightDistance=273;
+	RadarDistance=0;
+	SoundCategory=CORE_GANTRY;
+	EnergyStorage=1400;
+	MetalStorage=800;
+	ExplodeAs=LARGE_BUILDINGEX;
+	SelfDestructAs=LARGE_BUILDING;
+	Category=ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR;
+	TEDClass=PLANT;
+	Copyright=Copyright 1997 Humongous Entertainment. All rights reserved.;
+	YardMap=ooooooooo occccccco occccccco occccccco occccccco occccccco occccccco occccccco ;
+	Corpse=armgant_dead;
+	UnitNumber=2539;
+	FrenchName=Antre du Tigre;
+	Frenchdescription=Construit des Tigres;
+GermanName=Tiger Fabrik;
+GermanDescription=Baut Tiger;
+	firestandorders=1;
+	StandingFireOrder=2;
+	mobilestandorders=1;
+	StandingMoveOrder=1;
+	canmove=1;
+	canpatrol=1;
+	canstop=1;
+	//downloadable=1;
+	buildangle=4096;
+[SFXTypes] {
+    explosionGenerator0=custom:GantWhiteLight;
+    explosionGenerator1=custom:YellowLight;
+    explosionGenerator2=custom:WhiteLight;
+	explosiongenerator3=custom:Nano;
+
+  }
+  useBuildingGroundDecal=1;
+  buildingGroundDecalDecaySpeed=0.01;
+  buildingGroundDecalSizeX=10;
+  buildingGroundDecalSizeY=10;
+  buildingGroundDecalType=asphalt512c.dds;
+  //smoothAnim=1;
+	}

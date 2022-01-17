@@ -1,0 +1,36 @@
+[ARM_BULL]
+{
+	name=PlasmaCannon;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+	range=460;
+	reloadtime=1.12;
+	weaponvelocity=300;
+	areaofeffect=140;
+	soundstart=cannon3;
+	soundhit=xplomed2;
+	explosiongenerator=custom:FLASH72;
+	startsmoke=1;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=240;
+		VTRANS=30;
+		L1FIGHTERS=30;
+		L2FIGHTERS=30;
+		L1BOMBERS=30;
+		L2BOMBERS=30;
+		GUNSHIPS=30;
+		HGUNSHIPS=30;
+		VRADAR=30;
+		VTOL=30;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+	}
+}

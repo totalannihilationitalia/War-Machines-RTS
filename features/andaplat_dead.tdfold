@@ -1,0 +1,39 @@
+[plat_dead]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=arm_corpses;
+	object=plat_dead;
+	featuredead=plat_heap;
+	footprintx=6;
+	footprintz=6;
+	height=10;
+	blocking=1;
+	hitdensity=100;
+	metal=1035;
+	damage=542;
+	reclaimable=1;
+	featurereclamate=smudge01;
+        seqnamereclamate=tree1reclamate;
+	}
+
+[plat_heap]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=heaps;
+	object=6x6b;
+	footprintx=6;
+	footprintz=6;
+	height=4;
+	blocking=0;
+	hitdensity=100;
+	metal=482;
+	damage=128;
+	reclaimable=1;
+
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}
+
+

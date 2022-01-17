@@ -1,0 +1,77 @@
+[BANTHAAR_FIRE]
+	{
+	ID=131;
+	name=Anti-Tank Pulse Cannon;
+	rendertype=1;
+	lineofsight=1;
+	turret=1;
+	minbarrelangle=-15;
+
+	model=BPulse.s3o;	
+
+	range=598;
+	reloadtime=.6;
+	weaponvelocity=465;
+	areaofeffect=125;
+	edgeefectiveness=0.6;
+
+	soundstart=lasrhvy1;
+	soundhit=lasrmas1;
+
+	tolerance=500;
+
+	explosiongaf=pdgexp1;
+	explosionart=pdgexp1;
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom2;
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashlg;
+
+	startsmoke=1;
+                     texture2 = andsmoketrail;
+	[DAMAGE]
+		{
+		default=217;
+		CORCOM=1;
+		ARMCOM=1;
+		AAICK=70;
+		AAICV=70;
+		AAICA=70;
+		AAILAB=70;
+		AAIVP=70;
+		AAIAP=70;
+		AAIACK=70;
+		AAIACV=70;
+		AAIALAB=70;
+		AAIAVP=70;
+		AAIAAP=70;
+		CAIGANT=70;
+		AAIMEXX=7000;
+		CAIMEXX=7000;
+		AAIMEX=70;
+		CAMEX=70;
+		AAISOLARX=7000;
+		CAISOLARX=7000;
+		AAISOLAR=70;
+		CAISOLAR=70;
+		CAICK=70;
+		CAICV=70;
+		CAICA=70;
+		CAILAB=70;
+		CAIVP=70;
+		CAIAP=70;
+		CAIACK=70;
+		CAIACV=70;
+		CAIALAB=70;
+		CAIAVP=70;
+		CAIAAP=70;
+		BIOP=0;
+		BLAB=0;
+		PLAT=0;
+		armshgen=0;
+		armvshgen=0;
+		prot=0;
+		gun=0;
+		plat=0;
+		}
+	}

@@ -1,0 +1,45 @@
+[CORTOAST_GUN]
+{
+	name=PopupCannon;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+	range=1335;
+	reloadtime=2.1;
+	weaponvelocity=450;
+	areaofeffect=164;
+	PredictBoost=0.2;
+	edgeeffectiveness=0.25;
+	soundstart=cannhvy5;
+	soundhit=xplomed2;
+	minbarrelangle=-40;
+	accuracy=450;
+	explosiongenerator=custom:FLASH96;
+	startsmoke=1;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=346;
+		VTRANS=90;
+		L1FIGHTERS=90;
+		L2FIGHTERS=90;
+		L1BOMBERS=90;
+		L2BOMBERS=90;
+		GUNSHIPS=90;
+		HGUNSHIPS=90;
+		VRADAR=90;
+		VTOL=90;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+		SEADRAGON=1244;
+		BLACKHYDRA=1244;
+		FLAKBOATS=1244;
+		JAMMERBOATS=1244;
+		OTHERBOATS=1244;
+	}
+}

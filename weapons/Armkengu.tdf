@@ -1,0 +1,85 @@
+[v-rocket]
+	{
+	ID=137;
+	name=Rockets;
+	rendertype=1;
+	lineofsight=1;
+	vlaunch=1;
+
+	model=missile;
+
+	range=350;
+	reloadtime=4;
+	weapontimer=2;
+	weaponvelocity=300;
+	startvelocity=200;
+	weaponacceleration=200;
+	turnrate=48000;
+	areaofeffect=48;
+	metalpershot=0;
+
+	soundstart=rocklit1;
+	soundhit=xplosml2;
+
+	firestarter=70;
+	smokedelay=.1;
+	selfprop=1;
+	smoketrail=1;
+	flighttime=5;
+	guidance=1;
+	burnblow=1;
+	tolerance=1000;
+
+	explosiongaf=fx;
+	explosionart=explode3;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2o;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplash;
+
+	startsmoke=1;
+
+	[DAMAGE]
+		{
+		default=85;
+		}
+	}
+[Kengu-Lightning]
+	{
+	ID=138;
+	name=Lightning Gun;
+	rendertype=7;
+	lineofsight=1;
+	turret=1;
+
+	range=220;
+	reloadtime=2;
+	weaponvelocity=450;
+	areaofeffect=8;
+	duration=8;
+	soundtrigger=1;
+
+	soundstart=lghthvy1;
+	soundhit=lashit;
+
+	firestarter=50;
+
+	beamweapon=1;
+	color=232;	/* Red */
+	color2=234;
+
+	explosiongaf=fx;
+	explosionart=explode5;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom1;
+
+	startsmoke=1;
+
+	[DAMAGE]
+		{
+		default=90;
+		}
+	}

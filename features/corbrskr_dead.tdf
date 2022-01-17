@@ -1,0 +1,38 @@
+[corbrskr_dead]
+	{
+	world=All Worlds;
+	description=Berseker Wreckage;
+	category=arm_corpses;
+	object=corbrskr_dead;
+	featuredead=corbrskr_heap;
+	footprintx=2;
+	footprintz=2;
+	height=25;
+	blocking=1;
+	hitdensity=100;
+	metal=128;
+	damage=340;
+	reclaimable=1;
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}
+
+[corbrskr_heap]
+	{
+	world=All Worlds;
+	description=Berseker Wreckage;
+	category=heaps;
+	object=2x2d;
+	footprintx=2;
+	footprintz=2;
+	height=4;
+	blocking=0;
+	hitdensity=100;
+	metal=77;
+	damage=390;
+	reclaimable=1;
+
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}
+

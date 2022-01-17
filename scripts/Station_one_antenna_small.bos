@@ -1,0 +1,97 @@
+#define TA			// This is a TA script
+
+#include "sfxtype.h"
+#include "exptype.h"
+
+piece  base, esplosione1, esplosione2, esplosione3, esplosione4,esplosione5, esplosione6, esplosione7;
+
+
+SmokeUnit(healthpercent, sleeptime, smoketype)
+{
+	while( get BUILD_PERCENT_LEFT )
+	{
+		sleep 400;
+	}
+	while( TRUE )
+	{
+		healthpercent = get HEALTH;
+		if( healthpercent < 66 )
+		{
+			smoketype = 256 | 2;
+			if( Rand( 1, 66 ) < healthpercent )
+			{
+				smoketype = 256 | 1;
+			}
+			emit-sfx smoketype from base;
+		}
+		sleeptime = healthpercent * 50;
+		if( sleeptime < 200 )
+		{
+			sleeptime = 200;
+		}
+		sleep sleeptime;
+	}
+}
+
+Create()
+{
+	dont-shade base;
+	while( get BUILD_PERCENT_LEFT )
+	{
+		sleep 2000;
+	}
+	start-script SmokeUnit();
+}
+
+Killed(severity, corpsetype)
+{
+	if( severity <= 25 )
+	{
+		corpsetype = 1;
+		explode base type BITMAPONLY | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+		explode esplosione1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode esplosione2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode esplosione3 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		explode esplosione4 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+		explode esplosione5 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		explode esplosione6 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode esplosione7 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+
+		return (0);
+	}
+	if( severity <= 50 )
+	{
+		corpsetype = 2;
+		explode base type BITMAPONLY | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+		explode esplosione1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode esplosione2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode esplosione3 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		explode esplosione4 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+		explode esplosione5 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		explode esplosione6 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode esplosione7 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		return (0);
+	}
+	if( severity <= 99 )
+	{
+		corpsetype = 3;
+		explode base type BITMAPONLY | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+		explode esplosione1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode esplosione2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode esplosione3 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		explode esplosione4 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+		explode esplosione5 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		explode esplosione6 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode esplosione7 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		return (0);
+	}
+	corpsetype = 3;
+	explode base type BITMAPONLY | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+		explode esplosione1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode esplosione2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode esplosione3 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		explode esplosione4 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+		explode esplosione5 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		explode esplosione6 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode esplosione7 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+}

@@ -1,0 +1,323 @@
+[RANDOM_FALL_EXPLOSIONS0]
+{
+[particlesystem_dust_RANDOM_FALL_EXPLOSIONS3]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.00;
+		sizeMod=1.04;
+		pos=2 r-4, 2 r-4, 2 r-4;
+		emitVector=0, 1, 0;
+		gravity=0, 0.03, 0;
+		colorMap=1.0 1.0 1.0 0.8     1.0 0.5 0.0 0.5   1.0 0.3 0.0 0.4   0.0 0.0 0.0 0.01;
+		Texture=GenericFireball;
+		airdrag=0.5;
+		particleLife=15;
+		particleLifeSpread=15;
+		numParticles=1 r1;
+		particleSpeed=1;
+		particleSpeedSpread=1;
+		particleSize=2;
+		particleSizeSpread=2;
+		emitRot=0;
+		emitRotSpread=180;
+		directional=0;
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+[particlesystem_dust_RANDOM_FALL_EXPLOSIONS01]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.3;
+		sizeMod=1.01;
+		pos=5 r-10, 5 r-10, 5 r-10;
+		emitVector=0, 1, 0;
+		gravity=0, 0.005, 0;
+		colorMap=0.4 0.4 0.4 0.3    0.35 0.3 0.3 0.8   0.0 0.0 0.0 0.01;
+		Texture=Gas;
+		airdrag=0.90;
+		particleLife=60;
+		particleLifeSpread=60;
+		numParticles=1 r2;
+		particleSpeed=1;
+		particleSpeedSpread=1;
+		particleSize=2;
+		particleSizeSpread=4;
+		emitRot=0;
+		emitRotSpread=180;
+		directional=0;
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+[groundflash_RANDOM_FALL_EXPLOSIONS3]
+	{
+		class=CSimpleGroundFlash;
+		[properties]
+		{
+		texture=BrightFlashFadeScar;
+      		size=10 r35;
+		sizeGrowth=-1;
+      		ttl=10;
+      		colorMap=1.0 0.7 0.3 1.0   0 0 0 0.01;
+		}
+	air=1;
+     	ground=1;
+      	water=0;
+	count=1;
+	underwater=0;
+	useAirLos=1;
+	alwaysVisible=0;
+	}
+}
+
+[RANDOM_FALL_EXPLOSIONS1]
+{
+[particlesystem_dust_RANDOM_FALL_EXPLOSIONS3]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.00;
+		sizeMod=1.04;
+		pos=2 r-4, 2 r-4, 2 r-4;
+		emitVector=0, 1, 0;
+		gravity=0, 0.03, 0;
+		colorMap=1.0 1.0 1.0 0.8     1.0 0.5 0.0 0.5   1.0 0.3 0.0 0.4   0.0 0.0 0.0 0.01;
+		Texture=GenericFireball;
+		airdrag=0.5;
+		particleLife=15;
+		particleLifeSpread=15;
+		numParticles=1 r1;
+		particleSpeed=1;
+		particleSpeedSpread=1;
+		particleSize=2;
+		particleSizeSpread=2;
+		emitRot=0;
+		emitRotSpread=180;
+		directional=0;
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+[particlesystem_dust_RANDOM_FALL_EXPLOSIONS01]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.3;
+		sizeMod=1.01;
+		pos=5 r-10, 5 r-10, 5 r-10;
+		emitVector=0, 1, 0;
+		gravity=0, 0.005, 0;
+		colorMap=0.4 0.4 0.4 0.3    0.35 0.3 0.3 0.8   0.0 0.0 0.0 0.01;
+		Texture=Gas;
+		airdrag=0.90;
+		particleLife=60;
+		particleLifeSpread=60;
+		numParticles=2 r3;
+		particleSpeed=1;
+		particleSpeedSpread=1;
+		particleSize=2;
+		particleSizeSpread=4;
+		emitRot=0;
+		emitRotSpread=180;
+		directional=0;
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+[groundflash_RANDOM_FALL_EXPLOSIONS3]
+	{
+		class=CSimpleGroundFlash;
+		[properties]
+		{
+		texture=BrightFlashFadeScar;
+      		size=10 r35;
+		sizeGrowth=-1;
+      		ttl=10;
+      		colorMap=1.0 0.7 0.3 1.0   0 0 0 0.01;
+		}
+	air=1;
+     	ground=1;
+      	water=0;
+	count=1;
+	underwater=0;
+	useAirLos=1;
+	alwaysVisible=0;
+	}
+}
+
+[RANDOM_FALL_EXPLOSIONS2]
+{
+[particlesystem_dust_RANDOM_FALL_EXPLOSIONS3]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.00;
+		sizeMod=1.04;
+		pos=2 r-4, 2 r-4, 2 r-4;
+		emitVector=0, 1, 0;
+		gravity=0, 0.03, 0;
+		colorMap=1.0 1.0 1.0 0.8     1.0 0.5 0.0 0.5   1.0 0.3 0.0 0.4   0.0 0.0 0.0 0.01;
+		Texture=GenericFireball;
+		airdrag=0.5;
+		particleLife=15;
+		particleLifeSpread=15;
+		numParticles=2 r1;
+		particleSpeed=1;
+		particleSpeedSpread=1;
+		particleSize=2;
+		particleSizeSpread=2;
+		emitRot=0;
+		emitRotSpread=180;
+		directional=0;
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+[particlesystem_dust_RANDOM_FALL_EXPLOSIONS01]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.3;
+		sizeMod=1.01;
+		pos=5 r-10, 5 r-10, 5 r-10;
+		emitVector=0, 1, 0;
+		gravity=0, 0.005, 0;
+		colorMap=0.4 0.4 0.4 0.3    0.35 0.3 0.3 0.8   0.0 0.0 0.0 0.01;
+		Texture=Gas;
+		airdrag=0.90;
+		particleLife=60;
+		particleLifeSpread=60;
+		numParticles=3 r2;
+		particleSpeed=1;
+		particleSpeedSpread=1;
+		particleSize=2;
+		particleSizeSpread=4;
+		emitRot=0;
+		emitRotSpread=180;
+		directional=0;
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+[groundflash_RANDOM_FALL_EXPLOSIONS3]
+	{
+		class=CSimpleGroundFlash;
+		[properties]
+		{
+		texture=BrightFlashFadeScar;
+      		size=10 r35;
+		sizeGrowth=-1;
+      		ttl=10;
+      		colorMap=1.0 0.7 0.3 1.0   0 0 0 0.01;
+		}
+	air=1;
+     	ground=1;
+      	water=0;
+	count=1;
+	underwater=0;
+	useAirLos=1;
+	alwaysVisible=0;
+	}
+}
+
+[RANDOM_FALL_EXPLOSIONS3]
+{
+[particlesystem_dust_RANDOM_FALL_EXPLOSIONS3]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.00;
+		sizeMod=1.04;
+		pos=2 r-4, 2 r-4, 2 r-4;
+		emitVector=0, 1, 0;
+		gravity=0, 0.03, 0;
+		colorMap=1.0 1.0 1.0 0.8     1.0 0.5 0.0 0.5   1.0 0.3 0.0 0.4   0.0 0.0 0.0 0.01;
+		Texture=GenericFireball;
+		airdrag=0.5;
+		particleLife=15;
+		particleLifeSpread=15;
+		numParticles=2 r3;
+		particleSpeed=1;
+		particleSpeedSpread=1;
+		particleSize=2;
+		particleSizeSpread=2;
+		emitRot=0;
+		emitRotSpread=180;
+		directional=0;
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+[particlesystem_dust_RANDOM_FALL_EXPLOSIONS01]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.3;
+		sizeMod=1.01;
+		pos=5 r-10, 5 r-10, 5 r-10;
+		emitVector=0, 1, 0;
+		gravity=0, 0.005, 0;
+		colorMap=0.4 0.4 0.4 0.3    0.35 0.3 0.3 0.8   0.0 0.0 0.0 0.01;
+		Texture=Gas;
+		airdrag=0.90;
+		particleLife=60;
+		particleLifeSpread=60;
+		numParticles=1 r2;
+		particleSpeed=1;
+		particleSpeedSpread=1;
+		particleSize=2;
+		particleSizeSpread=4;
+		emitRot=0;
+		emitRotSpread=180;
+		directional=0;
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+[groundflash_RANDOM_FALL_EXPLOSIONS3]
+	{
+		class=CSimpleGroundFlash;
+		[properties]
+		{
+		texture=BrightFlashFadeScar;
+      		size=10 r35;
+		sizeGrowth=-1;
+      		ttl=10;
+      		colorMap=1.0 0.7 0.3 1.0   0 0 0 0.01;
+		}
+	air=1;
+     	ground=1;
+      	water=0;
+	count=1;
+	underwater=0;
+	useAirLos=1;
+	alwaysVisible=0;
+	}
+}

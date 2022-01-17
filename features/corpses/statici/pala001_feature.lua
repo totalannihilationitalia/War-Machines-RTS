@@ -1,0 +1,43 @@
+return {
+  pala001_feature =
+  {
+    description = "A building",
+    blocking = true,
+    damage = 1000,
+    energy = 0,
+    flammable = false,
+    featureDead ="pala001d_feature",
+    noselect = false,
+    metal = 250,
+    footprintx = 1,
+    footprintz = 1,
+    object = "pala001.s3o",
+    reclaimable = true,
+    upright = true,
+    crushResistance = 10000,
+    collisionvolumeoffsets = "0 50 0",
+    collisionvolumescales = "70 100 70",
+    collisionvolumetype = "Box",
+  },
+
+  pala001d_feature =
+  {
+    description = "A destroyed building",
+    blocking = true,
+    damage = 500,
+    energy = 0,
+    flammable = false,
+--    featureDead ="Pala001_d",
+    noselect = false,
+    metal = 100,
+    footprintx = 1,
+    footprintz = 1,
+    object = "pala001_d.s3o",
+    reclaimable = true,
+    upright = true,
+    crushResistance = 10000,
+    collisionvolumeoffsets = "0 35 0",
+    collisionvolumescales = "70 70 70",
+    collisionvolumetype = "Box",
+  },
+}

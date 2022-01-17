@@ -1,0 +1,36 @@
+[CGAUSSTW_dead]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=arm_corpses;
+	object=CGAUSSTW_dead;
+	featuredead=CGAUSSTW_heap;
+	footprintx=2;
+	footprintz=2;
+	height=25;
+	blocking=1;
+	hitdensity=100;
+	metal=556;
+	damage=1219;
+	reclaimable=1;
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}
+
+[CGAUSSTW_heap]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=heaps;
+	object=2x2d;
+	footprintx=3;
+	footprintz=3;
+	height=4;
+	blocking=0;
+	hitdensity=100;
+	metal=443;
+	damage=609;
+	reclaimable=1;
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}

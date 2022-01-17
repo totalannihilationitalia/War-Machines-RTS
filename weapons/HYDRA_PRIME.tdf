@@ -1,0 +1,37 @@
+[HYDRA_PRIME]
+{
+	name=BattleshipCannon;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+	range=2450;
+	reloadtime=0.5;
+	weaponvelocity=600;
+	areaofeffect=128;
+	soundstart=cannhvy1;
+	soundhit=xplomed2;
+	accuracy=400;
+	explosiongenerator=custom:FLASH96;
+	startsmoke=1;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=400;
+		VTRANS=65;
+		L1FIGHTERS=65;
+		L2FIGHTERS=65;
+		L1BOMBERS=65;
+		L2BOMBERS=65;
+		GUNSHIPS=65;
+		HGUNSHIPS=65;
+		VRADAR=65;
+		VTOL=65;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+	}
+}

@@ -1,0 +1,45 @@
+
+[DCLAW]
+{
+	name=LightningGun;
+	rendertype=7;
+	lineofsight=1;
+	turret=1;
+	range=440;
+	reloadtime=1.15;
+	weaponvelocity=450;
+	areaofeffect=8;
+	impactonly=1;
+	duration=8;
+	soundtrigger=1;
+	soundstart=lghthvy1;
+	soundhit=lashit;
+	firestarter=50;
+	beamweapon=1;
+	color=128;
+	color2=130;
+	explosiongenerator=custom:LIGHTNING_FLASH;
+	startsmoke=1;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=210;
+		COMMANDERS=390;
+		VTRANS=25;
+		L1FIGHTERS=25;
+		L2FIGHTERS=25;
+		L1BOMBERS=25;
+		L2BOMBERS=25;
+		GUNSHIPS=23;
+		HGUNSHIPS=23;
+		VRADAR=25;
+		VTOL=25;
+		L1SUBS=3;
+		L2SUBS=3;
+		L3SUBS=3;
+	}
+}

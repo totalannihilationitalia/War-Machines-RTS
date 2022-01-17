@@ -1,0 +1,25 @@
+[arm_defender_dead]
+{
+	world=All Worlds;
+	description=Wreckage;
+	category=arm_corpses;
+	object=arm_defender_dead;
+	featuredead=arm_defender_heap;
+	footprintx=2;
+	footprintz=2;
+	height=20;
+	blocking=1;
+	hitdensity=100;
+	metal=63;
+	damage=236;
+	reclaimable=1;
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	collisionVolumeType = CylY;
+	collisionVolumeScales =28 45 28;
+	collisionVolumeOffsets = 0 0 0;
+	collisionVolumeTest = 1;
+	collisionVolumeType=cyly;//#AUTO#
+	collisionVolumeScales=25 41 25;//#AUTO#
+	collisionVolumeOffsets=0 0 0;//#AUTO#
+}

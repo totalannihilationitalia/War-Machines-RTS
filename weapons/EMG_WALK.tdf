@@ -1,0 +1,33 @@
+[EMG_WALK]
+{
+	name=E.M.G.;
+	explosiongenerator=custom:EMG_HIT;
+	rendertype=1;
+	size=1.5;
+	rgbcolor=1 0.87 0.3;
+	lineofsight=1;
+	turret=1;
+	range=315;
+	reloadtime=0.9;
+	weapontimer=1;
+	weaponvelocity=350;
+	sprayangle=867;
+	areaofeffect=16;
+	burst=6;
+	burstrate=0.02;
+	soundstart=armsml2;
+	soundhit=lasrhit1;
+	soundtrigger=0;
+	tolerance=3000;
+	startsmoke=0;
+	endsmoke=0;
+	explosiongaf=fx;
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom1;
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashsm;
+	[DAMAGE]
+	{
+		default=11;//12.5
+	}
+}

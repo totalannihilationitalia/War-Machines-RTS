@@ -1,0 +1,74 @@
+[grayhound_dead]
+	{
+	world=All Worlds;
+	description=Grayhound Wreckage;
+	category=arm_corpses;
+	object=grayhound_dead;
+	featuredead=grayhound_dead2;
+	footprintx=3;
+	footprintz=3;
+	height=20;
+	blocking=1;
+	hitdensity=100;
+	metal=453;  //good number to go with, I thought.
+	damage=1624; //Pretty resilient corpse. Guess they make them better than they used to ^_^
+	reclaimable=1;
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}
+
+[grayhound_dead2] //it goes through a lot of decomposition phases. Reclaim it in earlier phases to get the most out of it.
+	{
+	world=All Worlds;
+	description=Grayhound Wreckage;
+	category=arm_corpses;
+	object=grayhound_dead2;
+	featuredead=grayhound_dead3;
+	footprintx=3;
+	footprintz=3;
+	height=20;
+	blocking=1;
+	hitdensity=100;
+	metal=339;
+	damage=1043;
+	reclaimable=1;
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}
+
+[grayhound_dead3]
+	{
+	world=All Worlds;
+	description=Grayhound Wreckage;
+	category=arm_corpses;
+	object=grayhound_dead3;
+	featuredead=grayhound_heap;
+	footprintx=3;
+	footprintz=3;
+	height=20;
+	blocking=1;
+	hitdensity=100;
+	metal=210;
+	damage=622;
+	reclaimable=1;
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}
+
+[grayhound_heap]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=heaps;
+	object=3x3d;
+	footprintx=3;
+	footprintz=3;
+	height=5;
+	blocking=0;
+	hitdensity=100;
+	metal=103;
+	damage=422;
+	reclaimable=1;
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}

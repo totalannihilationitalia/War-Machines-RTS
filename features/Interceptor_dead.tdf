@@ -1,0 +1,37 @@
+[Interceptor_dead]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=arm_corpses;
+	object=Interceptor_dead;
+	featuredead=Interceptor_heap;
+	footprintx=5;
+	footprintz=5;
+	height=20;
+	blocking=1;
+	hitdensity=100;
+	metal=243;
+	energy=374;
+	damage=582;
+	reclaimable=1;
+	featurereclamate=smudge03;
+	seqnamereclamate=tree1reclamate;
+	}
+[Interceptor_heap]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=heaps;
+	object=5x5d;
+	footprintx=5;
+	footprintz=5;
+	height=4;
+	blocking=0;
+	hitdensity=100;
+	metal=157;
+	energy=132;
+	damage=42;
+	reclaimable=1;
+	featurereclamate=smudge03;
+	seqnamereclamate=tree1reclamate;
+	}

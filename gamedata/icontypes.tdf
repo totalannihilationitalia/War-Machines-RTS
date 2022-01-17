@@ -1,0 +1,105 @@
+[icontypes]
+{
+	[default]
+	{
+		// Missing parameters get evualeted to the following by Spring:
+		// bitmap=standard radar dot
+		size=1.3;
+		radiusadjust=1;
+		// distance=1;
+	}
+	[corthovr]
+	{
+		size=0.7;
+		radiusadjust=1;	
+	}
+	[armthovr]
+	{
+		size=0.9;
+		radiusadjust=1;	
+	}
+	// ICONA DEL COMANDANTE ICU (E FAKECOMMANDER)
+	[icucommander]
+	{
+		bitmap=icons/icucom.png;
+		size=4;
+	}
+	// ICONA DEL COMANDANTE NFA (E FAKECOMMANDER)
+	[nfacommander]
+	{
+		bitmap=icons/nfacom.tga;
+		size=4;
+	}
+	// icon for the Core Krogoth
+	[krogoth]
+	{
+		bitmap=icons/krogoth.tga;
+		size=3;
+	}
+	// TUTTI GLI AEREI
+	[air]
+	{
+		bitmap=icons/icone_aerei.tga;
+		size=2;
+	}
+	// TUTTE LE NAVI E I SOMMERGIBILI
+	[sea]
+	{
+		bitmap=icons/icone_navi.tga;
+		size=2;
+	}
+	// TUTTI I VEICOLI
+	[carri]
+	{
+		bitmap=icons/icone_carri.tga;
+		size=2;
+	}
+	// TUTTI I ROBOTS
+	[kbots]
+	{
+		bitmap=icons/icone_robot.tga;
+		size=2;
+	}
+	// TUTTE LE TORRETTE DI DIFESA
+	[difesa]
+	{
+		bitmap=icons/icone_difesa.tga;
+		size=2;
+	}
+	// TUTTE LE COSTRUZIONI GENERICHE
+	[building]
+	{
+		bitmap=icons/icone_structures.tga;
+//		radiusadjust=1;
+		size=1;
+	}
+	// TUTTE LE COSTRUZIONI CHE PRODUCONO ENERGIA
+	[energia]
+	{
+		bitmap=icons/icone_energy.tga;
+		radiusadjust=1;
+		size=2;
+	}
+	// TUTTE LE COSTRUZIONI CHE PRODUCONO UNITà
+	[factory]
+	{
+		bitmap=icons/icone_fabbrica.tga;
+		radiusadjust=1;
+		size=2;
+	}
+	// TUTTE LE COSTRUZIONI CHE PRODUCONO METALLO
+	[metal]
+	{
+		bitmap=icons/icone_metal.tga;
+		radiusadjust=1;
+		size=2;
+	}
+	// TUTTI I RADAR
+	[radar]
+	{
+		bitmap=icons/icone_radar.tga;
+		radiusadjust=1;
+		size=2;
+	}
+
+} 

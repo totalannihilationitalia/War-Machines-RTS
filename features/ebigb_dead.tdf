@@ -1,0 +1,14 @@
+[ebigb_dead]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=cor_corpses;
+	object=7x7d;
+	height=80;
+	blocking=1;
+	hitdensity=100;
+	metal=124584;
+	damage=148754;
+	reclaimable=1;
+	}
+

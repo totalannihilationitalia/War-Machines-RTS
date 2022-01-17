@@ -1,0 +1,44 @@
+[MEDUSA_STUN]
+	{
+        ID=134;
+	name=Medusa Stun;
+	rendertype=0;
+	lineofsight=1;
+	turret=1;
+	paralyzer=1;
+	duration=0.1;
+
+	range=600;
+	reloadtime=7;
+	weaponvelocity=900;
+	energypershot=100;
+	areaofeffect=8;
+	soundtrigger=1;
+
+	soundstart=medusashot;
+	soundhit=capture1;
+
+	firestarter=0;
+	beamweapon=1;
+	color=250;	
+	color2=251;
+	tolerance=500;
+
+	explosiongaf=fx;
+	explosionart=explode5;
+	
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom1;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashsm;
+
+	startsmoke=1;
+
+	[DAMAGE]
+		{
+		default=1800;
+	
+		}
+	}
+

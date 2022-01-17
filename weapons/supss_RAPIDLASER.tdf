@@ -1,0 +1,38 @@
+[supss_RAPIDLASER]
+{
+	name=SupssRapidLaser;
+	rendertype=0;
+	lineofsight=1;
+	turret=1;
+	range=475;
+	reloadtime=0.12;
+	weaponvelocity=920;
+	areaofeffect=32;
+	soundtrigger=1;
+	tolerance=20000;
+	soundstart=lasfirerb;
+	soundhit=lasrhit1;
+	firestarter=10;
+	beamweapon=1;
+	//beamlaser=1;
+	thickness=3.5;
+	avoidfeature=0;
+	beamtime=0.14;
+	rgbcolor=0.75 0 0;
+	rgbcolor2=0.9 0.9 0.6;
+	--falloffrate=0.75;
+	//explosiongenerator=custom:BURN;
+	explosiongenerator=custom:Gator; 
+	startsmoke=1;
+	impulsefactor=1;
+	impulseboost=1;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	accuracy=32;
+	ProximityPriority=1.5;
+	[DAMAGE]
+	{
+		default=30;
+	}
+}

@@ -1,0 +1,47 @@
+[EMG]
+{
+	name=peewee;
+	rendertype=4;
+	lineofsight=1;
+	turret=1;
+	range=180;
+	reloadtime=0.31;
+	weapontimer=0.1;
+	weaponvelocity=500;
+	sprayangle=1180;
+	areaofeffect=8;
+	burst=3;
+	burstrate=0.1;
+	size=1.75;
+	rgbcolor=1 0.95 0.4;
+	intensity=0.7;
+	soundstart=flashemg;
+	tolerance=5000;
+	startsmoke=0;
+	endsmoke=0;
+	explosiongenerator=custom:EMG_HIT;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	AvoidFeature=0;
+	firestarter=100;
+	impactonly=1;
+	[DAMAGE]
+	{
+		default=11;
+		VTRANS=3;
+		L1FIGHTERS=3;
+		L2FIGHTERS=3;
+		L1BOMBERS=3;
+		L2BOMBERS=3;
+		GUNSHIPS=3;
+		HGUNSHIPS=3;
+		VRADAR=3;
+		VTOL=3;
+		L1SUBS=1;
+		L2SUBS=1;
+		L3SUBS=1;
+	}
+}

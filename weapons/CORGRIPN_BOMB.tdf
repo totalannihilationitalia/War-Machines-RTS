@@ -1,0 +1,33 @@
+[CORGRIPN_BOMB]
+{
+	name=EMPbomb;
+	rendertype=6;
+	dropped=1;
+	paralyzer=1;
+	model=bomb;
+	range=1280;
+	reloadtime=0.3;
+	areaofeffect=240;
+	soundstart=bombrel;
+	soundhit=EMGPULS1;
+	commandfire=1;
+	collidefriendly=0;
+	firestarter=90;
+	tolerance=7000;
+	edgeeffectiveness=0.75;
+	explosiongenerator=custom:EMPFLASH240;
+	paralyzetime=15;
+	impulsefactor=0;
+	impulseboost=0;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=4000;
+		SEADRAGON=30;
+		BLACKHYDRA=30;
+		KROGOTH=30;
+		COMMANDERS=30;
+	}
+}

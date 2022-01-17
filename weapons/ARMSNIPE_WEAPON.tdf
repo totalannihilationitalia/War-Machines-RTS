@@ -1,0 +1,38 @@
+[ARMSNIPE_WEAPON]
+{
+	name=SniperWeapon;
+	rendertype=0;
+	lineofsight=1;
+	turret=1;
+	noradar=1;
+	range=900;
+	EnergyPerShot=500;
+	reloadtime=10;
+	weaponvelocity=3000;
+	areaofeffect=16;
+	impactonly=1;
+	beamweapon=1;
+	intensity=0.75;
+	thickness=0.5;
+	rgbcolor=1 1 0;
+	duration=0.0025;
+	soundstart=sniper2;
+	soundhit=xplolrg2;
+	explosiongenerator=custom:SNIPELASER;
+	impulsefactor=0.234;
+	impulseboost=0.234;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	collidefriendly=0;
+	soundstartvolume=4;
+	soundhitvolume=4;
+	[DAMAGE]
+	{
+		default=2500;
+		COMMANDERS=1025;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+	}
+}

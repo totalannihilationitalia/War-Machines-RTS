@@ -1,0 +1,94 @@
+[fleaesplosionipostatterraggio]
+{
+	[spikes]
+	{
+		class=explspike;
+		[properties]
+		{
+			dir=-75 r150,-75 r150,-75 r150;
+			width=300;
+			length=1; //60;
+			alpha=0.75;
+			alphadecay=0.1333;
+			color=0.99, 0.88, 0.7;
+
+		}
+		air=1;
+		water=1;
+		ground=1;
+  		count=25; 
+	}
+	usedefaultexplosions=1;
+	[G_blast]//base explo// 
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.14;
+		sizeMod=1.0;
+		pos=3 r-3, 1 r-2, 3 r-3;  
+		gravity=0, 0, 0;
+	
+		colorMap=1 0.25 0 0.01		0.01 0.01 0.01 0.01 	0 0 0 0.01	 0 0 0 0.01;
+
+		Texture=splash;
+		airdrag=0.87;
+		
+		particleLifeSpread=30; 
+		particleSpeedSpread=18;  
+		particleSizeSpread=10;   
+		
+		particleLife=60; //75;
+		numParticles=135; //150; 
+		particleSpeed=17; 
+		particleSize=32;
+		
+		
+		emitVector=0, 1, 0; 
+		emitRot=80;
+		emitRotSpread=5; 
+		directional=1; 
+
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+[G_blast2]//half sphere explo// 
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0.14;
+		sizeMod=1.0;
+		pos=3 r-3, 1 r-2, 3 r-3;  
+		gravity=0, 0, 0;
+	
+		colorMap=1 0.25 0 0.01 		0.01 0.01 0.01 0.01 	0 0 0 0.01 	0 0 0 0.01;
+
+		Texture=splash;
+		airdrag=0.87;
+		
+		particleLifeSpread=30; 
+		particleSpeedSpread=15;  
+		particleSizeSpread=13;   
+		
+		particleLife=60; //75;
+		numParticles=150; //200; 
+		particleSpeed=17; 
+		particleSize=32;
+		
+		
+		emitVector=0, 1, 0; 
+		emitRot=0;
+		emitRotSpread=80; 
+		directional=1; 
+
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+}

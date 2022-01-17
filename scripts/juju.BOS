@@ -1,0 +1,590 @@
+piece torso ,hand ,luparm ,ruparm ,pelvis ,rthigh ,lthigh ,rloarm ,lloarm ,lleg ,lfoot ,rleg ,rfoot ;
+piece barrel1 ,flare1 ,barrel2 ,flare2 ,missilepod ,flare3 ,h1 ,h2 ,h3 ,h4 ,wing1 ,wing2;
+static-var bMoving ,bAiming ,bCanaim ,aimtype_0 ,restore_delay ,gun_0 ;
+	
+#include "exptype.h"
+#define SIG_NUM1	2
+#define SIG_NUM2        4
+walk()
+	{
+		IF (bMoving )
+			{
+			TURN pelvis to x-axis <3> NOW;
+			TURN rthigh to x-axis <17> NOW;
+			TURN lthigh to x-axis <-41> NOW;
+			TURN torso to y-axis <5> NOW;
+			TURN luparm to x-axis <20> NOW;
+			TURN ruparm to x-axis <-10> NOW;
+			TURN lleg to x-axis <31> NOW;
+			TURN lfoot to x-axis <-4> NOW;
+			TURN rleg to x-axis <17> NOW;
+			TURN rfoot to x-axis <-27> NOW;
+			SLEEP <120>;
+			}
+		IF (bMoving )
+			{
+			TURN pelvis to x-axis <5> NOW;
+			TURN rthigh to x-axis <7> NOW;
+			TURN lthigh to x-axis <-32> NOW;
+			TURN torso to y-axis <3> NOW;
+			TURN luparm to x-axis <25> NOW;
+			TURN ruparm to x-axis <-5> NOW;
+			TURN lleg to x-axis <22> NOW;
+			TURN lfoot to x-axis <-5> NOW;
+			TURN rleg to x-axis <29> NOW;
+			TURN rfoot to x-axis <-26> NOW;
+			SLEEP <110>;
+			}
+		IF (bMoving )
+			{
+			MOVE pelvis to y-axis <0> NOW;
+			TURN pelvis to x-axis <4> NOW;
+			TURN rthigh to x-axis <-10> NOW;
+			TURN lthigh to x-axis <-26> NOW;
+			TURN torso to y-axis <0> NOW;
+			TURN luparm to x-axis <19> NOW;
+			TURN ruparm to x-axis <0> NOW;
+			TURN lfoot to x-axis <9> NOW;
+			TURN rleg to x-axis <41> NOW;
+			SLEEP <100>;
+			}
+		IF (bMoving )
+			{
+			MOVE pelvis to y-axis <0> NOW;
+			TURN pelvis to x-axis <3> NOW;
+			TURN rthigh to x-axis <-19> NOW;
+			TURN lthigh to x-axis <1> NOW;
+			TURN torso to y-axis <-3> NOW;
+			TURN luparm to x-axis <10> NOW;
+			TURN ruparm to x-axis <10> NOW;
+			TURN lleg to x-axis <-4> NOW;
+			TURN lfoot to x-axis <-8> NOW;
+			TURN rleg to x-axis <42> NOW;
+			TURN rfoot to x-axis <-22> NOW;
+			SLEEP <90>;
+			}
+		IF (bMoving )
+			{
+			MOVE pelvis to y-axis <0> NOW;
+			TURN pelvis to x-axis <3> NOW;
+			TURN rthigh to x-axis <-41> NOW;
+			TURN lthigh to x-axis <7> NOW;
+			TURN torso to y-axis <-5> NOW;
+			TURN luparm to x-axis <0> NOW;
+			TURN ruparm to x-axis <20> NOW;
+			TURN lleg to x-axis <-1> NOW;
+			TURN lfoot to x-axis <-16> NOW;
+			TURN rleg to x-axis <40> NOW;
+			TURN rfoot to x-axis <-5> NOW;
+			SLEEP <100>;
+			}
+		IF (bMoving )
+			{
+			MOVE pelvis to y-axis <0> NOW;
+			TURN pelvis to x-axis <3> NOW;
+			TURN rthigh to x-axis <-49> NOW;
+			TURN lthigh to x-axis <11> NOW;
+			TURN torso to y-axis <-8> NOW;
+			TURN luparm to x-axis <-5> NOW;
+			TURN ruparm to x-axis <25> NOW;
+			TURN lleg to x-axis <8> NOW;
+			TURN lfoot to x-axis <-22> NOW;
+			TURN rleg to x-axis <22> NOW;
+			SLEEP <110>;
+			}
+		IF (bMoving )
+			{
+			MOVE pelvis to y-axis <0> NOW;
+			TURN pelvis to x-axis <3> NOW;
+			TURN rthigh to x-axis <-44> NOW;
+			TURN lthigh to x-axis <18> NOW;
+			TURN torso to y-axis <-5> NOW;
+			TURN luparm to x-axis <-10> NOW;
+			TURN ruparm to x-axis <20> NOW;
+			TURN lleg to x-axis <12> NOW;
+			TURN lfoot to x-axis <-26> NOW;
+			TURN rleg to x-axis <38> NOW;
+			TURN rfoot to x-axis <-8> NOW;
+			SLEEP <120>;
+			}
+		IF (bMoving )
+			{
+			MOVE pelvis to y-axis <0> NOW;
+			TURN pelvis to x-axis <5> NOW;
+			TURN rthigh to x-axis <-32> NOW;
+			TURN lthigh to x-axis <3> NOW;
+			TURN torso to y-axis <-3> NOW;
+			TURN luparm to x-axis <-15> NOW;
+			TURN ruparm to x-axis <15> NOW;
+			TURN lleg to x-axis <33> NOW;
+			TURN lfoot to x-axis <-27> NOW;
+			TURN rleg to x-axis <30> NOW;
+			TURN rfoot to x-axis <-12> NOW;
+			SLEEP <110>;
+			}
+		IF (bMoving )
+			{
+			MOVE pelvis to y-axis <0> NOW;
+			TURN pelvis to x-axis <4> NOW;
+			TURN rthigh to x-axis <-25> NOW;
+			TURN lthigh to x-axis <-11> NOW;
+			TURN torso to y-axis <0> NOW;
+			TURN luparm to x-axis <-10> NOW;
+			TURN ruparm to x-axis <10> NOW;
+			TURN lleg to x-axis <47> NOW;
+			TURN rleg to x-axis <25> NOW;
+			TURN rfoot to x-axis <-15> NOW;
+			SLEEP <100>;
+			}
+		IF (bMoving )
+			{
+			MOVE pelvis to y-axis <0> NOW;
+			TURN pelvis to x-axis <3> NOW;
+			TURN rthigh to x-axis <6> NOW;
+			TURN lthigh to x-axis <-25> NOW;
+			TURN torso to y-axis <3> NOW;
+			TURN luparm to x-axis <0> NOW;
+			TURN ruparm to x-axis <0> NOW;
+			TURN lleg to x-axis <55> NOW;
+			TURN lfoot to x-axis <-26> NOW;
+			TURN rleg to x-axis <-7> NOW;
+			TURN rfoot to x-axis <-11> NOW;
+			SLEEP <90>;
+			}
+		IF (bMoving )
+			{
+			MOVE pelvis to y-axis <0> NOW;
+			TURN pelvis to x-axis <3> NOW;
+			TURN rthigh to x-axis <16> NOW;
+			TURN lthigh to x-axis <-39> NOW;
+			TURN torso to y-axis <5> NOW;
+			TURN luparm to x-axis <10> NOW;
+			TURN ruparm to x-axis <-10> NOW;
+			TURN lleg to x-axis <44> NOW;
+			TURN lfoot to x-axis <-23> NOW;
+			TURN rleg to x-axis <-3> NOW;
+			TURN rfoot to x-axis <-18> NOW;
+			SLEEP <100>;
+			}
+		MOVE pelvis to y-axis <0> NOW;
+		TURN pelvis to x-axis <3> NOW;
+		TURN rthigh to x-axis <22> NOW;
+		TURN lthigh to x-axis <-47> NOW;
+		TURN torso to y-axis <0> NOW;
+		TURN luparm to x-axis <0> NOW;
+		TURN ruparm to x-axis <0> NOW;
+		TURN lleg to x-axis <30> NOW;
+		TURN lfoot to x-axis <-7> NOW;
+		TURN rleg to x-axis <0> NOW;
+		TURN rfoot to x-axis <-23> NOW;
+		SLEEP <110>;
+	}
+walklegs()
+	{
+		IF (bMoving )
+			{
+			MOVE pelvis to y-axis <0> NOW;
+			TURN pelvis to x-axis <3> NOW;
+			TURN rthigh to x-axis <17> NOW;
+			TURN lthigh to x-axis <-41> NOW;
+			TURN lleg to x-axis <41> NOW;
+			TURN lfoot to x-axis <-4> NOW;
+			TURN rleg to x-axis <27> NOW;
+			TURN rfoot to x-axis <-27> NOW;
+			SLEEP <120>;
+			}
+		IF (bMoving )
+			{
+			MOVE pelvis to y-axis <0> NOW;
+			TURN pelvis to x-axis <5> NOW;
+			TURN rthigh to x-axis <7> NOW;
+			TURN lthigh to x-axis <-32> NOW;
+			TURN lleg to x-axis <32> NOW;
+			TURN lfoot to x-axis <-5> NOW;
+			TURN rleg to x-axis <39> NOW;
+			TURN rfoot to x-axis <-26> NOW;
+			SLEEP <110>;
+			}
+		IF (bMoving )
+			{
+			MOVE pelvis to y-axis <0> NOW;
+			TURN pelvis to x-axis <4> NOW;
+			TURN rthigh to x-axis <-10> NOW;
+			TURN lthigh to x-axis <-26> NOW;
+			TURN lfoot to x-axis <-9> NOW;
+			TURN rleg to x-axis <51> NOW;
+			SLEEP <100>;
+			}
+		IF (bMoving )
+			{
+			MOVE pelvis to y-axis <0> NOW;
+			TURN pelvis to x-axis <3> NOW;
+			TURN rthigh to x-axis <-19> NOW;
+			TURN lthigh to x-axis <1> NOW;
+			TURN lleg to x-axis <6> NOW;
+			TURN lfoot to x-axis <-8> NOW;
+			TURN rleg to x-axis <52> NOW;
+			TURN rfoot to x-axis <-22> NOW;
+			SLEEP <90>;
+			}
+		IF (bMoving )
+			{
+			MOVE pelvis to y-axis <0> NOW;
+			TURN pelvis to x-axis <3> NOW;
+			TURN rthigh to x-axis <-41> NOW;
+			TURN lthigh to x-axis <7> NOW;
+			TURN lleg to x-axis <9> NOW;
+			TURN lfoot to x-axis <-16> NOW;
+			TURN rleg to x-axis <50> NOW;
+			TURN rfoot to x-axis <-5> NOW;
+			SLEEP <100>;
+			}
+		IF (bMoving )
+			{
+			MOVE pelvis to y-axis <0> NOW;
+			TURN pelvis to x-axis <3> NOW;
+			TURN rthigh to x-axis <-49> NOW;
+			TURN lthigh to x-axis <11> NOW;
+			TURN lleg to x-axis <18> NOW;
+			TURN lfoot to x-axis <-22> NOW;
+			TURN rleg to x-axis <32> NOW;
+			SLEEP <110>;
+			}
+		IF (bMoving )
+			{
+			MOVE pelvis to y-axis <0> NOW;
+			TURN pelvis to x-axis <3> NOW;
+			TURN rthigh to x-axis <-44> NOW;
+			TURN lthigh to x-axis <18> NOW;
+			TURN lleg to x-axis <22> NOW;
+			TURN lfoot to x-axis <-26> NOW;
+			TURN rleg to x-axis <48> NOW;
+			TURN rfoot to x-axis <-8> NOW;
+			SLEEP <120>;
+			}
+		IF (bMoving )
+			{
+			MOVE pelvis to y-axis <0> NOW;
+			TURN pelvis to x-axis <5> NOW;
+			TURN rthigh to x-axis <-32> NOW;
+			TURN lthigh to x-axis <3> NOW;
+			TURN lleg to x-axis <43> NOW;
+			TURN lfoot to x-axis <-27> NOW;
+			TURN rleg to x-axis <40> NOW;
+			TURN rfoot to x-axis <-12> NOW;
+			SLEEP <110>;
+			}
+		IF (bMoving )
+			{
+			MOVE pelvis to y-axis <0> NOW;
+			TURN pelvis to x-axis <4> NOW;
+			TURN rthigh to x-axis <-25> NOW;
+			TURN lthigh to x-axis <-11> NOW;
+			TURN lleg to x-axis <62> NOW;
+			TURN rleg to x-axis <35> NOW;
+			TURN rfoot to x-axis <-15> NOW;
+			SLEEP <100>;
+			}
+		IF (bMoving )
+			{
+			MOVE pelvis to y-axis <0> NOW;
+			TURN pelvis to x-axis <3> NOW;
+			TURN rthigh to x-axis <6> NOW;
+			TURN lthigh to x-axis <-25> NOW;
+			TURN lleg to x-axis <71> NOW;
+			TURN lfoot to x-axis <-26> NOW;
+			TURN rleg to x-axis <3> NOW;
+			TURN rfoot to x-axis <-11> NOW;
+			SLEEP <90>;
+			}
+		IF (bMoving )
+			{
+			MOVE pelvis to y-axis <0> NOW;
+			TURN pelvis to x-axis <3> NOW;
+			TURN rthigh to x-axis <16> NOW;
+			TURN lthigh to x-axis <-39> NOW;
+			TURN lleg to x-axis <54> NOW;
+			TURN lfoot to x-axis <-23> NOW;
+			TURN rleg to x-axis <7> NOW;
+			TURN rfoot to x-axis <-18> NOW;
+			SLEEP <100>;
+			}
+		MOVE pelvis to y-axis <0> NOW;
+		TURN pelvis to x-axis <3> NOW;
+		TURN rthigh to x-axis <22> NOW;
+		TURN lthigh to x-axis <-47> NOW;
+		TURN lleg to x-axis <40> NOW;
+		TURN lfoot to x-axis <-7> NOW;
+		TURN rleg to x-axis <10> NOW;
+		TURN rfoot to x-axis <-23> NOW;
+		SLEEP <110>;
+	}
+stand()
+	{
+		MOVE pelvis to y-axis <0> SPEED <1>;
+		TURN pelvis to x-axis <0> SPEED <200>;
+		TURN rthigh to x-axis <0> SPEED <200>;
+		TURN rleg to x-axis <0> SPEED <200>;
+		TURN rfoot to x-axis <0> SPEED <200>;
+		TURN lthigh to x-axis <0> SPEED <200>;
+		TURN lleg to x-axis <0> SPEED <200>;
+		TURN lfoot to x-axis <0> SPEED <200>;
+		SLEEP <200>;
+	}
+
+MotionControl(moving,aiming)
+	{
+		WHILE ( TRUE )
+			{
+			moving = bMoving ;
+			aiming = bAiming ;
+			IF (moving )
+				{
+				IF (aiming )
+					{
+					bCanAim = TRUE;
+					CALL-SCRIPT walklegs();
+					}
+				IF (!aiming )
+					{
+					bCanAim = FALSE;
+					CALL-SCRIPT walk();
+					}
+				}
+			IF (!moving )
+				{
+				bCanAim = TRUE;
+				CALL-SCRIPT stand();
+				}
+			}
+	}
+Create()
+	{
+		HIDE flare2;
+		HIDE flare1;
+		HIDE flare3;
+		bMoving = FALSE;
+		bAiming = FALSE;
+		bCanAim = TRUE;
+		aimtype_0 = 0;
+		gun_0 = 0;
+		restore_delay = 3000;
+		START-SCRIPT MotionControl();
+	}
+StartMoving()
+	{
+		bMoving = TRUE;
+	}
+StopMoving()
+	{
+		bMoving = FALSE;
+	}
+SweetSpot(piecenum)
+	{
+		piecenum = torso;
+	}
+SetMaxReloadTime(time)
+	{
+		restore_delay = time * 2 ;
+	}
+RestoreAfterDelay2()
+	{
+		SLEEP restore_delay;
+		TURN missilepod to y-axis <0> SPEED <90>;
+	}
+RestoreAfterDelay()
+	{
+		SLEEP restore_delay;
+		TURN torso to y-axis <0> SPEED <90>;
+		TURN ruparm to x-axis <0> SPEED <45>;
+		TURN rloarm to x-axis <0> SPEED <45>;
+		TURN luparm to x-axis <0> SPEED <45>;
+		TURN lloarm to x-axis <0> SPEED <45>;
+		MOVE barrel1 to y-axis <0> SPEED <3>;
+		MOVE barrel2 to y-axis <0> SPEED <3>;
+		MOVE h2 to z-axis <0> SPEED <1>;
+		MOVE h4 to z-axis <0> SPEED <1>;
+		MOVE h1 to z-axis <0> SPEED <1>;
+		MOVE h3 to z-axis <0> SPEED <1>;
+		bAiming = FALSE;
+	}
+AimFromPrimary(piecenum)
+	{
+		piecenum = torso;
+	}
+QueryPrimary(piecenum)
+	{
+	If (gun_0==0)
+		{
+		piecenum = flare1;
+		}
+	If (gun_0==1)
+		{
+		piecenum = flare2;
+		}
+	}
+AimPrimary(heading,pitch)
+	{
+		IF (aimtype_0 == 1 )
+			{
+			RETURN ( 0 );
+			}
+		SIGNAL SIG_NUM1;
+		SET-SIGNAL-MASK SIG_NUM1;
+		bAiming = TRUE;
+		WHILE (!bCanaim )
+			{
+			SLEEP <100>;
+			}
+		TURN torso to y-axis heading SPEED <300>;
+		TURN ruparm to x-axis <-45> SPEED <45>;
+		TURN rloarm to x-axis <-45> SPEED <60>;
+		TURN luparm to x-axis <-45> SPEED <45>;
+		TURN lloarm to x-axis <-45> SPEED <60>;
+		MOVE barrel1 to y-axis <-3> SPEED <150>;
+		MOVE barrel2 to y-axis <-3> SPEED <150>;
+		MOVE h2 to z-axis <2> SPEED <150>;
+		MOVE h4 to z-axis <2> SPEED <150>;
+		MOVE h1 to z-axis <-2> SPEED <150>;
+		MOVE h3 to z-axis <-2> SPEED <150>;
+		WAIT-FOR-MOVE h2 along z-axis;
+		WAIT-FOR-MOVE h4 along z-axis;
+		WAIT-FOR-MOVE h3 along z-axis;
+		WAIT-FOR-MOVE h1 along z-axis;
+		WAIT-FOR-MOVE barrel1 along y-axis;
+		WAIT-FOR-MOVE barrel2 along y-axis;
+		WAIT-FOR-TURN torso around y-axis;
+		WAIT-FOR-TURN ruparm around x-axis;
+		WAIT-FOR-TURN rloarm around x-axis;
+		WAIT-FOR-TURN luparm around x-axis;
+		WAIT-FOR-TURN lloarm around x-axis;
+		START-SCRIPT RestoreAfterDelay();
+		RETURN ( TRUE );
+	}
+FirePrimary()
+	{
+	IF (gun_0==0)
+		{
+		MOVE barrel1 to y-axis <-1> SPEED <500>;
+		SHOW flare1;
+		SLEEP <100>;
+		WAIT-FOR-MOVE barrel1 along y-axis;
+		MOVE barrel1 to y-axis <-3> SPEED <3>;
+		HIDE flare1;
+		}
+	IF (gun_0==1)
+		{
+		MOVE barrel2 to y-axis <-1> SPEED <500>;
+		SHOW flare2;
+		SLEEP <100>;
+		WAIT-FOR-MOVE barrel2 along y-axis;
+		MOVE barrel2 to y-axis <-3> SPEED <3>;
+		HIDE flare2;
+		}
+	gun_0=gun_0+1;
+	If (gun_0==2)
+		{
+		gun_0=0;
+		}
+	}
+AimSecondary(heading,pitch)
+	{
+		SIGNAL SIG_NUM2;
+		SET-SIGNAL-MASK SIG_NUM2;
+		TURN missilepod to y-axis heading SPEED <100>;
+		WAIT-FOR-TURN missilepod around y-axis;
+		START-SCRIPT RestoreAfterDelay2();
+		RETURN ( TRUE );
+	}
+FireSecondary()
+	{
+		SHOW flare3;
+		SLEEP <100>;
+		HIDE flare3;
+	}
+AimFromSecondary(piecenum)
+	{
+		piecenum = missilepod;
+	}
+QuerySecondary(piecenum)
+	{
+		piecenum = flare3 ;
+	}
+Killed(severity,corpsetype)
+	{
+		HIDE flare2;
+		HIDE flare1;
+		HIDE flare3;
+		IF (severity <= 25 )
+			{
+			corpsetype = 1 ;
+			EXPLODE  ground type  	BITMAPONLY | BITMAP1;
+			EXPLODE  lhand type  	BITMAPONLY | BITMAP3;
+			EXPLODE  lloarm type  	BITMAPONLY | BITMAP5;
+			EXPLODE  lthigh type  	BITMAPONLY | BITMAP1;
+			EXPLODE  luparm type  	BITMAPONLY | BITMAP2;
+			EXPLODE  rfoot type  	BITMAPONLY | BITMAP5;
+			EXPLODE  rleg type  	BITMAPONLY | BITMAP1;
+			EXPLODE  rthigh type  	BITMAPONLY | BITMAP3;
+			EXPLODE  wing1 type  	BITMAPONLY | BITMAP3;
+			RETURN ( 0 );
+			}
+		IF (severity <= 50 )
+			{
+			corpsetype = 2 ;
+			EXPLODE  ground type  	BITMAPONLY | BITMAP1;
+			EXPLODE  lfoot type  	FALL | BITMAP2;
+			EXPLODE  hand type  	FALL | SMOKE | BITMAP3;
+			EXPLODE  lleg type  	FALL | BITMAP4;
+			EXPLODE  lloarm type  	FALL | SMOKE | BITMAP5;
+			EXPLODE  lthigh type  	FALL | BITMAP1;
+			EXPLODE  luparm type  	FALL | SMOKE | BITMAP2;
+			EXPLODE  pelvis type  	FALL | BITMAP3;
+			EXPLODE  rfoot type  	FALL | BITMAP5;
+			EXPLODE  rleg type  	FALL | SMOKE | BITMAP1;
+			EXPLODE  rloarm type  	FALL | BITMAP2;
+			EXPLODE  rthigh type  	FALL | SMOKE | BITMAP3;
+			EXPLODE  wing1 type  	FALL | SMOKE | BITMAP3;
+			EXPLODE  ruparm type  	FALL | BITMAP4;
+			EXPLODE  torso type  	SHATTER | BITMAP5;
+			RETURN ( 0 );
+			}
+		IF (severity <= 99 )
+			{
+			corpsetype = 2 ;
+			EXPLODE  ground type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+			EXPLODE  lfoot type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+			EXPLODE  hand type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+			EXPLODE  lleg type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+			EXPLODE  lloarm type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+			EXPLODE  lthigh type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+			EXPLODE  luparm type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+			EXPLODE  pelvis type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+			EXPLODE  rfoot type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+			EXPLODE  rleg type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+			EXPLODE  rloarm type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+			EXPLODE  rthigh type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+			EXPLODE  wing1 type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+			EXPLODE  wing2 type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+			EXPLODE  ruparm type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+			EXPLODE  torso type  	SHATTER | BITMAP5;
+			RETURN ( 0 );
+			}
+		corpsetype = 3 ;
+		EXPLODE  ground type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		EXPLODE  lfoot type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		EXPLODE  hand type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		EXPLODE  lleg type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		EXPLODE  lloarm type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+		EXPLODE  lthigh type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		EXPLODE  luparm type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		EXPLODE  pelvis type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		EXPLODE  rfoot type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+		EXPLODE  rleg type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		EXPLODE  rloarm type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		EXPLODE  rthigh type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		EXPLODE  wing1 type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		EXPLODE  ruparm type  	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		EXPLODE  torso type  	SHATTER | EXPLODE_ON_HIT | BITMAP5;
+	}
+

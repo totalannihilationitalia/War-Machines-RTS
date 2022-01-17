@@ -1,0 +1,363 @@
+#define TA			// This is a TA script
+
+#include "sfxtype.h"
+#include "exptype.h"
+
+piece  base;
+
+static-var  Static_Var_1, statechg_DesiredState, statechg_StateChanging;
+
+
+activatescr()
+{
+	if( TRUE )
+	{
+//		move shell to y-axis [0.000000] now;
+//		move shell to y-axis [3.300000] speed [8.000000];
+		sleep 462;
+	}
+	if( TRUE )
+	{
+		sleep 135;
+	}
+	if( TRUE )
+	{
+/*		move leg1 to x-axis [4.450000] speed [9.000000];
+		move leg1 to z-axis [4.489990] speed [9.000000];
+		move leg2 to x-axis [-4.550000] speed [9.000000];
+		move leg2 to z-axis [4.500000] speed [9.000000];
+		move leg3 to x-axis [-4.339990] speed [9.000000];
+		move leg3 to z-axis [-4.450000] speed [9.000000];
+		move leg4 to x-axis [4.400000] speed [9.000000];
+		move leg4 to z-axis [-4.379999] speed [9.000000];
+*/	//	turn wing1 to z-axis <0.000000> speed <0.000000>;
+		sleep 472;
+	}
+	if( TRUE )
+	{
+		sleep 254;
+	}
+	if( TRUE )
+	{
+//		turn wing1 to z-axis <-90.016484> speed <242.000000>;
+//		turn wing2 to z-axis <90.016484> speed <242.000000>;
+		sleep 372;
+	}
+	if( TRUE )
+	{
+//		turn wing1 to z-axis <-225.049451> speed <365.000000>;
+//		turn wing2 to z-axis <225.049451> speed <365.000000>;
+		sleep 381;
+	}
+	if( TRUE )
+	{
+//		move wing3 to y-axis [0.300000] speed [1.000000];
+//		move wing4 to y-axis [0.300000] speed [1.000000];
+		sleep 226;
+	}
+	if( TRUE )
+	{
+//		move wing3 to y-axis [0.000000] speed [0.000000];
+//		move wing4 to y-axis [0.000000] speed [0.000000];
+//		turn wing3 to x-axis <-90.016484> speed <246.000000>;
+//		turn wing4 to x-axis <91.016484> speed <249.000000>;
+		sleep 365;
+	}
+	if( TRUE )
+	{
+/*		move wing3 to y-axis [0.300000] speed [0.000000];
+		move wing4 to y-axis [0.300000] speed [0.000000];
+		turn wing3 to x-axis <-225.049451> speed <446.000000>;
+*///		turn wing4 to x-axis <225.049451> speed <442.000000>;
+		sleep 312;
+	}
+	sleep 33;
+}
+
+deactivatescr()
+{
+	if( TRUE )
+	{
+/*		move shell to y-axis [3.300000] now;
+		move leg1 to x-axis [4.450000] now;
+		move leg1 to z-axis [4.489990] now;
+		move leg2 to x-axis [-4.550000] now;
+		move leg2 to z-axis [4.500000] now;
+		move leg3 to x-axis [-4.339990] now;
+		move leg3 to z-axis [-4.450000] now;
+		move leg4 to x-axis [4.400000] now;
+		move leg4 to z-axis [-4.379999] now;
+		move wing3 to y-axis [0.300000] now;
+		move wing3 to y-axis [0.000000] speed [0.000000];
+		move wing4 to y-axis [0.300000] now;
+		move wing4 to y-axis [0.000000] speed [0.000000];
+		turn wing1 to z-axis <-225.049451> now;
+		turn wing2 to z-axis <225.049451> now;
+		turn wing3 to x-axis <-225.049451> now;
+		turn wing3 to x-axis <-90.016484> speed <321.000000>;
+		turn wing4 to x-axis <225.049451> now;
+*/	//	turn wing4 to x-axis <91.016484> speed <318.000000>;
+		sleep 433;
+	}
+	if( TRUE )
+	{
+/*		move wing3 to y-axis [0.300000] speed [0.000000];
+		move wing4 to y-axis [0.300000] speed [0.000000];
+		turn wing3 to x-axis <0.000000> speed <207.000000>;
+*/	//	turn wing4 to x-axis <0.000000> speed <210.000000>;
+		sleep 434;
+	}
+	if( TRUE )
+	{
+//		move wing3 to y-axis [0.000000] speed [1.000000];
+//		move wing4 to y-axis [0.000000] speed [1.000000];
+		sleep 204;
+	}
+	if( TRUE )
+	{
+//		turn wing1 to z-axis <-90.016484> speed <324.000000>;
+//		turn wing2 to z-axis <90.016484> speed <324.000000>;
+		sleep 429;
+	}
+	if( TRUE )
+	{
+//		turn wing1 to z-axis <0.000000> speed <209.000000>;
+//		turn wing2 to z-axis <0.000000> speed <209.000000>;
+		sleep 429;
+	}
+	if( TRUE )
+	{
+		sleep 139;
+	}
+	if( TRUE )
+	{
+/*		move leg1 to x-axis [0.000000] speed [11.000000];
+		move leg1 to z-axis [0.000000] speed [11.000000];
+		move leg2 to x-axis [0.000000] speed [11.000000];
+		move leg2 to z-axis [0.000000] speed [11.000000];
+		move leg3 to x-axis [0.000000] speed [11.000000];
+		move leg3 to z-axis [0.000000] speed [11.000000];
+		move leg4 to x-axis [0.000000] speed [11.000000];
+		move leg4 to z-axis [0.000000] speed [11.000000];
+		turn wing1 to z-axis <0.000000> speed <0.000000>;
+*/		sleep 381;
+	}
+	if( TRUE )
+	{
+		sleep 122;
+	}
+	if( TRUE )
+	{
+//		move shell to y-axis [0.000000] speed [12.000000];
+		sleep 337;
+	}
+	sleep 52;
+}
+
+SmokeUnit(healthpercent, sleeptime, smoketype)
+{
+	while( get BUILD_PERCENT_LEFT )
+	{
+		sleep 400;
+	}
+	while( TRUE )
+	{
+		healthpercent = get HEALTH;
+		if( healthpercent < 66 )
+		{
+			smoketype = 256 | 2;
+			if( Rand( 1, 66 ) < healthpercent )
+			{
+				smoketype = 256 | 1;
+			}
+			emit-sfx smoketype from base;
+		}
+		sleeptime = healthpercent * 50;
+		if( sleeptime < 200 )
+		{
+			sleeptime = 200;
+		}
+		sleep sleeptime;
+	}
+}
+
+OpenYard()
+{
+	set YARD_OPEN to 1;
+	while( !get YARD_OPEN )
+	{
+		set BUGGER_OFF to 1;
+		sleep 1500;
+		set YARD_OPEN to 1;
+	}
+	set BUGGER_OFF to 0;
+}
+
+CloseYard()
+{
+	set YARD_OPEN to 0;
+	while( get YARD_OPEN )
+	{
+		set BUGGER_OFF to 1;
+		sleep 1500;
+		set YARD_OPEN to 0;
+	}
+	set BUGGER_OFF to 0;
+}
+
+InitState()
+{
+	statechg_DesiredState = TRUE;
+	statechg_StateChanging = FALSE;
+}
+
+RequestState(requestedstate, currentstate)
+{
+	if( statechg_StateChanging )
+	{
+		statechg_DesiredState = requestedstate;
+		return (0);
+	}
+	statechg_StateChanging = TRUE;
+	currentstate = statechg_DesiredState;
+	statechg_DesiredState = requestedstate;
+	while( statechg_DesiredState != currentstate )
+	{
+		if( statechg_DesiredState == 0 )
+		{
+			call-script activatescr();
+			currentstate = 0;
+		}
+		if( statechg_DesiredState == 1 )
+		{
+			call-script deactivatescr();
+			currentstate = 1;
+		}
+	}
+	statechg_StateChanging = FALSE;
+}
+
+Create()
+{
+	dont-shade base;
+/*	dont-shade leg1;
+	dont-shade leg2;
+	dont-shade leg3;
+	dont-shade leg4;
+	dont-shade shell;
+	dont-shade wing1;
+	dont-shade wing2;
+	dont-shade wing3;
+	dont-shade wing4;
+	dont-cache leg1;
+	dont-cache leg2;
+	dont-cache leg3;
+	dont-cache leg4;
+	dont-cache shell;
+	dont-cache wing1;
+	dont-cache wing2;
+	dont-cache wing3;
+	dont-cache wing4;
+*/	call-script InitState();
+	start-script SmokeUnit();
+	Static_Var_1 = 0;
+}
+
+Activate()
+{
+	if( Static_Var_1 )
+	{
+		set ACTIVATION to 0;
+		return (0);
+	}
+	set ARMORED to 0;
+	start-script RequestState(0);
+}
+
+Deactivate()
+{
+	set ARMORED to 1;
+	start-script RequestState(1);
+}
+
+HitByWeapon(Func_Var_1, Func_Var_2)
+{
+	if( get ACTIVATION )
+	{
+		Static_Var_1 = 1;
+	}
+	if( Static_Var_1 )
+	{
+		signal 2;
+		set-signal-mask 2;
+		set ACTIVATION to 0;
+		sleep 8000;
+		Static_Var_1 = 0;
+		set ACTIVATION to 100;
+	}
+}
+
+SweetSpot(piecenum)
+{
+	piecenum = base;
+}
+
+Killed(severity, corpsetype)
+{
+	if( severity <= 25 )
+	{
+		corpsetype = 1;
+		explode base type BITMAPONLY | BITMAP1;
+/*		explode leg1 type BITMAPONLY | BITMAP2;
+		explode leg2 type BITMAPONLY | BITMAP3;
+		explode leg3 type BITMAPONLY | BITMAP4;
+		explode leg4 type BITMAPONLY | BITMAP5;
+		explode shell type BITMAPONLY | BITMAP1;
+		explode wing1 type BITMAPONLY | BITMAP2;
+		explode wing2 type BITMAPONLY | BITMAP3;
+		explode wing3 type BITMAPONLY | BITMAP4;
+		explode wing4 type BITMAPONLY | BITMAP5;
+*/		return (0);
+	}
+	if( severity <= 50 )
+	{
+		corpsetype = 2;
+		explode base type BITMAPONLY | BITMAP1;
+/*		explode leg1 type SHATTER | BITMAP2;
+		explode leg2 type SHATTER | BITMAP3;
+		explode leg3 type BITMAPONLY | BITMAP4;
+		explode leg4 type BITMAPONLY | BITMAP5;
+		explode shell type BITMAPONLY | BITMAP1;
+		explode wing1 type FALL | BITMAP2;
+		explode wing2 type FALL | BITMAP3;
+		explode wing3 type BITMAPONLY | BITMAP4;
+		explode wing4 type BITMAPONLY | BITMAP5;
+*/		return (0);
+	}
+	if( severity <= 99 )
+	{
+		corpsetype = 3;
+		explode base type BITMAPONLY | BITMAP1;
+/*		explode leg1 type SHATTER | BITMAP2;
+		explode leg2 type SHATTER | BITMAP3;
+		explode leg3 type BITMAPONLY | BITMAP4;
+		explode leg4 type BITMAPONLY | BITMAP5;
+		explode shell type BITMAPONLY | BITMAP1;
+		explode wing1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode wing2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode wing3 type BITMAPONLY | BITMAP4;
+		explode wing4 type BITMAPONLY | BITMAP5;
+*/		return (0);
+	}
+	corpsetype = 3;
+	explode base type BITMAPONLY | BITMAP1;
+/*	explode leg1 type SHATTER | EXPLODE_ON_HIT | BITMAP2;
+	explode leg2 type SHATTER | EXPLODE_ON_HIT | BITMAP3;
+	explode leg3 type BITMAPONLY | BITMAP4;
+	explode leg4 type BITMAPONLY | BITMAP5;
+	explode shell type BITMAPONLY | BITMAP1;
+	explode wing1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	explode wing2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+	explode wing3 type BITMAPONLY | BITMAP4;
+	explode wing4 type BITMAPONLY | BITMAP5;
+*/}

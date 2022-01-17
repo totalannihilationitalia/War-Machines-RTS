@@ -1,0 +1,18 @@
+[CORFFF_dead]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=core_corpses;
+	object=CORFFF_dead;
+	footprintx=9;
+	footprintz=8;
+	height=4;
+	blocking=0;
+	hitdensity=100;
+	metal=17545;
+	damage=6931;
+	reclaimable=1;
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}
+

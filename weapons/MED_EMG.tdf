@@ -1,0 +1,49 @@
+[MED_EMG]
+{
+	name=E.M.G.;
+	rendertype=4;
+	lineofsight=1;
+	turret=0;
+	range=350;
+	reloadtime=0.7;
+	weapontimer=1;
+	weaponvelocity=350;
+	sprayangle=1024;
+	areaofeffect=8;
+	burst=3;
+	burstrate=0.25;
+	size=2.25;
+	rgbcolor=1 0.95 0.4;
+	intensity=0.8;
+	soundstart=brawlemg;
+	tolerance=6000;
+	pitchtolerance=12000;
+	startsmoke=0;
+	endsmoke=0;
+	explosiongenerator=custom:BRAWLIMPACTS;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	impactonly=1;
+	[DAMAGE]
+	{
+		default=9;
+		COMMANDERS=2;
+		FLAKS=3;
+		FLAKBOATS=3;
+		VTRANS=1;
+		L1FIGHTERS=1;
+		L2FIGHTERS=1;
+		L1BOMBERS=1;
+		L2BOMBERS=1;
+		GUNSHIPS=1;
+		HGUNSHIPS=1;
+		VRADAR=1;
+		VTOL=1;
+		L1SUBS=1;
+		L2SUBS=1;
+		L3SUBS=1;
+	}
+}

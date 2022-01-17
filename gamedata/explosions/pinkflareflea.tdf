@@ -1,0 +1,81 @@
+[pinkflareflea]
+{
+	usedefaultexplosions=0; //era 1	
+
+   [LARGEFLASH]
+  {
+	class = CBitmapMuzzleFlame;
+      
+	[properties]
+      	{
+         	dir = dir;
+       	colorMap=1 0 1 0.01    1 0 1 0.01    1 0 1 0.01; 
+          	size=6;
+         	length=28;
+         	sizeGrowth=-0.65;
+         	ttl=8;
+          	frontOffset=0;
+          	sideTexture=lesslag; //muzzleside;
+         	frontTexture=muzzlefront;
+     	}
+  water=1;
+   air=1;
+   underwater=1;
+   ground=1;
+   count=1;
+   }
+	[RealFlare] //flash da dove parte il laser
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+			sizeGrowth=0.0;
+			sizeMod=0.5;
+			pos=0, 0, 0;
+			emitVector=dir;
+			gravity=0, 0, 0;
+       	colorMap=1 0 1 0.01    1 0 1 0.01    1 0 1 0.01; 
+			Texture=light;
+			airdrag=0.8;
+			particleLife=7;
+			particleLifeSpread=5;
+			numParticles=1;
+			particleSpeed=0;
+			particleSpeedSpread=0;
+ 			particleSize=25;
+			particleSizeSpread=25;
+			emitRot=0;
+			emitRotSpread=10;
+			directional=0;
+		}
+		air=1;
+		water=1;
+		ground=1;
+		count=1;
+	}
+
+	[groundflash]
+	{
+		flashSize = 20;
+		flashAlpha = 0.25;
+		circleGrowth = 0;
+		circleAlpha = 0.1;
+		ttl = 15;
+		color = 0,0.5,1;
+
+	}
+}
+[REDFLASH]
+{
+	usedefaultexplosions=1;	
+	[groundflash]
+	{
+		flashSize = 20;
+		flashAlpha = 0.25;
+		circleGrowth = 0;
+		circleAlpha = 0.1;
+		ttl = 15;
+		color = 0,0.5,1;
+
+	}
+}

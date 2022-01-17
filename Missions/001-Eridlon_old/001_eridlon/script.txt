@@ -1,0 +1,146 @@
+[GAME]
+{
+	MapName=Eridlon Island;
+	StartMetal=1000;
+	StartEnergy=1000;
+	StartposType=3;
+	GameMode=0;
+	GameType=Eridlon mission;
+	LimitDGun=0;
+	DiminishingMMs=0;
+	GhostedBuildings=1;
+	HostIP=127.0.0.1;
+	HostPort=8452;
+	IsHost=1;
+	MyPlayerNum=0;
+	MyPlayerName=Giocatore_1;
+	NumPlayers=1;
+	NumTeams=6;
+	NumUsers=6;
+	NumRestrictions=0;
+	MaxSpeed=20;
+	MinSpeed=0.1;
+	[MODOPTIONS]
+	{
+
+	}
+	[PLAYER0]
+	{
+		Name=Giocatore_1;
+		Spectator=0;
+		Team=0;
+	}
+	[AI1]
+	{
+		Name=Asiatic Legion alfa;
+		ShortName=NullAI;
+		Team=1;
+		IsFromDemo=0;
+		Host=0;
+		[Options] {}
+	}
+	[AI2]
+	{
+		Name=Giocatore_2;
+		ShortName=NullAI;
+		Team=2;
+		IsFromDemo=0;
+		Host=0;
+		[Options] {}
+	}
+	[AI3]
+	{
+		Name=EU Force;
+		ShortName=NullAI;
+		Team=3;
+		IsFromDemo=0;
+		Host=0;
+		[Options] {}
+	}
+	[AI4]
+	{
+		Name=Asiatic Legion bravo;
+		ShortName=NullAI;
+		Team=4;
+		IsFromDemo=0;
+		Host=0;
+		[Options] {}
+	}
+	[AI5]
+	{
+		Name=Asiatic Legion charlie;
+		ShortName=NullAI;
+		Team=5;
+		IsFromDemo=0;
+		Host=0;
+		[Options] {}
+	}
+	[TEAM0]
+	{
+		TeamLeader=0;
+		AllyTeam=0;
+		RGBColor=0 0 1;
+		Side=ICU;
+		Handicap=0;
+		StartPosX=0;
+		StartPosZ=0;
+	}
+	[TEAM1]
+	{
+		TeamLeader=0;
+		AllyTeam=1;
+		RGBColor=1 0 0;
+		Side=ICU;
+		Handicap=0;
+		StartPosX=0;
+		StartPosZ=0;
+	}
+	[TEAM2]
+	{
+		TeamLeader=0;
+		AllyTeam=0;
+		RGBColor=0 1 1;
+		Side=ICU;
+		Handicap=0;
+		StartPosX=0;
+		StartPosZ=0;
+	}
+	[TEAM3]
+	{
+		TeamLeader=0;
+		AllyTeam=0;
+		RGBColor=0 1 0;
+		Side=ICU;
+		Handicap=0;
+		StartPosX=0;
+		StartPosZ=0;
+	}
+	[TEAM4]
+	{
+		TeamLeader=0;
+		AllyTeam=1;
+		RGBColor=1 1 0;
+		Side=ICU;
+		Handicap=0;
+		StartPosX=0;
+		StartPosZ=0;
+	}
+	[TEAM5]
+	{
+		TeamLeader=0;
+		AllyTeam=1;
+		RGBColor=1 0 1;
+		Side=ICU;
+		Handicap=0;
+		StartPosX=0;
+		StartPosZ=0;
+	}
+	[ALLYTEAM0]
+	{
+		NumAllies=0;
+	}
+	[ALLYTEAM1]
+	{
+		NumAllies=0;
+	}
+}

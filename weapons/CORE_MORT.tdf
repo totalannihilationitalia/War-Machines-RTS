@@ -1,0 +1,37 @@
+[CORE_MORT]
+{
+	name=PlasmaCannon;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+	minbarrelangle=-35;
+	range=850;
+	reloadtime=1.6;
+	weaponvelocity=450;
+	areaofeffect=36;
+	soundstart=cannon1;
+	soundhit=xplomed3;
+	explosiongenerator=custom:CORE_FIRE_SMALL;
+	startsmoke=1;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=105;
+		VTRANS=14;
+		L1FIGHTERS=14;
+		L2FIGHTERS=14;
+		L1BOMBERS=14;
+		L2BOMBERS=14;
+		GUNSHIPS=14;
+		HGUNSHIPS=14;
+		VRADAR=14;
+		VTOL=14;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+	}
+}

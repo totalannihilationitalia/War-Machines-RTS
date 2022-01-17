@@ -1,0 +1,36 @@
+[COR_GOL]
+{
+	name=HeavyCannon;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+	range=750; //650
+	reloadtime=3;
+	weaponvelocity=310;
+	areaofeffect=292;
+	soundstart=cannhvy2;
+	soundhit=xplomed4;
+	explosiongenerator=custom:FLASH96;
+	startsmoke=1;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=900;
+		VTRANS=55;
+		L1FIGHTERS=55;
+		L2FIGHTERS=55;
+		L1BOMBERS=55;
+		L2BOMBERS=55;
+		GUNSHIPS=55;
+		HGUNSHIPS=55;
+		VRADAR=55;
+		VTOL=55;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+	}
+}

@@ -1,0 +1,500 @@
+[popupcannon]   // <---ITS A YELLOWTHING //
+{
+	usedefaultexplosions=1;	
+[watercloud2]
+   		{
+	class=heatcloud;
+      		[properties]
+      		{
+		Texture=water;
+      		heat = 15;
+      		maxheat = 15;
+      		heatFalloff = 0.555;
+      		size = 26.67;
+      		sizeGrowth = -.8;
+      		sizemod = 26.67;
+      		sizemodmod = 0;
+      		speed = -0.3 r0.6, -0.3 r0.6, -0.3 r0.6;
+      		pos = 2.4 r-3.9, 1.5 r-0.8, 2.4 r-3.9;
+      		}
+	air=0;
+      	water=1;
+      	ground=0;
+      	count=5;
+	}
+[watercloud]
+   		{
+	class=heatcloud;
+      		[properties]
+      		{
+		Texture=water;
+      		heat = 15;
+      		maxheat = 15;
+      		heatFalloff = 0.333;
+      		size = 18.67;
+      		sizeGrowth = 0.1;
+      		sizemod = 18.67;
+      		sizemodmod = 0;
+      		speed = -0.4 r0.8, -0.4 r0.8, -0.4 r0.8;
+      		pos = 0.4 r-0.8, 1.5 r-0.2, 0.4 r-0.8;
+      		}
+	air=0;
+      	water=1;
+      	ground=0;
+      	count=10;
+	}
+[heatcloud]
+   		{
+      		[properties]
+      		{
+		Texture=Yellowblast;
+      		heat = 15;
+      		maxheat = 15;
+      		heatFalloff = 0.333;
+      		size = 18.67;
+      		sizeGrowth = 0.1;
+      		sizemod = 18.67;
+      		sizemodmod = 0;
+      		speed = -0.4 r0.8, -0.4 r0.8, -0.4 r0.8;
+      		pos = 0.4 r-0.8, 1.5 r-0.2, 0.4 r-0.8;
+      		}
+	air=1;
+      	water=0;
+      	ground=1;
+      	count=10;
+	}
+[heatcloud2]
+   		{
+	class=heatcloud;
+      		[properties]
+      		{
+		Texture=Yellowblast3;
+      		heat = 15;
+      		maxheat = 15;
+      		heatFalloff = 0.555;
+      		size = 26.67;
+      		sizeGrowth = -.8;
+      		sizemod = 26.67;
+      		sizemodmod = 0;
+      		speed = -0.3 r0.6, -0.3 r0.6, -0.3 r0.6;
+      		pos = 2.4 r-3.9, 1.5 r-0.8, 2.4 r-3.9;
+      		}
+	air=1;
+      	water=0;
+      	ground=1;
+      	count=10;
+	}
+[heatcloud_South]
+   		{
+	class=heatcloud;
+      		[properties]
+      		{
+		Texture=Yellowblast4;
+      		heat = 15;
+      		maxheat = 15;
+      		heatFalloff = 0.66;
+      		size = 	5.67;
+      		sizeGrowth = 1.0;
+      		sizemod = 5.67;
+      		sizemodmod = 0;
+      		speed = 0, 0, 1.0;
+      		pos = 0, 1, 0;
+      		}
+	air=1;
+      	water=1;
+      	ground=1;
+      	count=1;
+	}
+[heatcloud_North]
+   		{
+	class=heatcloud;
+      		[properties]
+      		{
+		Texture=Yellowblast4;
+      		heat = 15;
+      		maxheat = 15;
+      		heatFalloff = 0.66;
+      		size = 	5.67;
+      		sizeGrowth = 1.0;
+      		sizemod = 5.67;
+      		sizemodmod = 0;
+      		speed = 0, 0, -1.0;
+      		pos = 0, 1, 0;
+      		}
+	air=1;
+      	water=1;
+      	ground=1;
+      	count=1;
+	}
+[heatcloud_TRUEUP]
+   		{
+	class=heatcloud;
+      		[properties]
+      		{
+		Texture=Yellowblast4;
+      		heat = 15;
+      		maxheat = 15;
+      		heatFalloff = 0.66;
+      		size = 	5.67;
+      		sizeGrowth = 1.0;
+      		sizemod = 5.67;
+      		sizemodmod = 0;
+      		speed = 0, 1.0, 0;
+      		pos = 0, 1, 0;
+      		}
+	air=1;
+      	water=1;
+      	ground=1;
+      	count=1;
+	}
+[heatcloud_West]
+   		{
+	class=heatcloud;
+      		[properties]
+      		{
+		Texture=Yellowblast4;
+      		heat = 15;
+      		maxheat = 15;
+      		heatFalloff = 0.66;
+      		size = 	5.67;
+      		sizeGrowth = 1.0;
+      		sizemod = 5.67;
+      		sizemodmod = 0;
+      		speed = -1.0, 0, 0;
+      		pos = 1, 2, 0;
+      		}
+	air=1;
+      	water=1;
+      	ground=1;
+      	count=1;
+	}
+[heatcloud_East]
+   		{
+	class=heatcloud;
+      		[properties]
+      		{
+		Texture=Yellowblast4;
+      		heat = 15;
+      		maxheat = 15;
+      		heatFalloff = 0.66;
+      		size = 	5.67;
+      		sizeGrowth = 1.0;
+      		sizemod = 5.67;
+      		sizemodmod = 0;
+      		speed = 1.0, 0, 0;
+      		pos = -1, 2, 0;
+      		}
+	air=1;
+      	water=1;
+      	ground=1;
+      	count=1;
+	}
+
+[heatcloud_South2]
+   		{
+	class=heatcloud;
+      		[properties]
+      		{
+		Texture=Yellowblast2;
+      		heat = 15;
+      		maxheat = 15;
+      		heatFalloff = 0.7;
+      		size = 	5.67;
+      		sizeGrowth = 1.0;
+      		sizemod = 5.67;
+      		sizemodmod = 0;
+      		speed = 0, 0, 1.0;
+      		pos = 0, 1, 0;
+      		}
+	air=1;
+      	water=1;
+      	ground=1;
+      	count=1;
+	}
+[heatcloud_North2]
+   		{
+	class=heatcloud;
+      		[properties]
+      		{
+		Texture=Yellowblast2;
+      		heat = 15;
+      		maxheat = 15;
+      		heatFalloff = 0.7;
+      		size = 	5.67;
+      		sizeGrowth = 1.0;
+      		sizemod = 5.67;
+      		sizemodmod = 0;
+      		speed = 0, 0, -1.0;
+      		pos = 0, 1, 0;
+      		}
+	air=1;
+      	water=1;
+      	ground=1;
+      	count=1;
+	}
+[heatcloud_TRUEUP2]
+   		{
+	class=heatcloud;
+      		[properties]
+      		{
+		Texture=Yellowblast2;
+      		heat = 15;
+      		maxheat = 15;
+      		heatFalloff = 0.7;
+      		size = 	5.67;
+      		sizeGrowth = 1.0;
+      		sizemod = 5.67;
+      		sizemodmod = 0;
+      		speed = 0, 1.0, 0;
+      		pos = 0, 1, 0;
+      		}
+	air=1;
+      	water=1;
+      	ground=1;
+      	count=1;
+	}
+[heatcloud_West2]
+   		{
+	class=heatcloud;
+      		[properties]
+      		{
+		Texture=Yellowblast2;
+      		heat = 15;
+      		maxheat = 15;
+      		heatFalloff = 0.7;
+      		size = 	5.67;
+      		sizeGrowth = 1.0;
+      		sizemod = 5.67;
+      		sizemodmod = 0;
+      		speed = -1.0, 0, 0;
+      		pos = 1, 2, 0;
+      		}
+	air=1;
+      	water=1;
+      	ground=1;
+      	count=1;
+	}
+[heatcloud_East2]
+   		{
+	class=heatcloud;
+      		[properties]
+      		{
+		Texture=Yellowblast2;
+      		heat = 15;
+      		maxheat = 15;
+      		heatFalloff = 0.7;
+      		size = 	5.67;
+      		sizeGrowth = 1.0;
+      		sizemod = 5.67;
+      		sizemodmod = 0;
+      		speed = 1.0, 0, 0;
+      		pos = -1, 2, 0;
+      		}
+	air=1;
+      	water=1;
+      	ground=1;
+      	count=1;
+	}
+	[burnstuff]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0;
+		sizeMod=1.0;
+		pos=0, 0, 0; 
+		emitVector=0, 1, 0;
+	      gravity=0, -0.3, 0;  
+		colorMap=1 1 1 0.01   1 0.7 0.2 0.01   0 0 0 0.01;
+		Texture=flamespark;
+		airdrag=0.96;
+		particleLife=48;
+		particleLifeSpread=1;
+		numParticles=20;
+		particleSpeed=10.5;
+		particleSpeedSpread=3.8;
+		particleSize=4.6;
+		particleSizeSpread=2.0;
+		emitRot=35;
+		emitRotSpread=85;
+		directional=1;
+		alwaysVisible=1;
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+	[windsphereBIG]
+	{
+		class=CSpherePartSpawner;
+		[properties]
+		{
+			ttl=16;
+			alpha=0.2;
+			expansionSpeed=4 r4;
+			color=1.0, 0.9, 0.7;
+		}
+		ground=1;
+		air=1;
+		count=1;
+	}
+	[windspheresmall]
+	{
+		class=CSpherePartSpawner;
+		[properties]
+		{
+			ttl=28;
+			alpha=0.3;
+			expansionSpeed=1 r1;
+			color=1.0, 0.9, 0.6;
+		}
+		ground=1;
+		air=1;
+		count=1;
+	}
+	[groundflash]
+	{
+      		flashSize = 107;
+      		flashAlpha = 0.55;
+      		circleGrowth = 1;
+      		circleAlpha = 0.55;
+      		ttl = 30;
+      		color = 0.7, 0.5, 0.0;
+		air=1;
+     		ground=1;
+      		water=1;
+
+	}
+}
+[EMGFLASH]//Makes Emgs(peewees) look stronger and makes more smoke Nanoblobs
+{
+usedefaultexplosions=1;	
+[groundflash]
+   	{
+      	flashSize = 11; //5//
+      	flashAlpha = 1.5; //0.9//
+      	circleGrowth = 0;
+      	circleAlpha = 0.35; //0//
+      	ttl = 15;
+	color = 0.916, 0.980, 0.566; //0.8,1,0.9//
+	air=1;
+     	ground=1;
+      	water=1;
+	}
+	[smoke]
+	{
+	[properties]
+      		{
+         		color = 0.5;
+         		startSize = 0.4;
+         		sizeExpansion = 0.3;
+         		ageSpeed=0.03;
+         		size = 1.25;
+         		sizeGrowth = -1.5;
+         		pos = 5 r-5, 5 r-5, 5 r-5;
+         		speed=0, 1 r0.3, 0;
+      		}
+	air=1;
+      	water=1;
+      	ground=1;
+      	count=2;
+   	}
+[burnstuff]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0;
+		sizeMod=1.0;
+		pos=0, 0, 0; 
+		emitVector=0, 1, 0;
+	      gravity=0, -0.4, 0;  
+		colorMap=1 1 1 0.01   1 0.7 0.2 0.01   0 0 0 0.01;
+		Texture=flamespark;
+		airdrag=0.91;
+		particleLife=8;
+		particleLifeSpread=2;
+		numParticles=3;
+		particleSpeed=10.5;
+		particleSpeedSpread=1.8;
+		particleSize=3.9;
+		particleSizeSpread=1.6;
+		emitVector=dir; //direction of particles//
+		emitRot=33;
+		emitRotSpread=18; 
+		directional=1; 
+		alwaysVisible=1;
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+
+}
+[PURPLELASER]//use for solid beams, not pulses
+{
+	usedefaultexplosions=0;	
+	[groundflash]
+	{
+		flashSize = 10.0;
+		flashAlpha = 3;
+		circleGrowth = 3;
+		circleAlpha = 0.555;
+		ttl = 6;
+		color = 0.11, 0.033, 0.5;
+	}
+	[PURPLEsphere]
+	{
+		class=CSpherePartSpawner;
+		[properties]
+		{
+			ttl=3 r7;
+			alpha=0.3 r0.3;
+			expansionSpeed=2 r3;
+		color = 0.11, 0.033, 0.5;
+		}
+		ground=1;
+		air=1;
+		count=1;
+	}
+[heatcloud]
+   		{
+      		[properties]
+      		{
+		Texture=purplecloud;
+      		heat = 15;
+      		maxheat = 15;
+      		heatFalloff = 1;
+      		size = 1.15;
+      		sizeGrowth = 0.5;
+      		sizemod = 0;
+      		sizemodmod = 0;
+      		speed = 0, 0.45r, 0;
+      		pos = 0, -0.55, 0;
+      		}
+	air=1;
+      	water=1;
+      	ground=1;
+      	count=4;
+	}
+[smoke]
+	{
+	[properties]
+      		{
+         		color = 5.0;
+         		startSize = 1.25;
+         		sizeExpansion = 0.4;
+         		ageSpeed=0.03;
+         		size = 1.25;
+         		sizeGrowth = 0.75;
+         		pos = 0, -2, 0;
+         		speed=0, 0.33, 0;
+      		}
+	air=1;
+      	water=1;
+      	ground=1;
+      	count=1;
+   	}
+}

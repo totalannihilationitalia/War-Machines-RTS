@@ -1,0 +1,69 @@
+[ARM_ANTIAIR]
+	{
+	ID=232;
+	name=Fast Heat-seeking Missiles;
+	rendertype=1;
+	lineofsight=1;
+	turret=1;
+	toairweapon=1;
+
+	model=heatmis1;
+
+	range=1000;
+	reloadtime=3;
+	weapontimer=5;
+	weaponvelocity=1080;
+	startvelocity=700;
+	weaponacceleration=300;
+	turnrate=90000;
+	areaofeffect=72;
+	metalpershot=0;
+
+	soundstart=rockhvy2;
+	soundhit=xplomed2;
+
+	firestarter=50;
+	smokedelay=.04;
+	guidance=1;
+	tracks=1;
+	selfprop=1;
+	smoketrail=1;
+	tolerance=10000;
+
+	explosiongaf=fx;
+	explosionart=explode3;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2o;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplash;
+
+	startsmoke=1;
+
+	[DAMAGE]
+		{
+		default=160;
+		ARMTHUND=320;
+		ARMBRAWL=320;
+		ARMPEEP=320;
+		ARMFIG=320;
+		ARMCA=320;
+		ARMACA=320;
+		ARMATLAS=320;
+		ARMPNIX=320;
+		ARMHAWK=320;
+		ARMLANCE=320;
+		CORFINK=320;
+		CORVENG=320;
+		CORVAMP=320;
+		CORHURC=320;
+		CORTITAN=320;
+		CORACA=320;
+		CORSHAD=320;
+		CORAPE=320;
+		CORCA=320;
+		CORVALK=320;
+		}
+	}
+

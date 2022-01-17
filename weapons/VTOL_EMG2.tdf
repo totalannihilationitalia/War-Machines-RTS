@@ -1,0 +1,48 @@
+[VTOL_EMG2]
+{
+	name=HighEnergyLaser;
+	rendertype=0;
+	lineofsight=1;
+	turret=0;
+	range=420;
+	reloadtime=1.05;
+	energypershot=35;
+	weaponvelocity=800;
+	areaofeffect=8;
+	impactonly=1;
+	soundstart=Lasrmas2;
+	soundhit=lasrhit1;
+	firestarter=90;
+	beamlaser=1;
+	thickness=2.9;
+	targetmoveerror=0.3;
+	beamtime=0.1;
+	pitchtolerance=12000;
+	explosiongenerator=custom:SMALL_GREEN_LASER_BURN;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	corethickness=0.2;
+	rgbcolor=0 1 0;
+	[DAMAGE]
+	{
+		default=70;
+		COMMANDERS=35;
+		FLAKS=35;
+		FLAKBOATS=35;
+		VTRANS=10;
+		L1FIGHTERS=10;
+		L2FIGHTERS=10;
+		L1BOMBERS=10;
+		L2BOMBERS=10;
+		GUNSHIPS=10;
+		HGUNSHIPS=10;
+		VRADAR=10;
+		VTOL=10;
+		L1SUBS=1;
+		L2SUBS=1;
+		L3SUBS=1;
+	}
+}

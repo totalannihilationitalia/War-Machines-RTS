@@ -1,0 +1,34 @@
+[CORANGEL_laser]
+	{
+	ID=137;
+	name=Laser Battery;
+	rendertype=0;
+	lineofsight=1;
+	turret=1;
+	range=900;
+	reloadtime=10.0;
+	energypershot=800;
+	weapontimer=2;
+	weaponvelocity=900;
+	areaofeffect=12;
+	burst=26;
+	burstrate=.04;
+	sprayangle=0;
+	randomdecay=0;
+	soundstart=phaser1;
+	soundhit=lasrhit2;
+	firestarter=100;
+	groundbounce=1;
+	smokedelay=1;
+	startsmoke=0;
+	endsmoke=1;
+	color=232;	/* GREEN */
+	color2=232;
+	tolerance=8000;	
+
+	[DAMAGE]
+		{
+		default=100;
+		}
+	}
+

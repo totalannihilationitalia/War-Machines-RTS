@@ -1,0 +1,58 @@
+[icontypes]
+{
+	[default]
+	{
+		// Missing parameters get evualeted to the following by Spring:
+		// bitmap=standard radar dot
+		size=1.3;
+		radiusadjust=1;
+		// distance=1;
+	}
+	[corthovr]
+	{
+		size=0.7;
+		radiusadjust=1;	
+	}
+	[armthovr]
+	{
+		size=0.9;
+		radiusadjust=1;	
+	}
+	// icon for the Arm commander
+	[icucommander]
+	{
+		bitmap=icons/icucom.png;
+		size=4;
+	}
+	// icon for the Core commander
+	[nfacommander]
+	{
+		bitmap=icons/nfacom.tga;
+		size=4;
+	}
+	// icon for the Core Krogoth
+	[krogoth]
+	{
+		bitmap=icons/krogoth.tga;
+		size=3;
+	}
+	// icon for all airborne units
+	[air]
+	{
+		bitmap=icons/triangle.tga;
+		size=1.2;
+	}
+	// icon for all units restricted to water (boats, subs, but no hovercrafts or amphibious units)
+	[sea]
+	{
+		bitmap=icons/semi-circle.tga;
+		size=1.5;
+	}
+	// icon for all immobile units
+	[building]
+	{
+		bitmap=icons/square.tga;
+		radiusadjust=1;
+		size=0.8;
+	}
+} 

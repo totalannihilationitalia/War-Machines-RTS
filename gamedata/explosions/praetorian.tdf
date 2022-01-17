@@ -1,0 +1,67 @@
+[PARTACCEL]
+{
+	[whiteglow]
+	{
+	class=heatcloud;
+   	
+		[properties]
+      		{
+		alwaysVisible=1;
+		texture=laserendpink;
+      		heat = 10;
+      		maxheat = 15;
+      		heatFalloff = 1.2;
+
+      		size = 10;
+      		sizeGrowth = 15;
+
+         	pos = r-2 r2, 5, r-2 r2;
+         	speed=0, 1 0, 0;
+      		}
+	air=1;
+      	water=1;
+      	ground=1;
+      	count=1;
+	} 
+	[residuals_green]
+	{
+	    class=CExpGenSpawner;
+		[properties]
+		{
+		pos=-100 r200, 1, -100 r200; 
+		delay=10 r200;		
+		explosionGenerator=custom:LASER_RESIDUALS_PINK; 
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=10;
+	}
+	[pikes20]
+	{
+		class=explspike;
+		[properties]
+		{
+			dir=-20 r40,-20 r40,-20 r40;
+			width=10;
+			length=30;
+			alpha=0.8;
+			alphadecay=0.1;
+			color=0.6,1,0.6;
+
+		}
+	air=1;
+	water=1;
+	ground=1;
+    count=15; 
+	}
+		[groundflash]
+	{
+		flashsize=66;
+		flashalpha=0.3;
+		circlegrowth=0;
+		circlealpha=1;
+		ttl=12;
+		color=0,0.8,0;
+	}
+}

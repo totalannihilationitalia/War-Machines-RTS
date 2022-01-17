@@ -1,0 +1,1 @@
+ho aggiornato gadgets.lua per inserire la caduta degli alberi pertanto collaudare il gioco e se non crea problemi cancellare questo file altrimenti cancellare gadgets.lua e ripristinare quello originale

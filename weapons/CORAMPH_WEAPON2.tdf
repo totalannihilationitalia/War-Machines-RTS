@@ -1,0 +1,46 @@
+[CORAMPH_WEAPON2]
+{
+	name=HighEnergyLaser;
+	rendertype=0;
+	lineofsight=1;
+	turret=1;
+	range=300;
+	reloadtime=1.15;
+	energypershot=35;
+	weaponvelocity=700;
+	areaofeffect=12;
+	impactonly=1;
+	soundstart=lasrhvy3;
+	soundhit=lasrhit1;
+	firestarter=90;
+	beamlaser=1;
+	thickness=3;
+	corethickness=0.2;
+	laserflaresize=10;
+	targetmoveerror=0.25;
+	beamtime=0.15;
+	rgbcolor=0 1 0;
+	tolerance=10000;
+	explosiongenerator=custom:SMALL_GREEN_LASER_BURN;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=150;
+		VTRANS=38;
+		L1FIGHTERS=38;
+		L2FIGHTERS=38;
+		L1BOMBERS=38;
+		L2BOMBERS=38;
+		GUNSHIPS=38;
+		HGUNSHIPS=38;
+		VRADAR=38;
+		VTOL=38;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+	}
+}

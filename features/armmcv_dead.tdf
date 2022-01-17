@@ -1,0 +1,38 @@
+[armmcv_dead]
+{
+  description=Wreckage;
+  blocking=1;
+  category=corpses;
+  damage=5100;
+  energy=0;
+  featuredead=armmcv_heap;
+  featurereclamate=SMUDGE01;
+  footprintx=7;
+  footprintz=7;
+  height=15;
+  hitdensity=100;
+  metal=42761;
+  object=armmcv_dead;
+  reclaimable=1;
+  seqnamereclamate=TREE1RECLAMATE;
+  world=All Worlds;
+}
+
+[armmcv_heap]
+{
+  description=Wreckage;
+  blocking=0;
+  category=heaps;
+  damage=5100;
+  energy=0;
+  featurereclamate=SMUDGE01;
+  footprintx=7;
+  footprintz=7;
+  height=4;
+  hitdensity=100;
+  metal=21380;
+  object=7X7A;
+  reclaimable=1;
+  seqnamereclamate=TREE1RECLAMATE;
+  world=All Worlds;
+}

@@ -1,0 +1,267 @@
+#define TA			// This is a TA script
+
+#include "sfxtype.h"
+#include "exptype.h"
+
+piece  base, box, flare1, box2, flare2;
+
+static-var  Static_Var_1, bMoving, Static_Var_3, Static_Var_4, Static_Var_5,
+            Static_Var_6, statechg_DesiredState, statechg_StateChanging;
+
+
+Build2()
+{
+	turn box to y-axis Static_Var_1 speed <300.000000>;
+	turn box2 to y-axis Static_Var_1 speed <300.000000>;
+	wait-for-turn box around y-axis;
+	wait-for-turn box2 around y-axis;
+	Static_Var_6 = 1;
+	while( Static_Var_6 == 1 )
+	{
+		emit-sfx 2048 from flare1;
+		emit-sfx 2049 from flare2;
+		sleep 60;
+	}
+}
+
+walk2()
+{
+	while( bMoving )
+	{
+		if( bMoving )
+		{
+			sleep 200;
+		}
+		if( bMoving )
+		{
+			sleep 200;
+		}
+		if( bMoving )
+		{
+			sleep 200;
+		}
+		sleep 200;
+	}
+}
+
+stand()
+{
+	sleep 200;
+}
+
+SmokeUnit(healthpercent, sleeptime, smoketype)
+{
+	while( get BUILD_PERCENT_LEFT )
+	{
+		sleep 400;
+	}
+	while( TRUE )
+	{
+		healthpercent = get HEALTH;
+		if( healthpercent < 66 )
+		{
+			smoketype = 256 | 2;
+			if( Rand( 1, 66 ) < healthpercent )
+			{
+				smoketype = 256 | 1;
+			}
+			emit-sfx smoketype from box;
+		}
+		sleeptime = healthpercent * 50;
+		if( sleeptime < 200 )
+		{
+			sleeptime = 200;
+		}
+		sleep sleeptime;
+	}
+}
+
+MotionControl(Func_Var_1)
+{
+	while( TRUE )
+	{
+		Func_Var_1 = bMoving;
+		if( Func_Var_1 )
+		{
+			call-script walk2();
+		}
+		if( !Func_Var_1 )
+		{
+			sleep 100;
+		}
+	}
+}
+
+Go()
+{
+	Static_Var_3 = 1;
+	Static_Var_5 = 1;
+	set INBUILDSTANCE to 1;
+}
+
+Stop()
+{
+	set INBUILDSTANCE to 0;
+	turn box to y-axis <0.000000> speed <350.000000>;
+	turn box2 to y-axis <0.000000> speed <350.000000>;
+	wait-for-turn box around y-axis;
+	wait-for-turn box2 around y-axis;
+	if( TRUE )
+	{
+		sleep 50;
+	}
+	if( TRUE )
+	{
+		sleep 50;
+	}
+	if( TRUE )
+	{
+		sleep 50;
+	}
+	if( TRUE )
+	{
+		sleep 50;
+	}
+	if( TRUE )
+	{
+		sleep 50;
+	}
+	sleep 50;
+	Static_Var_3 = 0;
+}
+
+InitState()
+{
+	statechg_DesiredState = TRUE;
+	statechg_StateChanging = FALSE;
+}
+
+RequestState(requestedstate, currentstate)
+{
+	if( statechg_StateChanging )
+	{
+		statechg_DesiredState = requestedstate;
+		return (0);
+	}
+	statechg_StateChanging = TRUE;
+	currentstate = statechg_DesiredState;
+	statechg_DesiredState = requestedstate;
+	while( statechg_DesiredState != currentstate )
+	{
+		if( statechg_DesiredState == 0 )
+		{
+			call-script Go();
+			currentstate = 0;
+		}
+		if( statechg_DesiredState == 1 )
+		{
+			call-script Stop();
+			currentstate = 1;
+		}
+	}
+	statechg_StateChanging = FALSE;
+}
+
+Create()
+{
+	bMoving = FALSE;
+	Static_Var_3 = 0;
+	Static_Var_4 = 1;
+	Static_Var_1 = 0;
+	call-script InitState();
+	start-script MotionControl();
+	start-script SmokeUnit();
+}
+
+Activate()
+{
+	start-script RequestState(0);
+}
+
+Deactivate()
+{
+	start-script RequestState(1);
+}
+
+StartBuilding(Func_Var_1)
+{
+	Static_Var_1 = Func_Var_1;
+	start-script RequestState(0);
+	Static_Var_5 = 1;
+	start-script Build2();
+}
+
+StopBuilding()
+{
+	start-script RequestState(1);
+	Static_Var_5 = 0;
+	Static_Var_6 = 0;
+}
+
+StartMoving()
+{
+	bMoving = TRUE;
+}
+
+StopMoving()
+{
+	bMoving = FALSE;
+}
+
+QueryNanoPiece(piecenum)
+{
+	piecenum = flare1;
+}
+
+TargetHeading(Func_Var_1)
+{
+	Static_Var_1 = 0 - Func_Var_1;
+}
+
+AimFromSecondary(piecenum)
+{
+	piecenum = box2;
+}
+
+AimFromPrimary(piecenum)
+{
+	piecenum = box;
+}
+
+SweetSpot(piecenum)
+{
+	piecenum = base;
+}
+
+Killed(severity, corpsetype)
+{
+	hide flare1;
+	if( severity <= 25 )
+	{
+		corpsetype = 1;
+		explode base type BITMAPONLY | BITMAP3;
+		explode box type BITMAPONLY | BITMAP2;
+		explode box2 type BITMAPONLY | BITMAP2;
+		return (0);
+	}
+	if( severity <= 50 )
+	{
+		corpsetype = 2;
+		explode base type BITMAPONLY | BITMAP3;
+		explode box type SHATTER | BITMAP2;
+		explode box2 type SHATTER | BITMAP2;
+		return (0);
+	}
+	if( severity <= 99 )
+	{
+		corpsetype = 3;
+		explode base type BITMAPONLY | BITMAP3;
+		explode box type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		explode box2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		return (0);
+	}
+	corpsetype = 3;
+	explode base type BITMAPONLY | BITMAP3;
+	explode box type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+	explode box2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+}

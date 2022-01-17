@@ -1,0 +1,36 @@
+[spiderbot_dead]
+{
+world=All Worlds;
+description=Wreckage;
+category=core_corpses;
+object=3x3d;
+featuredead=spiderbot_heap;
+footprintx=3;
+footprintz=3;
+height=20;
+blocking=1;
+hitdensity=100;
+metal=592;
+damage=153;
+reclaimable=1;
+featurereclamate=smudge01;
+seqnamereclamate=tree1reclamate;
+}
+[spiderbot_heap]
+{
+world=All Worlds;
+description=Wreckage;
+category=heaps;
+object=3x3d;
+footprintx=3;
+footprintz=3;
+height=4;
+blocking=0;
+hitdensity=100;
+metal=291;
+damage=79;
+reclaimable=1;
+featurereclamate=smudge01;
+seqnamereclamate=tree1reclamate;
+}
+

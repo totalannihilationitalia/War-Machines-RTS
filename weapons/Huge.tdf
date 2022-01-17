@@ -1,0 +1,38 @@
+[SlipKnot_Kills]
+	{
+	ID=247; 
+	name=Slipknot Weapon;
+	rendertype=1;
+	lineofsight=1;
+	turret=1;
+	minbarrelangle=-15;
+
+	model=Huge;	
+
+	range=613;
+	reloadtime=0.4;
+	weaponvelocity=465;
+	areaofeffect=250;
+	edgeefectiveness=100;
+	Accuracy=1780;
+
+	soundstart=lasrhvy1;
+	soundhit=lasrmas1;
+
+	tolerance=500;
+
+	explosiongaf=pdgexp1;
+	explosionart=pdgexp1;
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom2;
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashlg;
+
+	startsmoke=1;
+
+	[DAMAGE]
+		{
+		default=13579;
+
+		}
+	}

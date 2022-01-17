@@ -1,0 +1,46 @@
+[CORSUMO_WEAPON]
+{
+	name=HighEnergyLaser;
+	rendertype=0;
+	lineofsight=1;
+	turret=1;
+	range=650;
+	reloadtime=0.55;
+	energypershot=75;
+	weaponvelocity=800;
+	areaofeffect=12;
+	impactonly=1;
+	soundstart=lasrhvy3;
+	soundhit=lasrhit1;
+	firestarter=90;
+	beamlaser=1;
+	thickness=3;
+	corethickness=0.3;
+	laserflaresize=10;
+	targetmoveerror=0.25;
+	beamtime=0.15;
+	rgbcolor=1 1 0;
+	tolerance=10000;
+	explosiongenerator=custom:LARGE_YELLOW_LASER_BURN;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=275;
+		VTRANS=65;
+		L1FIGHTERS=65;
+		L2FIGHTERS=65;
+		L1BOMBERS=65;
+		L2BOMBERS=65;
+		GUNSHIPS=65;
+		HGUNSHIPS=65;
+		VRADAR=65;
+		VTOL=65;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+	}
+}

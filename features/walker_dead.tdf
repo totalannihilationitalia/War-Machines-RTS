@@ -1,0 +1,52 @@
+[WALKER_DEAD]
+{
+World=all worlds;
+Description=Walker Wreckage;
+Category=arm_corpses;
+Object=WALKER_DEAD;
+Featuredead=WALKER_DEAD2;
+Footprintx=3;
+Footprintz=3;
+Height=10;
+Blocking=1;
+HitDensity=23;
+Metal=206;
+Damage=800;
+Reclaimable=1;
+Featurereclamate=smudge01;
+Seqnamereclamate=tree1reclamate;
+}
+[WALKER_DEAD2]
+{
+World=all worlds;
+Description=Walker Wreckage;
+Category=arm_corpses;
+Object=WALKER_DEAD2;
+Featuredead=WALKER_HEAP;
+Footprintx=3;
+Footprintz=3;
+Height=10;
+Blocking=1;
+HitDensity=23;
+Metal=103;
+Damage=600;
+Reclaimable=1;
+Featurereclamate=smudge01;
+Seqnamereclamate=tree1reclamate;
+}
+[WALKER_HEAP]
+{
+World=all worlds;
+Description=Walker Wreckage;
+Category=heaps;
+Object=3x3a;
+Footprintx=3;
+Footprintz=3;
+Blocking=0;
+HitDensity=4;
+Metal=101;
+Damage=400;
+Reclaimable=1;
+Featurereclamate=smudge01;
+Seqnamereclamate=tree1reclamate;
+}

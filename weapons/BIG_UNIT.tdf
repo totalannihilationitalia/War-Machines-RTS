@@ -1,0 +1,23 @@
+
+[BIG_UNIT]
+{
+	name=BigKbot;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+	range=480;
+	reloadtime=3.6;
+	weaponvelocity=250;
+	areaofeffect=120;
+	soundstart=largegun;
+	soundhit=xplolrg3;
+	explosiongenerator=custom:FLASHBIGUNIT;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	[DAMAGE]
+	{
+		default=350;
+	}
+}

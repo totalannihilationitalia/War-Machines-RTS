@@ -1,0 +1,13 @@
+[ORBITALLASER_Expl]
+{
+	usedefaultexplosions=1;
+	[groundflash]
+	{
+		flashSize = 120;
+		flashAlpha = .5;
+		circleGrowth = 35;
+		circleAlpha = 1.2;
+		ttl = 8;
+		color = 1,0,1;
+	}
+}

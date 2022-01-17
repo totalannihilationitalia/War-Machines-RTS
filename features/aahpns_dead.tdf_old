@@ -1,0 +1,40 @@
+[Aahpns_dead]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=arm_corpses;
+	object=Aahpns_dead;
+	featuredead=aahpns_heap;
+	footprintx=10;
+	footprintz=8;
+	height=20;
+	blocking=1;
+	hitdensity=100;
+	metal=3206;
+	damage=3804;
+	reclaimable=1;
+	featurereclamate=smudge01;
+      seqnamereclamate=tree1reclamate;
+	}
+
+[aahpns_heap]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=heaps;
+	object=7x7a;
+	footprintx=8;
+	footprintz=7;
+	height=4;
+	blocking=0;
+	hitdensity=100;
+	metal=1603;
+	damage=1202;
+	reclaimable=1;
+
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}
+
+
+

@@ -1,0 +1,50 @@
+[blab_dead]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=core_corpses;
+	object=blab_dead;
+	featuredead=blab_heap;
+	footprintx=15;
+	footprintz=15;
+	height=60;
+	blocking=1;
+	hitdensity=100;
+	metal=13845;
+	damage=12054;
+	reclaimable=1;
+	}
+
+[blab_heap]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=heaps;
+	object=blab_heap;
+	featuredead=blab_flat;
+	footprintx=15;
+	footprintz=15;
+	height=20;
+	blocking=1;
+	hitdensity=100;
+	metal=11745;
+	damage=10547;
+	reclaimable=1;
+	}
+
+[blab_flat]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=heaps;
+	object=blab_flat;
+	footprintx=15;
+	footprintz=15;
+	height=20;
+	blocking=1;
+	hitdensity=0;
+	metal=9845;
+	damage=9845;
+	reclaimable=1;
+	}
+

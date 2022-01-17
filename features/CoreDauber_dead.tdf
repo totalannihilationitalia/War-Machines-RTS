@@ -1,0 +1,18 @@
+[CoreDauber_dead]
+	{
+	world=All Worlds;
+	description=Dauber Wreckage;
+	category=arm_corpses;
+	object=CoreDauber_dead;
+	footprintx=2;
+	footprintz=2;
+	height=4;
+	blocking=1;
+	hitdensity=100;
+	metal=148;
+	damage=20000;
+	reclaimable=1;
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}
+

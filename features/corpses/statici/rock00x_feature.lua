@@ -1,0 +1,83 @@
+return {
+  rock001_feature =
+  {
+    description = "A rock",
+    blocking = true,
+    damage = 700,
+    energy = 0,
+    flammable = false,
+--    featureDead ="",
+    noselect = false,
+    metal = 100,
+    footprintx = 1,
+    footprintz = 1,
+    object = "rock001.s3o",
+    reclaimable = true,
+    upright = false,
+--    collisionvolumeoffsets = "0 0 0",
+--    collisionvolumescales = "5 50 5",
+--    collisionvolumetype = "Box",
+  },
+
+  rock002_feature =
+  {
+    description = "A rock",
+    blocking = true,
+    damage = 700,
+    energy = 0,
+    flammable = false,
+--    featureDead ="",
+    noselect = false,
+    metal = 100,
+    footprintx = 1,
+    footprintz = 1,
+    object = "rock002.s3o",
+    reclaimable = true,
+    upright = false,
+--    collisionvolumeoffsets = "0 0 0",
+--    collisionvolumescales = "5 50 5",
+--    collisionvolumetype = "Box",
+  },
+
+  rock003_feature =
+  {
+    description = "A rock",
+    blocking = true,
+    damage = 700,
+    energy = 0,
+    flammable = false,
+--    featureDead ="",
+    noselect = false,
+    metal = 100,
+    footprintx = 1,
+    footprintz = 1,
+    object = "rock003.s3o",
+    reclaimable = true,
+    upright = false,
+--    collisionvolumeoffsets = "0 0 0",
+--    collisionvolumescales = "5 50 5",
+--    collisionvolumetype = "Box",
+  },
+
+  rock004_feature =
+  {
+    description = "A rock",
+    blocking = true,
+    damage = 700,
+    energy = 0,
+    flammable = false,
+--    featureDead ="",
+    noselect = false,
+    metal = 100,
+    footprintx = 1,
+    footprintz = 1,
+    object = "rock004.s3o",
+    reclaimable = true,
+    upright = false,
+--    collisionvolumeoffsets = "0 0 0",
+--    collisionvolumescales = "5 50 5",
+--    collisionvolumetype = "Box",
+  },
+
+
+}

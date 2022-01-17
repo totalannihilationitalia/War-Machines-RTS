@@ -1,0 +1,47 @@
+[CORE_LASERH1]
+{
+	name=HighEnergyLaser;
+	rendertype=0;
+	lineofsight=1;
+	turret=1;
+	range=620;
+	reloadtime=1.2;
+	energypershot=50;
+	weaponvelocity=2250;
+	areaofeffect=14;
+	impactonly=1;
+	soundstart=Lasrmas2;
+	soundhit=lasrhit1;
+	firestarter=90;
+	beamlaser=1;
+	thickness=3;
+	corethickness=0.2;
+	laserflaresize=10;
+	targetmoveerror=0.2;
+	beamtime=0.15;
+	rgbcolor=1 1 0;
+	tolerance=10000;
+	explosiongenerator=custom:LARGE_YELLOW_LASER_BURN;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=261;
+		COMMANDERS=470;
+		VTRANS=35;
+		L1FIGHTERS=35;
+		L2FIGHTERS=35;
+		L1BOMBERS=35;
+		L2BOMBERS=35;
+		GUNSHIPS=35;
+		HGUNSHIPS=35;
+		VRADAR=35;
+		VTOL=35;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+	}
+}

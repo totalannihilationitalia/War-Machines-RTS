@@ -1,0 +1,66 @@
+[Julaser]
+	{
+	ID=220; 
+	name=Anti spider gun;
+	rendertype=1;
+	lineofsight=1;
+	Turret=1;
+
+	range=450;
+	reloadtime=.5;
+	weaponvelocity=700;
+	areaofeffect=100;
+	edgeeffectiveness=.985;
+	soundtrigger=1;
+	energypershot=30;
+      
+	model=ASshot;
+
+	soundstart=majorlaser;
+	soundhit=cantdo2;
+
+	firestarter=20;
+
+	explosiongaf=Spidergun; //Gaf by TAV
+	explosionart=laserexplode;
+	
+	waterexplosiongaf=fx;
+	waterexplosionart=h2o;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplash;
+
+	[DAMAGE]
+		{
+		default=155;		
+		ARMCOM=50;
+		CORCOM=50;
+		Armrezspd=210;
+		ArmRASPD=250;
+		ArmPASPD=225;
+		Armcspid=225;
+		ArmEMPSPD=290;
+		ArmFLSPD=295;
+		ArmJASPD=255;
+		ARMLASPD=305;
+		Armmlspd=317;
+		Armsptk2=225;
+		Armtick=265;
+		Aspdbunk=280;
+		Spiderlab=355;
+		Armspid=262;
+		Armflea=191;
+		Armvader=250;
+		Armscab=295;
+		Cortermite=250;
+		Cormons=260;
+		Coralpmo=235;
+		Corgamma=280;
+		Cormonsta=550;
+		Reaverspider=232;
+		Corroach=250;
+		Armpod=450;
+		Armdrone=300;
+		}
+	}
+

@@ -1,0 +1,53 @@
+[fleareactorbigsequence]//New Reactor Effect Mini
+{
+	[ElectricalORB] 
+	{
+	    class=CExpGenSpawner;
+		[properties]
+		{
+		pos=0, 0, 0;  
+		delay=0 r1;				  
+		explosionGenerator=custom:flear10;
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+
+	[ElectricalORB3] 
+	{
+	    class=CExpGenSpawner;
+		[properties]
+		{
+		pos=0, 0, 0;  
+		delay=20 r1;				  
+		explosionGenerator=custom:flear20;
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+
+	[ElectricalORB2] 
+	{
+	    class=CExpGenSpawner;
+		[properties]
+		{
+		pos=0, 0, 0;  
+		delay=40 r1;				  
+		explosionGenerator=custom:flear30;
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+}
+
+
+
+
+
+

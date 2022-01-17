@@ -1,0 +1,854 @@
+#define TA			// This is a TA script
+
+#include "sfxtype.h"
+#include "exptype.h"
+
+piece  flaremg1, flaremg2, flaremg, flaremini, launcher1, launcher2, base, hullcenter,
+       hullleft, hullright, drivetrain, tguardleft, tguardright, detail_fl, detail_fr, detail_bl,
+       detail_br, hullcenter_broken, hullleft_broken, hullright_broken, drivetrain_broken, tguardleft_broken, tguardright_broken, detail_fl_broken,
+       detail_fr_broken, detail_bl_broken, detail_br_broken, turret, standard, standard_broken, advanced, advanced_broken,
+       miniturret, gunpitch, standard_sleeves, advanced_sleeves, standard_sleeves_broken, advanced_sleeves_broken, gun, gun1,
+       gun2, aamissles, id0, id1, n00, n01, n02, n03,
+       n04, n05, n06, n07, n08, n09, n10, n11,
+       n12, n13, n14, n15, n16, n17, n18, n19;
+
+static-var  restore_delay, Static_Var_2, gun_1, Static_Var_4, Static_Var_5,
+            gun_3, Static_Var_7, Static_Var_8, Static_Var_9, statechg_DesiredState,
+            statechg_StateChanging;
+
+// Signal definitions
+#define SIG_AIM				2
+#define SIG_AIM_2			4
+#define SIG_AIM_3			8
+
+
+SmokeUnit(healthpercent, sleeptime, smoketype)
+{
+	while( get BUILD_PERCENT_LEFT )
+	{
+		sleep 400;
+	}
+	while( TRUE )
+	{
+		healthpercent = get HEALTH;
+		if( healthpercent < 66 )
+		{
+			smoketype = 256 | 2;
+			if( Rand( 1, 66 ) < healthpercent )
+			{
+				smoketype = 256 | 1;
+			}
+			emit-sfx smoketype from hullcenter;
+		}
+		sleeptime = healthpercent * 50;
+		if( sleeptime < 200 )
+		{
+			sleeptime = 200;
+		}
+		sleep sleeptime;
+	}
+}
+
+HitByWeapon(Func_Var_1, Func_Var_2)
+{
+	turn base to z-axis Func_Var_2 speed <105.016484>;
+	turn base to x-axis Func_Var_1 speed <105.016484>;
+	wait-for-turn base around z-axis;
+	wait-for-turn base around x-axis;
+	turn base to z-axis <0.000000> speed <30.005495>;
+	turn base to x-axis <0.000000> speed <30.005495>;
+}
+
+go()
+{
+}
+
+stop()
+{
+}
+
+InitState()
+{
+	statechg_DesiredState = TRUE;
+	statechg_StateChanging = FALSE;
+}
+
+RequestState(requestedstate, currentstate)
+{
+	if( statechg_StateChanging )
+	{
+		statechg_DesiredState = requestedstate;
+		return (0);
+	}
+	statechg_StateChanging = TRUE;
+	currentstate = statechg_DesiredState;
+	statechg_DesiredState = requestedstate;
+	while( statechg_DesiredState != currentstate )
+	{
+		if( statechg_DesiredState == 0 )
+		{
+			call-script go();
+			currentstate = 0;
+		}
+		if( statechg_DesiredState == 1 )
+		{
+			call-script stop();
+			currentstate = 1;
+		}
+	}
+	statechg_StateChanging = FALSE;
+}
+
+Activate()
+{
+	if( Static_Var_2 == 0 )
+	{
+		set ACTIVATION to 0;
+	}
+}
+
+Deactivate()
+{
+}
+
+reload()
+{
+	set-signal-mask 0;
+	Static_Var_5 = 1;
+	sleep 6500;
+	Static_Var_4 = 1;
+	Static_Var_5 = 0;
+}
+
+reloadmissles()
+{
+	set-signal-mask 0;
+	while( TRUE )
+	{
+		sleep 1000;
+		if( gun_3 <= 1 )
+		{
+			sleep Static_Var_8;
+			++gun_3;
+		}
+	}
+}
+
+damageeffects()
+{
+	set-signal-mask 0;
+	var Func_Var_1, Func_Var_2, Func_Var_3, Func_Var_4, Func_Var_5, Func_Var_6, Func_Var_7, Func_Var_8, Func_Var_9, Func_Var_10, Func_Var_11, Func_Var_12, Func_Var_13, Func_Var_14, Func_Var_15;
+	Func_Var_3 = 2;
+	Func_Var_4 = 2;
+	Func_Var_5 = 2;
+	Func_Var_6 = 2;
+	Func_Var_7 = 2;
+	Func_Var_10 = 2;
+	Func_Var_11 = 2;
+	Func_Var_12 = 2;
+	Func_Var_8 = 2;
+	Func_Var_9 = 2;
+	while( TRUE )
+	{
+		Func_Var_2 = Func_Var_1;
+		Func_Var_1 = get HEALTH;
+		Func_Var_15 = Func_Var_2 - Func_Var_1;
+		if( Func_Var_15 >= 5 )
+		{
+			Func_Var_13 = Rand( 0, Func_Var_15 );
+			if( Func_Var_13 >= 10 )
+			{
+				if( Func_Var_3 == 2 )
+				{
+					explode detail_fl_broken type SHATTER;
+//					hide detail_fl;
+//					show detail_fl_broken;
+					Func_Var_3 = 1;
+				}
+				if( Func_Var_3 == 1 )
+				{
+					Func_Var_14 = Rand( 1, 5 );
+					if( Func_Var_14 >= 2 )
+					{
+						explode detail_fl_broken type FALL | SMOKE;
+//						hide detail_fl_broken;
+						Func_Var_3 = 0;
+					}
+				}
+			}
+			Func_Var_13 = Rand( 0, Func_Var_15 );
+			if( Func_Var_13 >= 10 )
+			{
+				if( Func_Var_4 == 2 )
+				{
+					explode detail_fr_broken type SHATTER;
+//					show detail_fr_broken;
+					Func_Var_4 = 1;
+				}
+				if( Func_Var_4 == 1 )
+				{
+					Func_Var_14 = Rand( 1, 5 );
+					if( Func_Var_14 >= 2 )
+					{
+//						explode detail_fr_broken type FALL | SMOKE;
+						Func_Var_4 = 0;
+					}
+				}
+			}
+			Func_Var_13 = Rand( 0, Func_Var_15 );
+			if( Func_Var_13 >= 10 )
+			{
+				if( Func_Var_5 == 2 )
+				{
+					explode detail_bl_broken type SHATTER;
+//					hide detail_bl;
+//					show detail_bl_broken;
+					Func_Var_5 = 1;
+				}
+				if( Func_Var_5 == 1 )
+				{
+					Func_Var_14 = Rand( 1, 5 );
+					if( Func_Var_14 >= 2 )
+					{
+						explode detail_bl_broken type FALL | SMOKE;
+//						hide detail_bl_broken;
+						Func_Var_5 = 0;
+					}
+				}
+			}
+			Func_Var_13 = Rand( 0, Func_Var_15 );
+			if( Func_Var_13 >= 10 )
+			{
+				if( Func_Var_6 == 2 )
+				{
+					explode detail_br_broken type SHATTER;
+//					hide detail_br;
+//					show detail_br_broken;
+					Func_Var_6 = 1;
+				}
+				if( Func_Var_6 == 1 )
+				{
+					Func_Var_14 = Rand( 1, 5 );
+					if( Func_Var_14 >= 2 )
+					{
+						explode detail_br_broken type FALL | SMOKE;
+//						hide detail_br_broken;
+						Func_Var_6 = 0;
+					}
+				}
+			}
+			Func_Var_13 = Rand( 0, Func_Var_15 );
+			if( Func_Var_13 >= 20 )
+			{
+				if( Func_Var_8 == 2 )
+				{
+					explode tguardleft_broken type SHATTER;
+//					hide tguardleft;
+//					show tguardleft_broken;
+					Func_Var_8 = 1;
+				}
+			}
+			Func_Var_13 = Rand( 0, Func_Var_15 );
+			if( Func_Var_13 >= 20 )
+			{
+				if( Func_Var_9 == 2 )
+				{
+					explode tguardright_broken type SHATTER;
+//					hide tguardright;
+//					show tguardright_broken;
+					Func_Var_9 = 1;
+				}
+			}
+			Func_Var_13 = Rand( 0, Func_Var_15 );
+			if( Func_Var_13 >= 23 )
+			{
+				if( Func_Var_11 == 2 )
+				{
+					explode hullleft_broken type SHATTER;
+//					hide hullleft;
+//					show hullleft_broken;
+					Func_Var_11 = 1;
+				}
+			}
+			Func_Var_13 = Rand( 0, Func_Var_15 );
+			if( Func_Var_13 >= 23 )
+			{
+				if( Func_Var_12 == 2 )
+				{
+					explode hullright_broken type SHATTER;
+//					hide hullright;
+//					show hullright_broken;
+					Func_Var_12 = 1;
+				}
+			}
+			Func_Var_13 = Rand( 0, Func_Var_15 );
+			if( Func_Var_13 >= 23 )
+			{
+				if( Func_Var_7 == 2 )
+				{
+					explode drivetrain_broken type SHATTER;
+//					hide drivetrain;
+//					show drivetrain_broken;
+					Func_Var_7 = 1;
+				}
+			}
+			Func_Var_13 = Rand( 0, Func_Var_15 );
+			if( Func_Var_13 >= 25 )
+			{
+				if( Func_Var_10 == 2 )
+				{
+					explode hullcenter_broken type SHATTER | BITMAP1;
+//					hide hullcenter;
+//					show hullcenter_broken;
+					Func_Var_10 = 1;
+				}
+			}
+			Func_Var_13 = Rand( 0, Func_Var_15 );
+			if( Func_Var_13 >= 28 )
+			{
+				if( Static_Var_9 == 2 )
+				{
+					if( Static_Var_2 == 0 )
+					{
+						explode standard_broken type SHATTER | BITMAP1;
+//						hide standard;
+//						explode standard_sleeves type SHATTER | BITMAP1;
+//						hide standard_sleeves;
+//						show standard_broken;
+//						show standard_sleeves_broken;
+					}
+					if( Static_Var_2 == 1 )
+					{
+						explode advanced_broken type SHATTER | BITMAP1;
+//						hide advanced;
+						explode advanced_sleeves_broken type SHATTER | BITMAP1;
+//						hide advanced_sleeves;
+//						show advanced_broken;
+//						show advanced_sleeves_broken;
+					}
+					Static_Var_9 = 1;
+				}
+				if( Static_Var_9 == 1 )
+				{
+					Func_Var_14 = Rand( 1, 5 );
+					if( Func_Var_14 >= 2 )
+					{
+						if( Static_Var_2 == 0 )
+						{
+							explode standard_broken type FALL | BITMAP1;
+//							hide standard_broken;
+							explode standard_sleeves_broken type FALL | BITMAP1;
+//							hide standard_sleeves_broken;
+//							explode gun type FALL;
+//							hide gun;
+						}
+						if( Static_Var_2 == 1 )
+						{
+							explode advanced_broken type FALL | BITMAP1;
+//							hide advanced_broken;
+							explode advanced_sleeves_broken type FALL | BITMAP1;
+//							hide advanced_sleeves_broken;
+//							explode gun1 type SHATTER;
+//							hide gun1;
+//							explode gun2 type SHATTER;
+//							hide gun2;
+						}
+//						explode miniturret type FALL | EXPLODE_ON_HIT;
+//						hide miniturret;
+						Static_Var_9 = 0;
+					}
+				}
+			}
+		}
+		if( Func_Var_1 > Func_Var_2 )
+		{
+			if( Func_Var_1 >= 80 )
+			{
+				if( Static_Var_2 == 0 )
+				{
+					hide standard_broken;
+					show standard;
+					hide standard_sleeves_broken;
+					show standard_sleeves;
+					show gun;
+				}
+				if( Static_Var_2 == 1 )
+				{
+					hide advanced_broken;
+					show advanced;
+					hide advanced_sleeves_broken;
+					show advanced_sleeves;
+					show gun1;
+					show gun2;
+				}
+				show miniturret;
+				Static_Var_9 = 2;
+			}
+			if( Func_Var_1 >= 85 )
+			{
+				hide hullcenter_broken;
+				show hullcenter;
+				Func_Var_10 = 2;
+				hide drivetrain_broken;
+				show drivetrain;
+				Func_Var_7 = 2;
+			}
+			if( Func_Var_1 >= 87 )
+			{
+				hide hullleft_broken;
+				show hullleft;
+				Func_Var_11 = 2;
+			}
+			if( Func_Var_1 >= 88 )
+			{
+				hide hullright_broken;
+				show hullright;
+				Func_Var_12 = 2;
+			}
+			if( Func_Var_1 >= 90 )
+			{
+				hide tguardleft_broken;
+				show tguardleft;
+				Func_Var_8 = 2;
+			}
+			if( Func_Var_1 >= 92 )
+			{
+				hide tguardright_broken;
+				show tguardright;
+				Func_Var_9 = 2;
+			}
+			if( Func_Var_1 >= 95 )
+			{
+				hide detail_fl_broken;
+				show detail_fl;
+				Func_Var_3 = 2;
+			}
+			if( Func_Var_1 >= 96 )
+			{
+				hide detail_fr_broken;
+				show detail_fr;
+				Func_Var_4 = 2;
+			}
+			if( Func_Var_1 >= 97 )
+			{
+				hide detail_bl_broken;
+				show detail_bl;
+				Func_Var_5 = 2;
+			}
+			if( Func_Var_1 >= 98 )
+			{
+				hide detail_br_broken;
+				show detail_br;
+				Func_Var_6 = 2;
+			}
+		}
+		sleep 600;
+	}
+}
+
+Create(Func_Var_1)
+{
+	Static_Var_8 = 20000;
+	Static_Var_7 = 0;
+	hide n00;
+	hide n01;
+	hide n02;
+	hide n03;
+	hide n04;
+	hide n05;
+	hide n06;
+	hide n07;
+	hide n08;
+	hide n09;
+	hide n10;
+	hide n11;
+	hide n12;
+	hide n13;
+	hide n14;
+	hide n15;
+	hide n16;
+	hide n17;
+	hide n18;
+	hide n19;
+	hide hullcenter_broken;
+	hide hullleft_broken;
+	hide hullright_broken;
+	hide drivetrain_broken;
+	hide tguardleft_broken;
+	hide tguardright_broken;
+	hide detail_fl_broken;
+	hide detail_fr_broken;
+	hide detail_bl_broken;
+	hide detail_br_broken;
+	hide standard_broken;
+	hide advanced_broken;
+	hide standard_sleeves_broken;
+	hide advanced_sleeves_broken;
+	hide standard;
+	hide advanced;
+	hide miniturret;
+	hide standard_sleeves;
+	hide advanced_sleeves;
+	hide aamissles;
+	hide gun;
+	hide gun1;
+	hide gun2;
+	hide flaremg;
+	hide flaremg1;
+	hide flaremg2;
+	hide flaremini;
+	Static_Var_5 = 0;
+	gun_1 = flaremg1;
+	restore_delay = 1000;
+	while( get BUILD_PERCENT_LEFT )
+	{
+		sleep 1000;
+	}
+	Func_Var_1 = Rand( 0, 9 );
+	Static_Var_2 = 0;
+	show standard;
+	show standard_sleeves;
+	show gun;
+	Static_Var_9 = 2;
+	Static_Var_4 = 1;
+	if( Func_Var_1 == 0 )
+	{
+		Static_Var_2 = 1;
+		hide standard;
+		show advanced;
+		hide standard_sleeves;
+		show advanced_sleeves;
+		hide gun;
+		show gun1;
+		show gun2;
+		show aamissles;
+		gun_3 = flaremg;
+	}
+	show miniturret;
+	if( Func_Var_1 == 0 )
+	{
+		show n00;
+	}
+	if( Func_Var_1 == 1 )
+	{
+		show n01;
+	}
+	if( Func_Var_1 == 2 )
+	{
+		show n02;
+	}
+	if( Func_Var_1 == 3 )
+	{
+		show n03;
+	}
+	if( Func_Var_1 == 4 )
+	{
+		show n04;
+	}
+	if( Func_Var_1 == 5 )
+	{
+		show n05;
+	}
+	if( Func_Var_1 == 6 )
+	{
+		show n06;
+	}
+	if( Func_Var_1 == 7 )
+	{
+		show n07;
+	}
+	if( Func_Var_1 == 8 )
+	{
+		show n08;
+	}
+	if( Func_Var_1 == 9 )
+	{
+		show n09;
+	}
+	if( Func_Var_1 > 9 )
+	{
+		show n09;
+	}
+	Func_Var_1 = Rand( 0, 9 );
+	if( Func_Var_1 == 0 )
+	{
+		show n10;
+	}
+	if( Func_Var_1 == 1 )
+	{
+		show n11;
+	}
+	if( Func_Var_1 == 2 )
+	{
+		show n12;
+	}
+	if( Func_Var_1 == 3 )
+	{
+		show n13;
+	}
+	if( Func_Var_1 == 4 )
+	{
+		show n14;
+	}
+	if( Func_Var_1 == 5 )
+	{
+		show n15;
+	}
+	if( Func_Var_1 == 6 )
+	{
+		show n16;
+	}
+	if( Func_Var_1 == 7 )
+	{
+		show n17;
+	}
+	if( Func_Var_1 == 8 )
+	{
+		show n18;
+	}
+	if( Func_Var_1 == 9 )
+	{
+		show n19;
+	}
+	start-script SmokeUnit();
+	set ACTIVATION to 0;
+	if( Static_Var_2 == 1 )
+	{
+		start-script reloadmissles();
+		set ACTIVATION to 1;
+	}
+	call-script InitState();
+	start-script damageeffects();
+}
+
+SetMaxReloadTime(Func_Var_1)
+{
+	restore_delay = Func_Var_1 * 2;
+}
+
+RestoreAfterDelay()
+{
+	sleep restore_delay;
+	turn turret to y-axis <0.000000> speed <80.016484>;
+	turn gunpitch to x-axis <0.000000> speed <60.005495>;
+}
+
+AimPrimary(heading, pitch)
+{
+	signal SIG_AIM;
+	set-signal-mask SIG_AIM;
+	if( Static_Var_9 == 2 )
+	{
+		turn turret to y-axis heading speed <200.038462>;
+		turn gunpitch to x-axis <0.000000> - pitch speed <150.027473>;
+	}
+	if( Static_Var_9 == 1 )
+	{
+		turn turret to y-axis heading speed <60.005495>;
+		turn gunpitch to x-axis <0.000000> - pitch speed <50.005495>;
+	}
+	if( Static_Var_9 == 0 )
+	{
+		turn turret to y-axis heading speed <1.000000>;
+		turn gunpitch to x-axis <0.000000> - pitch speed <1.000000>;
+	}
+	if( Static_Var_2 == 0 )
+	{
+		while( Static_Var_4 <= 0 )
+		{
+			if( Static_Var_5 != 1 )
+			{
+				start-script reload();
+			}
+			sleep 400;
+		}
+	}
+	while( Static_Var_9 == 0 )
+	{
+		sleep 2000;
+	}
+	wait-for-turn turret around y-axis;
+	wait-for-turn gunpitch around x-axis;
+	start-script RestoreAfterDelay();
+	return (1);
+}
+
+FirePrimary()
+{
+	if( Static_Var_2 == 0 )
+	{
+		emit-sfx 1024 + 1 from flaremg;
+		move gun to z-axis [-2.400000] speed [500.000000];
+		sleep 150;
+		wait-for-move gun along z-axis;
+		move gun to z-axis [0.000000] speed [3.000000];
+	}
+	if( Static_Var_2 == 1 )
+	{
+		if( gun_1 == 0 )
+		{
+			emit-sfx 1024 + 1 from flaremg1;
+			move gun1 to z-axis [-2.400000] speed [500.000000];
+			sleep 150;
+			wait-for-move gun1 along z-axis;
+			move gun1 to z-axis [0.000000] speed [3.000000];
+		}
+		if( gun_1 == 1 )
+		{
+			emit-sfx 1024 + 1 from flaremg2;
+			move gun2 to z-axis [-2.400000] speed [500.000000];
+			sleep 150;
+			hide flaremg2;
+			wait-for-move gun2 along z-axis;
+			move gun2 to z-axis [0.000000] speed [3.000000];
+		}
+		gun_1 = !gun_1;
+	}
+	if( Static_Var_2 == 0 )
+	{
+		--Static_Var_4;
+		if( Static_Var_5 != 1 )
+		{
+			start-script reload();
+		}
+	}
+}
+
+QueryPrimary(piecenum)
+{
+	if( Static_Var_2 == 0 )
+	{
+		piecenum = flaremini;
+	}
+	if( Static_Var_2 == 1 )
+	{
+		piecenum = !gun_1;
+	}
+}
+
+AimFromPrimary(piecenum)
+{
+	piecenum = turret;
+}
+
+AimSecondary(heading, pitch)
+{
+	signal SIG_AIM_2;
+	set-signal-mask SIG_AIM_2;
+	turn miniturret to y-axis heading speed <325.071429>;
+	turn miniturret to x-axis <-0.005495> - pitch speed <300.071429>;
+	wait-for-turn miniturret around y-axis;
+	while( Static_Var_9 == 0 )
+	{
+		sleep 2000;
+	}
+	return (1);
+}
+
+FireSecondary()
+{
+	emit-sfx 1024 from flaremini;
+	sleep 150;
+}
+
+AimFromSecondary(piecenum)
+{
+	piecenum = miniturret;
+}
+
+QuerySecondary(piecenum)
+{
+	piecenum = flaremini;
+}
+
+AimTertiary(heading, pitch)
+{
+	signal SIG_AIM_3;
+	set-signal-mask SIG_AIM_3;
+	while( Static_Var_2 == 0 )
+	{
+		sleep 10000;
+	}
+	while( gun_3 <= 0 )
+	{
+		sleep 2000;
+	}
+	return (1);
+}
+
+FireTertiary()
+{
+	--gun_3;
+	Static_Var_7 = !Static_Var_7;
+}
+
+AimFromTertiary(piecenum)
+{
+	piecenum = aamissles;
+}
+
+QueryTertiary(piecenum)
+{
+	if( Static_Var_7 == 0 )
+	{
+		piecenum = launcher1;
+	}
+	if( Static_Var_7 == 1 )
+	{
+		piecenum = launcher2;
+	}
+}
+
+SweetSpot(piecenum)
+{
+	piecenum = hullcenter;
+}
+
+Killed(severity, corpsetype)
+{
+	hide flaremg;
+	hide flaremg1;
+	hide flaremg2;
+	hide flaremini;
+	if( severity <= 25 )
+	{
+		corpsetype = 1;
+		explode base type BITMAPONLY | BITMAP1;
+		explode flaremg type BITMAPONLY | BITMAP2;
+		explode turret type BITMAPONLY | BITMAP4;
+		explode miniturret type BITMAPONLY | BITMAP2;
+		explode aamissles type BITMAPONLY | BITMAP5;
+		return (0);
+	}
+	if( severity <= 50 )
+	{
+		corpsetype = 2;
+		explode base type BITMAPONLY | BITMAP1;
+		explode standard type FALL | BITMAP2;
+		explode gun type FALL | BITMAP3;
+		explode aamissles type BITMAPONLY | BITMAP4;
+		explode hullcenter type SHATTER | BITMAP5;
+		explode miniturret type FALL | BITMAP2;
+		return (0);
+	}
+	if( severity <= 99 )
+	{
+		corpsetype = 3;
+		explode base type BITMAPONLY | BITMAP1;
+		explode gun type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode hullcenter type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode flaremg type BITMAPONLY | BITMAP4;
+		explode gun type SHATTER | BITMAP5;
+		explode gun type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode standard type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+		return (0);
+	}
+	corpsetype = 3;
+	explode base type BITMAPONLY | BITMAP1;
+	explode miniturret type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	explode hullcenter type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+	explode aamissles type BITMAPONLY | BITMAP4;
+	explode hullcenter type SHATTER | EXPLODE_ON_HIT | BITMAP5;
+	explode gun type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	explode standard type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+}
