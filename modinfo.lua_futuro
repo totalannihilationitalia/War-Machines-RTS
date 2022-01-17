@@ -1,0 +1,17 @@
+local modinfo = {
+	name = "War Machines RTS",
+	shortname = "WM",
+	game = "War Machines RTS",
+	shortgame = "WM",
+	description = "RTS",
+	url = "https://www.warmachinesrts.com/",
+	
+	modtype = "1",
+
+	depend = {
+		"cursors.sdz",
+		"springcontent.sdz",
+	}
+}
+
+return modinfo
