@@ -27,13 +27,13 @@ local Config = {
 		
 		margin = 5, --distance from background border
 		
-		padding = 3, -- for border effect
-		color2 = {0,0,0,0.5}, -- riquadro interno
+--		padding = 3, -- for border effect --rimosso vedi codice seguente
+--		color2 = {0,0,0,0.5}, -- riquadro interno --rimosso vedi codice seguente
 		
 		expensefadetime = 0.5, --fade effect time, in seconds
 		
-		cbackground = {0,0,1,0.2}, --color {r,g,b,alpha} riquadro esterno metallo
-		cborder = {0,0,0,0.5}, -- bordo barra grigia metallo
+		cbackground = {0.03,0.18,0.3,0.5}, --color {r,g,b,alpha} riquadro esterno metallo
+		cborder =  {0,0.67,0.99,1}, -- bordo barra grigia metallo
 		cbarbackground = {1,1,1,1}, -- boh
 		cbar = {1,0.8,0,1}, -- colore barra metallo
 		cindicator = {1,0,0,1}, -- cursore rosso metallo
@@ -65,15 +65,15 @@ local Config = {
 		
 		margin = 5,
 		
-		padding = 2, -- for border effect
-		color2 = {0,0,0,0.5}, -- riquadro interno
+--		padding = 2, -- for border effect  --rimosso vedi codice seguente
+--		color2 = {0,0,0,0.5}, -- riquadro interno --rimosso vedi codice seguente
 		
 		expensefadetime = 0.25,
 		
-		cbackground = {0,0,1,0.2}, --riquadro esteno
-		cborder = {0,0,0,0.5},
+		cbackground = {0.03,0.18,0.3,0.5}, --riquadro esteno
+		cborder =  {0,0.67,0.99,1},
 		cbarbackground = {0,0,0,1},
-		cbar = {0,0.7,1,1},
+		cbar = {0.51,0.72,0.82,1}, --0,0.7,1,1
 		cindicator = {1,0,0,0.8},
 		
 		cincome = {0,1,0,1},
@@ -189,11 +189,12 @@ local function short(n,f)
 end
 
 local function createbar(r)
-	local background2 = {"rectanglerounded",
-		px=r.px+r.padding,py=r.py+r.padding,
-		sx=r.sx-r.padding-r.padding,sy=r.sy-r.padding-r.padding,
-		color=r.color2,
-	}
+-- rimuovo riquadro interno
+--	local background2 = {"rectanglerounded",
+--		px=r.px+r.padding,py=r.py+r.padding,
+--		sx=r.sx-r.padding-r.padding,sy=r.sy-r.padding-r.padding,
+--		color=r.color2,
+--	}
 	local background = {"rectanglerounded",
 		px=r.px,py=r.py,
 		sx=r.sx,sy=r.sy,
@@ -207,14 +208,15 @@ local function createbar(r)
 		--overridecursor = true,
 		overrideclick = {1},
 		onupdate=function(self)
-			background2.px = self.px + self.padding
-			background2.py = self.py + self.padding
-			background2.sx = self.sx - self.padding - self.padding
-			background2.sy = self.sy - self.padding - self.padding
+-- rimosso rettangolo iterno
+--			background2.px = self.px + self.padding
+--			background2.py = self.py + self.padding
+--			background2.sx = self.sx - self.padding - self.padding
+--			background2.sy = self.sy - self.padding - self.padding
 		end,
 	}
 	New(background)
-	New(background2)
+--	New(background2)
 	
 	local number = {"text",
 		px=0,py=background.py+r.margin,fontsize=r.fontsize,
@@ -224,6 +226,17 @@ local function createbar(r)
 	
 	local income = New(number)
 	income.color = r.cincome
+----- test
+	local icona = 	{"rectanglerounded",
+--		px=r.px,py=r.py,
+--		sx=r.sx,sy=r.sy,
+		px=50,py=50,
+		sx=200,sy=200,
+		color=r.cbackground,
+		border=r.cborder,
+		texture = barTexture,
+		texturecolor = {0.15,0.15,0.15,1},	
+	}
 	
 	local barbackground = {"rectangle",
 		px=background.px+income.getwidth()-r.margin,py=income.py,
@@ -303,7 +316,7 @@ local function createbar(r)
 	
 	return {
 		["background"] = background,
-		["background2"] = background2,
+--		["background2"] = background2,
 		["barbackground"] = barbackground,
 		["bar"] = bar,
 		["barborder"] = barborder,
@@ -313,7 +326,9 @@ local function createbar(r)
 		["expense"] = expense,
 		["current"] = current,
 		["storage"] = storage,
-		
+-- test
+		["icona"] = icona,
+	
 		margin = r.margin
 	}
 end
