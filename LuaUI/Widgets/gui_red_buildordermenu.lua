@@ -25,30 +25,30 @@ local CanvasX,CanvasY = 1272,734 --resolution in which the widget was made (for 
 local iconScaling = true
 
 local Config = {
-	buildmenu = {
+	buildmenu = { -- menu delle costruzioni (unità)
 		menuname = "buildmenu",
 		px = -0.5,py = CanvasY - 415, --default start position
 		
 		isx = 37,isy = 37, --icon size 38 e 36
 		ix = 5,iy = 3, -- menù delle icone icons x/y
 		
-		roundedPercentage = 0.2,	-- 0.25 == iconsize / 4 == cornersize
+		roundedPercentage = 0.2,	-- 0.25 == iconsize / 4 == cornersize -- era 0.2
 		
 		iconscale = 0.92,
 		iconhoverscale = 0.92,
 		ispreadx=0,ispready=0, --space between icons
 		
-		margin = 5, --distance from background border
+		margin = 5, --distance from background border -- offfset del riquadro esterno rispetto i bottoni del menù
 		
-		padding = 3, -- for border effect
-		color2 = {0,0,0,0.5}, -- for border effect
+--		padding = 30, -- 3 for border effect -- riquadro interno, indica l'offset del riquadro interno rispetto il riquadro esterno (rimosso, vedi righe successive)
+--		color2 = {0,0,0,1}, -- {0,0,0,0.5} for border effect -- colore riquadro interno (che ho rimosso, vedi righe successive)
 		
 		fadetime = 0.3, --fade effect time, in seconds
 		fadetimeOut = 0.3, --fade effect time, in seconds
 		
 		ctext = {1,1,1,1}, --color {r,g,b,alpha}
-		cbackground = {0,0,1,0.2},
-		cborder = {0.3,0.3,0.3,0.8},
+		cbackground = {0.03,0.18,0.3,0.5}, -- {0,0,1,0.2} -- colore rettangolo di sfondo
+		cborder = {0,0.67,0.99,1},  -- bordo del riquadro esterno
 		cbuttonbackground = {0.1,0.1,0.1,0.5},
 		dragbutton = {2}, --middle mouse button
 		tooltip = {
@@ -56,7 +56,7 @@ local Config = {
 		},
 	},
 	
-	ordermenu = {
+	ordermenu = { -- menu degli ordini
 		menuname = "ordermenu",
 		px = -0.5,py = CanvasY - 415 - 145,
 		
@@ -71,15 +71,15 @@ local Config = {
 		
 		margin = 5,
 		
-		padding = 4, -- for border effect
-		color2 = {0,0,0,0.5}, -- riquadro interno
+--		padding = 4, -- for border effect (rimosso, vedi righe successive)
+--		color2 = {0,0,0,1}, -- riquadro interno che ho rimosso (vedi codice successivo)
 		
 		fadetime = 0.3,
 		fadetimeOut = 0.3, --fade effect time, in seconds
 		
 		ctext = {1,1,1,1},
-		cbackground = {0,0,1,0.2}, -- riquadro esterno
-		cborder = {0.2,0.2,0.2,1},
+		cbackground = {0.03,0.18,0.3,0.5}, -- riquadro esterno
+		cborder = {0,0.67,0.99,1},
 		cbuttonbackground={0.1,0.1,0.1,0.2},
 		
 		dragbutton = {2}, --middle mouse button
@@ -173,12 +173,13 @@ end
 
 local function CreateGrid(r)
 
-	local background2 = {"rectanglerounded",
-		px=r.px+r.padding,py=r.py+r.padding,
-		sx=(r.isx*r.ix+r.ispreadx*(r.ix-1) +r.margin*2) -r.padding -r.padding,
-		sy=(r.isy*(r.iy)+r.ispready*(r.iy) +r.margin*2) -r.padding -r.padding,
-		color=r.color2,
-	}
+-- rimuovo il riquadro interno
+--	local background2 = {"rectanglerounded",
+--		px=r.px+r.padding,py=r.py+r.padding,
+--		sx=(r.isx*r.ix+r.ispreadx*(r.ix-1) +r.margin*2) -r.padding -r.padding,
+--		sy=(r.isy*(r.iy)+r.ispready*(r.iy) +r.margin*2) -r.padding -r.padding,
+--		color=r.color2,
+--	}
 	local background = {"rectanglerounded",
 		px=r.px,py=r.py,
 		sx=r.isx*r.ix+r.ispreadx*(r.ix-1) +r.margin*2,
@@ -196,10 +197,11 @@ local function CreateGrid(r)
 			fadeout_at_deactivation = r.fadetimeOut,
 		},
 		onupdate=function(self)
-			background2.px = self.px + self.padding
-			background2.py = self.py + self.padding
-			background2.sx = self.sx - self.padding - self.padding
-			background2.sy = self.sy - self.padding - self.padding
+-- rimuovo il riquadro interno
+--			background2.px = self.px + self.padding
+--			background2.py = self.py + self.padding
+--			background2.sx = self.sx - self.padding - self.padding
+--			background2.sy = self.sy - self.padding - self.padding
 		end,
 	}
 	
@@ -208,11 +210,11 @@ local function CreateGrid(r)
 		px=0,py=0,
 		sx=r.isx,sy=r.isy,
 		iconscale=(iconScaling and r.iconscale or 1),
-		color={1,0,0,0.26},
+		color={1,1,1,0},
 		border={0.8,0,0,0},
 		glone=0.12,
-		texture = LUAUI_DIRNAME.."Images/button-pushed.dds",
-		texturecolor={1,0,0,0.18},
+		texture = LUAUI_DIRNAME.."Images/button-pushed.png", -- bottone premuto???
+		texturecolor={1,1,1,1},
 		
 		active=false,
 		onupdate=function(self)
@@ -222,14 +224,14 @@ local function CreateGrid(r)
 	
 	local mouseoverhighlight = Copy(selecthighlight,true)
 	mouseoverhighlight.color={1,1,1,0.17}
-	mouseoverhighlight.border={1,1,1,0}
-	mouseoverhighlight.texture = LUAUI_DIRNAME.."Images/button-highlight.dds"
-	mouseoverhighlight.texturecolor={1,1,1,0.2}
+	mouseoverhighlight.border={1,1,1,0} ----- riquadro highlight disabilitato
+	mouseoverhighlight.texture = LUAUI_DIRNAME.."Images/button-hover.png"
+	mouseoverhighlight.texturecolor={1,1,1,0.9}
 	
 	local heldhighlight = Copy(selecthighlight,true)
 	heldhighlight.color={1,0.8,0,0.2}
 	heldhighlight.border={1,1,0,0}
-	heldhighlight.texture = LUAUI_DIRNAME.."Images/button-pushed.dds"
+	heldhighlight.texture = LUAUI_DIRNAME.."button-pushed_test.png"
 	heldhighlight.texturecolor={1,0.8,0,0.2}
 	
 	local icon = {"rectangle",
@@ -306,7 +308,8 @@ local function CreateGrid(r)
 	}
 	
 	New(background)
-	New(background2)
+-- rimuovo riquadro interno
+--	New(background2)
 	
 	local backward = New(Copy(icon,true))
 	backward.texture = LUAUI_DIRNAME.."Images/backward.png"
@@ -362,7 +365,8 @@ local function CreateGrid(r)
 	return {
 		["menuname"] = r.menuname,
 		["background"] = background,
-		["background2"] = background2,
+--rimuovo riquadro interno
+--		["background2"] = background2,
 		["icons"] = icons,
 		["backward"] = backward,
 		["forward"] = forward,
@@ -376,10 +380,10 @@ end
 local function UpdateGrid(g,cmds,ordertype)
 	if (#cmds==0) then
 		g.background.active = false
-		g.background2.active = false
+--		g.background2.active = false -- rimuovo riquadro interno
 	else
 		g.background.active = nil
-		g.background2.active = nil
+--		g.background2.active = nil -- rimuovo riquadro interno
 	end
 
 	local curpage = g.page
