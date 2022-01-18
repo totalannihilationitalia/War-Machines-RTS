@@ -329,9 +329,21 @@ function widget:DrawScreen()
       font = gl.LoadFont("FreeSansBold.otf", convoFontSize,3,3)
       convoString = font:WrapText(convoString, width-(convoImage and height or 0), height, convoFontSize)
     end
-    
-    gl.Color(0,0,0.5,0.3) --------  impostazione colore di sfondo del convomessage
+
+-------------------
+-- aspetto convobox
+-------------------
+    gl.Color(0.03,0.18,0.3,0.5) --------  impostazione colore di sfondo del convomessage
     gl.Rect(x-2, y+2, x + width + 2, y - height - 2)
+------------------
+-- aggiungo i bordi
+------------------
+    gl.Color(0,0.67,0.99,1)
+    gl.Rect(x-3, y+1, x + width + 3, y+2) --riga sopra
+    gl.Rect(x-3, y - height - 2, x + width + 3, y - height-1 ) -- riga sotto
+    gl.Rect(x-2, y+1, x-3, y - height-1) -- riga sx
+    gl.Rect(x + width + 2, y+1, x + width + 3, y - height-1) -- riga dx
+
     gl.Color(1,1,1,1)
     
     if convoImage then
