@@ -12,8 +12,8 @@ function widget:GetInfo()
 	}
 end
 
-local stateTexture		= LUAUI_DIRNAME.."images/resbar.dds"
-local buttonTexture		= LUAUI_DIRNAME.."images/button.png"
+local stateTexture		= LUAUI_DIRNAME.."images/menu/resbar.dds"
+local buttonTexture		= LUAUI_DIRNAME.."images/menu/button.png"
 local showNoobButtons   = tonumber(Spring.GetConfigInt("XTA_ShowNoobButtons",1) or 1) == 1
 
 local NeededFrameworkVersion = 9
@@ -213,7 +213,7 @@ local function CreateGrid(r)
 		color={1,1,1,0},
 		border={0.8,0,0,0},
 		glone=0.12,
-		texture = LUAUI_DIRNAME.."Images/button-pushed.png", -- bottone premuto???
+		texture = LUAUI_DIRNAME.."Images/menu/button-pushed.png", -- bottone premuto???
 		texturecolor={1,1,1,1},
 		
 		active=false,
@@ -225,13 +225,13 @@ local function CreateGrid(r)
 	local mouseoverhighlight = Copy(selecthighlight,true)
 	mouseoverhighlight.color={1,1,1,0.17}
 	mouseoverhighlight.border={1,1,1,0} ----- riquadro highlight disabilitato
-	mouseoverhighlight.texture = LUAUI_DIRNAME.."Images/button-hover.png"
+	mouseoverhighlight.texture = LUAUI_DIRNAME.."Images/menu/button-hover.png"
 	mouseoverhighlight.texturecolor={1,1,1,0.9}
 	
 	local heldhighlight = Copy(selecthighlight,true)
 	heldhighlight.color={1,0.8,0,0.2}
 	heldhighlight.border={1,1,0,0}
-	heldhighlight.texture = LUAUI_DIRNAME.."button-pushed_test.png"
+	heldhighlight.texture = LUAUI_DIRNAME.."Images/menu/button-pushed_test.png"
 	heldhighlight.texturecolor={1,0.8,0,0.2}
 	
 	local icon = {"rectangle",
@@ -312,10 +312,10 @@ local function CreateGrid(r)
 --	New(background2)
 	
 	local backward = New(Copy(icon,true))
-	backward.texture = LUAUI_DIRNAME.."Images/backward.png"
+	backward.texture = LUAUI_DIRNAME.."Images/menu/backward.png"
 
 	local forward = New(Copy(icon,true))
-	forward.texture = LUAUI_DIRNAME.."Images/forward.png"
+	forward.texture = LUAUI_DIRNAME.."Images/menu/forward.png"
 	
 	local indicator = New({"rectangle",
 		px=0,py=0,
