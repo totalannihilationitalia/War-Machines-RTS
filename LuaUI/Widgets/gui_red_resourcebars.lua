@@ -43,12 +43,13 @@ local Config = {
 		cexpense = {1,0,0,1},
 		ccurrent = {1,1,1,1},
 		cstorage = {1,1,1,1},
-		
+-- aggiungo icona
+		cicona = LUAUI_DIRNAME.."Images/menu/livrium_icon.png",
 		dragbutton = {2}, --middle mouse button
 		tooltip = {
 			background ="In CTRL+F11 mode: Hold \255\255\255\1middle mouse button\255\255\255\255 to drag the resource bar.\n\n"..
 			"\255\255\255\1Leftclick\255\255\255\255 on the bar to set team share.",
-			income = "Your metal income.",
+			income = "Your livrium income.",
 			pull = "Your metal pull.",
 			expense = "Your metal expense, same as pull if not shown.",
 			storage = "Your maximum metal storage.",
@@ -81,7 +82,8 @@ local Config = {
 		cexpense = {1,0,0,1},
 		ccurrent = {1,1,1,1},
 		cstorage = {1,1,1,1},
-		
+
+		cicona = LUAUI_DIRNAME.."Images/menu/energy_icon.png",	
 		dragbutton = {2}, --middle mouse button
 		tooltip = {
 			background ="In CTRL+F11 mode: Hold \255\255\255\1middle mouse button\255\255\255\255 to drag the resource bar.\n\n"..
@@ -215,7 +217,16 @@ local function createbar(r)
 --			background2.sy = self.sy - self.padding - self.padding
 		end,
 	}
+
+
+
+
+
+
 	New(background)
+
+--	New(icona)
+
 --	New(background2)
 	
 	local number = {"text",
@@ -226,24 +237,25 @@ local function createbar(r)
 	
 	local income = New(number)
 	income.color = r.cincome
------ test
-	local icona = 	{"rectanglerounded",
---		px=r.px,py=r.py,
---		sx=r.sx,sy=r.sy,
-		px=50,py=50,
-		sx=200,sy=200,
-		color=r.cbackground,
-		border=r.cborder,
-		texture = barTexture,
-		texturecolor = {0.15,0.15,0.15,1},	
-	}
+
 	
 	local barbackground = {"rectangle",
 		px=background.px+income.getwidth()-r.margin,py=income.py,
 		sx=background.sx-income.getwidth(),sy=r.barsy,
-		color=r.cbarbackground,
+--		color=r.cbarbackground,
 		texture = barTexture,
 		texturecolor = {0.15,0.15,0.15,1},
+	}
+
+----- test inserisco l'icona energia 
+	local icona = 	{"rectangle",
+		px=r.px-5,py=r.py+4,
+		sx=r.sx-240,sy=r.sy-8,
+
+		color=r.cbar,
+		border=r.cborder,
+		texture = r.cicona, 
+		texturecolor = {1,1,1,1},	
 	}
 
 	local barborder = Copy(barbackground)
@@ -251,12 +263,12 @@ local function createbar(r)
 	barborder.border = r.cborder
 	barborder.texture = nil
 	barborder.texturecolor = nil
-	
 	local bar = Copy(barbackground)
 	bar.color = r.cbar
 	bar.texture = barTexture
 	bar.texturecolor = r.cbar
-	
+	bar.cicona = r.cicona -- inserisco
+
 	local shareindicator = Copy(barbackground)
 	shareindicator.color = r.cindicator
 	shareindicator.py = shareindicator.py -2
@@ -270,6 +282,8 @@ local function createbar(r)
 	New(bar)
 	New(barborder)
 	New(shareindicator)
+-- aggiungo le icone
+	New(icona)
 	
 	bar.overridecursor = true
 	
@@ -326,8 +340,7 @@ local function createbar(r)
 		["expense"] = expense,
 		["current"] = current,
 		["storage"] = storage,
--- test
-		["icona"] = icona,
+		["cicona"] = cicona,
 	
 		margin = r.margin
 	}
@@ -337,7 +350,7 @@ local function updatebar(b,res)
 	local r = {sGetTeamResources(sGetMyTeamID(),res)} -- 1 = cur 2 = cap 3 = pull 4 = income 5 = expense 6 = share
 	local barbackpx = b.barbackground.px
 	local barbacksx = b.barbackground.sx
-	
+--New(icona)	
 	b.bar.sx = r[1]/r[2]*barbacksx
 	if (b.bar.sx > barbacksx) then --happens on gamestart and storage destruction
 		b.bar.sx = barbacksx
