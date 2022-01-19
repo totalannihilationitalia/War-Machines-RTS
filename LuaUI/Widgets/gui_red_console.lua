@@ -70,8 +70,8 @@ local Config = {
 		cmisctext = {0.78,0.78,0.78,1}, --everything else
 		cgametext = {0.4,1,1,1}, --server (autohost) chat
 		
-		cbackground = {0,0,1,0.2}, --riquadro esterno
-		cborder = {0,0,1,0.02},
+		cbackground = {0.03,0.18,0.3,0.5}, --riquadro esterno
+		cborder = {0,0.67,0.99,1},
 		
 		dragbutton = {2}, --middle mouse button
 		tooltip = {
