@@ -24,13 +24,13 @@ local Config = {
 		
 		fontsize = 7,
 		
-		padding = 3,
-		color2 = {0,0,0,0.5}, -- riquadro interno
+--		padding = 3, --distanza del riquadro interno rispetto quello esterno
+--		color2 = {0,0,0,0.5}, -- riquadro interno eliminato
 		
 		margin = 11, --distance from background border
 		
-		cbackground = {0,0,1,0.2}, --color {r,g,b,alpha} riquadro esterno
-		cborder = {0,0,0,0.5},
+		cbackground = {0.03,0.18,0.3,0.5}, --color {r,g,b,alpha} riquadro esterno
+		cborder = {0,0.67,0.99,1},
 		
 		dragbutton = {2}, --middle mouse button
 		tooltip = {
@@ -190,11 +190,11 @@ local function createtooltip(r)
 			end
 		end
 	}
-	local background2 = {"rectanglerounded",
-		px=r.px+r.padding,py=r.py+r.padding,
-		sx=r.sx-r.padding-r.padding,sy=r.sy-r.padding-r.padding,
-		color=r.color2,
-	}
+--	local background2 = {"rectanglerounded",
+--		px=r.px+r.padding,py=r.py+r.padding,
+--		sx=r.sx-r.padding-r.padding,sy=r.sy-r.padding-r.padding,
+--		color=r.color2,
+--	}
 	local background = {"rectanglerounded",
 		px=r.px,py=r.py,
 		sx=r.sx,sy=r.sy,
@@ -204,7 +204,7 @@ local function createtooltip(r)
 		padding=r.padding,
 		
 		movable=r.dragbutton,
-		movableslaves={text,unitcounter,background2},
+--		movableslaves={text,unitcounter,background2}, rimuovo
 		
 		obeyscreenedge = true,
 		--overridecursor = true,
@@ -229,10 +229,11 @@ local function createtooltip(r)
 				text.px = self.px + r.margin
 			end
 			unitcounter.px = self.sx - ((r.margin/2)* Screen.vsy/CanvasY)
-			background2.px = self.px + self.padding
-			background2.py = self.py + self.padding
-			background2.sx = self.sx - self.padding - self.padding
-			background2.sy = self.sy - self.padding - self.padding
+-- rimuovo background2
+--			background2.px = self.px + self.padding
+--			background2.py = self.py + self.padding
+--			background2.sx = self.sx - self.padding - self.padding
+--			background2.sy = self.sy - self.padding - self.padding
 		end,
 		
 		mouseover=function(mx,my,self)
@@ -245,13 +246,13 @@ local function createtooltip(r)
 
 	
 	New(background)
-	New(background2)
+--	New(background2)
 	New(text)
 	New(unitcounter)
 	
 	return {
 		["background"] = background,
-		["background2"] = background2,
+--		["background2"] = background2,
 		["text"] = text,
 		["unitcounter"] = unitcounter,
 		
