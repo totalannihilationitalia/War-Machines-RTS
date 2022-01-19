@@ -44,7 +44,7 @@ local imgArrows							= "LuaUI/Images/tweaksettings/arrows.png"
 local imgQuit							= "LuaUI/Images/tweaksettings/quit_menu.png"
 local imgQuit2							= "LuaUI/Images/tweaksettings/quit_menu_over.png" 
 local sfondomenu						= "LuaUI/Images/tweaksettings/sfondo_menua.png" -- menu background
-local icona_graphics					= "LuaUI/Images/tweaksettings/menu_visual_icon.png" -- icona menu graphics
+local icona_graphics					= "LuaUI/Images/tweaksettings/menu_graphics_icon.png" -- icona menu graphics
 
 --sounds
 local sndButtonOn 						= 'sounds/button8.wav'
