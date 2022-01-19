@@ -17,7 +17,7 @@ end
 
 local posX, posY					  	= 600, 400
 local buttonsize					  	= 16
-local width, height					  	= 400, 660  -- larghezza e alteza dello sfondo menù opzioni
+local width, height					  	= 400, 560  -- larghezza e alteza dello sfondo menù opzioni
 local iWidth							= 400
 local iRowHeight						= 14
 local rows								= 0
@@ -43,7 +43,8 @@ local optCheckBoxOff					= "LuaUI/Images/tweaksettings/chkBoxOff.png"
 local imgArrows							= "LuaUI/Images/tweaksettings/arrows.png"
 local imgQuit							= "LuaUI/Images/tweaksettings/quit_menu.png"
 local imgQuit2							= "LuaUI/Images/tweaksettings/quit_menu_over.png" 
-local sfondomenu						= "LuaUI/Images/tweaksettings/sfondo_menua.png" --test menu background
+local sfondomenu						= "LuaUI/Images/tweaksettings/sfondo_menua.png" -- menu background
+local icona_graphics					= "LuaUI/Images/tweaksettings/menu_visual_icon.png" -- icona menu graphics
 
 --sounds
 local sndButtonOn 						= 'sounds/button8.wav'
@@ -56,7 +57,6 @@ local Panel					  			= {}
 
 -- variables
 
-local onbuttclose = 0 					-- aggiungo questa variabile per modificare il colore del pulsante close
 local waterType = 0
 local modOptions 						= Spring.GetModOptions()
 local Options							= {}
@@ -83,10 +83,10 @@ local cRed								= {0.8, 0.2, 0.2, 1}
 local cGrey								= {1, 1, 1, 1} -- {0.8, 0.8, 0.8, 0.2}
 local cYellow							= {0.8, 0.8, 0.2, 1}
 local cRow								= {0.2,0.6,0.9,0.1}
-local cBorder							= {0,0,0,1}
+local cBorder							= {0,0,0,1} -- eliminare bordi ????? ## ho inserito l'immagine di sfondo (che ha già i bordi) ##################################
 local cAbove							= {1,1,1,0.5}
 local notOver							= {1,1,1,0.75} -- per testi pulsante "not over"
-
+local backbutton						= {0.03,0.18,0.3,0.3} -- righe sotto opzioni
 
 --------------------------------------------------------------------------------			 
 -- Local functions
@@ -150,7 +150,7 @@ end
 -----------	  
 function widget:Initialize()
 
-
+-- proprietà grafiche --------------------------------------------------------------------------------------------------------------------
 	Button[1] 						= {} -- mapshading
 	Button[2]						= {} -- unitshading
 	Button[3]						= {} -- shadows
@@ -158,33 +158,34 @@ function widget:Initialize()
 	Button[5]						= {} -- showfps
 	Button[6]						= {} -- show time
 	Button[7]						= {} -- show speed
-	Button[8]						= {} -- enable shaders
-	Button[9]						= {} -- info table	  -- cos'è??? ******************************************************************************
-	Button[10]						= {} -- water
-	Button[11]						= {} -- stats window order  -- cos'è??? ************************************************************************
-	Button[12]						= {} -- full screen
-	Button[13]						= {} -- disable blinking units
-	Button[14]						= {} -- show/don't show grass
-	Button[15]						= {} -- show/don't show help text
-	Button[16]						= {} -- scale commander names to res.
-	Button[17]						= {} -- show/don't show bloom shader	
-	Button[18]						= {} -- show/don't show bloom shader	
-	Button[19]						= {} -- show/don't show bloom shader
-	Button[20]						= {} -- show/don't show bloom shader	
-	Button[20]						= {} -- show/don't show bloom shader	
-	Button[21]						= {} -- show/don't show bloom shader		
-	Button[22]						= {} -- show/don't show bloom shader	
-	Button[23]						= {} -- show/don't show bloom shader	
-	Button[24]						= {} -- show/don't show bloom shader
-	Button[25]						= {} -- show/don't show bloom shader	
-	Button[26]						= {} -- show/don't show bloom shader	
-	Button[27]						= {} -- show/don't show bloom shader			
-	Button[28]						= {} -- show/don't show bloom shader	
-	Button[29]						= {} -- show/don't show bloom shader	
-	Button[30]						= {} -- show/don't show bloom shader
-	Button[31]						= {} -- show/don't show bloom shader	
-	Button[32]						= {} -- windowed edge mode
-	Button[33]						= {} -- scale commander name
+	Button[8]						= {} -- FSAA da portare a MSAA
+	Button[9]						= {} -- Spring shaders ON/OFF
+	Button[10]						= {} -- Bloom shader
+	Button[11]						= {} -- water render
+--	Button[12]						= {} -- camera mode
+	Button[12]						= {} -- projectilelight
+	Button[13]						= {} -- LUPS
+	Button[14]						= {} -- x-Ray
+	Button[15]						= {} -- Fullscreen
+	Button[16]						= {} -- TeamHighlight	
+	Button[17]						= {} -- grassdetail
+--	Button[18]						= {} -- eliminare ####################################
+-- proprietà visive --------------------------------------------------------------------------------------------------------------------
+--	Button[20]						= {} -- environmental on /off
+--	Button[21]						= {} -- units aura	(spot)
+--	Button[22]						= {} -- unitshealtbar
+--	Button[23]						= {} -- etabar
+--	Button[24]						= {} -- unitsrank
+--	Button[25]						= {} -- camerashake On/OFF da trasformare in camera shake level (con parametri da impostare)
+--	Button[26]						= {} -- showingamemessage on/off
+--	Button[27]						= {} -- showlos on/off		
+--	Button[28]						= {} -- showvline on/off
+--	Button[29]						= {} -- Show initial point spawn
+--	Button[30]						= {} -- Show aura on teammates selected units:
+--	Button[31]						= {} -- Show teammates cursor
+--	Button[32]						= {} -- Edge camera move (require restart):
+--	Button[33]						= {} -- scale commander name
+--	Button[34]						= {} -- camera mode	
 	
 	Panel["main"]					= {}
 --	Panel["main2"]					= {} -- test secondo menù	
@@ -505,8 +506,8 @@ function InitButtons()
 	Button[8]["wide"] 		    = true	
 	Button[11]["wide"]			= true -- Water double width as normal
 	Button[11]["divided"] 		= true -- Water
-	Button[12]["wide"]			= true -- Camera double width as normal
-	Button[12]["divided"] 		= true -- Camera
+--	Button[12]["wide"]			= true -- Camera double width as normal
+--	Button[12]["divided"] 		= true -- Camera
 	
 	-- automate positions
 	for i,button in ipairs(Button) do
@@ -571,7 +572,7 @@ function InitButtons()
 	Button[7]["command"]		= "showSpeed"
 	Button[7]["label"]			= "Show game speed:"
 	
-	Button[8]["click"]			= false																				--- Antialiasing level
+	Button[8]["click"]			= false						-- Antialiasing level utilizzare MSAA vedi docu springconfig
 	Button[8]["less"]			= "FSAALevelLess"
 	Button[8]["more"]			= "FSAALevelMore"
 	
@@ -616,151 +617,84 @@ function InitButtons()
 ----------------
 -- CAMERA SETTING 
 ----------------	
-	Button[12]["click"]			= false
-	Button[12]["img"]			= imgArrows
-	Button[12]["less"]			= "cameraPrev"
-	Button[12]["more"]			= "cameraNext"
-	if not Button[12]["value"] then
-		Button[12]["value"]   		= tonumber(Spring.GetConfigInt("CamMode",1)) or 0
-	end
-	if Button[12]["value"] == 0 then
-		cameraType = "FPS"
-		Spring.SendCommands('viewfps')
-	elseif Button[12]["value"] == 1 then
-		cameraType = "Overhead"
-		Spring.SendCommands('viewta')
-	elseif Button[12]["value"] == 2 then
-		cameraType = "Spring"
-		Spring.SendCommands('viewspring')
-	elseif Button[12]["value"] == 3 then
-		cameraType = "RotOverhead"
-		Spring.SendCommands('viewrot')
-	elseif Button[12]["value"] == 4 then
-		cameraType = "Free"
-	elseif Button[12]["value"] == 5 then
-		cameraType = "Overview"	
-		Spring.SendCommands('viewfree')		
-	end
+--	Button[12]["click"]			= false
+--	Button[12]["img"]			= imgArrows
+--	Button[12]["less"]			= "cameraPrev"
+--	Button[12]["more"]			= "cameraNext"
+--	if not Button[12]["value"] then
+--		Button[12]["value"]   		= tonumber(Spring.GetConfigInt("CamMode",1)) or 0
+--	end
+--	if Button[12]["value"] == 0 then
+--		cameraType = "FPS"
+--		Spring.SendCommands('viewfps')
+--	elseif Button[12]["value"] == 1 then
+--		cameraType = "Overhead"
+--		Spring.SendCommands('viewta')
+--	elseif Button[12]["value"] == 2 then
+--		cameraType = "Spring"
+--		Spring.SendCommands('viewspring')
+--	elseif Button[12]["value"] == 3 then
+--		cameraType = "RotOverhead"
+--		Spring.SendCommands('viewrot')
+--	elseif Button[12]["value"] == 4 then
+--		cameraType = "Free"
+--	elseif Button[12]["value"] == 5 then
+--		cameraType = "Overview"	
+--		Spring.SendCommands('viewfree')		
+--	end
 
-	Button[12]["label"]			= table.concat{"Camera type: "," (", tonumber(Button[12]["value"])," - ",cameraType ,")"}	
+--	Button[12]["label"]			= table.concat{"Camera type: "," (", tonumber(Button[12]["value"])," - ",cameraType ,")"}	
 ---------------	
 ---------------
 
-	Button[13]["click"]			= tonumber(Spring.GetConfigInt("projectilelight") or 0) == 1									-- projectile light
-	Button[13]["command"]		= "projectilelightopt"
-	Button[13]["label"]			= "Show ground projectile lights:"
+	Button[12]["click"]			= tonumber(Spring.GetConfigInt("projectilelight") or 0) == 1									-- projectile light
+	Button[12]["command"]		= "projectilelightopt"
+	Button[12]["label"]			= "Show ground projectile lights:"
 
 ----------------
 -- LUPS 
 ----------------	
 	
-	Button[14]["click"]			= tonumber(Spring.GetConfigInt("lupseffect") or 0) == 1									-- projectile light
-	Button[14]["command"]		= "cmdlupseff"
-	Button[14]["label"]			= "Show LUPS effects:"
+	Button[13]["click"]			= tonumber(Spring.GetConfigInt("lupseffect") or 0) == 1									-- projectile light
+	Button[13]["command"]		= "cmdlupseff"
+	Button[13]["label"]			= "Show LUPS effects:"
 	
 ----------------
 -- x-Ray
 ----------------	
 	
-	Button[15]["click"]			= tonumber(Spring.GetConfigInt("xrayeff") or 0) == 1									-- projectile light
-	Button[15]["command"]		= "cmdxray"
-	Button[15]["label"]			= "Show units X-ray effect:"	
+	Button[14]["click"]			= tonumber(Spring.GetConfigInt("xrayeff") or 0) == 1									-- projectile light
+	Button[14]["command"]		= "cmdxray"
+	Button[14]["label"]			= "Show units X-ray effect:"	
 
 ----------------
 -- Fullscreen
 ----------------	
 	
-	Button[16]["click"]			= tonumber(Spring.GetConfigInt("Fullscreen",1) or 1) == 1
-	Button[16]["command"]		= "fullscreen"
-	Button[16]["label"]			= "Full screen:"
+	Button[15]["click"]			= tonumber(Spring.GetConfigInt("Fullscreen",1) or 1) == 1
+	Button[15]["command"]		= "fullscreen"
+	Button[15]["label"]			= "Full screen:"
 
 ----------------
 -- TeamHighlight ############## verificare se è il blinking o la tabella di riepilogo ##################################
 ----------------	
 	
-	Button[17]["click"]			= tonumber(Spring.GetConfigInt("TeamHighlight",1) or 1) == 1							-- effetto blinking quando problemi syncro o utente mancante ################# sistemare perchè forse questo è l'impostazione della tabella
-	Button[17]["command"]		= "blinking"
-	Button[17]["label"]			= "Blinking units:"
+	Button[16]["click"]			= tonumber(Spring.GetConfigInt("TeamHighlight",1) or 1) == 1							-- effetto blinking quando problemi syncro o utente mancante ################# sistemare perchè forse questo è l'impostazione della tabella
+	Button[16]["command"]		= "blinking"
+	Button[16]["label"]			= "Blinking units:"
 
 ----------------
 -- grassdetail
 ----------------	
 	
-	Button[18]["click"]			= tonumber(Spring.GetConfigInt("GrassDetail",1) or 1) == 1											-- verirficare se metteremo l'erba
-	Button[18]["command"]		= "grass"
-	Button[18]["label"]			= "Show grass on maps:"
+	Button[17]["click"]			= tonumber(Spring.GetConfigInt("GrassDetail",1) or 1) == 1											-- verirficare se metteremo l'erba
+	Button[17]["command"]		= "grass"
+	Button[17]["label"]			= "Show grass on maps:"
 
 ----------------
--- eliminare ############## verificare se è il blinking o la tabella di riepilogo ##################################
-----------------	
-	
-	Button[19]["click"]			= tonumber(Spring.GetConfigInt("XTA_CommandHelpText",1) or 1) == 1									
-	Button[19]["command"]		= "help"
-	Button[19]["label"]			= "Eliminare:"
-
---- numerare da qui #####################################################################################
---- #####################################################################################################
-
-
-----------------
--- 
+-- fine opzioni grafiche
 ----------------	
 
-	Button[20]["click"]			= tonumber(Spring.GetConfigInt("environmeff",1) or 1) == 1									
-	Button[20]["command"]		= "showenviroeff"
-	Button[20]["label"]			= "show environment effects (snow, rain, etc):"
-	
-	Button[21]["click"]			= tonumber(Spring.GetConfigInt("unitsaura",1) or 1) == 1									
-	Button[21]["command"]		= "showunitaura"
-	Button[21]["label"]			= "Show units aura:"
-
-	Button[22]["click"]			= tonumber(Spring.GetConfigInt("unitshealtbar",1) or 1) == 1									
-	Button[22]["command"]		= "showunithbar"
-	Button[22]["label"]			= "Show units healt/weapon bars:"	
-	
-	Button[23]["click"]			= tonumber(Spring.GetConfigInt("unitsetabar",1) or 1) == 1									
-	Button[23]["command"]		= "showunitetabar"
-	Button[23]["label"]			= "Show units ETA bars:"	
-
-	Button[24]["click"]			= tonumber(Spring.GetConfigInt("unitsrank",1) or 1) == 1									
-	Button[24]["command"]		= "showunitrank"
-	Button[24]["label"]			= "Show units rank:"	
-	
-	Button[25]["click"]			= tonumber(Spring.GetConfigInt("camerashake",1) or 1) == 1									
-	Button[25]["command"]		= "shakecamera"
-	Button[25]["label"]			= "Camera shake during explosions:"	
-	
-	Button[26]["click"]			= tonumber(Spring.GetConfigInt("showingamemessage",1) or 1) == 1									
-	Button[26]["command"]		= "ingamemessage"
-	Button[26]["label"]			= "Show ingame alerts:"	
-	
-	Button[27]["click"]			= tonumber(Spring.GetConfigInt("showlos",1) or 1) == 1									
-	Button[27]["command"]		= "loseff"
-	Button[27]["label"]			= "Show LOS fog:"		
-	
-	Button[28]["click"]			= tonumber(Spring.GetConfigInt("showvline",1) or 1) == 1									
-	Button[28]["command"]		= "vlineopt"
-	Button[28]["label"]			= "Show vertical line on radar dots:"	
-	
-	Button[29]["click"]			= tonumber(Spring.GetConfigInt("showipsawn",1) or 1) == 1									
-	Button[29]["command"]		= "ipsawnopt"
-	Button[29]["label"]			= "Show initial point spawn:"	
-	
-	Button[30]["click"]			= tonumber(Spring.GetConfigInt("showteamaura",1) or 1) == 1									
-	Button[30]["command"]		= "teamauraopt"
-	Button[30]["label"]			= "Show aura on teammates selected units:"		
-
-	Button[31]["click"]			= tonumber(Spring.GetConfigInt("showteamcurs",1) or 1) == 1									
-	Button[31]["command"]		= "teamcursopt"
-	Button[31]["label"]			= "Show teammates cursor:"		
-
-	Button[32]["click"]			= tonumber(Spring.GetConfigInt("FullscreenEdgeMove",1) or 1) == 1		
-	Button[32]["command"]		= "setedgecamera"
-	Button[32]["label"]			= "Edge camera move (require restart):"
-
-	Button[33]["click"]			= WG.nameScaling or false
-	Button[33]["command"]		= "scale-names"
-	Button[33]["label"]			= "Scale commander names to zoom-level:"
 
 	Panel["main"]["x1"]			= posX
 	Panel["main"]["x2"]			= posX + width
@@ -897,29 +831,12 @@ function ButtonHandler (cmd)
 			Spring.SendCommands("water " .. tonumber(Button[11]["value"]))
 		end
 ---------------------------
--- CAMERA		
----------------------------
-elseif cmd == "cameraPrev" then
-		if Button[12]["value"] ~= math.max(Button[12]["value"] - 1,0) then
-			Button[12]["value"] = math.max(Button[12]["value"] - 1,0)
---			Spring.SendCommands("CamMode" .. tonumber(Button[12]["value"]))
-			Spring.SetConfigInt("CamMode",(Button[12]["value"]))
-		end
-
---		InitButtons() tolto #####################
-	elseif cmd == "cameraNext" then	
-		if Button[12]["value"] ~= math.min(Button[12]["value"] + 1,5) then
-			Button[12]["value"] = math.min(Button[12]["value"] + 1,5)
---			Spring.SendCommands("CamMode" .. tonumber(Button[12]["value"]))
-			Spring.SetConfigInt("CamMode",(Button[12]["value"]))
-		end
----------------------------
 -- PROJECTILE LIGHT		
 ---------------------------		
 		
 --		InitButtons() tolto #####################
 	elseif cmd == "projectilelightopt" then
-		if Button[13]["click"] then
+		if Button[12]["click"] then
 			Spring.SetConfigInt("projectilelight",0)
 			Spring.SendCommands({"luaui disablewidget Projectile lights"}) 
 		else
@@ -930,7 +847,7 @@ elseif cmd == "cameraPrev" then
 -- LUPS EFFECTS	
 ---------------------------		
 	elseif cmd == "cmdlupseff" then
-		if Button[14]["click"] then
+		if Button[13]["click"] then
 			Spring.SetConfigInt("lupseffect",0)
 			Spring.SendCommands({"luaui disablewidget Lups"}) 			
 			Spring.SendCommands({"luaui disablewidget LupsManager"}) 						
@@ -943,7 +860,7 @@ elseif cmd == "cameraPrev" then
 -- X-ray EFFECTS	
 ---------------------------		
 	elseif cmd == "cmdxray" then
-		if Button[15]["click"] then
+		if Button[14]["click"] then
 			Spring.SetConfigInt("xrayeff",0)
 			Spring.SendCommands({"luaui disablewidget XrayShader"}) 			
 								
@@ -954,7 +871,7 @@ elseif cmd == "cameraPrev" then
 		end
 
 	elseif cmd == "fullscreen" then
-		if Button[16]["click"] then
+		if Button[15]["click"] then
 			Spring.SendCommands("fullscreen 0")
 		else
 			Spring.SendCommands("fullscreen 1")
@@ -963,13 +880,13 @@ elseif cmd == "cameraPrev" then
 -- verificare se la condizione indica il blinking oppure le statistiche di gioco a fine partita!!!!
 --------------------------		
 	elseif cmd == "blinking" then
-		if Button[17]["click"] then
+		if Button[16]["click"] then
 			Spring.SendCommands("teamhighlight 0")
 		else
 			Spring.SendCommands("teamhighlight 1")
 		end
 	elseif cmd == "grass" then
-		if Button[18]["click"] then
+		if Button[17]["click"] then
 			Spring.SetConfigInt("GrassDetail",0)
 		else
 			Spring.SetConfigInt("GrassDetail",1)
@@ -979,159 +896,12 @@ elseif cmd == "cameraPrev" then
 ---------------------------		
 
 	elseif cmd == "help" then
-		if Button[19]["click"] then
+		if Button[18]["click"] then
 			Spring.SetConfigInt("XTA_CommandHelpText",0)
 		else
 			Spring.SetConfigInt("XTA_CommandHelpText",1)
 		end
----------------------------
--- 
----------------------------		
-	elseif cmd == "help" then
-		if Button[20]["click"] then
-			Spring.SetConfigInt("environmeff",0)
-			Spring.SendCommands({"luaui disablewidget Snow"}) 			
-		else
-			Spring.SetConfigInt("environmeff",1)
-			Spring.SendCommands({"luaui enablewidget Snow"}) 
-		end
----------------------------
--- 
----------------------------	
-	elseif cmd == "help" then			
-		if Button[21]["click"] then
-			Spring.SetConfigInt("unitsaura",0)
-			Spring.SendCommands({"luaui disablewidget Spotter"}) 			
-		else
-			Spring.SetConfigInt("unitsaura",1)
-			Spring.SendCommands({"luaui enablewidget Spotter"}) 			
-		end	
----------------------------
--- 
----------------------------	
-	elseif cmd == "help" then				
-		if Button[22]["click"] then
-			Spring.SetConfigInt("unitshealtbar",0)
-			Spring.SendCommands({"luaui disablewidget HealthBars"}) 			
-		else
-			Spring.SetConfigInt("unitshealtbar",1)
-			Spring.SendCommands({"luaui enablewidget HealthBars"}) 			
-		end
----------------------------
--- 
----------------------------	
-	elseif cmd == "help" then				
-			if Button[23]["click"] then
-			Spring.SetConfigInt("unitsetabar",0)
-			Spring.SendCommands({"luaui disablewidget BuildETA"}) 			
-		else
-			Spring.SetConfigInt("unitsetabar",1)
-			Spring.SendCommands({"luaui enablewidget BuildETA"}) 			
-		end
----------------------------
--- 
----------------------------	
-	elseif cmd == "help" then				
-			if Button[24]["click"] then
-			Spring.SetConfigInt("unitsrank",0)
-			Spring.SendCommands({"luaui disablewidget Rank Icons"}) 			
-		else
-			Spring.SetConfigInt("unitsrank",1)
-			Spring.SendCommands({"luaui enablewidget Rank Icons"}) 			
-		end
----------------------------
--- CAMERA SHAKE
----------------------------	
-	elseif cmd == "shakecamera" then				
-			if Button[25]["click"] then
-			Spring.SetConfigInt("camerashake",0)
-			Spring.SendCommands({"luaui disablewidget CameraShake"}) 			
-		else
-			Spring.SetConfigInt("camerashake",1)
-			Spring.SendCommands({"luaui enablewidget CameraShake"}) 			
-		end
----------------------------
--- 
----------------------------		
-	elseif cmd == "help" then			
-			if Button[26]["click"] then
-			Spring.SetConfigInt("showingamemessage",0)
-			Spring.SendCommands({"luaui disablewidget Warning messages"}) 			
-		else
-			Spring.SetConfigInt("showingamemessage",1)
-			Spring.SendCommands({"luaui enablewidget Warning messages"}) 			
-		end
----------------------------
--- 
----------------------------		
-	elseif cmd == "help" then			
-			if Button[27]["click"] then
-			Spring.SetConfigInt("showlos",0)
-			Spring.SendCommands({"luaui disablewidget LOS View"}) 			
-		else
-			Spring.SetConfigInt("showlos",1)
-			Spring.SendCommands({"luaui enablewidget LOS View"}) 			
-		end
----------------------------
--- 
----------------------------		
-	elseif cmd == "help" then			
-			if Button[28]["click"] then
-			Spring.SetConfigInt("showvline",0)
-			Spring.SendCommands({"luaui disablewidget Vertical Line on Radar Dots"}) 			
-		else
-			Spring.SetConfigInt("showvline",1)
-			Spring.SendCommands({"luaui enablewidget Vertical Line on Radar Dots"}) 			
-		end
----------------------------
--- 
----------------------------	
-	elseif cmd == "help" then				
-			if Button[29]["click"] then
-			Spring.SetConfigInt("showipsawn",0)
-			Spring.SendCommands({"luaui disablewidget Start Point Adder"}) 			
-		else
-			Spring.SetConfigInt("showipsawn",1)
-			Spring.SendCommands({"luaui enablewidget Start Point Adder"}) 			
-		end
----------------------------
--- 
----------------------------			
-	elseif cmd == "help" then		
-			if Button[30]["click"] then
-			Spring.SetConfigInt("showteamaura",0)
-			Spring.SendCommands({"luaui disablewidget Ally Selected Units"}) 			
-		else
-			Spring.SetConfigInt("showteamaura",1)
-			Spring.SendCommands({"luaui enablewidget Ally Selected Units"}) 			
-		end
----------------------------
--- 
----------------------------					
-	elseif cmd == "help" then
-			if Button[31]["click"] then
-			Spring.SetConfigInt("showteamcurs",0)
-			Spring.SendCommands({"luaui disablewidget AllyCursors"}) 			
-		else
-			Spring.SetConfigInt("showteamcurs",1)
-			Spring.SendCommands({"luaui enablewidget AllyCursors"}) 			
-		end		
----------------------------
--- 
----------------------------					
-	elseif cmd == "setedgecamera" then
-			if Button[32]["click"] then
-			Spring.SetConfigInt("FullscreenEdgeMove",0)
-			Spring.SendCommands("FullscreenEdgeMove 0")		
-		else
-			Spring.SetConfigInt("FullscreenEdgeMove",1)
-			Spring.SendCommands("FullscreenEdgeMove 1")		
-		end				
----------------------------
--- 
----------------------------			
-	elseif cmd == "scale-names" then
-		Spring.SendCommands("comnamescale")
+
 	else
 		Echo("Local command:",cmd)
 	end
@@ -1426,7 +1196,7 @@ local function drawSettings() -- valido per opzioni menu
 	
 	
 	--background panel 
-	gl.Color(notOver)
+	gl.Color(cWhite)
 
 	gl.Texture(sfondomenu)	-- aggiungo l'immagine al background
 	gl.TexRect(Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"])	
@@ -1440,52 +1210,44 @@ local function drawSettings() -- valido per opzioni menu
 --	gl.Rect(Panel["main"]["x1"],Panel["main"]["y1"]-1, Panel["main"]["x2"], Panel["main"]["y1"])
 --	gl.Rect(Panel["main"]["x1"],Panel["main"]["y2"], Panel["main"]["x2"], Panel["main"]["y2"]+1)
 	
+	-- icona menu
+	
+	gl.Texture(icona_graphics)	-- aggiungo l'immagine al background
+	gl.TexRect(Panel["main"]["x1"]+20,Panel["main"]["y1"]+527, Panel["main"]["x1"]+60, Panel["main"]["y1"]+567)	
+	gl.Texture(false)	-- fine texture		
+	
 	-- Heading
 	myFontBig:Begin()
 	myFontBig:SetTextColor(cWhite)
-	myFontBig:Print("Graphics settings:", Panel["main"]["x1"] + leftmargin, Panel["main"]["y2"] - 20,14,'ds')
+	myFontBig:Print("Graphics settings", Panel["main"]["x1"]+50 + leftmargin, Panel["main"]["y2"] - 34,14,'ds')
 	myFontBig:End()
---  era tutti qui
+
 
 	-- exit
-	if ButtonClose.above then
---		gl.Color(cAbove)
-		onbuttclose = 0				
-	else
-		onbuttclose = 1	
---		gl.Color(cGrey)
-	end
-
 	
-	-- Buttons	
-
-if (onbuttclose == 1) then	
+	myFontBig:Begin()
+	if ButtonClose.above then
+	gl.Texture(imgQuit2)	-- aggiungo l'immagine al pulsante close menù	
+	gl.TexRect(ButtonClose["x1"],ButtonClose["y1"],ButtonClose["x2"],ButtonClose["y2"])
+	gl.Texture(false)	-- fine texture		
+	myFontBig:SetTextColor(cWhite)
+	else
 	gl.Texture(imgQuit)	-- aggiungo l'immagine al pulsante close menù
 	gl.TexRect(ButtonClose["x1"],ButtonClose["y1"],ButtonClose["x2"],ButtonClose["y2"])
 	gl.Texture(false)	-- fine texture
-end
-if (onbuttclose == 0) then	
-	gl.Texture(imgQuit2)	-- aggiungo l'immagine al pulsante close menù
-	gl.TexRect(ButtonClose["x1"],ButtonClose["y1"],ButtonClose["x2"],ButtonClose["y2"])
-	gl.Texture(false)	-- fine texture
-end
-	myFontBig:Begin()
-	if (onbuttclose == 1) then
 	myFontBig:SetTextColor(notOver)
-	else
-	myFontBig:SetTextColor(cWhite)
-	end	
+	end
 	myFontBig:Print("Close", (ButtonClose["x1"]+ButtonClose["x2"])/2, (ButtonClose["y1"]+ButtonClose["y2"])/2,14,'vcs')
-	myFontBig:End()
-
-
-
-
+	myFontBig:End()	
+	-- Buttons	
 
 
 	
 	-- other
 	for _,button in ipairs(Button) do
+
+		gl.Color(backbutton)																	-- disegno i riquadri di ogni opzione
+		gl.Rect(Panel["main"]["x1"]+1,button["y1"]-2, Panel["main"]["x2"]-1, button["y1"]+18) 	-- disegno i riquadri di ogni opzione
 		
 		myFont:Begin()
 		if button["mouse"] then
@@ -1496,9 +1258,8 @@ end
 		
 		myFont:Print(button["label"] or "N/A", posX+leftmargin, button["y1"],12,'do')
 		myFont:End()
-		
+
 		gl.Color(cWhite)
-		
 		if button["divided"] then
 			if button["img"] then
 				gl.Texture(button["img"])
