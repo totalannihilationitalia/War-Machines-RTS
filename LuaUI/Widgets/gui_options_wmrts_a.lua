@@ -16,7 +16,7 @@ end
 -- ***********************
 
 local posX, posY					  	= 600, 400
-local buttonsize					  	= 16
+local buttonsize					  	= 16 
 local width, height					  	= 400, 560  -- larghezza e alteza dello sfondo menù opzioni
 local iWidth							= 400
 local iRowHeight						= 14
@@ -1398,8 +1398,7 @@ function widget:MousePress(x, y, button)
 			showSettings = false
 			showModOptions = false
 			showMapOptions = false
---			ButtonMenu.click = true -- test per apertura menù principale
-			Spring.Echo("uscita dal menù") -- for debug
+--			Spring.Echo("debug menu exit") -- for debug
 		end
 		
 	elseif button == 2 or button == 3 then

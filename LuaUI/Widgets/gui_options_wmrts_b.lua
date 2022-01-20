@@ -10,7 +10,7 @@ function widget:GetInfo()
 	}
 end
 -- ***********************
--- modified by molix 14/01/2022 -> removed some non used options for WMRTS
+-- original was for XTA, modified by molix 14/01/2022 -> restyling + inserted visual option (widget and option) used in War Machhines RTS
 -- ***********************
 -- VISUAL OPTIONS
 -- ***********************
@@ -83,7 +83,7 @@ local cRed								= {0.8, 0.2, 0.2, 1}
 local cGrey								= {1, 1, 1, 1} -- {0.8, 0.8, 0.8, 0.2}
 local cYellow							= {0.8, 0.8, 0.2, 1}
 local cRow								= {0.2,0.6,0.9,0.1}
-local cBorder							= {0,0,0,1} -- eliminare bordi ????? ## ho inserito l'immagine di sfondo (che ha già i bordi) ##################################
+local cBorder							= {0,0,0,1} 
 local cAbove							= {1,1,1,0.5}
 local notOver							= {1,1,1,0.75} -- per testi pulsante "not over"
 local backbutton						= {0.03,0.18,0.3,0.3} -- righe sotto opzioni
@@ -656,9 +656,9 @@ function ButtonHandler (cmd)
 			Spring.SetConfigInt("CamMode",(Button[1]["value"]))
 		end
 ---------------------------
--- 
+-- UNITS SPOT
 ---------------------------	
-	elseif cmd == "help" then			
+	elseif cmd == "showunitaura" then			
 		if Button[2]["click"] then
 			Spring.SetConfigInt("unitsaura",0)
 			Spring.SendCommands({"luaui disablewidget Spotter"}) 			
@@ -667,9 +667,9 @@ function ButtonHandler (cmd)
 			Spring.SendCommands({"luaui enablewidget Spotter"}) 			
 		end	
 ---------------------------
--- 
+-- HEALTBAR
 ---------------------------	
-	elseif cmd == "help" then				
+	elseif cmd == "showunithbar" then				
 		if Button[3]["click"] then
 			Spring.SetConfigInt("unitshealtbar",0)
 			Spring.SendCommands({"luaui disablewidget HealthBars"}) 			
@@ -678,9 +678,9 @@ function ButtonHandler (cmd)
 			Spring.SendCommands({"luaui enablewidget HealthBars"}) 			
 		end
 ---------------------------
--- 
+-- ETA
 ---------------------------	
-	elseif cmd == "help" then				
+	elseif cmd == "showunitetabar" then				
 			if Button[4]["click"] then
 			Spring.SetConfigInt("unitsetabar",0)
 			Spring.SendCommands({"luaui disablewidget BuildETA"}) 			
@@ -689,9 +689,9 @@ function ButtonHandler (cmd)
 			Spring.SendCommands({"luaui enablewidget BuildETA"}) 			
 		end
 ---------------------------
--- 
+-- RANK
 ---------------------------	
-	elseif cmd == "help" then				
+	elseif cmd == "showunitrank" then				
 			if Button[5]["click"] then
 			Spring.SetConfigInt("unitsrank",0)
 			Spring.SendCommands({"luaui disablewidget Rank Icons"}) 			
@@ -711,20 +711,22 @@ function ButtonHandler (cmd)
 			Spring.SendCommands({"luaui enablewidget CameraShake"}) 			
 		end
 ---------------------------
--- 
+-- IN GAME MESSAGES ################################# TO BE IMPROOOOOVEEE
 ---------------------------		
-	elseif cmd == "help" then			
+	elseif cmd == "ingamemessage" then			
 			if Button[7]["click"] then
 			Spring.SetConfigInt("showingamemessage",0)
+			Spring.Echo("to be improove")
 			Spring.SendCommands({"luaui disablewidget Warning messages"}) 			
 		else
 			Spring.SetConfigInt("showingamemessage",1)
 			Spring.SendCommands({"luaui enablewidget Warning messages"}) 			
+			Spring.Echo("to be improove")
 		end
 ---------------------------
--- 
+-- LOS
 ---------------------------		
-	elseif cmd == "help" then			
+	elseif cmd == "loseff" then			
 			if Button[8]["click"] then
 			Spring.SetConfigInt("showlos",0)
 			Spring.SendCommands({"luaui disablewidget LOS View"}) 			
@@ -733,9 +735,9 @@ function ButtonHandler (cmd)
 			Spring.SendCommands({"luaui enablewidget LOS View"}) 			
 		end
 ---------------------------
--- 
+-- VERTICAL LINE
 ---------------------------		
-	elseif cmd == "help" then			
+	elseif cmd == "vlineopt" then			
 			if Button[9]["click"] then
 			Spring.SetConfigInt("showvline",0)
 			Spring.SendCommands({"luaui disablewidget Vertical Line on Radar Dots"}) 			
@@ -744,9 +746,9 @@ function ButtonHandler (cmd)
 			Spring.SendCommands({"luaui enablewidget Vertical Line on Radar Dots"}) 			
 		end
 ---------------------------
--- 
+-- INITIAL POINT TO SPAWN
 ---------------------------	
-	elseif cmd == "help" then				
+	elseif cmd == "ipsawnopt" then				
 			if Button[10]["click"] then
 			Spring.SetConfigInt("showipsawn",0)
 			Spring.SendCommands({"luaui disablewidget Start Point Adder"}) 			
@@ -755,9 +757,9 @@ function ButtonHandler (cmd)
 			Spring.SendCommands({"luaui enablewidget Start Point Adder"}) 			
 		end
 ---------------------------
--- 
+-- TEAM SELECTED UNITS
 ---------------------------			
-	elseif cmd == "help" then		
+	elseif cmd == "teamauraopt" then		
 			if Button[11]["click"] then
 			Spring.SetConfigInt("showteamaura",0)
 			Spring.SendCommands({"luaui disablewidget Ally Selected Units"}) 			
@@ -766,9 +768,9 @@ function ButtonHandler (cmd)
 			Spring.SendCommands({"luaui enablewidget Ally Selected Units"}) 			
 		end
 ---------------------------
--- 
+-- TEAM CURSOR
 ---------------------------					
-	elseif cmd == "help" then
+	elseif cmd == "teamcursopt" then
 			if Button[12]["click"] then
 			Spring.SetConfigInt("showteamcurs",0)
 			Spring.SendCommands({"luaui disablewidget AllyCursors"}) 			
@@ -790,7 +792,7 @@ function ButtonHandler (cmd)
 			Spring.SendCommands("WindowedEdgeMove 1")				
 		end				
 ---------------------------
--- 
+-- SCALE COMMANDER NAME
 ---------------------------			
 	elseif cmd == "scale-names" then
 		Spring.SendCommands("comnamescale")
@@ -1277,13 +1279,12 @@ function widget:MousePress(x, y, button)
 				return true
 			end	
 		end
-		if IsOnButton(x, y, ButtonClose["x1"],ButtonClose["y1"],ButtonClose["x2"],ButtonClose["y2"]) then
+		if IsOnButton(x, y, ButtonClose["x1"],ButtonClose["y1"],ButtonClose["x2"],ButtonClose["y2"]) then -- exit from menu
 			PlaySoundFile(sndButtonOff,1.0,0,0,0,0,0,0,'userinterface')
 			showSettings = false
 			showModOptions = false
 			showMapOptions = false
---			ButtonMenu.click = true -- test per apertura menù principale
-			Spring.Echo("uscita dal menù") -- for debug
+			
 		end
 		
 	elseif button == 2 or button == 3 then
