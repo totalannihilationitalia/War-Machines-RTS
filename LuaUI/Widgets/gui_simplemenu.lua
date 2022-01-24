@@ -14,7 +14,7 @@ end
 local Echo 							= Spring.Echo
 local myFontBig	 					= gl.LoadFont("FreeSansBold.otf",14, 1.9, 40)
 local myFont	 					= gl.LoadFont("FreeSansBold.otf",12, 1.9, 40)
-local sizex, sizey					= 200, 360
+local sizex, sizey					= 400, 457 
 local vsx, vsy 						= gl.GetViewSizes()
 local posX, posY					= vsx/2, vsy/2
 local rowgap						= 27
@@ -33,7 +33,7 @@ local glRect						= gl.Rect
 local glTexture 					= gl.Texture
 local glTexRect 					= gl.TexRect
 local PlaySoundFile 				= Spring.PlaySoundFile
-
+local glTexture 					= gl.Texture
 
 
 -- colors
@@ -46,11 +46,17 @@ local cTitle						= {0.8, 0.8, 1.0, 1}
 local cPanel						= {0.2, 0.2, 0.2, 0.4}
 local cShadow						= {0.6, 0.6, 0.6, 0.6}
 local cDisabled						= {0.4, 0.4, 0.4, 1.0}
+local crelax				    	= {1, 1, 1, 0.8}
+local cover							= {1, 1, 1, 0.8}
 
 --sounds
 local button6						= "sounds/button6.wav"
 local button8						= "sounds/button8.wav"
 
+--images
+local main_butt_relax				= "LuaUI/Images/tweaksettings/menu_button_relax.png"
+local main_butt_over				= "LuaUI/Images/tweaksettings/menu_button_over.png"
+local main_butt_click				= "LuaUI/Images/tweaksettings/menu_button_click.png"
 local function IsOnButton(x, y, BLcornerX, BLcornerY,TRcornerX,TRcornerY)
 	if BLcornerX == nil then return false end
 	-- check if the mouse is in a rectangle
@@ -87,10 +93,10 @@ end
 function widget:Initialize()
 	myTeamID = Spring.GetLocalTeamID()
 	myAllyTeamID = select(6,Spring.GetTeamInfo(myTeamID))
-	ButtonMenu.x1					= vsx - 40
-	ButtonMenu.x2					= vsx
-	ButtonMenu.y1					= vsy - 30
-	ButtonMenu.y2					= vsy
+	ButtonMenu.x1					= vsx - 65
+	ButtonMenu.x2					= vsx - 5
+	ButtonMenu.y1					= vsy - 45
+	ButtonMenu.y2					= vsy - 5
 	
 	
 	Button[1] 						= {} -- resume
@@ -246,36 +252,46 @@ function widget:DrawScreen()
 		
 	-- draw menu button
 	if ButtonMenu.above then
-		glColor(cLight)
+		glColor(crelax)
+		gl.Texture(main_butt_over)	-- over button image		
 	elseif ButtonMenu.click then
-		glColor(cSelect)
+		glColor(crelax)
+		gl.Texture(main_butt_click)	-- clicked button image			
 	else
-		glColor(cBack)
+		glColor(crelax)
+		gl.Texture(main_butt_relax)	-- relax button image
 	end
-	glRect(ButtonMenu.x1,ButtonMenu.y1,ButtonMenu.x2,ButtonMenu.y2)
+	
+
+
+	gl.TexRect(ButtonMenu.x1,ButtonMenu.y1,ButtonMenu.x2,ButtonMenu.y2)	
+	gl.Texture(false)	-- end texture	
+--	glRect(ButtonMenu.x1,ButtonMenu.y1,ButtonMenu.x2,ButtonMenu.y2) -- old menu button
 	
 	glColor(cPanel)
 	local mg = 10
 	-- draw three stripes to symbolise menu drawer
-	glRect(ButtonMenu.x1+mg,ButtonMenu.y2 - 11,ButtonMenu.x2-mg,ButtonMenu.y2 - 13)
-	glRect(ButtonMenu.x1+mg,ButtonMenu.y2 - 16,ButtonMenu.x2-mg,ButtonMenu.y2 - 18)
-	glRect(ButtonMenu.x1+mg,ButtonMenu.y2 - 21,ButtonMenu.x2-mg,ButtonMenu.y2 - 23)
-	glColor(cShadow)
-	glRect(ButtonMenu.x1+mg,ButtonMenu.y2 - 13,ButtonMenu.x2-mg,ButtonMenu.y2 - 14)
-	glRect(ButtonMenu.x1+mg,ButtonMenu.y2 - 18,ButtonMenu.x2-mg,ButtonMenu.y2 - 19)
-	glRect(ButtonMenu.x1+mg,ButtonMenu.y2 - 23,ButtonMenu.x2-mg,ButtonMenu.y2 - 24)
+--	glRect(ButtonMenu.x1+mg,ButtonMenu.y2 - 11,ButtonMenu.x2-mg,ButtonMenu.y2 - 13)
+--	glRect(ButtonMenu.x1+mg,ButtonMenu.y2 - 16,ButtonMenu.x2-mg,ButtonMenu.y2 - 18)
+--	glRect(ButtonMenu.x1+mg,ButtonMenu.y2 - 21,ButtonMenu.x2-mg,ButtonMenu.y2 - 23)
+--	glColor(cShadow)
+--	glRect(ButtonMenu.x1+mg,ButtonMenu.y2 - 13,ButtonMenu.x2-mg,ButtonMenu.y2 - 14)
+--	glRect(ButtonMenu.x1+mg,ButtonMenu.y2 - 18,ButtonMenu.x2-mg,ButtonMenu.y2 - 19)
+--	glRect(ButtonMenu.x1+mg,ButtonMenu.y2 - 23,ButtonMenu.x2-mg,ButtonMenu.y2 - 24)
 	
 	--menu border
-	glColor(cShadow)
-	glRect(ButtonMenu.x1,ButtonMenu.y1,ButtonMenu.x1+1,ButtonMenu.y2)
-	glRect(ButtonMenu.x2-1,ButtonMenu.y1,ButtonMenu.x2,ButtonMenu.y2)
-	glRect(ButtonMenu.x1,ButtonMenu.y1,ButtonMenu.x2,ButtonMenu.y1+1)
-	glRect(ButtonMenu.x1,ButtonMenu.y2-1,ButtonMenu.x2,ButtonMenu.y2)
+--	glColor(cShadow)
+--	glRect(ButtonMenu.x1,ButtonMenu.y1,ButtonMenu.x1+1,ButtonMenu.y2)
+--	glRect(ButtonMenu.x2-1,ButtonMenu.y1,ButtonMenu.x2,ButtonMenu.y2)
+--	glRect(ButtonMenu.x1,ButtonMenu.y1,ButtonMenu.x2,ButtonMenu.y1+1)
+--	glRect(ButtonMenu.x1,ButtonMenu.y2-1,ButtonMenu.x2,ButtonMenu.y2)
 	
 	-- draw menu
 	if (not Spring.IsGUIHidden()) and ButtonMenu.click then  -- qui clicca sull icona per aprire il menu
-		DrawMenu()
+
 	-- Spring.Echo("helloWorld")	-- per debug
+
+	DrawMenu()
 	end
 end
 

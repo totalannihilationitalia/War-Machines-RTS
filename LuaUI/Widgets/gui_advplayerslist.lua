@@ -15,7 +15,7 @@ function widget:GetInfo()
 		desc      = "Playerlist. Use tweakmode (ctrl+F11) to customize.",
 		author    = "Marmoth. (spiced up by Floris)",
 		date      = "25 april 2015",
-		version   = "19.0",
+		version   = "21.0",
 		license   = "GNU GPL, v2 or later",
 		layer     = -4,
 		enabled   = true,  --  loaded by default?
@@ -41,12 +41,13 @@ end
 -- v18	 (Floris): Player system shown on tooltip + added FPS counter + replaced allycursor data with activity gadget data (all these features need gadgets too)
 -- v19   (Floris): added player resource bars
 -- v20   (Molix): added convomexbox alerts
+-- v21   (molix): changed graphic configuration, added "low energy" messagebox
 
 --------------------------------------------------------------------------------
 -- Widget Scale
 --------------------------------------------------------------------------------
 
-local customScale			= 1
+local customScale		= 1
 local customScaleStep		= 0.025
 local pointDuration    		= 40
 local cpuText				= false
@@ -248,6 +249,7 @@ local icucomDefID = UnitDefNames.icucom.id
 local kicucomDefID = UnitDefNames.kicucom.id
 local nfacomDefID = UnitDefNames.nfacom.id
 local knfacomDefID = UnitDefNames.knfacom.id
+local andcomDefID = UnitDefNames.andcom.id -- aggiungo comandante andronians 19/01/2022
 
 --Name for absent/resigned players
 local absentName = " --- "
@@ -844,6 +846,8 @@ function SetSidePics()
 				teamside = "icu"
 			elseif startunit == kicucomDefID  then 
 				teamside = "icu"
+			elseif startunit == andcomDefID  then  -- aggiungo comandante andronians 19/02/2022
+				teamside = "and"
 			elseif startunit == knfacomDefID  then 
 				teamside = "nfa"
 			else
@@ -1549,15 +1553,23 @@ function CreateBackground()
 	
 	Background = gl_CreateList(function()
 -- riquadro esterno **********************************************************************************
-		gl_Color(0,0,1,0.2)
-		RectRound(BLcornerX,BLcornerY,TRcornerX,TRcornerY,6)
+--		gl_Color(0,0,1,0.2)
+--		RectRound(BLcornerX,BLcornerY,TRcornerX,TRcornerY,6)
 		
-		local padding = 2.75
+--		local padding = 2.75
 -- riquadro interno **********************************************************************************
-		gl_Color(0,0,0,0.5)
-		RectRound(BLcornerX+padding,BLcornerY+padding,TRcornerX-padding,TRcornerY-padding,padding)
+		gl_Color(0.03,0.18,0.3,0.5)
+	--	RectRound(BLcornerX+padding,BLcornerY+padding,TRcornerX-padding,TRcornerY-padding,padding)
 		
-		--DrawRect(BLcornerX,BLcornerY,TRcornerX,TRcornerY)
+		gl_Rect(BLcornerX,BLcornerY+3,TRcornerX-2,TRcornerY) --sfondo -- aggiunto margine sotto
+		
+		gl_Color(0,0.67,0.99,1)
+		
+	gl_Rect(BLcornerX,BLcornerY+3,TRcornerX-2,BLcornerY+3.5) --riga sotto
+	gl_Rect(BLcornerX,BLcornerY+3,BLcornerX+0.5,TRcornerY) --riga sinistra	
+	gl_Rect(TRcornerX-2,BLcornerY+3,TRcornerX-2.5,TRcornerY) --riga destra	
+	gl_Rect(BLcornerX,TRcornerY,TRcornerX-2,TRcornerY+0.5) --riga sopra	
+
 		-- draws highlight (top and left sides)
 		--gl_Color(0.44,0.44,0.44,0.38)	
 		--gl_Rect(widgetPosX-margin-1,					widgetPosY + widgetHeight +margin, 	widgetPosX + widgetWidth+margin, 			widgetPosY + widgetHeight-1+margin)

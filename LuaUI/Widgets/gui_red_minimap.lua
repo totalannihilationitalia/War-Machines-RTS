@@ -27,15 +27,16 @@ local Config = {
 		fadetime = 0.10, --fade effect time, in seconds
 		fadedistance = 100, --distance from cursor at which console shows up when empty
 		
-		cresizebackground = {0.9,0.9,0.9,0.5}, --color {r,g,b,alpha}
+		cresizebackground = {0.9,0.9,0.9,0.5}, --color {r,g,b,alpha} {0.9,0.9,0.9,0.5}
 		cresizecolor = {1,0,0,1},
 		
 		cmovebackground = {0,1,0,0.5},
 		cmovecolor = {1,0,0,1},
 		
-		cborder = {1,1,1,0}, -- bordo interno
-		cbackground = {0,0,1,0.2},
-		cbordersize = 2,
+
+--		cbackground = {0,0.67,0.99,0}, -- sfondo -- rimosso
+		cborder = {0,0.67,0.99,1}, -- bordo 
+--		cbordersize = 2,
 		
 		dragbutton = {1}, --left mouse button
 		tooltip = {
@@ -132,13 +133,13 @@ local function createminimap(r)
 		border=r.cborder,
 		obeyscreenedge = true,
 	}
-	local minimapbg = {"rectanglerounded",
-		px=r.px-r.cbordersize,py=r.py,
-		sx=r.sx,sy=r.sy,
-		color=r.cbackground,
-		obeyscreenedge = true,
-		bordersize=r.cbordersize
-	}
+--	local minimapbg = {"rectanglerounded",
+--		px=r.px-r.cbordersize,py=r.py,
+--		sx=r.sx,sy=r.sy,
+--		color=r.cbackground,
+--		obeyscreenedge = true,
+--		bordersize=r.cbordersize
+--	}
 	
 	local resizebutton = {"rectangle",
 		px=r.px+r.sx-r.bsx,py=r.py+r.sy-1,
@@ -185,7 +186,7 @@ local function createminimap(r)
 	New(movebutton)
 	New(resizebutton)
 	New(minimap)
-	New(minimapbg)
+--	New(minimapbg)
 	
 	resizebutton.mouseover = function(mx,my,self)
 		self.active = nil
@@ -236,10 +237,11 @@ local function createminimap(r)
 	minimap.onupdate=function(self)
 		self.sx = resizebutton.px-self.px+resizebutton.sx
 		self.sy = resizebutton.py-self.py+1
-		minimapbg.px = self.px - minimapbg.bordersize
-		minimapbg.py = self.py - minimapbg.bordersize
-		minimapbg.sx = self.sx + minimapbg.bordersize + minimapbg.bordersize
-		minimapbg.sy = self.sy + minimapbg.bordersize + minimapbg.bordersize
+
+--		minimapbg.px = self.px - minimapbg.bordersize
+--		minimapbg.py = self.py - minimapbg.bordersize
+--		minimapbg.sx = self.sx + minimapbg.bordersize + minimapbg.bordersize
+--		minimapbg.sy = self.sy + minimapbg.bordersize + minimapbg.bordersize
 	end
 	resizebutton.onupdate=function(self)
 		if (self._mouseover) then
