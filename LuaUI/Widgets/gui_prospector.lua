@@ -11,8 +11,12 @@ function widget:GetInfo()
 		enabled = true
 	}
 end
+-----------------------------
+-- edit by molix 24/01/2022 -> add image background like War Machines RTS style
+-----------------------------
 
 local textSize = 16
+local bakgroundProspector						= "LuaUI/Images/menu/sfondo_prospector.png" -- menub background
 
 ------------------------------------------------
 --speedups
@@ -91,7 +95,13 @@ local function DrawTextWithBackground(text, x, y, size, opt)
 			glRect(x, y, x + width, y + size * TEXT_CORRECT_Y)
 		end
 	else
-		glRect(x, y, x + width, y + size * TEXT_CORRECT_Y)
+		glColor(1, 1, 1, 1) -- test
+		
+--bakgroundProspector		
+	gl.Texture(bakgroundProspector)	-- add background image
+	gl.TexRect(x, y-7, x + width, y + size * TEXT_CORRECT_Y)
+	gl.Texture(false)	-- fine texture	
+--		glRect(x, y, x + width, y + size * TEXT_CORRECT_Y) -- original string
 	end
 	
 	glColor(1, 1, 1, 0.85)
