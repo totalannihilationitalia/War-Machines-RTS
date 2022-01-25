@@ -12,7 +12,7 @@ function widget:GetInfo()
 	}
 end
 
-local useRoundedRectangles = false
+local useRoundedRectangles = true
 local roundedSizeMultiplier = 1
 local usedRoundedSize = roundedSize
 
@@ -721,7 +721,7 @@ function widget:Update()
 			local CurClock = clock()
 			
 			--for debugging
-			if WG[DrawingTN] then WG[DrawingTN].LastWidget = "<failed to get widget name>" end
+			WG[DrawingTN].LastWidget = "<failed to get widget name>"
 			local w = WidgetList[j]
 			if (w) then
 				local winfo = WidgetList[j]:GetInfo()
