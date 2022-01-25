@@ -7,14 +7,15 @@ function widget:GetInfo()
 		license = "Public domain",
 		layer   = 0,
 		enabled = true
-		-- modified by molix: removed and added options for War Machines RTS
+		-- rev 0 modified by molix: removed and added options for War Machines RTS
+		-- rev 1 add graphics for War Machines RTS game
 	}
 end
 
 local Echo 							= Spring.Echo
 local myFontBig	 					= gl.LoadFont("FreeSansBold.otf",14, 1.9, 40)
 local myFont	 					= gl.LoadFont("FreeSansBold.otf",12, 1.9, 40)
-local sizex, sizey					= 400, 457 
+local sizex, sizey					= 400, 200 
 local vsx, vsy 						= gl.GetViewSizes()
 local posX, posY					= vsx/2, vsy/2
 local rowgap						= 27
@@ -48,6 +49,7 @@ local cShadow						= {0.6, 0.6, 0.6, 0.6}
 local cDisabled						= {0.4, 0.4, 0.4, 1.0}
 local crelax				    	= {1, 1, 1, 0.8}
 local cover							= {1, 1, 1, 0.8}
+local backbutton					= {0.03,0.18,0.3,0.3} -- righe sotto opzioni
 
 --sounds
 local button6						= "sounds/button6.wav"
@@ -57,6 +59,9 @@ local button8						= "sounds/button8.wav"
 local main_butt_relax				= "LuaUI/Images/tweaksettings/menu_button_relax.png"
 local main_butt_over				= "LuaUI/Images/tweaksettings/menu_button_over.png"
 local main_butt_click				= "LuaUI/Images/tweaksettings/menu_button_click.png"
+local main_background				= "LuaUI/Images/tweaksettings/sfondo_mainmenu.png"
+local icona_graphics				= "LuaUI/Images/tweaksettings/menu_icon.png" -- icona main menu
+
 local function IsOnButton(x, y, BLcornerX, BLcornerY,TRcornerX,TRcornerY)
 	if BLcornerX == nil then return false end
 	-- check if the mouse is in a rectangle
@@ -72,7 +77,7 @@ local function InitButtons()
 	local L3 = 20   -- buttonheight
 	local L2 = 100  -- button width
 	
-	Button[9].disabled 				= mySpectatorState
+--	Button[9].disabled 				= mySpectatorState
 	
 	for i,button in ipairs(Button) do
 		button["x1"] 	= posX + margin
@@ -103,51 +108,55 @@ function widget:Initialize()
 	Button[1]["command"]			= "resume"
 	Button[1]["label"]				= "Return to game"
 	
-	Button[2] 						= {} -- options
+	Button[2] 						= {} -- graphics options
 	Button[2]["command"]			= "graphic_opt"
 	Button[2]["label"]				= "Graphics settings"
 	
-	Button[3] 						= {} -- set keys
+	Button[3] 						= {} -- visuals options
 	Button[3]["command"]			= "visual_opt"
 	Button[3]["label"]				= "Visual settings"
 
 --	Button[3] 						= {} -- set keys
 --	Button[3]["command"]				= "setkeys"
 --	Button[3]["label"]				= "Set custom keys"
+
+	Button[4] 						= {} -- sounds options
+	Button[4]["command"]			= "sound_opt"
+	Button[4]["label"]				= "Sound settings"
 	
-	Button[4] 						= {} -- energyview
-	Button[4]["command"]			= "energy"
-	Button[4]["label"]				= "Energy overview"
+--	Button[4] 						= {} -- energyview
+--	Button[4]["command"]			= "energy"
+--	Button[4]["label"]				= "Energy overview"
 	
-	Button[5] 						= {} -- find unit
-	Button[5]["command"]			= "find-unit"
-	Button[5]["label"]				= "Find unit"
+--	Button[5] 						= {} -- find unit
+--	Button[5]["command"]			= "find-unit"
+--	Button[5]["label"]				= "Find unit"
 	
-	Button[6] 						= {} -- modopt
-	Button[6]["command"]			= "modopt"
-	Button[6]["label"]				= "View mod-options"
+--	Button[6] 						= {} -- modopt
+--	Button[6]["command"]			= "modopt"
+--	Button[6]["label"]				= "View mod-options"
 	
-	Button[7] 						= {} -- modopt
-	Button[7]["command"]			= "mapopt"
-	Button[7]["label"]				= "View map-options"
+--	Button[7] 						= {} -- modopt
+--	Button[7]["command"]			= "mapopt"
+--	Button[7]["label"]				= "View map-options"
 		
-	Button[8] 						= {} -- widget
-	Button[8]["command"]			= "widget"
-	Button[8]["label"]				= "Widget selector"
+--	Button[8] 						= {} -- widget
+--	Button[8]["command"]			= "widget"
+--	Button[8]["label"]				= "Widget selector"
 	
-	Button[9] 						= {} -- propose draw
-	Button[9]["command"]			= "offer-draw"
-	Button[9]["label"]				= "Offer draw"
-	Button[9].disabled 				= mySpectatorState
+--	Button[9] 						= {} -- propose draw
+--	Button[9]["command"]			= "offer-draw"
+--	Button[9]["label"]				= "Offer draw"
+--	Button[9].disabled 				= mySpectatorState
 	
-	Button[10] 						= {} -- vote for surrender
-	Button[10]["command"]			= "vote-end"
-	Button[10]["label"]				= "Accept surrender"
-	Button[10].disabled 			= true
+--	Button[10] 						= {} -- vote for surrender
+--	Button[10]["command"]			= "vote-end"
+--	Button[10]["label"]				= "Accept surrender"
+--	Button[10].disabled 			= true
 	
-	Button[11] 						= {} -- quit
-	Button[11]["command"]			= "quit"
-	Button[11]["label"]				= "Quit game"
+	Button[5] 						= {} -- quit
+	Button[5]["command"]			= "quit"
+	Button[5]["label"]				= "Quit game"
 	
 	Button["close"] 				= {}
 	Panel["main"]					= {}
@@ -158,20 +167,29 @@ end
 local function DrawMenu()
 	
 	--background panel
-	gl.Color(cBack)
-	gl.Rect(Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"])
+	gl.Color(1,1,1,1)
+
+--	gl.Rect(Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"])
+	gl.Texture(main_background	)	-- aggiungo l'icona
+	gl.TexRect(Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"])	
+	gl.Texture(false)	-- fine texture		
 	
 	--border
-	gl.Color(cBorder)
-	gl.Rect(Panel["main"]["x1"]-1,Panel["main"]["y1"], Panel["main"]["x1"], Panel["main"]["y2"])
-	gl.Rect(Panel["main"]["x2"],Panel["main"]["y1"], Panel["main"]["x2"]+1, Panel["main"]["y2"])
-	gl.Rect(Panel["main"]["x1"],Panel["main"]["y1"]-1, Panel["main"]["x2"], Panel["main"]["y1"])
-	gl.Rect(Panel["main"]["x1"],Panel["main"]["y2"], Panel["main"]["x2"], Panel["main"]["y2"]+1)
+--	gl.Color(cBorder)
+--	gl.Rect(Panel["main"]["x1"]-1,Panel["main"]["y1"], Panel["main"]["x1"], Panel["main"]["y2"])
+--	gl.Rect(Panel["main"]["x2"],Panel["main"]["y1"], Panel["main"]["x2"]+1, Panel["main"]["y2"])
+--	gl.Rect(Panel["main"]["x1"],Panel["main"]["y1"]-1, Panel["main"]["x2"], Panel["main"]["y1"])
+--	gl.Rect(Panel["main"]["x1"],Panel["main"]["y2"], Panel["main"]["x2"], Panel["main"]["y2"]+1)
+	
+	-- icona menu
+	gl.Texture(icona_graphics)	-- add the icon
+	gl.TexRect(Panel["main"]["x1"]+20,Panel["main"]["y1"]+167, Panel["main"]["x1"]+60, Panel["main"]["y1"]+207)	
+	gl.Texture(false)	-- fine texture		
 	
 	-- Heading
 	myFontBig:SetTextColor(cTitle)
 	myFontBig:Begin()
-	myFontBig:Print("XTA simple game menu:", Panel["main"]["x1"] + margin, Panel["main"]["y2"] - 20,14,'ds')
+	myFontBig:Print("Game menu", Panel["main"]["x1"]+50 + margin, Panel["main"]["y2"] - 34,14,'ds')
 	myFontBig:End()
 	
 	-- Buttons
@@ -186,8 +204,10 @@ local function DrawMenu()
 		else
 			myFont:SetTextColor(cWhite)
 			gl.Color(cPanel)
+		gl.Color(backbutton)					
 		end
-		gl.Rect(button.x1,button.y1,button.x2,button.y2)
+
+		gl.Rect(button.x1-19,button.y1,button.x2+19,button.y2)
 		myFont:Print(button["label"] or "N/A", button.x1+margin, (button.y1+button.y2)/2,12,'vs')
 		myFont:End()
 		
@@ -210,6 +230,12 @@ local function ButtonHandler (cmd)
 		ButtonMenu.click = false
 		Spring.SendCommands("visual_opt")
 		PlaySoundFile(button8)
+	elseif cmd == "sound_opt" then -- apri gui_optionsc.lua
+		ButtonMenu.click = false
+		Spring.SendCommands("sound_opt")
+		Spring.Echo("Not available at the moment, wait for next update! :) ")
+		PlaySoundFile(button8)
+--[[		
 	elseif cmd == "energy" then
 		ButtonMenu.click = false
 		Spring.SendCommands("energy-overview")
@@ -226,10 +252,12 @@ local function ButtonHandler (cmd)
 		ButtonMenu.click = false
 		Spring.SendCommands("selector")
 		PlaySoundFile(button8)
+]]--		
 	elseif cmd == "quit" then
 		ButtonMenu.click = false
 		Spring.SendCommands("quitmenu")
 		PlaySoundFile(button8)
+--[[		
 	elseif cmd == "offer-draw" then
 		ButtonMenu.click = false
 		Spring.SendCommands("luarules votefordraw")
@@ -242,6 +270,7 @@ local function ButtonHandler (cmd)
 		ButtonMenu.click = false
 		Spring.SendCommands("findunit")
 		PlaySoundFile(button8)
+]]--		
 	else
 		Echo("Local command:",cmd)
 		ButtonMenu.click = false
@@ -306,11 +335,11 @@ function widget:MousePress(mx, my, mButton)
 				mySpectatorState = Spring.GetSpectatingState()
 				local canVoteTeam = Spring.GetGameRulesParam("VotingAllyID")
 			
-				if not mySpectatorState and canVoteTeam and canVoteTeam == myAllyTeamID then
-					Button[10].disabled 				= false
-				else
-					Button[10].disabled 				= true
-				end			
+--				if not mySpectatorState and canVoteTeam and canVoteTeam == myAllyTeamID then
+--					Button[10].disabled 				= false
+--				else
+--					Button[10].disabled 				= true
+--				end			
 				
 				return true
 			end
