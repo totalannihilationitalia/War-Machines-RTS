@@ -7,8 +7,11 @@ function widget:GetInfo()
 		license = "Public domain",
 		layer   = 0,
 		enabled = true
-		-- rev 0 modified by molix: removed and added options for War Machines RTS
-		-- rev 1 add graphics for War Machines RTS game
+		-- rev 0.wmrts modified by molix: removed and added options for War Machines RTS
+		-- rev 1.wmrts add graphics for War Machines RTS game
+		-- rev 2.wmrts add guishader
+		
+		
 	}
 end
 
@@ -61,6 +64,7 @@ local main_butt_over				= "LuaUI/Images/tweaksettings/menu_button_over.png"
 local main_butt_click				= "LuaUI/Images/tweaksettings/menu_button_click.png"
 local main_background				= "LuaUI/Images/tweaksettings/sfondo_mainmenu.png"
 local icona_graphics				= "LuaUI/Images/tweaksettings/menu_icon.png" -- icona main menu
+local mini_resume				= "LuaUI/Images/tweaksettings/Return to game_mini.png"
 
 local function IsOnButton(x, y, BLcornerX, BLcornerY,TRcornerX,TRcornerY)
 	if BLcornerX == nil then return false end
@@ -107,14 +111,17 @@ function widget:Initialize()
 	Button[1] 						= {} -- resume
 	Button[1]["command"]			= "resume"
 	Button[1]["label"]				= "Return to game"
+	Button[1]["icon"]				= "LuaUI/Images/tweaksettings/return_opt_mini.png"
 	
 	Button[2] 						= {} -- graphics options
 	Button[2]["command"]			= "graphic_opt"
 	Button[2]["label"]				= "Graphics settings"
+	Button[2]["icon"]				= "LuaUI/Images/tweaksettings/graphics_opt_mini.png"	
 	
 	Button[3] 						= {} -- visuals options
 	Button[3]["command"]			= "visual_opt"
 	Button[3]["label"]				= "Visual settings"
+	Button[3]["icon"]				= "LuaUI/Images/tweaksettings/visual_opt_mini.png"	
 
 --	Button[3] 						= {} -- set keys
 --	Button[3]["command"]				= "setkeys"
@@ -123,6 +130,7 @@ function widget:Initialize()
 	Button[4] 						= {} -- sounds options
 	Button[4]["command"]			= "sound_opt"
 	Button[4]["label"]				= "Sound settings"
+	Button[4]["icon"]				= "LuaUI/Images/tweaksettings/sound_opt_mini.png"	
 	
 --	Button[4] 						= {} -- energyview
 --	Button[4]["command"]			= "energy"
@@ -157,6 +165,7 @@ function widget:Initialize()
 	Button[5] 						= {} -- quit
 	Button[5]["command"]			= "quit"
 	Button[5]["label"]				= "Quit game"
+	Button[5]["icon"]				= "LuaUI/Images/tweaksettings/quit_opt_mini.png"	
 	
 	Button["close"] 				= {}
 	Panel["main"]					= {}
@@ -170,9 +179,19 @@ local function DrawMenu()
 	gl.Color(1,1,1,1)
 
 --	gl.Rect(Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"])
-	gl.Texture(main_background	)	-- aggiungo l'icona
+	gl.Texture(main_background)	-- aggiungo l'icona
 	gl.TexRect(Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"])	
 	gl.Texture(false)	-- fine texture		
+
+	-- add gui shader	
+	
+		if (WG['guishader_api'] ~= nil) then
+--		local left		= BLcornerX - ((widgetPosX - BLcornerX) * (widgetScale-1))
+--		local bottom	= BLcornerY - ((widgetPosY - BLcornerY) * (widgetScale-1))
+--		local right		= TRcornerX - ((widgetPosX - TRcornerX) * (widgetScale-1))
+--		local top		= TRcornerY - ((widgetPosY - TRcornerY) * (widgetScale-1))
+		WG['guishader_api'].InsertRect(Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"],'Simple menu')
+	end
 	
 	--border
 --	gl.Color(cBorder)
@@ -208,8 +227,12 @@ local function DrawMenu()
 		end
 
 		gl.Rect(button.x1-19,button.y1,button.x2+19,button.y2)
-		myFont:Print(button["label"] or "N/A", button.x1+margin, (button.y1+button.y2)/2,12,'vs')
+		myFont:Print(button["label"] or "N/A", button.x1+margin+5, (button.y1+button.y2)/2,12,'vs')
 		myFont:End()
+		-- add button icon
+		gl.Texture(button["icon"])	 								-- type of image (see button configuration - icon)
+		gl.TexRect(button.x1-9,button.y1+1,button.x1+15,button.y2-1)	-- dimensions of icons
+
 		
 	end
 		
@@ -335,6 +358,7 @@ function widget:MousePress(mx, my, mButton)
 				mySpectatorState = Spring.GetSpectatingState()
 				local canVoteTeam = Spring.GetGameRulesParam("VotingAllyID")
 			
+			
 --				if not mySpectatorState and canVoteTeam and canVoteTeam == myAllyTeamID then
 --					Button[10].disabled 				= false
 --				else
@@ -353,6 +377,12 @@ function widget:MousePress(mx, my, mButton)
 						if not button.disabled then
 							button["click"] = true
 							ButtonHandler(button["command"])
+							
+										-- remove gui shader
+				if (WG['guishader_api'] ~= nil) then
+					WG['guishader_api'].RemoveRect('Simple menu')
+				end
+							
 							return true
 						end
 					end
@@ -408,6 +438,10 @@ function widget:KeyPress(key, mods, isRepeat)
 		if ButtonMenu.click then
 			ButtonMenu.click = false
 			PlaySoundFile(button8)		
+			-- remove gui shader
+				if (WG['guishader_api'] ~= nil) then
+					WG['guishader_api'].RemoveRect('Simple menu')
+				end			
 			return true
 		end
 	end
@@ -435,4 +469,10 @@ function widget:GetConfigData(data)      -- save
 function widget:SetConfigData(data)      -- load
 	posX         			= data.posX or posX
 	posY         			= data.posY or posY
+end
+
+function widget:Shutdown()
+	if (WG['guishader_api'] ~= nil) then
+		WG['guishader_api'].RemoveRect('Simple menu')
+	end
 end
