@@ -91,10 +91,10 @@ function widget:Initialize()
 
 	myTeamID = Spring.GetLocalTeamID()
 	myAllyTeamID = select(6,Spring.GetTeamInfo(myTeamID))
-	FleaMenu.x1					= vsx - 70  -- larghezza del bottone in alto a destra per aprire la lista degli obiettivi
-	FleaMenu.x2					= vsx - 40
-	FleaMenu.y1					= vsy - 30
-	FleaMenu.y2					= vsy
+	FleaMenu.x1					= vsx - 228  -- larghezza del bottone in alto a destra per aprire la lista degli obiettivi
+	FleaMenu.x2					= vsx - 186
+	FleaMenu.y1					= vsy - 45
+	FleaMenu.y2					= vsy - 5
 
 	Button["close"] 				= {}
 	Panel["main"]					= {}
@@ -195,22 +195,23 @@ function widget:DrawScreen()
 	else
 		glColor(cBack)
 	end
-	glRect(FleaMenu.x1,FleaMenu.y1,FleaMenu.x2,FleaMenu.y2)
-	local mg = 2
+--	glRect(FleaMenu.x1,FleaMenu.y1,FleaMenu.x2,FleaMenu.y2)
+--	local mg = 2
 	
 	gl.Color(cTex)
 	glTexture(imgFlea)
-	glTexRect(FleaMenu.x1+mg,FleaMenu.y1+mg,FleaMenu.x2-mg,FleaMenu.y2-mg)
+--	glTexRect(FleaMenu.x1+mg,FleaMenu.y1+mg,FleaMenu.x2-mg,FleaMenu.y2-mg)
+	glTexRect(FleaMenu.x1,FleaMenu.y1,FleaMenu.x2,FleaMenu.y2)	
 	
 	glTexture(false)
-	glColor(cPanel)
+--	glColor(cPanel)
 			
 	--menu border
-	glColor(cShadow)
-	glRect(FleaMenu.x1,FleaMenu.y1,FleaMenu.x1+1,FleaMenu.y2)
-	glRect(FleaMenu.x2-1,FleaMenu.y1,FleaMenu.x2,FleaMenu.y2)
-	glRect(FleaMenu.x1,FleaMenu.y1,FleaMenu.x2,FleaMenu.y1+1)
-	glRect(FleaMenu.x1,FleaMenu.y2-1,FleaMenu.x2,FleaMenu.y2)
+--	glColor(cShadow)
+--	glRect(FleaMenu.x1,FleaMenu.y1,FleaMenu.x1+1,FleaMenu.y2)
+--	glRect(FleaMenu.x2-1,FleaMenu.y1,FleaMenu.x2,FleaMenu.y2)
+--	glRect(FleaMenu.x1,FleaMenu.y1,FleaMenu.x2,FleaMenu.y1+1)
+--	glRect(FleaMenu.x1,FleaMenu.y2-1,FleaMenu.x2,FleaMenu.y2)
 	
 	-- draw flea window
 	if (not Spring.IsGUIHidden()) and FleaMenu.click then
