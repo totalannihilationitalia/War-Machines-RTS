@@ -10,7 +10,9 @@ function widget:GetInfo()
 	}
 end
 -- ***********************
--- modified by molix 14/01/2022 -> removed some non used options for WMRTS
+-- modified by molix 14/01/2022 rev0.WMRTS -> removed some non used options for War Machines RTS game
+-- modified by molix 15/01/2022 rev1.WMRTS -> add images and restyling graphics ( WMRTS style)
+-- modified by molix 25/01/2022 rev2.WMRTS -> add guishader effect
 -- ***********************
 -- GRAPHIC OPTIONS
 -- ***********************
@@ -1193,24 +1195,14 @@ local function drawMapOptions() -- valido per map option
 	gl.Color(cWhite)
 end
 
-local function drawSettings() -- valido per opzioni menu
-	--test
---	gl.Color( 1, 1, 0, 0 )--glColor( 1, 1, 0, 0.33) --imposta colore linea
---	gl.Vertex(50,50) -- imposta linee
---	gl.Vertex(50,100) -- imposta linee 
---  eccetera
-
-
-
-	
+local function drawSettings() -- menu options
 	
 	--background panel 
 	gl.Color(cWhite)
 
-	gl.Texture(sfondomenu)	-- aggiungo l'immagine al background
+	gl.Texture(sfondomenu)	-- background image
 	gl.TexRect(Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"])	
---	gl.Rect(Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"])
-	gl.Texture(false)	-- fine texture	
+	gl.Texture(false)	-- end texture	
 	
 	--border
 --	gl.Color(cBorder)
@@ -1290,6 +1282,13 @@ local function drawSettings() -- valido per opzioni menu
 	--reset state
 	gl.Texture(false)
 	gl.Color(cWhite)
+	
+		-- add gui shader	
+	
+		if (WG['guishader_api'] ~= nil) then
+		WG['guishader_api'].InsertRect(Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"],'gui_options_a')
+	end
+	
 end
 
 local function drawIsAbove(x,y)
@@ -1398,6 +1397,13 @@ function widget:MousePress(x, y, button)
 			showSettings = false
 			showModOptions = false
 			showMapOptions = false
+			
+		-- remove gui shader
+				if (WG['guishader_api'] ~= nil) then
+					WG['guishader_api'].RemoveRect('gui_options_a')
+				end			
+			
+			
 --			Spring.Echo("debug menu exit") -- for debug
 		end
 		
@@ -1502,6 +1508,13 @@ function widget:TweakMouseMove(mx, my, dx, dy, mButton)
 		 InitButtons()
      end
  end
+
+function widget:Shutdown()
+	if (WG['guishader_api'] ~= nil) then
+		WG['guishader_api'].RemoveRect('gui_options_a')
+	end
+end
+
 
 function widget:GetConfigData(data)      -- save
 	local vsx, vsy = gl.GetViewSizes()

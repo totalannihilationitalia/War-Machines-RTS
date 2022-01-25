@@ -11,6 +11,8 @@ function widget:GetInfo()
 end
 -- ***********************
 -- original was for XTA, modified by molix 14/01/2022 -> restyling + inserted visual option (widget and option) used in War Machhines RTS
+-- modified by molix 15/01/2022 rev1.WMRTS -> add images and restyling graphics ( WMRTS style)
+-- modified by molix 25/01/2022 rev2.WMRTS -> add guishader effect
 -- ***********************
 -- VISUAL OPTIONS
 -- ***********************
@@ -1175,6 +1177,12 @@ local function drawSettings() -- valido per opzioni menu
 	--reset state
 	gl.Texture(false)
 	gl.Color(cWhite)
+	
+		-- add gui shader	
+	
+		if (WG['guishader_api'] ~= nil) then
+		WG['guishader_api'].InsertRect(Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"],'gui_options_b')
+	end
 end
 
 local function drawIsAbove(x,y)
@@ -1284,6 +1292,11 @@ function widget:MousePress(x, y, button)
 			showSettings = false
 			showModOptions = false
 			showMapOptions = false
+		-- remove gui shader
+				if (WG['guishader_api'] ~= nil) then
+					WG['guishader_api'].RemoveRect('gui_options_b')
+				end			
+
 			
 		end
 		
@@ -1388,7 +1401,13 @@ function widget:TweakMouseMove(mx, my, dx, dy, mButton)
 		 InitButtons()
      end
  end
-
+ 
+ function widget:Shutdown()
+	if (WG['guishader_api'] ~= nil) then
+		WG['guishader_api'].RemoveRect('gui_options_b')
+	end
+end
+ 
 function widget:GetConfigData(data)      -- save
 	local vsx, vsy = gl.GetViewSizes()
 	return {
