@@ -10,6 +10,7 @@ function widget:GetInfo()
 	enabled   = true,
 	}
 end
+-- 25/01/2022 add guishader effect for "non rounded" version of menù -- molix
 
 local consoleBlur = false
 local blurShaderStartColor = 0.31		-- will apply guishader if alpha >= ...
@@ -163,6 +164,10 @@ local function Rect(px,py,sx,sy,c,scale)
 	end
 	px,py,sx,sy = px,py,sx,sy
 	glRect(px,py,px+sx,py+sy)
+	-- add missing blur shader for "useRoundedRectangles = false" in "red_ui_framework.lua" -- molix
+	if c and c[4] >= blurShaderStartColor then
+		newBlurRect[px..' '..py..' '..sx..' '..sy] = {px=px,py=py,sx=sx,sy=sy}
+	end	
 end
 
 local function DrawRectRound(px,py,sx,sy,cs)
