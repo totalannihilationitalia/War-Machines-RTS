@@ -10,6 +10,8 @@ function widget:GetInfo()
 	handler   = true, --can use widgetHandler:x()
 	}
 end
+-- modified by molix 25/01/2022 -> rev0.wmrts changed color, add metal and energy icons for War Machines RTS game style
+
 
 local barTexture = LUAUI_DIRNAME.."Images/resbar.dds"
 
@@ -247,7 +249,7 @@ local function createbar(r)
 		texturecolor = {0.15,0.15,0.15,1},
 	}
 
------ test inserisco l'icona energia 
+ -- add metal and energy icon
 	local icona = 	{"rectangle",
 		px=r.px-5,py=r.py+4,
 		sx=r.sx-240,sy=r.sy-8,
@@ -267,7 +269,7 @@ local function createbar(r)
 	bar.color = r.cbar
 	bar.texture = barTexture
 	bar.texturecolor = r.cbar
-	bar.cicona = r.cicona -- inserisco
+	bar.cicona = r.cicona -- add metal and energy icon
 
 	local shareindicator = Copy(barbackground)
 	shareindicator.color = r.cindicator
@@ -282,7 +284,7 @@ local function createbar(r)
 	New(bar)
 	New(barborder)
 	New(shareindicator)
--- aggiungo le icone
+-- add metal and energy icon
 	New(icona)
 	
 	bar.overridecursor = true
