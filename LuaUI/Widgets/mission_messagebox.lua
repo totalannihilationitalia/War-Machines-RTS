@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
--- edited by daryl for non chili version, thx to KingRaptor for help
+-- edited by molix for non chili version, thx to KingRaptor for help
 function widget:GetInfo()
   return {
     name      = "MessageBoxes",
