@@ -50,7 +50,7 @@ local cTitle						= {0.8, 0.8, 1.0, 1}
 local cPanel						= {0.2, 0.2, 0.2, 0.4}
 local cShadow						= {0.6, 0.6, 0.6, 0.6}
 local cDisabled						= {0.4, 0.4, 0.4, 1.0}
-local crelax				    	= {1, 1, 1, 0.8}
+local crelax				    	= {1, 1, 1, 1}
 local cover							= {1, 1, 1, 0.8}
 local backbutton					= {0.03,0.18,0.3,0.3} -- righe sotto opzioni
 

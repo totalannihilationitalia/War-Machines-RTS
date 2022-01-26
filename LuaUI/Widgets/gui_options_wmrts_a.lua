@@ -1427,6 +1427,9 @@ function widget:KeyPress(key, mods, isRepeat)
 		showModOptions = false
 		showMapOptions = false
 		showSettings = false
+	if (WG['guishader_api'] ~= nil) then
+		WG['guishader_api'].RemoveRect('gui_options_a')
+	end		
 		return false
 	elseif key == 0x124 and mods.ctrl then -- CTRL-F11
 		showSettings = true
