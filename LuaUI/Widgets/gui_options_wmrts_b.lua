@@ -31,8 +31,8 @@ local buttontab							= 360 -- distanza dei bottoni dal testo
 local vsx, vsy 						  	= gl.GetViewSizes()
 local Echo								= Spring.Echo
 local PlaySoundFile						= Spring.PlaySoundFile
--- local showModOptions					= false 
--- local showMapOptions					= false
+local showModOptions					= false 
+local showMapOptions					= false
 local showSettings						= false
 local textSize							= 10
 local myFont							= gl.LoadFont("FreeSansBold.otf",textSize, 1.9, 40)
@@ -60,7 +60,7 @@ local Panel					  			= {}
 -- variables
 
 local waterType = 0
---local modOptions 						= Spring.GetModOptions()
+local modOptions 						= Spring.GetModOptions()
 local Options							= {}
 Options["general"]						= {}
 Options["other"]						= {}
@@ -72,8 +72,8 @@ Options["fleabowl"]						= {}
 
 local mapOptions 						= Spring.GetMapOptions()
 
--- local OptionCount						= {}
--- local MapOptionCount					= 0
+local OptionCount						= {}
+local MapOptionCount					= 0
 
 --colors
 local cLight 							= {1,1,1,1}
@@ -193,8 +193,7 @@ function widget:Initialize()
 	Panel["info"]					= {} -- info screen with mod options
 	InitButtons()
 	
--- rimuovo dall'originale
---[[	
+	
 	if modOptions then
 		--general
 		Options["general"] = {
@@ -495,7 +494,7 @@ function widget:Initialize()
 		}
 	end
 end
-]]-- 
+
 function updateHeights()
 	iHeight	 					= height0  + rows * (iRowHeight+4)
 	Panel["info"]["y2"]			= posY + iHeight
@@ -837,7 +836,6 @@ local function drawRow(optData,i,lastY)
 	return i,lastY
 end
 
---[[
 local function drawModOptions() -- valido per il mod optionz
 
 	--background panel
@@ -1081,7 +1079,6 @@ local function drawMapOptions() -- valido per map option
 	gl.Texture(false)
 	gl.Color(cWhite)
 end
-]]--
 
 local function drawSettings() -- valido per opzioni menu
 	--test
@@ -1213,20 +1210,19 @@ end
 
 function widget:DrawScreen()
 	if (not Spring.IsGUIHidden()) then
---		if showModOptions then
---			drawModOptions()
+		if showModOptions then
+			drawModOptions()
 		elseif showSettings then
 			drawSettings()
---		elseif showMapOptions then
---			drawMapOptions()
---		end
+		elseif showMapOptions then
+			drawMapOptions()
+		end
 	end
 end
 
 function widget:IsAbove(x,y)
 	if (not Spring.IsGUIHidden()) then
---		if showModOptions or showSettings or showMapOptions then --original
-		if showSettings then 
+		if showModOptions or showSettings or showMapOptions then
 			drawIsAbove(x,y)
 		end
 	end
@@ -1260,8 +1256,7 @@ function widget:MouseMove(mx, my, dx, dy, mButton)
  end 
  
 function widget:MousePress(x, y, button)
---	 if button == 1 and (showSettings or showModOptions or showMapOptions) then -- original
-	 if button == 1 and (showSettings) then
+	 if button == 1 and (showSettings or showModOptions or showMapOptions) then
 		
 		for _,button in ipairs(Button) do
 			if IsOnButton(x, y, button["x1"],button["y1"],button["x2"],button["y2"]) then
@@ -1295,8 +1290,8 @@ function widget:MousePress(x, y, button)
 		if IsOnButton(x, y, ButtonClose["x1"],ButtonClose["y1"],ButtonClose["x2"],ButtonClose["y2"]) then -- exit from menu
 			PlaySoundFile(sndButtonOff,1.0,0,0,0,0,0,0,'userinterface')
 			showSettings = false
---			showModOptions = false
---			showMapOptions = false
+			showModOptions = false
+			showMapOptions = false
 		-- remove gui shader
 				if (WG['guishader_api'] ~= nil) then
 					WG['guishader_api'].RemoveRect('gui_options_b')
@@ -1306,11 +1301,10 @@ function widget:MousePress(x, y, button)
 		end
 		
 	elseif button == 2 or button == 3 then
---		if (showModOptions or showMapOptions) and IsOnButton(x, y, Panel["info"]["x1"],Panel["info"]["y1"], Panel["info"]["x2"], Panel["info"]["y2"]) then			-- original
+		if (showModOptions or showMapOptions) and IsOnButton(x, y, Panel["info"]["x1"],Panel["info"]["y1"], Panel["info"]["x2"], Panel["info"]["y2"]) then			
 			--Dragging
---			return true			
---		elseif showSettings and IsOnButton(x, y, Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"]) then
-		if showSettings and IsOnButton(x, y, Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"]) then
+			return true			
+		elseif showSettings and IsOnButton(x, y, Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"]) then
 			--Dragging
 			return true
 		end
@@ -1319,15 +1313,15 @@ function widget:MousePress(x, y, button)
  end
  
 function widget:KeyPress(key, mods, isRepeat) 
-	if (key == 0x069) and mods["ctrl"] and (not isRepeat) then 				-- i-key  ############################ valutare questa funzione che non ha niente
---		showModOptions = not showModOptions
+	if (key == 0x069) and mods["ctrl"] and (not isRepeat) then 				-- i-key
+		showModOptions = not showModOptions
 		return true
 	elseif key == 0x01B then -- ESC
---		showModOptions = false
---		showMapOptions = false
+		showModOptions = false
+		showMapOptions = false
 		showSettings = false
 		return false
-	elseif key == 0x124 and mods.ctrl then -- CTRL-F11 -- ################################################################## rimuovere questa stringa in quanto con il tweak mode non si deve vedere la finestra delle opzioni
+	elseif key == 0x124 and mods.ctrl then -- CTRL-F11
 		showSettings = true
 		return false
 	end
@@ -1385,8 +1379,8 @@ function widget:TweakMousePress(x, y, button)
 		if IsOnButton(x, y, ButtonClose["x1"],ButtonClose["y1"],ButtonClose["x2"],ButtonClose["y2"]) then
 			PlaySoundFile(sndButtonOff,1.0,0,0,0,0,0,0,'userinterface')
 			showSettings = false
---			showModOptions = false
---			showMapOptions = false
+			showModOptions = false
+			showMapOptions = false
 		end
 		
 	 elseif (button == 2 or button == 3) then
