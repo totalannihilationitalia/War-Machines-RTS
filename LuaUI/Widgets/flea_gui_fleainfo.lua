@@ -9,16 +9,19 @@ function widget:GetInfo()
 		enabled = true
 	}
 end
+-----------------------------------------
+-- 27/01/2022 modified by molixx -> changed colours, added images, add guishader effect, add close button
+-----------------------------------------
 
 local Echo 							= Spring.Echo
 local myFontBig	 					= gl.LoadFont("FreeSansBold.otf",14, 1.9, 40)
 local myFont	 					= gl.LoadFont("FreeSansBold.otf",12, 1.9, 40)
-local sizex, sizey					= 200, 140
+local sizex, sizey					= 400, 200
 local vsx, vsy 						= gl.GetViewSizes()
 local posX, posY					= vsx/2, vsy/2
 local rowgap						= 27
 local rowheight						= 26
-local margin						= 20
+local margin						= 45
 local myTeamID						= nil
 local myAllyTeamID					= nil
 local mySpectatorState				= Spring.GetSpectatingState()
@@ -44,14 +47,26 @@ local cTitle						= {0.8, 0.8, 1.0, 1}
 local cPanel						= {0.2, 0.2, 0.2, 0.4}
 local cShadow						= {0.6, 0.6, 0.6, 0.6}
 local cDisabled						= {0.4, 0.4, 0.4, 1.0}
-local cTex							= {1, 1, 1, 0.75}
+local cTex							= {1, 1, 1, 1}
+local backbutton					= {0.03,0.18,0.3,0.3} -- row of flea info
 
 
 --sounds
 local button6						= "sounds/button6.wav"
 local button8						= "sounds/button8.wav"
 
-local imgFlea						= "luaui/images/fleabowl/armflea.png"
+-- images
+local imgButt						= "luaui/images/menu/alienflea/af_button_relax.png"
+local sfondomenu					= "LuaUI/Images/tweaksettings/sfondo_menuc.png" -- menub background
+--local imgQuit						= "LuaUI/Images/tweaksettings/quit_menu.png"			-- to do ##########################################################
+--local imgQuit2					= "LuaUI/Images/tweaksettings/quit_menu_over.png" 	-- to do ##########################################################
+local icona_alienflea				= "LuaUI/Images/menu/alienflea/af_menu_icon.png" -- icona alien flea menu
+local icona_wave					= "LuaUI/Images/menu/alienflea/af_wave_icon.png" -- icona wave
+local icona_spgate					= "LuaUI/Images/menu/alienflea/af_spgate_icon.png" -- icona spawned gates
+local icona_activeflea				= "LuaUI/Images/menu/alienflea/af_activeflea_icon.png" -- icona active flea
+local icona_killflea				= "LuaUI/Images/menu/alienflea/af_killflea_icon.png" -- icona killed flea
+
+-- other 
 local fleaData						= {}
 
 
@@ -91,10 +106,10 @@ function widget:Initialize()
 
 	myTeamID = Spring.GetLocalTeamID()
 	myAllyTeamID = select(6,Spring.GetTeamInfo(myTeamID))
-	FleaMenu.x1					= vsx - 70
-	FleaMenu.x2					= vsx - 40
-	FleaMenu.y1					= vsy - 30
-	FleaMenu.y2					= vsy
+	FleaMenu.x1					= vsx - 151
+	FleaMenu.x2					= vsx - 111
+	FleaMenu.y1					= vsy - 45
+	FleaMenu.y2					= vsy - 5
 
 	Button["close"] 				= {}
 	Panel["main"]					= {}
@@ -109,45 +124,95 @@ end
 local function DrawFleaStats()
 	
 	--background panel
-	gl.Color(cBack)
-	gl.Rect(Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"])
+--	gl.Color(cBack)
+--	gl.Rect(Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"])
 --	gl.Rect(posX,posY, posX + sizex, posY + sizey)
 --	gl.Rect(0,0, 100, 100)
+
+
+	--background panel 
+	gl.Color(cWhite)
+	gl.Texture(sfondomenu)	-- aggiungo l'immagine al background
+	gl.TexRect(Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"])	
+	gl.Texture(false)	-- fine texture	
+	
+	
 	
 	--border
-	gl.Color(cBorder)
-	gl.Rect(Panel["main"]["x1"]-1,Panel["main"]["y1"], Panel["main"]["x1"], Panel["main"]["y2"])
-	gl.Rect(Panel["main"]["x2"],Panel["main"]["y1"], Panel["main"]["x2"]+1, Panel["main"]["y2"])
-	gl.Rect(Panel["main"]["x1"],Panel["main"]["y1"]-1, Panel["main"]["x2"], Panel["main"]["y1"])
-	gl.Rect(Panel["main"]["x1"],Panel["main"]["y2"], Panel["main"]["x2"], Panel["main"]["y2"]+1)
+--	gl.Color(cBorder)
+--	gl.Rect(Panel["main"]["x1"]-1,Panel["main"]["y1"], Panel["main"]["x1"], Panel["main"]["y2"])
+--	gl.Rect(Panel["main"]["x2"],Panel["main"]["y1"], Panel["main"]["x2"]+1, Panel["main"]["y2"])
+--	gl.Rect(Panel["main"]["x1"],Panel["main"]["y1"]-1, Panel["main"]["x2"], Panel["main"]["y1"])
+--	gl.Rect(Panel["main"]["x1"],Panel["main"]["y2"], Panel["main"]["x2"], Panel["main"]["y2"]+1)
 	
 	-- Heading
 	myFontBig:SetTextColor(cTitle)
 	myFontBig:Begin()
-	myFontBig:Print("XTA Flea Bowl:", Panel["main"]["x1"] + margin, Panel["main"]["y2"] - 20,14,'ds')
+	myFontBig:Print("Alien fleas statistics:", Panel["main"]["x1"] + 70, Panel["main"]["y2"] - 34,14,'ds')
 	myFontBig:End()
+
+
+	local y0 = Panel["main"]["y2"] - 65	
+	-- backinfo
+	gl.Color(backbutton)																	-- disegno i riquadri di ogni opzione
+	gl.Rect(Panel["main"]["x1"]+1,y0+14, Panel["main"]["x2"]-1, y0-12) 	-- disegno i riquadri di ogni opzione
+	gl.Rect(Panel["main"]["x1"]+1,y0-13, Panel["main"]["x2"]-1, y0-39) 	
+	gl.Rect(Panel["main"]["x1"]+1,y0-40, Panel["main"]["x2"]-1, y0-66) 		
+	gl.Rect(Panel["main"]["x1"]+1,y0-67, Panel["main"]["x2"]-1, y0-93) 		
 	
 	-- Info
 	
-	local y0 = Panel["main"]["y2"] - 40
+
 	
 	myFont:Begin()		
-	myFont:SetTextColor(cTitle)
+	myFont:SetTextColor(cWhite)
 	myFont:Print("Wave:", Panel["main"]["x1"]+margin, y0 ,12,'vs')
-	myFont:Print("Spawned flea gates:", Panel["main"]["x1"]+margin, y0 - 20,12,'vs')
-	myFont:Print("Active fleas:", Panel["main"]["x1"]+margin, y0 - 40,12,'vs')
-	myFont:Print("Killed fleas:", Panel["main"]["x1"]+margin, y0 - 60,12,'vs')
+	myFont:Print("Spawned flea gates:", Panel["main"]["x1"]+margin, y0 - 26,12,'vs')
+	myFont:Print("Active fleas:", Panel["main"]["x1"]+margin, y0 - 53,12,'vs')
+	myFont:Print("Killed fleas:", Panel["main"]["x1"]+margin, y0 - 80,12,'vs')
 	
 	myFont:SetTextColor(cWhite)
 	myFont:Print(fleaData["wave"] or "-", Panel["main"]["x2"]-margin, y0 ,12,'rvs')
-	myFont:Print(fleaData["burrowspawns"] or "-", Panel["main"]["x2"]-margin, y0 - 20,12,'rvs')
-	myFont:Print(fleaData["active"] or "-", Panel["main"]["x2"]-margin, y0 - 40,12,'rvs')
-	myFont:Print(fleaData["kills"] or "-", Panel["main"]["x2"]-margin, y0 - 60,12,'rvs')
+	myFont:Print(fleaData["burrowspawns"] or "-", Panel["main"]["x2"]-margin, y0 - 26,12,'rvs')
+	myFont:Print(fleaData["active"] or "-", Panel["main"]["x2"]-margin, y0 - 53,12,'rvs')
+	myFont:Print(fleaData["kills"] or "-", Panel["main"]["x2"]-margin, y0 - 80,12,'rvs')
 	myFont:End()
 		
-	--reset state
-	gl.Texture(false)
-	gl.Color(1,1,1,1)
+		
+	-- icona menu
+	gl.Color(cTex)
+	gl.Texture(icona_alienflea)	-- add the icon
+	gl.TexRect(Panel["main"]["x1"]+20,Panel["main"]["y1"]+167, Panel["main"]["x1"]+60, Panel["main"]["y1"]+207)	
+	gl.Texture(false)	-- fine texture	
+	
+		-- icona wave
+	gl.Color(cTex)
+	gl.Texture(icona_wave)	-- add the icon
+	gl.TexRect(Panel["main"]["x1"]+10,y0-10, Panel["main"]["x1"]+33, y0+12)	
+	gl.Texture(false)	-- fine texture	
+	
+		-- icona spawned
+	gl.Color(cTex)
+	gl.Texture(icona_spgate)	-- add the icon
+	gl.TexRect(Panel["main"]["x1"]+10,y0-37, Panel["main"]["x1"]+33, y0-15)	
+	gl.Texture(false)	-- fine texture	
+	
+		-- icona active fleas
+	gl.Color(cTex)
+	gl.Texture(icona_activeflea)	-- add the icon
+	gl.TexRect(Panel["main"]["x1"]+10,y0-64, Panel["main"]["x1"]+33, y0-42)	
+	gl.Texture(false)	-- fine texture	
+	
+		-- icona killed fleas
+	gl.Color(cTex)
+	gl.Texture(icona_killflea)	-- add the icon
+	gl.TexRect(Panel["main"]["x1"]+10,y0-91, Panel["main"]["x1"]+33, y0-69)	
+	gl.Texture(false)	-- fine texture		
+	
+	-- add gui shader	
+	if (WG['guishader_api'] ~= nil) then
+	WG['guishader_api'].InsertRect(Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"],'aflea_menu')
+	end
 end
 
 
@@ -170,23 +235,14 @@ function widget:DrawScreen()
 	else
 		glColor(cBack)
 	end
-	glRect(FleaMenu.x1,FleaMenu.y1,FleaMenu.x2,FleaMenu.y2)
-	local mg = 2
 	
 	gl.Color(cTex)
-	glTexture(imgFlea)
-	glTexRect(FleaMenu.x1+mg,FleaMenu.y1+mg,FleaMenu.x2-mg,FleaMenu.y2-mg)
+	glTexture(imgButt)
+	glTexRect(FleaMenu.x1,FleaMenu.y1,FleaMenu.x2,FleaMenu.y2)
 	
 	glTexture(false)
 	glColor(cPanel)
 			
-	--menu border
-	glColor(cShadow)
-	glRect(FleaMenu.x1,FleaMenu.y1,FleaMenu.x1+1,FleaMenu.y2)
-	glRect(FleaMenu.x2-1,FleaMenu.y1,FleaMenu.x2,FleaMenu.y2)
-	glRect(FleaMenu.x1,FleaMenu.y1,FleaMenu.x2,FleaMenu.y1+1)
-	glRect(FleaMenu.x1,FleaMenu.y2-1,FleaMenu.x2,FleaMenu.y2)
-	
 	-- draw flea window
 	if (not Spring.IsGUIHidden()) and FleaMenu.click then
 		DrawFleaStats()
@@ -199,7 +255,11 @@ function widget:MousePress(mx, my, mButton)
 		if mButton == 1 then
 			if IsOnButton(mx, my, FleaMenu["x1"],FleaMenu["y1"],FleaMenu["x2"],FleaMenu["y2"]) then
 				FleaMenu.click = not FleaMenu.click
-				PlaySoundFile(button6)				
+				PlaySoundFile(button6)		
+			-- remove gui shader
+				if (WG['guishader_api'] ~= nil) then
+					WG['guishader_api'].RemoveRect('aflea_menu')
+				end						
 				return true
 			end
 		end
@@ -207,8 +267,9 @@ function widget:MousePress(mx, my, mButton)
 		if FleaMenu.click then		
 			if mButton == 1 then
 				-- add close button
+
 			elseif mButton == 2 or mButton == 3 then
-				
+												
 				if IsOnButton(mx, my, Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"]) then
 					--Dragging
 					return true
@@ -232,8 +293,9 @@ function widget:MouseMove(mx, my, dx, dy, mButton)
 function widget:IsAbove(mx,my)
 	if not Spring.IsGUIHidden() then
 		FleaMenu.above = IsOnButton(mx, my, FleaMenu["x1"],FleaMenu["y1"],FleaMenu["x2"],FleaMenu["y2"])
+
 	end
-	
+
 	return false				
 end	
 
