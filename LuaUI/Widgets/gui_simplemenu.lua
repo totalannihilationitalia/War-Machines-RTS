@@ -184,13 +184,8 @@ local function DrawMenu()
 	gl.Texture(false)	-- fine texture		
 
 	-- add gui shader	
-	
-		if (WG['guishader_api'] ~= nil) then
---		local left		= BLcornerX - ((widgetPosX - BLcornerX) * (widgetScale-1))
---		local bottom	= BLcornerY - ((widgetPosY - BLcornerY) * (widgetScale-1))
---		local right		= TRcornerX - ((widgetPosX - TRcornerX) * (widgetScale-1))
---		local top		= TRcornerY - ((widgetPosY - TRcornerY) * (widgetScale-1))
-		WG['guishader_api'].InsertRect(Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"],'Simple menu')
+	if (WG['guishader_api'] ~= nil) then
+	WG['guishader_api'].InsertRect(Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"],'Simple menu')
 	end
 	
 	--border
