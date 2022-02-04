@@ -15,7 +15,7 @@ function widget:GetInfo()
 		desc      = "Playerlist. Use tweakmode (ctrl+F11) to customize.",
 		author    = "Marmoth. (spiced up by Floris)",
 		date      = "25 april 2015",
-		version   = "21.0",
+		version   = "19.0",
 		license   = "GNU GPL, v2 or later",
 		layer     = -4,
 		enabled   = true,  --  loaded by default?
@@ -40,14 +40,14 @@ end
 -- v17	 (Floris): Added alliances display and button and /cputext option
 -- v18	 (Floris): Player system shown on tooltip + added FPS counter + replaced allycursor data with activity gadget data (all these features need gadgets too)
 -- v19   (Floris): added player resource bars
--- v20   (Molix): added convomexbox alerts
--- v21   (molix): changed graphic configuration, added "low energy" messagebox
+-- v20   (Molix): now advplayerlist interfaces with "mission_messagebox.lua" to send "low metal" and "low energy" warnings, if "convo_message_list.lua" is enabled by visual options ("gui_options_wmrts_b.lua")
+-- v21   (Molix): added WMRTS Avatars 04/02/2022
 
 --------------------------------------------------------------------------------
 -- Widget Scale
 --------------------------------------------------------------------------------
 
-local customScale		= 1
+local customScale			= 1
 local customScaleStep		= 0.025
 local pointDuration    		= 40
 local cpuText				= false
@@ -98,6 +98,8 @@ local gl_Text			  = gl.Text
 local gl_GetTextWidth	  = gl.GetTextWidth
 local gl_GetTextHeight  = gl.GetTextHeight
 
+local avatar = 0 -- verificare se lasciare questa variabile ##################################################################################################################
+
 --------------------------------------------------------------------------------
 -- VARIABILI PER MESSAGGI
 --------------------------------------------------------------------------------
@@ -111,6 +113,7 @@ local avvertimentoe = 0
 local imageDirectory  = ":n:"..LUAUI_DIRNAME.."Images/advplayerslist/"
 
 local flagsDirectory  = imageDirectory.."flags/"
+local avatarDirectory  = imageDirectory.."avatar/"
 
 local bgcorner        = ":n:"..LUAUI_DIRNAME.."Images/bgcorner.png"
 
@@ -139,6 +142,7 @@ local pics = {
 	seespecPic      = imageDirectory.."seespec.png",
 	indentPic       = imageDirectory.."indent.png",
 	cameraPic       = imageDirectory.."camera.dds",
+	avatarPic       = imageDirectory.."avatar.png",
 	countryPic      = imageDirectory.."country.dds",
 	readyTexture    = imageDirectory.."indicator.dds",
 	drawPic         = imageDirectory.."draw.dds",
@@ -249,7 +253,6 @@ local icucomDefID = UnitDefNames.icucom.id
 local kicucomDefID = UnitDefNames.kicucom.id
 local nfacomDefID = UnitDefNames.nfacom.id
 local knfacomDefID = UnitDefNames.knfacom.id
-local andcomDefID = UnitDefNames.andcom.id -- aggiungo comandante andronians 19/01/2022
 
 --Name for absent/resigned players
 local absentName = " --- "
@@ -367,6 +370,19 @@ m_rank = {
 	position  = position,
 	posX      = 0,
 	pic       = pics["rank6"],
+}
+position = position + 1
+
+m_avatar = {
+	name	  = "avatar",
+	spec      = true,
+	play      = true,
+	active    = true,
+	default   = true,
+	width     = 20,
+	position  = position,
+	posX      = 0,
+	pic       = pics["avatarPic"],
 }
 position = position + 1
 
@@ -519,6 +535,7 @@ position = position + 1
 modules = {
 	m_indent,
 	m_rank,
+	m_avatar,
 	m_country,
 	m_ID,
 	m_side,
@@ -846,8 +863,6 @@ function SetSidePics()
 				teamside = "icu"
 			elseif startunit == kicucomDefID  then 
 				teamside = "icu"
-			elseif startunit == andcomDefID  then  -- aggiungo comandante andronians 19/02/2022
-				teamside = "and"
 			elseif startunit == knfacomDefID  then 
 				teamside = "nfa"
 			else
@@ -969,10 +984,10 @@ end
 function CreatePlayer(playerID)
 	
 	--generic player data
-	local tname,_, tspec, tteam, tallyteam, tping, tcpu, tcountry, trank = Spring_GetPlayerInfo(playerID)
+	local tname,_, tspec, tteam, tallyteam, tping, tcpu, tcountry, trank, tavatar = Spring_GetPlayerInfo(playerID)
 	local _,_,_,_, tside, tallyteam                                      = Spring_GetTeamInfo(tteam)
 	local tred, tgreen, tblue  										     = Spring_GetTeamColor(tteam)
-	
+--	Spring.Echo("debug: "..tostring(avatar)) --debug	
 	--skill
 	local tskill 
 	tskill = GetSkill(playerID)
@@ -996,7 +1011,7 @@ function CreatePlayer(playerID)
 	
 	return {
 		rank             = trank,
-		skill			       = tskill,
+		skill	         = tskill,
 		name             = tname,
 		team             = tteam,
 		allyteam         = tallyteam,
@@ -1009,6 +1024,7 @@ function CreatePlayer(playerID)
 		cpuLvl           = tcpuLvl,
 		ping             = tping,
 		cpu              = tcpu,
+		avatar           = tavatar,
 		country          = tcountry,
 		tdead            = false,
 		spec             = tspec,
@@ -1033,7 +1049,7 @@ function CreatePlayerFromTeam(teamID) -- for when we don't have a human player o
 	
 		local version
 		
-		_,_,_,_, tname, version = Spring_GetAIInfo(teamID)
+		_,_,_,_, tname, version = Spring_GetAIInfo(teamID)    -- ###################################################### verificare questa riga -- molix
 		
 		if type(version) == "string" then
 			tname = "AI:" .. tname .. "-" .. version
@@ -1077,7 +1093,7 @@ function CreatePlayerFromTeam(teamID) -- for when we don't have a human player o
 	
 	return{
 		rank             = 8, -- "don't know which" value
-		skill			       = tskill,
+		skill	         = tskill,
 		name             = tname,
 		team             = teamID,
 		allyteam         = tallyteam,
@@ -1157,7 +1173,7 @@ function SortList()
 	local teamList
 	local myOldSpecStatus = mySpecStatus
 	
-	_,_, mySpecStatus,_,_,_,_,_,_ = Spring_GetPlayerInfo(myPlayerID)
+	_,_, mySpecStatus,_,_,_,_,_,_,_ = Spring_GetPlayerInfo(myPlayerID) -- aggiungo una ,_
 	
 	-- checks if a team has died
 	if mySpecStatus ~= myOldSpecStatus then
@@ -1553,23 +1569,15 @@ function CreateBackground()
 	
 	Background = gl_CreateList(function()
 -- riquadro esterno **********************************************************************************
---		gl_Color(0,0,1,0.2)
---		RectRound(BLcornerX,BLcornerY,TRcornerX,TRcornerY,6)
+		gl_Color(0,0,1,0.2)
+		RectRound(BLcornerX,BLcornerY,TRcornerX,TRcornerY,6)
 		
---		local padding = 2.75
+		local padding = 2.75
 -- riquadro interno **********************************************************************************
-		gl_Color(0.03,0.18,0.3,0.5)
-	--	RectRound(BLcornerX+padding,BLcornerY+padding,TRcornerX-padding,TRcornerY-padding,padding)
+		gl_Color(0,0,0,0.5)
+		RectRound(BLcornerX+padding,BLcornerY+padding,TRcornerX-padding,TRcornerY-padding,padding)
 		
-		gl_Rect(BLcornerX,BLcornerY+3,TRcornerX-2,TRcornerY) --sfondo -- aggiunto margine sotto
-		
-		gl_Color(0,0.67,0.99,1)
-		
-	gl_Rect(BLcornerX,BLcornerY+3,TRcornerX-2,BLcornerY+3.5) --riga sotto
-	gl_Rect(BLcornerX,BLcornerY+3,BLcornerX+0.5,TRcornerY) --riga sinistra	
-	gl_Rect(TRcornerX-2,BLcornerY+3,TRcornerX-2.5,TRcornerY) --riga destra	
-	gl_Rect(BLcornerX,TRcornerY,TRcornerX-2,TRcornerY+0.5) --riga sopra	
-
+		--DrawRect(BLcornerX,BLcornerY,TRcornerX,TRcornerY)
 		-- draws highlight (top and left sides)
 		--gl_Color(0.44,0.44,0.44,0.38)	
 		--gl_Rect(widgetPosX-margin-1,					widgetPosY + widgetHeight +margin, 	widgetPosX + widgetWidth+margin, 			widgetPosY + widgetHeight-1+margin)
@@ -1725,7 +1733,7 @@ function DrawLabelTip(text, vOffset, xOffset)
 	gl_Text(text, widgetPosX + xOffset, widgetPosY + widgetHeight -vOffset+7.5, 10, "n")
 end
 
-function DrawSeparator(vOffset)
+function DrawSeparator(vOffset) -- ################################################################## impostare il colore dei separatori ##################################################
 	vOffset = vOffset - 2
 	gl_Color(0.55,0.55,0.55,0.45)
 	gl_Rect(widgetPosX+2, widgetPosY + widgetHeight -vOffset+(1/widgetScale), widgetPosX + widgetWidth-2, widgetPosY + widgetHeight -vOffset)
@@ -1758,6 +1766,7 @@ function DrawPlayer(playerID, leader, vOffset, mouseX, mouseY)
 	local cpuLvl         = player[playerID].cpuLvl
 	local ping           = player[playerID].ping
 	local cpu            = player[playerID].cpu
+	local avatar         = player[playerID].avatar    					-- aggiunto avatar
 	local country        = player[playerID].country
 	local spec           = player[playerID].spec
 	local totake         = player[playerID].totake
@@ -1844,6 +1853,52 @@ function DrawPlayer(playerID, leader, vOffset, mouseX, mouseY)
 		if m_rank.active == true then
 			DrawRank(rank, posY)
 		end
+		-- setting WMRTS avatar from modoptions ------------------  to do ---> move this from playeroption table (molix)
+		if (playerID == 0) then 
+		avatar = Spring.GetModOptions().avatar0
+		elseif (playerID == 1) then
+		avatar = Spring.GetModOptions().avatar1		
+		elseif (playerID == 2) then
+		avatar = Spring.GetModOptions().avatar2
+		elseif (playerID == 3) then
+		avatar = Spring.GetModOptions().avatar3
+		elseif (playerID == 4) then
+		avatar = Spring.GetModOptions().avatar4
+		elseif (playerID == 5) then
+		avatar = Spring.GetModOptions().avatar5
+		elseif (playerID == 6) then
+		avatar = Spring.GetModOptions().avatar6
+		elseif (playerID == 7) then
+		avatar = Spring.GetModOptions().avatar7		
+		elseif (playerID == 8) then
+		avatar = Spring.GetModOptions().avatar8
+		elseif (playerID == 9) then
+		avatar = Spring.GetModOptions().avatar9
+		elseif (playerID == 10) then
+		avatar = Spring.GetModOptions().avatar10		
+		elseif (playerID == 11) then
+		avatar = Spring.GetModOptions().avatar11
+		elseif (playerID == 12) then
+		avatar = Spring.GetModOptions().avatar12
+		elseif (playerID == 13) then
+		avatar = Spring.GetModOptions().avatar13	
+		elseif (playerID == 14) then
+		avatar = Spring.GetModOptions().avatar14
+		elseif (playerID == 15) then
+		avatar = Spring.GetModOptions().avatar15	
+		else 
+--		Spring.Echo("No avatar set")
+		end
+		-- avatar debug
+		local playername,_ = Spring.GetPlayerInfo (playerID) 
+		if (playername ~= nil and avatar ~= nil) then
+		Spring.Echo("Name: "..tostring(playername).." -> avatar: "..tostring(avatar)) -- print name and his avatar number
+		end
+		-- end avatar debug
+		
+		if m_avatar.active == true and avatar ~= "" then
+			DrawAvatar(avatar, posY)
+		end
 		if m_country.active == true and country ~= "" then
 			DrawCountry(country, posY)
 		end
@@ -1910,7 +1965,7 @@ function DrawPlayer(playerID, leader, vOffset, mouseX, mouseY)
 		if m_point.active then
 			if player[playerID].pointTime ~= nil then
 				if player[playerID].allyteam == myAllyTeamID or mySpecStatus == true then
-					--if blink == true then
+					--if blink == true then            -- ################################################### verifica blink
 						DrawPoint(posY, player[playerID].pointTime-now)
 					--end
 					if tipY == true then PointTip(mouseX) end
@@ -2003,16 +2058,14 @@ function DrawResources(energy, energyStorage, metal, metalStorage, posY)
 	gl_Texture(pics["resbarBgPic"])
 	DrawRect(m_resources.posX + widgetPosX + paddingLeft, posY + 7, m_resources.posX + widgetPosX + paddingLeft + barWidth, posY + 5)	
 --	barra energia *****************************************************************************
---	gl_Color(0,0.7,1,1)
-	gl_Color(1,0.8,0,1)
+	gl_Color(0,0.7,1,1)
 	gl_Texture(pics["resbarPic"])
 	DrawRect(m_resources.posX + widgetPosX + paddingLeft, posY + 7, m_resources.posX + widgetPosX + paddingLeft + ((barWidth/metalStorage)*metal), posY + 5)	
 	gl_Color(1,1,0,0.14)
 	gl_Texture(pics["resbarBgPic"])
 	DrawRect(m_resources.posX + widgetPosX + paddingLeft, posY + 11, m_resources.posX + widgetPosX + paddingLeft + barWidth, posY + 9)	
 --	barra metallo *****************************************************************************
---	gl_Color(1,0.8,0,1)
-	gl_Color(0,0.7,1,1)
+	gl_Color(1,0.8,0,1)
 	gl_Texture(pics["resbarPic"])
 	DrawRect(m_resources.posX + widgetPosX + paddingLeft, posY + 11, m_resources.posX + widgetPosX + paddingLeft + ((barWidth/energyStorage)*energy), posY + 9)	
 end
@@ -2108,6 +2161,18 @@ function DrawAlly(posY, team)
 	gl_Texture(pics["allyPic"])
 	DrawRect(m_alliance.posX + widgetPosX + 3, posY+1, m_alliance.posX + widgetPosX + 17, posY + 15)
 end
+-- aggiungo avatar 
+function DrawAvatar(avatar, posY)
+--		local avatar = "1" -- debug
+-- Spring.Echo(avatar) -- debug
+	if avatar ~= nil and avatar ~= "??" then
+--		gl_Texture(avatarDirectory..string.upper(avatar)..".png")
+		gl_Texture(avatarDirectory..tostring(avatar)..".png")
+		gl_Color(1,1,1)
+		DrawRect(m_avatar.posX + widgetPosX + 3, posY+1, m_avatar.posX + widgetPosX + 17, posY + 15)
+--									Spring.Echo(avatar) --debug
+	end
+end
 
 function DrawCountry(country, posY)
 	if country ~= nil and country ~= "??" then
@@ -2115,6 +2180,7 @@ function DrawCountry(country, posY)
 		gl_Texture(flagsDirectory..string.upper(country)..".png")
 		gl_Color(1,1,1)
 		DrawRect(m_country.posX + widgetPosX + 3, posY+1, m_country.posX + widgetPosX + 17, posY + 15)
+--									Spring.Echo(country) --debug
 	end
 end
 
@@ -3199,7 +3265,8 @@ end
 function CheckPlayersChange()
 	local sorting = false
 	for i = 0,63 do
-		local name,active,spec,teamID,allyTeamID,pingTime,cpuUsage, country, rank = Spring_GetPlayerInfo(i)
+		local name,active,spec,teamID,allyTeamID,pingTime,cpuUsage, country, rank, avatar = Spring_GetPlayerInfo(i)    -- add avatar
+--	Spring.Echo(avatar) --debug
 		if active == false then
 			if player[i].name ~= nil then                                             -- NON SPEC PLAYER LEAVING
 				if player[i].spec==false then
