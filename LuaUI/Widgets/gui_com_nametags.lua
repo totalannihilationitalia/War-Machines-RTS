@@ -63,6 +63,15 @@ local glDeleteList				= gl.DeleteList
 local glCallList				= gl.CallList
 
 local diag						= math.diag
+local avatar					= 100
+--------------------------------------------------------------------------------
+-- IMAGES
+--------------------------------------------------------------------------------
+
+local imageDirectory  = ":n:"..LUAUI_DIRNAME.."Images/advplayerslist/"
+
+local flagsDirectory  = imageDirectory.."flags/"
+local avatarDirectory  = imageDirectory.."avatar/"
 
 --------------------------------------------------------------------------------
 
@@ -82,9 +91,49 @@ local function GetCommAttributes(unitID, unitDefID)
   local players = GetPlayerList(team)
   local name = (#players>0) and GetPlayerInfo(players[1]) or 'AI'
   for _,pID in ipairs(players) do
-    local pname,active = GetPlayerInfo(pID)
+    local pname,active,_,_,_,_,_,pcountry,prank = GetPlayerInfo(pID) -- aggiungo rank e country -----------------------------------------------------------------
     if active then
       name = pname
+	  local country = pcontry
+	  local rank = prank
+	  -- add avatar
+	if (pID == 0) then 
+		avatar = Spring.GetModOptions().avatar0
+		elseif (pID == 1) then
+		avatar = Spring.GetModOptions().avatar1		
+		elseif (pID == 2) then
+		avatar = Spring.GetModOptions().avatar2
+		elseif (pID == 3) then
+		avatar = Spring.GetModOptions().avatar3
+		elseif (pID == 4) then
+		avatar = Spring.GetModOptions().avatar4
+		elseif (pID == 5) then
+		avatar = Spring.GetModOptions().avatar5
+		elseif (pID == 6) then
+		avatar = Spring.GetModOptions().avatar6
+		elseif (pID == 7) then
+		avatar = Spring.GetModOptions().avatar7		
+		elseif (pID == 8) then
+		avatar = Spring.GetModOptions().avatar8
+		elseif (pID == 9) then
+		avatar = Spring.GetModOptions().avatar9
+		elseif (pID == 10) then
+		avatar = Spring.GetModOptions().avatar10		
+		elseif (pID == 11) then
+		avatar = Spring.GetModOptions().avatar11
+		elseif (pID == 12) then
+		avatar = Spring.GetModOptions().avatar12
+		elseif (pID == 13) then
+		avatar = Spring.GetModOptions().avatar13	
+		elseif (pID == 14) then
+		avatar = Spring.GetModOptions().avatar14
+		elseif (pID == 15) then
+		avatar = Spring.GetModOptions().avatar15	
+		else 
+--		Spring.Echo("No avatar set")
+	end
+ 
+	  
       break
     end
   end
@@ -129,6 +178,7 @@ local function createComnameList(attributes)
 end
 
 local function DrawName(unitID, attributes, shadow)
+  --   Spring.Echo("commandername debug: --> "..tostring(avatar))	 -- debug
 	if comnameList[attributes[1]] == nil then
 		createComnameList(attributes)
 	end
@@ -142,6 +192,17 @@ local function DrawName(unitID, attributes, shadow)
 	if nameScaling then
 		glScale(1,1,1)
 	end
+-- insert images (rank, country, avatar here ) -- ####################################################################################
+--		glColor(1,1,1,1)			-- test ##############################################
+--		gl.Rect(-10,-10, 10, 10) 	-- test ##############################################
+-- draw avatar
+	gl.Color(1,1,1)
+	gl.Texture(avatarDirectory..avatar..".png")
+	gl.TexRect(-10,-25, 10, -5)
+-- draw country
+	gl.Color(1,1,1)
+	gl.Texture(flagsDirectory..avatar..".png")
+	gl.TexRect(-20,-25, -10, -5)	
 end
 
 local vsx, vsy = Spring.GetViewGeometry()
@@ -158,7 +219,7 @@ function widget:DrawWorld()
 		CheckAllComs()
 	  end
   end
-  
+
   glDepthTest(true)
   glAlphaTest(GL_GREATER, 0)
   glBlending(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
@@ -175,12 +236,13 @@ function widget:DrawWorld()
 	    usedFontSize = (fontSize*0.5) + (camDistance/scaleFontAmount)
 	    
 		glDrawFuncAtUnit(unitID, false, DrawName, unitID, attributes, fontShadow)
+		
 	end
   end
   
   glAlphaTest(false)
   glColor(1,1,1,1)
-  glDepthTest(false)
+
 end
 
 --------------------------------------------------------------------------------
