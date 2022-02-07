@@ -59,7 +59,7 @@ local estallDefs = {
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- variabili
-local antiripetizione = 0
+--local antiripetizione = 0
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -123,15 +123,16 @@ function gadget:GameFrame(n)
           if (disabledUnitEnergyUse < teamEnergy[unitTeamID]) then  -- we still have enough energy to reenable unit
             disabledUnits[unitID]=nil
             GiveOrderToUnit(unitID, CMD.ONOFF, { 1 }, { })
+-- removed
 			-- in questo punto i radar tornano online
 			---------------
 			-- aggiungo righe seguenti per mandare la variabile al lato unsync
 			---------------
-			if (antiripetizione == 1) then
-			vala=5 -- invio la variabile a convo_message_list.lua per far apparire la scritta "Sensors reactivated"
-			SendToUnsynced("ParlatoGateEvent", vala)
-			antiripetizione = 0 -- immetto questa variabile per non ripetere il messaggio  (altrimenti lo ripete per ogni sensore esistente su mappa)
-			end
+--			if (antiripetizione == 1) then
+--			vala=5 -- invio la variabile a convo_message_list.lua per far apparire la scritta "Sensors reactivated"
+--			SendToUnsynced("ParlatoGateEvent", vala)
+--			antiripetizione = 0 -- immetto questa variabile per non ripetere il messaggio  (altrimenti lo ripete per ogni sensore esistente su mappa)
+--			end
 			----------------
             data.changeStateTime = gameSeconds
             teamEnergy[unitTeamID] = teamEnergy[unitTeamID] - disabledUnitEnergyUse
@@ -187,17 +188,18 @@ else
 ----------------
 --- UNSYNC
 ----------------
+-- removed
 
-function gadget:Initialize()
-  gadgetHandler:AddSyncAction("ParlatoGateEvent",WrapToLuaUI)
-  end
-  
-  ------ aggiungo la funzione per il parlato
-function WrapToLuaUI(_,vala)
-    if Script.LuaUI('ParlatoGateEvent') then
-       Script.LuaUI.ParlatoGateEvent(vala)
-    end
-end
+--function gadget:Initialize()
+--  gadgetHandler:AddSyncAction("ParlatoGateEvent",WrapToLuaUI)
+--  end
+--  
+------ aggiungo la funzione per il parlato
+--function WrapToLuaUI(_,vala)
+--    if Script.LuaUI('ParlatoGateEvent') then
+--       Script.LuaUI.ParlatoGateEvent(vala)
+--    end
+--end
 
 
 

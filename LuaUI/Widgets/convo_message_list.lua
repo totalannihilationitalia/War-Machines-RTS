@@ -10,13 +10,36 @@ function widget:GetInfo()
    }
 end
 
+-- ver 1 05/02/2022 remake better code because low energy and low metal message was sync for all player - now message works unsync only on necessary player team
+-- ver 2 06/02/2022 add "you received unit" warning
+------------------------------------------------------------------
+-- static var
+------------------------------------------------------------------
 local toggle
-local vala = 0 -- all'inizio attribuisco = 0 la variabile (nessun parlato)
+local vala = 0 								-- 0 = no warnings, esle see SYNC WARNINGS below
+local myplayerid = Spring.GetMyPlayerID ( )	-- get my playerid
+local myteamid = Spring.GetMyTeamID ( )		-- get my team id
+local antiloopm = 0	
+local antiloope = 0
+local antiloopr = 0
+local oldTeam 						-- the giver team (for sharing unit)
+local newTeam 						-- the destination team (for sharing unit)
+local oldName						-- the giver playerName (for sharing unit)
 
--- questo widget aspetta la variabile vala che si sincronizza con  i gadget (mo_comgate) per avviare il parlato durante il gioco
+------------------------------------------------------------------
+-- setting variables
+------------------------------------------------------------------
+local minmvalwarning = 200 			-- minimum metal amount to see warning
+local minevalwarning = 200 			-- minimum energy amount to see warning
+local minrvalwarning = 5 			-- minimum energy amount to see shutoff radar warning
+local warningtime 	 = 50			-- in frames, time of appearance of the warning 
+
+
+-- SYNC WARNINGS (MESSAGES APPEAR TO ALL TEAMS)
 
 function Parlatoingame(vala) -- ogni volta che si richiama questa funzione
-	if (vala == 1) then     -- se uguale 1 il comandante inizia il gate  in skirmish mode
+
+	if (vala == 1) then     -- se uguale 1 il comandante inizia il gate  in skirmish mode 
 		WG.AddConvo('>>> Initializing Commander Gate <<<', nil, "LuaUI/Images/parlato_gate.png", nil, 50)
 
 		end
@@ -31,29 +54,66 @@ function Parlatoingame(vala) -- ogni volta che si richiama questa funzione
 		 Spring.Echo("testwidget")
 
 		end	
-	if (vala == 4) then	-- se uguale 4 faccio apparire la quarta frase in skirmish mode
+	if (vala == 4) then	-- (sync warning) -- TEAM DESTROYED
 		WG.AddConvo('Warning: A team has been destroyed', nil, "LuaUI/Images/parlato_defeat.png", nil, 105)
 		  Spring.Echo("testdestroy")
 
 		end
-	if (vala == 5) then	-- se uguale 5 faccio apparire la quarta frase in skirmish mode
-	WG.AddConvo('Warning: Sensors reactivated', nil, "LuaUI/Images/parlato_radar_on.png", nil, 52)
-	--Spring.Echo("sens reactived")
-		end
-	if (vala == 6) then	-- se uguale 6 faccio apparire la quarta frase in skirmish mode
-	WG.AddConvo('Warning: Sensors deactivated due insufficient power', nil, "LuaUI/Images/parlato_radar_off.png", nil, 52)
-	--Spring.Echo("sens disattivi")
-		end
+
 end
 
 
 -- commander gate
-function widget:Initialize() -- ogni volta che si verifica l'evento ParlatoGateEvent nel gadget mo_comgate.lua (le variabili sono nate inizialmente per questo evento e poi sono state mantenute anche in altri gadget), esegui la funzione Parlatoingame in questo widget. è importante che ogni volta che si richiama questo script, la variabile vala assuma il valore del parlato che si vuole avere (vedi sopra)
+function widget:Initialize() -- ogni volta che si verifica l'evento ParlatoGateEvent nel gadget mo_comgate.lua (o in altri gadget), esegui la funzione Parlatoingame in questo widget. è importante che ogni volta che si richiama questo script, la variabile vala assuma il valore del parlato che si vuole avere (vedi sopra)
 widgetHandler:RegisterGlobal('ParlatoGateEvent',Parlatoingame)
+
+end
+
+-- UNSYNC WARNINGS (MESSAGES APPEAR ONLY TO LOCAL PLAYER )
+
+function widget:GameFrame(frame)
+	if frame%10 == 0 then
+		local mcurrlvl,mstorage = Spring.GetTeamResources(myteamid,"metal")				-- take player metal amount
+		local ecurrlvl,estorage = Spring.GetTeamResources(myteamid,"energy")			-- take player energy amount
+
+-- METAL WARNINGS		
+		if (mcurrlvl < minmvalwarning) and ( antiloopm == 0) then
+		WG.AddConvo('WARNING: You are in low of metal!', nil, "LuaUI/Images/parlato_need_metal.png", nil, 50)
+		antiloopm = 1
+		end
+		if (mcurrlvl > mstorage/2) and ( antiloopm == 1) then
+		WG.AddConvo('WARNING: metal level stable', nil, "LuaUI/Images/parlato_full_metal.png", nil, 50)
+		antiloopm = 0
+		end
+ 
+-- ENERGY WARNINGS 
+		if (ecurrlvl < minevalwarning) and ( antiloope == 0) then
+		WG.AddConvo('WARNING: You are in low of energy!', nil, "LuaUI/Images/parlato_need_energy.png", nil, 50)
+		antiloope = 1
+		end
+		if (ecurrlvl > estorage/2) and ( antiloope == 1) then
+		WG.AddConvo('WARNING: energy level stable', nil, "LuaUI/Images/parlato_full_energy.png", nil, 50)
+		antiloope = 0
+		end		
+-- RADAR WARNINGS -- 
+		if (ecurrlvl <= minrvalwarning) and ( antiloopr == 0) then
+		WG.AddConvo('Warning: Sensors deactivated due insufficient power!', nil, "LuaUI/Images/parlato_radar_off.png", nil, 50)
+		antiloopr = 1
+		end
+		if (ecurrlvl > 50) and ( antiloopr == 1) then
+		WG.AddConvo('Warning: Sensors reactivated', nil, "LuaUI/Images/parlato_radar_on.png", nil, 50)
+		antiloopr = 0
+		end		
+				
+	end -- end frame
+	
 end
 
 
-
-
-
-
+function widget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
+-- RECEIVED UNITS WARNINGS	
+	if (newTeam == myteamid) then
+	local oldName,_,_ = Spring.GetPlayerInfo ( oldTeam ) -- At start playerID = teamID (in WMRTS no changing or adding player during game admitted)
+	WG.AddConvo('Warning: You received an unit from '..oldName.."!", nil, "LuaUI/Images/parlato_radar_off.png", nil, 85)
+	end
+end
