@@ -12,7 +12,7 @@ function widget:GetInfo()
 	}
 end
 
-local useRoundedRectangles = true
+local useRoundedRectangles = false
 local roundedSizeMultiplier = 1
 local usedRoundedSize = roundedSize
 

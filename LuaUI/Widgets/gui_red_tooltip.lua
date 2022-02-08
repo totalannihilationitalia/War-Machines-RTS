@@ -140,6 +140,10 @@ local function createtooltip(r)
 		caption="",
 		options="o",
 		
+				-- add gui shader	
+
+		
+		
 		onupdate=function(self)
 			local unitcount = sGetSelectedUnitsCount()
 			if (unitcount ~= 0) then
@@ -155,6 +159,7 @@ local function createtooltip(r)
 			end
 		end
 	}
+	
 	
 	local unitcounter = {"text",
 		px=r.sx-(r.margin/2),py=r.py+(r.margin/2),
@@ -271,6 +276,8 @@ function widget:Initialize()
 	Spring.SetDrawSelectionInfo(false) --disables springs default display of selected units count
 	Spring.SendCommands("tooltip 0")
 	AutoResizeObjects()
+	
+
 end
 
 function widget:Shutdown()
