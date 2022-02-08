@@ -196,14 +196,20 @@ local function DrawName(unitID, attributes, shadow)
 --		glColor(1,1,1,1)			-- test ##############################################
 --		gl.Rect(-10,-10, 10, 10) 	-- test ##############################################
 -- draw avatar
+
+	if (avatar ~= nil) then
 	gl.Color(1,1,1)
-	gl.Texture(avatarDirectory..avatar..".png")
-	gl.TexRect(-10,-25, 10, -5)
+	gl.Texture(avatarDirectory..tostring(avatar)..".png")
+	gl.TexRect(-10,20, 10, 40)
+	end
+	
 -- draw country
+	if (country ~= nil) then
 	gl.Color(1,1,1)
-	gl.Texture(flagsDirectory..avatar..".png")
-	gl.TexRect(-20,-25, -10, -5)	
-end
+	gl.Texture(flagsDirectory..tostring(avatar)..".png")
+	gl.TexRect(-30,10, -10, 30)	
+	end
+end 
 
 local vsx, vsy = Spring.GetViewGeometry()
 function widget:ViewResize()

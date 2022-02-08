@@ -42,6 +42,8 @@ end
 -- v19   (Floris): added player resource bars
 -- v20   (Molix): now advplayerlist interfaces with "mission_messagebox.lua" to send "low metal" and "low energy" warnings, if "convo_message_list.lua" is enabled by visual options ("gui_options_wmrts_b.lua")
 -- v21   (Molix): added WMRTS Avatars 04/02/2022
+-- v22   (Molix): changed graphic configuration (for WMRTS game)
+-- v23   (Molix): removed interface with widget "mission_messagebox.lua", now warning messages code is entirely inside the "mission_messagebox.lua" widget
 
 --------------------------------------------------------------------------------
 -- Widget Scale
@@ -98,7 +100,7 @@ local gl_Text			  = gl.Text
 local gl_GetTextWidth	  = gl.GetTextWidth
 local gl_GetTextHeight  = gl.GetTextHeight
 
-local avatar = 0 -- verificare se lasciare questa variabile ##################################################################################################################
+--local avatar = 0 -- verificare se lasciare questa variabile ##################################################################################################################
 
 --------------------------------------------------------------------------------
 -- VARIABILI PER MESSAGGI
@@ -984,7 +986,7 @@ end
 function CreatePlayer(playerID)
 	
 	--generic player data
-	local tname,_, tspec, tteam, tallyteam, tping, tcpu, tcountry, trank, tavatar = Spring_GetPlayerInfo(playerID)
+	local tname,_, tspec, tteam, tallyteam, tping, tcpu, tcountry, trank = Spring_GetPlayerInfo(playerID)  -- tolgo tavatar alla fine @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 	local _,_,_,_, tside, tallyteam                                      = Spring_GetTeamInfo(tteam)
 	local tred, tgreen, tblue  										     = Spring_GetTeamColor(tteam)
 --	Spring.Echo("debug: "..tostring(avatar)) --debug	
@@ -1024,7 +1026,7 @@ function CreatePlayer(playerID)
 		cpuLvl           = tcpuLvl,
 		ping             = tping,
 		cpu              = tcpu,
-		avatar           = tavatar,
+--		avatar           = tavatar,
 		country          = tcountry,
 		tdead            = false,
 		spec             = tspec,
@@ -1568,20 +1570,16 @@ function CreateBackground()
 	end
 	
 	Background = gl_CreateList(function()
--- riquadro esterno **********************************************************************************
-		gl_Color(0,0,1,0.2)
-		RectRound(BLcornerX,BLcornerY,TRcornerX,TRcornerY,6)
+
+		gl_Color(0.03,0.18,0.3,0.5)
+		gl_Rect(BLcornerX,BLcornerY+3,TRcornerX-2,TRcornerY) --sfondo -- aggiunto margine sotto
 		
-		local padding = 2.75
--- riquadro interno **********************************************************************************
-		gl_Color(0,0,0,0.5)
-		RectRound(BLcornerX+padding,BLcornerY+padding,TRcornerX-padding,TRcornerY-padding,padding)
+		gl_Color(0,0.67,0.99,1)
 		
-		--DrawRect(BLcornerX,BLcornerY,TRcornerX,TRcornerY)
-		-- draws highlight (top and left sides)
-		--gl_Color(0.44,0.44,0.44,0.38)	
-		--gl_Rect(widgetPosX-margin-1,					widgetPosY + widgetHeight +margin, 	widgetPosX + widgetWidth+margin, 			widgetPosY + widgetHeight-1+margin)
-		--gl_Rect(widgetPosX-margin-1 , 					widgetPosY-margin, 					widgetPosX-margin, 							widgetPosY-margin + widgetHeight + 1  - 1+margin+margin)
+	gl_Rect(BLcornerX,BLcornerY+3,TRcornerX-2,BLcornerY+3.5) --riga sotto
+	gl_Rect(BLcornerX,BLcornerY+3,BLcornerX+0.5,TRcornerY) --riga sinistra	
+	gl_Rect(TRcornerX-2,BLcornerY+3,TRcornerX-2.5,TRcornerY) --riga destra	
+	gl_Rect(BLcornerX,TRcornerY,TRcornerX-2,TRcornerY+0.5) --riga sopra	
 		
 		gl_Color(1,1,1,1)
 	end)	
@@ -1766,7 +1764,7 @@ function DrawPlayer(playerID, leader, vOffset, mouseX, mouseY)
 	local cpuLvl         = player[playerID].cpuLvl
 	local ping           = player[playerID].ping
 	local cpu            = player[playerID].cpu
-	local avatar         = player[playerID].avatar    					-- aggiunto avatar
+--	local avatar         = player[playerID].avatar    					-- aggiunto avatar
 	local country        = player[playerID].country
 	local spec           = player[playerID].spec
 	local totake         = player[playerID].totake
@@ -1887,16 +1885,18 @@ function DrawPlayer(playerID, leader, vOffset, mouseX, mouseY)
 		elseif (playerID == 15) then
 		avatar = Spring.GetModOptions().avatar15	
 		else 
---		Spring.Echo("No avatar set")
+		avatar = nil
 		end
 		-- avatar debug
-		local playername,_ = Spring.GetPlayerInfo (playerID) 
-		if (playername ~= nil and avatar ~= nil) then
-		Spring.Echo("Name: "..tostring(playername).." -> avatar: "..tostring(avatar)) -- print name and his avatar number
-		end
+
+--		local playername,_ = Spring.GetPlayerInfo (playerID) 
+--		if (playername ~= nil and avatar ~= nil) then
+--		Spring.Echo("Name: "..tostring(playername).." -> avatar: "..tostring(avatar)) -- print name and his avatar number
+--		end
 		-- end avatar debug
+
 		
-		if m_avatar.active == true and avatar ~= "" then
+		if m_avatar.active == true and (avatar ~= "" or avatar ~= nil)  then
 			DrawAvatar(avatar, posY)
 		end
 		if m_country.active == true and country ~= "" then
@@ -2015,17 +2015,20 @@ function DrawShareButtons(posY, needm, neede) -- funzioni share unit, share meta
 	if neede == true then
 		DrawRect(m_share.posX + widgetPosX  + 17, posY, m_share.posX + widgetPosX  + 33, posY + 16)	
 	end
+	
+-- removed in v23 version	
+--[[
 -----------------
 -- GESTIONE PARLATO LOW ENERGY
 -----------------
 
 	if (neede == true) and (avvertimentoe == 0) then -- se c'è bisogno di energia mostra il messaggio "WARNING: You are in low of energy!" e imposta la variabile avvertimentoe=1 cosi da non ripetere continuamente il messaggio per tutto il tempo in cui si è in low of energy
---	Spring.Echo("test need energy!!!!!!!!!!!!")
+
 	WG.AddConvo('WARNING: You are in low of energy!', nil, "LuaUI/Images/parlato_need_energy.png", nil, 105)
-	avvertimentoe = 1
+	local avvertimentoe = 1
 	end
 	if (neede == false) then-- se non c'è bisogno di energia resetto la variabile cosi che la prox volta che si è in low of energy appare nuovamente il messaggio
-	avvertimentoe = 0
+	local avvertimentoe = 0
 	end	
 
 -----------------
@@ -2035,12 +2038,12 @@ function DrawShareButtons(posY, needm, neede) -- funzioni share unit, share meta
 	if (needm == true) and (avvertimentom == 0) then -- se c'è bisogno di metallo mostra il messaggio "WARNING: You are in low of metal!" e imposta la variabile avvertimentom=1 cosi da non ripetere continuamente il messaggio per tutto il tempo in cui si è in low of metal
 --	Spring.Echo("test need metal!!!!!!!!!!!!")
 	WG.AddConvo('WARNING: You are in low of metal!', nil, "LuaUI/Images/parlato_need_metal.png", nil, 105)
-	avvertimentom = 1
+	local avvertimentom = 1
 	end
 	if (needm == false) then-- se non c'è bisogno di metallo resetto la variabile cosi che la prox volta che si è in low of metal appare nuovamente il messaggio
-	avvertimentom = 0
+	local avvertimentom = 0
 	end	
-
+]]--
 	gl_Texture(false)
 end
 
@@ -2165,11 +2168,12 @@ end
 function DrawAvatar(avatar, posY)
 --		local avatar = "1" -- debug
 -- Spring.Echo(avatar) -- debug
-	if avatar ~= nil and avatar ~= "??" then
+	if avatar ~= nil and avatar ~= "??" then  -- ################################################ correggere "??"
 --		gl_Texture(avatarDirectory..string.upper(avatar)..".png")
 		gl_Texture(avatarDirectory..tostring(avatar)..".png")
 		gl_Color(1,1,1)
 		DrawRect(m_avatar.posX + widgetPosX + 3, posY+1, m_avatar.posX + widgetPosX + 17, posY + 15)
+		gl_Texture(false)
 --									Spring.Echo(avatar) --debug
 	end
 end
@@ -3265,7 +3269,7 @@ end
 function CheckPlayersChange()
 	local sorting = false
 	for i = 0,63 do
-		local name,active,spec,teamID,allyTeamID,pingTime,cpuUsage, country, rank, avatar = Spring_GetPlayerInfo(i)    -- add avatar
+		local name,active,spec,teamID,allyTeamID,pingTime,cpuUsage, country, rank = Spring_GetPlayerInfo(i)    -- rimuovo , avatar
 --	Spring.Echo(avatar) --debug
 		if active == false then
 			if player[i].name ~= nil then                                             -- NON SPEC PLAYER LEAVING

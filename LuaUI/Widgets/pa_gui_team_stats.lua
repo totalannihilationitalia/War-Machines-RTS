@@ -12,6 +12,7 @@ function widget:GetInfo()
 end
 
 local bgcorner	= ":n:"..LUAUI_DIRNAME.."Images/bgcorner.png"
+local image_button = ":n:"..LUAUI_DIRNAME.."Images/menu/menu_button_relax.png"
 
 local fontSize = 12
 local update = 30 -- in frames
@@ -128,9 +129,12 @@ function convertSIPrefix(value,thresholdmodifier,noSmallValues,useFirstDecimal)
 	return retVal
 end
 
+-- disegna il rettangolo in modalita tweak ################################# rimuovere questa funzione
+--[[
 function rectBoxWithBorder(boxData,fillColor,edgeColor)
 	if fillColor then
-		glColor(fillColor)
+--		glColor(fillColor)
+		glColor(1,1,1,1)
 	end
 	rectBox(boxData)
 	if edgeColor then
@@ -147,10 +151,14 @@ end
 function rectBox(boxData,fillColor)
 	boxData = boxData.absSizes
 	if fillColor then
-		glColor(fillColor)
+		glColor(1,1,1,1)	
+--		glColor(fillColor)
 	end
 	glRect(boxData.x.min,boxData.y.max,boxData.x.max,boxData.y.min)
 end
+]]--
+
+
 
 function aboveRectangle(mousePos,boxData)
 	local included = true
@@ -159,6 +167,8 @@ function aboveRectangle(mousePos,boxData)
 	end
 	return included
 end
+
+
 
 function isAbove(mousePos,guiData)
 	for boxType, boxData in pairs(guiData) do
@@ -200,7 +210,7 @@ function viewResize(scalingVec,guiData)
 	return guiData
 end
 
-function tweakMousePress(mouseCoords,guiData)
+--[[function tweakMousePress(mouseCoords,guiData)
 	local boxType, border, masks = isAbove(mouseCoords,guiData)
 	if not boxType then
 		return false, guiData
@@ -215,7 +225,7 @@ function tweakMousePress(mouseCoords,guiData)
 	end
 	return boxType, guiData
 end
-
+]]--
 function convertCoords(sourceCoords,scalingVec)
 	local newCoords = {}
 	for coordName, coordData in pairs(sourceCoords) do
@@ -402,13 +412,13 @@ function calcAbsSizes()
 	local vsx,vsy = gl.GetViewSizes()
 	guiData.smallBox.absSizes = {
 		x = {
-			min = (guiData.smallBox.relSizes.x.min * vsx),
-			max = (guiData.smallBox.relSizes.x.max * vsx),
+			min = (vsx -108),
+			max = (vsx -68),
 			length = (guiData.smallBox.relSizes.x.length * vsx),
 		},
 		y = {
-			min = (guiData.smallBox.relSizes.y.min * vsy),
-			max = (guiData.smallBox.relSizes.y.max * vsy),
+			min = (vsy - 45),
+			max = (vsy - 5),
 			length = (guiData.smallBox.relSizes.y.length * vsy),
 		}
 	}
@@ -458,7 +468,7 @@ function widget:Shutdown()
 		gl.DeleteList(buttonDrawList)
 	end
 	if (WG['guishader_api'] ~= nil) then
-		WG['guishader_api'].RemoveRect('teamstats_button')
+--		WG['guishader_api'].RemoveRect('teamstats_button')
 		WG['guishader_api'].RemoveRect('teamstats_window')
 	end
 end
@@ -641,17 +651,17 @@ function getLineAndColumn(x,y)
 end
 
 
-
-function widget:TweakMousePress(x, y, button)
-	if button == 2  or button == 3 then
-		local ok
-		ok, guiData = tweakMousePress({x=x,y=y},guiData)
-		createButtonList()
-		return ok
-	else
-		return false
-	end
-end
+--TweakMode rimosso ---
+--function widget:TweakMousePress(x, y, button)
+--	if button == 2  or button == 3 then
+--		local ok
+--		ok, guiData = tweakMousePress({x=x,y=y},guiData)
+--		createButtonList()
+--		return ok
+--	else
+--		return false
+--	end
+--end
 
 function updateFontSize()
 	columnSize = guiData.mainPanel.absSizes.x.length / numColums
@@ -659,22 +669,22 @@ function updateFontSize()
 	fontSize = floor(fakeColumnSize/maxColumnTextSize)
 end
 
-function widget:TweakMouseMove(x, y, dx, dy, button)
-	_, guiData = tweakMouseMove({x=dx,y=dy}, guiData)
-	updateFontSize()
-	glDeleteList(textDisplayList)
-	textDisplayList = glCreateList(ReGenerateTextDisplayList)
-	glDeleteList(backgroundDisplayList)
-	backgroundDisplayList = glCreateList(ReGenerateBackgroundDisplayList)
-	createButtonList()
-end
+--function widget:TweakMouseMove(x, y, dx, dy, button)
+--	_, guiData = tweakMouseMove({x=dx,y=dy}, guiData)
+--	updateFontSize()
+--	glDeleteList(textDisplayList)
+--	textDisplayList = glCreateList(ReGenerateTextDisplayList)
+--	glDeleteList(backgroundDisplayList)
+--	backgroundDisplayList = glCreateList(ReGenerateBackgroundDisplayList)
+--	createButtonList()
+--end
 
-function widget:TweakMouseRelease(mx,my,button)
-	guiData = tweakMouseRelease(guiData)
-	forceWithinScreen()
-	calcAbsSizes()
-	createButtonList()
-end
+--function widget:TweakMouseRelease(mx,my,button)
+--	guiData = tweakMouseRelease(guiData)
+--	forceWithinScreen()
+--	calcAbsSizes()
+--	createButtonList()
+--end
 
 function widget:MouseMove(mx,my,dx,dy)
 	local boxType = widget:IsAbove(mx,my)
@@ -697,7 +707,7 @@ function widget:Update()
 	mousex,mousey = x,y
 end
 
-function widget:DrawScreen()
+function widget:DrawScreen() -- disegna la tabella delle statistiche
 	if IsGUIHidden() then
 		return
 	end
@@ -705,11 +715,12 @@ function widget:DrawScreen()
 		WG['guishader_api'].RemoveRect('teamstats_window')
 	end
 	gl.CallList(buttonDrawList)
+
 	DrawBackground()
 	DrawAllStats()
 end
 
-local function DrawRectRound(px,py,sx,sy,cs)
+local function DrawRectRound(px,py,sx,sy,cs)   -- ############################################################eliminare
 	gl.TexCoord(0.8,0.8)
 	gl.Vertex(px+cs, py, 0)
 	gl.Vertex(sx-cs, py, 0)
@@ -770,7 +781,7 @@ local function DrawRectRound(px,py,sx,sy,cs)
 	gl.Vertex(sx, sy-cs, 0)
 end
 
-function RectRound(px,py,sx,sy,cs)
+function RectRound(px,py,sx,sy,cs) 			-- ############################################################eliminare-- ############################################################eliminare
 	local px,py,sx,sy,cs = math.floor(px),math.floor(py),math.ceil(sx),math.ceil(sy),math.floor(cs)
 	
 	gl.Texture(bgcorner)
@@ -792,37 +803,42 @@ function DrawButton()
 	end]]--
 	local x1,y1,x2,y2 = guiData.smallBox.absSizes.x.min, guiData.smallBox.absSizes.y.min, guiData.smallBox.absSizes.x.max, guiData.smallBox.absSizes.y.max
 	
-	gl.Color(0,0,0.7,0.2)
-	RectRound(x1,y1,x2,y2,7)
+	gl.Color(1,1,1,1)
+--	RectRound(x1,y1,x2,y2,7)
 	
-	local borderPadding = 3.5
-	gl.Color(1,1,1,0.022)
-	RectRound(x1+borderPadding,y1+borderPadding,x2-borderPadding,y2-borderPadding,6)
+--	local borderPadding = 3.5
+--	gl.Color(1,1,1,0.022)
+--	RectRound(x1+borderPadding,y1+borderPadding,x2-borderPadding,y2-borderPadding,6)
+
+		gl.Texture(image_button)
+		gl.TexRect(x1,y1,x2,y2)
+		gl.Texture(false)
+
 	
-	if (WG['guishader_api'] ~= nil) then
-		WG['guishader_api'].InsertRect(x1,y1,x2,y2,'teamstats_button')
-	end
+--	if (WG['guishader_api'] ~= nil) then
+--		WG['guishader_api'].InsertRect(x1,y1,x2,y2,'teamstats_button')
+--	end
 	
-	glText(colorToChar({1,1,1}) .. "Stats",boxAbsData.x.min+boxAbsData.x.length/2, boxAbsData.y.max-boxAbsData.y.length/2, tempFontSize, "ovc")
+	-- glText(colorToChar({1,1,1}) .. "Stats",boxAbsData.x.min+boxAbsData.x.length/2, boxAbsData.y.max-boxAbsData.y.length/2, tempFontSize, "ovc")
 end
 -- ****************************************** impostazione colore cella **********
 function DrawBackground()
 	if not guiData.mainPanel.visible then
 		return
 	end
-	if widgetHandler:InTweakMode() then
-		rectBoxWithBorder(guiData.mainPanel,{0,0,1,0.4})
-	else
+--	if widgetHandler:InTweakMode() then
+--		rectBoxWithBorder(guiData.mainPanel,{0,0,1,0.4})
+--	else
 		if backgroundDisplayList then
 			glCallList(backgroundDisplayList)
 		end
-	end
+--	end
 	
 	local x1,y1,x2,y2 = guiData.mainPanel.absSizes.x.min, guiData.mainPanel.absSizes.y.min, guiData.mainPanel.absSizes.x.max, guiData.mainPanel.absSizes.y.max
 -- ****************************************** impostazione background **********	
 	gl.Color(0,0,1,0.1)
 	local padding = 5
-	RectRound(x1-padding,y1-padding,x2+padding,y2+padding,7)
+	RectRound(x1-padding,y1-padding,x2+padding,y2+padding,7) -- sfondo tabella
 	if (WG['guishader_api'] ~= nil) then
 		WG['guishader_api'].InsertRect(x1-padding,y1-padding,x2+padding,y2+padding,'teamstats_window')
 	end
