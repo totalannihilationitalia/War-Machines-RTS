@@ -117,3 +117,19 @@ function widget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	WG.AddConvo('Warning: You received an unit from '..oldName.."!", nil, "LuaUI/Images/parlato_radar_off.png", nil, 85)
 	end
 end
+
+
+
+--[[
+add "WARNING: commander is under attack"
+addon.UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, projectileID, attackerID, attackerDefID, attackerTeam)
+
+    Called when a unit is damaged (after UnitPreDamaged).
+--]]
+
+-- TO TEST (WIP CONCLUDE THIS!!!) ####################################################################################
+function widget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, projectileID, attackerID, attackerDefID, attackerTeam)
+	if (( unitDefID == icucom) or ( unitDefID == kicucom) or ( unitDefID == nfacom) or ( unitDefID == knfacom)) and (unitTeam == myteamid) then -- this not include AND and EUF commanders at moment not playable) ########################################################### 
+			WG.AddConvo('Warning: Commander under attack!", nil, "LuaUI/Images/parlato_radar_off.png", nil, 85) 
+	end
+end
