@@ -1,0 +1,46 @@
+[CORFHLT_LASER]
+{
+	name=HighEnergyLaser;
+	rendertype=0;
+	lineofsight=1;
+	turret=1;
+	range=620;
+	reloadtime=1;
+	energypershot=75;
+	weaponvelocity=900;
+	areaofeffect=8;
+	impactonly=1;
+	soundstart=Lasrmas2;
+	soundhit=lasrhit1;
+	firestarter=90;
+	beamlaser=1;
+	thickness=3;
+	corethickness=0.2;
+	laserflaresize=10;
+	targetmoveerror=0.2;
+	beamtime=0.15;
+	rgbcolor=0 1 0;
+	tolerance=10000;
+	explosiongenerator=custom:LARGE_GREEN_LASER_BURN;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=210;
+		VTRANS=52;
+		L1FIGHTERS=52;
+		L2FIGHTERS=52;
+		L1BOMBERS=52;
+		L2BOMBERS=52;
+		GUNSHIPS=52;
+		HGUNSHIPS=52;
+		VRADAR=52;
+		VTOL=52;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+	}
+}

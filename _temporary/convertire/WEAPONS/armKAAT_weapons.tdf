@@ -1,0 +1,67 @@
+[SUPER_MISSILE]
+	{
+	ID=191;
+	Name=Infra-Red Guided Super Missiles;
+	RenderType=1;
+	LineOfSight=1;
+        Turret=1;
+
+	Model=missile;
+
+	Range=629;
+	ReloadTime=.7;
+	WeaponTimer=5;
+	WeaponVelocity=759;
+	StartVelocity=550;
+	WeaponAcceleration=130;
+	Turnrate=54384;
+	AreaOfEffect=48;
+	MetalPerShot=0;
+
+	SoundStart=Rocklit3;
+	SoundHit=xplosml2;
+
+	FireStarter=80;
+	SmokeDelay=.1;
+	Guidance=1;
+	Tracks=1;
+	SelfProp=1;
+	SmokeTrail=1;
+	Tolerance=6000;
+
+	Explosiongaf=fx;
+	Explosionart=explode3;
+
+	WaterExplosiongaf=fx;
+	WaterExplosionart=h2o;
+
+	LavaExplosiongaf=fx;
+	LavaExplosionart=lavasplash;
+
+	StartSmoke=1;
+
+	[DAMAGE]
+		{
+		Default=55;
+		ARMTHUND=110;
+		ARMBRAWL=110;
+		ARMPEEP=110;
+		ARMFIG=110;
+		ARMCA=110;
+		ARMACA=110;
+		ARMATLAS=110;
+		ARMPNIX=110;
+		ARMHAWK=110;
+		ARMLANCE=110;
+		CORFINK=110;
+		CORVENG=110;
+		CORVAMP=110;
+		CORHURC=110;
+		CORTITAN=110;
+		CORACA=110;
+		CORSHAD=110;
+		CORAPE=110;
+		CORCA=110;
+		CORVALK=110;
+		}
+	}

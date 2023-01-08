@@ -1,0 +1,54 @@
+
+[VTOL_ROCKET]
+{
+	name=RiotRocket;
+	rendertype=1;
+	lineofsight=1;
+	turret=0;
+	model=missile;
+	range=410;
+	reloadtime=1.1;
+	weapontimer=5;
+	weaponvelocity=700;
+	startvelocity=300;
+	weaponacceleration=200;
+	areaofeffect=128;
+	soundtrigger=1;
+	soundstart=rocklit3;
+	soundhit=explode;
+	burnblow=1;
+	firestarter=70;
+	smokedelay=0.1;
+	selfprop=1;
+	smoketrail=1;
+	tolerance=8000;
+	pitchtolerance=18000;
+	explosiongenerator=custom:KARGMISSILE_EXPLOSION;
+	startsmoke=1;
+	wobble=2500;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	turnrate=9000;
+	[DAMAGE]
+	{
+		default=122;
+		COMMANDERS=61;
+		FLAKS=61;
+		FLAKBOATS=61;
+		VTRANS=15;
+		L1FIGHTERS=15;
+		L2FIGHTERS=15;
+		L1BOMBERS=15;
+		L2BOMBERS=15;
+		GUNSHIPS=15;
+		HGUNSHIPS=15;
+		VRADAR=15;
+		VTOL=15;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+	}
+}

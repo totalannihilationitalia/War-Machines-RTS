@@ -1,0 +1,42 @@
+[ParticleAccelerator]
+	{
+	ID=168;
+	name=Particle accelerator;
+	rendertype=0;
+	beamlaser=1;
+	beamtime=1.5;
+	rgbcolor=0 1 0;
+	thickness=20;
+	corethickness=0.4;
+	largebeamlaser=1;
+	texture1=Type4Beam;
+	texture2=NULL;
+	texture3=NULL;
+	texture4=EMG;
+	explosiongenerator=custom:PARTACCEL;
+	laserflaresize=6;
+	lineofsight=1;
+	RANGE=1600;
+	RELOADTIME=4;
+	weaponvelocity=1500;
+	ENERGYPERSHOT=666.6666667;
+	areaofeffect=60;
+	soundtrigger=1;
+	soundstart=accel;
+	soundhit=lasbladehit;
+	burnblow=1;
+	noexplode=1;
+	targetMoveError=0.4;
+	tolerance=1500;
+	firestarter=20;
+	turret=1;
+	startsmoke=0;
+	endsmoke=0;
+	cratermult=0;
+	craterboost=0;
+	impulseboost=0;
+	[DAMAGE]
+		{
+		DEFAULT=4000;
+		}
+	}

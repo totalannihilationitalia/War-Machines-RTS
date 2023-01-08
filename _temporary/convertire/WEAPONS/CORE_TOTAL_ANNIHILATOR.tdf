@@ -1,0 +1,44 @@
+[CORE_TOTAL_ANNIHILATOR]
+{
+	toairweapon=0;
+	//SweepFire=1;
+	LargeBeamLaser=1;
+	pulseSpeed=1.0;
+	thickness=4.1;
+	CylinderTargetting=1;
+	name=Annihilator Weapon;
+	rendertype=0;
+	lineofsight=1;
+	minbarrelangle=-24;
+	turret=1;
+	explosiongenerator=custom:GREENLASER;
+	beamlaser=1;
+	impulsefactor=0.5;
+	beamtime=2;
+	range=900;
+	reloadtime=8.0;
+	energypershot=100;
+	weaponvelocity=1000;
+	areaofeffect=40;
+	targetMoveError=0.5;
+	soundstart=LASRLONG;
+	soundhit=xplolrg1;
+	firestarter=90;
+	beamweapon=1;
+	color=104;
+	color2=267;
+	tolerance=200;
+	explosiongaf=fx;
+	explosionart=explode5;
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom1;
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashsm;
+	guidance=1;
+	[DAMAGE]
+	{
+		default=1425;
+		group_skyair=1900;
+		group_landair=2000;
+	}
+}

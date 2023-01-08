@@ -1,0 +1,22 @@
+[ARMESTOR_BUILDINGEX]
+{
+	name=Smallbuilding;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+	range=550;
+	reloadtime=3.6;
+	weaponvelocity=250;
+	areaofeffect=210;
+	soundstart=largegun;
+	soundhit=xplolrg4;
+	explosiongenerator=custom:FLASHBIGBUILDINGEX;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	[DAMAGE]
+	{
+		default=590;
+	}
+}

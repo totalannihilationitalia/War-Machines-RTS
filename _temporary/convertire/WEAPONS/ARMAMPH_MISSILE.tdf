@@ -1,0 +1,44 @@
+[ARMAMPH_MISSILE]
+{
+	name=Missiles;
+	rendertype=1;
+	lineofsight=1;
+	turret=1;
+	model=missile;
+	range=600;
+	reloadtime=2;
+	texture2=armsmoketrail;
+	canattackground=0;
+	weapontimer=5;
+	weaponvelocity=850;
+	startvelocity=650;
+	weaponacceleration=141;
+	turnrate=48000;
+	areaofeffect=48;
+	metalpershot=0;
+	soundstart=rocklit1;
+	soundhit=xplosml2;
+	firestarter=70;
+	smokedelay=0.1;
+	guidance=1;
+	tracks=1;
+	selfprop=1;
+	smoketrail=1;
+	tolerance=9000;
+	explosiongenerator=custom:FLASH2;
+	startsmoke=1;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=85;
+		GUNSHIPS=48;
+		HGUNSHIPS=48;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+	}
+}

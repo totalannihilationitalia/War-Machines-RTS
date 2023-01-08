@@ -1,0 +1,38 @@
+[ARMST_GAUSS]
+{
+	name=Gauss;
+	rendertype=4;
+	lineofsight=1;
+	turret=1;
+	minbarrelangle=-15;
+	range=220;
+	reloadtime=4;
+	weaponvelocity=450;
+	areaofeffect=8;
+	impactonly=1;
+	soundstart=cannhvy1;
+	soundhit=xplomed2;
+	explosiongenerator=custom:FLASH1nd;
+	startsmoke=1;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=350;
+		VTRANS=24;
+		L1FIGHTERS=24;
+		L2FIGHTERS=24;
+		L1BOMBERS=24;
+		L2BOMBERS=24;
+		GUNSHIPS=24;
+		HGUNSHIPS=24;
+		VRADAR=24;
+		VTOL=24;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+	}
+}

@@ -1,0 +1,30 @@
+[SKYCRUISER_EMG]
+{
+	name=Sky Cruiser EMG;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+	color=2;
+	range=650;
+	reloadtime=0.4;
+	weaponvelocity=1100;
+	energypershot=100;
+	areaofeffect=224;
+	edgeeffectiveness=0.75;
+	soundstart=cannon3;
+	soundhit=xplomed2;
+	weapontimer=14;
+	randomdecay=11;
+	accuracy=700;
+	explosiongenerator=custom:FLASH96;
+	startsmoke=1;
+	impulsefactor=0.5;
+	impulseboost=0.5;
+	cratermult=0.25;
+	craterboost=0.25;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=50;
+	}
+}

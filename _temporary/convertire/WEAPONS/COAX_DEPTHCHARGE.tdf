@@ -1,0 +1,42 @@
+[COAX_DEPTHCHARGE]
+{
+	name=DepthCharge;
+	rendertype=1;
+	lineofsight=1;
+	turret=1;
+	model=depthcharge;
+	propeller=1;
+	range=580;
+	reloadtime=1.8;
+	weapontimer=6;
+	weaponvelocity=350;
+	startvelocity=250;
+	weaponacceleration=25;
+	turnrate=18000;
+	soundstart=torpedo1;
+	soundhit=xplodep2;
+	guidance=1;
+	tracks=1;
+	selfprop=1;
+	groundbounce=1;
+	NumBounce=1;
+	BounceRebound=0.6;
+	bounceslip=0.6;
+	waterweapon=1;
+	burnblow=1;
+	explosiongenerator=custom:FLASH2;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	avoidfriendly=0;
+	collidefriendly=0;
+	[DAMAGE]
+	{
+		default=250;
+		KROGOTH=500;
+		COMMANDERS=500;
+		DL=5;
+	}
+}

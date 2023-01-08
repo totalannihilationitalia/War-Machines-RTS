@@ -1,0 +1,44 @@
+[CORKROG_ROCKET]
+{
+	name=HeavyRockets;
+	rendertype=1;
+	lineofsight=1;
+	vlaunch=1;
+	model=fmdmisl;
+	range=800;
+	reloadtime=2.75;
+	weaponTimer=2;
+	twophase=1;
+	weaponvelocity=4000;
+	startvelocity=200;
+	weaponacceleration=230;
+	turnrate=50000;
+	areaofeffect=96;
+	metalpershot=0;
+	soundstart=rocklit1;
+	soundhit=xplosml2;
+	firestarter=70;
+	smokedelay=0.1;
+	guidance=1;
+	tracks=1;
+	selfprop=1;
+	smoketrail=1;
+	tolerance=9000;
+	explosiongenerator=custom:STARFIRE;
+	texture2=coresmoketrail;
+	startsmoke=1;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	proximityPriority=-1;
+	[DAMAGE]
+	{
+		default=360;
+		ANNIDDM=270;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+	}
+}

@@ -1,0 +1,48 @@
+[warhammer1]
+{
+	name=HighEnergyLaser;
+	rendertype=0;
+	lineofsight=1;
+	turret=1;
+	range=1110;
+	reloadtime=1;
+	energypershot=125;
+	weaponvelocity=700;
+	areaofeffect=8;
+	impactonly=1;
+	soundstart=Lasrmas2;
+	soundhit=lasrhit1;
+	firestarter=90;
+	beamweapon=1;
+	//beamlaser=1;
+	thickness=3;
+	corethickness=0.2;
+	laserflaresize=15;
+	targetmoveerror=0.2;
+	beamtime=0.2;
+	rgbcolor=0 1 0;
+	tolerance=10000;
+	//explosiongenerator=custom:SMALL_GREEN_LASER_BURN;
+	explosiongenerator=custom:LARGE_GREEN_LASER_BURN;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=350;
+		VTRANS=65;
+		L1FIGHTERS=65;
+		L2FIGHTERS=65;
+		L1BOMBERS=65;
+		L2BOMBERS=65;
+		GUNSHIPS=65;
+		HGUNSHIPS=65;
+		VRADAR=65;
+		VTOL=65;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+	}
+}

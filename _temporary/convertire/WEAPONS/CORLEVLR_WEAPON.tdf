@@ -1,0 +1,38 @@
+[CORLEVLR_WEAPON]
+{
+	name=RiotCannon;
+	rendertype=4;
+	lineofsight=1;
+	turret=1;
+	range=315;
+	reloadtime=1.8;
+	weaponvelocity=550;
+	areaofeffect=144;
+	soundstart=canlite3;
+	soundhit=xplosml3;
+	burnblow=1;
+	edgeeffectiveness=0.75;
+	explosiongenerator=custom:FLASH64;
+	startsmoke=1;
+	noselfdamage=1;
+	impulsefactor=0.55;
+	impulseboost=0.55;
+	cratermult=0;
+	craterboost=0;
+	[DAMAGE]
+	{
+		default=220;
+		VTRANS=27;
+		L1FIGHTERS=27;
+		L2FIGHTERS=27;
+		L1BOMBERS=27;
+		L2BOMBERS=27;
+		GUNSHIPS=27;
+		HGUNSHIPS=27;
+		VRADAR=27;
+		VTOL=27;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+	}
+}

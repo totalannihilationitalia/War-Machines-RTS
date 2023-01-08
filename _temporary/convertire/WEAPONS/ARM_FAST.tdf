@@ -1,0 +1,43 @@
+[ARM_FAST]
+{
+	name=EMGBurst;
+	rendertype=4;
+	lineofsight=1;
+	turret=1;
+	range=220;
+	reloadtime=0.5;
+	weapontimer=0.6;
+	weaponvelocity=500;
+	areaofeffect=16;
+	burst=5;
+	size=1.5;
+	rgbcolor=1 0.95 0.4;
+	intensity=0.7;
+	burstrate=0.1;
+	soundstart=fastemg;
+	startsmoke=0;
+	endsmoke=0;
+	explosiongenerator=custom:EMG_HIT;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	impactonly=1;
+	[DAMAGE]
+	{
+		default=12;
+		VTRANS=1;
+		L1FIGHTERS=1;
+		L2FIGHTERS=1;
+		L1BOMBERS=1;
+		L2BOMBERS=1;
+		GUNSHIPS=1;
+		HGUNSHIPS=1;
+		VRADAR=1;
+		VTOL=1;
+		L1SUBS=1;
+		L2SUBS=1;
+		L3SUBS=1;
+	}
+}

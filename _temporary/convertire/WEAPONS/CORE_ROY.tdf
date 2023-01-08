@@ -1,0 +1,37 @@
+[CORE_ROY]
+{
+	name=HeavyCannon;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+	minbarrelangle=-25;
+	range=710;
+	reloadtime=2.5;
+	weaponvelocity=320;
+	areaofeffect=64;
+	soundstart=cannhvy1;
+	soundhit=xplomed2;
+	explosiongenerator=custom:FLASH4;
+	startsmoke=1;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=310;
+		VTRANS=45;
+		L1FIGHTERS=45;
+		L2FIGHTERS=45;
+		L1BOMBERS=45;
+		L2BOMBERS=45;
+		GUNSHIPS=45;
+		HGUNSHIPS=45;
+		VRADAR=45;
+		VTOL=45;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+	}
+}

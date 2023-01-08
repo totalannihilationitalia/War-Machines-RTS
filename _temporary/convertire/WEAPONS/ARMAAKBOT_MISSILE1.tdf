@@ -1,0 +1,49 @@
+
+[ARMAAKBOT_MISSILE1]
+{
+	name=Missiles;
+	rendertype=1;
+	lineofsight=1;
+	turret=1;
+	toairweapon=1;
+	canattackground=0;
+	model=missile;
+	range=875;
+	reloadtime=3;
+	flighttime=1.5;
+	weapontimer=6;
+	weaponvelocity=1000;
+	startvelocity=600;
+	weaponacceleration=150;
+	texture2=armsmoketrail;
+	turnrate=63000;
+	areaofeffect=64;
+	metalpershot=0;
+	soundstart=rocklit1;
+	soundhit=xplosml2;
+	firestarter=70;
+	smokedelay=0.1;
+	guidance=1;
+	tracks=1;
+	selfprop=1;
+	smoketrail=1;
+	tolerance=9000;
+	explosiongenerator=custom:FLASH2;
+	startsmoke=1;
+	impulsefactor=0;
+	impulseboost=0;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	soundstartvolume=7.5;
+	soundhitvolume=7.5;
+	[DAMAGE]
+	{
+		default=150;
+		GUNSHIPS=113;
+		HGUNSHIPS=113;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+	}
+}

@@ -1,0 +1,38 @@
+[ARM_ARTIC]
+	{
+	ID=29;
+	name=Paralyzer;
+	rendertype=0;
+	lineofsight=1;
+	turret=1;
+	paralyzer=1;
+	minbarrelangle=0;
+	energypershot = 75;
+	range=550;
+	reloadtime=1.2;
+	weaponvelocity=2250;
+	areaofeffect=8;
+	duration=.04;
+	soundtrigger=1;
+
+	soundstart=lasrlit1;
+	soundhit=lashit;
+
+	beamweapon=1;
+	color=209;	/* Redish */
+	color2=211;
+
+	explosiongaf=fx;
+	explosionart=explode5;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom1;
+
+	[DAMAGE]
+		{
+		default=400;		/* 50 seconds of paralysis */
+		}
+	}
+
+	
+

@@ -1,0 +1,39 @@
+[CORE_AMEX_LASER]
+	{
+	ID=240;
+	name=Special Metal Extractor laser;
+	rendertype=0;
+	lineofsight=1;
+	turret=1;
+
+	range=220;
+	reloadtime=.65;
+	weaponvelocity=900;
+	energypershot=8;
+	areaofeffect=8;
+	soundtrigger=1;
+
+	soundstart=lasrhvy2;
+	soundhit=lasrhit2;
+
+	firestarter=30;
+	beamweapon=1;
+	color=211;	/* RED */
+	color2=210;
+	tolerance=500;
+
+	explosiongaf=fx;
+	explosionart=explode5;
+	
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom1;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashsm;
+
+	[DAMAGE]
+		{
+		default=65;
+	
+		}
+	}

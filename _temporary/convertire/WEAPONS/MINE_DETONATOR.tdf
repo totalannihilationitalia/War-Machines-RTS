@@ -1,0 +1,22 @@
+[MINE_DETONATOR]
+{
+	name=Mine Detonator;
+	rendertype=4;
+	ballistic=1;
+	range=1;
+	reloadtime=0.1;
+	firesubmersed=1;
+	weaponvelocity=1000;
+	areaofeffect=5;
+	edgeeffectiveness=0;
+	explosiongenerator=;
+	impulseboost=0;
+	impulsefactor=0;
+	cratermult=0;
+	craterboost=0;
+	[DAMAGE]
+	{
+		default=0;
+		MINES=100;
+	}
+}

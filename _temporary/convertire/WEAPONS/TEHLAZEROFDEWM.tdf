@@ -1,0 +1,38 @@
+[TEHLAZEROFDEWM]
+{
+	name=DEEEEEEEEEEEEEWWWWWMMMM;
+	rendertype=0;
+	lineofsight=1;
+	turret=1;
+	range=800;
+	reloadtime=5;
+	energypershot=100;
+	weaponvelocity=1500;
+	areaofeffect=14;
+	impactonly=1;
+	soundstart=annigun1;
+	soundhit=xplosml3;
+	beamlaser=1;
+	thickness=4;
+	corethickness=0.5;
+	laserflaresize=12;
+	targetmoveerror=0.2;
+	beamtime=1.05;
+    rgbcolor=0.2 0.2 1;
+	tolerance=10000;
+	explosiongenerator=custom:BURN_WHITE;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=2500;
+		COMMANDERS=999;
+		ANNIDDM=1250;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+	}
+}

@@ -1,0 +1,23 @@
+[BOGUS_MISSILE2]
+{
+	name=Missiles;
+	rendertype=1;
+	lineofsight=1;
+	turret=1;
+	range=200;
+	reloadtime=3;
+	weapontimer=0.1;
+	weaponvelocity=3650;
+	turnrate=33000;
+	areaofeffect=48;
+	metalpershot=0;
+	tolerance=9000;
+	impulsefactor=0;
+	impulseboost=0;
+	cratermult=0;
+	craterboost=0;
+	[DAMAGE]
+	{
+		default=0;
+	}
+}

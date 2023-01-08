@@ -1,0 +1,47 @@
+[GATOR_LASER]
+{
+	name=Laser;
+	rendertype=0;
+	lineofsight=1;
+	turret=1;
+	range=240;
+	reloadtime=0.5;
+	weaponvelocity=1000;
+	areaofeffect=8;
+	impactonly=1;
+	soundtrigger=1;
+	energypershot=0;
+	tolerance=10000;
+	soundstart=lasrlit3;
+	soundhit=lasrhit2;
+	firestarter=50;
+	beamlaser=1;
+	thickness=2;
+	corethickness=0.175;
+	laserflaresize=6;
+	targetmoveerror=0.15;
+	beamtime=0.1;
+	rgbcolor=1 0.2 0;
+	explosiongenerator=custom:SMALL_ARANCIO_BURN;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=35;
+		VTRANS=4;
+		L1FIGHTERS=4;
+		L2FIGHTERS=4;
+		L1BOMBERS=4;
+		L2BOMBERS=4;
+		GUNSHIPS=4;
+		HGUNSHIPS=4;
+		VRADAR=4;
+		VTOL=4;
+		L1SUBS=1;
+		L2SUBS=1;
+		L3SUBS=1;
+	}
+}

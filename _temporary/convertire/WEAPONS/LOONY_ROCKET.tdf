@@ -1,0 +1,33 @@
+[LOONY_ROCKET]
+{
+ID=247;
+name=Rockets;
+rendertype=1;
+lineofsight=1;
+turret=1;
+model=rocket2;
+range=430;
+reloadtime=1.8;
+weapontimer=2;
+weaponvelocity=250;
+startvelocity=200;
+weaponacceleration=130;
+areaofeffect=48;
+firestarter=70;
+smokedelay=.1;
+selfprop=1;
+smoketrail=1;
+startsmoke=1;
+soundstart=ROCKHVY3;
+soundhit=ROCKXPL2;
+explosiongaf=fx;
+explosionart=explode3;
+waterexplosiongaf=fx;
+waterexplosionart=h2o;
+lavaexplosiongaf=fx;
+lavaexplosionart=lavasplash;
+[DAMAGE]
+	{
+	default=210;
+	}
+}

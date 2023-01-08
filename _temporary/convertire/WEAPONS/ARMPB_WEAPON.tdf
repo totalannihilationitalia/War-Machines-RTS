@@ -1,0 +1,39 @@
+[ARMPB_WEAPON]
+{
+	name=GaussCannon;
+	rendertype=4;
+	lineofsight=1;
+	turret=1;
+	range=730;
+	reloadtime=1.625;
+	weaponvelocity=800;
+	areaofeffect=24;
+	targetmoveerror=0.2;
+	soundstart=cannhvy1;
+	soundhit=xplomed2;
+	burnblow=1;
+	tolerance=8000;
+	explosiongenerator=custom:FLASH2nd;
+	startsmoke=0;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=675;
+		VTRANS=26;
+		L1FIGHTERS=26;
+		L2FIGHTERS=26;
+		L1BOMBERS=26;
+		L2BOMBERS=26;
+		GUNSHIPS=26;
+		HGUNSHIPS=26;
+		VRADAR=26;
+		VTOL=26;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+	}
+}

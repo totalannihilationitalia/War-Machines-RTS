@@ -1,0 +1,64 @@
+[SHATTER_MISSILE]
+{
+ID=250;
+name=Heavy Missiles;
+rendertype=1;
+lineofsight=1;
+turret=1;
+model=missile;
+range=650;
+reloadtime=2;
+weapontimer=5;
+weaponvelocity=520;
+turnrate=30000;
+areaofeffect=48;
+soundstart=Shat- fire;
+soundhit=Shat- explode;
+firestarter=70;
+tracks=1;
+guidance=1;
+smokedelay=.1;
+selfprop=1;
+smoketrail=1;
+explosiongaf=fx;
+explosionart=explode3;
+waterexplosiongaf=fx;
+waterexplosionart=h2o;
+lavaexplosiongaf=fx;
+lavaexplosionart=lavasplash;
+startsmoke=1;
+[DAMAGE]
+	{
+	default=65;
+	ARMTHUND=125;
+	ARMBRAWL=125;
+	ARMPEEP=125;
+	ARMFIG=125;
+	ARMCA=125;
+	ARMACA=125;
+	ARMATLAS=125;
+	ARMPNIX=125;
+	ARMHAWK=125;
+	ARMLANCE=125;
+	ARMAWAC=125;
+	ARMSEHAK=125;
+	ARMCSA=125;
+	ARMSEAP=125;
+	ARMSFIG=125;
+	CORFINK=125;
+	CORVENG=125;
+	CORVAMP=125;
+	CORHURC=125;
+	CORTITAN=125;
+	CORACA=125;
+	CORSHAD=125;
+	CORAPE=125;
+	CORCA=125;
+	CORVALK=125;
+	CORAWAC=125;
+	CORHUNT=125;
+	CORCSA=125;
+	CORSEAP=125;
+	CORSFIG=125;
+	}
+}

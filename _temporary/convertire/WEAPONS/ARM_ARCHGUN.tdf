@@ -1,0 +1,35 @@
+[ARM_ARCHGUN]
+	{
+//	ID=17;
+	name=Plasma Cannon;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+	
+	range=1000;
+	reloadtime=0.15;
+	weaponvelocity=400;
+	areaofeffect=50;
+	energypershot=0; 
+	soundtrigger=1;
+
+	soundstart=cannhvy5;
+	soundhit=xplomed2;
+
+	explosiongaf=fx;
+	explosionart=explode2;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom1;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashsm;
+
+	startsmoke=1;
+
+	[DAMAGE]
+		{
+		default=150;
+		}
+	}
+

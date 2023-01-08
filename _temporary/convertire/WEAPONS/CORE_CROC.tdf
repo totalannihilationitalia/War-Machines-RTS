@@ -1,0 +1,35 @@
+[CORE_CROC]
+{
+	name=PlasmaCannon;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+	range=440;
+	reloadtime=0.9;
+	weaponvelocity=260;
+	areaofeffect=64;
+	soundstart=cannon2;
+	soundhit=xplomed4;
+	explosiongenerator=custom:FLASH64;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=116;
+		VTRANS=29;
+		L1FIGHTERS=29;
+		L2FIGHTERS=29;
+		L1BOMBERS=29;
+		L2BOMBERS=29;
+		GUNSHIPS=29;
+		HGUNSHIPS=29;
+		VRADAR=29;
+		VTOL=29;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+	}
+}

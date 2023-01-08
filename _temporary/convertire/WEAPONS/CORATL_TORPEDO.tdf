@@ -1,0 +1,39 @@
+[CORATL_TORPEDO]
+{
+	name=LongRangeTorpedo;
+	rendertype=1;
+	lineofsight=1;
+	turret=1;
+	model=advtorpedo;
+	propeller=1;
+	range=890;
+	reloadtime=5.6;
+	weapontimer=3;
+	weaponvelocity=580;
+	startvelocity=100;
+	weaponacceleration=80;
+	turnrate=20000;
+	areaofeffect=16;
+	impactonly=1;
+	soundstart=torpedo1;
+	soundhit=xplodep1;
+	guidance=1;
+	tracks=1;
+	selfprop=1;
+	waterweapon=1;
+	burnblow=1;
+	explosiongenerator=custom:FLASH2;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	avoidfriendly=0;
+	collidefriendly=0;
+	[DAMAGE]
+	{
+		default=1400;
+		KROGOTH=2800;
+		COMMANDERS=2800;
+	}
+}

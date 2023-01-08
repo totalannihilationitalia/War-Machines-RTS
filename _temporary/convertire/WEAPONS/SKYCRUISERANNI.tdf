@@ -1,0 +1,37 @@
+[SKYCRUISERANNI]
+{
+	name=Annihilator Weapon;
+	rendertype=0;
+	SweepFire=0;
+	CylinderTargetting=1;
+	lineofsight=1;
+	turret=1;
+	beamlaser=1;
+	minbarrelangle=-24;
+	beamtime=0.1;
+	range=600;
+	reloadtime=0.1;
+	energypershot=20;
+	weaponvelocity=900;
+	explosiongenerator=custom:PURPLELASER;
+	areaofeffect=8;
+	targetMoveError=0.5;
+	soundstart=annigun1;
+	soundhit=xplolrg1;
+	firestarter=90;
+	beamweapon=1;
+	color=144;
+	color2=217;
+	tolerance=500;
+	explosiongaf=fx;
+	explosionart=explode5;
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom1;
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashsm;
+	guidance=1;
+	[DAMAGE]
+	{
+		default=28;
+	}
+}

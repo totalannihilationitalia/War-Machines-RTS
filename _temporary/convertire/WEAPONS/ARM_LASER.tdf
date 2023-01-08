@@ -1,0 +1,52 @@
+[ARM_LASER]
+{
+	name=Laser;
+	rendertype=0;
+	lineofsight=1;
+	turret=1;
+	range=180;
+	reloadtime=0.95;
+	weaponvelocity=800;
+	areaofeffect=8;
+	impactonly=1;
+	burstrate=0.2;
+	duration=0.02;
+	soundtrigger=1;
+	energypershot=2;
+	soundstart=lasrfir1;
+	intensity=0.8;
+	soundhit=lasrhit2;
+	firestarter=50;
+	beamweapon=1;
+	thickness=1;
+	corethickness=0.3;
+	hardstop=1;
+	laserflaresize=5;
+	targetmoveerror=0.2;
+	beamtime=0.18;
+	rgbcolor=1 1 0.4;
+	tolerance=10000;
+	explosiongenerator=custom:PINKFLASH;
+	cegTag=PINKCRAP;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	[DAMAGE]
+	{
+		default=35;
+		VTRANS=2;
+		L1FIGHTERS=2;
+		L2FIGHTERS=2;
+		L1BOMBERS=2;
+		L2BOMBERS=2;
+		GUNSHIPS=2;
+		HGUNSHIPS=2;
+		VRADAR=2;
+		VTOL=2;
+		L1SUBS=2;
+		L2SUBS=2;
+		L3SUBS=2;
+	}
+}

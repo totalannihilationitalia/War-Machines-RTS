@@ -1,0 +1,47 @@
+[CORBUZZ_WEAPON]
+{
+	name=RapidfireLRPC;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+
+	color=2;
+	range=6100;
+	reloadtime=0.5;
+	weaponvelocity=1150;
+	energypershot=10500;
+	areaofeffect=256;
+	edgeeffectiveness=0.8;
+	soundstart=XPLONUK4;
+	soundhit=rflrpc3;
+	weapontimer=14;
+	randomdecay=11;
+	accuracy=750;
+	explosiongenerator=custom:FLASHBIGBUILDING;
+	startsmoke=1;
+	impulsefactor=0.5;
+	impulseboost=0.5;
+	cratermult=0.25;
+	craterboost=0.25;
+	noselfdamage=1;
+
+	rgbcolor=1 0.8 0.5;
+	stages=20;
+	separation=1.45; //0.45
+	alphadecay=0.3;
+	sizedecay=-0.15;
+	nogap=1;
+	size=5;
+	cegTag=vulcanfx;
+	GroundBounce=0;
+	WaterBounce=0;
+	NumBounce=1;
+	BounceSlip=1.01;
+	BounceRebound=0.4;
+	tolerance=500;
+
+	[DAMAGE]
+	{
+		default=600;
+	}
+}

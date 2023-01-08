@@ -1,0 +1,44 @@
+[CORSSUB_WEAPON]
+{
+	name=advTorpedo;
+	rendertype=1;
+	lineofsight=1;
+	turret=1;
+	model=advtorpedo;
+	propeller=1;
+	range=690;
+	reloadtime=1.5;
+	weapontimer=4;
+	weaponvelocity=220;
+	startvelocity=150;
+	weaponacceleration=25;
+	turnrate=1500;
+	areaofeffect=16;
+	impactonly=1;
+	soundstart=torpedo1;
+	soundhit=xplodep1;
+	guidance=1;
+	tracks=1;
+	selfprop=1;
+	waterweapon=1;
+	burnblow=1;
+	tolerance=32767;
+	explosiongenerator=custom:FLASH3;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	avoidfriendly=0;
+	collidefriendly=0;
+	[DAMAGE]
+	{
+		default=500;
+		L1SUBS=250;
+		L2SUBS=150;
+		L3SUBS=250;
+		TL=750;
+		ATL=750;
+		KROGOTH=1500;
+	}
+}

@@ -1,0 +1,46 @@
+[ARMAMB_GUN_HIGH]
+{
+	name=PopupCannon;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+	range=1320;
+	reloadtime=7;
+	weaponvelocity=440;
+	areaofeffect=224;
+	impulsefactor=2;
+	edgeeffectiveness=0.5;
+	soundstart=cannhvy5;
+	soundhit=xplomed2;
+	minbarrelangle=-35;
+	accuracy=400;
+	explosiongenerator=custom:FLASH96;
+	startsmoke=1;
+	impulseboost=0.123;
+	cratermult=0.123;
+	craterboost=0.123;
+	noselfdamage=1;
+	proximityPriority=-2;
+	[DAMAGE]
+	{
+		default=865;
+		VTRANS=90;
+		L1FIGHTERS=90;
+		L2FIGHTERS=90;
+		L1BOMBERS=90;
+		L2BOMBERS=90;
+		GUNSHIPS=90;
+		HGUNSHIPS=90;
+		VRADAR=90;
+		VTOL=90;
+		COMMANDERS=1504;
+		L1SUBS=5;
+		L2SUBS=5;
+		L3SUBS=5;
+		SEADRAGON=2256;
+		BLACKHYDRA=2256;
+		FLAKBOATS=2256;
+		JAMMERBOATS=2256;
+		OTHERBOATS=2256;
+	}
+}

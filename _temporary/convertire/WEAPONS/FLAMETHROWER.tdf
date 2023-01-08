@@ -1,0 +1,42 @@
+[FLAMETHROWER]
+{
+	name=FlameThrower;
+	rendertype=5;
+	lineofsight=1;
+	turret=1;
+	range=230;
+	reloadtime=1.1;
+	weapontimer=1.5;
+	sizegrowth=1.1;
+	intensity=0.6;
+	rgbcolor=1 0.95 0.9;
+	rgbcolor2=0.9 0.85 0.8;
+	flamegfxtime=1.9;
+	weaponvelocity=265;
+	areaofeffect=48;
+	burst=22;
+	burstrate=0.01;
+	sprayangle=1500;
+	soundstart=Flamhvy1;
+	soundtrigger=0;
+	firestarter=100;
+	groundbounce=1;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	endsmoke=1;
+	tolerance=2500;
+	noselfdamage=1;
+	AvoidFeature=0;
+	[DAMAGE]
+	{
+		default=12;
+		FLAMETHROWERS=5;
+		GUNSHIPS=1;
+		HGUNSHIPS=1;
+		L1SUBS=1;
+		L2SUBS=1;
+		L3SUBS=1;
+	}
+}

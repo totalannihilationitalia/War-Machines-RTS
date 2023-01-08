@@ -1,0 +1,25 @@
+[CRAWL_BLASTSML]
+{
+	name=WimpyCrawlingBomb;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+	range=400;
+	reloadtime=3.6;
+	weaponvelocity=250;
+	areaofeffect=280;
+	soundstart=largegun;
+	soundhit=xplonuk3;
+	edgeeffectiveness=0.35;
+	explosiongenerator=custom:FLASHNUKE280;
+	impulsefactor=0;
+	impulseboost=0;
+	cratermult=0;
+	craterboost=0;
+	[DAMAGE]
+	{
+		default=1800;
+		COMMANDERS=900;
+		CRAWLINGBOMBS=99;
+	}
+}

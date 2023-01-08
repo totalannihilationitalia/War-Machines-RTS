@@ -1,0 +1,35 @@
+[cor_circ]
+	{
+	ID=125;
+	name=Plasma Cannon;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+	
+	range=1100;
+	reloadtime=0.5;
+	weaponvelocity=400;
+	areaofeffect=80;
+	energypershot=200; 
+	soundtrigger=1;
+
+	soundstart=cannhvy5;
+	soundhit=xplomed2;
+
+	explosiongaf=fx;
+	explosionart=explode2;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom1;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashsm;
+
+	startsmoke=1;
+
+	[DAMAGE]
+		{
+		default=200;
+		}
+	}
+

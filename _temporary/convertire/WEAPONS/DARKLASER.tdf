@@ -1,0 +1,31 @@
+[DARKLASER]
+{
+ID=248;
+name=Pitch Black Laser;
+rendertype=0;
+lineofsight=1;
+turret=1;
+range=300;
+reloadtime=.75;
+weaponvelocity=400;
+areaofeffect=8;
+burstrate=.2;
+duration=.02;
+soundtrigger=1;
+soundstart=lasrfir3;
+soundhit=lasrhit2;
+firestarter=50;
+beamweapon=1;
+color=0;
+color2=1;
+explosiongaf=fx;
+explosionart=explode5;
+waterexplosiongaf=fx;
+waterexplosionart=h2oboom1;
+lavaexplosiongaf=fx;
+lavaexplosionart=lavasplashsm;
+[DAMAGE]
+	{
+	default=70;
+	}
+}

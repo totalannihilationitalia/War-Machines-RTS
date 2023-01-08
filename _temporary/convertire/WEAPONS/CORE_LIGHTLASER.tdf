@@ -1,0 +1,49 @@
+[CORE_LIGHTLASER]
+{
+	name=LightLaser;
+	rendertype=0;
+	lineofsight=1;
+	turret=1;
+	range=435;
+	reloadtime=0.48;
+	weaponvelocity=2250;
+	energypershot=20;
+	areaofeffect=12;
+	impactonly=1;
+	soundtrigger=1;
+	soundstart=lasrfir3;
+	soundhit=lasrhit2;
+	firestarter=100;
+	beamlaser=1;
+	thickness=2.5;
+	corethickness=0.175;
+	laserflaresize=10;
+	targetmoveerror=0.1;
+	beamtime=0.12;
+	rgbcolor=1 0.2 0;
+	tolerance=10000;
+	explosiongenerator=custom:SMALL_ARANCIO_BURN;
+	impulsefactor=0.123;
+	impulseboost=0.123;
+	cratermult=0;
+	craterboost=0;
+	noselfdamage=1;
+	AvoidFeature=0;
+	[DAMAGE]
+	{
+		default=75;
+		COMMANDERS=140;
+		VTRANS=5;
+		L1FIGHTERS=5;
+		L2FIGHTERS=5;
+		L1BOMBERS=5;
+		L2BOMBERS=5;
+		GUNSHIPS=3;
+		HGUNSHIPS=3;
+		VRADAR=5;
+		VTOL=5;
+		L1SUBS=2;
+		L2SUBS=2;
+		L3SUBS=2;
+	}
+}
