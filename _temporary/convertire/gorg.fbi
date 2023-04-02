@@ -1,0 +1,72 @@
+[UNITINFO] {
+  unitname=gorg;
+  name=Juggernaut;
+  description=(barely) Mobile Heavy Turret;
+  acceleration=0.048;
+  bmcode=1;
+  brakeRate=0.125;
+  buildCostEnergy=481165;
+  buildCostMetal=18705;
+  builder=0;
+  buildPic=GORG.DDS;
+  buildTime=629630;
+  canAttack=1;
+  canGuard=1;
+  canMove=1;
+  canPatrol=1;
+  canstop=1;
+  category=KBOT WEAPON ALL NOTSUB NOTAIR;
+  corpse=GORG_DEAD;
+  defaultmissiontype=Standby;
+  explodeAs=CRAWL_BLASTSML;
+  firestandorders=1;
+  footprintX=6;
+  footprintZ=6;
+  maneuverleashlength=640;
+  mass=2e+06;
+  maxDamage=300000;
+  maxSlope=14;
+  maxVelocity=0.55;
+  maxWaterDepth=12;
+  mobilestandorders=1;
+  movementClass=HKBOT4;
+  noAutoFire=0;
+  noChaseCategory=VTOL;
+  objectName=nfagorg.s3o;
+  seismicSignature=0;
+  selfDestructAs=CRAWL_BLAST;
+  side=nfa;
+  sightDistance=525;
+  smoothAnim=1;
+  soundcategory=JUGGERNAUT;
+  standingfireorder=2;
+  standingmoveorder=1;
+  steeringmode=2;
+  TEDClass=KBOT;
+  turnRate=109;
+  workerTime=0;
+  wpri_badtargetcategory=VTOL;
+
+  weapon1=JUGGERNAUT_FIRE;
+
+  weapon2=HLLT_BOTTOM;
+  maxAngleDif2=90;
+  onlyTargetCategory2=NOTAIR;
+  weaponMainDir2=1 0 4;
+
+  weapon3=HLLT_BOTTOM;
+  maxAngleDif3=90;
+  onlyTargetCategory3=NOTAIR;
+  weaponMainDir3=-1 0 4;
+
+  weapon4=HLLT_TOP;
+  maxAngleDif4=270;
+  onlyTargetCategory4=NOTAIR;
+  weaponMainDir4=0 1 0;
+
+	[SFXTypes]
+	{
+		explosiongenerator0=custom:berthaflare;
+	}
+}
+
