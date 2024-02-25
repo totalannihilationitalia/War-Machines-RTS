@@ -1,0 +1,165 @@
+// Arm Fire Bird Script
+
+piece base, Plane, flame11, flame21, flame31, flame41, flame12, flame22, flame32, flame42, flame13, flame23, flame33, flame43, flare1, flare2, flare3, flare4;
+static-var flamer;
+	
+#DEFINE SMOKEPIECE1	Plane
+#INCLUDE "smokeunit.h"
+#INCLUDE "exptype.h"
+#INCLUDE "Hitweap.h"
+
+Flames()
+	{
+	var	i;
+
+	while (TRUE)
+		{
+		i = rand(1,3);
+
+		if (i == 1)
+			{
+			show flame11;
+			show flame21;
+			show flame31;
+			show flame41;
+			sleep 100;
+			hide flame11;
+			hide flame21;
+			hide flame31;
+			hide flame41;
+			}
+		if (i == 2)
+			{
+			show flame12;
+			show flame22;
+			show flame32;
+			show flame42;
+			sleep 100;
+			hide flame12;
+			hide flame22;
+			hide flame32;
+			hide flame42;
+			}
+
+		if (i == 3)
+			{
+			show flame13;
+			show flame23;
+			show flame33;
+			show flame43;
+			sleep 100;
+			hide flame13;
+			hide flame23;
+			hide flame33;
+			hide flame43;
+			}
+		}
+	}
+
+
+Create()
+	{
+	hide flame11;
+	hide flame21;
+	hide flame31;
+	hide flame41;
+	hide flame12;
+	hide flame22;
+	hide flame32;
+	hide flame42;
+	hide flame13;
+	hide flame23;
+	hide flame33;
+	hide flame43;
+	hide flare1;
+	hide flare2;
+	hide flare3;
+	hide flare4;
+	START-SCRIPT SmokeUnit();
+	START-SCRIPT Flames();
+	}
+FirePrimary()
+	{
+		IF (flamer == 1 )
+			{
+			}
+		IF (flamer == 2 )
+			{
+			}
+		IF (flamer == 3 )
+			{
+			}
+		IF (flamer == 4 )
+			{
+			}
+	flamer=flamer+1;
+	if (flamer==5) {
+		flamer=1; }
+	}
+QueryPrimary(piecenum)
+	{
+		IF (flamer == 1 )
+			{
+			piecenum = flare1;
+			}
+		IF (flamer == 2 )
+			{
+			piecenum = flare2;
+			}
+		IF (flamer == 3 )
+			{
+			piecenum = flare3;
+			}
+		IF (flamer == 4 )
+			{
+			piecenum = flare4;
+			}
+	}
+SweetSpot(piecenum)
+	{
+		piecenum = Plane;
+	}
+Killed(severity,corpsetype)
+	{
+		hide flame11;
+		hide flame21;
+		hide flame31;
+		hide flame41;
+		hide flame12;
+		hide flame22;
+		hide flame32;
+		hide flame42;
+		hide flame13;
+		hide flame23;
+		hide flame33;
+		hide flame43;
+		hide flare1;
+		hide flare2;
+		hide flare3;
+		hide flare4;
+		IF (severity <= 25 )
+			{
+			corpsetype = 1 ;
+			EXPLODE  base type		  BITMAPONLY | BITMAP1;
+			EXPLODE  Plane type	 	 BITMAPONLY | BITMAP3;
+			RETURN ( 0 );
+			}
+		IF (severity <= 50 )
+			{
+			corpsetype = 2 ;
+			EXPLODE  base type	  	BITMAPONLY | BITMAP1;
+			EXPLODE  Plane type	  	SHATTER | BITMAP4;
+			RETURN ( 0 );
+			}
+		IF (severity <= 99 )
+			{
+			corpsetype = 3 ;
+			EXPLODE  base type	  	BITMAPONLY | BITMAP2;
+			EXPLODE  Plane type	  	SHATTER | BITMAP4;
+			RETURN ( 0 );
+			}
+		corpsetype = 3 ;
+		EXPLODE  base type		BITMAPONLY | BITMAP2;
+		EXPLODE  Plane type		SHATTER | EXPLODE_ON_HIT | BITMAP4;
+	}
+

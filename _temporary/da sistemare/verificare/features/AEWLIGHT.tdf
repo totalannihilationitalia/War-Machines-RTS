@@ -1,0 +1,17 @@
+[AEWLIGHT]
+	{
+	world=All Worlds;
+	description=Wall;
+	category=arm_corpses;
+	object=AEWLIGHT;
+	footprintx=6;
+	footprintz=2;
+	height=60;
+	blocking=1;
+	hitdensity=100;
+	metal=250;
+	damage=7500;
+	reclaimable=1;
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}

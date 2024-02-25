@@ -1,0 +1,17 @@
+[CNSLASERWALL]
+	{
+	world=All Worlds;
+	description=Wall;
+	category=core_corpses;
+	object=CNSLASERWALL;
+	footprintx=2;
+	footprintz=4;
+	height=20;
+	blocking=1;
+	hitdensity=50;
+	metal=30;
+	damage=3000;
+	reclaimable=1;
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}

@@ -1,0 +1,47 @@
+[VALHALLA_GUN]
+	{
+	ID=127;
+	name=Nuclear Shells;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+
+	shakemagnitude=12;
+	shakeduration=0.75;
+
+	range=7500;
+	reloadtime=16;
+	weaponvelocity=2000;
+
+	energypershot=20000;
+	metalpershot=2000;
+
+	areaofeffect=512;
+	edgeeffectiveness=0.25;
+
+	soundstart=xplonuk3;
+	soundhit=xplonuk1;
+
+	firestarter=100;
+	tolerance=5000;
+	aimrate=2500;
+	holdtime=1;
+
+	explosiongaf=commboom;
+	explosionart=commboom;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom2;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashlg;
+
+	startsmoke=1;
+
+	[DAMAGE]
+		{
+		default=4000;
+		ARMCOM=2000;
+		CORCOM=2000;
+		}
+	}

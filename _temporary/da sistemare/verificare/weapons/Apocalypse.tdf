@@ -1,0 +1,87 @@
+[APOCALYPSE_LASER]
+	{
+	ID=131;
+	name=Apocalypse Laser;
+	rendertype=0;
+	lineofsight=1;
+	turret=1;
+
+	range=1000;
+	reloadtime=5;
+	energypershot=3000;
+	weaponvelocity=1000;
+	areaofeffect=8;
+	soundstart=Lasrmas2;
+	soundhit=lasrhit1;
+	firestarter=90;
+	beamweapon=1;
+	color=0;	/* B&W */
+	color2=255;
+
+	tolerance=0;
+
+	explosiongaf=fx;
+	explosionart=explode5;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom1;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashsm;
+
+	[DAMAGE]
+		{
+		default=2500;
+		}
+	}
+
+
+
+[APOCALYPSE_ROCKET]
+	{
+	ID=132;
+	name=Apocalypse Rockets;
+	rendertype=1;
+	lineofsight=1;
+
+	model=missile;
+
+	range=800;
+	reloadtime=0.2;
+	weapontimer=5;
+	weaponvelocity=750;
+	startvelocity=250;
+	weaponacceleration=150;
+	turnrate=33000;
+	metalpershot=10;
+
+	turnrate=7680;
+	areaofeffect=48;
+
+	soundstart=rocklit3;
+	soundhit=explode;
+
+	firestarter=70;
+	smokedelay=.1;
+	guidance=1;
+	tracks=1;
+	selfprop=1;
+	smoketrail=1;
+	tolerance=8000;
+
+	explosiongaf=fx;
+	explosionart=explode3;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2o;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplash;
+
+	startsmoke=1;
+
+	[DAMAGE]
+		{
+		default=100;
+		}
+	}
