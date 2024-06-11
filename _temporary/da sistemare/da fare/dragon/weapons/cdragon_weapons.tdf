@@ -1,0 +1,60 @@
+[dragonfire]
+	{
+	ID=237;
+	name=air-launch Starburst missle;
+	rendertype=1;
+	lineofsight=1;
+	vlaunch=1;
+
+	model=armmhmsl;
+
+	range=770;
+	reloadtime=8;
+
+	noautorange=1;
+	weapontimer=.1;
+	flighttime=1.75;
+
+	weaponvelocity=350;
+	startvelocity=350;
+	turnrate=20384;
+	areaofeffect=128;
+	edgeeffectiveness=.25;
+	metalpershot=0;
+
+	sprayangle=512;
+	burst=4;
+	burstrate=.75;
+
+	soundstart=DFlnch;
+	soundhit=DFhit;
+
+	firestarter=100;
+	smokedelay=.1;
+	selfprop=1;
+	smoketrail=1;
+	firetrail=1;
+
+	twophase=1;
+	tracks=0;
+	guidance=0;
+	tolerance=6000;
+
+	explosiongaf=fx;
+	explosionart=explode3;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom2;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashlg;
+
+	startsmoke=1;
+
+	togroundweapon=1;
+
+	[DAMAGE]
+		{
+		default=225;
+		}
+	}

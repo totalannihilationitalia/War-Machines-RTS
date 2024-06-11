@@ -1,0 +1,17 @@
+[ANSHEAVY]
+	{
+	world=All Worlds;
+	description=Wall;
+	category=arm_corpses;
+	object=ANSHEAVY;
+	footprintx=2;
+	footprintz=6;
+	height=100;
+	blocking=1;
+	hitdensity=100;
+	metal=500;
+	damage=17500;
+	reclaimable=1;
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}

@@ -1,0 +1,17 @@
+[ELASERWALL]
+	{
+	world=All Worlds;
+	description=Wall;
+	category=arm_corpses;
+	object=ELASERWALL;
+	footprintx=6;
+	footprintz=2;
+	height=20;
+	blocking=1;
+	hitdensity=25;
+	metal=15;
+	damage=1500;
+	reclaimable=1;
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}

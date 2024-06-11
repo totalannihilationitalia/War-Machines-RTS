@@ -1,0 +1,34 @@
+[WRECKER_ARTILLERY]
+	{
+	ID=41;
+	name=Plasma Artillery;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+
+	range=820;
+	reloadtime=1.8;
+	weaponvelocity=420;
+	areaofeffect=48;
+	sprayangle=1024;
+	minbarrelangle=-10;
+	soundstart=cannhvy2;
+	soundhit=xplomed4;
+	tolerance=2000;
+
+	explosiongaf=fx;
+	explosionart=explode3;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2o;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplash;
+
+	startsmoke=1;
+
+	[DAMAGE]
+		{
+		default=240;
+		}
+	}

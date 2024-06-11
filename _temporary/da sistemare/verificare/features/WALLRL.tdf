@@ -1,0 +1,18 @@
+[WALLRL_dead]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=arm_corpses;
+	object=wallrl_dead;
+	featuredead=armrl_heap;
+	footprintx=3;
+	footprintz=3;
+	height=60;
+	blocking=1;
+	hitdensity=100;
+	metal=110;
+	damage=302;
+	reclaimable=1;
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}

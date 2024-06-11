@@ -1,0 +1,37 @@
+[OMEGA_WEAPON]
+	{
+	ID=125;
+	name=The Omega Weapon;
+	rendertype=7;
+	lineofsight=1;
+	turret=1;
+
+	range=7500;
+	reloadtime=10;
+	energypershot=10000;
+	weaponvelocity=2000;
+	areaofeffect=50;
+	duration=2;
+	soundstart=annigun1;
+	soundhit=XPLONUK4;
+	firestarter=100;
+	beamweapon=1;
+	color=0;	/* B&W */
+	color2=255;
+	accuracy=0;
+	tolerance=0;
+
+	explosiongaf=fx;
+	explosionart=NUKE1;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom1;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashsm;
+
+	[DAMAGE]
+		{
+		default=7500;
+		}
+	}

@@ -1,0 +1,18 @@
+[CWALLGUARD_dead]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=arm_corpses;
+	object=cwallguard_dead;
+	featuredead=armguard_heap;
+	footprintx=5;
+	footprintz=4;
+	height=60;
+	blocking=1;
+	hitdensity=100;
+	metal=2057;
+	damage=2302;
+	reclaimable=1;
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}

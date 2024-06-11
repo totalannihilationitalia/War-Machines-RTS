@@ -1,0 +1,142 @@
+[ARMAGEDDON_LASER]
+	{
+	ID=167;
+	name=High Energy Laser;
+	rendertype=0;
+	lineofsight=1;
+	turret=1;
+
+	range=650;
+	reloadtime=.4;
+	energypershot=125;
+	weaponvelocity=900;
+	areaofeffect=8;
+
+	soundstart=Lasrmas2;
+	soundhit=lasrhit1;
+
+	firestarter=90;
+	beamweapon=1;
+	color=96;	/* blue */
+	color2=98;
+
+	tolerance=8000;
+
+	explosiongaf=fx;
+	explosionart=explode5;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom1;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashsm;
+
+	[DAMAGE]
+		{
+		default=200;
+		}
+	}
+
+[ARMAGEDDON_NUCLEAR_MISSILE]
+	{
+	ID=168;
+	name=Nuclear Missile;
+	rendertype=1;
+	lineofsight=1;
+
+	model=ballmiss;
+
+	range=5000;
+	reloadtime=50;
+
+	noautorange=1;
+	weapontimer=10;
+	flighttime=400;
+
+	weaponvelocity=500;
+	weaponacceleration=50;
+	turnrate=32768;
+	areaofeffect=512;
+	edgeeffectiveness=0.25;
+
+	energypershot=8000;
+	metalpershot=2000;
+
+	targetable=1;
+	cruise=1;
+
+	soundstart=misicbm1;
+	soundhit=xplomed4;
+
+	firestarter=100;
+	smokedelay=.1;
+	selfprop=1;
+	smoketrail=1;
+	propeller=1;
+
+	twophase=1;
+	guidance=1;
+	tracks=1;
+	tolerance=4000;
+
+	shakemagnitude=20;
+	shakeduration=1;
+
+	explosiongaf=commboom;
+	explosionart=commboom;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom2;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashlg;
+
+	startsmoke=1;
+
+	[DAMAGE]
+		{
+		default=1500;
+		ARMCOM=1000;
+		CORCOM=1000;
+		}
+	}
+
+[OBLITERATOR_CANNON]
+	{
+	ID=119;
+	name=Obliterator Cannon;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+
+	range=2000;
+	reloadtime=1;
+	weaponvelocity=800;
+	energypershot=1000;
+	areaofeffect=80;
+
+	soundstart=xplonuk4;
+	soundhit=xplonuk1;
+
+	firestarter=50;
+	accuracy=0;
+	//aimrate=2500;
+	tolerance=0;
+	holdtime=1;
+
+	explosiongaf=fx;
+	explosionart=NUKE1;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom2;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashlg;
+
+	startsmoke=1;
+
+	[DAMAGE]
+		{
+		default=1000;
+		}
+	}

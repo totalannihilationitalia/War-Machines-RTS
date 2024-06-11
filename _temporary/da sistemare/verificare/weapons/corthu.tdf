@@ -1,0 +1,31 @@
+[BOMBARDER]
+	{
+	ID=31;
+	name=Long Range Cannon;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+
+	range=500;
+	reloadtime=3;
+	weaponvelocity=250;
+	areaofeffect=64;
+	soundstart=cannhvy2;
+	soundhit=xplomed4;
+
+	explosiongaf=fx;
+	explosionart=explode2;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2o;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplash;
+
+	startsmoke=1;
+
+	[DAMAGE]
+		{
+		default=280;
+		}
+	}
