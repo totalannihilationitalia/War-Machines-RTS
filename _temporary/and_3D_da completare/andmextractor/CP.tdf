@@ -1,0 +1,62 @@
+sound.tdf
+[ARM_FBOY]
+	{
+	select1=capture2;
+	ok1=mavbot1;
+	arrived1=mavbot2;
+	cant1=cantdo4;
+	underattack=warning1;
+	count5=count1;
+	count4=count2;
+	count3=count3;
+	count2=count4;
+	count1=count5;
+	count0=count6;
+	canceldestruct=cancel2;
+	}
+
+[Termite]		
+	{
+	select1=Termitstp;
+	ok1=Termitgo;
+	arrived1=Termitstp;
+	cant1=cantdo4;
+	underattack=warning1;
+	count5=count1;
+	count4=count2;
+	count3=count3;
+	count2=count4;
+	count1=count5;
+	count0=count6;
+	canceldestruct=cancel2;
+	}
+
+[ARMNAGA]
+	{
+	select1=servmdo3;
+	ok1=servmed4;
+	cant1=cantdo4;
+	underattack=warning1;
+	count5=count1;
+	count4=count2;
+	count3=count3;
+	count2=count4;
+	count1=count5;
+	count0=count6;
+	canceldestruct=cancel2;
+	}
+
+[CORMAK]
+	{
+	select1=makactiv;
+	ok1=makstop;
+	cant1=cantdo4;
+	underattack=warning1;
+	count5=count1;
+	count4=count2;
+	count3=count3;
+	count2=count4;
+	count1=count5;
+	count0=count6;
+	canceldestruct=cancel2;
+	}

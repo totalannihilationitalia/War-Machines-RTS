@@ -1,0 +1,8 @@
+[MENUENTRY1]
+{
+UNITMENU=CORACSUB;
+MENU=3;
+BUTTON=0;
+UNITNAME=coruwadvms;
+}
+

@@ -1,0 +1,36 @@
+[MARTYR_BLAST]
+	{
+	ID=249;
+	name=Martyr Blast;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+
+	range=450;
+	reloadtime=3.6;
+	weaponvelocity=600;
+	soundstart=largegun;
+	soundhit=xplonuk4;
+
+	explosiongaf=commboom;
+	explosionart=commboom;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom2;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashlg;
+
+	shakemagnitude=12;
+	shakeduration=2;
+
+	areaofeffect=1235;
+	edgeeffectiveness=0.15;
+
+	[DAMAGE]
+		{
+		default=3000;
+		armcom=1900;
+		corcom=1900;
+		}
+	}

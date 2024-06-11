@@ -1,0 +1,39 @@
+[ELECTRON_PULSE_CANNON]
+	{
+	ID=163;
+	name=Electron Pulse Cannon;
+	rendertype=3;				
+	lineofsight=1;
+	turret=0;
+
+	model=pulse;
+
+	range=370;
+	reloadtime=1.3;
+	weapontimer=1;
+	weaponvelocity=450;
+	sprayangle=123;
+	areaofeffect=43;
+	soundstart=plashvy1;
+	soundhit=electronhit;
+	soundtrigger=1;
+	tolerance=6000;
+	pitchtolerance=12000;
+
+	startsmoke=1;
+
+	explosiongaf=gryphon;
+	explosionart=exploblu;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom1;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashsm;
+
+
+	[DAMAGE]
+		{
+		default=120;
+		}
+	}

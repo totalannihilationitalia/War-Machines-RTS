@@ -1,0 +1,31 @@
+[ARM_MAULER]
+	{
+	ID=247;
+	name=Mauler Cannon;
+	rendertype=4;
+	lineofsight=1;
+	turret=1;
+
+	range=500;
+	reloadtime=1.55;
+	weaponvelocity=800;
+	areaofeffect=8;
+	metalpershot=6;
+
+	soundstart=cannhvy2;
+	soundhit=xplomed2;
+
+	explosiongaf=fx;
+	explosionart=explode4;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom1;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashsm;
+
+	[DAMAGE]
+		{
+		default=150;
+		}
+	}

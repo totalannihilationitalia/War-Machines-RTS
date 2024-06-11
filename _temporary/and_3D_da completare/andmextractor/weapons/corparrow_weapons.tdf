@@ -1,0 +1,31 @@
+[CORE_PARROW]
+	{
+	ID=251;
+	name=Poison Arrow Cannon;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+
+	range=320;
+	reloadtime=2.54;
+	weaponvelocity=300;
+	areaofeffect=55;
+	soundstart=largegun;
+	soundhit=xplomed1;
+
+	explosiongaf=fx;
+	explosionart=explode3;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2o;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplash;
+
+	startsmoke=1;
+
+	[DAMAGE]
+		{
+		default=150;
+		}
+	}

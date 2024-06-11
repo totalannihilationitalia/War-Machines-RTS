@@ -1,0 +1,36 @@
+[armpopsol_dead]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=arm_corpses;
+	object=armpopsol_dead;
+	featuredead=armpopsol_heap;
+	featurereclamate=smudge01;
+	footprintx=5;
+	footprintz=5;
+	height=40;
+	blocking=1;
+	hitdensity=85;
+	metal=132;
+	damage=1000;
+	reclaimable=1;
+	seqnamereclamate=tree1reclamate;
+	}
+[armpopsol_heap]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=heaps;
+	object=6x6a;
+	footprintx=5;
+	footprintz=5;
+	height=4;
+	blocking=0;
+	hitdensity=100;
+	metal=62;
+	damage=99999;
+	reclaimable=0;
+
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}

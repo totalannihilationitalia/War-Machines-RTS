@@ -1,0 +1,35 @@
+[armtorpmex_dead]
+	{
+	World=all;
+	Description=Wreckage;
+	Catagory=armcorpses;
+	Object=armtorpmex_dead;
+	Featuredead=armtorpmex_heap;
+	Footprintx=3;
+	Footprintz=3;
+	Height=8;
+	Blocking=1;
+	HitDensity=23;
+	Metal=310;
+	Damage=4545;
+	Reclaimable=1;
+	Featurereclamate=smudge01;
+	Seqnamereclamate=tree1reclamate;
+	}
+ 
+[armtorpmex_heap]
+	{
+	World=all;
+	Description=Metal Shards;
+	Category=heaps;
+	Object=3x3b;
+	Footprintx=3;
+	Footprintz=3;
+	Blocking=0;
+	HitDensity=4;
+	Metal=142;
+	Damage=34;
+	Reclaimable=1;
+	Featurereclamate=smudge01;
+	Seqnamereclamate=tree1reclamate;
+	}

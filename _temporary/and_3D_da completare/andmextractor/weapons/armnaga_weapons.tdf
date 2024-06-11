@@ -1,0 +1,44 @@
+[ARM_NAGA]
+	{
+	ID=248;
+	name=Neutron Stun Missiles;
+	rendertype=1;
+	lineofsight=1;
+	turret=1;
+	paralyzer=1;
+
+	model=stunmis;
+
+	range=755;
+	reloadtime=4.11;
+	weapontimer=2;
+	weaponvelocity=300;
+	startvelocity=300;
+	weaponacceleration=120;
+	areaofeffect=45;
+	metalpershot=0;
+
+	soundstart=mislite3;
+	soundhit=xplobld3;
+
+	firestarter=0;
+	smokedelay=.1;
+	selfprop=1;
+	smoketrail=1;
+
+	explosiongaf=fx;
+	explosionart=parablast;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2o;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplash;
+
+	startsmoke=1;
+
+	[DAMAGE]
+		{
+		default=1200;
+		}
+	}

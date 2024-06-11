@@ -1,0 +1,38 @@
+[CORE_MAK]
+	{
+	ID=241;
+	name=M.A.K. Assault Laser;
+	rendertype=0;
+	lineofsight=1;
+	turret=1;
+
+	range=240;
+	reloadtime=0.998;
+	weaponvelocity=790;
+	energypershot=45;
+	areaofeffect=10;
+	soundtrigger=1;
+
+	soundstart=makweapon;
+	soundhit=lasrhit2;
+
+	firestarter=60;
+	beamweapon=1;
+	color=205;	// Yellow-orange
+	color2=200;
+	tolerance=500;
+
+	explosiongaf=fx;
+	explosionart=explode5;
+	
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom1;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashsm;
+
+	[DAMAGE]
+		{
+		default=100;
+		}
+	}

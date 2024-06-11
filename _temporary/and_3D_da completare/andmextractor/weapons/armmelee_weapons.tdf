@@ -1,0 +1,25 @@
+[MELEE_BLADE]
+	{
+	ID=236;
+	name=Melee Laser Blade;
+	rendertype=1;		
+	lineofsight=1;
+	turret=1;
+
+	model=gun;
+
+	range=55;
+	reloadtime=3.085;
+	weaponvelocity=900;
+	areaofeffect=30;
+	soundstart=lasblade1;
+	soundhit=lasbladehit;
+	tolerance=6000;
+
+	startsmoke=0;
+
+	[DAMAGE]
+		{
+		default=150;
+		}
+	}

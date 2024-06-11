@@ -1,0 +1,32 @@
+[CORWOLV_GUN]
+	{
+	ID=252;
+	name=Light Plasma Artillery;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+
+	range=530;
+	reloadtime=2.65;
+	weaponvelocity=305;
+	areaofeffect=43;
+	soundstart=cannhvy3;
+	soundhit=xplomed2;
+	accuracy=1850;
+
+	explosiongaf=fx;
+	explosionart=explode3;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2o;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplash;
+
+	startsmoke=1;
+
+	[DAMAGE]
+		{
+		default=85;
+		}
+	}

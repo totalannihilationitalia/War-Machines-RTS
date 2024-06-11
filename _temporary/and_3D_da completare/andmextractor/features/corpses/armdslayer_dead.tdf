@@ -1,0 +1,35 @@
+[armdslayer_dead]
+{
+	World=all;
+	Description=Wreckage;
+	Catagory=armcorpses;
+	Object=armdslayer_dead;
+	Featuredead=armdslayer_heap;
+	Footprintx=2;
+	Footprintz=2;
+	Height=10;
+	Blocking=1;
+	HitDensity=23;
+	Metal=540;
+	Damage=4545;
+	Reclaimable=1;
+	Featurereclamate=smudge01;
+	Seqnamereclamate=tree1reclamate;
+}
+ 
+[armdslayer_heap]
+{
+	World=all;
+	Description=Metal Shards;
+	Category=heaps;
+	Object=2x2c;
+	Footprintx=3;
+	Footprintz=3;
+	Blocking=0;
+	HitDensity=4;
+	Metal=210;	
+	Damage=34;
+	Reclaimable=1;
+	Featurereclamate=smudge01;
+	Seqnamereclamate=tree1reclamate;
+}

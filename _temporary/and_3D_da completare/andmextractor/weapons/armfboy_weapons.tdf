@@ -1,0 +1,34 @@
+[ARM_FATBOY_LASER]
+	{
+	ID=158;
+	name=Tachyon Laser;
+	rendertype=0;
+	lineofsight=1;
+	turret=1;
+
+	range=230;
+	reloadtime=1.25;
+	energypershot=45;
+	weaponvelocity=700;
+	areaofeffect=8;
+	soundstart=fboylas;
+	soundhit=fboyhit;
+	firestarter=90;
+	beamweapon=1;
+	color=144;	/* blue */
+	color2=125;
+
+	explosiongaf=fx;
+	explosionart=explode5;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom1;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashsm;
+
+	[DAMAGE]
+		{
+		default=190;
+		}
+	}

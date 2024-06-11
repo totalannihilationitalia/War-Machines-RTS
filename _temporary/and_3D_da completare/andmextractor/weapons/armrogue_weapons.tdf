@@ -1,0 +1,40 @@
+[ARMROGUE_CANNON]
+	{
+	ID=243;
+	name=Rogue Gatling Cannon;
+	rendertype=1;		
+	lineofsight=1;
+	turret=1;
+
+	model=bullet;
+
+	range=170;
+	reloadtime=.15;
+	weapontimer=1;
+	weaponvelocity=550;
+	sprayangle=1024;
+	areaofeffect=8;
+	burst=3;
+	soundstart=gungatl;
+	soundhit=gatlhit;
+	soundtrigger=1;
+	tolerance=6000;
+
+	startsmoke=1;
+
+	explosiongaf=fx;
+	explosionart=explode5;
+
+	waterexplosiongaf=fx;
+	waterexplosionart=h2oboom1;
+
+	lavaexplosiongaf=fx;
+	lavaexplosionart=lavasplashsm;
+
+	[DAMAGE]
+		{
+		default=9;
+		armcom=4;
+		corcom=4;
+		}
+	}
