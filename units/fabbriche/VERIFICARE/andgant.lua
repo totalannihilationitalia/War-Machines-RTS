@@ -65,6 +65,7 @@ return {
 			[3] = "conartist",
 			[4] = "bigb",
 			[5] = "ebigb",
+			[6] = "armpraet",
 		},
 -----------------------------------------------------------
 --- Units wreckage and heaps

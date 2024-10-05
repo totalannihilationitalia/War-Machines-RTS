@@ -74,15 +74,16 @@ return {
 		[6] = "andmexun",
 		[7] = "andmex",
 		[8] = "andalab",
-		[9] = "andhp",
-		[10] = "andplat",
+		[9] = "andlab",
+		[10] = "andhp",
+		[11] = "andplat",
 --		mettere le altre fabbriche
-		[11] = "andrad", -- creare un radarino semplice
+		[12] = "andrad", -- creare un radarino semplice
 --		mettere un muro semplice tipo dente di drago
-		[12] = "andlartic",
-		[13] = "andartic",
-		[14] = "andhartic",
-		[15] = "armpopaa",
+		[13] = "andlartic",
+		[14] = "andartic",
+		[15] = "andhartic",
+		[16] = "armpopaa",
 --		ricavare da cordfens = mettere un cannoncino
 --		armpopaa = mettere un antiaerea media
 --		mettere un jammer

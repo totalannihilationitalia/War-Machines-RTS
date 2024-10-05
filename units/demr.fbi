@@ -3,7 +3,7 @@
 	UnitName=demr;
 	Version=1;
 	Side=ARM;
-	Objectname=DEMR;
+	Objectname=demr.s3o;
 	Buildpic=DEMR.JPG;
 	Designation=DEMR;
 	Name=Demarcator;
@@ -48,7 +48,7 @@
 	SteeringMode=1;
 	ShootMe=1;
 	Canfly=1;
-	cruisealt=400;
+	cruisealt=280;
 	Scale=1;
 	BankScale=1;
 	EnergyMake=0;

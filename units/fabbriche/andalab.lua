@@ -62,7 +62,7 @@ return {
                buildoptions = { 
 			[1] = "walker",
 			[2] = "corogre",
-			[3] = "aexxec",
+			[3] = "exxec",
 		},
 -----------------------------------------------------------
 --- Units wreckage and heaps

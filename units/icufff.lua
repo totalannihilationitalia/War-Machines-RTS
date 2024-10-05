@@ -9,12 +9,16 @@ return {
                buildcostenergy = 21941,
                buildcostmetal = 5284,
                builder = true,
+               buildinggrounddecaldecayspeed= 0.01,
+               buildinggrounddecalsizex= 12,
+               buildinggrounddecalsizey = 12,
+               buildinggrounddecaltype = "Pavimentazione3.png",
                buildpic = "",
                buildtime  = 80132,
                canmove = true,
                canPatrol = true,
 --               canstop = 1,
-               category = "ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE",
+               category = "ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE",
                --collisionvolumeoffsets = "0 5 0",
                --collisionvolumescales = "155 55 155",
                --collisionvolumetype = "box",
@@ -34,7 +38,7 @@ return {
 --               mobilestandorders= 1,
                name = "Anti-gravity hangar",
                noAutoFire = false,
-               objectname = "icufff",
+               objectname = "icufff.s3o",
                radardistance = 0,
                selfdestructas = "LARGE_BUILDING",
                sightdistance = 510,
@@ -42,12 +46,14 @@ return {
 --               standingfireorder = 2,
 --               standingmoveorder = 1,
                TEDClass = "PLANT", -- verificare se necessario
+               usebuildinggrounddecal = true,
                workertime = 400,
                YardMap= "oooooooooo oyyyyyyyyo oyyyyyyyyo oyyyyyyyyo oyyyyyyyyo oyyyyyyyyo oyyyyyyyyo oyyyyyyyyo oyyyyyyyyo oooooooooo",
                buildoptions = { 
------------------------------------
---- INSERT BUILDLIST
------------------------------------
+--			[1] = "armff",
+			[1] = "cirr",
+			[2] = "orcl",
+			[3] = "demr",
                },
 
 
@@ -73,9 +79,9 @@ featuredefs = {
                reclaimable = true,
                seqnamereclamate = "TREE1RECLAMATE",
                energy = 0,
-				collisionvolumeoffsets = "0.0 -1.2425585791 1.2922744751",
-				collisionvolumescales = "90.0 14.3981628418 90.5845489502",
-				collisionvolumetype = "Box",
+	       collisionvolumeoffsets = "0.0 -1.2425585791 1.2922744751",
+	       collisionvolumescales = "90.0 14.3981628418 90.5845489502",
+	       collisionvolumetype = "Box",
                },  -- Close Dead Features
   heap = {
                world = "All Worlds",

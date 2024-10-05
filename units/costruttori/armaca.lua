@@ -85,7 +85,7 @@ return {
 			[23] = "armvulc",
 			[24] = "armap",
 			[25] = "armaap",
-			[26] = "armfff",
+			[26] = "icufff",
 			[27] = "advmoho",
 			[28] = "armfarad",
 			[29] = "armfamb",
