@@ -9,7 +9,7 @@ return {
                buildcostenergy = 60000,
                buildcostmetal = 8000,
                builder = true,
-               buildpic = "armgant",
+               buildpic = "icugant.png",
                buildtime  = 68000,
                canmove = true,
                canPatrol = true,
