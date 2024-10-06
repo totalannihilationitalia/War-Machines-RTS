@@ -4,7 +4,7 @@ return {
 -----------------------------------------------------------
 --- UNITS FEATURES
 -----------------------------------------------------------
-  armgant= {
+  icugant= {
 --               buildangle = 4096,
                buildcostenergy = 60000,
                buildcostmetal = 8000,
@@ -37,7 +37,7 @@ return {
 --               mobilestandorders= 1,
                name = "Tiger Gantry",
                noAutoFire = false,
-               objectname = "armgant",
+               objectname = "icugant.s3o",
                radardistance = 0,
                selfdestructas = "LARGE_BUILDING",
                sightdistance = 273,
