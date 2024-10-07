@@ -16,7 +16,7 @@ return {
 		collisionvolumescales = "36 57 36",
 		collisionvolumetest = 1,
 		collisionvolumetype = "CylY",
-		corpse = "DEAD",
+		corpse = "dead",
 		description = "Anti-air Tower",
 		explodeas = "BIG_UNITEX",
 		footprintx = 3,

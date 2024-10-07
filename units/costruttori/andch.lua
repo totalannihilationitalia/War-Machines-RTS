@@ -83,7 +83,7 @@ return {
 		[12] = "andlartic",
 		[13] = "andartic",
 		[14] = "andhartic",
-		[15] = "armpopaa",
+		[15] = "andpopaa",
 --		ricavare da cordfens = mettere un cannoncino
 --		armpopaa = mettere un antiaerea media
 --		mettere un jammer
