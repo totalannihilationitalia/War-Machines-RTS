@@ -69,7 +69,7 @@ return {
 -----------------------------------
     		buildoptions = {
 		[1] = "armfus",
-		[2] = "armgant",
+		[2] = "icugant",
 		[3] = "aafus",
 		[4] = "amgeo",
 		[5] = "armgmm",

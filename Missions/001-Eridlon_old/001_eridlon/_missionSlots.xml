@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<ArrayOfMissionSlot xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <MissionSlot>
+    <AiShortName>NullAI</AiShortName>
+    <AiVersion>0.1</AiVersion>
+    <AllyID>0</AllyID>
+    <AllyName>Alliance 1</AllyName>
+    <Color>16711680</Color>
+    <IsHuman>true</IsHuman>
+    <IsRequired>true</IsRequired>
+    <TeamID>0</TeamID>
+    <TeamName>Giocatore_1</TeamName>
+  </MissionSlot>
+  <MissionSlot>
+    <AiShortName>NullAI</AiShortName>
+    <AiVersion>0.1</AiVersion>
+    <AllyID>1</AllyID>
+    <AllyName>Alliance 2</AllyName>
+    <Color>255</Color>
+    <IsHuman>false</IsHuman>
+    <IsRequired>false</IsRequired>
+    <TeamID>1</TeamID>
+    <TeamName>Asiatic Legion alfa</TeamName>
+  </MissionSlot>
+  <MissionSlot>
+    <AiShortName>NullAI</AiShortName>
+    <AiVersion>0.1</AiVersion>
+    <AllyID>0</AllyID>
+    <AllyName>Alliance 1</AllyName>
+    <Color>16776960</Color>
+    <IsHuman>false</IsHuman>
+    <IsRequired>false</IsRequired>
+    <TeamID>2</TeamID>
+    <TeamName>Giocatore_2</TeamName>
+  </MissionSlot>
+  <MissionSlot>
+    <AiShortName>NullAI</AiShortName>
+    <AiVersion>0.1</AiVersion>
+    <AllyID>0</AllyID>
+    <AllyName>Alliance 1</AllyName>
+    <Color>65280</Color>
+    <IsHuman>false</IsHuman>
+    <IsRequired>false</IsRequired>
+    <TeamID>3</TeamID>
+    <TeamName>EU Force</TeamName>
+  </MissionSlot>
+  <MissionSlot>
+    <AiShortName>NullAI</AiShortName>
+    <AiVersion>0.1</AiVersion>
+    <AllyID>1</AllyID>
+    <AllyName>Alliance 2</AllyName>
+    <Color>65535</Color>
+    <IsHuman>false</IsHuman>
+    <IsRequired>false</IsRequired>
+    <TeamID>4</TeamID>
+    <TeamName>Asiatic Legion bravo</TeamName>
+  </MissionSlot>
+  <MissionSlot>
+    <AiShortName>NullAI</AiShortName>
+    <AiVersion>0.1</AiVersion>
+    <AllyID>1</AllyID>
+    <AllyName>Alliance 2</AllyName>
+    <Color>16711935</Color>
+    <IsHuman>false</IsHuman>
+    <IsRequired>false</IsRequired>
+    <TeamID>5</TeamID>
+    <TeamName>Asiatic Legion charlie</TeamName>
+  </MissionSlot>
+</ArrayOfMissionSlot>

@@ -130,7 +130,10 @@ return {
 			[68] = "tank_1",
 			[69] = "tank_2",
 			[70] = "container_1",
-			[71] = "treno_vagone_container",
+			[71] = "treno_locomotiva",
+			[72] = "treno_vagone_chiuso",
+			[73] = "treno_vagone_aperto",
+			[74] = "treno_vagone_container",
 		},
 		featuredefs = {
 			["1_dead"] = {

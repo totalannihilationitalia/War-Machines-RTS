@@ -89,7 +89,7 @@ return {
 			[24] = "corbuzz",
 			[25] = "corap",
 			[26] = "coraap",
-			[27] = "corfff",
+			[27] = "nfafff",
 			[28] = "corfarad",
 			[29] = "corftoast",
 			[30] = "corfvipe",

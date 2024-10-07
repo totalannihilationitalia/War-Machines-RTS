@@ -117,12 +117,12 @@ return {
 			[1] = {
 				badtargetcategory = "SMALLVTOL TINYVTOL",
 				def = "CORVTOL_ADVMISSILE",
-				onlytargetcategory = "VTOL",
+				onlytargetcategory = "VTOL SURFACE",
 			},
 			[2] = {
 				badtargetcategory = "SMALLVTOL TINYVTOL",
 				def = "CORVTOL_ADVMISSILE",
-				onlytargetcategory = "VTOL",
+				onlytargetcategory = "VTOL SURFACE",
 			},
 		},
 	},
