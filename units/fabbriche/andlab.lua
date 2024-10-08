@@ -62,7 +62,7 @@ return {
                buildoptions = { 
 			[1] = "andcsp",
 			[2] = "andscouter",
-			[3] = "coredauber",
+			[3] = "anddauber",
 			[4] = "corbrskr",
 
 		},
