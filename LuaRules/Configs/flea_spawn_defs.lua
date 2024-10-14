@@ -16,7 +16,7 @@ waveRatio            = 0.6       -- waves are composed by two types of chicken, 
 defenderChance       = 0.7       -- amount of turrets spawned per wave, <1 is the probability of spawning a single turret
 maxBurrows           = Spring.GetModOptions().mo_maxburrows*1
 queenSpawnMult       = 3         -- how many times bigger is a queen hatch than a normal burrow hatch
-alwaysVisible        = false     -- era true chicken are always visible
+alwaysVisible        = false     -- era true chicken are always visible ################################# INSERIRE OPZIONE PER FARLO SCEGLIERE DAL CLIENT!!!!!!!!!!!!!!!!
 burrowSpawnRate      = 50       -- higher in games with many players, seconds
 upgradeTime		   	 = 10*60
 chickenSpawnRate     = 100
@@ -102,7 +102,8 @@ local retardmadTypes = {
   minigoth	=  {time = 44,  squadSize = 0.5},
 }
 
-local fireTypes = {
+-- NON VENGONO RICHIAMATI DAL CLIENT VEDI SOTTO PER LE MODALITA###########################################################################
+local fireTypes = { 
   order_fire      =  {time =  0,  squadSize = 0.1,  obsolete = 30},
   order_nova      =  {time =  30,  squadSize = 0.1, obsolete = 50},
   order_plasma      =  {time =  60,  squadSize = 0.1, obsolete = 60},

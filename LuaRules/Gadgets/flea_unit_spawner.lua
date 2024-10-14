@@ -56,7 +56,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	local hiveposz            	= 0   
 	local checkDisabled	  		= 0
 	local armflea		  		= 0
-	gameMode                 	= 'normal' --Spring.GetModOption("gamemode")
+	gameMode                 	= 'normal' --Spring.GetModOption("gamemode") -- perchè è stato tolto??????? ----------------------------------------#############
 	local gaiaTeamID          	= Spring.GetGaiaTeamID()
 	local malus
 	
@@ -69,7 +69,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			['fleas']			= 0,
 	}
 
-	local mexes = {
+	local mexes = {                                     -- ############################################ aggiungere avanzati? aggiungere euf ed AND????????
 		"icumetex", 
 		"cormex",
 	}
@@ -704,7 +704,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	function gadget:UnitCreated(unitID, unitDefID, unitTeam)
 	  local name = UnitDefs[unitDefID].name
 	  if (name == "icucom" or
-		  name == "nfacom") then
+		  name == "nfacom") then   ------ ################################################## aggiungere andcom e eufcom ????????????????
 		commanders[unitID] = true
 	  end
 	--  if (chickenTeamID == unitTeam and name ~= "arm_commander" and name ~= "core_commander" ) then
