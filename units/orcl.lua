@@ -106,6 +106,8 @@ weapondefs = {
 		heavyflying_missile = {
                      areaofeffect = 96,
                      avoidfeature = true,
+                     canattackground = false,
+
 --                     cegTag = "",
 --                     craterareaofeffect =  ,
                      explosiongenerator = "custom:popupcannon",
