@@ -48,7 +48,7 @@
 	ShootMe=1;
 	DefaultMissionType=GUARD_NOMOVE;
 	buildangle=4096;
-	Weapon1=OMEGA_WEAPON;
+	Weapon1=OMEGA_WEAPON_ARIA;
 	canattack=1;
 	ActivateWhenBuilt=0;
 	}
