@@ -3,7 +3,7 @@
 	UnitName=Order_fork;
 	Version=1.0;
 	Side=ARM;
-	Objectname=Order_fork;
+	Objectname=order_fork.s3o;
 	Designation=ARM-KS;
 	Name=Spooning Fork;
 	Description=Floating Spaceship;
