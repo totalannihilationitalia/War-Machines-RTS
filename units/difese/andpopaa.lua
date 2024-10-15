@@ -91,6 +91,7 @@ weapondefs = {
 		arm_antiair = {
                      areaofeffect = 72,
                      avoidfeature = true,
+                     canattackground = false,
 --                     cegTag = "",
 --                     craterareaofeffect =  ,
                      firestarter = 50,
@@ -108,6 +109,7 @@ weapondefs = {
                      startvelocity = 700,
                      tolerance = 10000,
                      tracks = true, 
+                     toairweapon = true,
                      turnrate = 90000,
                      turret  = true, 
                      weaponacceleration = 300,
@@ -125,7 +127,7 @@ weapondefs = {
 -----------------------------------------------------------
 weapons = {
                  [1] = {
-                 badtargetcategory = "NOTAIR",
+--                 badtargetcategory = "NOTAIR",
                  def = "arm_antiair",
 		 onlytargetcategory = "VTOL",
                  },
