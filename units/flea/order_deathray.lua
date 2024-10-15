@@ -61,6 +61,11 @@ return {
 -----------------------------------------------------------
 --- EFFECTS
 -----------------------------------------------------------
+sfxtypes = {
+  explosiongenerators = {
+               [1]="custom:redflare",
+               }, -- close effects list
+}, -- close section sfxtypes
 -----------------------------------------------------------
 --- UNITS SOUND
 -----------------------------------------------------------
@@ -94,7 +99,7 @@ weapondefs = {
                      areaofeffect = 24,
                      avoidfeature = true,
                      beamtime = 0.40,
---                     cegTag = "",
+--                     cegTag = "BLUCRAP",
                      corethickness = 0.32,
 --                     craterareaofeffect =  ,
                      craterboost = 1,
@@ -102,7 +107,8 @@ weapondefs = {
                      duration = 0.31,
                      edgeeffectiveness = 0.99,
                      energypershot = 0,
-                     explosiongenerator = "custom:ZIPPERDICKER_EFFECT",
+--                     explosiongenerator = "custom:ZIPPERDICKER_EFFECT",
+                     explosiongenerator = "custom:Gator",
                      firestarter = 70,
                      impulseboost = 0,
                      impulsefactor = 1,
