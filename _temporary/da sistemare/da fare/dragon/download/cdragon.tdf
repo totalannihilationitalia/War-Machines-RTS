@@ -1,7 +1,0 @@
-[MENUENTRY1]
-	{
-	UNITMENU=CORAVP;
-	MENU=4;
-	BUTTON=1;
-	UNITNAME=cdragon;
-	}
