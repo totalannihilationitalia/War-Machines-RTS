@@ -60,9 +60,10 @@ return {
 --- INSERT BUILDLIST
 -----------------------------------
                buildoptions = { 
-			[1] = "walker",
-			[2] = "corogre",
-			[3] = "exxec",
+			[1] = "andacsp",
+			[2] = "walker",
+			[3] = "corogre",
+			[4] = "exxec",
 		},
 -----------------------------------------------------------
 --- Units wreckage and heaps
