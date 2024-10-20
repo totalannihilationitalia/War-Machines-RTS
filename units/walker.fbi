@@ -29,7 +29,7 @@
 	MetalStorage=0;
 	ExplodeAs=BIG_UNITEX;
 	SelfDestructAs=BIG_UNIT;
-	Category=ARM KBOT WEAPON NOTAIR NOTSUB;
+	Category=ARM KBOT WEAPON NOTAIR NOTSUB SURFACE;
 	TEDClass=KBOT;
 	Copyright=Copyright 1997 Humongous Entertainment. All rights reserved.;
 	Corpse=WALKER_dead;
