@@ -62,7 +62,7 @@ return {
                buildoptions = { 
 			[1] = "andacsp",
 			[2] = "walker",
-			[3] = "corogre",
+			[3] = "andogre",
 			[4] = "exxec",
 		},
 -----------------------------------------------------------
