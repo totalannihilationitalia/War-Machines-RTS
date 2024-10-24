@@ -3,7 +3,7 @@
 	UnitName=corogre;
 	Version=1.2;
 	Side=CORE;
-	Objectname=COROGRE;
+	Objectname=andogre.s3o;
 	Designation=swamp;
 	Name=Ogre;
 	Description=Heavy Amphibious Kbot;
