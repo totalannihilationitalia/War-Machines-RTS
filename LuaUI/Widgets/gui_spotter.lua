@@ -1,0 +1,303 @@
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+--  file:    gui_spotter.lua
+--  brief:   Draws smoothed polygons under units
+--  author:  [wee]gahn aka. metuslucidium (Orig. by Dave Rodgers (orig. TeamPlatter edited by TradeMark))
+--   
+--  Copyright (C) 2016.
+--  Licensed under the terms of the GNU GPL, v2 or later.
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+function widget:GetInfo()
+	return {
+		name      = "Spotter",
+		desc      = "Draws smoothed polys using fast glDrawListAtUnit",
+		author    = "Orig. by 'TradeMark' - mod. by '[wee]gahn' - mod. by 'molix'",
+		date      = "04.09.2016",
+		license   = "GNU GPL, v2 or later",
+		layer     = 5,
+		enabled   = true  --  loaded by default?
+	}
+end
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+-- Automatically generated local definitions
+
+local GL_LINE_LOOP           = GL.LINE_LOOP
+local GL_TRIANGLE_FAN        = GL.TRIANGLE_FAN
+local glBeginEnd             = gl.BeginEnd
+local glColor                = gl.Color
+local glCreateList           = gl.CreateList
+local glDeleteList           = gl.DeleteList
+local glDepthTest            = gl.DepthTest
+local glDrawListAtUnit       = gl.DrawListAtUnit
+local glLineWidth            = gl.LineWidth
+local glPolygonOffset        = gl.PolygonOffset
+local glVertex               = gl.Vertex
+local spDiffTimers           = Spring.DiffTimers
+local spGetAllUnits          = Spring.GetAllUnits
+local spGetGroundNormal      = Spring.GetGroundNormal
+local spGetSelectedUnits     = Spring.GetSelectedUnits
+local spGetTeamColor         = Spring.GetTeamColor
+local spGetTimer             = Spring.GetTimer
+local spGetUnitBasePosition  = Spring.GetUnitBasePosition
+local spGetUnitDefDimensions = Spring.GetUnitDefDimensions
+local spGetUnitDefID         = Spring.GetUnitDefID
+local spGetUnitRadius        = Spring.GetUnitRadius
+local spGetUnitTeam          = Spring.GetUnitTeam
+local spGetUnitViewPosition  = Spring.GetUnitViewPosition
+local spIsUnitSelected       = Spring.IsUnitSelected
+local spIsUnitVisible        = Spring.IsUnitVisible
+local spSendCommands         = Spring.SendCommands
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+local spGetActiveCommand 	= Spring.GetActiveCommand
+local spGetSelectedUnits    = Spring.GetSelectedUnits
+local spGetUnitPosition     = Spring.GetUnitPosition
+local spGetGameSeconds      = Spring.GetGameSeconds
+local spGetActiveCommand 	= Spring.GetActiveCommand
+local spGetActiveCmdDesc 	= Spring.GetActiveCmdDesc
+local spGetMouseState       = Spring.GetMouseState
+local spTraceScreenRay      = Spring.TraceScreenRay
+local spGetMyPlayerID       = Spring.GetMyPlayerID
+local spGetPlayerInfo       = Spring.GetPlayerInfo
+local spGetVisibleUnits = Spring.GetVisibleUnits
+local spAreTeamsAllied = Spring.AreTeamsAllied
+
+local spGetCommandQueue = Spring.GetCommandQueue
+local spPos2BuildPos = Spring.Pos2BuildPos
+
+local spEcho = Spring.Echo
+local spGetActiveCommand = Spring.GetActiveCommand
+local spGetModKeyState = Spring.GetModKeyState
+local spGetGaiaTeamID = Spring.GetGaiaTeamID
+
+local max					= math.max
+local min					= math.min
+local sqrt					= math.sqrt
+local abs					= math.abs
+local lower                 = string.lower
+local floor                 = math.floor
+
+local udefTab                           = UnitDefs
+local weapNamTab                        = WeaponDefNames
+local weapTab                           = WeaponDefs
+
+local realRadii = {}
+
+local circleDivs = 13 -- precisione del cerchio che appare sotto le unità (numero di lati). Era 65, poi 25
+local enemy_corona = 3 -- precisione del cerchio che appare sotto le unità (numero di lati). Lo imposto a 3 per farne un triangolo
+local innersize = 0.7 -- circle scale compared to unit radius
+local outersize = 1.4 -- outer fade size compared to circle scale (1 = no outer fade)
+
+local circlePolys = {}
+
+local unitDefID
+
+local numteams
+
+local myTeamID = Spring.GetLocalTeamID()
+local gaiaTeamID = spGetGaiaTeamID()
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+-- Creating polygons, this is run only once at widget init or ally change, create quads for each team colour:
+function widget:Initialize()
+	--[[local roster = Spring.GetPlayerRoster() --testing
+	for i=1,#roster do
+		spEcho(roster[i][1],roster[i][2],roster[i][3],roster[i][4],roster[i][5],roster[i][6],roster[i][7])
+	end]]
+	--spEcho("gaia team: ",gaiaTeamID)
+	for _,team in ipairs(Spring.GetTeamList()) do
+		--testing
+		--spEcho("team,roster.team: ",team,r)
+		--for i,v in pairs(r[team]) do
+		--	spEcho(team,i,v)
+		--end
+		--spEcho("name,ID,teamID,allyID,spec,cpu,ping: ", r[team][name], r[playerID],r[teamID],r[allyTeamID],r[spectator],r[cpuUsage],r[pingTime])
+		local r, g, b = spGetTeamColor(team)
+		local alpha = 0.5
+		local fadealpha = 0.2
+		if (r == b) and (r == g) then  -- increased alphas for greys/b/w
+			alpha = 0.7
+			fadealpha = 0.4
+		end
+		--Spring.Echo("Team", team, "R G B", r, g, b, "Alphas", alpha, fadealpha) --for debugging
+		circlePolys[team] = glCreateList(function()
+			-- inner:
+			glBeginEnd(GL.TRIANGLES, function()
+				local radstep = (2.0 * math.pi) / circleDivs
+				for i = 1, circleDivs do
+					local a1 = (i * radstep)
+					local a2 = ((i+1) * radstep)
+					glColor(r, g, b, alpha)
+					glVertex(0, 0, 0)
+					glColor(r, g, b, fadealpha)
+					glVertex(math.sin(a1), 0, math.cos(a1))
+					glVertex(math.sin(a2), 0, math.cos(a2))
+				end
+			end)
+			-- outer edge:
+			glBeginEnd(GL.QUADS, function()
+				local radstep = (2.0 * math.pi) / circleDivs
+				for i = 1, circleDivs do
+					local a1 = (i * radstep)
+					local a2 = ((i+1) * radstep)
+					glColor(r, g, b, fadealpha)
+					glVertex(math.sin(a1), 0, math.cos(a1))
+					glVertex(math.sin(a2), 0, math.cos(a2))
+					glColor(r, g, b, 0.0)
+					glVertex(math.sin(a2) * outersize, 0, math.cos(a2) * outersize)
+					glVertex(math.sin(a1) * outersize, 0, math.cos(a1) * outersize)
+				end
+			end)
+			-- 'enemy spotter' red-yellow 'rainbow' part
+			if not ( spAreTeamsAllied(myTeamID, team) ) then
+				-- inner:
+-- DISABILITO 3 CERCHI PER LASCIARNE UNO SOLO
+--				glBeginEnd(GL.QUADS, function()
+--					local radstep = (2.0 * math.pi) / circleDivs
+--					for i = 1, circleDivs do
+--						local a1 = (i * radstep)
+--						local a2 = ((i+1) * radstep)
+--						glColor( 1, 1, 0, 0 )
+--						glVertex(math.sin(a1) * (outersize + 0.8), 0, math.cos(a1) * (outersize + 0.8))
+--						glVertex(math.sin(a2) * (outersize + 0.8), 0, math.cos(a2) * (outersize + 0.8))
+--						glColor( 1, 1, 0, 0 ) --glColor( 1, 1, 0, 0.33 )
+--						glVertex(math.sin(a2) * (outersize + 0.9), 0, math.cos(a2) * (outersize + 0.9))
+--						glVertex(math.sin(a1) * (outersize + 0.9), 0, math.cos(a1) * (outersize + 0.9))
+--					end
+--				end)
+				-- outer edge:
+--				glBeginEnd(GL.QUADS, function()
+--					local radstep = (2.0 * math.pi) / enemy_corona
+--					for i = 1, enemy_corona do
+--						local a1 = (i * radstep)
+--						local a2 = ((i+1) * radstep)
+--						glColor( 1, 1, 0, 0.2 )--glColor( 1, 1, 0, 0.33)
+--						glVertex(math.sin(a1) * (outersize + 0.4), 0, math.cos(a1) * (outersize + 0.4))
+--						glVertex(math.sin(a2) * (outersize + 0.4), 0, math.cos(a2) * (outersize + 0.4))
+--						glColor( 1, 1, 0, 0 )--glColor( 1, 1, 0, 0.33)
+--						glVertex(math.sin(a2) * (outersize + 0.6), 0, math.cos(a2) * (outersize + 0.6))
+--						glVertex(math.sin(a1) * (outersize + 0.6), 0, math.cos(a1) * (outersize + 0.6))
+--					end
+--				end)
+				glBeginEnd(GL.QUADS, function()
+					local radstep = (2 * math.pi) / enemy_corona --disegno della corona sotto le unità nemiche  ////////////////////////////////// 					local radstep = (2 * math.pi) / circleDivs
+					for i = 1, enemy_corona do  --for i = 1, circleDivs do
+						local a1 = (i * radstep)
+						local a2 = ((i+1) * radstep)
+						glColor(r, g, b, 0.5) -- sostituisco il colore fisso con il colore della squadra ---- glColor( 1, 0, 0, 0 )
+						glVertex(math.sin(a1) * (outersize + 0.0), 0, math.cos(a1) * (outersize + 0.0)) -- cerchio interno x, y
+						glVertex(math.sin(a2) * (outersize + 0.0), 0, math.cos(a2) * (outersize + 0.0)) --
+						glColor(r, g, b, 0.0)-- sostituisco il colore fisso con il colore della squadra ---- glColor( 1, 0, 0, 0.4 )
+						glVertex(math.sin(a2) * (outersize + 0.3), 0, math.cos(a2) * (outersize + 0.3))
+						glVertex(math.sin(a1) * (outersize + 0.3), 0, math.cos(a1) * (outersize + 0.3)) -- dovrebbero essere parametri x,y,z
+
+					end
+				end)
+			end
+		end)
+		numteams = team
+	end
+	--spEcho("number of teams = ",numteams)
+end
+
+function widget:Shutdown()
+	for _,team in ipairs(Spring.GetTeamList()) do
+		glDeleteList(circlePolys[team])
+	end
+end
+
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+
+-- Retrieving radius:
+local function GetUnitDefRealRadius(udid)
+	local radius = realRadii[udid]
+	if (radius) then return radius end
+	local ud = UnitDefs[udid]
+	if (ud == nil) then return nil end
+	local dims = spGetUnitDefDimensions(udid)
+	if (dims == nil) then return nil end
+	local scale = ud.hitSphereScale -- missing in 0.76b1+
+	scale = ((scale == nil) or (scale == 0.0)) and 1.0 or scale
+	radius = dims.radius / scale
+	realRadii[udid] = radius*innersize
+	return radius
+end
+
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+
+-- Drawing:
+function widget:DrawWorldPreUnit()
+	local selUnits = spGetSelectedUnits()
+	if selUnits[1] then
+		local selTeam = spGetUnitTeam(selUnits[1])
+		if selTeam then
+			if not spAreTeamsAllied(selTeam, myTeamID) then
+				myTeamID = Spring.GetLocalTeamID()
+				widget:Shutdown()
+				widget:Initialize()
+			end
+		end
+	end
+	--local deathBlasId = weapNamTab[lower(udef["deathExplosion"])].id
+	glDepthTest(true)
+	glPolygonOffset(-10000, -2)  -- draw on top of water - sideeffect: will shine through terrain/mountains. FIXME
+
+	-- built-in explosion radius viewer. FIXME: should be ctrl+f11 configurable
+	-- mouseover unit + SHIFT: death explosien radius
+	-- mouseover unit + CTRL: for ctrl-d blast radius
+	-- also view death explosion radius when placing buildings - code reuse from the old gui_blastradius made by 'very_bad_soldier'.
+	local alt,ctrl,meta,shift = spGetModKeyState()
+	if (shift) then
+		--[[local udef = udefTab[udid]
+		if ( weapNamTab[lower(udef["deathExplosion"])] ~= nil and weapNamTab[lower(udef["selfDExplosion"])] ~= nil ) then
+		local blastId
+		local deathBlasId
+		local idx, cmd_id, cmd_type, cmd_name = spGetActiveCommand()
+		deathBlasId = weapNamTab[lower(udef["deathExplosion"])].id
+		blastId = weapNamTab[lower(udef["selfDExplosion"])].id
+
+		--blastRadius = weapTab[blastId].damageAreaOfEffect
+		deathblastRadius = weapTab[deathBlasId].damageAreaOfEffect
+
+		--blastDamage = weapTab[blastId].damages[0]
+		--deathblastDamage = weapTab[deathBlasId].damages[0]
+		--spEcho("deathBlasId,blastId,deathblastRadius:",deathBlasId,blastId,deathblastRadius)
+		end]]
+	end
+
+	--local counter
+	for counter,unitID in ipairs(Spring.GetVisibleUnits()) do
+		local team = spGetUnitTeam(unitID)
+		if (team) and team ~= gaiaTeamID then
+			unitDefID =  spGetUnitDefID(unitID)
+			local radius = GetUnitDefRealRadius(unitDefID)
+			if (radius) then
+				if radius < 28 then
+					radius = radius + 5
+				end
+				glDrawListAtUnit(unitID, circlePolys[team], false, radius, 1.0, radius)
+			end
+		end
+	end
+end
+
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------

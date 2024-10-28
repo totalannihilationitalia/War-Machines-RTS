@@ -1,0 +1,25 @@
+function widget:GetInfo()
+	return {
+		name      = "test_write",
+		desc      = "export mission status for client. Use the code inside mission",
+		author    = "Daryl",
+		date      = "18/09/2018",
+		license   = "yes",
+		layer     = 0,
+		enabled   = false
+	}
+end
+
+
+
+
+function widget:Initialize()
+	local fn = "test_scrittura.txt"
+-- eliminare questo echo
+	Spring.Echo (widget.GetInfo().name .. " - start")
+	local f = io.open(fn, "w+")
+	local toSave = {}
+	f:write ("missionex=compiuta" ..",\n")
+	f:close()
+	widgetHandler:RemoveWidget()
+end
