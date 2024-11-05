@@ -131,7 +131,7 @@ weapons = {
                  [1] = {
                  badtargetcategory = "ANTILASER",
                  def = "arm_lightlaser",
---               onlytargetcategory = " ",
+                 onlytargetcategory = "SURFACE",
                  },
 }, -- close weapon usage
 
