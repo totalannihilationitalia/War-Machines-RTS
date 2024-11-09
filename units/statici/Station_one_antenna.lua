@@ -13,7 +13,7 @@ return {
                buildcostenergy = 600,
                buildcostmetal = 54,
                builder = false,
-               buildpic = "icurad.png",
+               buildpic = "Station_one_antenna.png",
                buildtime  = 1137,
                canAttack = false,
                category = "OGGETTISTATICI",

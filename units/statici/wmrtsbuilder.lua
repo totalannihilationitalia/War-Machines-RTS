@@ -6,7 +6,7 @@ return {
 		brakerate = 0.4275,
 		buildcostenergy = 31029,
 		buildcostmetal = 2901,
-		builddistance = 225,
+		builddistance = 1000,
 		builder = true,
 		buildpic = "icuaca.png",
 		buildtime = 27763,
