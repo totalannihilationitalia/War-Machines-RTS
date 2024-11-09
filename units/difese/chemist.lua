@@ -25,7 +25,7 @@ return {
 		maxslope = 20,
 		maxwaterdepth = 0,
 		name = "Screamer",
-		objectname = "chemist",
+		objectname = "chemist.s3o",
 		seismicsignature = 0,
 		selfdestructas = "BIG_UNIT",
 		sightdistance = 350,
