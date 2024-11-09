@@ -40,7 +40,7 @@ return {
                maxwaterdepth = 0,
                metalStorage = 0,
                name = "Super Cannon",
-               objectname = "ANDANGEL",
+               objectname = "andangel.s3o",
                seismicsignature = 0,
                selfdestructas = "ATOMIC_BLAST",
                sightdistance = 273,

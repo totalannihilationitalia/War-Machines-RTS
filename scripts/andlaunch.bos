@@ -1,0 +1,211 @@
+#define TA			// This is a TA script
+
+#include "sfxtype.h"
+#include "exptype.h"
+
+piece  base, dish, plate, turret, missile, fp, fire,
+       fire2, fire3, fire4;
+
+static-var  Static_Var_1;
+
+
+SmokeUnit(healthpercent, sleeptime, smoketype)
+{
+	while( get BUILD_PERCENT_LEFT )
+	{
+		sleep 400;
+	}
+	while( TRUE )
+	{
+		healthpercent = get HEALTH;
+		if( healthpercent < 66 )
+		{
+			smoketype = 256 | 2;
+			if( Rand( 1, 66 ) < healthpercent )
+			{
+				smoketype = 256 | 1;
+			}
+			emit-sfx smoketype from base;
+		}
+		sleeptime = healthpercent * 50;
+		if( sleeptime < 200 )
+		{
+			sleeptime = 200;
+		}
+		sleep sleeptime;
+	}
+}
+
+FireTrail()
+{
+	while( Static_Var_1 == 1 )
+	{
+		explode fire type BITMAPONLY | BITMAP3;
+		explode fire2 type BITMAPONLY | BITMAP3;
+		explode fire3 type BITMAPONLY | BITMAP3;
+		explode fire4 type BITMAPONLY | BITMAP3;
+		sleep 50;
+	}
+}
+
+LaunchMissile()
+{
+	start-script FireTrail();
+	move missile to y-axis [4000.000000] speed [5.000000];
+	sleep 500;
+	move missile to y-axis [4000.000000] speed [8.000000];
+	sleep 500;
+	move missile to y-axis [4000.000000] speed [10.000000];
+	sleep 500;
+	move missile to y-axis [4000.000000] speed [13.000000];
+	sleep 500;
+	move missile to y-axis [4000.000000] speed [16.000000];
+	sleep 500;
+	move missile to y-axis [4000.000000] speed [20.000000];
+	sleep 700;
+	move missile to y-axis [4000.000000] speed [25.000000];
+	sleep 800;
+	move missile to y-axis [4000.000000] speed [30.000000];
+	sleep 1000;
+	move missile to y-axis [4000.000000] speed [40.000000];
+	sleep 1000;
+	move missile to y-axis [4000.000000] speed [50.000000];
+	sleep 1000;
+	move missile to y-axis [4000.000000] speed [60.000000];
+	sleep 1000;
+	move missile to y-axis [4000.000000] speed [70.000000];
+	sleep 1000;
+	move missile to y-axis [4000.000000] speed [80.000000];
+	sleep 1000;
+	move missile to y-axis [4000.000000] speed [90.000000];
+	sleep 1000;
+	move missile to y-axis [4000.000000] speed [100.000000];
+	sleep 1000;
+	move missile to y-axis [4000.000000] speed [105.000000];
+	sleep 1000;
+	move missile to y-axis [4000.000000] speed [155.000000];
+	wait-for-move missile along y-axis;
+	Static_Var_1 = 2;
+	move missile to y-axis [4700.000000] speed [100.000000];
+	sleep 1000;
+	move missile to y-axis [4700.000000] speed [90.000000];
+	sleep 1000;
+	move missile to y-axis [4700.000000] speed [80.000000];
+	sleep 1000;
+	move missile to y-axis [4700.000000] speed [70.000000];
+	sleep 1000;
+	move missile to y-axis [4700.000000] speed [60.000000];
+	sleep 1000;
+	move missile to y-axis [4700.000000] speed [50.000000];
+	sleep 1000;
+	move missile to y-axis [4700.000000] speed [40.000000];
+	sleep 1000;
+	move missile to y-axis [4700.000000] speed [30.000000];
+	sleep 1000;
+	move missile to y-axis [4700.000000] speed [20.000000];
+	wait-for-move missile along y-axis;
+	turn missile to z-axis <90.000000> speed <10.000000>;
+	Static_Var_1 = 0;
+}
+
+Activate()
+{
+	dont-cache turret;
+	dont-cache dish;
+	dont-cache missile;
+	dont-cache fire;
+	turn turret to y-axis <180.000000> speed <20.000000>;
+	turn dish to x-axis <270.000000> speed <20.000000>;
+	sleep 100;
+	turn dish to x-axis <180.000000> speed <20.000000>;
+	call-script LaunchMissile();
+}
+
+Create()
+{
+	move fp to y-axis [4700.000000] now;
+	Static_Var_1 = 1;
+	start-script SmokeUnit();
+}
+
+AimWeapon1(Func_Var_1, Func_Var_2)
+{
+	if( Static_Var_1 == 0 )
+	{
+		return (1);
+	}
+}
+
+AimFromPrimary(piecenum)
+{
+	piecenum = fp;
+}
+
+QueryPrimary(piecenum)
+{
+	piecenum = fp;
+}
+
+SweetSpot(piecenum)
+{
+	piecenum = base;
+}
+
+Killed(severity, corpsetype)
+{
+	explode fire type FALL | FIRE | BITMAP4;
+	explode fire type FALL | FIRE | BITMAP5;
+	explode fire type FALL | FIRE | BITMAP4;
+	explode fire type FALL | FIRE | BITMAP3;
+	explode fire type FALL | FIRE | BITMAP2;
+	explode fire type FALL | FIRE | BITMAP1;
+	explode fire type FALL | FIRE | BITMAP5;
+	explode fire type FALL | FIRE | BITMAP4;
+	explode fire type FALL | FIRE | BITMAP4;
+	explode fire type FALL | FIRE | BITMAP4;
+	explode fire type FALL | FIRE | BITMAP5;
+	explode fire type FALL | FIRE | BITMAP5;
+	explode fire type FALL | FIRE | BITMAP5;
+	explode fire type FALL | FIRE | BITMAP2;
+	explode fire type FALL | FIRE | BITMAP3;
+	explode fire type FALL | FIRE | BITMAP2;
+	explode fire type FALL | FIRE | BITMAP2;
+	explode fire type FALL | FIRE | BITMAP1;
+	explode fire type FALL | FIRE | BITMAP1;
+	explode fire type FALL | FIRE | BITMAP2;
+	if( severity <= 25 )
+	{
+		corpsetype = 1;
+		explode base type BITMAPONLY | BITMAP2;
+		explode dish type BITMAPONLY | BITMAP3;
+		explode plate type BITMAPONLY | BITMAP4;
+		explode missile type SHATTER | BITMAP4;
+		return (0);
+	}
+	if( severity <= 50 )
+	{
+		corpsetype = 2;
+		explode base type BITMAPONLY | BITMAP2;
+		explode dish type BITMAPONLY | BITMAP3;
+		
+		explode plate type FALL | BITMAP4;
+		explode missile type SHATTER | BITMAP4;
+		return (0);
+	}
+	if( severity <= 99 )
+	{
+		corpsetype = 3;
+		explode base type BITMAPONLY | BITMAP2;
+		explode dish type BITMAPONLY | BITMAP3;
+		
+		explode plate type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		explode missile type SHATTER | BITMAP4;
+		return (0);
+	}
+	corpsetype = 3;
+	explode base type BITMAPONLY | BITMAP2;
+	explode dish type BITMAPONLY | BITMAP3;
+	
+	explode plate type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+	explode missile type SHATTER | BITMAP4;
+}
