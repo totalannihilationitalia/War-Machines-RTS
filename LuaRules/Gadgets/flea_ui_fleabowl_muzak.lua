@@ -2,7 +2,7 @@ function gadget:GetInfo()
 	return {
 	name = "Fleabowl Muzak",
 	desc = "Plays final battle and boss death music",
-	author = "Deadnight Warrior",
+	author = "Deadnight Warrior", -- edit by molix
 	date = "29 Sep 2011",
 	license = "GTFO",
 	layer = 1,
@@ -18,12 +18,12 @@ if (gadgetHandler:IsSyncedCode()) then
 	 -- end	
 	end
 	function gadget:UnitCreated(unitID, unitDefID, unitTeam)
-		if UnitDefs[unitDefID].name == "fleagoth" then
+		if UnitDefs[unitDefID].name == "juju" then
 			Spring.PlaySoundStream("sounds/finalbattle.ogg")
 		end
 	end
 	function gadget:UnitDestroyed(unitID, unitDefID, unitTeam)
-		if UnitDefs[unitDefID].name == "fleagoth" then
+		if UnitDefs[unitDefID].name == "juju" then
 			Spring.StopSoundStream()
 			Spring.PlaySoundStream("sounds/fleabossdead.ogg")
 		end

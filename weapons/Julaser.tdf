@@ -6,7 +6,7 @@
 	lineofsight=1;
 	Turret=1;
 
-	range=450;
+	range=1350;
 	reloadtime=.5;
 	weaponvelocity=700;
 	areaofeffect=100;
