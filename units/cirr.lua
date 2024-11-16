@@ -12,7 +12,7 @@ return {
                buildcostenergy = 19946,
                buildcostmetal = 1961,
                builder = false,
-               buildpic = "CIRR.JPG",
+               buildpic = "cirr.png",
                buildtime  = 43453,
                canAttack = true,
                canfly = true,

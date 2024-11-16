@@ -13,7 +13,7 @@ return {
                buildcostenergy = 38023,
                buildcostmetal = 3511,
                builder = false,
-               buildpic = "ORCL.JPG",
+               buildpic = "orcl.png",
                buildtime  = 59993,
                canAttack = true,
                canfly = true,

@@ -4,7 +4,7 @@
 	Version=1;
 	Side=ARM;
 	Objectname=demr.s3o;
-	Buildpic=DEMR.JPG;
+	Buildpic=demr.png;
 	Designation=DEMR;
 	Name=Demarcator;
 	Description=Heavy Skycruiser;

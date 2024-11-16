@@ -13,7 +13,7 @@ return {
                buildinggrounddecalsizex= 12,
                buildinggrounddecalsizey = 12,
                buildinggrounddecaltype = "Pavimentazione3.png",
-               buildpic = "",
+               buildpic = "icufff.png",
                buildtime  = 80132,
                canmove = true,
                canPatrol = true,
