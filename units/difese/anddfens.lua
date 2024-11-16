@@ -10,7 +10,7 @@ return {
                buildcostenergy = 11327,
                buildcostmetal = 2463,
                builder = false,
-               buildpic = "",
+               buildpic = "anddfens.png",
                buildtime  = 16765,
                canAttack = true,
 --               canstop = 1,

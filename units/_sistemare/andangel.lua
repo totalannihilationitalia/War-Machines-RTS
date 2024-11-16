@@ -12,7 +12,7 @@ return {
                buildcostenergy = 60680,
                buildcostmetal = 4184,
                builder = false,
-               buildpic = "corangel.png",
+               buildpic = "andangel.png",
                buildtime  = 85185,
                canAttack = true,
 --               canstop = 1,

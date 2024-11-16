@@ -10,7 +10,7 @@ return {
 --		buildinggrounddecalsizex = 6,
 --		buildinggrounddecalsizey = 6,
 --		buildinggrounddecaltype = "Pavimentazione_nfa_ap.png",
-		buildpic = "chemist",
+		buildpic = "chemist.png",
 		buildtime = 26280,
 		category = "ALL WEAPON NOTSUB SPECIAL NOTAIR NOTHOVER SURFACE",
 		corpse = "DEAD",

@@ -10,7 +10,7 @@ return {
                buildcostenergy = 1370,
                buildcostmetal = 850,
                builder = true,
-               buildpic = "CORPLAT.DDS",
+               buildpic = "andplat.png",
                buildtime  = 7240,
                canmove = true,
                canPatrol = true,
