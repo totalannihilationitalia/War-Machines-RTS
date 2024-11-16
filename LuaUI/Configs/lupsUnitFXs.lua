@@ -81,6 +81,15 @@ effectUnitDefs = {
 -- rimuovo i suoni    {class='Sound', options={repeatEffect=true, file="Sparks", blockfor=4.8*30, length=5.1*30}},
   },
 
+  andaafus = {
+    {class='Bursts', options=andaafusBursts},
+	-- aggiungere sfere come originale
+	{class='ShieldSphere', options=andaafusShieldSphere},
+
+
+-- rimuovo i suoni    {class='Sound', options={repeatEffect=true, file="Sparks", blockfor=4.8*30, length=5.1*30}},
+  },
+
   --// SHIELDS //---------------------------
   -- Don't raise strength of ShieldJitter recklessly, it can really distort things (including unit icons) under it!
 --  corjamt = {

@@ -140,6 +140,22 @@ icufusBurstsdx = {
   repeatEffect = true,
   count      = 20,
 }
+andaafusBursts = {
+  life       = math.huge,
+  pos        = {0,110,0},
+  rotSpeed   = 0.5,
+  rotSpread  = 1,
+  arc        = 90,
+  arcSpread  = 0,
+  size       = 35,
+  sizeSpread = 10,
+  colormap   = { {1.0, 1, 1, 0.5} },
+  directional= true,
+  repeatEffect = true,
+  count      = 20,
+}
+
+
 
 corjamtBursts = {
   layer      = -35,
@@ -198,6 +214,15 @@ aafusShieldSpheredx = {
   size=24,
   colormap1 = { {0.9, 0.9, 1, 0.75},{0.9, 0.9, 1, 1.0},{0.9, 0.9, 1, 1.0},{0.9, 0.9, 1, 0.75} },
   colormap2 = { {0.2, 0.2, 1, 0.7},{0.2, 0.2, 1, 0.75},{0.2, 0.2, 1, 0.75},{0.2, 0.2, 1, 0.7} },
+  repeatEffect=true
+}
+andaafusShieldSphere = {
+  layer=-35,
+  life=20,
+  pos={0,110,0},
+  size=24,
+  colormap1 = { {1, 0.7, 0, 0.75},{1, 0.8, 0, 1.0},{1, 0.9, 0, 1.0},{1, 0.8, 0, 0.75} },
+  colormap2 = { {1, 0.7, 0, 0.4},{1, 0.8, 0, 0.55},{1, 0.9, 0, 0.75},{1, 0.9, 0, 0.7} },
   repeatEffect=true
 }
 
