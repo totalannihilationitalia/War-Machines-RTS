@@ -9,13 +9,13 @@
   buildCostEnergy=88000;
   buildCostMetal=1437;
   builder=0;
-  buildPic=ARMSCAB.DDS;
+  buildPic=armscab.png;
   buildTime=95678;
   canGuard=1;
   canMove=1;
   canPatrol=1;
   canstop=1;
-  category=ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR;
+  category=ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE;
   corpse=ARMSCAB_DEAD;
   damageModifier=0.5;
   defaultmissiontype=Standby;

@@ -12,7 +12,7 @@ return {
                buildcostenergy = 19001,
                buildcostmetal = 2014,
                builder = false,
-               buildpic = "TALN.JPG",
+               buildpic = "taln.png",
                buildtime  = 44398,
                canAttack = true,
                canfly = true,

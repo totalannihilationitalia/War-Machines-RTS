@@ -12,7 +12,7 @@ return {
                buildinggrounddecalsizex= 12,
                buildinggrounddecalsizey = 12,
                buildinggrounddecaltype = "Pavimentazione_nfa_ap.png",
-               buildpic = "",
+               buildpic = "nfafff.png",
                buildtime  = 80210,
                canmove = true,
                canPatrol = true,

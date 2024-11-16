@@ -10,7 +10,7 @@ return {
                buildcostenergy = 481165,
                buildcostmetal = 18705,
                builder = false,
-               buildpic = "GORG.DDS",
+               buildpic = "gorg.png",
                buildtime  = 629630,
                canAttack = true,
                canGuard = true,

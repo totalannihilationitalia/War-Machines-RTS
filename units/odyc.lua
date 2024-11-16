@@ -13,7 +13,7 @@ return {
                buildcostenergy = 36083,
                buildcostmetal = 3443,
                builder = false,
-               buildpic = "ODYC.JPG",
+               buildpic = "odyc.png",
                buildtime  = 57045,
                canAttack = true,
                canfly = true,
