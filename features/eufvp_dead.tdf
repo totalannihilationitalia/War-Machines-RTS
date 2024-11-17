@@ -1,10 +1,10 @@
-[eufcp_dead]
+[eufvp_dead]
 {
 World=all;
 Description=Wreckage;
 Category=corecorpses;
-Object=eufcp_dead;
-Featuredead=eufcp_heap;
+Object=eufvp_dead;
+Featuredead=eufvp_heap;
 Footprintx=7;
 Footprintz=7;
 Height=24;
@@ -16,7 +16,7 @@ Reclaimable=1;
 Featurereclamate=smudge01;
 Seqnamereclamate=tree1reclamate;
 }
-[eufcp_heap]
+[eufvp_heap]
 {
 world=All Worlds;
 description=Wreckage;

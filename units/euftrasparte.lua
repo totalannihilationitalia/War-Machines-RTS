@@ -17,7 +17,7 @@ return {
                canGuard = true,
                canmove = true,
                canPatrol = true,
---               canreclamate = true,
+               canreclamate = false,
 --               canstop = 1,
                category = "ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE",
                --collisionvolumeoffsets = "",

@@ -64,6 +64,9 @@ return {
 			[2] = "andscouter",
 			[3] = "anddauber",
 			[4] = "andbrskr",
+			[5] = "andgaso",
+			[6] = "andlipo",
+			[7] = "andmisa",
 
 		},
 -----------------------------------------------------------

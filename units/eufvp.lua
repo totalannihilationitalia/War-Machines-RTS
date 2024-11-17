@@ -4,69 +4,60 @@ return {
 -----------------------------------------------------------
 --- UNITS FEATURES
 -----------------------------------------------------------
-  andainc = {
-               acceleration = 0,
-               brakerate  = 0,
-               buildcostenergy = 1772,
-               buildcostmetal = 723,
+  eufvp = {
+               buildcostenergy = 1200,
+               buildcostmetal = 650,
                builder = true,
-               buildpic = "andainc.png",
-               buildtime  = 7151,
+               buildpic = "eufvp",
+               buildtime  = 6930,
                canmove = true,
                canPatrol = true,
 --               canstop = 1,
-               category = "ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE",
+               category = "ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE",
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
-               corpse = "andalab_dead",
-               description = "Produces Level 2 Kbots",
+               corpse = "eufvp_dead",
+               description = "Builds 1 lvl tanks",
 --               firestandorders = 1,
-               energymake = 300,
                energystorage = 150,
-               energyUse = -200,
+               energyUse = 0,
                explodeas = "LARGE_BUILDINGEX",
-               footprintx = 9,
+               footprintx = 7,
                footprintz = 7,
                icontype = "factory",
                idleautoheal = 5,
                idletime = 1800,
 --               mass = 0 --definire massa,
-               maxdamage = 2800,
-               maxslope = 15,
+               maxdamage = 2580,
+               maxslope = 10,
                maxvelocity = 0,
                maxwaterdepth = 0,
-	       metalmake = 10,
-	       makesMetal = 0.1,
                metalStorage = 150,
 --               minWaterDepth= 0,
 --               mobilestandorders= 1,
-               name = "Incubator Lab",
+               name = "Tank Plant",
                noAutoFire = false,
-               objectname = "andainc.s3o",
+               objectname = "eufvp",
                radardistance = 50,
-               seismicsignature = 0,
                selfdestructas = "LARGE_BUILDING",
-               sightdistance = 280,
+               sightdistance = 270,
 --               soundcategory= "ARM_HOVER_PLANT",
 --               standingfireorder = 2,
 --               standingmoveorder = 1,
                TEDClass = "PLANT", -- verificare se necessario
-               turnrate = 0,
 --               waterline = 5,
                workertime = 100,
-               YardMap= "oocccccoo oocccccoo oocccccoo oocccccoo oocccccoo oocccccoo oocccccoo",
+               YardMap= "occccco occccco occccco occccco occccco occccco occccco",
 -----------------------------------
 --- INSERT BUILDLIST
 -----------------------------------
                buildoptions = { 
-			[1] = "andacsp",
-			[2] = "walker",
-			[3] = "andogre",
-			[4] = "exxec",
-			[5] = "andtanko",
-			[6] = "andtesla",
-			[7] = "androck",
+			[1] = "eufcd",
+			[2] = "eufthorn",
+			[3] = "eufsab",
+--			[4] = "andmisa",
+--			[5] = "andmiss",
 		},
 -----------------------------------------------------------
 --- Units wreckage and heaps
@@ -76,15 +67,15 @@ featuredefs = {
                world = "All Worlds",
                description = "Wreckage",
                category = "arm_corpses",
-               object = "andincubator2_dead.s3o",
-               featuredead = "andhp_heap",
+               object = "eufvp_dead",
+               featuredead = "eufvp_heap",
                featurereclamate = "smudge01",
-               footprintx = 10,
-               footprintz = 8,
-               height = 20,
+               footprintx = 7,
+               footprintz = 7,
+               height = 24,
                hitdensity = 100,
-               metal = 3206,
-               damage = 3804,
+               metal = 520,
+               damage = 2064,
                seqnamereclamate = "tree1reclamate",
 				collisionvolumeoffsets = "0.0 -1.2425585791 1.2922744751",
 				collisionvolumescales = "90.0 14.3981628418 90.5845489502",
@@ -92,7 +83,7 @@ featuredefs = {
                },  -- Close Dead Features
   heap = {
                world = "All Worlds",
-               description = "Advance vehicle factory heap",
+               description = "Wreckage",
                category = "heaps",
 	       collisionvolumeoffsets = "0 0 0",
 	       collisionvolumescales = "114 10 129",
@@ -112,19 +103,13 @@ featuredefs = {
                },  -- Close heap
 },  --  Wreckage and heaps
 -----------------------------------------------------------
---- EFFECTS
+--- NO EFFECTS
 -----------------------------------------------------------
-sfxtypes = {
-  explosiongenerators = {
-               [1]="custom:fleanuklearmini",
-               [2]="custom:fleafireLanding",
-               }, -- close effects list
-}, -- close section sfxtypes
 -----------------------------------------------------------
 --- UNITS SOUND
 -----------------------------------------------------------
 sounds = {
-               build = "hoverok1",
+               build = "pvehwork",
                count = {
                      [1] =  "count6",
                      [2] =  "count5",
@@ -135,7 +120,7 @@ sounds = {
                        },
                canceldestruct = "cancel2",
                select = {
-                     [1] = "hoversl1",
+                     [1] = "pvehactv",
                         },
                unitcomplete = "untdone",
                underattack = "warning1",
