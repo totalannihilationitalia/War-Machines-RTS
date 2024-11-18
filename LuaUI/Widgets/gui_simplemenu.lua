@@ -179,7 +179,7 @@ local function DrawMenu()
 	gl.Color(1,1,1,1)
 
 --	gl.Rect(Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"])
-	gl.Texture(main_background)	-- aggiungo l'icona
+	gl.Texture(main_background)	-- aggiungo l'immagine di sfondo
 	gl.TexRect(Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"])	
 	gl.Texture(false)	-- fine texture		
 
