@@ -15,7 +15,7 @@ end
 local Echo 					     	= Spring.Echo
 local myFontBig	 					= gl.LoadFont("FreeSansBold.otf",14, 1.9, 40)
 local myFont	 					= gl.LoadFont("FreeSansBold.otf",12, 1.9, 40)
-local sizex, sizey					= 400, 140
+local sizex, sizey					= 400, 160
 local vsx, vsy 						= gl.GetViewSizes()
 local posX, posY					= vsx/2, vsy/2
 local rowgap						= 27
@@ -53,9 +53,12 @@ local cTex							= {1, 1, 1, 0.75}
 local button6						= "sounds/button6.wav"
 local button8						= "sounds/button8.wav"
 
-local imgMission						= "luaui/images/buttons/button_obj.png" -- rev1
-local missionData						= {}
 
+local missionData						= {}
+-- images
+local imgMission						= "luaui/images/menu/button_obj.png" -- rev1
+local main_background				= "LuaUI/Images/menu/sfondo_obj.png"
+local icona_graphics				= "LuaUI/Images/menu/menu_obj_icon.png" -- icona main menu
 
 local function IsOnButton(x, y, BLcornerX, BLcornerY,TRcornerX,TRcornerY)
 	if BLcornerX == nil then return false end
@@ -119,46 +122,55 @@ end
 local function DrawMissionStats()
 	
 	--background panel
-	gl.Color(cBack)
-	gl.Rect(Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"])
---	gl.Rect(posX,posY, posX + sizex, posY + sizey)
---	gl.Rect(0,0, 100, 100)
+	gl.Color(1,1,1,1)
+	gl.Texture(main_background)	-- aggiungo l'immagine di sfondo --rev1
+	gl.TexRect(Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"])	
+	gl.Texture(false)	-- fine texture	
+	-- icona menu
+	gl.Texture(icona_graphics)	-- aggiungo l'icona --rev1
+	gl.TexRect(Panel["main"]["x1"]+20,Panel["main"]["y1"]+127, Panel["main"]["x1"]+60, Panel["main"]["y1"]+167)	
+	gl.Texture(false)	-- fine texture	
 	
 	--border
-	gl.Color(cBorder)
-	gl.Rect(Panel["main"]["x1"]-1,Panel["main"]["y1"], Panel["main"]["x1"], Panel["main"]["y2"])
-	gl.Rect(Panel["main"]["x2"],Panel["main"]["y1"], Panel["main"]["x2"]+1, Panel["main"]["y2"])
-	gl.Rect(Panel["main"]["x1"],Panel["main"]["y1"]-1, Panel["main"]["x2"], Panel["main"]["y1"])
-	gl.Rect(Panel["main"]["x1"],Panel["main"]["y2"], Panel["main"]["x2"], Panel["main"]["y2"]+1)
+--	gl.Color(cBorder)
+--	gl.Rect(Panel["main"]["x1"]-1,Panel["main"]["y1"], Panel["main"]["x1"], Panel["main"]["y2"])
+--	gl.Rect(Panel["main"]["x2"],Panel["main"]["y1"], Panel["main"]["x2"]+1, Panel["main"]["y2"])
+--	gl.Rect(Panel["main"]["x1"],Panel["main"]["y1"]-1, Panel["main"]["x2"], Panel["main"]["y1"])
+--	gl.Rect(Panel["main"]["x1"],Panel["main"]["y2"], Panel["main"]["x2"], Panel["main"]["y2"]+1)
 	
 	-- Heading
 	myFontBig:SetTextColor(cTitle)
 	myFontBig:Begin()
-	myFontBig:Print("Mission objectives:", Panel["main"]["x1"] + margin, Panel["main"]["y2"] - 20,14,'ds')
+	myFontBig:Print("Mission objectives:", Panel["main"]["x1"]+50 + margin, Panel["main"]["y2"] - 34,14,'ds') 
 	myFontBig:End()
+	
+	-- add gui shader	
+	if (WG['guishader_api'] ~= nil) then
+	WG['guishader_api'].InsertRect(Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"],'Simple menu')
+	end	
 	
 	-- Info
 	
 	local y0 = Panel["main"]["y2"] - 40
 	
 	myFont:Begin()		
-	myFont:SetTextColor(cTitle)
+	myFont:SetTextColor(1,1,1,1)
 	-- fare in modo che in funzione delle missioni scrivo n righe. --##dafare############## 
 	
 	
 	-- scrivo nel menu i titoli degli obiettivi (distruggi x, difendi y ecc) impostabili dalla funzione function widget:GameFrame(frame)
-	myFont:Print(missionData["titoloobj1"] or "-", Panel["main"]["x1"]+margin, y0 ,12,'vs')
-	myFont:Print(missionData["titoloobj2"] or "-", Panel["main"]["x1"]+margin, y0 - 20,12,'vs')
-	myFont:Print(missionData["titoloobj3"] or "-", Panel["main"]["x1"]+margin, y0 - 40,12,'vs')
-	myFont:Print(missionData["titoloobj4"] or "-", Panel["main"]["x1"]+margin, y0 - 60,12,'vs')
-	myFont:Print(missionData["titoloobj5"] or "-", Panel["main"]["x1"]+margin, y0 - 80,12,'vs')
+	myFont:Print(missionData["titoloobj1"] or "-", Panel["main"]["x1"]+margin, y0 -20 ,12,'vs')
+	myFont:Print(missionData["titoloobj2"] or "-", Panel["main"]["x1"]+margin, y0 - 40,12,'vs')
+	myFont:Print(missionData["titoloobj3"] or "-", Panel["main"]["x1"]+margin, y0 - 60,12,'vs')
+	myFont:Print(missionData["titoloobj4"] or "-", Panel["main"]["x1"]+margin, y0 - 80,12,'vs')
+	myFont:Print(missionData["titoloobj5"] or "-", Panel["main"]["x1"]+margin, y0 - 100,12,'vs')
 	myFont:SetTextColor(cWhite)
 	-- ricevo lo stato degli obiettivi (in progess, complete, failed ecc) impostabili dalla funzione function widget:GameFrame(frame)
-	myFont:Print(missionData["Objective 1"] or "-", Panel["main"]["x2"]-margin, y0 ,12,'rvs')
-	myFont:Print(missionData["Objective 2"] or "-", Panel["main"]["x2"]-margin, y0 - 20,12,'rvs')
-	myFont:Print(missionData["Objective 3"] or "-", Panel["main"]["x2"]-margin, y0 - 40,12,'rvs')
-	myFont:Print(missionData["Objective 4"] or "-", Panel["main"]["x2"]-margin, y0 - 60,12,'rvs')
-	myFont:Print(missionData["Objective 5"] or "-", Panel["main"]["x2"]-margin, y0 - 80,12,'rvs')
+	myFont:Print(missionData["Objective 1"] or "-", Panel["main"]["x2"]-margin, y0 -20 ,12,'rvs')
+	myFont:Print(missionData["Objective 2"] or "-", Panel["main"]["x2"]-margin, y0 - 40,12,'rvs')
+	myFont:Print(missionData["Objective 3"] or "-", Panel["main"]["x2"]-margin, y0 - 60,12,'rvs')
+	myFont:Print(missionData["Objective 4"] or "-", Panel["main"]["x2"]-margin, y0 - 80,12,'rvs')
+	myFont:Print(missionData["Objective 5"] or "-", Panel["main"]["x2"]-margin, y0 - 100,12,'rvs')
 	myFont:End()
 		
 	--reset state
