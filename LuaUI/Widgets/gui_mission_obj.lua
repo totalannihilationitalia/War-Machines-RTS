@@ -24,6 +24,7 @@ local margin						= 20
 local myTeamID						= nil
 local myAllyTeamID					= nil
 local mySpectatorState				= Spring.GetSpectatingState()
+--local attivo						 -- rev1
 
 local Button						= {}
 local ObjMenu						= {}
@@ -87,9 +88,16 @@ end
 
 -- mettere una condizione per attivare questo widget (al posto di quella sotto dopo --), del tipo dalle missioni, se ismission==1 ok altrimenti chiudi
 function widget:Initialize()
-	if not(Spring.GetGameRulesParam('IsMission') == 1 or Spring.GetGameRulesParam('IsMission') == '1') then  -- rev1 ******************** mettere la variabile ismission nel client --##dafare##############
+--	attivo = Spring.GetModOptions().mo_comgate
+--		Spring.Echo("variabile MO_gate = "..attivo)
+--		if (attivo == 0) then 
+		if Spring.GetModOptions().ismission=="0" then
+--		Spring.Echo("WMRTS button mission off")
 		widgetHandler:RemoveWidget()
-	end
+		end
+--	if not(Spring.GetGameRulesParam('IsMission') == 1 or Spring.GetGameRulesParam('IsMission') == '1') then  -- rev1 ******************** mettere la variabile ismission nel client --##dafare##############
+		
+	
 
 	myTeamID = Spring.GetLocalTeamID()
 	myAllyTeamID = select(6,Spring.GetTeamInfo(myTeamID))
