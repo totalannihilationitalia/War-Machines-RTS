@@ -2060,15 +2060,16 @@ function DrawResources(energy, energyStorage, metal, metalStorage, posY)
 	gl_Color(1,1,1,0.14) 
 	gl_Texture(pics["resbarBgPic"])
 	DrawRect(m_resources.posX + widgetPosX + paddingLeft, posY + 7, m_resources.posX + widgetPosX + paddingLeft + barWidth, posY + 5)	
---	barra energia *****************************************************************************
-	gl_Color(0,0.7,1,1)
+--	barra metallo *****************************************************************************
+	gl_Color(1,0.8,0,1)
 	gl_Texture(pics["resbarPic"])
 	DrawRect(m_resources.posX + widgetPosX + paddingLeft, posY + 7, m_resources.posX + widgetPosX + paddingLeft + ((barWidth/metalStorage)*metal), posY + 5)	
 	gl_Color(1,1,0,0.14)
 	gl_Texture(pics["resbarBgPic"])
 	DrawRect(m_resources.posX + widgetPosX + paddingLeft, posY + 11, m_resources.posX + widgetPosX + paddingLeft + barWidth, posY + 9)	
---	barra metallo *****************************************************************************
-	gl_Color(1,0.8,0,1)
+--	barra energia *****************************************************************************
+	gl_Color(0,0.7,1,1)  --1,0.8,0,1
+	
 	gl_Texture(pics["resbarPic"])
 	DrawRect(m_resources.posX + widgetPosX + paddingLeft, posY + 11, m_resources.posX + widgetPosX + paddingLeft + ((barWidth/energyStorage)*energy), posY + 9)	
 end

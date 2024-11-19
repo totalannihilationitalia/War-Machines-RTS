@@ -33,7 +33,7 @@ local Config = {
 		expensefadetime = 0.5, --fade effect time, in seconds
 		
 		cbackground = {0.03,0.18,0.3,0.5}, --color {r,g,b,alpha} riquadro esterno metallo
-		cborder =  {0,0.67,0.99,1}, -- bordo barra grigia metallo
+		cborder =  {0,0.67,0.99,1}, -- bordo barra  metallo
 		cbarbackground = {1,1,1,1}, -- boh
 		cbar = {1,0.8,0,1}, -- colore barra metallo
 		cindicator = {1,0,0,1}, -- cursore rosso metallo
@@ -74,7 +74,7 @@ local Config = {
 		cbackground = {0.03,0.18,0.3,0.5}, --riquadro esteno
 		cborder =  {0,0.67,0.99,1},
 		cbarbackground = {0,0,0,1},
-		cbar = {0.51,0.72,0.82,1}, --0,0.7,1,1
+		cbar = {0.33,0.45,0.81,1}, --0,0.7,1,1
 		cindicator = {1,0,0,0.8},
 		
 		cincome = {0,1,0,1},
