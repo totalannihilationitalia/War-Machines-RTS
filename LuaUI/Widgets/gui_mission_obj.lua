@@ -9,6 +9,7 @@ function widget:GetInfo()
 		enabled = true
 	}
 --rev1: 18/11/2024 aggiunta condizione per farlo apparire (ismission = 1) 
+--rev2: 19/11/2024 rimosso lo shader quando si chiude la finesta degli obiettivi
 
 end
 
@@ -240,6 +241,11 @@ function widget:DrawScreen()
 	-- draw flea window
 	if (not Spring.IsGUIHidden()) and ObjMenu.click then
 		DrawMissionStats()
+		else --rev2 -- remove gui shader
+				if (WG['guishader_api'] ~= nil) then
+					WG['guishader_api'].RemoveRect('Simple menu')
+				end			
+		
 	end
 end
 
