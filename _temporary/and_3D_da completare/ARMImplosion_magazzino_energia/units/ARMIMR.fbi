@@ -1,0 +1,42 @@
+[UNITINFO]
+	{
+	UnitName=ARMIMR;
+	Version=1.0;
+	Side=ARM;
+	Objectname=ARMIMR;
+	Designation=ARMIMPLOSIONREACTOR;
+	Name=Implosion Reactor;
+	Description=Highly Unstable Implosion Reactor;
+FrenchName=Réacteur à implosion;
+FrenchDescription=Réacteur à implosion hautement instable;
+GermanName=Imblosionsreaktorr;
+GermanDescription=öchst Instabieler Imblosionsreaktor;
+	FootprintX=14;
+	FootprintZ=6;
+	BuildCostEnergy=40742;
+	BuildCostMetal=19873;
+	MaxDamage=11791;
+	EnergyUse=0;
+	BuildTime=157941;
+	BMcode=0;
+	Builder=0;
+	ThreeD=1;
+	ZBuffer=1;
+	NoAutoFire=0;
+	SightDistance=380;
+	RadarDistance=50;
+	SoundCategory=Imr;
+	EnergyStorage=1400;
+	MetalStorage=1;
+	ExplodeAs=ATOMIC_BLAST;
+	SelfDestructAs=NUCLEAR_MISSILE;
+	Category=CORE LEVEL3 NOWEAPON NOTAIR NOTSUB ;
+	YardMap=ooooooooooooooo;
+	TEDClass=Special;
+	Copyright=Copyright 1997 Humongous Entertainment. All rights reserved.;
+	Corpse=ARMIMR_dead;
+	UnitNumber=19011395;
+	EnergyMake=6972;
+	buildangle=8292;
+	ActivateWhenBuilt=1;
+	}

@@ -1,0 +1,9 @@
+// Arm "Killer Machine" Adv. EMG-Kbot by M. Hüdepohl
+
+[MENUENTRY1]
+	{
+	UNITMENU=ARMALAB;
+	MENU=4;
+	BUTTON=4;
+	UNITNAME=ARMKILLER;
+	}

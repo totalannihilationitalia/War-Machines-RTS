@@ -1,0 +1,996 @@
+// Arm "Killer Machine" Adv. EMG-Kbot by M. Hüdepohl
+
+
+#define TA			// This is a TA script
+
+#include "sfxtype.h"
+#include "exptype.h"
+
+piece Huefte, rOberschenkel, rUnterschenkel, lOberschenkel, lUnterschenkel, Torso,
+       Kopf, rSchulter, roArm, ruArm, Blitz, lSchulter, loArm, Punkt,
+       luArm, Kanone, Atrappe;
+
+static-var  bMoving, bAiming, Static_Var_3, gezogen, Kanonebewegt;
+
+// Signal definitions
+#define SIG_AIM				2
+
+
+SmokeUnit(healthpercent, sleeptime, smoketype)
+{
+	while( get BUILD_PERCENT_LEFT )
+	{
+		sleep 400;
+	}
+	while( TRUE )
+	{
+		healthpercent = get HEALTH;
+		if( healthpercent < 66 )
+		{
+			smoketype = 256 | 2;
+			if( Rand( 1, 66 ) < healthpercent )
+			{
+				smoketype = 256 | 1;
+			}
+			emit-sfx smoketype from torso;
+		}
+		sleeptime = healthpercent * 50;
+		if( sleeptime < 200 )
+		{
+			sleeptime = 200;
+		}
+		sleep sleeptime;
+	}
+}
+
+Gehen()
+{
+	if( TRUE )
+	{
+		move Huefte to y-axis [0] now;
+		move Huefte to z-axis [0] now;
+		move Torso to y-axis [0] now;
+		move rOberschenkel to y-axis [1] now;
+		move lOberschenkel to y-axis [0] now;
+		move rUnterschenkel to y-axis [1] now;
+		move Kopf to z-axis [0] now;
+		move loArm to x-axis [0] now;
+		move roArm to x-axis [0] now;
+		turn rOberschenkel to x-axis <-19> now;
+		turn rUnterschenkel to x-axis <26.005495> now;
+		turn rSchulter to x-axis <16> now;
+		turn lSchulter to x-axis <-17> now;
+		turn loArm to z-axis <-15> now;
+		turn luArm to x-axis <-14> now;
+		turn roArm to z-axis <15> now;
+		turn ruArm to x-axis <-26.005495> now;
+		sleep 95;
+	}
+	if( TRUE )
+	{
+		move Huefte to y-axis [0] now;
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		move rUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <3> now;
+		turn Torso to y-axis <-1> now;
+		turn rOberschenkel to x-axis <-34.005495> now;
+		turn lOberschenkel to x-axis <6> now;
+		turn lUnterschenkel to x-axis <-9> now;
+		turn rUnterschenkel to x-axis <20> now;
+		turn Kopf to y-axis <2> now;
+		turn rSchulter to x-axis <25.005495> now;
+		turn lSchulter to x-axis <-24.005495> now;
+		turn loArm to z-axis <-11> now;
+		turn luArm to x-axis <-20> now;
+		turn roArm to z-axis <13> now;
+		turn ruArm to x-axis <-38.005495> now;
+		sleep 87;
+	}
+	if( TRUE )
+	{
+		move Huefte to y-axis [0] now;
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [-1] now;
+		move rUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <6> now;
+		turn Torso to y-axis <-3> now;
+		turn rOberschenkel to x-axis <-50.010989> now;
+		turn lOberschenkel to x-axis <12> now;
+		turn lUnterschenkel to x-axis <-18> now;
+		turn rUnterschenkel to x-axis <13> now;
+		turn Kopf to y-axis <4> now;
+		turn rSchulter to x-axis <34.005495> now;
+		turn lSchulter to x-axis <-30.005495> now;
+		turn loArm to z-axis <-7> now;
+		turn luArm to x-axis <-27.005495> now;
+		turn roArm to z-axis <11> now;
+		turn ruArm to x-axis <-51.010989> now;
+		sleep 71;
+	}
+	if( TRUE )
+	{
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		move rUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <8> now;
+		turn Torso to y-axis <-5> now;
+		turn rOberschenkel to x-axis <-52.010989> now;
+		turn lOberschenkel to x-axis <17> now;
+		turn lUnterschenkel to x-axis <-13> now;
+		turn rUnterschenkel to x-axis <6> now;
+		turn Kopf to y-axis <6> now;
+		turn rSchulter to x-axis <44.005495> now;
+		turn lSchulter to x-axis <-38.005495> now;
+		turn loArm to z-axis <-3> now;
+		turn luArm to x-axis <-16> now;
+		turn roArm to z-axis <10> now;
+		turn ruArm to x-axis <-60.010989> now;
+		sleep 68;
+	}
+	if( TRUE )
+	{
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		move rUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <11> now;
+		turn Torso to y-axis <-7> now;
+		turn rOberschenkel to x-axis <-53.010989> now;
+		turn lOberschenkel to x-axis <22> now;
+		turn lUnterschenkel to x-axis <-7> now;
+		turn rUnterschenkel to x-axis <0> now;
+		turn Kopf to y-axis <8> now;
+		turn rSchulter to x-axis <54.010989> now;
+		turn lSchulter to x-axis <-45.010989> now;
+		turn loArm to z-axis <0> now;
+		turn luArm to x-axis <-6> now;
+		turn roArm to z-axis <9> now;
+		turn ruArm to x-axis <-69.016484> now;
+		sleep 68;
+	}
+	if( TRUE )
+	{
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		turn Huefte to x-axis <14> now;
+		turn Torso to y-axis <-5> now;
+		turn rOberschenkel to x-axis <-53.010989> now;
+		turn lUnterschenkel to x-axis <10> now;
+		turn rUnterschenkel to x-axis <17> now;
+		turn Kopf to y-axis <6> now;
+		turn rSchulter to x-axis <45.010989> now;
+		turn lSchulter to x-axis <-40.005495> now;
+		turn loArm to z-axis <-4> now;
+		turn luArm to x-axis <-14> now;
+		turn roArm to z-axis <12> now;
+		sleep 68;
+	}
+	if( TRUE )
+	{
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		turn Huefte to x-axis <18> now;
+		turn Torso to y-axis <-3> now;
+		turn rOberschenkel to x-axis <-53.010989> now;
+		turn lUnterschenkel to x-axis <29.005495> now;
+		turn rUnterschenkel to x-axis <35.005495> now;
+		turn Kopf to y-axis <4> now;
+		turn rSchulter to x-axis <35.005495> now;
+		turn lSchulter to x-axis <-35.005495> now;
+		turn loArm to z-axis <-9> now;
+		turn luArm to x-axis <-22> now;
+		turn roArm to z-axis <15> now;
+		sleep 60;
+	}
+	if( TRUE )
+	{
+		move Huefte to y-axis [0] now;
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		move lUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <13> now;
+		turn Torso to y-axis <-2> now;
+		turn rOberschenkel to x-axis <-39.005495> now;
+		turn lOberschenkel to x-axis <12> now;
+		turn lUnterschenkel to x-axis <28.005495> now;
+		turn rUnterschenkel to x-axis <26.005495> now;
+		turn Kopf to y-axis <3> now;
+		turn rSchulter to x-axis <22> now;
+		turn lSchulter to x-axis <-22> now;
+		turn loArm to z-axis <-11> now;
+		turn luArm to x-axis <-23.005495> now;
+		turn roArm to z-axis <15> now;
+		turn ruArm to x-axis <-55.010989> now;
+		sleep 58;
+	}
+	if( TRUE )
+	{
+		move Huefte to y-axis [0] now;
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		move lUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <9> now;
+		turn Torso to y-axis <-1> now;
+		turn rOberschenkel to x-axis <-26.005495> now;
+		turn lOberschenkel to x-axis <1> now;
+		turn lUnterschenkel to x-axis <27.005495> now;
+		turn rUnterschenkel to x-axis <17> now;
+		turn Kopf to y-axis <2> now;
+		turn rSchulter to x-axis <9> now;
+		turn lSchulter to x-axis <-9> now;
+		turn loArm to z-axis <-12> now;
+		turn luArm to x-axis <-24.005495> now;
+		turn roArm to z-axis <15> now;
+		turn ruArm to x-axis <-41.005495> now;
+		sleep 90;
+	}
+	if( TRUE )
+	{
+		move Huefte to y-axis [0] now;
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		move lUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <4> now;
+		turn Torso to y-axis <0> now;
+		turn rOberschenkel to x-axis <-13> now;
+		turn lOberschenkel to x-axis <-8> now;
+		turn lUnterschenkel to x-axis <27.005495> now;
+		turn rUnterschenkel to x-axis <8> now;
+		turn Kopf to y-axis <1> now;
+		turn rSchulter to x-axis <-4> now;
+		turn lSchulter to x-axis <3> now;
+		turn loArm to z-axis <-13> now;
+		turn luArm to x-axis <-25.005495> now;
+		turn roArm to z-axis <15> now;
+		turn ruArm to x-axis <-28.005495> now;
+		sleep 90;
+	}
+	if( TRUE )
+	{
+		move Huefte to y-axis [0] now;
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [1] now;
+		move lUnterschenkel to y-axis [1] now;
+		turn Huefte to x-axis <0> now;
+		turn Torso to y-axis <0> now;
+		turn rOberschenkel to x-axis <0> now;
+		turn lOberschenkel to x-axis <-19> now;
+		turn lUnterschenkel to x-axis <26.005495> now;
+		turn rUnterschenkel to x-axis <0> now;
+		turn Kopf to y-axis <0> now;
+		turn rSchulter to x-axis <-17> now;
+		turn lSchulter to x-axis <16> now;
+		turn loArm to z-axis <-15> now;
+		turn luArm to x-axis <-26.005495> now;
+		turn roArm to z-axis <15> now;
+		turn ruArm to x-axis <-14> now;
+		sleep 98;
+	}
+	if( TRUE )
+	{
+		move Huefte to y-axis [0] now;
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		move lUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <3> now;
+		turn Torso to y-axis <2> now;
+		turn rOberschenkel to x-axis <6> now;
+		turn lOberschenkel to x-axis <-34.005495> now;
+		turn lUnterschenkel to x-axis <19> now;
+		turn rUnterschenkel to x-axis <-9> now;
+		turn Kopf to y-axis <-1> now;
+		turn rSchulter to x-axis <-24.005495> now;
+		turn lSchulter to x-axis <25.005495> now;
+		turn loArm to z-axis <-13> now;
+		turn luArm to x-axis <-38.005495> now;
+		turn roArm to z-axis <11> now;
+		turn ruArm to x-axis <-20> now;
+		sleep 86;
+	}
+	if( TRUE )
+	{
+		move Huefte to y-axis [0] now;
+		move rOberschenkel to y-axis [-1] now;
+		move lOberschenkel to y-axis [0] now;
+		move lUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <6> now;
+		turn Torso to y-axis <4> now;
+		turn rOberschenkel to x-axis <12> now;
+		turn lOberschenkel to x-axis <-50.010989> now;
+		turn lUnterschenkel to x-axis <13> now;
+		turn rUnterschenkel to x-axis <-18> now;
+		turn Kopf to y-axis <-3> now;
+		turn rSchulter to x-axis <-30.005495> now;
+		turn lSchulter to x-axis <34.005495> now;
+		turn loArm to z-axis <-11> now;
+		turn luArm to x-axis <-51.010989> now;
+		turn roArm to z-axis <7> now;
+		turn ruArm to x-axis <-27.005495> now;
+		sleep 80;
+	}
+	if( TRUE )
+	{
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] - [0.000031] now;
+		move lUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <8> now;
+		turn Torso to y-axis <6> now;
+		turn rOberschenkel to x-axis <17> now;
+		turn lOberschenkel to x-axis <-51.010989> now;
+		turn lUnterschenkel to x-axis <6> now;
+		turn rUnterschenkel to x-axis <-12> now;
+		turn Kopf to y-axis <-5> now;
+		turn rSchulter to x-axis <-37.005495> now;
+		turn lSchulter to x-axis <44.005495> now;
+		turn loArm to z-axis <-10> now;
+		turn luArm to x-axis <-60.010989> now;
+		turn roArm to z-axis <3> now;
+		turn ruArm to x-axis <-16> now;
+		sleep 81;
+	}
+	if( TRUE )
+	{
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		move lUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <11> now;
+		turn Torso to y-axis <8> now;
+		turn rOberschenkel to x-axis <22> now;
+		turn lOberschenkel to x-axis <-53.010989> now;
+		turn lUnterschenkel to x-axis <0> now;
+		turn rUnterschenkel to x-axis <-7> now;
+		turn Kopf to y-axis <-7> now;
+		turn rSchulter to x-axis <-45.010989> now;
+		turn lSchulter to x-axis <54.010989> now;
+		turn loArm to z-axis <-9> now;
+		turn luArm to x-axis <-69.016484> now;
+		turn roArm to z-axis <0> now;
+		turn ruArm to x-axis <-6> now;
+		sleep 79;
+	}
+	if( TRUE )
+	{
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		turn Huefte to x-axis <14> now;
+		turn Torso to y-axis <6> now;
+		turn rOberschenkel to x-axis <22> now;
+		turn lOberschenkel to x-axis <-53.010989> now;
+		turn lUnterschenkel to x-axis <17> now;
+		turn rUnterschenkel to x-axis <10> now;
+		turn Kopf to y-axis <-6> now;
+		turn rSchulter to x-axis <-40.005495> now;
+		turn lSchulter to x-axis <44.005495> now;
+		turn loArm to z-axis <-12> now;
+		turn luArm to x-axis <-69.016484> now;
+		turn roArm to z-axis <4> now;
+		turn ruArm to x-axis <-19> now;
+		sleep 80;
+	}
+	if( TRUE )
+	{
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		turn Huefte to x-axis <18> now;
+		turn Torso to y-axis <4> now;
+		turn rOberschenkel to x-axis <22> now;
+		turn lOberschenkel to x-axis <-53.010989> now;
+		turn lUnterschenkel to x-axis <35.005495> now;
+		turn rUnterschenkel to x-axis <29.005495> now;
+		turn Kopf to y-axis <-4> now;
+		turn rSchulter to x-axis <-35.005495> now;
+		turn lSchulter to x-axis <35.005495> now;
+		turn loArm to z-axis <-15> now;
+		turn luArm to x-axis <-69.016484> now;
+		turn roArm to z-axis <9> now;
+		turn ruArm to x-axis <-32.005495> now;
+		sleep 48;
+	}
+	if( TRUE )
+	{
+		move Huefte to y-axis [0] now;
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		move rUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <13> now;
+		turn Torso to y-axis <3> now;
+		turn rOberschenkel to x-axis <11> now;
+		turn lOberschenkel to x-axis <-40.005495> now;
+		turn lUnterschenkel to x-axis <26.005495> now;
+		turn rUnterschenkel to x-axis <28.005495> now;
+		turn Kopf to y-axis <-3> now;
+		turn rSchulter to x-axis <-22> now;
+		turn lSchulter to x-axis <21> now;
+		turn luArm to x-axis <-55.010989> now;
+		turn roArm to z-axis <11> now;
+		turn ruArm to x-axis <-31.005495> now;
+		sleep 49;
+	}
+	if( TRUE )
+	{
+		move Huefte to y-axis [0] now;
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		move rUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <9> now;
+		turn Torso to y-axis <2> now;
+		turn rOberschenkel to x-axis <1> now;
+		turn lOberschenkel to x-axis <-26.005495> now;
+		turn lUnterschenkel to x-axis <17> now;
+		turn rUnterschenkel to x-axis <27.005495> now;
+		turn Kopf to y-axis <-2> now;
+		turn rSchulter to x-axis <-9> now;
+		turn lSchulter to x-axis <8> now;
+		turn luArm to x-axis <-41.005495> now;
+		turn roArm to z-axis <12> now;
+		turn ruArm to x-axis <-29.005495> now;
+		sleep 65;
+	}
+	move Huefte to y-axis [0] now;
+	move rOberschenkel to y-axis [0] now;
+	move lOberschenkel to y-axis [0] now;
+	move rUnterschenkel to y-axis [0] now;
+	turn Huefte to x-axis <4> now;
+	turn Torso to y-axis <1> now;
+	turn rOberschenkel to x-axis <-8> now;
+	turn lOberschenkel to x-axis <-13> now;
+	turn lUnterschenkel to x-axis <8> now;
+	turn rUnterschenkel to x-axis <27.005495> now;
+	turn Kopf to y-axis <-1> now;
+	turn rSchulter to x-axis <3> now;
+	turn lSchulter to x-axis <-4> now;
+	turn luArm to x-axis <-27.005495> now;
+	turn roArm to z-axis <13> now;
+	turn ruArm to x-axis <-27.005495> now;
+	sleep 64;
+}
+
+GehenBeine()
+{
+	if( TRUE )
+	{
+		move Huefte to y-axis [0] now;
+		move Huefte to z-axis [0] now;
+		move rOberschenkel to y-axis [1] now;
+		move lOberschenkel to y-axis [0] now;
+		move rUnterschenkel to y-axis [1] now;
+		turn rOberschenkel to x-axis <-19> now;
+		turn rUnterschenkel to x-axis <26.005495> now;
+		sleep 95;
+	}
+	if( TRUE )
+	{
+		move Huefte to y-axis [0] now;
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		move rUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <3> now;
+		turn rOberschenkel to x-axis <-34.005495> now;
+		turn lOberschenkel to x-axis <6> now;
+		turn lUnterschenkel to x-axis <-9> now;
+		turn rUnterschenkel to x-axis <20> now;
+		sleep 87;
+	}
+	if( TRUE )
+	{
+		move Huefte to y-axis [0] now;
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [-1] now;
+		move rUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <6> now;
+		turn rOberschenkel to x-axis <-50.010989> now;
+		turn lOberschenkel to x-axis <12> now;
+		turn lUnterschenkel to x-axis <-18> now;
+		turn rUnterschenkel to x-axis <13> now;
+		sleep 71;
+	}
+	if( TRUE )
+	{
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		move rUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <8> now;
+		turn rOberschenkel to x-axis <-52.010989> now;
+		turn lOberschenkel to x-axis <17> now;
+		turn lUnterschenkel to x-axis <-13> now;
+		turn rUnterschenkel to x-axis <6> now;
+		sleep 68;
+	}
+	if( TRUE )
+	{
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		move rUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <11> now;
+		turn rOberschenkel to x-axis <-53.010989> now;
+		turn lOberschenkel to x-axis <22> now;
+		turn lUnterschenkel to x-axis <-7> now;
+		turn rUnterschenkel to x-axis <0> now;
+		sleep 68;
+	}
+	if( TRUE )
+	{
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		turn Huefte to x-axis <14> now;
+		turn rOberschenkel to x-axis <-53.010989> now;
+		turn lUnterschenkel to x-axis <10> now;
+		turn rUnterschenkel to x-axis <17> now;
+		sleep 68;
+	}
+	if( TRUE )
+	{
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		turn Huefte to x-axis <18> now;
+		turn rOberschenkel to x-axis <-53.010989> now;
+		turn lUnterschenkel to x-axis <29.005495> now;
+		turn rUnterschenkel to x-axis <35.005495> now;
+		sleep 60;
+	}
+	if( TRUE )
+	{
+		move Huefte to y-axis [0] now;
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		move lUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <13> now;
+		turn rOberschenkel to x-axis <-39.005495> now;
+		turn lOberschenkel to x-axis <12> now;
+		turn lUnterschenkel to x-axis <28.005495> now;
+		turn rUnterschenkel to x-axis <26.005495> now;
+		sleep 58;
+	}
+	if( TRUE )
+	{
+		move Huefte to y-axis [0] now;
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		move lUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <9> now;
+		turn rOberschenkel to x-axis <-26.005495> now;
+		turn lOberschenkel to x-axis <1> now;
+		turn lUnterschenkel to x-axis <27.005495> now;
+		turn rUnterschenkel to x-axis <17> now;
+		sleep 90;
+	}
+	if( TRUE )
+	{
+		move Huefte to y-axis [0] now;
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		move lUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <4> now;
+		turn rOberschenkel to x-axis <-13> now;
+		turn lOberschenkel to x-axis <-8> now;
+		turn lUnterschenkel to x-axis <27.005495> now;
+		turn rUnterschenkel to x-axis <8> now;
+		sleep 90;
+	}
+	if( TRUE )
+	{
+		move Huefte to y-axis [0] now;
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [1] now;
+		move lUnterschenkel to y-axis [1] now;
+		turn Huefte to x-axis <0> now;
+		turn rOberschenkel to x-axis <0> now;
+		turn lOberschenkel to x-axis <-19> now;
+		turn lUnterschenkel to x-axis <26.005495> now;
+		turn rUnterschenkel to x-axis <0> now;
+		sleep 98;
+	}
+	if( TRUE )
+	{
+		move Huefte to y-axis [0] now;
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		move lUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <3> now;
+		turn rOberschenkel to x-axis <6> now;
+		turn lOberschenkel to x-axis <-34.005495> now;
+		turn lUnterschenkel to x-axis <19> now;
+		turn rUnterschenkel to x-axis <-9> now;
+		sleep 86;
+	}
+	if( TRUE )
+	{
+		move Huefte to y-axis [0] now;
+		move rOberschenkel to y-axis [-1] now;
+		move lOberschenkel to y-axis [0] now;
+		move lUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <6> now;
+		turn rOberschenkel to x-axis <12> now;
+		turn lOberschenkel to x-axis <-50.010989> now;
+		turn lUnterschenkel to x-axis <13> now;
+		turn rUnterschenkel to x-axis <-18> now;
+		sleep 80;
+	}
+	if( TRUE )
+	{
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] - [0.000031] now;
+		move lUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <8> now;
+		turn rOberschenkel to x-axis <17> now;
+		turn lOberschenkel to x-axis <-51.010989> now;
+		turn lUnterschenkel to x-axis <6> now;
+		turn rUnterschenkel to x-axis <-12> now;
+		sleep 81;
+	}
+	if( TRUE )
+	{
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		move lUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <11> now;
+		turn rOberschenkel to x-axis <22> now;
+		turn lOberschenkel to x-axis <-53.010989> now;
+		turn lUnterschenkel to x-axis <0> now;
+		turn rUnterschenkel to x-axis <-7> now;
+		sleep 79;
+	}
+	if( TRUE )
+	{
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		turn Huefte to x-axis <14> now;
+		turn rOberschenkel to x-axis <22> now;
+		turn lOberschenkel to x-axis <-53.010989> now;
+		turn lUnterschenkel to x-axis <17> now;
+		turn rUnterschenkel to x-axis <10> now;
+		sleep 80;
+	}
+	if( TRUE )
+	{
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		turn Huefte to x-axis <18> now;
+		turn rOberschenkel to x-axis <22> now;
+		turn lOberschenkel to x-axis <-53.010989> now;
+		turn lUnterschenkel to x-axis <35.005495> now;
+		turn rUnterschenkel to x-axis <29.005495> now;
+		sleep 48;
+	}
+	if( TRUE )
+	{
+		move Huefte to y-axis [0] now;
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		move rUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <13> now;
+		turn rOberschenkel to x-axis <11> now;
+		turn lOberschenkel to x-axis <-40.005495> now;
+		turn lUnterschenkel to x-axis <26.005495> now;
+		turn rUnterschenkel to x-axis <28.005495> now;
+		sleep 49;
+	}
+	if( TRUE )
+	{
+		move Huefte to y-axis [0] now;
+		move rOberschenkel to y-axis [0] now;
+		move lOberschenkel to y-axis [0] now;
+		move rUnterschenkel to y-axis [0] now;
+		turn Huefte to x-axis <9> now;
+		turn rOberschenkel to x-axis <1> now;
+		turn lOberschenkel to x-axis <-26.005495> now;
+		turn lUnterschenkel to x-axis <17> now;
+		turn rUnterschenkel to x-axis <27.005495> now;
+		sleep 65;
+	}
+	move Huefte to y-axis [0] now;
+	move rOberschenkel to y-axis [0] now;
+	move lOberschenkel to y-axis [0] now;
+	move rUnterschenkel to y-axis [0] now;
+	turn Huefte to x-axis <4> now;
+	turn rOberschenkel to x-axis <-8> now;
+	turn lOberschenkel to x-axis <-13> now;
+	turn lUnterschenkel to x-axis <8> now;
+	turn rUnterschenkel to x-axis <27.005495> now;
+	sleep 64;
+}
+
+Bewegungskontrolle(moving, aiming, justmoved)
+{
+	justmoved = TRUE;
+	while( TRUE )
+	{
+		moving = bMoving;
+		aiming = bAiming;
+		if( moving )
+		{
+			if( aiming )
+			{
+				Static_Var_3 = 1;
+				call-script GehenBeine();
+			}
+			if( !aiming )
+			{
+				Static_Var_3 = 0;
+				call-script Gehen();
+			}
+			justmoved = TRUE;
+		}
+		if( !moving )
+		{
+			Static_Var_3 = 1;
+			if( justmoved )
+			{
+				move Huefte to y-axis [0] speed [-62.143994];
+				turn Huefte to x-axis <0> speed <200.043956>;
+				turn rOberschenkel to x-axis <0> speed <200.043956>;
+				turn rUnterschenkel to x-axis <0> speed <200.043956>;
+				turn lOberschenkel to x-axis <0> speed <200.043956>;
+				turn lUnterschenkel to x-axis <0> speed <200.043956>;
+				if( !aiming )
+				{
+					turn Torso to y-axis <0> speed <90.021978>;
+					turn ruArm to x-axis <0> speed <200.043956>;
+					turn roArm to x-axis <0> speed <200.043956>;
+					turn luArm to x-axis <0> speed <200.043956>;
+					turn loArm to x-axis <0> speed <200.043956>;
+					turn ruArm to z-axis <0> speed <200.043956>;
+					turn roArm to z-axis <7> speed <200.043956>;
+					turn luArm to z-axis <0> speed <200.043956>;
+					turn loArm to z-axis <-7> speed <200.043956>;
+					turn loArm to y-axis <0> speed <200.043956>;
+					turn roArm to y-axis <0> speed <200.043956>;
+					turn lSchulter to x-axis <0> speed <200.043956>;
+					turn rSchulter to x-axis <0> speed <200.043956>;
+				}
+				justmoved = FALSE;
+			}
+			sleep 100;
+		}
+	}
+}
+
+
+
+
+Create()
+{
+	hide Blitz;
+	hide Kanone;
+	bMoving = FALSE;
+	bAiming = FALSE;
+	gezogen = FALSE;
+	Static_Var_3 = 1;
+	Kanonebewegt = FALSE;
+	start-script Bewegungskontrolle();
+	start-script SmokeUnit();
+}
+
+Ziehen()
+{	
+	gezogen =TRUE;
+	Kanonebewegt=TRUE;
+	turn Torso to y-axis <-50> speed <120>;
+	turn luArm to z-axis <20> speed <100.021978>;
+	turn luArm to z-axis <30> speed <90>;
+	turn luArm to x-axis <0> speed <90>;
+	turn luArm to y-axis <45> speed <90.021978>;
+	turn loArm to z-axis <20> speed <100.021978>;
+	turn lSchulter to x-axis <-50> speed <160.038462>;
+	turn rSchulter to x-axis <-160> speed <500>;
+	turn ruArm to x-axis <-60> speed <300>;
+
+
+
+	wait-for-turn rSchulter around x-axis;
+	wait-for-turn ruArm around x-axis;
+
+	show Kanone;
+	hide Atrappe;
+
+	//sleep 1000;
+
+	turn Kanone to z-axis <-30> speed <220>;
+	turn Kanone to x-axis <-10> speed <220>;
+	turn rSchulter to x-axis <20> speed <500>;
+	turn ruArm to x-axis <-100> speed <300>;
+	turn lSchulter to x-axis <-50> speed <160.038462>;
+	turn roArm to y-axis <20> speed <50>;
+
+
+
+
+	wait-for-turn lSchulter around x-axis;
+	wait-for-turn rSchulter around x-axis;
+	wait-for-turn luArm around z-axis;
+	wait-for-turn ruArm around x-axis;
+	Kanonebewegt=FALSE;
+}
+
+Holstern()
+{
+	Kanonebewegt=TRUE;
+	turn loArm to z-axis <0> speed <80.016484>;
+	turn loArm to y-axis <0> speed <180.043956>;
+	turn lSchulter to x-axis <-50> speed <160.038462>;
+	turn rSchulter to x-axis <-160> speed <500>;
+	turn ruArm to x-axis <-60> speed <300>;
+	turn roArm to y-axis <0> speed <180>;
+
+	wait-for-turn rSchulter around x-axis;
+	wait-for-turn ruArm around x-axis;
+	hide Kanone;
+ 	show Atrappe;
+
+
+	turn Kanone to z-axis <0> speed <180>;
+	turn Kanone to x-axis <0> speed <180>;
+	turn loArm to z-axis <0> speed <80.016484>;
+	turn luArm to z-axis <0> speed <220.049451>;
+	turn luArm to y-axis <0> speed <220.049451>;
+	turn roArm to y-axis <0> speed <40.005495>;
+	turn Torso to y-axis <0> speed <100.021978>;
+	turn Punkt to y-axis <0> speed <100.021978>;
+	turn ruArm to z-axis <0> speed <220.049451>;
+	turn ruArm to x-axis <0> speed <80>;
+	turn rSchulter to x-axis <0> speed <180.043956>;
+	turn luArm to x-axis <0> speed <180.043956>;
+	turn lSchulter to x-axis <0> speed <160.038462>;
+	turn roArm to z-axis <0> speed <180.043956>;
+	turn loArm to x-axis <0> speed <180.043956>;
+	turn luArm to x-axis <0> speed <90.021978>;
+	turn loArm to y-axis <0> speed <180.043956>;
+	turn roArm to x-axis <0> speed <180.043956>;
+	turn Kopf to y-axis <0> speed <160.038462>;
+
+	turn Torso to y-axis <0> speed <180>;
+
+	wait-for-turn loArm around x-axis;
+	wait-for-turn luArm around z-axis;
+	wait-for-turn roArm around x-axis;
+	wait-for-turn ruArm around z-axis;
+	Kanonebewegt=FALSE;
+	bAiming = FALSE;
+}
+
+StartMoving()
+{
+	bMoving = TRUE;
+}
+
+StopMoving()
+{
+	bMoving = FALSE;
+}
+
+RestoreAfterDelay()
+{
+	sleep 7500;
+	set-signal-mask 0;
+	while( Kanonebewegt ) {sleep 200;}
+	gezogen = FALSE;
+	call-script Holstern();
+
+}
+
+
+
+
+
+SweetSpot(piecenum)
+{
+	piecenum = Torso;
+}
+
+QueryPrimary(piecenum)
+{
+	piecenum = Blitz;
+}
+
+AimFromPrimary(piecenum)
+{
+	piecenum = ruArm;
+}
+
+AimPrimary(heading, pitch)
+{
+	bAiming = TRUE;
+	while(Kanonebewegt or !Static_Var_3 )
+	{
+		sleep 200;
+	}
+	if (!gezogen) {call-script ziehen();}
+	signal SIG_AIM;
+	set-signal-mask SIG_AIM;
+	
+
+	turn Punkt to y-axis heading speed <180>;
+	wait-for-turn Punkt around y-axis;
+	start-script RestoreAfterDelay();
+	return (1);
+}
+
+FirePrimary()
+{
+
+	move Kanone to y-axis [0.5] speed <10000>;
+	turn luArm to z-axis <35> speed <9000>;
+	show Blitz;
+	sleep 120;
+	hide Blitz;
+	move Kanone to y-axis [0] speed <3300>;
+	turn luArm to z-axis <30> speed <3000>;
+	sleep 120;
+	move Kanone to y-axis [0.5] speed <12000>;
+	turn luArm to z-axis <35> speed <9000>;
+	show Blitz;
+	sleep 120;
+	hide Blitz;
+	move Kanone to y-axis [0] speed <200>;
+	turn luArm to z-axis <30> speed <45>;
+	
+}
+
+
+
+Killed(severity, corpsetype)
+{
+	hide Blitz;
+
+if( severity <= 25 )
+	{
+		corpsetype = 1;
+		explode Huefte type BITMAPONLY | BITMAP1;
+		explode rOberschenkel type BITMAPONLY | BITMAP1;
+		explode rUnterschenkel type BITMAPONLY | BITMAP1;
+		explode lOberschenkel type BITMAPONLY | BITMAP1;
+		explode lUnterschenkel type BITMAPONLY | BITMAP1;
+		explode Torso type BITMAPONLY | BITMAP1;
+		explode Kopf type BITMAPONLY | BITMAP1;
+		explode roArm type BITMAPONLY | BITMAP1;
+		explode ruArm type BITMAPONLY | BITMAP1;
+		explode loArm type BITMAPONLY | BITMAP1;
+		explode luArm type BITMAPONLY | BITMAP1;
+		explode Kanone type BITMAPONLY | BITMAP1;
+		return (0);
+	}
+	if( severity <= 50 )
+	{
+		corpsetype = 2;
+		explode Huefte type SHATTER | BITMAP4;
+		explode rOberschenkel type SHATTER | BITMAP4;
+		explode rUnterschenkel type SHATTER | BITMAP4;
+		explode lOberschenkel type SHATTER | BITMAP4;
+		explode lUnterschenkel type SHATTER | BITMAP4;
+		explode Torso type SHATTER | BITMAP4;
+		explode Kopf type SHATTER | BITMAP4;
+		explode roArm type SHATTER | BITMAP4;
+		explode ruArm type SHATTER | BITMAP4;
+		explode luArm type SHATTER | BITMAP4;
+		explode Kanone type SHATTER | BITMAP4;
+		return (0);
+	}
+	if( severity <= 99 )
+	{
+		corpsetype = 3;
+		explode Huefte type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode rOberschenkel type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode rUnterschenkel type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode lOberschenkel type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode lUnterschenkel type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode Torso type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode Kopf type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode roArm type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode ruArm type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode loArm type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode Kanone type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		return (0);
+	}
+	corpsetype = 3;
+	explode Huefte type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	explode rOberschenkel type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	explode rUnterschenkel type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	explode lOberschenkel type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	explode lUnterschenkel type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	explode Torso type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	explode Kopf type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	explode roArm type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	explode ruArm type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	explode loArm type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	explode luArm type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+}

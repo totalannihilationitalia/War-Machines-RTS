@@ -1,0 +1,21 @@
+[CORAESTOR_dead]
+	{
+	world=lava;
+	description=Wreckage;
+	category=nodes;
+	animating=0;
+	footprintx=3;
+	footprintz=3;
+	height=55;
+	filename=invisio;
+	seqname=dead;
+	seqnamereclamate=rec01;
+	seqnamedie=diedeath03;
+	energy=500;
+
+	animtrans=0;
+	reclaimable=1;
+	blocking=1;
+	hitdensity=100;
+	damage=2000;
+	}

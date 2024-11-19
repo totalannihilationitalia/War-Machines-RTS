@@ -1,0 +1,29 @@
+[CORAESTOR]
+	{
+	ID=8; // Original ID was 243 - Edited on 03-11-28 10:13:19 using TA Conflict Crusher - http://www.r1ch.net/tacc/
+	name=BUG;
+	rendertype=4;
+	ballistic=1;
+	turret=1;
+
+	range=480;
+	reloadtime=3.6;
+	weaponvelocity=250;
+	areaofeffect=540;
+	soundstart=largegun;
+	soundhit=xplonuk1;
+
+	explosiongaf=invisio;
+	explosionart=death1;
+
+	waterexplosiongaf=invisio;
+	waterexplosionart=death1;
+
+	shakemagnitude=8;
+	shakeduration=2;
+
+	[DAMAGE]
+		{
+		default=1600;
+		}
+	}
