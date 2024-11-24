@@ -30,7 +30,8 @@ end
 --rev 1 by molix 20/11/2024 
 --		only sx button mouse can select soundbar
 -- 		extended sound options (like music, battle, icon of menù
-
+--rev 2 by molix 24/11/2024
+--		add esc, add spring commander for integration in WMRTS menu, add shader
 
 local TEST_SOUND = LUAUI_DIRNAME .. 'Sounds/pop.wav'
 
@@ -38,7 +39,7 @@ local function PlayTestSound()
   Spring.PlaySoundFile(TEST_SOUND, 1.0)
 end
 
-
+--------------------------------------------------------------############## inserire condizione se GUI è visibile altrimenti si modificano i parametri anche quando non è visibile.
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
@@ -47,20 +48,20 @@ local volume_music = 1.0 	-- volume music
 local volume_battle = 1.0 	-- volume music
 local vsx, vsy = widgetHandler:GetViewSizes()
 
-local xmin = 200 -- parte dalla sinistra dello schermo
-local ymin = 650 -- parte dal basso dello schermo
+--local xmin = 200 -- parte dalla sinistra dello schermo
+--local ymin = 650 -- parte dal basso dello schermo
 local larghezza_barre =  200
 local altezza_barre = 10
-local xmax = xmin + larghezza_barre
-local ymax = ymin + altezza_barre
-local posx_menu = 300 -- da sinistra
-local posy_menu = 300 -- dal basso
+--local xmax = xmin + larghezza_barre
+--local ymax = ymin + altezza_barre
 local altezza_menu = 140
 local larghezza_menu = 400
 local margine_barre_sx = 150 -- il margine sinistro delle barre dal background
 local margine_barre_giu = 20 -- il margine sotto delle barre dal background
 local interasse_righe = 20 -- distanza tra le righe
---local xmin, xmax, ymin, ymax
+local posx_menu = vsx/2 - larghezza_menu/2 -- parte da sx
+local posy_menu = vsy/2 - altezza_menu/2 -- parte dal basso
+local mostra_soundsetting = false
 
 -- images
 local main_background				= "LuaUI/Images/menu/sfondo_sound.png"
@@ -70,22 +71,53 @@ local icona_menu_sound				= "LuaUI/Images/tweaksettings/menu_sound_icon.png"
 local titolo_menu_col						= {0.8, 0.8, 1.0, 1}
 local titolo_menu_dim	 					= gl.LoadFont("FreeSansBold.otf",14, 1.9, 40)
 
---[[
+--------------------------------------
+-- AGGGIORNAMENTO DELLA GEOMETRIA
+--------------------------------------
+
+-- funzione aggiorno la geometria
 local function UpdateGeometry() -- aggiorno geometria
-  xmin = math.floor(vsx * 0.205)
-  xmax = math.floor(vsx * 0.22)
-  ymin = math.floor(vsy * 10) --0.975
-  ymax = math.floor(vsy * 11) --0.997
+  posx_menu = vsx/2 - larghezza_menu/2
+  posy_menu = vsy/2 - altezza_menu/2
 end
-UpdateGeometry()
+--UpdateGeometry()
 
-
+--- funzione rilevamento delle dimensioni della finestra durante il resizing
 function widget:ViewResize(viewSizeX, viewSizeY) -- quando si modifica la dimensione della finestra di spring, prelevane larghezza e altezza e fai partire la funzione "aggiorno geometria"
   vsx = viewSizeX
   vsy = viewSizeY
   UpdateGeometry()
 end
-]]--
+
+-- RICEZIONE DEI COMANDI TESTUALI INTERNI AL GIOCO
+
+function widget:TextCommand(command)
+
+	if command == 'sound_opt' then
+		mostra_soundsetting = true
+	end
+end
+
+-- ALLA PRESSIONE DEI PULSANTI
+
+function widget:KeyPress(key, mods, isRepeat) 
+if mostra_soundsetting and not Spring.IsGUIHidden() then
+	if key == 0x01B then -- TASTO esc
+	mostra_soundsetting = false  
+--		if ButtonMenu.click then
+--			ButtonMenu.click = false
+--			PlaySoundFile(TEST_SOUND)		
+			-- remove gui shader
+				if (WG['guishader_api'] ~= nil) then
+					WG['guishader_api'].RemoveRect('WMRTS_snd_option')
+				end			
+			return true
+--		end
+	end
+end
+	
+	return false
+end
 
 --------------------------------------------------------------------------------
 
@@ -131,24 +163,29 @@ end
 
 
 function widget:IsAbove(x, y) -- se il mouse è sopra.....
+if mostra_soundsetting and not Spring.IsGUIHidden() then
   return ((x >= posx_menu + margine_barre_sx) and (x <= posx_menu + margine_barre_sx +larghezza_barre) and (y >= posy_menu + margine_barre_giu) and (y <= posy_menu +margine_barre_giu + altezza_barre)) -- ....il primo "quadrato" di selezione, definisco se il mouse si trova dentro le coordinate "x min",  "x max", "ymin" e "ymax" di un quadrato che fungerà da selezione per il volume master
   or 
   ((x >= posx_menu + margine_barre_sx) and (x <= posx_menu + margine_barre_sx +larghezza_barre) and (y >= posy_menu + margine_barre_giu+interasse_righe*1) and (y <= posy_menu +margine_barre_giu + altezza_barre+interasse_righe*1)) -- .... il secondo "quadrato" di selezione, valido per il volume music
   or
   ((x >= posx_menu + margine_barre_sx) and (x <= posx_menu + margine_barre_sx +larghezza_barre) and (y >= posy_menu + margine_barre_giu+interasse_righe*2) and (y <= posy_menu +margine_barre_giu + altezza_barre+interasse_righe*2)) -- .... il terzo "quadrato" di selezione, valido per il volume battle
 end
+end
 -----------------------------------
 
 function widget:GetTooltip(x, y) -- questa condizione è vera quando isAbove è vera, modificare aggiungendo  le condizioni dei quadrati
+if mostra_soundsetting and not Spring.IsGUIHidden() then
   if (Spring.GetGameSeconds() < 0.1) then
     return "Sound Options  (only works in game)"
   else
     return "Sound Options"
   end
 end
+end
 
 
 function widget:MousePress(x, y, button)
+if mostra_soundsetting and not Spring.IsGUIHidden() then
   if (Spring.GetGameSeconds() < 0.1) then
     return false
   end
@@ -178,12 +215,15 @@ function widget:MousePress(x, y, button)
 	end
 	
   end
-  end-- aggiunto rev1
+
+  end-- if button == 1 aggiunto rev1
   return false
+end
 end
 
 
 function widget:MouseMove(x, y, dx, dy, button)
+if mostra_soundsetting and not Spring.IsGUIHidden() then
   if button == 1 then -- se il pulsante sinistro è premuto --aggiunto rev1
   if ((x >= posx_menu + margine_barre_sx) and (x <= posx_menu + margine_barre_sx +larghezza_barre) and (y >= posy_menu + margine_barre_giu) and (y <= posy_menu +margine_barre_giu + altezza_barre))  then --se è sopra  il primo "quadrato" di selezione esegui le modifiche al volume_master
   Calcvolume_master(x)
@@ -204,9 +244,11 @@ function widget:MouseMove(x, y, dx, dy, button)
   end -- if del volume music  
   end -- end button 1 premuto -- aggiunto rev1
 end
+end
 
 
 function widget:MouseRelease(x, y, button)
+if mostra_soundsetting and not Spring.IsGUIHidden() then
   if button == 1 then -- aggiunto rev1
   if ((x >= posx_menu + margine_barre_sx) and (x <= posx_menu + margine_barre_sx +larghezza_barre) and (y >= posy_menu + margine_barre_giu) and (y <= posy_menu +margine_barre_giu + altezza_barre))  then --se è sopra  il primo "quadrato" di selezione esegui le modifiche al volume_master
   Calcvolume_master(x)
@@ -229,9 +271,11 @@ function widget:MouseRelease(x, y, button)
   end -- if del volume music  
   end -- end button 1 premuto
 end
+end
 
 
 function widget:DrawScreen()
+	if mostra_soundsetting then
   -- fade before the game starts  ("volume_master" command is not available)
   local alpha = (Spring.GetGameSeconds() < 0.1) and 0.2 or 0.9
 --  local xvol = xmin + volume_master * (xmax - xmin) -- sostituito da:
@@ -296,7 +340,7 @@ function widget:DrawScreen()
     { v = { posx_menu + margine_barre_sx +larghezza_barre, posy_menu +margine_barre_giu + altezza_barre +interasse_righe *2} }, -- alto dx
   })
   
-	-- disegno la linea che definisce il valore de  volume BATTLE 
+-- disegno la linea che definisce il valore de  volume BATTLE 
     gl.Shape(GL.QUAD_STRIP, {
     { v = { posx_menu + margine_barre_sx, posy_menu + margine_barre_giu+interasse_righe*2 },c = { 0, 1, 0, alpha } }, -- basso sx = posizione del background + margine
     { v = { xvol_battle, posy_menu + margine_barre_giu +interasse_righe*2} }, -- basso dx =  posizione del background + margine + larghezza della barra
@@ -306,19 +350,19 @@ function widget:DrawScreen()
   
   
   
-  	-- icona menu
+-- icona menu
 	gl.Color(1,1,1,1)
 	gl.Texture(icona_menu_sound)	-- add the icon
 	gl.TexRect(posx_menu+20,posy_menu+107, posx_menu+20+40,posy_menu+147)	
 	gl.Texture(false)	-- fine texture		
 	
-	--titolo menu
+--titolo menu
 	titolo_menu_dim:SetTextColor(titolo_menu_col)
 	titolo_menu_dim:Begin()
 	titolo_menu_dim:Print("Sound settings:", posx_menu+70,posy_menu+106,14,'ds') 
 	titolo_menu_dim:End()
   
-    --testi di fianco alle barre
+--testi di fianco alle barre
 	gl.Text(string.format("%i%%", 100 * volume_master), posx_menu + margine_barre_sx+ larghezza_barre + 20, posy_menu + margine_barre_giu +1, 12, "ocn") -- master volume %
 	gl.Text(string.format("Master volume:"), posx_menu +140 , posy_menu + margine_barre_giu +1, 12, "orn") -- master volume title
 
@@ -329,27 +373,18 @@ function widget:DrawScreen()
 	gl.Text(string.format("Battle volume:"), posx_menu +140 , posy_menu + margine_barre_giu +1+ interasse_righe*2, 12, "orn") -- battle volume title
   
   gl.ShadeModel(GL.SMOOTH)
-  -- outline
- -- gl.Color(0, 0, 0, alpha)
- -- gl.Shape(GL.LINE_LOOP, {
-  --  { v = { xmin - 0.5, ymin - 0.5 } },
-   -- { v = { xmax + 0.5, ymin - 0.5 } },
-  --  { v = { xmax + 0.5, ymax + 0.5 } },
-  --  { v = { xmin - 0.5, ymax + 0.5 } },
- -- })
- -- gl.Color(1, 1, 1, alpha)
- -- gl.Shape(GL.LINE_LOOP, {
- --   { v = { xmin - 1.5, ymin - 1.5 } },
-  --  { v = { xmax + 1.5, ymin - 1.5 } },
-  --  { v = { xmax + 1.5, ymax + 1.5 } },
- --   { v = { xmin - 1.5, ymax + 1.5 } },
- -- })
-  -- header
+
+-- gui shader	
+	
+		if (WG['guishader_api'] ~= nil) then
+		WG['guishader_api'].InsertRect( posx_menu,posy_menu, posx_menu+larghezza_menu, posy_menu+altezza_menu],'WMRTS_snd_option')
+	end
   
  
           
 
   return
+  end -- mostra_soundsetting = true
 end
 
 
