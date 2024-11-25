@@ -9,7 +9,7 @@ return {
 --               buildangle = 0,
                buildcostenergy = 300,
                buildcostmetal = 140,
-               builder = false,
+               builder = false, 
                buildpic = "euf_fence_wall.png",
                buildtime  = 1600,
                category = "NOWEAPON NOTAIR NOTSUB NOTSHIP SURFACE",
@@ -24,7 +24,7 @@ return {
                footprintx = 1,
                footprintz = 5,
                hidedamage = true,
-               isFeature= true,
+               isFeature= true, -- riportare sempre su true
 --               mass = 0 --definire massa,
                maxdamage = 1263,
                maxslope = 12,
@@ -35,12 +35,13 @@ return {
                noAutoFire = false,
                objectname = "euf_fence_wall.s3o",
                radardistance = 0,
+               seismicsignature = 0,
                selfdestructas = "LARGE_BUILDING",
                sightdistance = 100,
 --               soundcategory= "ARM_ESTOR",
                TEDClass = "FORT", -- verificare se necessario
                workertime = 0,
-               YardMap= "ooooo",
+               YardMap= "ccccc",
 -----------------------------------------------------------
 --- Units wreckage and heaps
 -----------------------------------------------------------

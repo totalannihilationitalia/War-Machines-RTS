@@ -152,6 +152,7 @@ Flicker(Func_Var_1, Func_Var_2)
 
 activatescr()
 {
+	//set YARD_OPEN to 1;
 	dont-cache Blink1;
 	dont-cache Blink2;
 	show laser;
@@ -172,14 +173,12 @@ deactivatescr()
 
 OpenYard()
 {
-    set YARD_OPEN to 1;
-
+	set YARD_OPEN to 1;
 }
 
 CloseYard()
 {
 	set YARD_OPEN to 0;
-
 }
 
 Go()
@@ -288,11 +287,13 @@ Create()
 
 Activate()
 {
+	set YARD_OPEN to 0;
 	start-script RequestState(0);
 }
 
 Deactivate()
 {
+	set YARD_OPEN to 1;
 	start-script RequestState(1);
 }
 
