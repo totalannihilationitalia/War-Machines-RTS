@@ -377,9 +377,9 @@ function widget:DrawScreen()
 -- gui shader	
 	
 		if (WG['guishader_api'] ~= nil) then
-		WG['guishader_api'].InsertRect( posx_menu,posy_menu, posx_menu+larghezza_menu, posy_menu+altezza_menu],'WMRTS_snd_option')
+		WG['guishader_api'].InsertRect( posx_menu,posy_menu, posx_menu+larghezza_menu, posy_menu+altezza_menu,'WMRTS_snd_option')
 	end
-  
+
  
           
 
