@@ -31,7 +31,7 @@ end
 --		only sx button mouse can select soundbar
 -- 		extended sound options (like music, battle, icon of menù
 --rev 2 by molix 24/11/2024
---		add esc, add spring commander for integration in WMRTS menu, add shader
+--		add exit at esc button pressed, add spring commander for integration in WMRTS menu, add shader to background and change graphics
 
 local TEST_SOUND = LUAUI_DIRNAME .. 'Sounds/pop.wav'
 
@@ -43,29 +43,31 @@ end
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
-local volume_master = 1.0	-- volume sounmaster
-local volume_music = 1.0 	-- volume music
-local volume_battle = 1.0 	-- volume music
+local volume_master = 1.0			-- volume sounmaster
+local volume_music = 1.0 			-- volume music
+local volume_battle = 1.0 			-- volume battle
 local vsx, vsy = widgetHandler:GetViewSizes()
-
---local xmin = 200 -- parte dalla sinistra dello schermo
---local ymin = 650 -- parte dal basso dello schermo
-local larghezza_barre =  200
-local altezza_barre = 10
---local xmax = xmin + larghezza_barre
---local ymax = ymin + altezza_barre
+local larghezza_barre =  200 		-- larghezza barre volume
+local altezza_barre = 10			-- altezza barre volume
 local altezza_menu = 140
 local larghezza_menu = 400
-local margine_barre_sx = 150 -- il margine sinistro delle barre dal background
-local margine_barre_giu = 20 -- il margine sotto delle barre dal background
-local interasse_righe = 20 -- distanza tra le righe
-local posx_menu = vsx/2 - larghezza_menu/2 -- parte da sx
-local posy_menu = vsy/2 - altezza_menu/2 -- parte dal basso
-local mostra_soundsetting = false
+local margine_barre_sx = 150		-- il margine sinistro delle barre dal background
+local margine_barre_giu = 20 		-- il margine sotto delle barre dal background
+local interasse_righe = 20 			-- distanza tra le righe
+local posx_menu = vsx/2 - larghezza_menu/2 	-- parte da sx
+local posy_menu = vsy/2 - altezza_menu/2 	-- parte dal basso
+local mostra_soundsetting = false 			-- show sound options at start?
+local larghezza_menu_buttons = 114			-- like back button, close button
+local altezza_menu_buttons = 38				-- like back button, close button
+local posx_menu_button = 20						-- position x of first menu button (from 0 ,0 of main menu)
+local posy_menu_button = 20						-- position y of first menu button (from 0 ,0 of main menu)
+local distance_x_menu_button = 300				-- x distance between menu buttons
 
 -- images
 local main_background				= "LuaUI/Images/menu/sfondo_sound.png"
 local icona_menu_sound				= "LuaUI/Images/tweaksettings/menu_sound_icon.png"
+local buttons_back					= "LuaUI/Images/menu/menu_back.png"
+local buttons_close					= "LuaUI/Images/menu/menu_close.png"
 
 --caratteristche testo
 local titolo_menu_col						= {0.8, 0.8, 1.0, 1}
@@ -162,7 +164,7 @@ function widget:Initialize()
 end
 
 
-function widget:IsAbove(x, y) -- se il mouse è sopra.....
+function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la variabile mostra_soundsettings è ture.....
 if mostra_soundsetting and not Spring.IsGUIHidden() then
   return ((x >= posx_menu + margine_barre_sx) and (x <= posx_menu + margine_barre_sx +larghezza_barre) and (y >= posy_menu + margine_barre_giu) and (y <= posy_menu +margine_barre_giu + altezza_barre)) -- ....il primo "quadrato" di selezione, definisco se il mouse si trova dentro le coordinate "x min",  "x max", "ymin" e "ymax" di un quadrato che fungerà da selezione per il volume master
   or 
@@ -373,6 +375,18 @@ function widget:DrawScreen()
 	gl.Text(string.format("Battle volume:"), posx_menu +140 , posy_menu + margine_barre_giu +1+ interasse_righe*2, 12, "orn") -- battle volume title
   
   gl.ShadeModel(GL.SMOOTH)
+  
+-- pulsante back, first button
+  	gl.Color(1,1,1,1)
+	gl.Texture(buttons_back)	-- add the icon
+	gl.TexRect(posx_menu+posx_menu_button,posy_menu+posy_menu_button, posx_menu+posx_menu_button+larghezza_menu_buttons,posy_menu+posy_menu_button+altezza_menu_buttons)	
+	gl.Texture(false)	-- fine texture		
+	
+-- pulsante close, second button
+  	gl.Color(1,1,1,1)
+	gl.Texture(buttons_close)	-- add the icon
+	gl.TexRect(posx_menu+posx_menu_button+distance_x_menu_button,posy_menu+posy_menu_button, posx_menu+posx_menu_button+distance_x_menu_button+larghezza_menu_buttons,posy_menu+posy_menu_button+altezza_menu_buttons)
+	gl.Texture(false)	-- fine texture			
 
 -- gui shader	
 	
