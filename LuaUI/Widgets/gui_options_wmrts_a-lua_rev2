@@ -13,7 +13,7 @@ end
 -- modified by molix 14/01/2022 rev0.WMRTS -> removed some non used options for War Machines RTS game
 -- modified by molix 15/01/2022 rev1.WMRTS -> add images and restyling graphics ( WMRTS style)
 -- modified by molix 25/01/2022 rev2.WMRTS -> add guishader effect
--- modified by molix 02/12/2024 rev4.WMRTS -> add close and back buttons and logic. Removed dragging, add auto set position on change resolution
+-- modified by molix 02/12/2024 rev4.WMRTS -> add close and back buttons and logic. Removed
 
 
 local posX, posY					  	= 600, 400
@@ -94,25 +94,6 @@ local backbutton						= {0.03,0.18,0.3,0.3} -- righe sotto opzioni
 --------------------------------------------------------------------------------			 
 -- Local functions
 --------------------------------------------------------------------------------
-
---------------------------------------
--- AGGGIORNAMENTO DELLA GEOMETRIA
---------------------------------------
-
--- funzione aggiorno la geometria
-local function UpdateGeometry() -- aggiorno geometria
-  posx = vsx/2 - width/2
-  posy = vsy/2 - height/2
-end
---UpdateGeometry()
-
---- funzione rilevamento delle dimensioni della finestra durante il resizing
-function widget:ViewResize(viewSizeX, viewSizeY) -- quando si modifica la dimensione della finestra di spring, prelevane larghezza e altezza e fai partire la funzione "aggiorno geometria"
-  vsx = viewSizeX
-  vsy = viewSizeY
-  UpdateGeometry()
-end
-
 
 local function round(num, idp)
   local mult = 10^(idp or 0)
@@ -1473,9 +1454,9 @@ function widget:KeyPress(key, mods, isRepeat)
 end
 
 --------------------------------------------------------------------------------			 
--- Tweak-mode --eliminato con revisione 02/11/2024 molixx
+-- Tweak-mode
 --------------------------------------------------------------------------------
---[[
+
 function widget:TweakDrawScreen()
 	if showSettings then
 		drawSettings()
@@ -1565,4 +1546,4 @@ function widget:SetConfigData(data)      -- load
 	posX         			= data.posX or posX
 	posY         			= data.posY or posY
 end
- ]]--
+ 
