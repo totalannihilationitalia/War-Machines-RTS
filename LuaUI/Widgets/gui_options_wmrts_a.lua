@@ -37,6 +37,10 @@ local textSize							= 10
 local myFont							= gl.LoadFont("FreeSansBold.otf",textSize, 1.9, 40)
 local myFontBig							= gl.LoadFont("FreeSansBold.otf",14, 1.9, 40)
 local myFontBigger						= gl.LoadFont("FreeSansBold.otf",18, 1.9, 40)
+local distance_x_menu_button = 300				-- x distance between menu buttons
+local larghezza_menu_buttons = 76 --114		-- like back button, close button
+local altezza_menu_buttons = 25 --38				-- like back button, close button
+
 -- images
 local optContrast						= "LuaUI/Images/tweaksettings/contrast.png"
 local optCheckBoxOn						= "LuaUI/Images/tweaksettings/chkBoxOn.png"
@@ -1306,13 +1310,13 @@ local function drawSettings() -- menu options
 	-- pulsante back, first button
   	gl.Color(1,1,1,1)
 	gl.Texture(buttons_back)	-- add the icon
-	gl.TexRect(posx_menu+posx_menu_button,posy_menu+posy_menu_button, posx_menu+posx_menu_button+larghezza_menu_buttons,posy_menu+posy_menu_button+altezza_menu_buttons)	
+	gl.TexRect(posX,posY, posX+larghezza_menu_buttons,posY+altezza_menu_buttons)	
 	gl.Texture(false)	-- fine texture		
-	
+		
 	-- pulsante close, second button
   	gl.Color(1,1,1,1)
 	gl.Texture(buttons_close)	-- add the icon
-	gl.TexRect(posx_menu+posx_menu_button+distance_x_menu_button,posy_menu+posy_menu_button, posx_menu+posx_menu_button+distance_x_menu_button+larghezza_menu_buttons,posy_menu+posy_menu_button+altezza_menu_buttons)
+	gl.TexRect(posX+distance_x_menu_button,posY, posX+distance_x_menu_button+larghezza_menu_buttons,posY+altezza_menu_buttons)
 	gl.Texture(false)	-- fine texture		
 	
 	

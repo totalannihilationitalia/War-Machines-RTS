@@ -35,11 +35,11 @@ to do list
 
 -- definizione dimensioni pulsanti minimenu
 local larghezza_main_minimenu_button 	= 50 --- definire
-local altezza_main_minimenu_button 		= 50 --- definire
-local larghezza_minimenu_buttons 		= 50 -- definire
-local altezza_minimenu_buttons 			= 50 -- definire
-local margine_dx_minimenu 				= 10 -- da destra
-local margine_su_minimenu 				= 10 -- da sopra
+local altezza_main_minimenu_button 		= 35 --- definire
+local larghezza_minimenu_buttons 		= 35 -- definire
+local altezza_minimenu_buttons 			= 35 -- definire
+local margine_dx_minimenu 				= 5 -- da destra
+local margine_su_minimenu 				= 5 -- da sopra
 local interspazio_buttons				= 2  -- spazio tra un pulsante e l altro
 local interspazio_funzionale_buttons	= 5  -- spazio tra una serie di pulsanti (menu) e l'altro (funzionali), ad esempio distanzio i pulsanti menu, sound ecc con i pulsanti idle, wind, ecc
 
@@ -56,18 +56,18 @@ local show_idlemenu						= false					-- is idle windows active? -- or function a
 local show_wingmenu						= false					-- is wing windows active? -- or function active?? --todo
 local show_tidalmenu					= false					-- is tidal windows active? -- or function active?? --todo
 
-local Pos_x_minimenu_button										-- cossisponde al margine in basso a sx del minimenu_buttons
-local Pos_y_minimenu_button										-- cossisponde al margine in basso a sx del minimenu_buttons
-local vsx, vsy 						  	= gl.GetViewSizes()
+local Pos_x_minimenu_button		        = 200					-- cossisponde al margine in basso a sx del minimenu_buttons
+local Pos_y_minimenu_button				= 200 					-- cossisponde al margine in basso a sx del minimenu_buttons
+local vsx, vsy 						  	= widgetHandler:GetViewSizes()
 local Pos_x_next_button_drawing									-- Usato nel drawing, il valore della posizione si sposterà man mano di quanti pulsanti sono attivi, cosi da disegnarli uno di fianco all'altro
 
 local show_minimenu_statistics_button	= true
 local show_minimenu_object_button		= true
 local show_minimenu_snd_button			= true
-local show_minimenu_los_button			= false
-local show_minimenu_idle_button			= false
-local show_minimenu_wind_button			= false					-- non è un bottone ma è una finestrella con il valore del vento
-local show_minimenu_tidal_button		= false					-- non è un bottone ma è una finestrella con il valore delle maree
+local show_minimenu_los_button			= true
+local show_minimenu_idle_button			= true
+local show_minimenu_wind_button			= true					-- non è un bottone ma è una finestrella con il valore del vento
+local show_minimenu_tidal_button		= true					-- non è un bottone ma è una finestrella con il valore delle maree
 
 -- definizioni immagini bottoni
 local mainminimenubutton_off = "LuaUI/Images/menu/main_menu_rest.png"
@@ -109,7 +109,9 @@ end
 -- INIZIALIZZO IL MENU CARICANDO LE IMPOSTAZIONI DA "Spring.GetConfigInt" ( vedi Lua UnsyncedRead)
 --------------------------------------
 function widget:Initialize()
--- todo
+-- all'inizio imposto la posizione del mini menu
+  Pos_x_minimenu_button = vsx - margine_dx_minimenu - larghezza_main_minimenu_button
+  Pos_y_minimenu_button = vsy - margine_su_minimenu - altezza_main_minimenu_button
 end
 
 --------------------------------------
@@ -134,8 +136,21 @@ function widget:DrawScreen()
 		end
 	gl.TexRect(	Pos_x_minimenu_button,Pos_y_minimenu_button,Pos_x_minimenu_button+larghezza_main_minimenu_button,Pos_y_minimenu_button+altezza_main_minimenu_button)	
 	gl.Texture(false)	-- fine texture	
-	Pos_x_next_button_drawing = posx_menu - interspazio_buttons - larghezza_minimenu_buttons -- definisco la posizione di partenza per disegnare il pulsante successivo (se sarà presente)
+	Pos_x_next_button_drawing = Pos_x_minimenu_button - interspazio_buttons - larghezza_minimenu_buttons -- definisco la posizione di partenza per disegnare il pulsante successivo (se sarà presente)
 	
+-- inserisco sound minipulsante, se abilitato
+	gl.Color(1,1,1,1)
+		if show_minimenu_snd_button then 			-- se il minipulsante è attivo per vederlo nel minimenù:
+				if show_sndmenu then 				-- se la finestra (o funzione) degli obiettivi è attiva:
+				gl.Texture(sndbutton_on)			-- mostra il pulsante acceso
+				else
+				gl.Texture(sndbutton_off)			-- altrimenti mostra il pulsante spento	
+				end
+			gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
+			gl.Texture(false)	-- fine texture	
+			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante successivo (se sarà presente)
+		end
+
 -- inserisco show statistics minipulsante, se abilitato
 	gl.Color(1,1,1,1)
 		if show_minimenu_statistics_button then 	-- se il minipulsante è attivo per vederlo nel minimenù:
@@ -162,19 +177,6 @@ function widget:DrawScreen()
 			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante successivo (se sarà presente)
 		end
 		
--- inserisco sound minipulsante, se abilitato
-	gl.Color(1,1,1,1)
-		if show_minimenu_snd_button then 			-- se il minipulsante è attivo per vederlo nel minimenù:
-				if show_sndmenu then 				-- se la finestra (o funzione) degli obiettivi è attiva:
-				gl.Texture(sndbutton_on)			-- mostra il pulsante acceso
-				else
-				gl.Texture(sndbutton_off)			-- altrimenti mostra il pulsante spento	
-				end
-			gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
-			gl.Texture(false)	-- fine texture	
-			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante successivo (se sarà presente)
-		end
-
 -- se si vuole inserire il separatore tra i bottoni del menu ( menu, statistiche, suono e obiettivi) a quelli funzionali ( LOS, idle ecc) abilitare questa funzione:
 	Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_funzionale_buttons
 
@@ -203,6 +205,10 @@ function widget:DrawScreen()
 			gl.Texture(false)	-- fine texture	
 			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante successivo (se sarà presente)
 		end
+
+-- se si vuole inserire il separatore tra i bottoni del menu ( menu, statistiche, suono e obiettivi) a quelli funzionali ( LOS, idle ecc) abilitare questa funzione:
+	Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_funzionale_buttons
+
 		
 -- inserisco wind minipulsante, se abilitato
 	gl.Color(1,1,1,1)
