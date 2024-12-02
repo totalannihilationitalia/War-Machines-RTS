@@ -10,7 +10,9 @@ function widget:GetInfo()
 		-- rev 0.wmrts modified by molix: removed and added options for War Machines RTS
 		-- rev 1.wmrts add graphics for War Machines RTS game
 		-- rev 2.wmrts add guishader
-		
+		-- rev 3.open this menu from external command, like "come back button" from other options
+		-- rev 4. remover dragging 30/11/2024
+		 
 		
 	}
 end
@@ -65,6 +67,7 @@ local main_butt_click				= "LuaUI/Images/tweaksettings/menu_button_click.png"
 local main_background				= "LuaUI/Images/tweaksettings/sfondo_mainmenu.png"
 local icona_graphics				= "LuaUI/Images/tweaksettings/menu_icon.png" -- icona main menu
 local mini_resume				= "LuaUI/Images/tweaksettings/Return to game_mini.png"
+
 
 local function IsOnButton(x, y, BLcornerX, BLcornerY,TRcornerX,TRcornerY)
 	if BLcornerX == nil then return false end
@@ -236,6 +239,14 @@ local function DrawMenu()
 	gl.Color(1,1,1,1)
 end
 
+function widget:TextCommand(command) -- add bay molix 30/11/2024 open menu from external command (like back manu button)
+
+	if command == 'open_WMRTS_menu' then
+		ButtonMenu.click = true
+	end
+end
+
+
 local function ButtonHandler (cmd)
 	if cmd == "resume" then
 		ButtonMenu.click = false
@@ -251,7 +262,7 @@ local function ButtonHandler (cmd)
 	elseif cmd == "sound_opt" then -- apri gui_optionsc.lua
 		ButtonMenu.click = false
 		Spring.SendCommands("sound_opt")
-		Spring.Echo("Not available at the moment, wait for next update! :) ")
+--		Spring.Echo("Not available at the moment, wait for next update! :) ") removed by molix 30/11/2024
 		PlaySoundFile(button8)
 --[[		
 	elseif cmd == "energy" then
@@ -270,11 +281,13 @@ local function ButtonHandler (cmd)
 		ButtonMenu.click = false
 		Spring.SendCommands("selector")
 		PlaySoundFile(button8)
-]]--		
+
+]]--
 	elseif cmd == "quit" then
 		ButtonMenu.click = false
 		Spring.SendCommands("quitmenu")
 		PlaySoundFile(button8)
+	
 --[[		
 	elseif cmd == "offer-draw" then
 		ButtonMenu.click = false
@@ -383,12 +396,12 @@ function widget:MousePress(mx, my, mButton)
 					end
 				end
 		
-			elseif mButton == 2 or mButton == 3 then
-				
-				if IsOnButton(mx, my, Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"]) then
-					--Dragging
-					return true
-				end
+---			elseif mButton == 2 or mButton == 3 then --rev 4 rimosso dragging
+---				
+---				if IsOnButton(mx, my, Panel["main"]["x1"],Panel["main"]["y1"], Panel["main"]["x2"], Panel["main"]["y2"]) then
+---					--Dragging
+---					return true
+---				end
 			end
 		end
 	end

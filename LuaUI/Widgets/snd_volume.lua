@@ -32,6 +32,8 @@ end
 -- 		extended sound options (like music, battle, icon of menù
 --rev 2 by molix 24/11/2024
 --		add exit at esc button pressed, add spring commander for integration in WMRTS menu, add shader to background and change graphics
+-- rev 3 by molix 30/11/2024
+-- 		add back to mai menu and close buttons
 
 local TEST_SOUND = LUAUI_DIRNAME .. 'Sounds/pop.wav'
 
@@ -52,15 +54,15 @@ local altezza_barre = 10			-- altezza barre volume
 local altezza_menu = 140
 local larghezza_menu = 400
 local margine_barre_sx = 150		-- il margine sinistro delle barre dal background
-local margine_barre_giu = 20 		-- il margine sotto delle barre dal background
+local margine_barre_giu = 40 		-- il margine sotto delle barre dal background
 local interasse_righe = 20 			-- distanza tra le righe
 local posx_menu = vsx/2 - larghezza_menu/2 	-- parte da sx
 local posy_menu = vsy/2 - altezza_menu/2 	-- parte dal basso
 local mostra_soundsetting = false 			-- show sound options at start?
-local larghezza_menu_buttons = 114			-- like back button, close button
-local altezza_menu_buttons = 38				-- like back button, close button
-local posx_menu_button = 20						-- position x of first menu button (from 0 ,0 of main menu)
-local posy_menu_button = 20						-- position y of first menu button (from 0 ,0 of main menu)
+local larghezza_menu_buttons = 76 --114		-- like back button, close button
+local altezza_menu_buttons = 25 --38				-- like back button, close button
+local posx_menu_button = 11						-- position x of first menu button (from 0 ,0 of main menu)
+local posy_menu_button = -10						-- position y of first menu button (from 0 ,0 of main menu)
 local distance_x_menu_button = 300				-- x distance between menu buttons
 
 -- images
@@ -164,13 +166,17 @@ function widget:Initialize()
 end
 
 
-function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la variabile mostra_soundsettings è ture.....
+function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la variabile mostra_soundsettings è true.....
 if mostra_soundsetting and not Spring.IsGUIHidden() then
-  return ((x >= posx_menu + margine_barre_sx) and (x <= posx_menu + margine_barre_sx +larghezza_barre) and (y >= posy_menu + margine_barre_giu) and (y <= posy_menu +margine_barre_giu + altezza_barre)) -- ....il primo "quadrato" di selezione, definisco se il mouse si trova dentro le coordinate "x min",  "x max", "ymin" e "ymax" di un quadrato che fungerà da selezione per il volume master
+  return ((x >= posx_menu + margine_barre_sx) and (x <= posx_menu + margine_barre_sx +larghezza_barre) and (y >= posy_menu + margine_barre_giu) and (y <= posy_menu +margine_barre_giu + altezza_barre)) -- ....il primo "quadrato" di selezione, definisco se il mouse si trova dentro le coordinate "x min",  "x max", "ymin" e "ymax" della barra di selezione per il volume master
   or 
   ((x >= posx_menu + margine_barre_sx) and (x <= posx_menu + margine_barre_sx +larghezza_barre) and (y >= posy_menu + margine_barre_giu+interasse_righe*1) and (y <= posy_menu +margine_barre_giu + altezza_barre+interasse_righe*1)) -- .... il secondo "quadrato" di selezione, valido per il volume music
   or
   ((x >= posx_menu + margine_barre_sx) and (x <= posx_menu + margine_barre_sx +larghezza_barre) and (y >= posy_menu + margine_barre_giu+interasse_righe*2) and (y <= posy_menu +margine_barre_giu + altezza_barre+interasse_righe*2)) -- .... il terzo "quadrato" di selezione, valido per il volume battle
+  or
+  ((x >= posx_menu+posx_menu_button) and (x <= posx_menu+posx_menu_button+larghezza_menu_buttons) and (y >= posy_menu+posy_menu_button) and (y <= posy_menu+posy_menu_button+altezza_menu_buttons)) -- .... il pulsante back
+  or
+  ((x >= posx_menu+posx_menu_button+distance_x_menu_button) and (x <= posx_menu+posx_menu_button+larghezza_menu_buttons+distance_x_menu_button) and (y >= posy_menu+posy_menu_button) and (y <= posy_menu+posy_menu_button+altezza_menu_buttons)) -- .... il pulsante close  
 end
 end
 -----------------------------------
@@ -213,6 +219,31 @@ if mostra_soundsetting and not Spring.IsGUIHidden() then
 	volume_battle = Spring.GetConfigInt("snd_volbattle", volume_battle)
 	volume_battle = volume_battle * 0.01
      return true		
+	
+	  elseif  ((x >= posx_menu+posx_menu_button) and (x <= posx_menu+posx_menu_button+larghezza_menu_buttons) and (y >= posy_menu+posy_menu_button) and (y <= posy_menu+posy_menu_button+altezza_menu_buttons)) then -- .... il pulsante back
+	mostra_soundsetting = false  
+--		if ButtonMenu.click then
+--			ButtonMenu.click = false
+--			PlaySoundFile(TEST_SOUND)		
+			-- remove gui shader
+		if (WG['guishader_api'] ~= nil) then
+			WG['guishader_api'].RemoveRect('WMRTS_snd_option')
+		end		
+	Spring.SendCommands("open_WMRTS_menu") -- invia comando per aprire menu principale di WMRTS
+   return true        
+	
+	  elseif  ((x >= posx_menu+posx_menu_button+distance_x_menu_button) and (x <= posx_menu+posx_menu_button+larghezza_menu_buttons+distance_x_menu_button) and (y >= posy_menu+posy_menu_button) and (y <= posy_menu+posy_menu_button+altezza_menu_buttons)) then -- .... il pulsante close
+	mostra_soundsetting = false  
+--		if ButtonMenu.click then
+--			ButtonMenu.click = false
+--			PlaySoundFile(TEST_SOUND)		
+			-- remove gui shader
+		if (WG['guishader_api'] ~= nil) then
+			WG['guishader_api'].RemoveRect('WMRTS_snd_option')
+		end		
+	
+   return true       
+	
 	
 	end
 	
@@ -270,7 +301,13 @@ if mostra_soundsetting and not Spring.IsGUIHidden() then
   PlayTestSound()
   return -1
   
-  end -- if del volume music  
+--  elseif  ((x >= posx_menu+posx_menu_button) and (x <= posx_menu+posx_menu_button+larghezza_menu_buttons) and (y >= posy_menu+posy_menu_button) and (y <= posy_menu+posy_menu_button+altezza_menu_buttons)) then -- .... il pulsante back
+--	mostra_soundsetting = false  
+--		if (WG['guishader_api'] ~= nil) then
+--			WG['guishader_api'].RemoveRect('WMRTS_snd_option')
+--		end		
+--   return true        ------------------------------------------------------- verificare questa cosa
+  end -- if delle posizioni del puntatore
   end -- end button 1 premuto
 end
 end
@@ -387,6 +424,11 @@ function widget:DrawScreen()
 	gl.Texture(buttons_close)	-- add the icon
 	gl.TexRect(posx_menu+posx_menu_button+distance_x_menu_button,posy_menu+posy_menu_button, posx_menu+posx_menu_button+distance_x_menu_button+larghezza_menu_buttons,posy_menu+posy_menu_button+altezza_menu_buttons)
 	gl.Texture(false)	-- fine texture			
+
+-- testi deu PULSANTI
+	gl.LoadFont("FreeSansBold.otf",14, 1.9, 40):SetTextColor(0.5,0.5,0.5,0.5)
+	gl.Text(string.format("MAIN MENU"), posx_menu+posx_menu_button+ 45, posy_menu+posy_menu_button +9, 9, "ocn") -- BACK BUTTON
+	gl.Text(string.format("CLOSE"), posx_menu+posx_menu_button+distance_x_menu_button +45 , posy_menu+posy_menu_button +9, 9, "ocn") -- close button
 
 -- gui shader	
 	
