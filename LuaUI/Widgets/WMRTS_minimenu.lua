@@ -34,14 +34,22 @@ to do list
 -- designing top right WMRTS mini-menù
 
 -- definizione dimensioni pulsanti minimenu
-local larghezza_main_minimenu_button 	= 50 --- definire
-local altezza_main_minimenu_button 		= 35 --- definire
-local larghezza_minimenu_buttons 		= 35 -- definire
-local altezza_minimenu_buttons 			= 35 -- definire
-local margine_dx_minimenu 				= 5 -- da destra
-local margine_su_minimenu 				= 5 -- da sopra
-local interspazio_buttons				= 2  -- spazio tra un pulsante e l altro
-local interspazio_funzionale_buttons	= 5  -- spazio tra una serie di pulsanti (menu) e l'altro (funzionali), ad esempio distanzio i pulsanti menu, sound ecc con i pulsanti idle, wind, ecc
+local larghezza_main_minimenu_button 	= 50 	-- larghezza del pulsante "main menu" del minimenu (più largo degli altri)
+local larghezza_minimenu_buttons 		= 35 	-- larghezza di tutti i pulsanti del minimenu
+local altezza_minimenu_buttons 			= 35 	-- altezza di tutti i pulanti del minimenu
+local margine_dx_minimenu 				= 5 	-- da destra
+local margine_su_minimenu 				= 5 	-- da sopra
+local margine_giù_minimenu 				= 5 	-- margine dal sotto il pulsante al bordo del background
+local margine_sx_minimenu 				= 5 	-- margine da sinistra dell'ultimo pulsante a sx, serve a creare l'ultimo blocco del background image
+local interspazio_buttons				= 2 	-- spazio tra un pulsante e l altro
+local interspazio_button_separator	= 5 	-- spazio tra una serie di pulsanti (menu) e l'altro (funzionali), ad esempio distanzio i pulsanti menu, sound ecc con i pulsanti idle, wind, ecc
+local Pos_x_statistics_button					-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
+local Pos_x_obj_button							-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)	
+local Pos_x_snd_button							-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
+local Pos_x_los_button							-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
+local Pos_x_idle_button							-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
+local Pos_x_wind_button							-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
+local Pos_x_tidal_button						-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
 
 -- definizione variabili
 local show_mainmenu						= false					-- is mainmenu active?
@@ -70,23 +78,26 @@ local show_minimenu_wind_button			= true					-- non è un bottone ma è una fine
 local show_minimenu_tidal_button		= true					-- non è un bottone ma è una finestrella con il valore delle maree
 
 -- definizioni immagini bottoni
-local mainminimenubutton_off = "LuaUI/Images/menu/main_menu_rest.png"
-local mainminimenubutton_on = "LuaUI/Images/menu/main_menu_rest.png"
-local statisticsbutton_off = "LuaUI/Images/menu/main_menu_rest.png"
-local statisticsbutton_on = "LuaUI/Images/menu/main_menu_rest.png"
-local objbutton_off = ""
-local objbutton_on = ""
-local idlebutton_off = ""
-local idlebutton_on = ""
-local losbutton_off = ""
-local losbutton_on = ""
-local wingbutton_off = ""
-local wingbutton_on = ""
-local tidebutton_off = ""
-local tidebutton_on = ""
-local sndbutton_off = ""
-local sndbutton_on = ""
-
+local mainminimenubutton_off = "LuaUI/Images/menu/minimenu/main_menu_rest.png"
+local mainminimenubutton_on = "LuaUI/Images/menu/minimenu/main_menu_rest.png"
+local statisticsbutton_off = "LuaUI/Images/menu/minimenu/statisticsbutton_off.png"
+local statisticsbutton_on = "LuaUI/Images/menu/minimenu/statisticsbutton_on.png"
+local objbutton_off = "LuaUI/Images/menu/minimenu/objbutton_off.png"
+local objbutton_on = "LuaUI/Images/menu/minimenu/objbutton_on.png"
+local idlebutton_off = "LuaUI/Images/menu/minimenu/idlebutton_off.png"
+local idlebutton_on = "LuaUI/Images/menu/minimenu/idlebutton_on.png"
+local losbutton_off = "LuaUI/Images/menu/minimenu/losbutton_off.png"
+local losbutton_on = "LuaUI/Images/menu/minimenu/losbutton_on.png"
+local windbutton_off = "LuaUI/Images/menu/minimenu/windbutton_off.png"
+local windbutton_on = "LuaUI/Images/menu/minimenu/windbutton_on.png"
+local tidebutton_off = "LuaUI/Images/menu/minimenu/tidebutton_off.png"
+local tidebutton_on = "LuaUI/Images/menu/minimenu/tidebutton_on.png"
+local sndbutton_off = "LuaUI/Images/menu/minimenu/sndbutton_off.png"
+local sndbutton_on = "LuaUI/Images/menu/minimenu/sndbutton_on.png"
+local minimenu_bkgnd_btn = "LuaUI/Images/menu/minimenu/minimenu_bkgnd_btn.png"
+local minimenu_bkgnd_dx = "LuaUI/Images/menu/minimenu/minimenu_bkgnd_dx.png"
+local minimenu_bkgnd_separator = "LuaUI/Images/menu/minimenu/minimenu_bkgnd_separator.png"
+local minimenu_bkgnd_sx = "LuaUI/Images/menu/minimenu/minimenu_bkgnd_sx.png"
 --------------------------------------
 -- AGGIORNAMENTO DELLA GEOMETRIA
 --------------------------------------
@@ -94,7 +105,7 @@ local sndbutton_on = ""
 -- funzione aggiorno la posizione del minimenu button in alto a destra
 local function UpdateGeometry() -- aggiorno geometria
   Pos_x_minimenu_button = vsx - margine_dx_minimenu - larghezza_main_minimenu_button
-  Pos_y_minimenu_button = vsy - margine_su_minimenu - altezza_main_minimenu_button
+  Pos_y_minimenu_button = vsy - margine_su_minimenu - altezza_minimenu_buttons
 end
 
 
@@ -111,9 +122,58 @@ end
 function widget:Initialize()
 -- all'inizio imposto la posizione del mini menu
   Pos_x_minimenu_button = vsx - margine_dx_minimenu - larghezza_main_minimenu_button
-  Pos_y_minimenu_button = vsy - margine_su_minimenu - altezza_main_minimenu_button
+  Pos_y_minimenu_button = vsy - margine_su_minimenu - altezza_minimenu_buttons
 end
 
+--------------------------------------
+-- GESTIONE PRESSIONE PULSANTE 1 DEL MOUSE -- TASTO SX
+--------------------------------------
+function widget:MousePress(x, y, button)
+	if not Spring.IsGUIHidden() then
+			if (Spring.GetGameSeconds() < 0.1) then
+				return false
+			end
+		if button== 1 then -- pulsante sx
+			if (widget:IsAbove(x, y)) then
+				-- mainmenu
+				if ((x >= Pos_x_minimenu_button) and (x <= Pos_x_minimenu_button + larghezza_main_minimenu_button) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))  then --se è sopra il minibutton main menu
+				show_mainmenu = true
+				-- inviare springcommand per apertura rispettivo menu
+				return true
+				-- sound
+				else if (show_minimenu_snd_button and ((x >= Pos_x_snd_button) and (x <= Pos_x_snd_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton sound
+				show_sndmenu = true
+				return true	
+				-- statistics
+				else if (show_minimenu_statistics_button and((x >= Pos_x_statistics_button) and (x <= Pos_x_statistics_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				show_statisticsmenu	= true
+				return true	
+				-- obj
+				else if (show_minimenu_object_button and((x >= Pos_x_obj_button) and (x <= Pos_x_obj_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				show_objmenu = true
+				return true			
+				-- LOS
+				else if (show_minimenu_los_button and((x >= Pos_x_los_button) and (x <= Pos_x_los_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				-- eseguire codice
+				return true	
+				-- idle
+				else if (show_minimenu_idle_button and ((x >= Pos_x_idle_button) and (x <= Pos_x_idle_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				-- eseguire codice
+				return true	
+				-- wind
+				else if (show_minimenu_wind_button and ((x >= Pos_x_wind_button) and (x <= Pos_x_wind_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				-- eseguire codice
+				return true	
+				-- tidal
+				else if (show_minimenu_tidal_button and((x >= Pos_x_tidal_button) and (x <= Pos_x_tidal_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				-- eseguire codice
+				return true	
+				end-- posizioni
+			end -- isabove
+		end -- button 1
+	end -- not gui hidden
+end -- function	
+				
 --------------------------------------
 -- DISEGNO IL MINIMENU
 --------------------------------------
@@ -128,19 +188,31 @@ function widget:DrawScreen()
 --]]
 
 -- inserisco il main_minimenu_button
+	
+	-- sfondo, primo blocco a dx
 	gl.Color(1,1,1,1)
+	gl.Texture(minimenu_bkgnd_dx)	
+	gl.TexRect(	Pos_x_minimenu_button,Pos_y_minimenu_button-margine_giù_minimenu,vsx,vsy)	
+	gl.Texture(false)	-- fine texture	
+	-- pulsante
 		if show_mainmenu then -- se la finestra delle opzioni principali è attiva
 		gl.Texture(mainminimenubutton_on)	
 		else
 		gl.Texture(mainminimenubutton_off)	
 		end
-	gl.TexRect(	Pos_x_minimenu_button,Pos_y_minimenu_button,Pos_x_minimenu_button+larghezza_main_minimenu_button,Pos_y_minimenu_button+altezza_main_minimenu_button)	
+	gl.TexRect(	Pos_x_minimenu_button,Pos_y_minimenu_button,Pos_x_minimenu_button+larghezza_main_minimenu_button,Pos_y_minimenu_button+altezza_minimenu_buttons)	
 	gl.Texture(false)	-- fine texture	
-	Pos_x_next_button_drawing = Pos_x_minimenu_button - interspazio_buttons - larghezza_minimenu_buttons -- definisco la posizione di partenza per disegnare il pulsante successivo (se sarà presente)
+	Pos_x_next_button_drawing = Pos_x_minimenu_button - interspazio_buttons - larghezza_minimenu_buttons -- definisco la posizione di partenza per disegnare il pulsante del sound (se sarà presente)
 	
 -- inserisco sound minipulsante, se abilitato
-	gl.Color(1,1,1,1)
 		if show_minimenu_snd_button then 			-- se il minipulsante è attivo per vederlo nel minimenù:
+	Pos_x_snd_button = Pos_x_next_button_drawing	-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)
+	-- sfondo del blocco, se attivo
+	gl.Color(1,1,1,1)
+	gl.Texture(minimenu_bkgnd_btn)	
+	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giù_minimenu,Pos_x_next_button_drawing+larghezza_minimenu_buttons+interspazio_buttons,vsy)	
+	gl.Texture(false)	-- fine texture	
+	-- pulsante
 				if show_sndmenu then 				-- se la finestra (o funzione) degli obiettivi è attiva:
 				gl.Texture(sndbutton_on)			-- mostra il pulsante acceso
 				else
@@ -148,12 +220,18 @@ function widget:DrawScreen()
 				end
 			gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
 			gl.Texture(false)	-- fine texture	
-			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante successivo (se sarà presente)
+			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante show statistics (se sarà presente)
 		end
 
 -- inserisco show statistics minipulsante, se abilitato
-	gl.Color(1,1,1,1)
 		if show_minimenu_statistics_button then 	-- se il minipulsante è attivo per vederlo nel minimenù:
+	Pos_x_statistics_button = Pos_x_next_button_drawing		-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
+	-- sfondo del blocco, se attivo
+	gl.Color(1,1,1,1)
+	gl.Texture(minimenu_bkgnd_btn)	
+	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giù_minimenu,Pos_x_next_button_drawing+larghezza_minimenu_buttons+interspazio_buttons,vsy)	
+	gl.Texture(false)	-- fine texture	
+	-- pulsante
 				if show_statisticsmenu then 		-- se la finestra (o funzione) delle statistiche è attiva:
 				gl.Texture(statisticsbutton_on)		-- mostra il pulsante acceso
 				else
@@ -161,12 +239,18 @@ function widget:DrawScreen()
 				end
 			gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
 			gl.Texture(false)	-- fine texture	
-			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante successivo (se sarà presente)
+			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante degli obj (se sarà presente)
 		end
 		
 -- inserisco obj minipulsante, se abilitato
-	gl.Color(1,1,1,1)
 		if show_minimenu_object_button then 	-- se il minipulsante è attivo per vederlo nel minimenù:
+	Pos_x_obj_button = Pos_x_next_button_drawing		-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
+	-- sfondo del blocco, se attivo
+	gl.Color(1,1,1,1)
+	gl.Texture(minimenu_bkgnd_btn)	
+	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giù_minimenu,Pos_x_next_button_drawing+larghezza_minimenu_buttons+interspazio_buttons,vsy)	
+	gl.Texture(false)	-- fine texture	
+	-- pulsante
 				if show_objmenu then 				-- se la finestra (o funzione) degli obiettivi è attiva:
 				gl.Texture(objbutton_on)			-- mostra il pulsante acceso
 				else
@@ -174,15 +258,27 @@ function widget:DrawScreen()
 				end
 			gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
 			gl.Texture(false)	-- fine texture	
-			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante successivo (se sarà presente)
+			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante LOS (se sarà presente)
 		end
 		
--- se si vuole inserire il separatore tra i bottoni del menu ( menu, statistiche, suono e obiettivi) a quelli funzionali ( LOS, idle ecc) abilitare questa funzione:
-	Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_funzionale_buttons
+-- se si vuole inserire il separatore tra i bottoni del menu ( menu, statistiche, suono e obiettivi) a quelli funzionali ( LOS, idle ecc) inserire questa funzione:
+	Pos_x_next_button_drawing = Pos_x_next_button_drawing + interspazio_buttons + larghezza_minimenu_buttons - interspazio_button_separator -- riposiziono al precedente pulsante il "posizionatore_x_next_button" e lo sposto di quanto è larga la variabile del separatore
+	-- sfondo del blocco separatore
+	gl.Color(1,1,1,1)
+	gl.Texture(minimenu_bkgnd_separator)	
+	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giù_minimenu,Pos_x_next_button_drawing+interspazio_button_separator,vsy)	
+	gl.Texture(false)	-- fine texture				
+	Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante LOS (se sarà presente)
 
 -- inserisco LOS minipulsante, se abilitato
-	gl.Color(1,1,1,1)
 		if show_minimenu_los_button then 			-- se il minipulsante è attivo per vederlo nel minimenù:
+	Pos_x_los_button = Pos_x_next_button_drawing		-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
+	-- sfondo del blocco, se attivo
+	gl.Color(1,1,1,1)
+	gl.Texture(minimenu_bkgnd_btn)	
+	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giù_minimenu,Pos_x_next_button_drawing+larghezza_minimenu_buttons+interspazio_buttons,vsy)	
+	gl.Texture(false)	-- fine texture	
+	-- pulsante	
 				if show_losmenu then 				-- se la finestra (o funzione) del LOS è attiva:
 				gl.Texture(losbutton_on)			-- mostra il pulsante acceso
 				else
@@ -190,12 +286,18 @@ function widget:DrawScreen()
 				end
 			gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
 			gl.Texture(false)	-- fine texture	
-			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante successivo (se sarà presente)
+			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante idle (se sarà presente)
 		end
 
 -- inserisco idle minipulsante, se abilitato
-	gl.Color(1,1,1,1)
 		if show_minimenu_idle_button then 			-- se il minipulsante è attivo per vederlo nel minimenù:
+	Pos_x_idle_button = Pos_x_next_button_drawing		-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
+	-- sfondo del blocco, se attivo
+	gl.Color(1,1,1,1)
+	gl.Texture(minimenu_bkgnd_btn)	
+	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giù_minimenu,Pos_x_next_button_drawing+larghezza_minimenu_buttons+interspazio_buttons,vsy)	
+	gl.Texture(false)	-- fine texture	
+	-- pulsante			
 				if show_idlemenu then 					-- se la finestra (o funzione) di idle è attiva:
 				gl.Texture(idlebutton_on)			-- mostra il pulsante acceso
 				else
@@ -203,17 +305,47 @@ function widget:DrawScreen()
 				end
 			gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
 			gl.Texture(false)	-- fine texture	
-			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante successivo (se sarà presente)
+			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante wind (se sarà presente)
 		end
-
--- se si vuole inserire il separatore tra i bottoni del menu ( menu, statistiche, suono e obiettivi) a quelli funzionali ( LOS, idle ecc) abilitare questa funzione:
-	Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_funzionale_buttons
-
 		
--- inserisco wind minipulsante, se abilitato
+-- se si vuole inserire il separatore tra i bottoni del menu ( menu, statistiche, suono e obiettivi) a quelli funzionali ( LOS, idle ecc) inserire questa funzione:
+	Pos_x_next_button_drawing = Pos_x_next_button_drawing + interspazio_buttons + larghezza_minimenu_buttons - interspazio_button_separator -- riposiziono al precedente pulsante il "posizionatore_x_next_button" e lo sposto di quanto è larga la variabile del separatore
+	-- sfondo del blocco separatore
 	gl.Color(1,1,1,1)
+	gl.Texture(minimenu_bkgnd_separator)	
+	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giù_minimenu,Pos_x_next_button_drawing+interspazio_button_separator,vsy)	
+	gl.Texture(false)	-- fine texture				
+	Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante LOS (se sarà presente)
+
+-- inserisco wind minipulsante, se abilitato
 		if show_minimenu_wind_button then 			-- se il minipulsante è attivo per vederlo nel minimenù:
+	Pos_x_wind_button = Pos_x_next_button_drawing	-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
+	-- sfondo del blocco, se attivo
+	gl.Color(1,1,1,1)
+	gl.Texture(minimenu_bkgnd_btn)	
+	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giù_minimenu,Pos_x_next_button_drawing+larghezza_minimenu_buttons+interspazio_buttons,vsy)	
+	gl.Texture(false)	-- fine texture	
+	-- pulsante			
 				if show_wingmenu then 				-- se la finestra (o funzione) di wind è attiva:
+				gl.Texture(idlebutton_on)			-- mostra il pulsante acceso
+				else
+				gl.Texture(idlebutton_off)			-- altrimenti mostra il pulsante spento	
+				end
+			gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
+			gl.Texture(false)	-- fine texture	
+			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante tidal (se sarà presente)
+		end		
+	
+-- inserisco tidal minipulsante, se abilitato
+		if show_minimenu_tidal_button then 			-- se il minipulsante è attivo per vederlo nel minimenù:
+	Pos_x_tidal_button = Pos_x_next_button_drawing			-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
+	-- sfondo del blocco, se attivo
+	gl.Color(1,1,1,1)
+	gl.Texture(minimenu_bkgnd_btn)	
+	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giù_minimenu,Pos_x_next_button_drawing+larghezza_minimenu_buttons+interspazio_buttons,vsy)	
+	gl.Texture(false)	-- fine texture	
+	-- pulsante			
+				if show_tidalmenu then 				-- se la finestra (o funzione) di tidal è attiva:
 				gl.Texture(idlebutton_on)			-- mostra il pulsante acceso
 				else
 				gl.Texture(idlebutton_off)			-- altrimenti mostra il pulsante spento	
@@ -223,18 +355,14 @@ function widget:DrawScreen()
 			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante successivo (se sarà presente)
 		end		
 	
--- inserisco tidal minipulsante, se abilitato
+-- inserisco l'ultima parte (sx) del background del minimenu	
+	Pos_x_next_button_drawing = Pos_x_next_button_drawing + interspazio_buttons + larghezza_minimenu_buttons - margine_sx_minimenu -- riposiziono al precedente pulsante il "posizionatore_x_next_button" e lo sposto di quanto è largo il margine_sx_minimenu
+	-- sfondo del blocco separatore
 	gl.Color(1,1,1,1)
-		if show_minimenu_tidal_button then 			-- se il minipulsante è attivo per vederlo nel minimenù:
-				if show_tidalmenu then 				-- se la finestra (o funzione) di tidal è attiva:
-				gl.Texture(idlebutton_on)			-- mostra il pulsante acceso
-				else
-				gl.Texture(idlebutton_off)			-- altrimenti mostra il pulsante spento	
-				end
-			gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
-			gl.Texture(false)	-- fine texture	
-			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante successivo (se sarà presente)
-		end			
+	gl.Texture(minimenu_bkgnd_sx)	
+	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giù_minimenu,Pos_x_next_button_drawing+minimenu_bkgnd_sx,vsy)	
+	gl.Texture(false)	-- fine texture				
+----------------------------
 end -- end DrawScreen
 
 
