@@ -27,13 +27,12 @@ end
 --[[
 to do list 
 - pulsanti piccoli / grossi
-
 ]]--
 --------------------------------------------------------------------------------
 -- rev 0 by molix
 -- designing top right WMRTS mini-menù
 
--- definizione dimensioni pulsanti minimenu
+-- definizione pulsanti minimenu
 local larghezza_main_minimenu_button 	= 50 	-- larghezza del pulsante "main menu" del minimenu (più largo degli altri)
 local larghezza_minimenu_buttons 		= 35 	-- larghezza di tutti i pulsanti del minimenu
 local altezza_minimenu_buttons 			= 35 	-- altezza di tutti i pulanti del minimenu
@@ -43,24 +42,31 @@ local margine_giu_minimenu 				= 5 	-- margine dal sotto il pulsante al bordo de
 local margine_sx_minimenu 				= 5 	-- margine da sinistra dell'ultimo pulsante a sx, serve a creare l'ultimo blocco del background image
 local interspazio_buttons				= 2 	-- spazio tra un pulsante e l altro
 local interspazio_button_separator		= 5 	-- spazio tra una serie di pulsanti (menu) e l'altro (funzionali), ad esempio distanzio i pulsanti menu, sound ecc con i pulsanti idle, wind, ecc
+local show_minimenu_statistics_button	= true
+local show_minimenu_object_button		= true
+local show_minimenu_snd_button			= true
+local show_minimenu_los_button			= true
+local show_minimenu_idle_button			= true
+local show_minimenu_wind_button			= true					-- non è un bottone ma è una finestrella con il valore del vento
+local show_minimenu_tidal_button		= true					-- non è un bottone ma è una finestrella con il valore delle maree
 -- definizione variabili di posizione e lunghezza
 local Pos_x_minimenu_button		        = 200					-- cossisponde al margine in basso a sx del minimenu_buttons
 local Pos_y_minimenu_button				= 200 					-- cossisponde al margine in basso a sx del minimenu_buttons
 local vsx, vsy 						  	= widgetHandler:GetViewSizes()
 local Pos_x_next_button_drawing					-- Usato nel drawing, il valore della posizione si sposterà man mano di quanti pulsanti sono attivi, cosi da disegnarli uno di fianco all'altro
-local Pos_x_statistics_button			=5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
-local Pos_x_obj_button					=5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)	
-local Pos_x_snd_button					=5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
-local Pos_x_los_button					=5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
-local Pos_x_idle_button					=5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
-local Pos_x_wind_button					=5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
-local Pos_x_tidal_button				=5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
-local Pos_x_riquadro_button				=5		-- posizione X del riquadro per evidenziare l' "above" sui pulsanti generici
-local Pos_y_riquadro_button				=5		-- posizione Y del riquadro per evidenziare l' "above" sui pulsanti generici
-local Pos_x_riquadro_mainbutton			=5		-- posizione X del riquadro per evidenziare l' "above" sul pulsante main menu
-local Pos_y_riquadro_mainbutton			=5		-- posizione Y del riquadro per evidenziare l' "above" sul pulsante main menu
+local Pos_x_statistics_button			= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
+local Pos_x_obj_button					= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)	
+local Pos_x_snd_button					= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
+local Pos_x_los_button					= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
+local Pos_x_idle_button					= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
+local Pos_x_wind_button					= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
+local Pos_x_tidal_button				= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
+local Pos_x_riquadro_button				= 5		-- posizione X del riquadro per evidenziare l' "above" sui pulsanti generici
+local Pos_y_riquadro_button				= 5		-- posizione Y del riquadro per evidenziare l' "above" sui pulsanti generici
+local Pos_x_riquadro_mainbutton			= 5		-- posizione X del riquadro per evidenziare l' "above" sul pulsante main menu
+local Pos_y_riquadro_mainbutton			= 5		-- posizione Y del riquadro per evidenziare l' "above" sul pulsante main menu
 
--- definizione variabili MENU aperto chiuso
+-- definizione variabili MENU aperti/chiusi
 local show_mainmenu						= false					-- is mainmenu active?
 local show_sndmenu 						= false 				-- is sound menu options active?
 local show_statisticsmenu				= false					-- is statistics table active?
@@ -69,14 +75,6 @@ local show_losmenu						= false					-- is LOS windows active? -- or function act
 local show_idlemenu						= false					-- is idle windows active? -- or function active?? --todo
 local show_wingmenu						= false					-- is wing windows active? -- or function active?? --todo
 local show_tidalmenu					= false					-- is tidal windows active? -- or function active?? --todo
-
-local show_minimenu_statistics_button	= true
-local show_minimenu_object_button		= true
-local show_minimenu_snd_button			= true
-local show_minimenu_los_button			= true
-local show_minimenu_idle_button			= true
-local show_minimenu_wind_button			= true					-- non è un bottone ma è una finestrella con il valore del vento
-local show_minimenu_tidal_button		= true					-- non è un bottone ma è una finestrella con il valore delle maree
 
 -- definizioni immagini bottoni
 local mainminimenubutton_off = "LuaUI/Images/menu/minimenu/main_menu_rest.png"
@@ -170,36 +168,40 @@ function widget:MousePress(x, y, button)
 			end
 		if button== 1 then -- pulsante sx
 			if (widget:IsAbove(x, y)) then
-				-- mainmenu
+		-- mainmenu
 				if ((x >= Pos_x_minimenu_button) and (x <= Pos_x_minimenu_button + larghezza_main_minimenu_button) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))  then --se è sopra il minibutton main menu
-				show_mainmenu = true
+--				show_mainmenu = true
+				Spring.SendCommands("open_WMRTS_menu")
 				-- inviare springcommand per apertura rispettivo menu
 				return true
-				-- sound
+		-- sound
 				elseif (show_minimenu_snd_button and ((x >= Pos_x_snd_button) and (x <= Pos_x_snd_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton sound
-				show_sndmenu = true
+--				show_sndmenu = true
+				Spring.SendCommands("open_WMRTS_snd")
 				return true	
-				-- statistics
+		-- statistics
 				elseif (show_minimenu_statistics_button and((x >= Pos_x_statistics_button) and (x <= Pos_x_statistics_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
-				show_statisticsmenu	= true
+--				show_statisticsmenu	= true
+				Spring.SendCommands("open_WMRTS_statistics")
 				return true	
-				-- obj
+		-- obj
 				elseif (show_minimenu_object_button and((x >= Pos_x_obj_button) and (x <= Pos_x_obj_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
-				show_objmenu = true
+--				show_objmenu = true
+				Spring.SendCommands("open_WMRTS_obj")
 				return true			
-				-- LOS
+		-- LOS
 				elseif (show_minimenu_los_button and((x >= Pos_x_los_button) and (x <= Pos_x_los_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				-- eseguire codice
 				return true	
-				-- idle
+		-- idle
 				elseif (show_minimenu_idle_button and ((x >= Pos_x_idle_button) and (x <= Pos_x_idle_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				-- eseguire codice
 				return true	
-				-- wind
+		-- wind
 				elseif (show_minimenu_wind_button and ((x >= Pos_x_wind_button) and (x <= Pos_x_wind_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				-- eseguire codice
 				return true	
-				-- tidal
+		-- tidal
 				elseif (show_minimenu_tidal_button and((x >= Pos_x_tidal_button) and (x <= Pos_x_tidal_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				-- eseguire codice
 				return true	
@@ -208,6 +210,40 @@ function widget:MousePress(x, y, button)
 		end -- button 1
 	end -- not gui hidden
 end -- function	
+
+--------------------------------------
+-- GESTIONE DEI COMANDI SPRING RICEVUTI
+--------------------------------------				
+function widget:TextCommand(command) 
+-- apertura e chiusura main menu
+	if command == 'open_WMRTS_menu' then
+		show_mainmenu = true
+	end
+	if command == 'close_WMRTS_menu' then
+		show_mainmenu = false
+	end	
+-- apertura e chiusura obj menu
+	if command == 'open_WMRTS_obj' then
+		show_objmenu = true
+	end
+	if command == 'close_WMRTS_obj' then
+		show_objmenu = false
+	end		
+-- apertura e chiusura statistics menu
+	if command == 'open_WMRTS_statistics' then
+		show_statisticsmenu = true
+	end
+	if command == 'close_WMRTS_statistics' then
+		show_statisticsmenu = false
+	end	
+-- apertura e chiusura statistics menu
+	if command == 'open_WMRTS_snd' then
+		show_sndmenu = true
+	end
+	if command == 'close_WMRTS_snd' then
+		show_sndmenu = false
+	end		
+end		
 				
 --------------------------------------
 -- DISEGNO IL MINIMENU
