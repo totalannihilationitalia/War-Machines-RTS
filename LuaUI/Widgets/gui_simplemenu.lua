@@ -239,7 +239,7 @@ local function DrawMenu()
 	gl.Color(1,1,1,1)
 end
 
-function widget:TextCommand(command) -- add bay molix 30/11/2024 open menu from external command (like back manu button)
+function widget:TextCommand(command) -- add by molix 30/11/2024 open menu from external command (like back manu button)
 
 	if command == 'open_WMRTS_menu' then
 		ButtonMenu.click = true
