@@ -1,6 +1,6 @@
 function widget:GetInfo()
   return {
-    name      = "cancellare_porcodio",
+    name      = "cancellare_WMRTStest",
     desc      = "Camera shakes",
     author    = "trepan",
     date      = "Jun 15, 2007",

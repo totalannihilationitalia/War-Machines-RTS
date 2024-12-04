@@ -76,7 +76,7 @@ local show_idlemenu						= false					-- is idle windows active? -- or function a
 local show_wingmenu						= false					-- is wing windows active? -- or function active?? --todo
 local show_tidalmenu					= false					-- is tidal windows active? -- or function active?? --todo
 
--- definizioni immagini bottoni
+-- definizioni immagini bottoni e background
 local mainminimenubutton_off = "LuaUI/Images/menu/minimenu/main_menu_rest.png"
 local mainminimenubutton_on = "LuaUI/Images/menu/minimenu/main_menu_rest.png"
 local statisticsbutton_off = "LuaUI/Images/menu/minimenu/statisticsbutton_off.png"
@@ -434,7 +434,13 @@ function widget:DrawScreen()
 	gl.Texture(minimenu_bkgnd_sx)	
 	gl.TexRect(Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giu_minimenu,Pos_x_next_button_drawing+margine_sx_minimenu,vsy)	
 	gl.Texture(false)	-- fine texture				
+
+
+-- Aggiungo GUI shader
 ----------------------------
+	if (WG['guishader_api'] ~= nil) then
+	WG['guishader_api'].InsertRect(Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giu_minimenu, vsx, vsy,'WMRTS menu')
+	end
 
 return
 end -- end DrawScreen

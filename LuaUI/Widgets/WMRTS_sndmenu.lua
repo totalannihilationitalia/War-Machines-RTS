@@ -2,7 +2,7 @@
 --------------------------------------------------------------------------------
 --
 --  file:    WMRTS_sndmenu.lua
---  brief:   War Machines RTS options minimenu
+--  brief:   War Machines RTS sounds options
 --  author:  Dario Molinaroli ( Molixx81 )
 --
 --  Copyright (C) 2024.
@@ -29,10 +29,7 @@ local function PlayTestSound()
   Spring.PlaySoundFile(TEST_SOUND, 1.0)
 end
 
---------------------------------------------------------------############## inserire condizione se GUI è visibile altrimenti si modificano i parametri anche quando non è visibile.
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-
+-- definizione variabili
 local volume_master = 1.0			-- volume sounmaster
 local volume_music = 1.0 			-- volume music
 local volume_battle = 1.0 			-- volume battle
@@ -53,7 +50,7 @@ local posx_menu_button = 11						-- position x of first menu button (from 0 ,0 o
 local posy_menu_button = -10						-- position y of first menu button (from 0 ,0 of main menu)
 local distance_x_menu_button = 300				-- x distance between menu buttons
 
--- images
+-- definizione immagini
 local main_background				= "LuaUI/Images/menu/sfondo_sound.png"
 local icona_menu_sound				= "LuaUI/Images/tweaksettings/menu_sound_icon.png"
 local buttons_back					= "LuaUI/Images/menu/menu_back.png"
