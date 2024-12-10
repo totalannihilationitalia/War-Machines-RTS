@@ -51,10 +51,10 @@ local posy_menu_button = -10						-- position y of first menu button (from 0 ,0 
 local distance_x_menu_button = 300				-- x distance between menu buttons
 
 -- definizione immagini
-local main_background				= "LuaUI/Images/menu/sfondo_sound.png"
-local icona_menu_sound				= "LuaUI/Images/tweaksettings/menu_sound_icon.png"
-local buttons_back					= "LuaUI/Images/menu/menu_back.png"
-local buttons_close					= "LuaUI/Images/menu/menu_close.png"
+local main_background				= "LuaUI/Images/menu/mainmenu/sfondo_sound.png"
+local icona_menu_sound				= "LuaUI/Images/tweaksettings/mainmenu/menu_sound_icon.png"
+local buttons_back					= "LuaUI/Images/menu/mainmenu/menu_back.png"
+local buttons_close					= "LuaUI/Images/menu/mainmenu/menu_close.png"
 
 --caratteristche testo
 local titolo_menu_col						= {0.8, 0.8, 1.0, 1}

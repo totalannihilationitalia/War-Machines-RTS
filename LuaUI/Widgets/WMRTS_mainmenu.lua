@@ -78,7 +78,7 @@ local icona_snd = ""
 local icona_graphics = ""
 local icona_visuals = ""
 local icona_menuset = ""
-local icona_mainmenu = ""
+local icona_mainmenu = "LuaUI/Images/menu/mainmenu/icona_main_menu.png"
 local button_back					= "LuaUI/Images/menu/mainmenu/menu_back.png"
 local button_close					= "LuaUI/Images/menu/mainmenu/menu_close.png"
 
@@ -104,24 +104,26 @@ function widget:ViewResize(viewSizeX, viewSizeY) -- quando si modifica la dimens
 end
 
 --------------------------------------
--- RICEZIONE DEI COMANDI TESTUALI INTERNI AL GIOCO
---------------------------------------
+-- GESTIONE DEI COMANDI SPRING RICEVUTI
+--------------------------------------	
 function widget:TextCommand(command)
-
-	if command == 'WMRTS_mainmenu' and mainmenu_attivo then
-		mainmenu_attivo = false
-	elseif command ==  'WMRTS_mainmenu' and not mainmenu_attivo then
+	if command == 'open_WMRTS_menu' and not mainmenu_attivo then
 		mainmenu_attivo = true
+		Spring.SendCommands("open_WMRTS_minimenu")  -- invio il comando open_WMRTS_minimenu per gestire l'icona minimenu
+	elseif command ==  'open_WMRTS_menu' and mainmenu_attivo then
+		mainmenu_attivo = false
+		Spring.SendCommands("close_WMRTS_minimenu")  -- invio il comando close_WMRTS_minimenu per gestire l'icona minimenu
+-- invio il comando close_WMRTS_minimenu per gestire l'icona minimenu		---------------------------------------------------------------------------		
 	end
 end
 
 --------------------------------------
--- ALLA PRESSIONE DEI PULSANTI
+-- ALLA PRESSIONE DEI PULSANTI --------------------------------------------------------------- spostare questa funzione nel minimenu! in modo da gestire l'apertura del menu col tasto esc solamente quando non ci sono altri elementi aperti
 --------------------------------------
 function widget:KeyPress(key, mods, isRepeat) 
 if mainmenu_attivo and not Spring.IsGUIHidden() then
-	if key == 0x01B then -- TASTO esc
-	mainmenu_attivo = false  
+	if key == 0x01B then -- TASTO esc  
+	Spring.SendCommands("open_WMRTS_menu")
 --------------------------------------------------------------------------------------------------------------- introdurre queste righe per disabilitare lo shader, quando lo installi nel drawing
 --				if (WG['guishader_api'] ~= nil) then
 --					WG['guishader_api'].RemoveRect('WMRTS_snd_option')
@@ -130,7 +132,7 @@ if mainmenu_attivo and not Spring.IsGUIHidden() then
 	end
 elseif not mainmenu_attivo 	and not Spring.IsGUIHidden() then
 	if key == 0x01B then -- TASTO esc
-	mainmenu_attivo = true  
+	Spring.SendCommands("open_WMRTS_menu")
 			return true
 	end
 end
@@ -245,24 +247,21 @@ if mainmenu_attivo and not Spring.IsGUIHidden() then
 				Echo("test mainmenu")
 				return true
 				-- visualsetting				
-			elseif 
-			 ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_visuals) and (y <= Pos_y_mainmenu+Posy_visuals + altezza_menu_buttons)) then
+			elseif ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_visuals) and (y <= Pos_y_mainmenu+Posy_visuals + altezza_menu_buttons)) then
 				Echo("test visual menu")
 				return true		
 				-- sndsetting					
-				elseif 
-		     ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_snd) and (y <= Pos_y_mainmenu+Posy_snd + altezza_menu_buttons)) then
+				elseif ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_snd) and (y <= Pos_y_mainmenu+Posy_snd + altezza_menu_buttons)) then
 				Echo("test snd menu")
 				return true					
 				-- graphicssetting						
-			elseif 
-		     ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_graphics) and (y <= Pos_y_mainmenu+Posy_graphics + altezza_menu_buttons)) then
+			elseif ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_graphics) and (y <= Pos_y_mainmenu+Posy_graphics + altezza_menu_buttons)) then
 				Echo("test graphics menu")
 				return true					
 				-- exit to windows						
-			elseif 
-			 ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_exitgame) and (y <= Pos_y_mainmenu+Posy_exitgame + altezza_menu_buttons)) then
-				Echo("test exit menu")
+			elseif ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_exitgame) and (y <= Pos_y_mainmenu+Posy_exitgame + altezza_menu_buttons)) then
+				Spring.SendCommands("open_WMRTS_menu")
+				Spring.SendCommands("open_WMRTS_exit")				
 				return true				
 				-- backbutton
 				------------------------------------- concludere inserendo il back button!!!!!!!!!!!!!! ---------------

@@ -76,9 +76,9 @@ local show_idlemenu						= false					-- is idle windows active? -- or function a
 local show_wingmenu						= false					-- is wing windows active? -- or function active?? --todo
 local show_tidalmenu					= false					-- is tidal windows active? -- or function active?? --todo
 
--- definizioni immagini bottoni e background
-local mainminimenubutton_off = "LuaUI/Images/menu/minimenu/main_menu_rest.png"
-local mainminimenubutton_on = "LuaUI/Images/menu/minimenu/main_menu_rest.png"
+-- definizioni immagini ON/OFF bottoni e background
+local mainminimenubutton_off = "LuaUI/Images/menu/minimenu/main_menu_off.png"
+local mainminimenubutton_on = "LuaUI/Images/menu/minimenu/main_menu_on.png"
 local statisticsbutton_off = "LuaUI/Images/menu/minimenu/statisticsbutton_off.png"
 local statisticsbutton_on = "LuaUI/Images/menu/minimenu/statisticsbutton_on.png"
 local objbutton_off = "LuaUI/Images/menu/minimenu/objbutton_off.png"
@@ -171,7 +171,7 @@ function widget:MousePress(x, y, button)
 		-- mainmenu
 				if ((x >= Pos_x_minimenu_button) and (x <= Pos_x_minimenu_button + larghezza_main_minimenu_button) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))  then --se è sopra il minibutton main menu
 --				show_mainmenu = true
-				Spring.SendCommands("WMRTS_mainmenu") -- open_WMRTS_menu
+				Spring.SendCommands("open_WMRTS_menu") -- open_WMRTS_menu
 				-- inviare springcommand per apertura rispettivo menu
 				return true
 		-- sound
@@ -215,12 +215,12 @@ end -- function
 -- GESTIONE DEI COMANDI SPRING RICEVUTI
 --------------------------------------				
 function widget:TextCommand(command) 
--- apertura e chiusura main menu
-	if command == 'open_WMRTS_menu' then
-		show_mainmenu = true
+-- apertura e chiusura main menu (icona on off del minimenu
+	if command == 'open_WMRTS_minimenu' then
+		show_mainmenu = true ----------------------------------- bottone minimenu ON
 	end
-	if command == 'close_WMRTS_menu' then
-		show_mainmenu = false
+	if command == 'close_WMRTS_minimenu' then
+		show_mainmenu = false  ----------------------------------- bottone minimenu OFF
 	end	
 -- apertura e chiusura obj menu
 	if command == 'open_WMRTS_obj' then
