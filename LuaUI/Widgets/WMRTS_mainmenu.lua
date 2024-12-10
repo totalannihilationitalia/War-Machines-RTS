@@ -36,7 +36,7 @@ to do list
 -- definizione dei comandi
 local Echo 							= Spring.Echo 
 -- definizione variabili di posizione e lunghezza menu e icone
-local mainmenu_attivo					= true
+local mainmenu_attivo					= false
 local vsx, vsy 						  	= widgetHandler:GetViewSizes()
 local larghezza_mainmenu				= 400
 local altezza_mainmenu					= 200
@@ -104,6 +104,41 @@ function widget:ViewResize(viewSizeX, viewSizeY) -- quando si modifica la dimens
 end
 
 --------------------------------------
+-- RICEZIONE DEI COMANDI TESTUALI INTERNI AL GIOCO
+--------------------------------------
+function widget:TextCommand(command)
+
+	if command == 'WMRTS_mainmenu' and mainmenu_attivo then
+		mainmenu_attivo = false
+	elseif command ==  'WMRTS_mainmenu' and not mainmenu_attivo then
+		mainmenu_attivo = true
+	end
+end
+
+--------------------------------------
+-- ALLA PRESSIONE DEI PULSANTI
+--------------------------------------
+function widget:KeyPress(key, mods, isRepeat) 
+if mainmenu_attivo and not Spring.IsGUIHidden() then
+	if key == 0x01B then -- TASTO esc
+	mainmenu_attivo = false  
+--------------------------------------------------------------------------------------------------------------- introdurre queste righe per disabilitare lo shader, quando lo installi nel drawing
+--				if (WG['guishader_api'] ~= nil) then
+--					WG['guishader_api'].RemoveRect('WMRTS_snd_option')
+--				end			
+			return true
+	end
+elseif not mainmenu_attivo 	and not Spring.IsGUIHidden() then
+	if key == 0x01B then -- TASTO esc
+	mainmenu_attivo = true  
+			return true
+	end
+end
+	
+	return false
+end
+
+--------------------------------------
 -- INIZIALIZZO IL MENU CARICANDO LE IMPOSTAZIONI DA "Spring.GetConfigInt" ( vedi Lua UnsyncedRead)
 --------------------------------------
 function widget:Initialize()
@@ -120,27 +155,27 @@ function widget:Update(dt)
 mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di aggiornamento
 	if mainmenu_attivo and not Spring.IsGUIHidden() then
 				-- menusetting
-				if 	((mousex >= Pos_x_mainmenu) and (mousex <= Pos_x_mainmenu + larghezza_mainmenu) and (mousey >= Pos_y_mainmenu+Posy_menuset) and (mousey <= Pos_y_mainmenu+Posy_menuset + altezza_menu_buttons)) then
+				if 	((mousex >= Pos_x_mainmenu) and (mousex <= Pos_x_mainmenu + larghezza_mainmenu) and (mousey >= Pos_y_mainmenu+Posy_menuset+offsety_selettore) and (mousey <= Pos_y_mainmenu+Posy_menuset + altezza_menu_buttons+offsety_selettore)) then
 				selettore_visibile = true
 				posy_selettore = Posy_menuset																
 				elseif
 				-- visualsetting
-				((mousex >= Pos_x_mainmenu) and (mousex <= Pos_x_mainmenu + larghezza_mainmenu) and (mousey >= Pos_y_mainmenu+Posy_visuals) and (mousey <= Pos_y_mainmenu+Posy_visuals + altezza_menu_buttons)) then
+				((mousex >= Pos_x_mainmenu) and (mousex <= Pos_x_mainmenu + larghezza_mainmenu) and (mousey >= Pos_y_mainmenu+Posy_visuals+offsety_selettore) and (mousey <= Pos_y_mainmenu+Posy_visuals + altezza_menu_buttons+offsety_selettore)) then
 				selettore_visibile = true
 				posy_selettore = Posy_visuals	
 				-- graphicssetting
 				elseif 
-				((mousex >= Pos_x_mainmenu) and (mousex <= Pos_x_mainmenu + larghezza_mainmenu) and (mousey >= Pos_y_mainmenu+Posy_graphics) and (mousey <= Pos_y_mainmenu+Posy_graphics + altezza_menu_buttons)) then
+				((mousex >= Pos_x_mainmenu) and (mousex <= Pos_x_mainmenu + larghezza_mainmenu) and (mousey >= Pos_y_mainmenu+Posy_graphics+offsety_selettore) and (mousey <= Pos_y_mainmenu+Posy_graphics + altezza_menu_buttons+offsety_selettore)) then
 				selettore_visibile = true
 				posy_selettore = Posy_graphics					
 				-- soundsettings
 				elseif 
-				((mousex >= Pos_x_mainmenu) and (mousex <= Pos_x_mainmenu + larghezza_mainmenu) and (mousey >= Pos_y_mainmenu+Posy_snd) and (mousey <= Pos_y_mainmenu+Posy_snd + altezza_menu_buttons)) then
+				((mousex >= Pos_x_mainmenu) and (mousex <= Pos_x_mainmenu + larghezza_mainmenu) and (mousey >= Pos_y_mainmenu+Posy_snd+offsety_selettore) and (mousey <= Pos_y_mainmenu+Posy_snd + altezza_menu_buttons+offsety_selettore)) then
 				selettore_visibile = true
 				posy_selettore = Posy_snd					
 				-- exittowindows
 				elseif 
-				((mousex >= Pos_x_mainmenu) and (mousex <= Pos_x_mainmenu + larghezza_mainmenu) and (mousey >= Pos_y_mainmenu+Posy_exitgame) and (mousey <= Pos_y_mainmenu+Posy_exitgame + altezza_menu_buttons)) then
+				((mousex >= Pos_x_mainmenu) and (mousex <= Pos_x_mainmenu + larghezza_mainmenu) and (mousey >= Pos_y_mainmenu+Posy_exitgame+offsety_selettore) and (mousey <= Pos_y_mainmenu+Posy_exitgame + altezza_menu_buttons+offsety_selettore)) then
 				selettore_visibile = true
 				posy_selettore = Posy_exitgame
 				else
@@ -157,7 +192,7 @@ end
 --------------------------------------
 -- MOUSE IS OVER BUTTONS
 --------------------------------------
-function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la variabile mostra_soundsettings è true.....
+function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la variabile mainmenu_attivo è true.....
 	if mainmenu_attivo and not Spring.IsGUIHidden() then
 				-- menusetting
 				return 	((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_menuset) and (y <= Pos_y_mainmenu+Posy_menuset + altezza_menu_buttons))
@@ -203,14 +238,41 @@ if mainmenu_attivo and not Spring.IsGUIHidden() then
   if (Spring.GetGameSeconds() < 0.1) then
     return false
   end
-  if button== 1 then -- aggiunto rev1
-  if (widget:IsAbove(x, y)) then
-  if ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_menuset) and (y <= Pos_y_mainmenu+Posy_menuset + altezza_menu_buttons)) then
-  Echo("test press")
-   return true
-  end
-  end
-  end
+	if button== 1 then -- aggiunto rev1
+		if (widget:IsAbove(x, y)) then
+				-- menusetting		
+			if ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_menuset) and (y <= Pos_y_mainmenu+Posy_menuset + altezza_menu_buttons)) then
+				Echo("test mainmenu")
+				return true
+				-- visualsetting				
+			elseif 
+			 ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_visuals) and (y <= Pos_y_mainmenu+Posy_visuals + altezza_menu_buttons)) then
+				Echo("test visual menu")
+				return true		
+				-- sndsetting					
+				elseif 
+		     ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_snd) and (y <= Pos_y_mainmenu+Posy_snd + altezza_menu_buttons)) then
+				Echo("test snd menu")
+				return true					
+				-- graphicssetting						
+			elseif 
+		     ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_graphics) and (y <= Pos_y_mainmenu+Posy_graphics + altezza_menu_buttons)) then
+				Echo("test graphics menu")
+				return true					
+				-- exit to windows						
+			elseif 
+			 ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_exitgame) and (y <= Pos_y_mainmenu+Posy_exitgame + altezza_menu_buttons)) then
+				Echo("test exit menu")
+				return true				
+				-- backbutton
+				------------------------------------- concludere inserendo il back button!!!!!!!!!!!!!! ---------------
+				-------------------------------------
+				-------------------------------------
+				-------------------------------------
+				
+			end -- posizioni menu
+		end
+	end
     return false
   end
   
@@ -357,7 +419,12 @@ if mainmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	gl.Texture(button_back)	
 	gl.TexRect(Pos_x_mainmenu+posx_menu_button+distance_x_menu_button,Pos_y_mainmenu+posy_menu_button, Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_menu_buttons,Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons)	
 	gl.Texture(false)	-- fine texture		
-
+-- testo pulsante close	
+	-- testo
+	font_generale:SetTextColor(1, 1, 1, 1)
+	font_generale:Begin()
+	font_generale:Print("Close", Pos_x_mainmenu+posx_menu_button+distance_x_menu_button + 28, Pos_y_mainmenu+posy_menu_button+5 ,12,'ds')
+	font_generale:End()		
 
 end -- if mainmenu_attivo	
 end --drawscreen

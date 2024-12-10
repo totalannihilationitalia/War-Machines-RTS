@@ -171,7 +171,7 @@ function widget:MousePress(x, y, button)
 		-- mainmenu
 				if ((x >= Pos_x_minimenu_button) and (x <= Pos_x_minimenu_button + larghezza_main_minimenu_button) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))  then --se è sopra il minibutton main menu
 --				show_mainmenu = true
-				Spring.SendCommands("open_WMRTS_menu")
+				Spring.SendCommands("WMRTS_mainmenu") -- open_WMRTS_menu
 				-- inviare springcommand per apertura rispettivo menu
 				return true
 		-- sound

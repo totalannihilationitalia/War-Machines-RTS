@@ -13,20 +13,19 @@ end
 local helloWorld = "quante risorse hai, coglione!"
 local toggle
 local GetTeamResources = Spring.GetTeamResources -- questo funziona solo se il teamID è un giocatore, non funziona con le AI
-local glevel
-local gstore
-local gpull
-local gincome
-local gexpanse
-local tteam = 1
+local glevel = 1
+local gstore = 1
+local gpull = 1
+local gincome = 1
+local gexpanse  = 1
+local tteam = 2
 
 function widget:Initialize()
    Spring.Echo(helloWorld)
 end
 
 function widget:Update()
-   if (toggle == true) then
-	  glevel,gstore, gpull = GetTeamResources(tteam, "metal")
+   	  glevel,gstore, gpull = GetTeamResources(tteam, "metal")
 	  Spring.Echo("storage: "..tostring(gstore))
 	  Spring.Echo("current level: "..tostring(glevel))
 	  Spring.Echo("pull: "..tostring(pull))	  
@@ -35,9 +34,6 @@ function widget:Update()
 --	  
 --	  nuteamid = Spring.GetTeamInfo ( tteam )
 --	  Spring.Echo("number team id "..tostring(nuteamid))
-      toggle = false
-   else
-      Spring.Echo("test_stopped")
-      toggle = true
-   end
+   
+   
 end
