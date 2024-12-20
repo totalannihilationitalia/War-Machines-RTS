@@ -174,18 +174,15 @@ function widget:MousePress(x, y, button)
 			if (widget:IsAbove(x, y)) then
 		-- mainmenu
 				if ((x >= Pos_x_minimenu_button) and (x <= Pos_x_minimenu_button + larghezza_main_minimenu_button) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))  then --se è sopra il minibutton main menu
---				show_mainmenu = true
 				Spring.SendCommands("open_WMRTS_menu") -- open_WMRTS_menu
 				-- inviare springcommand per apertura rispettivo menu
 				return true
 		-- sound
 				elseif (show_minimenu_snd_button and ((x >= Pos_x_snd_button) and (x <= Pos_x_snd_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton sound
---				show_sndmenu = true
 				Spring.SendCommands("open_WMRTS_snd")
 				return true	
 		-- statistics
 				elseif (show_minimenu_statistics_button and((x >= Pos_x_statistics_button) and (x <= Pos_x_statistics_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
---				show_statisticsmenu	= true
 				Spring.SendCommands("open_WMRTS_statistics")
 				return true	
 		-- obj
@@ -259,13 +256,44 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 --			return false
 --		end
 				-- menusetting
-				if 	((mousex >= Pos_x_minimenu_button) and (mousex <= Pos_x_minimenu_button + larghezza_main_minimenu_button) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su mainmenu
+				if 	((mousex >= Pos_x_minimenu_button) and (mousex <= Pos_x_minimenu_button + larghezza_main_minimenu_button) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su mainmenu minibutton
 				show_selettore_mainmini = true
 				else
 				show_selettore_mainmini = false
 				end
-
-	
+				-- tutti i minibutton menu:
+				-- sound
+				if 	((mousex >= Pos_x_snd_button) and (mousex <= Pos_x_snd_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su snd minibutton
+				Pos_x_riquadro_button =	Pos_x_snd_button
+				show_selettore_minibutton = true
+				-- obj				
+				elseif  ((mousex >= Pos_x_obj_button) and (mousex <= Pos_x_obj_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su obj minibutton
+				Pos_x_riquadro_button =	Pos_x_obj_button
+				show_selettore_minibutton = true
+				-- statistics				
+				elseif  ((mousex >= Pos_x_statistics_button) and (mousex <= Pos_x_statistics_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su statistics minibutton
+				Pos_x_riquadro_button =	Pos_x_statistics_button
+				show_selettore_minibutton = true	
+				-- idle					
+				elseif  ((mousex >= Pos_x_idle_button) and (mousex <= Pos_x_idle_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su idle minibutton
+				Pos_x_riquadro_button =	Pos_x_idle_button
+				show_selettore_minibutton = true	
+				-- LOS					
+				elseif  ((mousex >= Pos_x_los_button) and (mousex <= Pos_x_los_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su los minibutton
+				Pos_x_riquadro_button =	Pos_x_los_button
+				show_selettore_minibutton = true	
+				-- Wind					
+				elseif  ((mousex >= Pos_x_wind_button) and (mousex <= Pos_x_wind_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su wind minibutton
+				Pos_x_riquadro_button =	Pos_x_wind_button
+				show_selettore_minibutton = true					
+				-- Tidal					
+				elseif  ((mousex >= Pos_x_tidal_button) and (mousex <= Pos_x_tidal_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su tidal minibutton
+				Pos_x_riquadro_button =	Pos_x_tidal_button
+				show_selettore_minibutton = true									
+				-- altrimenti se il cursore non è sopra alcuno dei suddetti buttons, nascondilo				
+				else 
+				show_selettore_minibutton = false
+				end
 	end
 end
 		
@@ -465,6 +493,15 @@ function widget:DrawScreen()
 		gl.Color(1,1,1,1)
 		gl.Texture(selettore_mainmini)	
 		gl.TexRect(	Pos_x_minimenu_button,Pos_y_minimenu_button,Pos_x_minimenu_button+larghezza_main_minimenu_button,Pos_y_minimenu_button+altezza_minimenu_buttons)	
+		gl.Texture(false)	-- fine texture			
+	end
+	
+-- inserisco il selettore del mini button menu, se visibile
+------------------------------------
+	if show_selettore_minibutton then
+		gl.Color(1,1,1,1)
+		gl.Texture(selettore_minibutton)	
+		gl.TexRect(	Pos_x_riquadro_button,Pos_y_minimenu_button,Pos_x_riquadro_button+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
 		gl.Texture(false)	-- fine texture			
 	end
 

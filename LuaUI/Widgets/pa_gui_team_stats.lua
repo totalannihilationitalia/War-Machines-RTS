@@ -237,6 +237,7 @@ function convertCoords(sourceCoords,scalingVec)
 	return newCoords
 end
 
+
 function tweakMouseRelease(guiData)
 	local vsx,vsy = widgetHandler:GetViewSizes()
 	local scalingVec = {x=1/vsx,y=1/vsy}

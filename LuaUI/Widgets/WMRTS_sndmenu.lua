@@ -82,7 +82,7 @@ end
 --------------------------------------
 function widget:TextCommand(command)
 
-	if command == 'sound_opt' then
+	if command == 'open_WMRTS_snd' then
 		mostra_soundsetting = true
 	end
 end
@@ -220,11 +220,13 @@ if mostra_soundsetting and not Spring.IsGUIHidden() then
 		if (WG['guishader_api'] ~= nil) then
 			WG['guishader_api'].RemoveRect('WMRTS_snd_option')
 		end		
+	Spring.SendCommands("close_WMRTS_snd") -- invia il comando per chiudere il snd button sul minimenu
 	Spring.SendCommands("open_WMRTS_menu") -- invia comando per aprire menu principale di WMRTS
-   return true        
+	 return true        
 	
 	  elseif  ((x >= posx_menu+posx_menu_button+distance_x_menu_button) and (x <= posx_menu+posx_menu_button+larghezza_menu_buttons+distance_x_menu_button) and (y >= posy_menu+posy_menu_button) and (y <= posy_menu+posy_menu_button+altezza_menu_buttons)) then -- .... il pulsante close
-	mostra_soundsetting = false  
+	Spring.SendCommands("close_WMRTS_snd") -- invia il comando per chiudere il snd button sul minimenu	
+	mostra_soundsetting = false  -- chiudo il menu soundsettings
 --		if ButtonMenu.click then
 --			ButtonMenu.click = false
 --			PlaySoundFile(TEST_SOUND)		

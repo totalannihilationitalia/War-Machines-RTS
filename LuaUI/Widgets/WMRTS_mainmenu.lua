@@ -107,6 +107,7 @@ end
 -- GESTIONE DEI COMANDI SPRING RICEVUTI
 --------------------------------------	
 function widget:TextCommand(command)
+-- apertura e chiusura del main menu
 	if command == 'open_WMRTS_menu' and not mainmenu_attivo then
 		mainmenu_attivo = true
 		Spring.SendCommands("open_WMRTS_minimenu")  -- invio il comando open_WMRTS_minimenu per gestire l'icona minimenu
@@ -141,7 +142,7 @@ end
 end
 
 --------------------------------------
--- INIZIALIZZO IL MENU CARICANDO LE IMPOSTAZIONI DA "Spring.GetConfigInt" ( vedi Lua UnsyncedRead)
+-- INIZIALIZZO IL MENU 
 --------------------------------------
 function widget:Initialize()
 -- all'inizio imposto la posizione del mini menu
@@ -252,7 +253,8 @@ if mainmenu_attivo and not Spring.IsGUIHidden() then
 				return true		
 				-- sndsetting					
 				elseif ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_snd) and (y <= Pos_y_mainmenu+Posy_snd + altezza_menu_buttons)) then
-				Echo("test snd menu")
+				Spring.SendCommands("open_WMRTS_menu")
+				Spring.SendCommands("open_WMRTS_snd")
 				return true					
 				-- graphicssetting						
 			elseif ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_graphics) and (y <= Pos_y_mainmenu+Posy_graphics + altezza_menu_buttons)) then
