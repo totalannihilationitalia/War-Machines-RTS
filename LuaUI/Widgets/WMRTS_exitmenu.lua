@@ -43,6 +43,7 @@ local main_background				= "LuaUI/Images/menu/mainmenu/sfondo_sound.png"
 local icona_menu_exit				= "LuaUI/Images/menu/mainmenu/icona_exit.png"
 local buttons_back					= "LuaUI/Images/menu/mainmenu/menu_back.png"
 local buttons_close					= "LuaUI/Images/menu/mainmenu/menu_close.png"
+local buttons_ok					= "LuaUI/Images/menu/mainmenu/menu_ok.png"
 
 --caratteristche testo
 local titolo_menu_col						= {0.8, 0.8, 1.0, 1}
@@ -134,7 +135,6 @@ if mostra_exitmenu and not Spring.IsGUIHidden() then
 			if  ((x >= posx_menu+posx_menu_button) and (x <= posx_menu+posx_menu_button+larghezza_menu_buttons) and (y >= posy_menu+posy_menu_button) and (y <= posy_menu+posy_menu_button+altezza_menu_buttons)) then -- .... se è sopra il pulsante back
 				mostra_exitmenu = false  
 				Spring.SendCommands("open_WMRTS_menu") -- invia comando per aprire menu principale di WMRTS
----------------------------------------- inserire chiudi questo menu			
 					if (WG['guishader_api'] ~= nil) then
 					WG['guishader_api'].RemoveRect('WMRTS_exit_option')
 					end		
@@ -145,7 +145,12 @@ if mostra_exitmenu and not Spring.IsGUIHidden() then
 					WG['guishader_api'].RemoveRect('WMRTS_exit_option')
 					end		
 				return true       
-			end
+			
+			elseif  ((x >= posx_menu+posx_menu_button+distance_x_menu_button/2) and (x <= posx_menu+posx_menu_button+larghezza_menu_buttons+distance_x_menu_button/2) and (y >= posy_menu+posy_menu_button) and (y <= posy_menu+posy_menu_button+altezza_menu_buttons)) then -- .... il pulsante ok
+				mostra_exitmenu = false  
+				Spring.SendCommands("quit") -- invia comando per chiudere spring
+				return true       
+			end			
 		end
 	end-- if button == 1 aggiunto rev1
   return false
@@ -182,8 +187,14 @@ function widget:DrawScreen()
 	gl.Texture(buttons_back)	-- add the icon
 	gl.TexRect(posx_menu+posx_menu_button,posy_menu+posy_menu_button, posx_menu+posx_menu_button+larghezza_menu_buttons,posy_menu+posy_menu_button+altezza_menu_buttons)	
 	gl.Texture(false)	-- fine texture		
+
+-- pulsante ok, secondo buttone
+  	gl.Color(1,1,1,1)
+	gl.Texture(buttons_ok)	-- add the icon
+	gl.TexRect(posx_menu+posx_menu_button+distance_x_menu_button/2,posy_menu+posy_menu_button, posx_menu+posx_menu_button+distance_x_menu_button/2+larghezza_menu_buttons,posy_menu+posy_menu_button+altezza_menu_buttons)
+	gl.Texture(false)	-- fine texture		
 	
--- pulsante close, second button
+-- pulsante close, terzo buttone
   	gl.Color(1,1,1,1)
 	gl.Texture(buttons_close)	-- add the icon
 	gl.TexRect(posx_menu+posx_menu_button+distance_x_menu_button,posy_menu+posy_menu_button, posx_menu+posx_menu_button+distance_x_menu_button+larghezza_menu_buttons,posy_menu+posy_menu_button+altezza_menu_buttons)
@@ -192,10 +203,11 @@ function widget:DrawScreen()
 -- testi dei PULSANTI
 	gl.LoadFont("FreeSansBold.otf",14, 1.9, 40):SetTextColor(0.5,0.5,0.5,0.5)
 	gl.Text(string.format("MAIN MENU"), posx_menu+posx_menu_button+ 45, posy_menu+posy_menu_button +9, 9, "ocn") -- BACK BUTTON
+	gl.Text(string.format("EXIT"), posx_menu+posx_menu_button+distance_x_menu_button/2+ 45, posy_menu+posy_menu_button +9, 9, "ocn") -- OK BUTTON	
 	gl.Text(string.format("CLOSE"), posx_menu+posx_menu_button+distance_x_menu_button +45 , posy_menu+posy_menu_button +9, 9, "ocn") -- close button
  
 -- testo di uscita dal gioco
-	gl.Text(string.format("Exit to Windows?"), posx_menu+80, posy_menu+200, 9, "ocn") -- BACK BUTTON
+	gl.Text(string.format("Do you want exit to Windows?"), posx_menu+190, posy_menu+60, 12, "ocn") -- BACK BUTTON
 	
 -- gui shader	
 	

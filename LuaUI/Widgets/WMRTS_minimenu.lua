@@ -97,6 +97,10 @@ local minimenu_bkgnd_btn = "LuaUI/Images/menu/minimenu/minimenu_bkgnd_btn.png"
 local minimenu_bkgnd_dx = "LuaUI/Images/menu/minimenu/minimenu_bkgnd_dx.png"
 local minimenu_bkgnd_separator = "LuaUI/Images/menu/minimenu/minimenu_bkgnd_separator.png"
 local minimenu_bkgnd_sx = "LuaUI/Images/menu/minimenu/minimenu_bkgnd_sx.png"
+local selettore_mainmini = "LuaUI/Images/menu/minimenu/selettore_main.png"
+local selettore_minibutton = "LuaUI/Images/menu/minimenu/selettore_btn.png"
+local show_selettore_mainmini = false
+local show_selettore_minibutton = false
 
 --------------------------------------
 -- AGGIORNAMENTO DELLA GEOMETRIA
@@ -116,7 +120,7 @@ function widget:ViewResize(viewSizeX, viewSizeY) -- quando si modifica la dimens
 end
 
 --------------------------------------
--- INIZIALIZZO IL MENU CARICANDO LE IMPOSTAZIONI DA "Spring.GetConfigInt" ( vedi Lua UnsyncedRead)
+-- INIZIALIZZO IL MENU 
 --------------------------------------
 function widget:Initialize()
 -- all'inizio imposto la posizione del mini menu
@@ -244,7 +248,27 @@ function widget:TextCommand(command)
 		show_sndmenu = false
 	end		
 end		
-				
+		
+--------------------------------------
+-- SEMPRE
+--------------------------------------
+function widget:Update(dt)
+mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di aggiornamento
+	if not Spring.IsGUIHidden() then
+--		if (Spring.GetGameSeconds() < 0.1) then
+--			return false
+--		end
+				-- menusetting
+				if 	((mousex >= Pos_x_minimenu_button) and (mousex <= Pos_x_minimenu_button + larghezza_main_minimenu_button) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su mainmenu
+				show_selettore_mainmini = true
+				else
+				show_selettore_mainmini = false
+				end
+
+	
+	end
+end
+		
 --------------------------------------
 -- DISEGNO IL MINIMENU
 --------------------------------------
@@ -433,8 +457,16 @@ function widget:DrawScreen()
 	gl.Color(1,1,1,1)
 	gl.Texture(minimenu_bkgnd_sx)	
 	gl.TexRect(Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giu_minimenu,Pos_x_next_button_drawing+margine_sx_minimenu,vsy)	
-	gl.Texture(false)	-- fine texture				
+	gl.Texture(false)	-- fine texture			
 
+-- inserisco il selettore del minimenu button, se visibile
+------------------------------------
+	if show_selettore_mainmini then
+		gl.Color(1,1,1,1)
+		gl.Texture(selettore_mainmini)	
+		gl.TexRect(	Pos_x_minimenu_button,Pos_y_minimenu_button,Pos_x_minimenu_button+larghezza_main_minimenu_button,Pos_y_minimenu_button+altezza_minimenu_buttons)	
+		gl.Texture(false)	-- fine texture			
+	end
 
 -- Aggiungo GUI shader
 ----------------------------
