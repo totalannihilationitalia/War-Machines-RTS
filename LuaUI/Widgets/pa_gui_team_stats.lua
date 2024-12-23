@@ -11,6 +11,9 @@ function widget:GetInfo()
 	}
 end
 
+-- rev 23/12/2024: Molix removed mouse controls, removed button for better integration with WMRTS minimenu
+
+
 local bgcorner	= ":n:"..LUAUI_DIRNAME.."Images/bgcorner.png"
 local image_button = ":n:"..LUAUI_DIRNAME.."Images/menu/menu_button_relax.png"
 
@@ -62,6 +65,7 @@ local glDeleteList = gl.DeleteList
 local glBeginText = gl.BeginText
 local glEndText = gl.EndText
 
+local mostra_statistics     = false
 local GetGaiaTeamID			= Spring.GetGaiaTeamID
 local GetAllyTeamList		= Spring.GetAllyTeamList
 local GetTeamList			= Spring.GetTeamList
@@ -91,6 +95,7 @@ local char					= string.char
 local format				= string.format
 local SIsuffixes = {"p","n","u","m","","k","M","G","T"}
 local borderRemap = {left={"x","min",-1},right={"x","max",1},top={"y","max",1},bottom={"y","min",-1}}
+
 
 
 function roundNumber(num,useFirstDecimal)
@@ -169,7 +174,7 @@ function aboveRectangle(mousePos,boxData)
 end
 
 
-
+--[[
 function isAbove(mousePos,guiData)
 	for boxType, boxData in pairs(guiData) do
 		if boxData.visible then
@@ -193,6 +198,7 @@ function isAbove(mousePos,guiData)
 		end
 	end
 end
+]]--
 
 function colorToChar(colorarray)
 	return char(255,min(max(floor(colorarray[1]*255),1),255),min(max(floor(colorarray[2]*255),1),255),min(max(floor(colorarray[3]*255),1),255))
@@ -248,6 +254,8 @@ function tweakMouseRelease(guiData)
 	return guiData
 end
 
+
+
 function tweakMouseMove(mouseDelta, guiData)
 	local changed
 	for boxType, boxData in pairs(guiData) do
@@ -288,10 +296,10 @@ local guiData = {
 	smallBox = {
 		relSizes = {
 			x = {
-				min = 0.96, 
-				max = 1,  
-				length = 0.04,  
-			},
+				min = 0.36, --0.96, 
+				max = 0.5,  --1
+				length = 0.01,  --0.04
+				},
 			y = {
 				min = 0.7,
 				max = 0.74,
@@ -306,11 +314,11 @@ local guiData = {
 			x = {
 				min = 0.05,
 				max = 0.95,
-				length = 0.86,
+				length = 0.46, --0.86
 			},
 			y = {
-				min = 0.2,
-				max = 0.8,
+				min = 0.1, --0.2
+				max = 0.3, --0.8
 				length = 0.6,
 			},
 		},
@@ -318,6 +326,7 @@ local guiData = {
 		visible = false,
 	},
 }
+
 local teamData={}
 local maxColumnTextSize = 0
 local columnSize = 0
@@ -412,6 +421,7 @@ function calcAbsSizes()
 	
 	local vsx,vsy = gl.GetViewSizes()
 	guiData.smallBox.absSizes = {
+-- dimensioni dell'icona del minimenu
 		x = {
 			min = (vsx -108),
 			max = (vsx -68),
@@ -423,6 +433,7 @@ function calcAbsSizes()
 			length = (guiData.smallBox.relSizes.y.length * vsy),
 		}
 	}
+-- dimensioni della tabella	
 	guiData.mainPanel.absSizes = {
 		x = {
 			min = (guiData.mainPanel.relSizes.x.min * vsx),
@@ -611,22 +622,25 @@ function widget:GameOver()
 end
 
 
-function widget:IsAbove(x,y)
-	return isAbove({x=x,y=y},guiData)
-end
-
+--function widget:IsAbove(x,y)
+--	return isAbove({x=x,y=y},guiData)
+--end
+--[[
 function widget:MousePress(mx,my,button)
 	if gameStarted == nil then return end
 	
+	if guiData.mainPanel.visible then
 	local boxType = widget:IsAbove(mx,my)
-	if not boxType then
-		guiData.mainPanel.visible = false
-		return false
-	end
-	if boxType == "smallBox" then
-		guiData.mainPanel.visible = not guiData.mainPanel.visible
-		widget:GameFrame(GetGameFrame(),true)
-	elseif boxType == "mainPanel" then
+--	if not boxType then
+--		guiData.mainPanel.visible = false
+--		Spring.SendCommands("close_WMRTS_statistics")
+--		return false
+--	end
+--	if boxType == "smallBox" then
+
+--		guiData.mainPanel.visible = not guiData.mainPanel.visible
+--		widget:GameFrame(GetGameFrame(),true)
+	if boxType == "mainPanel" then
 		local line, column = getLineAndColumn(mx,my)
 		if line <= 3 then -- header
 			local newSort = header[column]
@@ -636,12 +650,16 @@ function widget:MousePress(mx,my,button)
 				end
 				sortVar = newSort
 			end
-		else
-			guiData.mainPanel.visible = not guiData.mainPanel.visible
+--		else
+--			guiData.mainPanel.visible = not guiData.mainPanel.visible
 		end
+	end
 	end
 	return true
 end
+]]--
+
+
 
 function getLineAndColumn(x,y)
 	local relativex = x - guiData.mainPanel.absSizes.x.min - columnSize/2
@@ -687,7 +705,7 @@ end
 --	createButtonList()
 --end
 
-function widget:MouseMove(mx,my,dx,dy)
+--[[function widget:MouseMove(mx,my,dx,dy)
 	local boxType = widget:IsAbove(mx,my)
 	local newLine,newColumn
 	if boxType == "mainPanel" then
@@ -699,14 +717,15 @@ function widget:MouseMove(mx,my,dx,dy)
 		backgroundDisplayList = glCreateList(ReGenerateBackgroundDisplayList)
 	end
 end
-
-function widget:Update()
+]]--
+--[[function widget:Update()
 	local x,y = GetMouseState()
 	if x ~= mousex or y ~= mousey then
 		widget:MouseMove(x,y,x-mousex,y-mousey)
 	end
 	mousex,mousey = x,y
 end
+]]--
 
 function widget:DrawScreen() -- disegna la tabella delle statistiche
 	if IsGUIHidden() then
@@ -924,7 +943,7 @@ function ReGenerateTextDisplayList()
 end
 
 
-
+--[[
 function widget:GetTooltip(mx, my)
 	if widget:IsAbove(mx,my) then
 		local text =  string.format("In CTRL+F11 mode: Hold \255\255\255\1middle mouse button\255\255\255\255 to drag this display.\n\n")
@@ -935,3 +954,18 @@ function widget:GetTooltip(mx, my)
 		return text
 	end
 end
+]]--
+
+--------------------------------------
+-- RICEZIONE DEI COMANDI TESTUALI INTERNI AL GIOCO
+--------------------------------------
+function widget:TextCommand(command)
+
+	if command == 'open_WMRTS_statistics' then
+		guiData.mainPanel.visible = true
+	end
+	if command == 'close_WMRTS_statistics' then
+		guiData.mainPanel.visible = false
+	end	
+end
+

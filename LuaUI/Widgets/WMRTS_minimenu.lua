@@ -177,19 +177,33 @@ function widget:MousePress(x, y, button)
 				Spring.SendCommands("open_WMRTS_menu") -- open_WMRTS_menu
 				-- inviare springcommand per apertura rispettivo menu
 				return true
-		-- sound
-				elseif (show_minimenu_snd_button and ((x >= Pos_x_snd_button) and (x <= Pos_x_snd_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton sound
+		-- sound 
+				-- si attiva
+				elseif not show_sndmenu and (show_minimenu_snd_button and ((x >= Pos_x_snd_button) and (x <= Pos_x_snd_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton sound
 				Spring.SendCommands("open_WMRTS_snd")
 				return true	
+				-- si disattiva
+				elseif show_sndmenu and (show_minimenu_snd_button and ((x >= Pos_x_snd_button) and (x <= Pos_x_snd_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton sound
+				Spring.SendCommands("close_WMRTS_snd")
+				return true	
 		-- statistics
-				elseif (show_minimenu_statistics_button and((x >= Pos_x_statistics_button) and (x <= Pos_x_statistics_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				-- si attiva				
+				elseif not show_statisticsmenu and (show_minimenu_statistics_button and((x >= Pos_x_statistics_button) and (x <= Pos_x_statistics_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				Spring.SendCommands("open_WMRTS_statistics")
 				return true	
+				-- si disattiva				
+				elseif show_statisticsmenu and (show_minimenu_statistics_button and((x >= Pos_x_statistics_button) and (x <= Pos_x_statistics_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				Spring.SendCommands("close_WMRTS_statistics")
+				return true					
 		-- obj
-				elseif (show_minimenu_object_button and((x >= Pos_x_obj_button) and (x <= Pos_x_obj_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
---				show_objmenu = true
+				-- si attiva			
+				elseif not show_objmenu and (show_minimenu_object_button and((x >= Pos_x_obj_button) and (x <= Pos_x_obj_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				Spring.SendCommands("open_WMRTS_obj")
 				return true			
+				-- si disattiva			
+				elseif show_objmenu and (show_minimenu_object_button and((x >= Pos_x_obj_button) and (x <= Pos_x_obj_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				Spring.SendCommands("close_WMRTS_obj")
+				return true							
 		-- LOS
 				elseif (show_minimenu_los_button and((x >= Pos_x_los_button) and (x <= Pos_x_los_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				-- eseguire codice

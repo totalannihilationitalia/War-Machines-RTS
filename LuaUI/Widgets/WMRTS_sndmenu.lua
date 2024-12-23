@@ -30,25 +30,25 @@ local function PlayTestSound()
 end
 
 -- definizione variabili
-local volume_master = 1.0			-- volume sounmaster
-local volume_music = 1.0 			-- volume music
-local volume_battle = 1.0 			-- volume battle
+local volume_master = 1.0					-- volume sounmaster
+local volume_music = 1.0 					-- volume music
+local volume_battle = 1.0 					-- volume battle
 local vsx, vsy = widgetHandler:GetViewSizes()
-local larghezza_barre =  200 		-- larghezza barre volume
-local altezza_barre = 10			-- altezza barre volume
+local larghezza_barre =  200 				-- larghezza barre volume
+local altezza_barre = 10					-- altezza barre volume
 local altezza_menu = 140
 local larghezza_menu = 400
-local margine_barre_sx = 150		-- il margine sinistro delle barre dal background
-local margine_barre_giu = 40 		-- il margine sotto delle barre dal background
-local interasse_righe = 20 			-- distanza tra le righe
+local margine_barre_sx = 150				-- il margine sinistro delle barre dal background
+local margine_barre_giu = 40 				-- il margine sotto delle barre dal background
+local interasse_righe = 20 					-- distanza tra le righe
 local posx_menu = vsx/2 - larghezza_menu/2 	-- parte da sx
 local posy_menu = vsy/2 - altezza_menu/2 	-- parte dal basso
 local mostra_soundsetting = false 			-- show sound options at start?
 local larghezza_menu_buttons = 76 --114		-- like back button, close button
-local altezza_menu_buttons = 25 --38				-- like back button, close button
-local posx_menu_button = 11						-- position x of first menu button (from 0 ,0 of main menu)
-local posy_menu_button = -10						-- position y of first menu button (from 0 ,0 of main menu)
-local distance_x_menu_button = 300				-- x distance between menu buttons
+local altezza_menu_buttons = 25 --38		-- like back button, close button
+local posx_menu_button = 11					-- position x of first menu button (from 0 ,0 of main menu)
+local posy_menu_button = -10				-- position y of first menu button (from 0 ,0 of main menu)
+local distance_x_menu_button = 300			-- x distance between menu buttons
 
 -- definizione immagini
 local main_background				= "LuaUI/Images/menu/mainmenu/sfondo_sound.png"
@@ -68,9 +68,8 @@ local function UpdateGeometry() -- aggiorno geometria
   posx_menu = vsx/2 - larghezza_menu/2
   posy_menu = vsy/2 - altezza_menu/2
 end
---UpdateGeometry()
 
---- funzione rilevamento delle dimensioni della finestra durante il resizing
+-- funzione rilevamento delle dimensioni della finestra durante il resizing
 function widget:ViewResize(viewSizeX, viewSizeY) -- quando si modifica la dimensione della finestra di spring, prelevane larghezza e altezza e fai partire la funzione "aggiorno geometria"
   vsx = viewSizeX
   vsy = viewSizeY
@@ -85,6 +84,9 @@ function widget:TextCommand(command)
 	if command == 'open_WMRTS_snd' then
 		mostra_soundsetting = true
 	end
+	if command == 'close_WMRTS_snd' then
+		mostra_soundsetting = false
+	end	
 end
 
 --------------------------------------
