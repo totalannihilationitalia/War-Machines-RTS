@@ -14,7 +14,7 @@ function widget:GetInfo()
 end
 
 include"keysym.h.lua"
-
+-- REV1 by molix for integration in WMRTS minimenu 24/12/2024
 
 
 
@@ -22,7 +22,7 @@ include"keysym.h.lua"
 -- options begin
 
 -- how many sides the marker "circles" will have
-local circleDivs = 4
+local circleDivs = 6
 
 -- how fast the constructor-indicating graphics blink
 local aniSpeedMultiplier = 10
@@ -65,7 +65,7 @@ local miniMapOnly = false
 
 
 
-
+local show_builder_units = false
 local widgetName = widget:GetInfo().name
 
 local abs = math.abs
@@ -127,8 +127,6 @@ local lastTime
 local aniSpeed
 local aniDelta
 
-
-
 function append(list, value)
   --Echo(widgetName .. ': entered "' .. debug.getinfo(1, "n").name .. '"')
   list[#list+1] = value
@@ -176,7 +174,7 @@ end
 function areConditionsMet()
     local cx, cy, cz = GetCameraPosition()
 
-    if (keyPressed or above or (activationHeight and cy >= activationHeight)) and 
+    if (show_builder_units or keyPressed or above or (activationHeight and cy >= activationHeight)) and 
         cy >= minActivationHeight and not IsGUIHidden() then
         return true
     end
@@ -498,6 +496,21 @@ function widget:DrawWorld()
 
 end
 
+--------------------------------------
+-- GESTIONE DEI COMANDI SPRING RICEVUTI --  Add with REV 1
+--------------------------------------				
+function widget:TextCommand(command) 
+-- apertura e chiusura main menu (icona on off del minimenu
+	if command == 'open_WMRTS_buildermenu' then
+		fillConList()
+        show_builder_units = true
+	end
+	if command == 'close_WMRTS_buildermenu' then
+        show_builder_units = false
+		rewindAnimation()
+	end
+end
+
 function widget:KeyPress(key, mods, isRepeat)
 
     if activationKeyTable[key] and isRepeat == false then
@@ -505,6 +518,7 @@ function widget:KeyPress(key, mods, isRepeat)
         fillConList()
     
         keyPressed = true
+		Spring.SendCommands("open_WMRTS_buildermenu")		 -- Add with REV1
     end
 
 end
@@ -513,6 +527,7 @@ function widget:KeyRelease(key)
 
     if activationKeyTable[key] then
         keyPressed = false
+		Spring.SendCommands("close_WMRTS_buildermenu")		 -- Add with REV1
         rewindAnimation()
     end
 

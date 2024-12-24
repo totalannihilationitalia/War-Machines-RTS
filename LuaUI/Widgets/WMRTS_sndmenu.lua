@@ -90,7 +90,7 @@ function widget:TextCommand(command)
 end
 
 --------------------------------------
--- ALLA PRESSIONE DEI PULSANTI
+-- ALLA PRESSIONE DEI TASTI
 --------------------------------------
 function widget:KeyPress(key, mods, isRepeat) 
 if mostra_soundsetting and not Spring.IsGUIHidden() then

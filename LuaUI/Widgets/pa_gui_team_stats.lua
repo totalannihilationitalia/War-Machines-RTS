@@ -164,7 +164,7 @@ end
 ]]--
 
 
-
+--[[  ttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 function aboveRectangle(mousePos,boxData)
 	local included = true
 	for coordName, coordData in pairs(boxData.absSizes) do
@@ -172,7 +172,7 @@ function aboveRectangle(mousePos,boxData)
 	end
 	return included
 end
-
+]]--
 
 --[[
 function isAbove(mousePos,guiData)
@@ -243,7 +243,7 @@ function convertCoords(sourceCoords,scalingVec)
 	return newCoords
 end
 
-
+--[[ *******************************************************************
 function tweakMouseRelease(guiData)
 	local vsx,vsy = widgetHandler:GetViewSizes()
 	local scalingVec = {x=1/vsx,y=1/vsy}
@@ -291,7 +291,7 @@ function tweakMouseMove(mouseDelta, guiData)
 	end
 	return changed,guiData
 end
-
+]]--
 local guiData = {
 	smallBox = {
 		relSizes = {
@@ -380,7 +380,7 @@ local numColums = #header +1
 
 function widget:SetConfigData(data)
 	guiData = data.guiData or guiData
-	forceWithinScreen()
+--	forceWithinScreen()
 	sortVar = data.sortVar or sortVar
 	sortAscending = data.sortAscending or sortAscending
 	local vsx,vsy = widgetHandler:GetViewSizes()
@@ -395,7 +395,7 @@ function widget:GetConfigData(data)
 	}
 end
 
-
+--[[ ----------------------------------------------------------------------
 function forceWithinScreen()
 	if guiData.smallBox.relSizes.x.min < 0 then
 		guiData.smallBox.relSizes.x.min = 0
@@ -414,15 +414,16 @@ function forceWithinScreen()
 		guiData.smallBox.relSizes.y.min = 1 - guiData.smallBox.relSizes.y.length
 	end
 end
-
+]]--
 
 function calcAbsSizes()
 	--forceWithinScreen()
 	
 	local vsx,vsy = gl.GetViewSizes()
+--[[-------------------------------------------------------------------------------------------------------------------------
 	guiData.smallBox.absSizes = {
--- dimensioni dell'icona del minimenu
-		x = {
+-- dimensioni dell'icona del minimenu 
+		x = { 			
 			min = (vsx -108),
 			max = (vsx -68),
 			length = (guiData.smallBox.relSizes.x.length * vsx),
@@ -433,6 +434,7 @@ function calcAbsSizes()
 			length = (guiData.smallBox.relSizes.y.length * vsy),
 		}
 	}
+	]]--
 -- dimensioni della tabella	
 	guiData.mainPanel.absSizes = {
 		x = {
@@ -452,7 +454,7 @@ function widget:ViewResize(viewSizeX, viewSizeY)
 	vsx,vsy = viewSizeX, viewSizeY
 	calcAbsSizes()
 	updateFontSize()
-	createButtonList()
+--	createButtonList()
 end
 
 function widget:Initialize()
@@ -463,22 +465,22 @@ function widget:Initialize()
 	if paused then
 		widget:GameFrame(GetGameFrame(),true)
 	end
-	createButtonList()
+--	createButtonList()
 end
 
-function createButtonList()
-	if buttonDrawList ~= nil then
-		gl.DeleteList(buttonDrawList)
-	end
-	buttonDrawList = gl.CreateList(DrawButton)
-end
+--function createButtonList()
+--	if buttonDrawList ~= nil then
+--		gl.DeleteList(buttonDrawList)
+--	end
+--	buttonDrawList = gl.CreateList(DrawButton)
+--end
 
 function widget:Shutdown()
 	glDeleteList(textDisplayList)
 	glDeleteList(backgroundDisplayList)
-	if buttonDrawList ~= nil then
-		gl.DeleteList(buttonDrawList)
-	end
+--	if buttonDrawList ~= nil then
+--		gl.DeleteList(buttonDrawList)
+--	end
 	if (WG['guishader_api'] ~= nil) then
 --		WG['guishader_api'].RemoveRect('teamstats_button')
 		WG['guishader_api'].RemoveRect('teamstats_window')
@@ -603,7 +605,7 @@ function widget:GameFrame(n,forceupdate)
 	sort(teamData,compareAllyTeams)
 	if totalNumLines ~= prevNumLines then
 		guiData.mainPanel.absSizes.y.min = guiData.mainPanel.absSizes.y.max - totalNumLines*fontSize
-		guiData = tweakMouseRelease(guiData)
+--		guiData = tweakMouseRelease(guiData) *******************************
 	end
 	prevNumLines = totalNumLines
 	glDeleteList(textDisplayList)
@@ -734,7 +736,7 @@ function widget:DrawScreen() -- disegna la tabella delle statistiche
 	if (WG['guishader_api'] ~= nil) then
 		WG['guishader_api'].RemoveRect('teamstats_window')
 	end
-	gl.CallList(buttonDrawList)
+--	gl.CallList(buttonDrawList)
 
 	DrawBackground()
 	DrawAllStats()
@@ -809,18 +811,14 @@ function RectRound(px,py,sx,sy,cs) 			-- #######################################
 	gl.Texture(false)
 end
 
-
+--[[
 function DrawButton()
 	if not guiData.smallBox.visible then
 		return
 	end
 	local boxAbsData = guiData.smallBox.absSizes
 	local tempFontSize = 14
-	--[[if widgetHandler:InTweakMode() then
-		rectBoxWithBorder(guiData.smallBox,{0,0,0,0.7})
-	else
-		rectBox(guiData.smallBox,{0,0,0,0.5})
-	end]]--
+
 	local x1,y1,x2,y2 = guiData.smallBox.absSizes.x.min, guiData.smallBox.absSizes.y.min, guiData.smallBox.absSizes.x.max, guiData.smallBox.absSizes.y.max
 	
 	gl.Color(1,1,1,1)
@@ -841,6 +839,7 @@ function DrawButton()
 	
 	-- glText(colorToChar({1,1,1}) .. "Stats",boxAbsData.x.min+boxAbsData.x.length/2, boxAbsData.y.max-boxAbsData.y.length/2, tempFontSize, "ovc")
 end
+]]--
 -- ****************************************** impostazione colore cella **********
 function DrawBackground()
 	if not guiData.mainPanel.visible then

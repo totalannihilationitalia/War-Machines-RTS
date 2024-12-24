@@ -26,8 +26,8 @@ end
 --------------------------------------------------------------------------------
 --[[
 to do list 
-- pulsanti piccoli / grossi
-- le immagini dei comandanti di fianco al menu
+-- pulsanti piccoli / grossi
+-- le immagini dei comandanti di fianco al menu
 ]]--
 --------------------------------------------------------------------------------
 -- rev 0 by molix
@@ -111,7 +111,7 @@ function widget:TextCommand(command)
 	if command == 'open_WMRTS_menu' and not mainmenu_attivo then
 		mainmenu_attivo = true
 		Spring.SendCommands("open_WMRTS_minimenu")  -- invio il comando open_WMRTS_minimenu per gestire l'icona minimenu
-	elseif command ==  'open_WMRTS_menu' and mainmenu_attivo then
+	elseif command ==  'close_WMRTS_menu' and mainmenu_attivo then
 		mainmenu_attivo = false
 		Spring.SendCommands("close_WMRTS_minimenu")  -- invio il comando close_WMRTS_minimenu per gestire l'icona minimenu
 -- invio il comando close_WMRTS_minimenu per gestire l'icona minimenu		---------------------------------------------------------------------------		
@@ -119,12 +119,12 @@ function widget:TextCommand(command)
 end
 
 --------------------------------------
--- ALLA PRESSIONE DEI PULSANTI --------------------------------------------------------------- spostare questa funzione nel minimenu! in modo da gestire l'apertura del menu col tasto esc solamente quando non ci sono altri elementi aperti
+-- ALLA PRESSIONE DEI TASTI --------------------------------------------------------------- spostare questa funzione nel minimenu! in modo da gestire l'apertura del menu col tasto esc solamente quando non ci sono altri elementi aperti
 --------------------------------------
 function widget:KeyPress(key, mods, isRepeat) 
 if mainmenu_attivo and not Spring.IsGUIHidden() then
-	if key == 0x01B then -- TASTO esc  
-	Spring.SendCommands("open_WMRTS_menu")
+	if key == 27 then -- TASTO esc  0x01B
+	Spring.SendCommands("close_WMRTS_menu")
 --------------------------------------------------------------------------------------------------------------- introdurre queste righe per disabilitare lo shader, quando lo installi nel drawing
 --				if (WG['guishader_api'] ~= nil) then
 --					WG['guishader_api'].RemoveRect('WMRTS_snd_option')
@@ -132,7 +132,7 @@ if mainmenu_attivo and not Spring.IsGUIHidden() then
 			return true
 	end
 elseif not mainmenu_attivo 	and not Spring.IsGUIHidden() then
-	if key == 0x01B then -- TASTO esc
+	if key == 27 then -- TASTO esc 0x01B
 	Spring.SendCommands("open_WMRTS_menu")
 			return true
 	end
@@ -253,7 +253,7 @@ if mainmenu_attivo and not Spring.IsGUIHidden() then
 				return true		
 				-- sndsetting					
 				elseif ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_snd) and (y <= Pos_y_mainmenu+Posy_snd + altezza_menu_buttons)) then
-				Spring.SendCommands("open_WMRTS_menu")
+				Spring.SendCommands("close_WMRTS_menu")
 				Spring.SendCommands("open_WMRTS_snd")
 				return true					
 				-- graphicssetting						
@@ -262,7 +262,7 @@ if mainmenu_attivo and not Spring.IsGUIHidden() then
 				return true					
 				-- exit to windows						
 			elseif ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_exitgame) and (y <= Pos_y_mainmenu+Posy_exitgame + altezza_menu_buttons)) then
-				Spring.SendCommands("open_WMRTS_menu")
+				Spring.SendCommands("close_WMRTS_menu")				
 				Spring.SendCommands("open_WMRTS_exit")				
 				return true				
 				-- backbutton
@@ -278,48 +278,6 @@ if mainmenu_attivo and not Spring.IsGUIHidden() then
   end
   
 end
-
---[[
---------------------------------------
--- MOUSE IS MOVING  --------------------------------- sto testando sta merda
---------------------------------------
-function widget:MouseMove(x, y, dx, dy, Button)
---function widget:MouseMove(x, y)
-if mainmenu_attivo and not Spring.IsGUIHidden() then
-
-
--- if Button == 0 then -- se il pulsante sinistro è premuto --aggiunto rev1
---  if (widget:IsAbove(x, y)) then
-if ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_menuset) and (y <= Pos_y_mainmenu+Posy_menuset + altezza_menu_buttons)) then
-Echo("test move")
-return
---	end
---   end
-	end
-	end
---	if mainmenu_attivo and not Spring.IsGUIHidden() then
-	--Posy_exitgame = y
-
---	end --is gui hidden
-end
-
---------------------------------------
--- MOUSE BUTTON 1 IS RELEASE
---------------------------------------
-function widget:MouseRelease(x, y, button)
-if mainmenu_attivo and not Spring.IsGUIHidden() then
-
-
-if Button == 1 then -- se il pulsante sinistro è premuto --aggiunto rev1
-if ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_menuset) and (y <= Pos_y_mainmenu+Posy_menuset + altezza_menu_buttons)) then
-Echo("test release")
-return -1
-	end
-	end
-	end
-	  
-end
-]]-- 
 
 --------------------------------------
 -- DISEGNO IL MINIMENU
