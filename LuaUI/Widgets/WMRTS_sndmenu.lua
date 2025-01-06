@@ -23,6 +23,17 @@ function widget:GetInfo()
   }
 end
 
+--------------------------------------------------------------------------------
+--[[
+to do list 
+-- definire suoni bottoni WMRTS
+-- Aggiungere opzione controllo rapido volume master nel minimenu
+-- Aggiungere animazione "minibutton off" se l'utente preme F6 (mute)
+]]--
+--------------------------------------------------------------------------------
+-- rev 0 by molix -- 02/12/2024 -- designing SND menu
+-- rev 1 by molix -- 03/01/2025 -- risolto problema di memoria e relativo crash in Spring 
+
 local TEST_SOUND = LUAUI_DIRNAME .. 'Sounds/pop.wav'
 
 local function PlayTestSound()
@@ -30,35 +41,42 @@ local function PlayTestSound()
 end
 
 -- definizione variabili
-local volume_master = 1.0					-- volume sounmaster
-local volume_music = 1.0 					-- volume music
-local volume_battle = 1.0 					-- volume battle
+local volume_master = 1.0									-- volume sounmaster
+local volume_music = 1.0 									-- volume music
+local volume_battle = 1.0 									-- volume battle
 local vsx, vsy = widgetHandler:GetViewSizes()
-local larghezza_barre =  200 				-- larghezza barre volume
-local altezza_barre = 10					-- altezza barre volume
+local larghezza_barre =  200 								-- larghezza barre volume
+local altezza_barre = 10									-- altezza barre volume
 local altezza_menu = 140
 local larghezza_menu = 400
-local margine_barre_sx = 150				-- il margine sinistro delle barre dal background
-local margine_barre_giu = 40 				-- il margine sotto delle barre dal background
-local interasse_righe = 20 					-- distanza tra le righe
-local posx_menu = vsx/2 - larghezza_menu/2 	-- parte da sx
-local posy_menu = vsy/2 - altezza_menu/2 	-- parte dal basso
-local mostra_soundsetting = false 			-- show sound options at start?
-local larghezza_menu_buttons = 76 --114		-- like back button, close button
-local altezza_menu_buttons = 25 --38		-- like back button, close button
-local posx_menu_button = 11					-- position x of first menu button (from 0 ,0 of main menu)
-local posy_menu_button = -10				-- position y of first menu button (from 0 ,0 of main menu)
-local distance_x_menu_button = 300			-- x distance between menu buttons
+local margine_barre_sx = 150								-- il margine sinistro delle barre dal background
+local margine_barre_giu					= 40 				-- il margine sotto delle barre dal background
+local interasse_righe 					= 20 				-- distanza tra le righe
+local posx_menu = vsx/2 - larghezza_menu/2 					-- parte da sx
+local posy_menu = vsy/2 - altezza_menu/2 					-- parte dal basso
+local mostra_soundsetting 				= false 			-- show sound options at start?
+local larghezza_menu_buttons 			= 76 --114			-- like back button, close button
+local altezza_menu_buttons 				= 25 --38			-- like back button, close button
+local posx_menu_button 					= 11				-- position x of first menu button (from 0 ,0 of main menu)
+local posy_menu_button					= -10				-- position y of first menu button (from 0 ,0 of main menu)
+local distance_x_menu_button 			= 300				-- x distance between menu buttons
+local selettore_buttons_visibile 		= false				-- visibile o no
+local posx_selettore_buttons 			= 0					-- posizione x del selettore dei pulsanti close, back ecc
+local posy_selettore_buttons 			= 0					-- posizione y del selettore dei pulsanti close, back ecc
 
 -- definizione immagini
 local main_background				= "LuaUI/Images/menu/mainmenu/sfondo_sound.png"
-local icona_menu_sound				= "LuaUI/Images/tweaksettings/mainmenu/menu_sound_icon.png"
+local icona_menu_sound				= "LuaUI/Images/menu/mainmenu/menu_sound_icon.png"
 local buttons_back					= "LuaUI/Images/menu/mainmenu/menu_back.png"
 local buttons_close					= "LuaUI/Images/menu/mainmenu/menu_close.png"
+local selettore_button				= "LuaUI/Images/menu/mainmenu/main_menu_buttonselection.png"
 
---caratteristche testo
-local titolo_menu_col						= {0.8, 0.8, 1.0, 1}
-local titolo_menu_dim	 					= gl.LoadFont("FreeSansBold.otf",14, 1.9, 40)
+--caratteristche testo header
+local titolo_menu_col				= {0.8, 0.8, 1.0, 1}
+local titolo_menu_dim	 			= gl.LoadFont("FreeSansBold.otf",14, 1.9, 40)
+
+-- impostazione dei fonts
+local font_generale					= gl.LoadFont("FreeSansBold.otf",12, 1.9, 40)
 
 --------------------------------------
 -- AGGGIORNAMENTO DELLA GEOMETRIA
@@ -150,6 +168,30 @@ function widget:Initialize()
   volume_music = volume_music * 0.01  
   volume_battle = Spring.GetConfigInt("snd_volbattle", 60)
   volume_battle = volume_battle * 0.01  
+end
+
+--------------------------------------
+-- SEMPRE
+--------------------------------------
+function widget:Update(dt)
+mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di aggiornamento
+	if mostra_soundsetting and not Spring.IsGUIHidden() then
+				-- backbutton
+				if 	
+				((mousex >= posx_menu+posx_menu_button) and (mousex <= posx_menu+posx_menu_button+larghezza_menu_buttons) and (mousey >= posy_menu+posy_menu_button) and (mousey <= posy_menu+posy_menu_button+altezza_menu_buttons)) then -- .... il pulsante back
+				selettore_buttons_visibile = true
+				posx_selettore_buttons = posx_menu+posx_menu_button 
+				posy_selettore_buttons = posy_menu+posy_menu_button
+				-- closebutton
+				elseif 
+				((mousex >= posx_menu+posx_menu_button+distance_x_menu_button) and (mousex <= posx_menu+posx_menu_button+larghezza_menu_buttons+distance_x_menu_button) and (mousey >= posy_menu+posy_menu_button) and (mousey <= posy_menu+posy_menu_button+altezza_menu_buttons)) then -- .... il pulsante close
+				selettore_buttons_visibile = true
+				posx_selettore_buttons = posx_menu+posx_menu_button+distance_x_menu_button
+				posy_selettore_buttons = posy_menu+posy_menu_button
+				else
+				selettore_buttons_visibile = false
+				end
+	end
 end
 
 --------------------------------------
@@ -314,10 +356,10 @@ end
 --------------------------------------
 -- DISEGNO IL SNDMENU
 --------------------------------------
-function widget:DrawScreen()
+local function DrawMenu()
 	if mostra_soundsetting then
   -- fade before the game starts  ("volume_master" command is not available)
-  local alpha = (Spring.GetGameSeconds() < 0.1) and 0.2 or 0.9
+	local alpha = (Spring.GetGameSeconds() < 0.1) and 0.2 or 0.9
 --  local xvol = xmin + volume_master * (xmax - xmin) -- sostituito da:
 	local xvol = (posx_menu + margine_barre_sx) + (volume_master * ((posx_menu + margine_barre_sx +larghezza_barre) - (posx_menu + margine_barre_sx)))
 	local xvol_music = (posx_menu + margine_barre_sx) + (volume_music * ((posx_menu + margine_barre_sx +larghezza_barre) - (posx_menu + margine_barre_sx)))
@@ -386,9 +428,7 @@ function widget:DrawScreen()
     { v = { xvol_battle, posy_menu + margine_barre_giu +interasse_righe*2} }, -- basso dx =  posizione del background + margine + larghezza della barra
     { v = { posx_menu + margine_barre_sx, posy_menu +margine_barre_giu + altezza_barre+interasse_righe*2 } }, --xvol_battle -- alto sx 
     { v = { xvol_battle, posy_menu +margine_barre_giu + altezza_barre+interasse_righe*2 } }, -- alto dx
-  })
-  
-  
+  })  
   
 -- icona menu
 	gl.Color(1,1,1,1)
@@ -399,20 +439,36 @@ function widget:DrawScreen()
 --titolo menu
 	titolo_menu_dim:SetTextColor(titolo_menu_col)
 	titolo_menu_dim:Begin()
-	titolo_menu_dim:Print("Sound settings:", posx_menu+70,posy_menu+106,14,'ds') 
+	titolo_menu_dim:Print("Sound settings", posx_menu+70,posy_menu+106,14,'ds') 
 	titolo_menu_dim:End()
   
 --testi di fianco alle barre
-	gl.Text(string.format("%i%%", 100 * volume_master), posx_menu + margine_barre_sx+ larghezza_barre + 20, posy_menu + margine_barre_giu +1, 12, "ocn") -- master volume %
-	gl.Text(string.format("Master volume:"), posx_menu +140 , posy_menu + margine_barre_giu +1, 12, "orn") -- master volume title
+	font_generale:SetTextColor(1, 1, 1, 1)
+	font_generale:Begin()
+	font_generale:Print(string.format("%i%%", 100 * volume_master), posx_menu + margine_barre_sx+ larghezza_barre + 20, posy_menu + margine_barre_giu +1, 12, "ocn") -- master volume %
+	font_generale:End()	
 
-	gl.Text(string.format("%i%%", 100 * volume_music), posx_menu + margine_barre_sx+ larghezza_barre + 20, posy_menu + margine_barre_giu +1+ interasse_righe*1, 12, "ocn") -- music volume %
-	gl.Text(string.format("Music volume:"), posx_menu +140 , posy_menu + margine_barre_giu +1+ interasse_righe*1, 12, "orn") -- music volume title
+	font_generale:Begin()
+	font_generale:Print(("Master volume:"),  posx_menu +140 , posy_menu + margine_barre_giu +1, 12, "orn") -- master volume title
+	font_generale:End()	
+
+	font_generale:Begin()
+	font_generale:Print(string.format("%i%%", 100 * volume_music), posx_menu + margine_barre_sx+ larghezza_barre + 20, posy_menu + margine_barre_giu +1+ interasse_righe*1, 12, "ocn") -- music volume %
+	font_generale:End()	
+
+	font_generale:Begin()
+	font_generale:Print(("Music volume:"), posx_menu +140 , posy_menu + margine_barre_giu +1+ interasse_righe*1, 12, "orn") -- music volume title
+	font_generale:End()	
+
+	font_generale:Begin()
+	font_generale:Print(string.format("%i%%", 100 * volume_battle), posx_menu + margine_barre_sx+ larghezza_barre + 20, posy_menu + margine_barre_giu +1+ interasse_righe*2, 12, "ocn") -- battle volume %
+	font_generale:End()	
 	
-	gl.Text(string.format("%i%%", 100 * volume_battle), posx_menu + margine_barre_sx+ larghezza_barre + 20, posy_menu + margine_barre_giu +1+ interasse_righe*2, 12, "ocn") -- battle volume %
-	gl.Text(string.format("Battle volume:"), posx_menu +140 , posy_menu + margine_barre_giu +1+ interasse_righe*2, 12, "orn") -- battle volume title
-  
-  gl.ShadeModel(GL.SMOOTH)
+	font_generale:Begin()
+	font_generale:Print(("Battle volume:"), posx_menu +140 , posy_menu + margine_barre_giu +1+ interasse_righe*2, 12, "orn") -- battle volume title
+	font_generale:End()	
+	
+ -- gl.ShadeModel(GL.SMOOTH) -- rimosso 03/01/2025
   
 -- pulsante back, first button
   	gl.Color(1,1,1,1)
@@ -426,24 +482,38 @@ function widget:DrawScreen()
 	gl.TexRect(posx_menu+posx_menu_button+distance_x_menu_button,posy_menu+posy_menu_button, posx_menu+posx_menu_button+distance_x_menu_button+larghezza_menu_buttons,posy_menu+posy_menu_button+altezza_menu_buttons)
 	gl.Texture(false)	-- fine texture			
 
--- testi deu PULSANTI
-	gl.LoadFont("FreeSansBold.otf",14, 1.9, 40):SetTextColor(0.5,0.5,0.5,0.5)
-	gl.Text(string.format("MAIN MENU"), posx_menu+posx_menu_button+ 45, posy_menu+posy_menu_button +9, 9, "ocn") -- BACK BUTTON
-	gl.Text(string.format("CLOSE"), posx_menu+posx_menu_button+distance_x_menu_button +45 , posy_menu+posy_menu_button +9, 9, "ocn") -- close button
+-- testi dei PULSANTI
 
--- gui shader	
+	font_generale:Begin()
+	font_generale:Print(("MAIN MENU"), posx_menu+posx_menu_button+ 45, posy_menu+posy_menu_button +9, 9, "ocn") -- BACK BUTTON	
+	font_generale:End()	
 	
-		if (WG['guishader_api'] ~= nil) then
-		WG['guishader_api'].InsertRect( posx_menu,posy_menu, posx_menu+larghezza_menu, posy_menu+altezza_menu,'WMRTS_snd_option')
+	font_generale:Begin()
+	font_generale:Print(("CLOSE"), posx_menu+posx_menu_button+distance_x_menu_button +45 , posy_menu+posy_menu_button +9, 9, "ocn") -- close button
+	font_generale:End()	
+
+-- riquadri di selezione dei menubuttons (close o back)
+  	if selettore_buttons_visibile then
+		gl.Color(1,1,1,1)
+		gl.Texture(selettore_button)	-- add the selector
+		gl.TexRect(posx_selettore_buttons,posy_selettore_buttons, posx_selettore_buttons+larghezza_menu_buttons,posy_selettore_buttons+altezza_menu_buttons)	
+		gl.Texture(false)	-- fine texture			
 	end
 
- 
-          
+-- gui shader	
+	if (WG['guishader_api'] ~= nil) then
+		WG['guishader_api'].InsertRect( posx_menu,posy_menu, posx_menu+larghezza_menu, posy_menu+altezza_menu,'WMRTS_snd_option')
+	end
 
   return
   end -- mostra_soundsetting = true
 end
 
+function widget:DrawScreen()
+	if (not Spring.IsGUIHidden()) then
+		DrawMenu()
+	end
+end
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------

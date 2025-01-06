@@ -32,6 +32,7 @@ to do list
 --------------------------------------------------------------------------------
 -- rev 0 by molix -- 02/12/2024 -- designing top right WMRTS mini-menù
 -- rev 1 by molix -- 24/12/2024 -- integrato il controllo del LOS cosi che si interfacci correttamente con il minimenu
+-- rev 2 by molix -- 03/01/2025 -- risolto problema di memoria e relativo crash in Spring. Ottimizzato il codice.
 
 -- definizione pulsanti minimenu
 local larghezza_main_minimenu_button 	= 50 	-- larghezza del pulsante "main menu" del minimenu (più largo degli altri)
@@ -107,7 +108,13 @@ local show_selettore_minibutton = false			-- mostra o no il selettore arancione 
 local UltimaMapDrawMode = Spring.GetMapDrawMode()
 
 -- definizioni variabili di gestione wind e tidal
-local forzatidal = Game.tidal
+local forzatidal
+local forzawind
+local valoretidal
+local valorewind
+
+-- impostazione dei fonts
+local font_generale					= gl.LoadFont("FreeSansBold.otf",12, 1.9, 40)
 
 --------------------------------------
 -- AGGIORNAMENTO DELLA GEOMETRIA
@@ -387,9 +394,78 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 				else 
 				show_selettore_minibutton = false
 				end
-	end
--- scrivo il valore della forza tidal (test)
-	Spring.Echo(forzatidal)
+	end -- isguihidden
+	
+-- imposto il valore tidal ed il valore di valorewind in funzione di forzawind (questo per evitare i 12 decimali). Avevo provato anche con queste stringhe: --	forzawind = string.sub(forzawind,1,string.len(forzawind)-11)  --	Spring.Echo(string.sub(forzawind, 0, -13)) ma a volte stampa la virgola, a volte no, a volte mi ruba anche un intero
+	valoretidal = Game.tidal
+	_,_,_, forzawind = Spring.GetWind()	
+			if forzawind == 0 then
+				valorewind = 0
+			elseif (forzawind > 0 and forzawind < 1) then
+				valorewind = 0.5
+			elseif (forzawind >=1 and forzawind< 2) then
+				valorewind = 1			
+			elseif (forzawind >=2 and forzawind< 3) then
+				valorewind = 2		
+			elseif (forzawind >=3 and forzawind< 4) then
+				valorewind = 3	
+			elseif (forzawind >=4 and forzawind< 5) then
+				valorewind = 4		
+			elseif (forzawind >=5 and forzawind< 6) then
+				valorewind = 5	
+			elseif (forzawind >=6 and forzawind< 7) then
+				valorewind = 6	
+			elseif (forzawind >=7 and forzawind< 8) then
+				valorewind = 7	
+			elseif (forzawind >=8 and forzawind< 9) then
+				valorewind = 8	
+			elseif (forzawind >=9 and forzawind< 10) then
+				valorewind = 9	
+			elseif (forzawind >=10 and forzawind< 11) then
+				valorewind = 10	
+			elseif (forzawind >=11 and forzawind< 12) then
+				valorewind = 11			
+			elseif (forzawind >=12 and forzawind< 13) then
+				valorewind = 12		
+			elseif (forzawind >=13 and forzawind< 14) then
+				valorewind = 13	
+			elseif (forzawind >=14 and forzawind< 15) then
+				valorewind = 14	
+			elseif (forzawind >=15 and forzawind< 16) then
+				valorewind = 15	
+			elseif (forzawind >=16 and forzawind< 17) then
+				valorewind = 16	
+			elseif (forzawind >=17 and forzawind< 18) then
+				valorewind = 17	
+			elseif (forzawind >=18 and forzawind< 19) then
+				valorewind = 18	
+			elseif (forzawind >=19 and forzawind< 20) then
+				valorewind = 19	
+			elseif (forzawind >=20 and forzawind< 21) then
+				valorewind = 20	
+			elseif (forzawind >=21 and forzawind< 22) then
+				valorewind = 21			
+			elseif (forzawind >=22 and forzawind< 23) then
+				valorewind = 22		
+			elseif (forzawind >=23 and forzawind< 24) then
+				valorewind = 23	
+			elseif (forzawind >=24 and forzawind< 25) then
+				valorewind = 24	
+			elseif (forzawind >=25 and forzawind< 26) then
+				valorewind = 25	
+			elseif (forzawind >=26 and forzawind< 27) then
+				valorewind = 26	
+			elseif (forzawind >=27 and forzawind< 28) then
+				valorewind = 27	
+			elseif (forzawind >=28 and forzawind< 29) then
+				valorewind = 28	
+			elseif (forzawind >=29 and forzawind< 30) then
+				valorewind = 29	
+			elseif (forzawind >=30 and forzawind< 31) then
+				valorewind = 30		
+			elseif (forzawind >=31) then
+				Spring.Echo("valore massimo vento raggiunto, sistemare logica in WMRTS_minimenu.lua")				
+			end -- arrivo fino ad un massimo di 30 come valore, se nelle mappe è superiore, aumentare la logica
 end
 	
 --------------------------------------
@@ -419,7 +495,7 @@ end
 --------------------------------------
 -- DISEGNO IL MINIMENU
 --------------------------------------
-function widget:DrawScreen()
+local function DrawMainMiniMenu()
 -- inserisco il main_minimenu_button
 ------------------------------------	
 	-- sfondo, primo blocco a dx
@@ -496,6 +572,9 @@ function widget:DrawScreen()
 			gl.Texture(false)	-- fine texture	
 			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante LOS (se sarà presente)
 		end
+end
+
+local function DrawSeparatorMiniMenu()
 		
 -- se si vuole inserire il separatore tra i bottoni del menu ( menu, statistiche, suono e obiettivi) a quelli funzionali ( LOS, builder ecc) inserire questa funzione:
 ------------------------------------
@@ -506,7 +585,9 @@ function widget:DrawScreen()
 	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giu_minimenu,Pos_x_next_button_drawing+interspazio_button_separator,vsy)	
 	gl.Texture(false)	-- fine texture				
 	Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante LOS (se sarà presente)
+end
 
+local function DrawVisualsMiniMenu()
 -- inserisco LOS minipulsante, se abilitato
 ------------------------------------
 		if show_minimenu_los_button then 			-- se il minipulsante è attivo per vederlo nel minimenù:
@@ -546,17 +627,9 @@ function widget:DrawScreen()
 			gl.Texture(false)	-- fine texture	
 			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante wind (se sarà presente)
 		end
-		
--- se si vuole inserire il separatore tra i bottoni del menu ( menu, statistiche, suono e obiettivi) a quelli funzionali ( LOS, builder ecc) inserire questa funzione:
-------------------------------------
-	Pos_x_next_button_drawing = Pos_x_next_button_drawing + interspazio_buttons + larghezza_minimenu_buttons - interspazio_button_separator -- riposiziono al precedente pulsante il "posizionatore_x_next_button" e lo sposto di quanto è larga la variabile del separatore
-	-- sfondo del blocco separatore
-	gl.Color(1,1,1,1)
-	gl.Texture(minimenu_bkgnd_separator)	
-	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giu_minimenu,Pos_x_next_button_drawing+interspazio_button_separator,vsy)	
-	gl.Texture(false)	-- fine texture				
-	Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante LOS (se sarà presente)
+end
 
+local function DrawMapDataMinimenu()
 -- inserisco wind minipulsante, se abilitato
 ------------------------------------
 		if show_minimenu_wind_button then 			-- se il minipulsante è attivo per vederlo nel minimenù:
@@ -572,9 +645,13 @@ function widget:DrawScreen()
 				else
 				gl.Texture(windbutton_off)			-- altrimenti mostra il pulsante spento	
 				end
-			gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
-			gl.Texture(false)	-- fine texture	
-			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante tidal (se sarà presente)
+	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
+	gl.Texture(false)	-- fine texture	
+	Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante tidal (se sarà presente)
+	-- Valore del vento	
+    font_generale:Begin()
+	font_generale:Print(valorewind, Pos_x_wind_button+17, Pos_y_minimenu_button+12, 15, "ocn") -- valore del vento trasformato in stringa
+	font_generale:End()	
 		end		
 	
 -- inserisco tidal minipulsante, se abilitato
@@ -595,6 +672,10 @@ function widget:DrawScreen()
 			gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
 			gl.Texture(false)	-- fine texture	
 			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante successivo (se sarà presente)
+		-- Valore delle maree
+    font_generale:Begin()
+	font_generale:Print(valoretidal, Pos_x_tidal_button+17, Pos_y_minimenu_button+12, 15, "ocn") -- valore del vento trasformato in stringa
+	font_generale:End()	
 		end		
 	
 -- inserisco l'ultima parte (sx) del background del minimenu	
@@ -630,8 +711,18 @@ function widget:DrawScreen()
 	WG['guishader_api'].InsertRect(Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giu_minimenu, vsx, vsy,'WMRTS menu')
 	end
 
-return
 end -- end DrawScreen
+
+function widget:DrawScreen()
+	if (not Spring.IsGUIHidden()) then
+
+		DrawMainMiniMenu() 			-- carico il minimenu principale (main menu, statistics e obj)
+		DrawSeparatorMiniMenu() 	-- inserisco il separatore
+		DrawVisualsMiniMenu()		-- inserisco il minimenu visuals (LOS e Builder)
+		DrawSeparatorMiniMenu() 	-- inserisco il separatore
+		DrawMapDataMinimenu()		-- inserisco il minimenu mapdata (Wind value e Tidal value
+	end
+end
 
 --------------------------------------
 -- GESTIONE SALVATAGGIO DATA

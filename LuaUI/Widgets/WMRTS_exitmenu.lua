@@ -23,20 +23,31 @@ function widget:GetInfo()
   }
 end
 
+--------------------------------------------------------------------------------
+--[[
+to do list 
+-- aggiungere comando exit
+]]--
+--------------------------------------------------------------------------------
+-- rev 0 by molix -- 10/12/2024 -- designing EXIT menu
+-- rev 1 by molix -- 03/01/2025 -- risolto problema di memoria e relativo crash in Spring 
 
 -- definizione variabili
 local vsx, vsy = widgetHandler:GetViewSizes()
-local altezza_menu = 140
-local larghezza_menu = 400
-local interasse_righe = 20 			-- distanza tra le righe
-local posx_menu = vsx/2 - larghezza_menu/2 	-- parte da sx
-local posy_menu = vsy/2 - altezza_menu/2 	-- parte dal basso
-local mostra_exitmenu = false 			-- mostra / nascondi menu
-local larghezza_menu_buttons = 76 --114		-- like back button, close button
-local altezza_menu_buttons = 25 --38				-- like back button, close button
-local posx_menu_button = 11						-- position x of first menu button (from 0 ,0 of main menu)
-local posy_menu_button = -10						-- position y of first menu button (from 0 ,0 of main menu)
-local distance_x_menu_button = 300				-- x distance between menu buttons
+local altezza_menu 							= 140
+local larghezza_menu 						= 400
+local interasse_righe 						= 20 					-- distanza tra le righe
+local posx_menu = vsx/2 - larghezza_menu/2 							-- parte da sx
+local posy_menu = vsy/2 - altezza_menu/2 							-- parte dal basso
+local mostra_exitmenu 						= false 				-- mostra / nascondi menu
+local larghezza_menu_buttons 				= 76 --114				-- like back button, close button
+local altezza_menu_buttons 					= 25 --38				-- like back button, close button
+local posx_menu_button						= 11					-- position x of first menu button (from 0 ,0 of main menu)
+local posy_menu_button 						= -10					-- position y of first menu button (from 0 ,0 of main menu)
+local distance_x_menu_button 				= 300					-- x distance between menu buttons
+local selettore_buttons_visibile 		 	= false					-- visibile o no
+local posx_selettore_buttons 			 	= 0						-- posizione x del selettore dei pulsanti close, back ecc
+local posy_selettore_buttons 			 	= 0						-- posizione y del selettore dei pulsanti close, back ecc
 
 -- definizione immagini
 local main_background				= "LuaUI/Images/menu/mainmenu/sfondo_sound.png"
@@ -44,10 +55,14 @@ local icona_menu_exit				= "LuaUI/Images/menu/mainmenu/icona_exit.png"
 local buttons_back					= "LuaUI/Images/menu/mainmenu/menu_back.png"
 local buttons_close					= "LuaUI/Images/menu/mainmenu/menu_close.png"
 local buttons_ok					= "LuaUI/Images/menu/mainmenu/menu_ok.png"
+local selettore_button 				= "LuaUI/Images/menu/mainmenu/main_menu_buttonselection.png"
 
 --caratteristche testo
-local titolo_menu_col						= {0.8, 0.8, 1.0, 1}
-local titolo_menu_dim	 					= gl.LoadFont("FreeSansBold.otf",14, 1.9, 40)
+local titolo_menu_col				= {0.8, 0.8, 1.0, 1}
+local titolo_menu_dim	 			= gl.LoadFont("FreeSansBold.otf",14, 1.9, 40)
+
+-- impostazione dei fonts
+local font_generale					= gl.LoadFont("FreeSansBold.otf",12, 1.9, 40)
 
 --------------------------------------
 -- AGGGIORNAMENTO DELLA GEOMETRIA
@@ -98,14 +113,46 @@ end
 end
 
 --------------------------------------
+-- SEMPRE
+--------------------------------------
+function widget:Update(dt)
+mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di aggiornamento
+	if mostra_exitmenu and not Spring.IsGUIHidden() then
+				-- backbutton
+				if 	
+				((mousex >= posx_menu+posx_menu_button) and (mousex <= posx_menu+posx_menu_button+larghezza_menu_buttons) and (mousey >= posy_menu+posy_menu_button) and (mousey <= posy_menu+posy_menu_button+altezza_menu_buttons)) then -- .... il pulsante back
+				selettore_buttons_visibile = true
+				Spring.Echo("test")
+				posx_selettore_buttons = posx_menu+posx_menu_button 
+				posy_selettore_buttons = posy_menu+posy_menu_button
+				-- closebutton
+				elseif 
+				((mousex >= posx_menu+posx_menu_button+distance_x_menu_button) and (mousex <= posx_menu+posx_menu_button+larghezza_menu_buttons+distance_x_menu_button) and (mousey >= posy_menu+posy_menu_button) and (mousey <= posy_menu+posy_menu_button+altezza_menu_buttons)) then -- .... il pulsante close
+				selettore_buttons_visibile = true
+				posx_selettore_buttons = posx_menu+posx_menu_button+distance_x_menu_button
+				posy_selettore_buttons = posy_menu+posy_menu_button
+				elseif
+				((mousex >= posx_menu+posx_menu_button+distance_x_menu_button/2) and (mousex <= posx_menu+posx_menu_button+larghezza_menu_buttons+distance_x_menu_button/2) and (mousey >= posy_menu+posy_menu_button) and (mousey <= posy_menu+posy_menu_button+altezza_menu_buttons)) then -- .... il pulsante ok
+				selettore_buttons_visibile = true
+				posx_selettore_buttons = posx_menu+posx_menu_button+distance_x_menu_button/2
+				posy_selettore_buttons = posy_menu+posy_menu_button
+				else
+				selettore_buttons_visibile = false
+				end
+	end
+end
+
+--------------------------------------
 -- MOUSE IS OVER BUTTONS
 --------------------------------------
 function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la variabile mostra_exitmenus è true.....
 if mostra_exitmenu and not Spring.IsGUIHidden() then
-  return 
+  return
   ((x >= posx_menu+posx_menu_button) and (x <= posx_menu+posx_menu_button+larghezza_menu_buttons) and (y >= posy_menu+posy_menu_button) and (y <= posy_menu+posy_menu_button+altezza_menu_buttons)) -- .... il pulsante back
   or
   ((x >= posx_menu+posx_menu_button+distance_x_menu_button) and (x <= posx_menu+posx_menu_button+larghezza_menu_buttons+distance_x_menu_button) and (y >= posy_menu+posy_menu_button) and (y <= posy_menu+posy_menu_button+altezza_menu_buttons)) -- .... il pulsante close  
+  or
+  ((x >= posx_menu+posx_menu_button+distance_x_menu_button/2) and (x <= posx_menu+posx_menu_button+larghezza_menu_buttons+distance_x_menu_button/2) and (y >= posy_menu+posy_menu_button) and (y <= posy_menu+posy_menu_button+altezza_menu_buttons)) -- .... il pulsante ok
 end
 end
 
@@ -147,8 +194,8 @@ if mostra_exitmenu and not Spring.IsGUIHidden() then
 				return true       
 			
 			elseif  ((x >= posx_menu+posx_menu_button+distance_x_menu_button/2) and (x <= posx_menu+posx_menu_button+larghezza_menu_buttons+distance_x_menu_button/2) and (y >= posy_menu+posy_menu_button) and (y <= posy_menu+posy_menu_button+altezza_menu_buttons)) then -- .... il pulsante ok
-				mostra_exitmenu = false  
-				Spring.SendCommands("quit") -- invia comando per chiudere spring
+				Spring.Echo("WIP: Exit to windows")
+				Spring.SendCommands("QuitForce") -- invia comando per chiudere spring
 				return true       
 			end			
 		end
@@ -200,25 +247,37 @@ function widget:DrawScreen()
 	gl.TexRect(posx_menu+posx_menu_button+distance_x_menu_button,posy_menu+posy_menu_button, posx_menu+posx_menu_button+distance_x_menu_button+larghezza_menu_buttons,posy_menu+posy_menu_button+altezza_menu_buttons)
 	gl.Texture(false)	-- fine texture			
 
+-- riquadri di selezione dei menubuttons (close o back)
+  	if selettore_buttons_visibile then
+		gl.Color(1,1,1,1)
+		gl.Texture(selettore_button)	-- add the selector
+		gl.TexRect(posx_selettore_buttons,posy_selettore_buttons, posx_selettore_buttons+larghezza_menu_buttons,posy_selettore_buttons+altezza_menu_buttons)	
+		gl.Texture(false)	-- fine texture			
+	end
+
 -- testi dei PULSANTI
-	gl.LoadFont("FreeSansBold.otf",14, 1.9, 40):SetTextColor(0.5,0.5,0.5,0.5)
-	gl.Text(string.format("MAIN MENU"), posx_menu+posx_menu_button+ 45, posy_menu+posy_menu_button +9, 9, "ocn") -- BACK BUTTON
-	gl.Text(string.format("EXIT"), posx_menu+posx_menu_button+distance_x_menu_button/2+ 45, posy_menu+posy_menu_button +9, 9, "ocn") -- OK BUTTON	
-	gl.Text(string.format("CLOSE"), posx_menu+posx_menu_button+distance_x_menu_button +45 , posy_menu+posy_menu_button +9, 9, "ocn") -- close button
- 
--- testo di uscita dal gioco
-	gl.Text(string.format("Do you want exit to Windows?"), posx_menu+190, posy_menu+60, 12, "ocn") -- BACK BUTTON
+	font_generale:Begin()
+	font_generale:Print("MAIN MENU", posx_menu+posx_menu_button+ 45, posy_menu+posy_menu_button +9, 9, "ocn") -- BACK BUTTON
+	font_generale:End()	
+
+	font_generale:Begin()
+	font_generale:Print("EXIT", posx_menu+posx_menu_button+distance_x_menu_button/2+ 45, posy_menu+posy_menu_button +9, 9, "ocn") -- OK BUTTON	
+	font_generale:End()	
+	
+	font_generale:Begin()
+	font_generale:Print("CLOSE", posx_menu+posx_menu_button+distance_x_menu_button +45 , posy_menu+posy_menu_button +9, 9, "ocn") -- close button
+	font_generale:End()	
+
+	font_generale:Begin()
+	font_generale:Print("Do you want exit to Windows?",  posx_menu+190, posy_menu+60, 12, "ocn") -- frase
+	font_generale:End()	
 	
 -- gui shader	
-	
-		if (WG['guishader_api'] ~= nil) then
+	if (WG['guishader_api'] ~= nil) then
 		WG['guishader_api'].InsertRect( posx_menu,posy_menu, posx_menu+larghezza_menu, posy_menu+altezza_menu,'WMRTS_exit_option')
 	end
 
- 
-          
-
-  return
+   return
   end 
 end
 

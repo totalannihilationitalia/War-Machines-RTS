@@ -13,6 +13,7 @@ function widget:GetInfo()
 end
 -----------------------------
 -- edit by molix 24/01/2022 -> add image background like War Machines RTS style
+-- fix by molix 03/01/2025 -> fix extractsquare error
 -----------------------------
 
 local textSize = 16
@@ -54,7 +55,7 @@ local strFormat = string.format
 --vars
 ------------------------------------------------
 
---unitDefID = {extractsMetal, extractSquare, oddX, oddZ}
+-- unitDefID = {extractsMetal, extractSquare, oddX, oddZ}
 local mexDefInfos = {}
 local defaultDefID
 
@@ -126,7 +127,7 @@ local function SetupMexDefInfos()
 		if (extractsMetal > 0) then
 			mexDefInfos[unitDefID] = {}
 			mexDefInfos[unitDefID][1] = extractsMetal
-			mexDefInfos[unitDefID][2] = unitDef.extractSquare
+--			mexDefInfos[unitDefID][2] = unitDef.extractSquare -- rimuovo questa riga 03/01/2025 molixx
 			if (unitDef.xsize % 4 == 2) then
 				mexDefInfos[unitDefID][3] = true
 			end

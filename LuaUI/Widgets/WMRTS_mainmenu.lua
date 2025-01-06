@@ -58,9 +58,9 @@ local altezza_selettore					= 24  	-- altezza del selettore
 local selettore_visibile				= false -- visibile o no
 local mousex, mousey				    -- posizione x e y del mouse, usata per rilevare la sua posizione e far apparire il selettore
 -- icona principale del menu
-local larghezza_icona_mainmenu			= 60
-local altezza_icona_mainmenu			= 60
-local margine_sx_icona_mainmenu			= 30  -- distanza dal margine sinistro del background e l'icona del menu
+local larghezza_icona_mainmenu			= 40
+local altezza_icona_mainmenu			= 40
+local margine_sx_icona_mainmenu			= 20  -- distanza dal margine sinistro del background e l'icona del menu
 local margine_su_icona_mainmenu			= -30 -- distanza di quanto sborda l'immagine dal bordo superiore del background
 -- pulsanti back / close
 local larghezza_menu_buttons 			= 76  -- like back button, close button
@@ -68,11 +68,15 @@ local altezza_menu_buttons 				= 25  -- like back button, close button
 local distance_x_menu_button 			= 300 -- distanza tra i due pulsanti 
 local posx_menu_button = 11					  -- position x of first menu button (from 0 ,0 of main menu)
 local posy_menu_button = -10				  -- position y of first menu button (from 0 ,0 of main menu)
+local selettore_buttons_visibile 		= false		-- visibile o no
+local posx_selettore_buttons 						-- posizione x del selettore dei pulsanti close, back ecc
+local posy_selettore_buttons 						-- posizione y del selettore dei pulsanti close, back ecc
 							
 
 -- definizioni immagini bottoni e background
 local backgroundmainmenu = "LuaUI/Images/menu/mainmenu/main_menu_bkgnd.png"
 local selettore = "LuaUI/Images/menu/mainmenu/main_menu_selection.png"
+local selettore_button = "LuaUI/Images/menu/mainmenu/main_menu_buttonselection.png"
 local icona_exit = ""
 local icona_snd = ""
 local icona_graphics = ""
@@ -151,6 +155,8 @@ function widget:Initialize()
   endTime = false
 end
 
+
+
 --------------------------------------
 -- SEMPRE
 --------------------------------------
@@ -181,16 +187,19 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 				((mousex >= Pos_x_mainmenu) and (mousex <= Pos_x_mainmenu + larghezza_mainmenu) and (mousey >= Pos_y_mainmenu+Posy_exitgame+offsety_selettore) and (mousey <= Pos_y_mainmenu+Posy_exitgame + altezza_menu_buttons+offsety_selettore)) then
 				selettore_visibile = true
 				posy_selettore = Posy_exitgame
-				else
-				selettore_visibile = false
 				-- backbutton
-				------------------------------------- inserire il button back col rispettivo selettore
-				-------------------------------------
-				-------------------------------------
-				-------------------------------------
+				elseif 
+				((mousex >= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button) and (mousex <= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_menu_buttons) and (mousey >= Pos_y_mainmenu+posy_menu_button) and (mousey <= Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons)) then
+				selettore_buttons_visibile = true
+				posx_selettore_buttons = Pos_x_mainmenu+posx_menu_button+distance_x_menu_button
+				posy_selettore_buttons = Pos_y_mainmenu+posy_menu_button
+				else
+				selettore_buttons_visibile = false
+				selettore_visibile = false
 				end
 	end
 end
+
 
 --------------------------------------
 -- MOUSE IS OVER BUTTONS
@@ -212,11 +221,8 @@ function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la 
 				or 
 				((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_exitgame) and (y <= Pos_y_mainmenu+Posy_exitgame + altezza_menu_buttons))
 				-- backbutton
-				------------------------------------- concludere inserendo il back button!!!!!!!!!!!!!! ---------------
-				-------------------------------------
-				-------------------------------------
-				-------------------------------------
-
+				or
+				((mousex >= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button) and (mousex <= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button +larghezza_menu_buttons) and (mousey >= Pos_y_mainmenu+posy_menu_button) and (mousey <= Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons))
 	end --is gui hidden
 end
 
@@ -266,10 +272,9 @@ if mainmenu_attivo and not Spring.IsGUIHidden() then
 				Spring.SendCommands("open_WMRTS_exit")				
 				return true				
 				-- backbutton
-				------------------------------------- concludere inserendo il back button!!!!!!!!!!!!!! ---------------
-				-------------------------------------
-				-------------------------------------
-				-------------------------------------
+			elseif ((mousex >= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button ) and (mousex <= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button +larghezza_menu_buttons) and (mousey >= Pos_y_mainmenu+posy_menu_button) and (mousey <= Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons)) then
+				Spring.SendCommands("close_WMRTS_menu")	
+				return true
 				
 			end -- posizioni menu
 		end
@@ -295,7 +300,7 @@ if mainmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	-- testo
 	font_intestazione:SetTextColor(1, 1, 1, 1)
 	font_intestazione:Begin()
-	font_intestazione:Print("Game menu", Pos_x_mainmenu+110, Pos_y_mainmenu + 170,14,'ds')
+	font_intestazione:Print("Game menu", Pos_x_mainmenu+70, Pos_y_mainmenu + 170,14,'ds')
 	font_intestazione:End()	
 	
 -- icona principale del menu
@@ -364,7 +369,7 @@ if mainmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi,Pos_y_mainmenu -distanzay_icone_testi +Posy_menuset,Pos_x_mainmenu + margine_sx_scritte-distanzax_icone_testi,Pos_y_mainmenu -distanzay_icone_testi + Posy_menuset +altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 	
--- riquadro selettore----------------------------------------------
+-- riquadro selettore delle opzioni del menu----------------------------------------------
 	if  selettore_visibile then
 	gl.Color(1,1,1,1)
 	gl.Texture(selettore)	
@@ -373,11 +378,12 @@ if mainmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	end
 	
 -- pulsanti close e back (se presente)----------------------------------------------
-	-- pulsante back
+	-- pulsante close
   	gl.Color(1,1,1,1)
-	gl.Texture(button_back)	
+	gl.Texture(button_close)	
 	gl.TexRect(Pos_x_mainmenu+posx_menu_button+distance_x_menu_button,Pos_y_mainmenu+posy_menu_button, Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_menu_buttons,Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons)	
 	gl.Texture(false)	-- fine texture		
+
 -- testo pulsante close	
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
@@ -385,6 +391,14 @@ if mainmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	font_generale:Print("Close", Pos_x_mainmenu+posx_menu_button+distance_x_menu_button + 28, Pos_y_mainmenu+posy_menu_button+5 ,12,'ds')
 	font_generale:End()		
 
+-- riquadro selettore dei pulsanti back, close ecc----------------------------------------------
+	if  selettore_buttons_visibile then
+	gl.Color(1,1,1,1)
+	gl.Texture(selettore_button)	
+	gl.TexRect(	posx_selettore_buttons,posy_selettore_buttons,posx_selettore_buttons+larghezza_menu_buttons ,posy_selettore_buttons + altezza_menu_buttons)	
+	gl.Texture(false)	-- fine texture		
+	end
+	
 end -- if mainmenu_attivo	
 end --drawscreen
 
