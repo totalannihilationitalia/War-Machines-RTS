@@ -151,12 +151,12 @@ function gadget:GameFrame(n)
 			---------------
 			-- aggiungo righe seguenti per mandare la variabile al lato unsync
 			---------------
-			if (antiripetizione == 0) then
-			vala=6 -- invio la variabile a convo_message_list.lua per far apparire la scritta "Sensors deactivated due insufficient power"
-			SendToUnsynced("ParlatoGateEvent", vala)
-			antiripetizione = 1 -- immetto questa variabile per non ripetere il messaggio (altrimenti lo ripete per ogni sensore esistente su mappa)
+--			if (antiripetizione == 0) then
+--			vala=6 -- invio la variabile a convo_message_list.lua per far apparire la scritta "Sensors deactivated due insufficient power"
+--			SendToUnsynced("ParlatoGateEvent", vala)
+--			antiripetizione = 1 -- immetto questa variabile per non ripetere il messaggio (altrimenti lo ripete per ogni sensore esistente su mappa)
 			----------------
-			end
+--			end
 		
             end				
           end
