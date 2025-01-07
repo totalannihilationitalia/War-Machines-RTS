@@ -42,7 +42,7 @@ local larghezza_mainmenu				= 400*2 -- doppia rispetto a mainmenu
 local altezza_mainmenu					= 200+50-- + 2 opzioni (da 25 l'una), rispetto a mainmenu
 local Pos_x_mainmenu					= 20  	-- NON EDITARE posizione in basso a sinistra del menu (valore gestito poi autonomamente dallo script)
 local Pos_y_mainmenu					= 20  	-- NON EDITARE posizione in basso a sinistra del menu (valore gestito poi autonomamente dallo script)
-local margine_sx_scritte				= 60  	-- margine sinistro da cui partono le scritte del menu
+local margine_sx_scritte				= 80  	-- margine sinistro da cui partono le scritte del menu
 local margine_inferiore					= 25    -- margine inferiore da cui parte la prima riga delle opzioni
 local distanzax_icone_testi				= 20  	-- distanza x tra le icone (caselle di selezione on/off) ed il testo della medesima opzione
 local distanzay_icone_testi				= 2   	-- distanza x tra le icone (caselle di selezione on/off) ed il testo della medesima opzione
@@ -113,6 +113,7 @@ function widget:ViewResize(viewSizeX, viewSizeY) -- quando si modifica la dimens
   UpdateGeometry()
 end
 
+
 --------------------------------------
 -- GESTIONE DEI COMANDI SPRING RICEVUTI
 --------------------------------------	
@@ -120,7 +121,7 @@ function widget:TextCommand(command)
 -- apertura e chiusura del menu
 	if command == 'open_WMRTS_graphics' and not graphicsmenu_attivo then
 		graphicsmenu_attivo = true
-		Spring.SendCommands("open_WMRTS_minimenu")  -- invio il comando open_WMRTS_minimenu per gestire l'icona minimenu
+		Spring.SendCommands("close_WMRTS_mainmenu")  -- invio il comando open_WMRTS_minimenu per gestire l'icona minimenu
 -- VALUTARE SE SONO NECESSARI ALTRI COMANDI ----------------------------------------------------------------------------------------------------		
 --	elseif command ==  'close_WMRTS_graphics' and graphicsmenu_attivo then
 --		graphicsmenu_attivo = false
@@ -290,7 +291,7 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	-- testo
 	font_intestazione:SetTextColor(1, 1, 1, 1)
 	font_intestazione:Begin()
-	font_intestazione:Print("Game menu", Pos_x_mainmenu+70, Pos_y_mainmenu + 170,14,'ds')
+	font_intestazione:Print("Grapichs options", Pos_x_mainmenu+70, Pos_y_mainmenu + 220,14,'ds')
 	font_intestazione:End()	
 	
 -- icona principale del menu
@@ -299,11 +300,11 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	gl.TexRect(	Pos_x_mainmenu+margine_sx_icona_graphicsmenu,Pos_y_mainmenu+altezza_mainmenu+margine_su_icona_graphicsmenu,Pos_x_mainmenu+margine_sx_icona_graphicsmenu+larghezza_icona_graphicsmenu,Pos_y_mainmenu+altezza_mainmenu+margine_su_icona_graphicsmenu+altezza_icona_graphicsmenu)	
 	gl.Texture(false)	-- fine texture	
 
--- voce advanced unit shading del menu
+-- voce dx advanced unit shading 
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Use advanced unit shading", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + Posy_exitgame,12,'ds')
+	font_generale:Print("Use advanced unit shading", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_unitshading,12,'ds')
 	font_generale:End()		
 	-- icona
 	gl.Color(1,1,1,1)
@@ -311,16 +312,112 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_unitshading - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_unitshading - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 	
--- voce advanced map shading del menu
+-- voce sx advanced map shading 
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Use advance map shading", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + Posy_snd ,12,'ds')
+	font_generale:Print("Use advanced map shading", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_advmapshading ,12,'ds')
 	font_generale:End()
 	-- icona	
 	gl.Color(1,1,1,1)
 	gl.Texture(icona_onoff)	
 	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_advmapshading - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_advmapshading - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture		
+
+-- voce dx hardware cursor
+	-- testo
+	font_generale:SetTextColor(1, 1, 1, 1)
+	font_generale:Begin()
+	font_generale:Print("Use hardware cursor", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_hardwarecur,12,'ds')
+	font_generale:End()		
+	-- icona
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_onoff)	
+	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_hardwarecur - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_hardwarecur - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture		
+	
+-- voce sx Show grass on maps
+	-- testo
+	font_generale:SetTextColor(1, 1, 1, 1)
+	font_generale:Begin()
+	font_generale:Print("Show grass on maps", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_showgrass ,12,'ds')
+	font_generale:End()
+	-- icona	
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_onoff)	
+	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_showgrass - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_showgrass - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture		
+	
+-- voce dx bloom shader cursor
+	-- testo
+	font_generale:SetTextColor(1, 1, 1, 1)
+	font_generale:Begin()
+	font_generale:Print("Use bloom shader", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_bloomshader,12,'ds')
+	font_generale:End()		
+	-- icona
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_onoff)	
+	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_bloomshader - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_bloomshader - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture		
+	
+-- voce sx LUPS
+	-- testo
+	font_generale:SetTextColor(1, 1, 1, 1)
+	font_generale:Begin()
+	font_generale:Print("Use LUPS effects", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_lups ,12,'ds')
+	font_generale:End()
+	-- icona	
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_onoff)	
+	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_lups - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_lups - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture		
+
+-- voce dx x-ray
+	-- testo
+	font_generale:SetTextColor(1, 1, 1, 1)
+	font_generale:Begin()
+	font_generale:Print("Use X-ray effects on units", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_xray,12,'ds')
+	font_generale:End()		
+	-- icona
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_onoff)	
+	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_xray - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_xray - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture		
+	
+-- voce sx ground projectiles
+	-- testo
+	font_generale:SetTextColor(1, 1, 1, 1)
+	font_generale:Begin()
+	font_generale:Print("Show ground projectile light", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_projectiles ,12,'ds')
+	font_generale:End()
+	-- icona	
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_onoff)	
+	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_projectiles - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_projectiles - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture		
+
+-- voce dx Blinking units
+	-- testo
+	font_generale:SetTextColor(1, 1, 1, 1)
+	font_generale:Begin()
+	font_generale:Print("Blinking units", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_xray,12,'ds')
+	font_generale:End()		
+	-- icona
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_onoff)	
+	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_xray - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_xray - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture		
+	
+-- voce sx fullscreen
+	-- testo
+	font_generale:SetTextColor(1, 1, 1, 1)
+	font_generale:Begin()
+	font_generale:Print("Fullscreen", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_projectiles ,12,'ds')
+	font_generale:End()
+	-- icona	
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_onoff)	
+	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_projectiles - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_projectiles - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 	
 -- riquadro selettore delle opzioni del menu----------------------------------------------
@@ -335,14 +432,14 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	-- pulsante close
   	gl.Color(1,1,1,1)
 	gl.Texture(button_close)	
-	gl.TexRect(Pos_x_mainmenu+posx_menu_button+distance_x_menu_button,Pos_y_mainmenu+posy_menu_button, Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_menu_buttons,Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons)	
+	gl.TexRect(Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_mainmenu/2,Pos_y_mainmenu+posy_menu_button, Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_menu_buttons+larghezza_mainmenu/2,Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons)	
 	gl.Texture(false)	-- fine texture		
 
 -- testo pulsante close	
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Close", Pos_x_mainmenu+posx_menu_button+distance_x_menu_button + 28, Pos_y_mainmenu+posy_menu_button+5 ,12,'ds')
+	font_generale:Print("Close", Pos_x_mainmenu+posx_menu_button+distance_x_menu_button + 28+larghezza_mainmenu/2, Pos_y_mainmenu+posy_menu_button+5 ,12,'ds')
 	font_generale:End()		
 
 -- riquadro selettore dei pulsanti back, close ecc----------------------------------------------

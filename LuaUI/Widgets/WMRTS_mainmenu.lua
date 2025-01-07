@@ -155,8 +155,6 @@ function widget:Initialize()
   endTime = false
 end
 
-
-
 --------------------------------------
 -- SEMPRE
 --------------------------------------
@@ -264,7 +262,8 @@ if mainmenu_attivo and not Spring.IsGUIHidden() then
 				return true					
 				-- graphicssetting						
 			elseif ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_graphics) and (y <= Pos_y_mainmenu+Posy_graphics + altezza_menu_buttons)) then
-				Echo("test graphics menu")
+				Spring.SendCommands("close_WMRTS_menu")
+				Spring.SendCommands("open_WMRTS_graphics")
 				return true					
 				-- exit to windows						
 			elseif ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_exitgame) and (y <= Pos_y_mainmenu+Posy_exitgame + altezza_menu_buttons)) then
