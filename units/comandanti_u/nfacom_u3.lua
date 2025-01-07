@@ -79,11 +79,31 @@ return {
                workertime = 300,
                wpri_badtargetcategory = "NOTAIR",
                wspe_badtargetcategory = "VTOL",
-               buildoptions = { 
 -----------------------------------
 --- INSERT BUILDLIST
 -----------------------------------
-               },
+		buildoptions = {
+			[1] = "corsolar",
+			[2] = "corwin",
+			[3] = "cormstor",
+			[4] = "corestor",
+			[5] = "cormex",
+			[6] = "cormakr",
+			[7] = "corlab",
+			[8] = "corvp",
+			[9] = "corap",
+			[10] = "corsy",
+			[11] = "coreyes",
+			[12] = "corrad",
+			[13] = "corsonar",
+			[14] = "cordrag",
+			[15] = "corllt",
+			[16] = "cortl",
+			[17] = "corrl",
+			[18] = "corfrad",
+			[19] = "corfrl",
+			[20] = "corfllt",
+		},
 
 
 
@@ -140,6 +160,13 @@ sfxtypes = {
                [1]="custom:Nano",
                }, -- close effects list
 }, -- close section sfxtypes
+-----------------------------------------------------------
+--- CUSTOM PARAMETERS
+-----------------------------------------------------------
+		customparams = {
+			paralyzemultiplier = 0.025000000372529,
+			iscommander = true,
+		},
 -----------------------------------------------------------
 --- UNITS SOUND
 -----------------------------------------------------------
