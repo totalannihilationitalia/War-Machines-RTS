@@ -12,7 +12,7 @@ return {
                buildinggrounddecalsizex= 11,
                buildinggrounddecalsizey = 11,
                buildinggrounddecaltype = "pavimentazione_euf.png",
-               buildpic = "",
+               buildpic = "eufavp.png",
                buildtime  = 17940,
                canmove = true,
                canPatrol = true,
