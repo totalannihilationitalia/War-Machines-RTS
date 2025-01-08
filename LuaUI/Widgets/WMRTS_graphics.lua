@@ -27,7 +27,6 @@ end
 --[[
 to do list 
 -- verificare se fare o predisporre su due pagine (intesi come tabs)
--- sulle opzioni multiple (come la selezione water) cambiare opzione precedente o successiva cliccando il tasto sx o dx del mouse facendo venire fuori un icona doppia del mouse con cliccato il pulsante sinistro e destro e rispettive funzioni
 ]]--
 --------------------------------------------------------------------------------
 -- rev 0 by molix
@@ -53,20 +52,13 @@ local offsety_selettore					= -4	-- offset y selettore rispetto al testo selezio
 local altezza_selettore					= 24  	-- altezza del selettore
 local selettore_visibile				= false -- visibile o no quando si passa sopra l'opzione (a casella singola) o sopra il pulsante + o - nel caso della casella doppia
 local mousex, mousey				   			-- posizione x e y del mouse, usata per rilevare la sua posizione e far apparire il selettore
-local posy_watertype					= 25	-- posizione y della rispettiva riga (dal fondo del background) 
-local posy_antialiasing					= 25	-- posizione y della rispettiva riga (dal fondo del background) 
-local posy_shadows						= 50	-- posizione y della rispettiva riga (dal fondo del background) 
-local posy_showenveronmental			= 50	-- posizione y della rispettiva riga (dal fondo del background) 
-local posy_fullscreen					= 75	-- posizione y della rispettiva riga (dal fondo del background) 
-local posy_blinking						= 75	-- posizione y della rispettiva riga (dal fondo del background) 
-local posy_projectiles					= 100	-- posizione y della rispettiva riga (dal fondo del background) 
-local posy_xray							= 100	-- posizione y della rispettiva riga (dal fondo del background) 
-local posy_bloomshader					= 125	-- posizione y della rispettiva riga (dal fondo del background) 
-local posy_lups							= 125	-- posizione y della rispettiva riga (dal fondo del background) 
-local posy_hardwarecur					= 150	-- posizione y della rispettiva riga (dal fondo del background) 
-local posy_showgrass					= 150	-- posizione y della rispettiva riga (dal fondo del background) 
-local posy_advmapshading				= 175	-- posizione y della rispettiva riga (dal fondo del background) 
-local posy_unitshading					= 175	-- posizione y della rispettiva riga (dal fondo del background) 
+local posy_riga1						= 25    -- posizione y della prima riga (dal fondo del background) di opzioni
+local posy_riga2						= 50    -- posizione y della seconda riga (dal fondo del background) di opzioni
+local posy_riga3						= 75    -- posizione y della terza riga (dal fondo del background) di opzioni 
+local posy_riga4						= 100    -- posizione y della quarta riga (dal fondo del background) di opzioni 
+local posy_riga5						= 125    -- posizione y della quinta riga (dal fondo del background) di opzioni 
+local posy_riga6						= 150    -- posizione y della sesta riga (dal fondo del background) di opzioni 
+local posy_riga7						= 175    -- posizione y della settima riga (dal fondo del background) di opzioni 
 -- icona principale del menu
 local larghezza_icona_graphicsmenu			= 40
 local altezza_icona_graphicsmenu			= 40
@@ -82,12 +74,14 @@ local selettore_buttons_visibile 		= false		-- visibile o no
 local posx_selettore_buttons 						-- posizione x del selettore dei pulsanti close, back ecc
 local posy_selettore_buttons 						-- posizione y del selettore dei pulsanti close, back ecc
 							
-
 -- definizioni immagini bottoni e background
-local backgroundmainmenu 			= "LuaUI/Images/menu/mainmenu/main_menu_bkgnd.png"
+local backgroundmainmenu 			= "LuaUI/Images/menu/mainmenu/graph_menu_bkgnd.png"
 local selettore 					= "LuaUI/Images/menu/mainmenu/main_menu_selection.png"
 local selettore_button 				= "LuaUI/Images/menu/mainmenu/main_menu_buttonselection.png"
-local icona_onoff 					= "LuaUI/Images/menu/mainmenu/graphics_onoff.png"
+local icona_on 						= "LuaUI/Images/menu/mainmenu/graphics_on.png"
+local icona_off 					= "LuaUI/Images/menu/mainmenu/graphics_off.png"
+local icona_prec 					= "LuaUI/Images/menu/mainmenu/graphics_prec.png"
+local icona_succ						= "LuaUI/Images/menu/mainmenu/graphics_succ.png"
 local icona_graphicsmenu			= "LuaUI/Images/menu/mainmenu/icona_main_menu.png"
 local button_back					= "LuaUI/Images/menu/mainmenu/menu_back.png"
 local button_close					= "LuaUI/Images/menu/mainmenu/menu_close.png"
@@ -105,14 +99,12 @@ local function UpdateGeometry() -- aggiorno geometria
   Pos_y_mainmenu = vsy/2 - altezza_mainmenu/2
 end
 
-
 --- funzione rilevamento delle dimensioni della finestra durante il resizing
 function widget:ViewResize(viewSizeX, viewSizeY) -- quando si modifica la dimensione della finestra di spring, prelevane larghezza e altezza e fai partire la funzione "aggiorno geometria"
   vsx = viewSizeX
   vsy = viewSizeY
   UpdateGeometry()
 end
-
 
 --------------------------------------
 -- GESTIONE DEI COMANDI SPRING RICEVUTI
@@ -162,9 +154,62 @@ function widget:Initialize()
 -- all'inizio imposto la posizione del mini menu
   Pos_x_mainmenu = vsx/2 - larghezza_mainmenu/2
   Pos_y_mainmenu = vsy/2 - altezza_mainmenu/2
-  endTime = false
-end
+-- all'inizio verifico anche il valore delle configurazioni
+  valore_mapshading = Spring.GetConfigInt("AdvMapShading", 1)		-- booleano di default è true
+  valore_unitshading = Spring.GetConfigInt("AdvUnitShading", 1)		-- booleano di default è true
+--  valore_grass = Spring.GetConfigInt("xxxxxxx", 1)   				----------------- non esiste grass ON/OFF
+  valore_hardwarecur = Spring.GetConfigInt("HardwareCursor", 0) 	-- booleano di default è falso
+  valore_LUPS = Spring.GetConfigInt("LupsActive", 0) 				-- booleano di default è falso -> disattivo successivamente anche il Widget				## widget
+  valore_bloom_shader = Spring.GetConfigInt("BloomshaderActive", 0)		-- booleano di default è falso -> disattivo successivamente anche il Widget			## widget
+  valore_show_projeclight = Spring.GetConfigInt("ShowProjectile", 0)		-- booleano di default è falso  -> disattivo successivamente anche il Widget	## widget
+  valore_xray = Spring.GetConfigInt("XrayActive", 0)				-- booleano di default è falso  -> disattivo successivamente anche il Widget			## widget
+  valore_hardwarecur = Spring.GetConfigInt("Fullscreen", 1) 		-- booleano di default è true
+--  valore_blinking = Spring.GetConfigInt("xxxxxxx", 1)   			----------------- non esiste è un widget???
+  valore_shadows = Spring.GetConfigInt("Shadows", 2) 				-- -1:=forceoff, 0:=off, 1:=full, 2:=fast (skip terrain)
+  valore_showenvironmental = Spring.GetConfigInt("EnviroActive", 0)	-- booleano di default è falso ->  -> disattivo successivamente anche il Widget			## widget
+  valore_antialiasing = Spring.GetConfigInt("MSAALevel", 0) 		-- valori da 0 a 32 MAX
+  valore_watertype = Spring.GetConfigInt("Water", 1) 				-- Defines the type of water rendering. Can be set in game. Options are: 0 = Basic water, 1 = Reflective water, 2 = Reflective and Refractive water, 3 = Dynamic water, 4 = Bumpmapped water
+  
+--[[
+Spring.GetConfigInt ( string name [, number default ] ) 
+return: nil | number configInt 
+Spring.GetConfigFloat ( string name [, number default ] ) 
+return: nil | number configFloat 
+New in version 104.0
+Spring.GetConfigString ( string name [, number default ] ) 
+return: nil | string configString 
+]]--
 
+--[[
+  volume_master = Spring.GetConfigInt("snd_volmaster", 60) 	-- prelevo il valore del volume master
+  volume_master = volume_master * 0.01						-- e lo converto in numero da 0 a 1
+  volume_music = Spring.GetConfigInt("snd_volmusic", 60)
+  volume_music = volume_music * 0.01  
+  volume_battle = Spring.GetConfigInt("snd_volbattle", 60)
+  volume_battle = volume_battle * 0.01  
+]]--
+--[[
+---------------------------
+-- TEAM CURSOR ESEMPIO DI SIMPLE MENU
+---------------------------					
+	elseif cmd == "teamcursopt" then
+			if Button[12]["click"] then
+			Spring.SetConfigInt("showteamcurs",0)
+			Spring.SendCommands({"luaui disablewidget AllyCursors"}) 			
+		else
+			Spring.SetConfigInt("showteamcurs",1)
+			Spring.SendCommands({"luaui enablewidget AllyCursors"}) 			
+		end	
+]]--
+--[[
+--ESEMPIO  
+valore_mostracurs=Spring.GetConfigInt("showteamcurs",0) -- se non esiste di default è 0 ma anche il widget deve essere disabilitato.
+if valore_mostracurs = 0 then
+			Spring.SendCommands({"luaui disablewidget AllyCursors"}) 	-- disabilito il widget
+end
+]]--
+
+end
 
 --[[
 --------------------------------------
@@ -304,121 +349,184 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Use advanced unit shading", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_unitshading,12,'ds')
+	font_generale:Print("Use advanced unit shading", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga7,12,'ds')
 	font_generale:End()		
 	-- icona
 	gl.Color(1,1,1,1)
-	gl.Texture(icona_onoff)	
-	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_unitshading - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_unitshading - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(icona_on)	
+	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 	
 -- voce sx advanced map shading 
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Use advanced map shading", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_advmapshading ,12,'ds')
+	font_generale:Print("Use advanced map shading", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga7 ,12,'ds')
 	font_generale:End()
 	-- icona	
 	gl.Color(1,1,1,1)
-	gl.Texture(icona_onoff)	
-	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_advmapshading - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_advmapshading - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(icona_on)	
+	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 
 -- voce dx hardware cursor
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Use hardware cursor", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_hardwarecur,12,'ds')
+	font_generale:Print("Use hardware cursor", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga6,12,'ds')
 	font_generale:End()		
 	-- icona
 	gl.Color(1,1,1,1)
-	gl.Texture(icona_onoff)	
-	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_hardwarecur - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_hardwarecur - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(icona_on)	
+	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 	
 -- voce sx Show grass on maps
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Show grass on maps", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_showgrass ,12,'ds')
+	font_generale:Print("Show grass on maps", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga6 ,12,'ds')
 	font_generale:End()
 	-- icona	
 	gl.Color(1,1,1,1)
-	gl.Texture(icona_onoff)	
-	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_showgrass - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_showgrass - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(icona_on)	
+	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 	
 -- voce dx bloom shader cursor
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Use bloom shader", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_bloomshader,12,'ds')
+	font_generale:Print("Use bloom shader", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga5,12,'ds')
 	font_generale:End()		
 	-- icona
 	gl.Color(1,1,1,1)
-	gl.Texture(icona_onoff)	
-	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_bloomshader - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_bloomshader - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(icona_on)	
+	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 	
 -- voce sx LUPS
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Use LUPS effects", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_lups ,12,'ds')
+	font_generale:Print("Use LUPS effects", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga5 ,12,'ds')
 	font_generale:End()
 	-- icona	
 	gl.Color(1,1,1,1)
-	gl.Texture(icona_onoff)	
-	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_lups - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_lups - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(icona_on)	
+	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 
 -- voce dx x-ray
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Use X-ray effects on units", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_xray,12,'ds')
+	font_generale:Print("Use X-ray effects on units", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga4,12,'ds')
 	font_generale:End()		
 	-- icona
 	gl.Color(1,1,1,1)
-	gl.Texture(icona_onoff)	
-	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_xray - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_xray - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(icona_on)	
+	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 	
 -- voce sx ground projectiles
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Show ground projectile light", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_projectiles ,12,'ds')
+	font_generale:Print("Show ground projectile light", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga4 ,12,'ds')
 	font_generale:End()
 	-- icona	
 	gl.Color(1,1,1,1)
-	gl.Texture(icona_onoff)	
-	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_projectiles - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_projectiles - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(icona_on)	
+	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 
 -- voce dx Blinking units
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Blinking units", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_xray,12,'ds')
+	font_generale:Print("Blinking units", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga3,12,'ds')
 	font_generale:End()		
 	-- icona
 	gl.Color(1,1,1,1)
-	gl.Texture(icona_onoff)	
-	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_xray - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_xray - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(icona_on)	
+	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 	
 -- voce sx fullscreen
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Fullscreen", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_projectiles ,12,'ds')
+	font_generale:Print("Fullscreen", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga3 ,12,'ds')
 	font_generale:End()
 	-- icona	
 	gl.Color(1,1,1,1)
-	gl.Texture(icona_onoff)	
-	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_projectiles - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_projectiles - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(icona_on)	
+	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
+	
+-- voce dx environments
+	-- testo
+	font_generale:SetTextColor(1, 1, 1, 1)
+	font_generale:Begin()
+	font_generale:Print("Show environment effects (snow, rain, etc)", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga2,12,'ds')
+	font_generale:End()		
+	-- icona
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_on)	
+	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture		
+	
+-- voce sx shadows
+	-- testo
+	font_generale:SetTextColor(1, 1, 1, 1)
+	font_generale:Begin()
+	font_generale:Print("Shadows", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga2 ,12,'ds')
+	font_generale:End()
+	-- icona down
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_prec)	
+	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture		
+	-- icona up
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_up)	
+	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture		
+
+-- voce dx Water rendering
+	-- testo
+	font_generale:SetTextColor(1, 1, 1, 1)
+	font_generale:Begin()
+	font_generale:Print("Water rendering type", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga1,12,'ds')
+	font_generale:End()		
+	-- icona down
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_prec)	
+	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture		
+	-- icona up
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_up)	
+	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi,Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi,Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture			
+	
+-- voce sx antialiasing
+	-- testo
+	font_generale:SetTextColor(1, 1, 1, 1)
+	font_generale:Begin()
+	font_generale:Print("Set Antialiasing level", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga1 ,12,'ds')
+	font_generale:End()
+	-- icona down
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_prec)	
+	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture		
+	-- icona up
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_up)	
+	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi,Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi,Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture			
 	
 -- riquadro selettore delle opzioni del menu----------------------------------------------
 	if  selettore_visibile then
