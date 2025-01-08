@@ -152,7 +152,7 @@ function widget:Initialize()
 -- all'inizio imposto la posizione del mini menu
   Pos_x_mainmenu = vsx/2 - larghezza_mainmenu/2
   Pos_y_mainmenu = vsy/2 - altezza_mainmenu/2
-  endTime = false
+--  endTime = false
 end
 
 --------------------------------------
