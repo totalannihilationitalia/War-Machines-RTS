@@ -35,30 +35,30 @@ to do list
 -- definizione dei comandi
 local Echo 								= Spring.Echo 
 -- definizione variabili di posizione e lunghezza menu e icone
-local graphicsmenu_attivo				= false -- Indica se questo menu è attivo o meno
+local graphicsmenu_attivo				= false 							-- Indica se questo menu è attivo o meno
 local vsx, vsy 						  	= widgetHandler:GetViewSizes()
-local larghezza_mainmenu				= 400*2 -- doppia rispetto a mainmenu
-local altezza_mainmenu					= 200+50-- + 2 opzioni (da 25 l'una), rispetto a mainmenu
-local Pos_x_mainmenu					= 20  	-- NON EDITARE posizione in basso a sinistra del menu (valore gestito poi autonomamente dallo script)
-local Pos_y_mainmenu					= 20  	-- NON EDITARE posizione in basso a sinistra del menu (valore gestito poi autonomamente dallo script)
-local margine_sx_scritte				= 80  	-- margine sinistro da cui partono le scritte del menu
-local margine_inferiore					= 25    -- margine inferiore da cui parte la prima riga delle opzioni
-local distanzax_icone_testi				= 20  	-- distanza x tra le icone (caselle di selezione on/off) ed il testo della medesima opzione
-local distanzay_icone_testi				= 2   	-- distanza x tra le icone (caselle di selezione on/off) ed il testo della medesima opzione
-local interpazio_icone					= 4		-- distanza x tra due icone consecutive (ad esempio per le opzioni che necessitano di una regolazione + e -)
-local larghezza_icona_opzioni			= 20  	-- larghezza icona opzioni
-local altezza_icona_opzioni				= 20  	-- altezza icona opzioni
-local offsety_selettore					= -4	-- offset y selettore rispetto al testo selezionato
-local altezza_selettore					= 24  	-- altezza del selettore
-local selettore_visibile				= false -- visibile o no quando si passa sopra l'opzione (a casella singola) o sopra il pulsante + o - nel caso della casella doppia
-local mousex, mousey				   			-- posizione x e y del mouse, usata per rilevare la sua posizione e far apparire il selettore
-local posy_riga1						= 25    -- posizione y della prima riga (dal fondo del background) di opzioni
-local posy_riga2						= 50    -- posizione y della seconda riga (dal fondo del background) di opzioni
-local posy_riga3						= 75    -- posizione y della terza riga (dal fondo del background) di opzioni 
-local posy_riga4						= 100    -- posizione y della quarta riga (dal fondo del background) di opzioni 
-local posy_riga5						= 125    -- posizione y della quinta riga (dal fondo del background) di opzioni 
-local posy_riga6						= 150    -- posizione y della sesta riga (dal fondo del background) di opzioni 
-local posy_riga7						= 175    -- posizione y della settima riga (dal fondo del background) di opzioni 
+local larghezza_mainmenu				= 400*2 							-- doppia rispetto a mainmenu
+local altezza_mainmenu					= 200+50							-- + 2 opzioni (da 25 l'una), rispetto a mainmenu
+local Pos_x_mainmenu					= 20  								-- NON EDITARE posizione in basso a sinistra del menu (valore gestito poi autonomamente dallo script)
+local Pos_y_mainmenu					= 20  								-- NON EDITARE posizione in basso a sinistra del menu (valore gestito poi autonomamente dallo script)
+local margine_sx_scritte				= 80  								-- margine sinistro da cui partono le scritte del menu
+local margine_inferiore					= 25    							-- margine inferiore da cui parte la prima riga delle opzioni
+local distanzax_icone_testi				= 20  								-- distanza x tra le icone (caselle di selezione on/off) ed il testo della medesima opzione
+local distanzay_icone_testi				= 2   								-- distanza x tra le icone (caselle di selezione on/off) ed il testo della medesima opzione
+local larghezza_icona_opzioni			= 20  								-- larghezza icona opzioni
+local interpazio_icone					= larghezza_icona_opzioni + 4		-- distanza x tra due icone consecutive (ad esempio per le opzioni che necessitano di una regolazione + e -)
+local altezza_icona_opzioni				= 20  								-- altezza icona opzioni
+local offsety_selettore					= -4								-- offset y selettore rispetto al testo selezionato
+local altezza_selettore					= 24  								-- altezza del selettore
+local selettore_visibile				= false 							-- visibile o no quando si passa sopra l'opzione (a casella singola) o sopra il pulsante + o - nel caso della casella doppia
+local mousex, mousey				   										-- posizione x e y del mouse, usata per rilevare la sua posizione e far apparire il selettore
+local posy_riga1						= 25    							-- posizione y della prima riga (dal fondo del background) di opzioni
+local posy_riga2						= 50    							-- posizione y della seconda riga (dal fondo del background) di opzioni
+local posy_riga3						= 75    							-- posizione y della terza riga (dal fondo del background) di opzioni 
+local posy_riga4						= 100   							-- posizione y della quarta riga (dal fondo del background) di opzioni 
+local posy_riga5						= 125    							-- posizione y della quinta riga (dal fondo del background) di opzioni 
+local posy_riga6						= 150    							-- posizione y della sesta riga (dal fondo del background) di opzioni 
+local posy_riga7						= 175    							-- posizione y della settima riga (dal fondo del background) di opzioni 
 -- icona principale del menu
 local larghezza_icona_graphicsmenu			= 40
 local altezza_icona_graphicsmenu			= 40
@@ -113,7 +113,6 @@ function widget:TextCommand(command)
 -- apertura e chiusura del menu
 	if command == 'open_WMRTS_graphics' and not graphicsmenu_attivo then
 		graphicsmenu_attivo = true
-		Spring.SendCommands("close_WMRTS_mainmenu")  -- invio il comando open_WMRTS_minimenu per gestire l'icona minimenu
 -- VALUTARE SE SONO NECESSARI ALTRI COMANDI ----------------------------------------------------------------------------------------------------		
 --	elseif command ==  'close_WMRTS_graphics' and graphicsmenu_attivo then
 --		graphicsmenu_attivo = false
@@ -148,29 +147,26 @@ end
 ]]--
 
 --------------------------------------
--- INIZIALIZZO IL MENU 
+-- FUNZIONE CHECK STATO OPZIONI, viene richiamata in diverse fasi dello script per controllare lo stato delle opzioni 
 --------------------------------------
-function widget:Initialize()
--- all'inizio imposto la posizione del mini menu
-  Pos_x_mainmenu = vsx/2 - larghezza_mainmenu/2
-  Pos_y_mainmenu = vsy/2 - altezza_mainmenu/2
+local function check_options()
 -- all'inizio verifico anche il valore delle configurazioni
-  valore_mapshading = Spring.GetConfigInt("AdvMapShading", 1)		-- booleano di default è true
-  valore_unitshading = Spring.GetConfigInt("AdvUnitShading", 1)		-- booleano di default è true
+  valore_mapshading = Spring.GetConfigInt("AdvMapShading", 1)			-- booleano di default è true
+  valore_unitshading = Spring.GetConfigInt("AdvUnitShading", 1)			-- booleano di default è true
 --  valore_grass = Spring.GetConfigInt("xxxxxxx", 1)   				----------------- non esiste grass ON/OFF
-  valore_hardwarecur = Spring.GetConfigInt("HardwareCursor", 0) 	-- booleano di default è falso
-  valore_LUPS = Spring.GetConfigInt("LupsActive", 0) 				-- booleano di default è falso -> disattivo successivamente anche il Widget				## widget
+  valore_hardwarecur = Spring.GetConfigInt("HardwareCursor", 0) 		-- booleano di default è falso
+  valore_LUPS = Spring.GetConfigInt("LupsActive", 0) 					-- booleano di default è falso -> disattivo successivamente anche il Widget				## widget
   valore_bloom_shader = Spring.GetConfigInt("BloomshaderActive", 0)		-- booleano di default è falso -> disattivo successivamente anche il Widget			## widget
-  valore_show_projeclight = Spring.GetConfigInt("ShowProjectile", 0)		-- booleano di default è falso  -> disattivo successivamente anche il Widget	## widget
-  valore_xray = Spring.GetConfigInt("XrayActive", 0)				-- booleano di default è falso  -> disattivo successivamente anche il Widget			## widget
-  valore_hardwarecur = Spring.GetConfigInt("Fullscreen", 1) 		-- booleano di default è true
+  valore_show_projeclight = Spring.GetConfigInt("ShowProjectile", 0)	-- booleano di default è falso  -> disattivo successivamente anche il Widget	## widget
+  valore_xray = Spring.GetConfigInt("XrayActive", 0)					-- booleano di default è falso  -> disattivo successivamente anche il Widget			## widget
+  valore_hardwarecur = Spring.GetConfigInt("Fullscreen", 1) 			-- booleano di default è true
 --  valore_blinking = Spring.GetConfigInt("xxxxxxx", 1)   			----------------- non esiste è un widget???
-  valore_shadows = Spring.GetConfigInt("Shadows", 2) 				-- -1:=forceoff, 0:=off, 1:=full, 2:=fast (skip terrain)
-  valore_showenvironmental = Spring.GetConfigInt("EnviroActive", 0)	-- booleano di default è falso ->  -> disattivo successivamente anche il Widget			## widget
-  valore_antialiasing = Spring.GetConfigInt("MSAALevel", 0) 		-- valori da 0 a 32 MAX
-  valore_watertype = Spring.GetConfigInt("Water", 1) 				-- Defines the type of water rendering. Can be set in game. Options are: 0 = Basic water, 1 = Reflective water, 2 = Reflective and Refractive water, 3 = Dynamic water, 4 = Bumpmapped water
+  valore_shadows = Spring.GetConfigInt("Shadows", 2) 					-- -1:=forceoff, 0:=off, 1:=full, 2:=fast (skip terrain)
+  valore_showenvironmental = Spring.GetConfigInt("EnviroActive", 0)		-- booleano di default è falso ->  -> disattivo successivamente anche il Widget			## widget
+  valore_antialiasing = Spring.GetConfigInt("MSAALevel", 0) 			-- valori da 0 a 32 MAX
+  valore_watertype = Spring.GetConfigInt("Water", 1) 					-- Defines the type of water rendering. Can be set in game. Options are: 0 = Basic water, 1 = Reflective water, 2 = Reflective and Refractive water, 3 = Dynamic water, 4 = Bumpmapped water
   
---[[
+--[[ ESEMPIO DA UTILIZZARE PER IL CHECK OPTIONS
 Spring.GetConfigInt ( string name [, number default ] ) 
 return: nil | number configInt 
 Spring.GetConfigFloat ( string name [, number default ] ) 
@@ -208,8 +204,19 @@ if valore_mostracurs = 0 then
 			Spring.SendCommands({"luaui disablewidget AllyCursors"}) 	-- disabilito il widget
 end
 ]]--
-
+ 
 end
+
+--------------------------------------
+-- INIZIALIZZO IL MENU 
+--------------------------------------
+function widget:Initialize()
+-- all'inizio imposto la posizione del mini menu
+	Pos_x_mainmenu = vsx/2 - larghezza_mainmenu/2
+	Pos_y_mainmenu = vsy/2 - altezza_mainmenu/2
+-- avvio la funzione check_options()
+	check_options()
+ end
 
 --[[
 --------------------------------------
@@ -234,47 +241,78 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 	end
 end
 ]]--
---[[
 --------------------------------------
 -- MOUSE IS OVER BUTTONS
 --------------------------------------
 function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la variabile graphicsmenu_attivo è true.....
 	if graphicsmenu_attivo and not Spring.IsGUIHidden() then
-				-- menusetting
-				return 	((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_menuset) and (y <= Pos_y_mainmenu+Posy_menuset + altezza_menu_buttons))
-				or
-				-- visualsetting
-				((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_visuals) and (y <= Pos_y_mainmenu+Posy_visuals + altezza_menu_buttons))
-				-- graphicssetting
-				or 
-				((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_graphics) and (y <= Pos_y_mainmenu+Posy_graphics + altezza_menu_buttons))
-				-- soundsettings
-				or 
-				((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_snd) and (y <= Pos_y_mainmenu+Posy_snd + altezza_menu_buttons))
-				-- exittowindows
-				or 
-				((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_exitgame) and (y <= Pos_y_mainmenu+Posy_exitgame + altezza_menu_buttons))
-				-- backbutton
-				or
-				((mousex >= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button) and (mousex <= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button +larghezza_menu_buttons) and (mousey >= Pos_y_mainmenu+posy_menu_button) and (mousey <= Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons))
+			-- Advanced map shading A SINISTRA icona "ON/OFF"
+			return ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi+altezza_icona_opzioni)) 
+			-- Advanced unit shading A DESTRA icona "ON/OFF"			
+			or
+			((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi+altezza_icona_opzioni)) 
+			-- Show grass on maps  A SINISTRA icona "ON/OFF"
+			or 
+			((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi+altezza_icona_opzioni)) 
+			-- hardware cursor A DESTRA  icona "ON/OFF"
+			or 
+			((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi+altezza_icona_opzioni	)) 
+			-- LUPS effect  A SINISTRA icona "ON/OFF"
+			or 
+			((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)) 
+			-- Bloom shader A DESTRA  icona "ON/OFF"	
+			or 
+			((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)) 
+			-- Show ground projectile light  A SINISTRA icona "ON/OFF"
+			or 
+			((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)) 
+			-- X-RAY A DESTRA  icona "ON/OFF"
+			or 
+			((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)) 
+			-- Fullscreen  A SINISTRA icona "ON/OFF"
+			or 
+			((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)) 
+			-- Blinking units A DESTRA  icona "ON/OFF"
+			or 
+			((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)) 
+			-- shadows icona "<-"
+			or 
+			((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) 
+			-- shadows icona "->"
+			or 
+			((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) 
+			-- Show environment effects (snow, rain, etc) 	icona "<-"		
+			or 
+			((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) 
+			-- Show environment effects (snow, rain, etc) 	icona "->"		
+			or 
+			((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) 
+			-- Set Antialiasing level  icona "<-"
+			or 
+			((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)) 
+			-- Set Antialiasing level  icona "->"
+			or 
+			((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)) 
+			-- Water type 	icona "<-"		
+			or 
+			((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)) 
+			-- Water type 	icona "->"		
+			or 
+			((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)) 
 	end --is gui hidden
 end
-]]--
---[[
 --------------------------------------
 -- GESTIONE TOOLTIP ------------------------------------------------------------------------------------------------ IMPLEMENTARE INSERENDO LE SPIEGAZIONI DEI PULSANTI ----------------------------
 --------------------------------------
 function widget:GetTooltip(x, y) -- questa condizione è vera quando isAbove è vera, modificare aggiungendo  le condizioni dei quadrati
 if graphicsmenu_attivo and not Spring.IsGUIHidden() then
   if (Spring.GetGameSeconds() < 0.1) then
-    return "Main menu  (only works in game)"
+    return "Graphics options menu  (only works in game)"
   else
-    return "Menu Options"
+    return "Graphics options menu"
   end
 end
 end
-]]--
---[[
 --------------------------------------
 -- MOUSE PRESS BUTTONS 1 (SX)
 --------------------------------------
@@ -285,41 +323,84 @@ if graphicsmenu_attivo and not Spring.IsGUIHidden() then
   end
 	if button== 1 then -- aggiunto rev1
 		if (widget:IsAbove(x, y)) then
-				-- menusetting		
-			if ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_menuset) and (y <= Pos_y_mainmenu+Posy_menuset + altezza_menu_buttons)) then
-				Echo("test mainmenu")
+				-- Advanced map shading A SINISTRA icona "ON/OFF"
+			if ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				Echo("test advance map")
 				return true
-				-- visualsetting				
-			elseif ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_visuals) and (y <= Pos_y_mainmenu+Posy_visuals + altezza_menu_buttons)) then
-				Echo("test visual menu")
+				-- Advanced unit shading A DESTRA icona "ON/OFF"			
+			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				Echo("test Advanced unit shading")
 				return true		
-				-- sndsetting					
-				elseif ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_snd) and (y <= Pos_y_mainmenu+Posy_snd + altezza_menu_buttons)) then
-				Spring.SendCommands("close_WMRTS_menu")
-				Spring.SendCommands("open_WMRTS_snd")
-				return true					
-				-- graphicssetting						
-			elseif ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_graphics) and (y <= Pos_y_mainmenu+Posy_graphics + altezza_menu_buttons)) then
-				Echo("test graphics menu")
-				return true					
-				-- exit to windows						
-			elseif ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_exitgame) and (y <= Pos_y_mainmenu+Posy_exitgame + altezza_menu_buttons)) then
-				Spring.SendCommands("close_WMRTS_menu")				
-				Spring.SendCommands("open_WMRTS_exit")				
-				return true				
-				-- backbutton
-			elseif ((mousex >= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button ) and (mousex <= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button +larghezza_menu_buttons) and (mousey >= Pos_y_mainmenu+posy_menu_button) and (mousey <= Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons)) then
-				Spring.SendCommands("close_WMRTS_menu")	
+				-- Show grass on maps  A SINISTRA icona "ON/OFF"
+			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				Echo("test Show grass")
 				return true
-				
+				-- hardware cursor A DESTRA  icona "ON/OFF"
+			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi+altezza_icona_opzioni	)) then
+				Echo("test hardware cursor")
+				return true				
+				-- LUPS effect  A SINISTRA icona "ON/OFF"
+			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				Echo("test LUPS effect")
+				return true
+				-- Bloom shader A DESTRA  icona "ON/OFF"	
+			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				Echo("test Bloom shader")
+				return true		
+				-- Show ground projectile light  A SINISTRA icona "ON/OFF"
+			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				Echo("test Show ground projectile light")
+				return true
+				-- X-RAY A DESTRA  icona "ON/OFF"
+			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				Echo("test X-RAY")
+				return true					
+				-- Fullscreen  A SINISTRA icona "ON/OFF"
+			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				Echo("test Fullscreen")
+				return true
+				-- Blinking units A DESTRA  icona "ON/OFF"
+			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				Echo("test Blinking")
+				return true						
+				-- shadows icona "<-"
+			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				Echo("test shadows indietro")
+				return true
+				-- shadows icona "->"
+			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				Echo("test shadows avanti")
+				return true				
+					-- Show environment effects (snow, rain, etc) 	icona "<-"		
+			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				Echo("test environment undietro")
+				return true		
+					-- Show environment effects (snow, rain, etc) 	icona "->"		
+			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				Echo("test environment avanti")
+				return true		
+				-- Set Antialiasing level  icona "<-"
+			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				Echo("test Antialiasing indietro")
+				return true
+				-- Set Antialiasing level  icona "->"
+			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				Echo("test Antialiasing avanti")
+				return true		
+				-- Water type 	icona "<-"		
+			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				Echo("test Water type indietro")
+				return true		
+				-- Water type 	icona "->"		
+			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				Echo("test Water type avanti")
+				return true					
 			end -- posizioni menu
-		end
-	end
+		end -- isAbove
+	end -- button = 1
     return false
-  end
-  
-end
-]]--
+  end -- GUIHidden
+end -- function
 --------------------------------------
 -- DISEGNO IL MINIMENU
 --------------------------------------
@@ -376,10 +457,10 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	font_generale:Print("Use hardware cursor", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga6,12,'ds')
 	font_generale:End()		
 	-- icona
---	gl.Color(1,1,1,1)
---	gl.Texture(icona_on)	
---	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi+altezza_icona_opzioni)	
---	gl.Texture(false)	-- fine texture		
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_on)	
+	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture		
 	
 -- voce sx Show grass on maps
 	-- testo
@@ -400,10 +481,10 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	font_generale:Print("Use bloom shader", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga5,12,'ds')
 	font_generale:End()		
 	-- icona
---	gl.Color(1,1,1,1)
---	gl.Texture(icona_on)	
---	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)	
---	gl.Texture(false)	-- fine texture		
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_on)	
+	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture		
 	
 -- voce sx LUPS
 	-- testo
@@ -412,10 +493,10 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	font_generale:Print("Use LUPS effects", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga5 ,12,'ds')
 	font_generale:End()
 	-- icona	
---	gl.Color(1,1,1,1)
---	gl.Texture(icona_on)	
---	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)	
---	gl.Texture(false)	-- fine texture		
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_on)	
+	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)
+	gl.Texture(false)	-- fine texture		
 
 -- voce dx x-ray
 	-- testo
@@ -424,10 +505,10 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	font_generale:Print("Use X-ray effects on units", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga4,12,'ds')
 	font_generale:End()		
 	-- icona
---	gl.Color(1,1,1,1)
---	gl.Texture(icona_on)	
---	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)	
---	gl.Texture(false)	-- fine texture		
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_on)	
+	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture		
 	
 -- voce sx ground projectiles
 	-- testo
@@ -436,10 +517,10 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	font_generale:Print("Show ground projectile light", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga4 ,12,'ds')
 	font_generale:End()
 	-- icona	
---	gl.Color(1,1,1,1)
---	gl.Texture(icona_on)	
---	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)	
---	gl.Texture(false)	-- fine texture		
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_on)	
+	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)
+	gl.Texture(false)	-- fine texture		
 
 -- voce dx Blinking units
 	-- testo
@@ -448,10 +529,10 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	font_generale:Print("Blinking units", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga3,12,'ds')
 	font_generale:End()		
 	-- icona
---	gl.Color(1,1,1,1)
---	gl.Texture(icona_on)	
---	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)	
---	gl.Texture(false)	-- fine texture		
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_on)	
+	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture		
 	
 -- voce sx fullscreen
 	-- testo
@@ -460,10 +541,10 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	font_generale:Print("Fullscreen", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga3 ,12,'ds')
 	font_generale:End()
 	-- icona	
---	gl.Color(1,1,1,1)
---	gl.Texture(icona_on)	
---	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)	
---	gl.Texture(false)	-- fine texture		
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_on)	
+	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)
+	gl.Texture(false)	-- fine texture		
 	
 -- voce dx environments
 	-- testo
@@ -472,10 +553,10 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	font_generale:Print("Show environment effects (snow, rain, etc)", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga2,12,'ds')
 	font_generale:End()		
 	-- icona
---	gl.Color(1,1,1,1)
---	gl.Texture(icona_on)	
---	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)	
---	gl.Texture(false)	-- fine texture		
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_on)	
+	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture		
 	
 -- voce sx shadows
 	-- testo
@@ -486,12 +567,12 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	-- icona down
 	gl.Color(1,1,1,1)
 	gl.Texture(icona_prec)	
-	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)
 	gl.Texture(false)	-- fine texture		
 	-- icona up
 	gl.Color(1,1,1,1)
 	gl.Texture(icona_succ)	
-	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)
 	gl.Texture(false)	-- fine texture		
 
 -- voce dx Water rendering
