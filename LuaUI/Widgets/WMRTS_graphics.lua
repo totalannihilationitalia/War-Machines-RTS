@@ -343,11 +343,15 @@ if graphicsmenu_attivo and not Spring.IsGUIHidden() then
 				if valore_mapshading > 1 then
 				 valore_mapshading = 0
 				end
-				if valore_mapshading = 0 then
-				Spring.SetConfigInt("valore_mapshading", 0)				
+				if valore_mapshading == 0 then
+				Spring.SendCommands("AdvMapShading 0")
+				Spring.SetConfigInt("AdvMapShading", 0)	
+--				Echo("System: Disable advanced map shading,  maybe you need to restart the game. If you don't see any differences, maybe your graphics card doesn't support the shader.")
 --				Spring.SendCommands({"luaui disablewidget AllyCursors"}) 	-- disabilito il widget
-				elseif valore_mapshading = 1 then
-				Spring.SetConfigInt("valore_mapshading", 1)					
+				elseif valore_mapshading == 1 then
+				Spring.SendCommands("AdvMapShading 1")
+				Spring.SetConfigInt("AdvMapShading", 1)					
+--				Echo("System: Enable advanced map shading, maybe you need to restart the game. If you do not see any differents, maybe your graphics card doesn't support the shader.")				
 --				Spring.SendCommands({"luaui enablewidget AllyCursors"}) 	-- disabilito il widget
 				end
 				return true
@@ -466,7 +470,11 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	font_generale:End()
 	-- icona	
 	gl.Color(1,1,1,1)
-	gl.Texture(icona_on)	
+	if valore_mapshading == 0 then
+	gl.Texture(icona_off)	
+	elseif valore_mapshading == 1 then
+	gl.Texture(icona_on)		
+	end	
 	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 
