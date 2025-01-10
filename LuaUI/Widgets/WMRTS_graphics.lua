@@ -59,6 +59,21 @@ local posy_riga4						= 100   							-- posizione y della quarta riga (dal fondo
 local posy_riga5						= 125    							-- posizione y della quinta riga (dal fondo del background) di opzioni 
 local posy_riga6						= 150    							-- posizione y della sesta riga (dal fondo del background) di opzioni 
 local posy_riga7						= 175    							-- posizione y della settima riga (dal fondo del background) di opzioni 
+-- definizione valori delle opzioni
+local valore_mapshading
+local valore_unitshading
+local valore_grass					-- verificare!!!!!!!!!!!!!!!!!!!
+local valore_hardwarecur
+local valore_LUPS
+local valore_bloom_shader
+local valore_show_projeclight
+local valore_xray
+local valore_hardwarecur
+local valore_blinking				-- verificare!!!!!!!!!!!!!!!!!!!
+local valore_shadows
+local valore_showenvironmental
+local valore_antialiasing
+local valore_watertype
 -- icona principale del menu
 local larghezza_icona_graphicsmenu			= 40
 local altezza_icona_graphicsmenu			= 40
@@ -73,7 +88,6 @@ local posy_menu_button = -10				 		-- position y of first menu button (from 0 ,0
 local selettore_buttons_visibile 		= false		-- visibile o no
 local posx_selettore_buttons 						-- posizione x del selettore dei pulsanti close, back ecc
 local posy_selettore_buttons 						-- posizione y del selettore dei pulsanti close, back ecc
-							
 -- definizioni immagini bottoni e background
 local backgroundmainmenu 			= "LuaUI/Images/menu/mainmenu/graph_menu_bkgnd.png"
 local selettore 					= "LuaUI/Images/menu/mainmenu/main_menu_selection.png"
@@ -85,7 +99,6 @@ local icona_succ						= "LuaUI/Images/menu/mainmenu/graphics_succ.png"
 local icona_graphicsmenu			= "LuaUI/Images/menu/mainmenu/icona_main_menu.png"
 local button_back					= "LuaUI/Images/menu/mainmenu/menu_back.png"
 local button_close					= "LuaUI/Images/menu/mainmenu/menu_close.png"
-
 -- impostazione dei fonts
 local font_intestazione				= gl.LoadFont("FreeSansBold.otf",14, 1.9, 40)
 local font_generale					= gl.LoadFont("FreeSansBold.otf",12, 1.9, 40)
@@ -326,7 +339,17 @@ if graphicsmenu_attivo and not Spring.IsGUIHidden() then
 		if (widget:IsAbove(x, y)) then
 				-- Advanced map shading A SINISTRA icona "ON/OFF"
 			if ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				Echo("test advance map")
+				valore_mapshading = valore_mapshading + 1
+				if valore_mapshading > 1 then
+				 valore_mapshading = 0
+				end
+				if valore_mapshading = 0 then
+				Spring.SetConfigInt("valore_mapshading", 0)				
+--				Spring.SendCommands({"luaui disablewidget AllyCursors"}) 	-- disabilito il widget
+				elseif valore_mapshading = 1 then
+				Spring.SetConfigInt("valore_mapshading", 1)					
+--				Spring.SendCommands({"luaui enablewidget AllyCursors"}) 	-- disabilito il widget
+				end
 				return true
 				-- Advanced unit shading A DESTRA icona "ON/OFF"			
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi+altezza_icona_opzioni)) then
