@@ -172,7 +172,7 @@ local function check_options()
   valore_bloom_shader = Spring.GetConfigInt("BloomshaderActive", 0)		-- booleano di default è falso -> disattivo successivamente anche il Widget			## widget
   valore_show_projeclight = Spring.GetConfigInt("ShowProjectile", 0)	-- booleano di default è falso  -> disattivo successivamente anche il Widget	## widget
   valore_xray = Spring.GetConfigInt("XrayActive", 0)					-- booleano di default è falso  -> disattivo successivamente anche il Widget			## widget
-  valore_hardwarecur = Spring.GetConfigInt("Fullscreen", 1) 			-- booleano di default è true
+  valore_fullscreen = Spring.GetConfigInt("Fullscreen", 1) 			-- booleano di default è true
 --  valore_blinking = Spring.GetConfigInt("xxxxxxx", 1)   			----------------- non esiste è un widget???
   valore_shadows = Spring.GetConfigInt("Shadows", 2) 					-- -1:=forceoff, 0:=off, 1:=full, 2:=fast (skip terrain)
   valore_showenvironmental = Spring.GetConfigInt("EnviroActive", 0)		-- booleano di default è falso ->  -> disattivo successivamente anche il Widget			## widget
@@ -337,55 +337,119 @@ if graphicsmenu_attivo and not Spring.IsGUIHidden() then
   end
 	if button== 1 then -- aggiunto rev1
 		if (widget:IsAbove(x, y)) then
-				-- Advanced map shading A SINISTRA icona "ON/OFF"
+				-- Advanced map shading A SINISTRA icona "ON/OFF" -- se clicco sull'icona della relativa opzione, aggiungo +1 al valore, di conseguenza diventa 0 o 1. Serve per impostare poi la grafica corretta della casella di selezione ON/OFF
 			if ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi+altezza_icona_opzioni)) then
 				valore_mapshading = valore_mapshading + 1
 				if valore_mapshading > 1 then
 				 valore_mapshading = 0
 				end
 				if valore_mapshading == 0 then
-				Spring.SendCommands("AdvMapShading 0")
-				Spring.SetConfigInt("AdvMapShading", 0)	
---				Echo("System: Disable advanced map shading,  maybe you need to restart the game. If you don't see any differences, maybe your graphics card doesn't support the shader.")
---				Spring.SendCommands({"luaui disablewidget AllyCursors"}) 	-- disabilito il widget
+					Spring.SendCommands("AdvMapShading 0")
+					Spring.SetConfigInt("AdvMapShading", 0)	
 				elseif valore_mapshading == 1 then
-				Spring.SendCommands("AdvMapShading 1")
-				Spring.SetConfigInt("AdvMapShading", 1)					
---				Echo("System: Enable advanced map shading, maybe you need to restart the game. If you do not see any differents, maybe your graphics card doesn't support the shader.")				
---				Spring.SendCommands({"luaui enablewidget AllyCursors"}) 	-- disabilito il widget
+					Spring.SendCommands("AdvMapShading 1")
+					Spring.SetConfigInt("AdvMapShading", 1)					
 				end
 				return true
-				-- Advanced unit shading A DESTRA icona "ON/OFF"			
+				-- Advanced unit shading A DESTRA icona "ON/OFF" -- se clicco sull'icona della relativa opzione, aggiungo +1 al valore, di conseguenza diventa 0 o 1. Serve per impostare poi la grafica corretta della casella di selezione ON/OFF			
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				Echo("test Advanced unit shading")
+					valore_unitshading = valore_unitshading + 1
+				if valore_unitshading > 1 then
+					valore_unitshading = 0
+				end
+				if valore_unitshading == 0 then
+					Spring.SendCommands("AdvUnitShading 0")
+					Spring.SetConfigInt("AdvUnitShading", 0)	
+				elseif valore_unitshading == 1 then
+					Spring.SendCommands("AdvUnitShading 1")
+					Spring.SetConfigInt("AdvUnitShading", 1)		
+				end
 				return true		
 				-- Show grass on maps  A SINISTRA icona "ON/OFF"
 			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi+altezza_icona_opzioni)) then
 				Echo("test Show grass")
 				return true
-				-- hardware cursor A DESTRA  icona "ON/OFF"
+				-- hardware cursor A DESTRA  icona "ON/OFF" -- se clicco sull'icona della relativa opzione, aggiungo +1 al valore, di conseguenza diventa 0 o 1. Serve per impostare poi la grafica corretta della casella di selezione ON/OFF
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi+altezza_icona_opzioni	)) then
-				Echo("test hardware cursor")
+					valore_hardwarecur = valore_hardwarecur + 1
+				if valore_hardwarecur > 1 then
+					valore_hardwarecur = 0
+				end
+				if valore_hardwarecur == 0 then
+					Spring.SendCommands("HardwareCursor 0")
+					Spring.SetConfigInt("HardwareCursor", 0)	
+				elseif valore_hardwarecur == 1 then
+					Spring.SendCommands("HardwareCursor 1")
+					Spring.SetConfigInt("HardwareCursor", 1)	
+				end
 				return true				
-				-- LUPS effect  A SINISTRA icona "ON/OFF"
+				-- LUPS effect  A SINISTRA icona "ON/OFF"	 WIDGET
 			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				Echo("test LUPS effect")
+				if valore_LUPS > 1 then
+				 valore_LUPS = 0
+				end
+				if valore_LUPS == 0 then
+					Spring.SendCommands({"luaui disablewidget Lups"}) 				-- disabilito il widget
+					Spring.SendCommands({"luaui disablewidget LupsManager"}) 		-- disabilito il widget
+					Spring.SetConfigInt("LupsActive", 0)	
+				elseif valore_LUPS == 1 then
+					Spring.SendCommands({"luaui enablewidget Lups"}) 				-- abilito il widget
+					Spring.SendCommands({"luaui enablewidget LupsManager"}) 		-- abilito il widget
+					Spring.SetConfigInt("LupsActive", 1)					
+				end				
 				return true
-				-- Bloom shader A DESTRA  icona "ON/OFF"	
+				-- Bloom shader A DESTRA  icona "ON/OFF"	 WIDGET	
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				Echo("test Bloom shader")
+				if valore_bloom_shader > 1 then
+				 valore_bloom_shader = 0
+				end
+				if valore_bloom_shader == 0 then
+					Spring.SendCommands({"luaui disablewidget Bloom Shader"}) 		-- disabilito il widget
+					Spring.SetConfigInt("BloomshaderActive", 0)	
+				elseif valore_bloom_shader == 1 then
+					Spring.SendCommands({"luaui enablewidget Bloom Shader"}) 		-- abilito il widget
+					Spring.SetConfigInt("BloomshaderActive", 1)					
+				end				
 				return true		
-				-- Show ground projectile light  A SINISTRA icona "ON/OFF"
+				-- Show ground projectile light  A SINISTRA icona "ON/OFF"	 WIDGET
 			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				Echo("test Show ground projectile light")
+				if valore_show_projeclight > 1 then
+				 valore_show_projeclight = 0
+				end
+				if valore_show_projeclight == 0 then
+					Spring.SendCommands({"luaui disablewidget Projectile lights"}) 		-- disabilito il widget
+					Spring.SetConfigInt("ShowProjectile", 0)	
+				elseif valore_show_projeclight == 1 then
+					Spring.SendCommands({"luaui enablewidget Projectile lights"}) 		-- abilito il widget
+					Spring.SetConfigInt("ShowProjectile", 1)					
+				end		
 				return true
-				-- X-RAY A DESTRA  icona "ON/OFF"
+				-- X-RAY A DESTRA  icona "ON/OFF"	 WIDGET
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				Echo("test X-RAY")
+				if valore_xray > 1 then
+				 valore_xray = 0
+				end
+				if valore_xray == 0 then
+					Spring.SendCommands({"luaui disablewidget XrayShader"}) 		-- disabilito il widget
+					Spring.SetConfigInt("XrayActive", 0)	
+				elseif valore_xray == 1 then
+					Spring.SendCommands({"luaui enablewidget XrayShader"}) 		-- abilito il widget
+					Spring.SetConfigInt("XrayActive", 1)					
+				end		
 				return true					
-				-- Fullscreen  A SINISTRA icona "ON/OFF"
+				-- Fullscreen  A SINISTRA icona "ON/OFF" -- se clicco sull'icona della relativa opzione, aggiungo +1 al valore, di conseguenza diventa 0 o 1. Serve per impostare poi la grafica corretta della casella di selezione ON/OFF
 			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				Echo("test Fullscreen")
+				valore_fullscreen = valore_fullscreen + 1
+				if valore_fullscreen > 1 then
+					valore_fullscreen = 0
+				end
+				if valore_fullscreen == 0 then
+					Spring.SendCommands("Fullscreen 0")
+					Spring.SetConfigInt("Fullscreen", 0)	
+				elseif valore_fullscreen == 1 then
+					Spring.SendCommands("Fullscreen 1")
+					Spring.SetConfigInt("Fullscreen", 1)		
+				end
 				return true
 				-- Blinking units A DESTRA  icona "ON/OFF"
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)) then
@@ -393,13 +457,50 @@ if graphicsmenu_attivo and not Spring.IsGUIHidden() then
 				return true						
 				-- shadows icona "<-"
 			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				Echo("test shadows indietro")
+				valore_shadows = valore_shadows - 1
+				if valore_shadows < 0 then
+					valore_shadows = 0
+				end
+				if valore_shadows == 0 then
+					Spring.SendCommands("Shadows 0")
+					Spring.SetConfigInt("Shadows", 0)	
+				elseif valore_shadows == 1 then
+					Spring.SendCommands("Shadows 1")
+					Spring.SetConfigInt("Shadows", 1)		
+				elseif valore_shadows == 2 then
+					Spring.SendCommands("Shadows 2")
+					Spring.SetConfigInt("Shadows", 2)	
+				end
 				return true
 				-- shadows icona "->"
 			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) then							
-				Echo("test shadows avanti")
+				valore_shadows = valore_shadows + 1
+				if valore_shadows > 2 then
+					valore_shadows = 2
+				end
+				if valore_shadows == 0 then
+					Spring.SendCommands("Shadows 0")
+					Spring.SetConfigInt("Shadows", 0)	
+				elseif valore_shadows == 1 then
+					Spring.SendCommands("Shadows 1")
+					Spring.SetConfigInt("Shadows", 1)		
+				elseif valore_shadows == 2 then
+					Spring.SendCommands("Shadows 2")
+					Spring.SetConfigInt("Shadows", 2)	
+				end				
 				return true				
-					-- Show environment effects (snow, rain, etc) 	icona "<-"		
+					-- Show environment effects (snow, rain, etc) 	icona "ON/OFF"	 WIDGET
+				valore_showenvironmental = valore_showenvironmental + 1
+				if valore_showenvironmental > 1 then	
+					valore_showenvironmental = 0
+				end
+				if valore_showenvironmental == 0 then
+					Spring.SendCommands({"luaui disablewidget Snow"}) 		-- disabilito il widget
+					Spring.SetConfigInt("EnviroActive", 0)	
+				elseif valore_showenvironmental == 1 then
+					Spring.SendCommands({"luaui enablewidget Snow"}) 		-- abilito il widget
+					Spring.SetConfigInt("EnviroActive", 1)					
+				end					
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) then
 				Echo("test environment")
 				return true		
@@ -458,7 +559,11 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	font_generale:End()		
 	-- icona
 	gl.Color(1,1,1,1)
-	gl.Texture(icona_on)	
+	if valore_unitshading == 0 then
+	gl.Texture(icona_off)	
+	elseif valore_unitshading == 1 then
+	gl.Texture(icona_on)		
+	end	
 	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 	
@@ -486,7 +591,11 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	font_generale:End()		
 	-- icona
 	gl.Color(1,1,1,1)
-	gl.Texture(icona_on)	
+	if valore_hardwarecur == 0 then
+	gl.Texture(icona_off)	
+	elseif valore_hardwarecur == 1 then
+	gl.Texture(icona_on)		
+	end	
 	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 	
