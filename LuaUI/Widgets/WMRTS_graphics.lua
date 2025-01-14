@@ -346,13 +346,9 @@ if graphicsmenu_attivo and not Spring.IsGUIHidden() then
 				if valore_mapshading == 0 then
 					Spring.SendCommands("AdvMapShading 0")
 					Spring.SetConfigInt("AdvMapShading", 0)	
---				Echo("System: Disable advanced map shading,  maybe you need to restart the game. If you don't see any differences, maybe your graphics card doesn't support the shader.")
---				Spring.SendCommands({"luaui disablewidget AllyCursors"}) 	-- disabilito il widget
 				elseif valore_mapshading == 1 then
 					Spring.SendCommands("AdvMapShading 1")
 					Spring.SetConfigInt("AdvMapShading", 1)					
---				Echo("System: Enable advanced map shading, maybe you need to restart the game. If you do not see any differents, maybe your graphics card doesn't support the shader.")				
---				Spring.SendCommands({"luaui enablewidget AllyCursors"}) 	-- disabilito il widget
 				end
 				return true
 				-- Advanced unit shading A DESTRA icona "ON/OFF" -- se clicco sull'icona della relativa opzione, aggiungo +1 al valore, di conseguenza diventa 0 o 1. Serve per impostare poi la grafica corretta della casella di selezione ON/OFF			
@@ -387,21 +383,59 @@ if graphicsmenu_attivo and not Spring.IsGUIHidden() then
 					Spring.SetConfigInt("HardwareCursor", 1)	
 				end
 				return true				
-				-- LUPS effect  A SINISTRA icona "ON/OFF"
+				-- LUPS effect  A SINISTRA icona "ON/OFF"	 WIDGET
 			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				Echo("test LUPS effect")
+				if valore_LUPS > 1 then
+				 valore_LUPS = 0
+				end
+				if valore_LUPS == 0 then
+					Spring.SendCommands({"luaui disablewidget Lups"}) 				-- disabilito il widget
+					Spring.SendCommands({"luaui disablewidget LupsManager"}) 		-- disabilito il widget
+					Spring.SetConfigInt("LupsActive", 0)	
+				elseif valore_LUPS == 1 then
+					Spring.SendCommands({"luaui enablewidget Lups"}) 				-- abilito il widget
+					Spring.SendCommands({"luaui enablewidget LupsManager"}) 		-- abilito il widget
+					Spring.SetConfigInt("LupsActive", 1)					
+				end				
 				return true
-				-- Bloom shader A DESTRA  icona "ON/OFF"	
+				-- Bloom shader A DESTRA  icona "ON/OFF"	 WIDGET	
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				Echo("test Bloom shader")
+				if valore_bloom_shader > 1 then
+				 valore_bloom_shader = 0
+				end
+				if valore_bloom_shader == 0 then
+					Spring.SendCommands({"luaui disablewidget Bloom Shader"}) 		-- disabilito il widget
+					Spring.SetConfigInt("BloomshaderActive", 0)	
+				elseif valore_bloom_shader == 1 then
+					Spring.SendCommands({"luaui enablewidget Bloom Shader"}) 		-- abilito il widget
+					Spring.SetConfigInt("BloomshaderActive", 1)					
+				end				
 				return true		
-				-- Show ground projectile light  A SINISTRA icona "ON/OFF"
+				-- Show ground projectile light  A SINISTRA icona "ON/OFF"	 WIDGET
 			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				Echo("test Show ground projectile light")
+				if valore_show_projeclight > 1 then
+				 valore_show_projeclight = 0
+				end
+				if valore_show_projeclight == 0 then
+					Spring.SendCommands({"luaui disablewidget Projectile lights"}) 		-- disabilito il widget
+					Spring.SetConfigInt("ShowProjectile", 0)	
+				elseif valore_show_projeclight == 1 then
+					Spring.SendCommands({"luaui enablewidget Projectile lights"}) 		-- abilito il widget
+					Spring.SetConfigInt("ShowProjectile", 1)					
+				end		
 				return true
-				-- X-RAY A DESTRA  icona "ON/OFF"
+				-- X-RAY A DESTRA  icona "ON/OFF"	 WIDGET
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				Echo("test X-RAY")
+				if valore_xray > 1 then
+				 valore_xray = 0
+				end
+				if valore_xray == 0 then
+					Spring.SendCommands({"luaui disablewidget XrayShader"}) 		-- disabilito il widget
+					Spring.SetConfigInt("XrayActive", 0)	
+				elseif valore_xray == 1 then
+					Spring.SendCommands({"luaui enablewidget XrayShader"}) 		-- abilito il widget
+					Spring.SetConfigInt("XrayActive", 1)					
+				end		
 				return true					
 				-- Fullscreen  A SINISTRA icona "ON/OFF" -- se clicco sull'icona della relativa opzione, aggiungo +1 al valore, di conseguenza diventa 0 o 1. Serve per impostare poi la grafica corretta della casella di selezione ON/OFF
 			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)) then
@@ -455,7 +489,18 @@ if graphicsmenu_attivo and not Spring.IsGUIHidden() then
 					Spring.SetConfigInt("Shadows", 2)	
 				end				
 				return true				
-					-- Show environment effects (snow, rain, etc) 	icona "<-"		
+					-- Show environment effects (snow, rain, etc) 	icona "ON/OFF"	 WIDGET
+				valore_showenvironmental = valore_showenvironmental + 1
+				if valore_showenvironmental > 1 then	
+					valore_showenvironmental = 0
+				end
+				if valore_showenvironmental == 0 then
+					Spring.SendCommands({"luaui disablewidget Snow"}) 		-- disabilito il widget
+					Spring.SetConfigInt("EnviroActive", 0)	
+				elseif valore_showenvironmental == 1 then
+					Spring.SendCommands({"luaui enablewidget Snow"}) 		-- abilito il widget
+					Spring.SetConfigInt("EnviroActive", 1)					
+				end					
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) then
 				Echo("test environment")
 				return true		
