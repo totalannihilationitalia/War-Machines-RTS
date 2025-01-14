@@ -18,19 +18,19 @@ local gstore = 1
 local gpull = 1
 local gincome = 1
 local gexpanse  = 1
-local tteam = 2
+local tteam = 1
 
 function widget:Initialize()
    Spring.Echo(helloWorld)
 end
 
 function widget:Update()
-   	  glevel,gstore, gpull = GetTeamResources(tteam, "metal")
-	  Spring.Echo("storage: "..tostring(gstore))
+   	  glevel,gstore, gpull = GetTeamResources(1, "metal")
+	  Spring.Echo(gstore)
 	  Spring.Echo("current level: "..tostring(glevel))
 	  Spring.Echo("pull: "..tostring(pull))	  
---	  ai_number, ai_name= Spring.GetAIInfo ( tteam )
---	  Spring.Echo("hai "..tostring(ai_number).." name: "..ai_name)
+	  local ai_number, ai_name= Spring.GetAIInfo ( tteam )
+	  Spring.Echo("hai "..tostring(ai_number).." name: "..ai_name)
 --	  
 --	  nuteamid = Spring.GetTeamInfo ( tteam )
 --	  Spring.Echo("number team id "..tostring(nuteamid))
