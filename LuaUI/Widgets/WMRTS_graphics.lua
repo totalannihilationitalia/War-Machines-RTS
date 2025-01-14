@@ -26,7 +26,11 @@ end
 --------------------------------------------------------------------------------
 --[[
 to do list 
--- verificare se fare o predisporre su due pagine (intesi come tabs)
+-- fare apparire una volta sola la voce "				Echo("Restart is require for changes to take effect") " quando si modifica l' Antialiasing.
+-- includere MapBorder ???
+-- includere VSync
+-- includere GroundDecals
+-- /TeamHighlight                   (unsynced)  Enables/Disables uncontrolled team blinking
 ]]--
 --------------------------------------------------------------------------------
 -- rev 0 by molix
@@ -37,8 +41,8 @@ local Echo 								= Spring.Echo
 -- definizione variabili di posizione e lunghezza menu e icone
 local graphicsmenu_attivo				= false 							-- Indica se questo menu è attivo o meno
 local vsx, vsy 						  	= widgetHandler:GetViewSizes()
-local larghezza_mainmenu				= 400*2 							-- doppia rispetto a mainmenu
-local altezza_mainmenu					= 200+50							-- + 2 opzioni (da 25 l'una), rispetto a mainmenu
+local larghezza_mainmenu				= 800 							-- doppia rispetto a mainmenu
+local altezza_mainmenu					= 250							-- + 2 opzioni (da 25 l'una), rispetto a mainmenu
 local Pos_x_mainmenu					= 20  								-- NON EDITARE posizione in basso a sinistra del menu (valore gestito poi autonomamente dallo script)
 local Pos_y_mainmenu					= 20  								-- NON EDITARE posizione in basso a sinistra del menu (valore gestito poi autonomamente dallo script)
 local margine_sx_scritte				= 80  								-- margine sinistro da cui partono le scritte del menu
@@ -165,7 +169,7 @@ end
 local function check_options()
 -- all'inizio verifico anche il valore delle configurazioni
   valore_mapshading = Spring.GetConfigInt("AdvMapShading", 1)			-- booleano di default è true
-  valore_unitshading = Spring.GetConfigInt("AdvUnitShading", 1)			-- booleano di default è true
+  valore_unitshading = Spring.GetConfigInt("AdvModelShading", 1)			-- booleano di default è true
 --  valore_grass = Spring.GetConfigInt("xxxxxxx", 1)   				----------------- non esiste grass ON/OFF
   valore_hardwarecur = Spring.GetConfigInt("HardwareCursor", 0) 		-- booleano di default è falso
   valore_LUPS = Spring.GetConfigInt("LupsActive", 0) 					-- booleano di default è falso -> disattivo successivamente anche il Widget				## widget
@@ -348,21 +352,22 @@ if graphicsmenu_attivo and not Spring.IsGUIHidden() then
 					Spring.SetConfigInt("AdvMapShading", 0)	
 				elseif valore_mapshading == 1 then
 					Spring.SendCommands("AdvMapShading 1")
-					Spring.SetConfigInt("AdvMapShading", 1)					
+					Spring.SetConfigInt("AdvMapShading", 1)		
+					Echo("May require a reboot for the changes to take effect")
 				end
 				return true
 				-- Advanced unit shading A DESTRA icona "ON/OFF" -- se clicco sull'icona della relativa opzione, aggiungo +1 al valore, di conseguenza diventa 0 o 1. Serve per impostare poi la grafica corretta della casella di selezione ON/OFF			
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi+altezza_icona_opzioni)) then
-					valore_unitshading = valore_unitshading + 1
+				valore_unitshading = valore_unitshading + 1
 				if valore_unitshading > 1 then
 					valore_unitshading = 0
 				end
 				if valore_unitshading == 0 then
-					Spring.SendCommands("AdvUnitShading 0")
-					Spring.SetConfigInt("AdvUnitShading", 0)	
+					Spring.SendCommands("AdvModelShading 0")
+					Spring.SetConfigInt("AdvModelShading", 0)	
 				elseif valore_unitshading == 1 then
-					Spring.SendCommands("AdvUnitShading 1")
-					Spring.SetConfigInt("AdvUnitShading", 1)		
+					Spring.SendCommands("AdvModelShading 1")
+					Spring.SetConfigInt("AdvModelShading", 1)		
 				end
 				return true		
 				-- Show grass on maps  A SINISTRA icona "ON/OFF"
@@ -371,7 +376,7 @@ if graphicsmenu_attivo and not Spring.IsGUIHidden() then
 				return true
 				-- hardware cursor A DESTRA  icona "ON/OFF" -- se clicco sull'icona della relativa opzione, aggiungo +1 al valore, di conseguenza diventa 0 o 1. Serve per impostare poi la grafica corretta della casella di selezione ON/OFF
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi+altezza_icona_opzioni	)) then
-					valore_hardwarecur = valore_hardwarecur + 1
+				valore_hardwarecur = valore_hardwarecur + 1
 				if valore_hardwarecur > 1 then
 					valore_hardwarecur = 0
 				end
@@ -385,6 +390,7 @@ if graphicsmenu_attivo and not Spring.IsGUIHidden() then
 				return true				
 				-- LUPS effect  A SINISTRA icona "ON/OFF"	 WIDGET
 			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				valore_LUPS = valore_LUPS + 1
 				if valore_LUPS > 1 then
 				 valore_LUPS = 0
 				end
@@ -400,6 +406,7 @@ if graphicsmenu_attivo and not Spring.IsGUIHidden() then
 				return true
 				-- Bloom shader A DESTRA  icona "ON/OFF"	 WIDGET	
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				valore_bloom_shader = valore_bloom_shader + 1
 				if valore_bloom_shader > 1 then
 				 valore_bloom_shader = 0
 				end
@@ -413,6 +420,7 @@ if graphicsmenu_attivo and not Spring.IsGUIHidden() then
 				return true		
 				-- Show ground projectile light  A SINISTRA icona "ON/OFF"	 WIDGET
 			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				valore_show_projeclight = valore_show_projeclight + 1
 				if valore_show_projeclight > 1 then
 				 valore_show_projeclight = 0
 				end
@@ -426,6 +434,7 @@ if graphicsmenu_attivo and not Spring.IsGUIHidden() then
 				return true
 				-- X-RAY A DESTRA  icona "ON/OFF"	 WIDGET
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				valore_xray = valore_xray + 1
 				if valore_xray > 1 then
 				 valore_xray = 0
 				end
@@ -490,10 +499,11 @@ if graphicsmenu_attivo and not Spring.IsGUIHidden() then
 				end				
 				return true				
 					-- Show environment effects (snow, rain, etc) 	icona "ON/OFF"	 WIDGET
+			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) then
 				valore_showenvironmental = valore_showenvironmental + 1
 				if valore_showenvironmental > 1 then	
 					valore_showenvironmental = 0
-				end
+				end 
 				if valore_showenvironmental == 0 then
 					Spring.SendCommands({"luaui disablewidget Snow"}) 		-- disabilito il widget
 					Spring.SetConfigInt("EnviroActive", 0)	
@@ -501,24 +511,74 @@ if graphicsmenu_attivo and not Spring.IsGUIHidden() then
 					Spring.SendCommands({"luaui enablewidget Snow"}) 		-- abilito il widget
 					Spring.SetConfigInt("EnviroActive", 1)					
 				end					
-			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				Echo("test environment")
-				return true		
+--			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) then
+--				Echo("test environment")
+--				return true		
 				-- Set Antialiasing level  icona "<-"
 			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				Echo("test Antialiasing indietro")
+				valore_antialiasing = valore_antialiasing - 1
+				Echo("Restart is require for changes to take effect")
+				if valore_antialiasing < 0 then
+					valore_antialiasing = 0
+				end
+				Spring.SendCommands("MSAALevel "..valore_antialiasing)
+				Spring.SetConfigInt("MSAALevel", valore_antialiasing)					
 				return true
 				-- Set Antialiasing level  icona "->"
 			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi) and (y >= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)) then							
-				Echo("test Antialiasing avanti")
+				valore_antialiasing = valore_antialiasing + 1
+				Echo("Restart is require for changes to take effect")				
+				if valore_antialiasing > 32 then
+					valore_antialiasing = 32	
+				end
+				Spring.SendCommands("MSAALevel "..valore_antialiasing)
+				Spring.SetConfigInt("MSAALevel", valore_antialiasing)	
 				return true		
 				-- Water type 	icona "<-"		
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				Echo("test Water type indietro")
+				valore_watertype = valore_watertype - 1
+				if valore_watertype < 0 then
+					valore_watertype = 0
+				end
+				if valore_watertype == 0 then
+					Spring.SendCommands("Water 0")
+					Spring.SetConfigInt("Water", 0)	
+				elseif valore_watertype == 1 then
+					Spring.SendCommands("Water 1")
+					Spring.SetConfigInt("Water", 1)		
+				elseif valore_watertype == 2 then
+					Spring.SendCommands("Water 2")
+					Spring.SetConfigInt("Water", 2)	
+				elseif valore_watertype == 3 then
+					Spring.SendCommands("Water 3")
+					Spring.SetConfigInt("Water", 3)	
+				elseif valore_watertype == 4 then
+					Spring.SendCommands("Water 4")
+					Spring.SetConfigInt("Water", 4)						
+				end		
 				return true		
 				-- Water type 	icona "->"		
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi) and (y >= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				Echo("test Water type avanti")
+				valore_watertype = valore_watertype + 1
+				if valore_watertype > 4 then
+					valore_watertype = 4
+				end
+				if valore_watertype == 0 then
+					Spring.SendCommands("Water 0")
+					Spring.SetConfigInt("Water", 0)	
+				elseif valore_watertype == 1 then
+					Spring.SendCommands("Water 1")
+					Spring.SetConfigInt("Water", 1)		
+				elseif valore_watertype == 2 then
+					Spring.SendCommands("Water 2")
+					Spring.SetConfigInt("Water", 2)	
+				elseif valore_watertype == 3 then
+					Spring.SendCommands("Water 3")
+					Spring.SetConfigInt("Water", 3)	
+				elseif valore_watertype == 4 then
+					Spring.SendCommands("Water 4")
+					Spring.SetConfigInt("Water", 4)						
+				end		
 				return true					
 			end -- posizioni menu
 		end -- isAbove
@@ -619,7 +679,11 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	font_generale:End()		
 	-- icona
 	gl.Color(1,1,1,1)
-	gl.Texture(icona_on)	
+	if valore_bloom_shader == 0 then
+	gl.Texture(icona_off)	
+	elseif valore_bloom_shader == 1 then
+	gl.Texture(icona_on)		
+	end		
 	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 	
@@ -631,7 +695,11 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	font_generale:End()
 	-- icona	
 	gl.Color(1,1,1,1)
-	gl.Texture(icona_on)	
+	if valore_LUPS == 0 then
+	gl.Texture(icona_off)	
+	elseif valore_LUPS == 1 then
+	gl.Texture(icona_on)		
+	end	
 	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)
 	gl.Texture(false)	-- fine texture		
 
@@ -643,7 +711,11 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	font_generale:End()		
 	-- icona
 	gl.Color(1,1,1,1)
-	gl.Texture(icona_on)	
+	if valore_xray == 0 then
+	gl.Texture(icona_off)	
+	elseif valore_xray == 1 then
+	gl.Texture(icona_on)		
+	end		
 	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 	
@@ -655,7 +727,11 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	font_generale:End()
 	-- icona	
 	gl.Color(1,1,1,1)
-	gl.Texture(icona_on)	
+	if valore_show_projeclight == 0 then
+	gl.Texture(icona_off)	
+	elseif valore_show_projeclight == 1 then
+	gl.Texture(icona_on)		
+	end		
 	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)
 	gl.Texture(false)	-- fine texture		
 
@@ -667,7 +743,11 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	font_generale:End()		
 	-- icona
 	gl.Color(1,1,1,1)
-	gl.Texture(icona_on)	
+	if valore_blinking == 0 then
+	gl.Texture(icona_off)	
+	elseif valore_blinking == 1 then
+	gl.Texture(icona_on)		
+	end		
 	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 	
@@ -679,7 +759,11 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	font_generale:End()
 	-- icona	
 	gl.Color(1,1,1,1)
-	gl.Texture(icona_on)	
+	if valore_fullscreen == 0 then
+	gl.Texture(icona_off)	
+	elseif valore_fullscreen == 1 then
+	gl.Texture(icona_on)		
+	end	
 	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)
 	gl.Texture(false)	-- fine texture		
 	
@@ -691,7 +775,11 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	font_generale:End()		
 	-- icona
 	gl.Color(1,1,1,1)
-	gl.Texture(icona_on)	
+		if valore_showenvironmental == 0 then
+	gl.Texture(icona_off)	
+	elseif valore_showenvironmental == 1 then
+	gl.Texture(icona_on)		
+	end		
 	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 	
@@ -699,7 +787,14 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Shadows", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga2 ,12,'ds')
+		if valore_shadows == 0 then
+			font_generale:Print("Shadows: OFF", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga2 ,12,'ds')	
+		elseif valore_shadows == 1 then
+			font_generale:Print("Shadows: Full (Units + Terrains)", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga2 ,12,'ds')	
+		elseif valore_shadows == 2 then		
+			font_generale:Print("Shadows: Only units", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga2 ,12,'ds')			
+		end		
+	
 	font_generale:End()
 	-- icona down
 	gl.Color(1,1,1,1)
@@ -716,7 +811,17 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Water rendering type", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga1,12,'ds')
+		if valore_watertype == 0 then
+			font_generale:Print("Water render: Basic", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga1,12,'ds')
+		elseif valore_watertype == 1 then
+			font_generale:Print("Water render: Reflective",  Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga1,12,'ds')
+		elseif valore_watertype == 2 then		
+			font_generale:Print("Water render: Reflective and Refractive",  Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga1,12,'ds')	
+		elseif valore_watertype == 3 then		
+			font_generale:Print("Water render:  Dynamic water",  Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga1,12,'ds')
+		elseif valore_watertype == 4 then		
+			font_generale:Print("Water render:  Bumpmapped water",  Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga1,12,'ds')
+		end			
 	font_generale:End()		
 	-- icona down
 	gl.Color(1,1,1,1)
@@ -729,11 +834,11 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi,Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi,Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture			
 	
--- voce sx antialiasing
+-- voce sx antialiasing  
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Set Antialiasing level", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga1 ,12,'ds')
+	font_generale:Print(("Antialiasing level: "..valore_antialiasing), Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga1 ,12,'ds')
 	font_generale:End()
 	-- icona down
 	gl.Color(1,1,1,1)
