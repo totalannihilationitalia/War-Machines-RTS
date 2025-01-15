@@ -61,8 +61,6 @@ return {
 			[1] = "eufcd",
 			[2] = "eufthorn",
 			[3] = "eufsab",
---			[4] = "andmisa",
---			[5] = "andmiss",
 		},
 -----------------------------------------------------------
 --- Units wreckage and heaps

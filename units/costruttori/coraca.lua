@@ -93,9 +93,7 @@ return {
 			[28] = "corfarad",
 			[29] = "corftoast",
 			[30] = "corfvipe",
-			[31] = "corfdoom",
-			[32] = "corfflak",
-			[33] = "corfscreamer",
+			[31] = "corfflak",
 		},
 -----------------------------------------------------------
 --- NO EFFECTS

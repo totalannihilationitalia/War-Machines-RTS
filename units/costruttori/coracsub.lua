@@ -62,21 +62,15 @@ return {
 --- BUILDLIST
 -----------------------------------
                buildoptions = { 
-		[1] = "coruwfus",
-		[2] = "coruwmme",
-		[3] = "coruwmmm",
-		[4] = "coruwadves",
-		[5] = "coruwadvms",
-		[6] = "corfatf",
-		[7] = "corsy",
-		[8] = "corasy",
-		[9] = "csubpen",
-		[10] = "corenaa",
-		[11] = "coratl",
-		[12] = "corfarad",
-		[13] = "corfvipe",
-		[14] = "corfflak",
-		[15] = "corftoast",
+		[1] = "coruwmme",
+		[2] = "coruwadves",
+		[3] = "coruwadvms",
+		[4] = "corsy",
+		[5] = "corasy",
+		[6] = "corfarad",
+		[7] = "corfvipe",
+		[8] = "corfflak",
+		[9] = "corftoast",
                },
 -----------------------------------------------------------
 --- Units wreckage and heaps

@@ -57,7 +57,6 @@ return {
 			[2] = "andgaso",
 			[3] = "andlipo",
 			[4] = "andmisa",
---			[5] = "andmiss",
 		},
 -----------------------------------------------------------
 --- Units wreckage and heaps

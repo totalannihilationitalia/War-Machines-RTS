@@ -68,26 +68,26 @@ return {
 -----------------------------------
                buildoptions = { 
 		[1] = "andsolar",
-		[2]= "andadvsolar",
-		[3]= "andwind",
-		[4] = "andmstor",
-		[5] = "andestor",
-		[6] = "andmexun",
-		[7] = "andmex",
-		[8] = "andahp",
-		[9] = "andhp",
-		[10] = "andlab",
-		[11] = "andplat",
+		[2]= "andwind",
+		[3] = "andmstor",
+		[4] = "andestor",
+		[5] = "andmexun",
+		[6] = "andmex",
+		[7] = "andahp",
+		[8] = "andhp",
+		[9] = "andlab",
+		[10] = "andplat",
 --		mettere le altre fabbriche
-		[12] = "andrad", -- creare un radarino semplice
+		[11] = "andrad", -- creare un radarino semplice
 --		mettere un muro semplice tipo dente di drago
-		[13] = "andlartic",
-		[14] = "andartic",
-		[15] = "andhartic",
-		[16] = "andpopaa",
+		[12] = "andlartic",
+		[13] = "andartic",
+		[14] = "andhartic",
+		[15] = "andpopaa",
 --		ricavare da cordfens = mettere un cannoncino
 --		armpopaa = mettere un antiaerea media
 --		mettere un jammer
+-- 		mettere un advsolar
                },
 -----------------------------------------------------------
 --- Units wreckage and heaps
