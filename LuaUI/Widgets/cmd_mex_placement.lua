@@ -125,7 +125,7 @@ options = {
 	size = {
 		name = "Income Display Size", 
 		type = "number", 
-		value = 40, 
+		value = 15, -- altezza carattere del valore di estrazione del metallo
 		min = 10,
 		max = 150,
 		step = 5,
@@ -585,7 +585,7 @@ function calcMainMexDrawList()
 				if metal > 10 then
 					if metal > 100 then
 						metal = metal*0.01
-						size = 5
+						size = 5 
 					else
 						metal = metal*0.1
 						size = 2.5
@@ -606,7 +606,7 @@ function calcMainMexDrawList()
 				glRotate(270,1,0,0)
   				glColor(1,1,1)
 				glTranslate(x,-z-40-options.size.value, y)
-				glText("+" .. ("%."..options.rounding.value.."f"):format(metal), 0.0, 0.0, options.size.value , "cno")
+				glText("+" .. ("%."..options.rounding.value.."f"):format(metal), 0.0, 0.0, options.size.value , "cno") -- stringa per scrivere l'estrazione del metallo di fianco al giacimento
 			end	
 	
 			glPopMatrix()	
