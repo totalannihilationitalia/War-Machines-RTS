@@ -4,7 +4,7 @@ return {
 -----------------------------------------------------------
 --- UNITS FEATURES
 -----------------------------------------------------------
-  CORSPEC= {
+  corspec = {
                acceleration = 0.1,
                activatewhenbuilt = true,
 --               badTargetCategory = MOBILE,

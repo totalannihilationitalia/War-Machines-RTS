@@ -4,7 +4,7 @@ return {
 -----------------------------------------------------------
 --- UNITS FEATURES
 -----------------------------------------------------------
-  CORVRAD= {
+  corvrad = {
                acceleration = 0.03,
                activatewhenbuilt = true,
                brakerate  = 0.012,

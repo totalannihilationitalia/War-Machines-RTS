@@ -4,7 +4,7 @@ return {
 -----------------------------------------------------------
 --- UNITS FEATURES
 -----------------------------------------------------------
-  ARMJAM= {
+  armjam = {
                acceleration = 0.035,
                activatewhenbuilt = true,
 --               badTargetCategory = MOBILE,

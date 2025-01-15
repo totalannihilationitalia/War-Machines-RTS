@@ -4,7 +4,7 @@ return {
 -----------------------------------------------------------
 --- UNITS FEATURES
 -----------------------------------------------------------
-  ARMGMM= {
+  armgmm = {
                acceleration = 0,
                activatewhenbuilt = true,
                brakerate  = 0,
