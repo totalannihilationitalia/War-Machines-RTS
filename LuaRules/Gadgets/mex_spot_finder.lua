@@ -461,8 +461,8 @@ else  -- UNSYNCED
 --------------------------------------------------------------------------------
 
 function gadget:GameStart()
---	Spring.Utilities = Spring.Utilities or {}  -- rimosso
---	VFS.Include("LuaRules/Utilities/json.lua"); -- rimosso
+	Spring.Utilities = Spring.Utilities or {}  -- rimosso
+	VFS.Include("LuaRules/Utilities/json.lua"); -- rimosso
 
 	local teamlist = Spring.GetTeamList();
 	local localPlayer = Spring.GetLocalPlayerID();

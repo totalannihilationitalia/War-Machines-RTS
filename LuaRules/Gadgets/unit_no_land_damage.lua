@@ -27,12 +27,12 @@ local NO_LAND_DAMAGE = {
   [WeaponDefNames['coax_torpedo'].id] = true,
   [WeaponDefNames['coratl_torpedo'].id] = true,
   [WeaponDefNames['armair_torpedo'].id] = true,
-  [WeaponDefNames['armseap_weapon1'].id] = true,
+--  [WeaponDefNames['armseap_weapon1'].id] = true,
   [WeaponDefNames['depthcharge'].id] = true,
   [WeaponDefNames['advdepthcharge'].id] = true,
   [WeaponDefNames['arm_torpedo'].id] = true,
   [WeaponDefNames['armsmart_torpedo'].id] = true,
-  [WeaponDefNames['tawf009_weapon'].id] = true,
+--  [WeaponDefNames['tawf009_weapon'].id] = true,
   [WeaponDefNames['corssub_weapon'].id] = true,
   [WeaponDefNames['coramph_weapon1'].id] = true
 }

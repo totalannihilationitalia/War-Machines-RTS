@@ -26,17 +26,17 @@ local SetUnitNeutral = Spring.SetUnitNeutral
 local AIRPLANT = {
   [UnitDefNames["corap"].id] = true,
   [UnitDefNames["coraap"].id] = true,
-  [UnitDefNames["coreap"].id] = true,
-  [UnitDefNames["corplat"].id] = true,
-  [UnitDefNames["corehpad"].id] = true,
+--  [UnitDefNames["coreap"].id] = true,
+--  [UnitDefNames["corplat"].id] = true,
+--  [UnitDefNames["corehpad"].id] = true,
   [UnitDefNames["armap"].id] = true,
   [UnitDefNames["armaap"].id] = true,
-  [UnitDefNames["armeap"].id] = true,
-  [UnitDefNames["armplat"].id] = true,
-  [UnitDefNames["armcp"].id] = true,
-  [UnitDefNames["tllap"].id] = true,
-  [UnitDefNames["tllaap"].id] = true,
-  [UnitDefNames["tllplat"].id] = true,
+--  [UnitDefNames["armeap"].id] = true,
+--  [UnitDefNames["armplat"].id] = true,
+--  [UnitDefNames["armcp"].id] = true,
+--  [UnitDefNames["tllap"].id] = true,
+--  [UnitDefNames["tllaap"].id] = true,
+--  [UnitDefNames["tllplat"].id] = true,
 }
 
 local plantList = {}

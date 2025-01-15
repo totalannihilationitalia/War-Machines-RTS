@@ -23,7 +23,7 @@ local GetUnitStates = Spring.GetUnitStates
 local neutralUnits = {}
 local armourTurrets = {}
 armourTurrets[UnitDefNames["cormaw"].id] = true
-armourTurrets[UnitDefNames["armclaw"].id] = true
+-- armourTurrets[UnitDefNames["armclaw"].id] = true
 local UPDATE = 30
 local timeCounter = 15
 
