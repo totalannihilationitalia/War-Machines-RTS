@@ -13,7 +13,7 @@ function widget:GetInfo()
 	}
 end
 
-VFS.Include("LuaRules/Configs/customcmds.h.lua")
+-- VFS.Include("LuaRules/Configs/customcmds.h.lua")
 
 ------------------------------------------------------------
 -- Speedups
@@ -567,13 +567,13 @@ function calcMainMexDrawList()
 			
 			gl.DepthTest(true)
 
-			glColor(0,0,0,0.7)
-			-- glDepthTest(false)
-			glLineWidth(spot.metal*2.4)
-			glDrawGroundCircle(x, 1, z, 40, 21)
+--			glColor(0,0,0,0.7) -- riga eliminata il 15/01/2025
+			-- glDepthTest(false) 
+--			glLineWidth(spot.metal*2.4) -- riga eliminata il 15/01/2025
+--			glDrawGroundCircle(x, 1, z, 40, 4) -- disegna il quadrato nero (ombra) -- riga eliminata il 15/01/2025
 			glColor(mexColor)
 			glLineWidth(spot.metal*1.5)
-			glDrawGroundCircle(x, 1, z, 40, 21)	
+			glDrawGroundCircle(x, 1, z, 40, 4) -- disegna il quadrato colorato col colore del team
 			
 			glPopMatrix()	
 			
