@@ -27,14 +27,14 @@ end
 --[[
 to do list 
 -- fare apparire una volta sola la voce "				Echo("Restart is require for changes to take effect") " quando si modifica l' Antialiasing.
--- includere MapBorder ???
--- includere VSync
 -- includere GroundDecals
--- /TeamHighlight                   (unsynced)  Enables/Disables uncontrolled team blinking
+-- includere MaxParticles
+-- includere MaxNanoParticles
 ]]--
 --------------------------------------------------------------------------------
--- rev 0 by molix
--- designing WMRTS graphics menu
+-- rev 0 by molix -- 07/01/2025 -- designing WMRTS graphics menu
+-- rev 1 by molix -- 15/01/2025 -- adding mapBorder, Vsync options. Simplified the code
+
 
 -- definizione dei comandi
 local Echo 								= Spring.Echo 
@@ -42,7 +42,7 @@ local Echo 								= Spring.Echo
 local graphicsmenu_attivo				= false 							-- Indica se questo menu è attivo o meno
 local vsx, vsy 						  	= widgetHandler:GetViewSizes()
 local larghezza_mainmenu				= 800 							-- doppia rispetto a mainmenu
-local altezza_mainmenu					= 250							-- + 2 opzioni (da 25 l'una), rispetto a mainmenu
+local altezza_mainmenu					= 275							-- + 2 opzioni (da 25 l'una), rispetto a mainmenu
 local Pos_x_mainmenu					= 20  								-- NON EDITARE posizione in basso a sinistra del menu (valore gestito poi autonomamente dallo script)
 local Pos_y_mainmenu					= 20  								-- NON EDITARE posizione in basso a sinistra del menu (valore gestito poi autonomamente dallo script)
 local margine_sx_scritte				= 80  								-- margine sinistro da cui partono le scritte del menu
@@ -56,28 +56,31 @@ local offsety_selettore					= -4								-- offset y selettore rispetto al testo 
 local altezza_selettore					= 24  								-- altezza del selettore
 local selettore_visibile				= false 							-- visibile o no quando si passa sopra l'opzione (a casella singola) o sopra il pulsante + o - nel caso della casella doppia
 local mousex, mousey				   										-- posizione x e y del mouse, usata per rilevare la sua posizione e far apparire il selettore
-local posy_riga1						= 25    							-- posizione y della prima riga (dal fondo del background) di opzioni
-local posy_riga2						= 50    							-- posizione y della seconda riga (dal fondo del background) di opzioni
-local posy_riga3						= 75    							-- posizione y della terza riga (dal fondo del background) di opzioni 
-local posy_riga4						= 100   							-- posizione y della quarta riga (dal fondo del background) di opzioni 
-local posy_riga5						= 125    							-- posizione y della quinta riga (dal fondo del background) di opzioni 
-local posy_riga6						= 150    							-- posizione y della sesta riga (dal fondo del background) di opzioni 
-local posy_riga7						= 175    							-- posizione y della settima riga (dal fondo del background) di opzioni 
+local posy_riga1						= 25    							-- posizione y della prima riga di opzioni (dal fondo del background) di opzioni
+local posy_riga2						= 50    							-- posizione y della seconda riga di opzioni (dal fondo del background) di opzioni
+local posy_riga3						= 75    							-- posizione y della terza riga di opzioni (dal fondo del background) di opzioni 
+local posy_riga4						= 100   							-- posizione y della quarta riga di opzioni (dal fondo del background) di opzioni 
+local posy_riga5						= 125    							-- posizione y della quinta riga di opzioni (dal fondo del background) di opzioni 
+local posy_riga6						= 150    							-- posizione y della sesta riga di opzioni (dal fondo del background) di opzioni 
+local posy_riga7						= 175    							-- posizione y della settima riga di opzioni (dal fondo del background) di opzioni 
+local posy_riga8						= 200    							-- posizione y dell' ottava riga di opzioni (dal fondo del background) di opzioni 
 -- definizione valori delle opzioni
 local valore_mapshading
 local valore_unitshading
-local valore_grass					-- verificare!!!!!!!!!!!!!!!!!!!
+local valore_grass					
 local valore_hardwarecur
 local valore_LUPS
 local valore_bloom_shader
 local valore_show_projeclight
 local valore_xray
 local valore_hardwarecur
-local valore_blinking				-- verificare!!!!!!!!!!!!!!!!!!!
+local valore_blinking				
 local valore_shadows
 local valore_showenvironmental
 local valore_antialiasing
 local valore_watertype
+local valore_vsynk
+local valore_mapborders
 -- icona principale del menu
 local larghezza_icona_graphicsmenu			= 40
 local altezza_icona_graphicsmenu			= 40
@@ -128,13 +131,10 @@ end
 --------------------------------------	
 function widget:TextCommand(command)
 -- apertura e chiusura del menu
-	if command == 'open_WMRTS_graphics' and not graphicsmenu_attivo then
+	if command == 'open_WMRTS_graphics' then
 		graphicsmenu_attivo = true
--- VALUTARE SE SONO NECESSARI ALTRI COMANDI ----------------------------------------------------------------------------------------------------		
---	elseif command ==  'close_WMRTS_graphics' and graphicsmenu_attivo then
---		graphicsmenu_attivo = false
---		Spring.SendCommands("close_WMRTS_minimenu")  -- invio il comando close_WMRTS_minimenu per gestire l'icona minimenu
--- invio il comando close_WMRTS_minimenu per gestire l'icona minimenu		---------------------------------------------------------------------------		
+	elseif command == 'close_WMRTS_graphics' then
+		graphicsmenu_attivo = false		
 	end
 end
 
@@ -170,58 +170,20 @@ local function check_options()
 -- all'inizio verifico anche il valore delle configurazioni
   valore_mapshading = Spring.GetConfigInt("AdvMapShading", 1)			-- booleano di default è true
   valore_unitshading = Spring.GetConfigInt("AdvModelShading", 1)			-- booleano di default è true
---  valore_grass = Spring.GetConfigInt("xxxxxxx", 1)   				----------------- non esiste grass ON/OFF
+  valore_grass = Spring.GetConfigInt("GrassDetail", 1)   				-- booleano di default è true
   valore_hardwarecur = Spring.GetConfigInt("HardwareCursor", 0) 		-- booleano di default è falso
   valore_LUPS = Spring.GetConfigInt("LupsActive", 0) 					-- booleano di default è falso -> disattivo successivamente anche il Widget				## widget
   valore_bloom_shader = Spring.GetConfigInt("BloomshaderActive", 0)		-- booleano di default è falso -> disattivo successivamente anche il Widget			## widget
   valore_show_projeclight = Spring.GetConfigInt("ShowProjectile", 0)	-- booleano di default è falso  -> disattivo successivamente anche il Widget	## widget
   valore_xray = Spring.GetConfigInt("XrayActive", 0)					-- booleano di default è falso  -> disattivo successivamente anche il Widget			## widget
-  valore_fullscreen = Spring.GetConfigInt("Fullscreen", 1) 			-- booleano di default è true
---  valore_blinking = Spring.GetConfigInt("xxxxxxx", 1)   			----------------- non esiste è un widget???
+  valore_fullscreen = Spring.GetConfigInt("Fullscreen", 1) 				-- booleano di default è true
+  valore_blinking = Spring.GetConfigInt("teamhighlight", 1)   			-- booleano di default è true
   valore_shadows = Spring.GetConfigInt("Shadows", 2) 					-- -1:=forceoff, 0:=off, 1:=full, 2:=fast (skip terrain)
   valore_showenvironmental = Spring.GetConfigInt("EnviroActive", 0)		-- booleano di default è falso ->  -> disattivo successivamente anche il Widget			## widget
   valore_antialiasing = Spring.GetConfigInt("MSAALevel", 0) 			-- valori da 0 a 32 MAX
   valore_watertype = Spring.GetConfigInt("Water", 1) 					-- Defines the type of water rendering. Can be set in game. Options are: 0 = Basic water, 1 = Reflective water, 2 = Reflective and Refractive water, 3 = Dynamic water, 4 = Bumpmapped water
-  
---[[ ESEMPIO DA UTILIZZARE PER IL CHECK OPTIONS
-Spring.GetConfigInt ( string name [, number default ] ) 
-return: nil | number configInt 
-Spring.GetConfigFloat ( string name [, number default ] ) 
-return: nil | number configFloat 
-New in version 104.0
-Spring.GetConfigString ( string name [, number default ] ) 
-return: nil | string configString 
-]]--
-
---[[
-  volume_master = Spring.GetConfigInt("snd_volmaster", 60) 	-- prelevo il valore del volume master
-  volume_master = volume_master * 0.01						-- e lo converto in numero da 0 a 1
-  volume_music = Spring.GetConfigInt("snd_volmusic", 60)
-  volume_music = volume_music * 0.01  
-  volume_battle = Spring.GetConfigInt("snd_volbattle", 60)
-  volume_battle = volume_battle * 0.01  
-]]--
---[[
----------------------------
--- TEAM CURSOR ESEMPIO DI SIMPLE MENU
----------------------------					
-	elseif cmd == "teamcursopt" then
-			if Button[12]["click"] then
-			Spring.SetConfigInt("showteamcurs",0)
-			Spring.SendCommands({"luaui disablewidget AllyCursors"}) 			
-		else
-			Spring.SetConfigInt("showteamcurs",1)
-			Spring.SendCommands({"luaui enablewidget AllyCursors"}) 			
-		end	
-]]--
---[[
---ESEMPIO  
-valore_mostracurs=Spring.GetConfigInt("showteamcurs",0) -- se non esiste di default è 0 ma anche il widget deve essere disabilitato.
-if valore_mostracurs = 0 then
-			Spring.SendCommands({"luaui disablewidget AllyCursors"}) 	-- disabilito il widget
-end
-]]--
- 
+  valore_vsynk = Spring.GetConfigInt("VSync", 0)   						-- valori 1 o 0 (default) abilita o disabilita standard VSynk
+  valore_mapborders = Spring.GetConfigInt("MapBorder", 1)   			-- valori 1 (default) o 0 abilita o disabilita bordi della mappa
 end
 
 --------------------------------------
@@ -259,7 +221,7 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 end
 ]]--
 --------------------------------------
--- MOUSE IS OVER BUTTONS
+-- MOUSE IS OVER BUTTONS --> fare riferimento a "Elenco opzioni Graphics_visuals.ods" per la disposizione delle opzioni
 --------------------------------------
 function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la variabile graphicsmenu_attivo è true.....
 	if graphicsmenu_attivo and not Spring.IsGUIHidden() then
@@ -271,6 +233,9 @@ function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la 
 			-- Show grass on maps  A SINISTRA icona "ON/OFF"
 			or 
 			((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi+altezza_icona_opzioni)) 
+			-- Show mapborders  A SINISTRA icona "ON/OFF"
+			or 
+			((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi+altezza_icona_opzioni)) 			
 			-- hardware cursor A DESTRA  icona "ON/OFF"
 			or 
 			((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi+altezza_icona_opzioni	)) 
@@ -291,6 +256,9 @@ function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la 
 			((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)) 
 			-- Blinking units A DESTRA  icona "ON/OFF"
 			or 
+			((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi+altezza_icona_opzioni)) 
+			-- Vsync A DESTRA  icona "ON/OFF"
+			or 
 			((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)) 
 			-- shadows icona "<-"
 			or 
@@ -298,7 +266,6 @@ function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la 
 			-- shadows icona "->"
 			or 
 			((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni))
---			((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) 
 			-- Show environment effects (snow, rain, etc) 	icona "<-"		
 			or 
 			((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) 
@@ -372,8 +339,32 @@ if graphicsmenu_attivo and not Spring.IsGUIHidden() then
 				return true		
 				-- Show grass on maps  A SINISTRA icona "ON/OFF"
 			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				Echo("test Show grass")
+				valore_grass = valore_grass + 1
+				if valore_grass > 1 then
+					valore_grass = 0
+				end
+				if valore_grass == 0 then
+					Spring.SendCommands("GrassDetail 0")
+					Spring.SetConfigInt("GrassDetail", 0)	
+				elseif valore_grass == 1 then
+					Spring.SendCommands("GrassDetail 1")
+					Spring.SetConfigInt("GrassDetail", 1)		
+				end
 				return true
+				-- Show map borders A SINISTRA RIGA 8 icona "ON/OFF"
+			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				valore_mapborders = valore_mapborders + 1
+				if valore_mapborders > 1 then
+					valore_mapborders = 0
+				end
+				if valore_mapborders == 0 then
+					Spring.SendCommands("MapBorder 0")
+					Spring.SetConfigInt("MapBorder", 0)	
+				elseif valore_mapborders == 1 then
+					Spring.SendCommands("MapBorder 1")
+					Spring.SetConfigInt("MapBorder", 1)		
+				end
+				return true				
 				-- hardware cursor A DESTRA  icona "ON/OFF" -- se clicco sull'icona della relativa opzione, aggiungo +1 al valore, di conseguenza diventa 0 o 1. Serve per impostare poi la grafica corretta della casella di selezione ON/OFF
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi+altezza_icona_opzioni	)) then
 				valore_hardwarecur = valore_hardwarecur + 1
@@ -461,8 +452,18 @@ if graphicsmenu_attivo and not Spring.IsGUIHidden() then
 				end
 				return true
 				-- Blinking units A DESTRA  icona "ON/OFF"
-			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				Echo("test Blinking")
+			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				valore_blinking = valore_blinking + 1
+				if valore_blinking > 1 then
+					valore_blinking = 0
+				end
+				if valore_blinking == 0 then
+					Spring.SendCommands("TeamHighlight 0")
+					Spring.SetConfigInt("TeamHighlight", 0)	
+				elseif valore_blinking == 1 then
+					Spring.SendCommands("TeamHighlight 1")
+					Spring.SetConfigInt("TeamHighlight", 1)		
+				end
 				return true						
 				-- shadows icona "<-"
 			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) then
@@ -579,7 +580,21 @@ if graphicsmenu_attivo and not Spring.IsGUIHidden() then
 					Spring.SendCommands("Water 4")
 					Spring.SetConfigInt("Water", 4)						
 				end		
-				return true					
+				return true			
+				-- VSync A DESTRA RIGA 3  icona "ON/OFF"
+			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				valore_vsynk = valore_vsynk + 1
+				if valore_vsynk > 1 then
+					valore_vsynk = 0
+				end
+				if valore_vsynk == 0 then
+					Spring.SendCommands("VSync 0")
+					Spring.SetConfigInt("VSync", 0)	
+				elseif valore_vsynk == 1 then
+					Spring.SendCommands("VSync 1")
+					Spring.SetConfigInt("VSync", 1)		
+				end
+				return true			
 			end -- posizioni menu
 		end -- isAbove
 	end -- button = 1
@@ -666,10 +681,14 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	font_generale:Print("Show grass on maps", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga6 ,12,'ds')
 	font_generale:End()
 	-- icona	
---	gl.Color(1,1,1,1)
---	gl.Texture(icona_on)	
---	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi+altezza_icona_opzioni)	
---	gl.Texture(false)	-- fine texture		
+	gl.Color(1,1,1,1)
+	if valore_grass == 0 then
+	gl.Texture(icona_off)	
+	elseif valore_grass == 1 then
+	gl.Texture(icona_on)		
+	end		
+	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture		
 	
 -- voce dx bloom shader cursor
 	-- testo
@@ -739,7 +758,7 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Blinking units", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga3,12,'ds')
+	font_generale:Print("Blinking units", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga8,12,'ds')
 	font_generale:End()		
 	-- icona
 	gl.Color(1,1,1,1)
@@ -748,7 +767,39 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	elseif valore_blinking == 1 then
 	gl.Texture(icona_on)		
 	end		
+	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture		
+
+-- voce dx Vsync
+	-- testo
+	font_generale:SetTextColor(1, 1, 1, 1)
+	font_generale:Begin()
+	font_generale:Print("Standard VSynk", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga3,12,'ds')
+	font_generale:End()		
+	-- icona
+	gl.Color(1,1,1,1)
+	if valore_vsynk == 0 then
+	gl.Texture(icona_off)	
+	elseif valore_vsynk == 1 then
+	gl.Texture(icona_on)		
+	end		
 	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)	
+	gl.Texture(false)	-- fine texture		
+
+-- voce sx mapborders
+	-- testo
+	font_generale:SetTextColor(1, 1, 1, 1)
+	font_generale:Begin()
+	font_generale:Print("Map borders", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga8 ,12,'ds')
+	font_generale:End()
+	-- icona	
+	gl.Color(1,1,1,1)
+	if valore_mapborders == 0 then
+	gl.Texture(icona_off)	
+	elseif valore_mapborders == 1 then
+	gl.Texture(icona_on)		
+	end	
+	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi+altezza_icona_opzioni)
 	gl.Texture(false)	-- fine texture		
 	
 -- voce sx fullscreen
