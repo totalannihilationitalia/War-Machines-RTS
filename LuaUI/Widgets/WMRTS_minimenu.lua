@@ -28,6 +28,7 @@ end
 to do list 
 -- pulsanti piccoli / grossi
 -- gestire se si vuole il LOS attivo alla partenza oppure no
+-- inserire nel DrawMapDataMinimenu() i markers sugli estrattori di metallo
 ]]--
 --------------------------------------------------------------------------------
 -- rev 0 by molix -- 02/12/2024 -- designing top right WMRTS mini-menù
@@ -48,7 +49,7 @@ local show_minimenu_statistics_button	= true
 local show_minimenu_object_button		= true
 local show_minimenu_snd_button			= true
 local show_minimenu_los_button			= true
-local show_minimenu_builder_button			= true
+local show_minimenu_builder_button		= true
 local show_minimenu_wind_button			= true					-- non è un bottone ma è una finestrella con il valore del vento
 local show_minimenu_tidal_button		= true					-- non è un bottone ma è una finestrella con il valore delle maree
 -- definizione variabili di posizione e lunghezza
@@ -74,7 +75,7 @@ local show_sndmenu 						= false 				-- is sound menu options active?
 local show_statisticsmenu				= false					-- is statistics table active?
 local show_objmenu						= false 				-- is obj windows active? 
 local show_losmenu						= false					-- is LOS windows active? -- or function active?? --todo
-local show_buildermenu						= false					-- is builder windows active? -- or function active?? --todo
+local show_buildermenu					= false					-- is builder windows active? -- or function active?? --todo
 local show_wingmenu						= false					-- is wing windows active? -- or function active?? --todo
 local show_tidalmenu					= false					-- is tidal windows active? -- or function active?? --todo
 
@@ -110,8 +111,6 @@ local UltimaMapDrawMode = Spring.GetMapDrawMode()
 -- definizioni variabili di gestione wind e tidal
 local forzatidal
 local forzawind
-local valoretidal
-local valorewind
 
 -- impostazione dei fonts
 local font_generale					= gl.LoadFont("FreeSansBold.otf",12, 1.9, 40)
@@ -226,16 +225,24 @@ function widget:MousePress(x, y, button)
 		-- mainmenu
 				-- si attiva
 				if not show_mainmenu and((x >= Pos_x_minimenu_button) and (x <= Pos_x_minimenu_button + larghezza_main_minimenu_button) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))  then --se è sopra il minibutton main menu
-				Spring.SendCommands("open_WMRTS_menu") -- open_WMRTS_menu
+				Spring.SendCommands("open_WMRTS_menu") 	-- open_WMRTS_menu
+				Spring.SendCommands("close_WMRTS_snd")	-- close_WMRTS_sndmenu				
+				show_mainmenu = true					-- attivo il pulsante "menu" del minimenu
 				return true
 				-- si disattiva
 				elseif show_mainmenu and((x >= Pos_x_minimenu_button) and (x <= Pos_x_minimenu_button + larghezza_main_minimenu_button) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))  then --se è sopra il minibutton main menu
 				Spring.SendCommands("close_WMRTS_menu") -- close_WMRTS_menu
+				Spring.SendCommands("close_WMRTS_snd")	-- close_WMRTS_sndmenu
+				show_mainmenu = false					-- disattivo il pulsante "menu" del minimenu
 				return true				
 		-- sound 
 				-- si attiva
 				elseif not show_sndmenu and (show_minimenu_snd_button and ((x >= Pos_x_snd_button) and (x <= Pos_x_snd_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton sound
-				Spring.SendCommands("open_WMRTS_snd")
+				Spring.SendCommands("open_WMRTS_snd")		-- open wmrts_sndmenu
+				Spring.SendCommands("close_WMRTS_menu") 	-- close WMRTS_menu	
+				Spring.SendCommands("close_WMRTS_graphics") -- close WMRTS_graphics	
+				Spring.SendCommands("close_WMRTS_exit") 	-- close WMRTS_exit					
+				show_mainmenu = false
 				return true	
 				-- si disattiva
 				elseif show_sndmenu and (show_minimenu_snd_button and ((x >= Pos_x_snd_button) and (x <= Pos_x_snd_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton sound
@@ -395,86 +402,19 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 				show_selettore_minibutton = false
 				end
 	end -- isguihidden
-	
--- imposto il valore tidal ed il valore di valorewind in funzione di forzawind (questo per evitare i 12 decimali). Avevo provato anche con queste stringhe: --	forzawind = string.sub(forzawind,1,string.len(forzawind)-11)  --	Spring.Echo(string.sub(forzawind, 0, -13)) ma a volte stampa la virgola, a volte no, a volte mi ruba anche un intero
-	valoretidal = Game.tidal
+-- imposto la variabilw forzatidal forzawind e le trasformo in valori interi
+	forzatidal = Game.tidal
 	_,_,_, forzawind = Spring.GetWind()	
-			if forzawind == 0 then
-				valorewind = 0
-			elseif (forzawind > 0 and forzawind < 1) then
-				valorewind = 0.5
-			elseif (forzawind >=1 and forzawind< 2) then
-				valorewind = 1			
-			elseif (forzawind >=2 and forzawind< 3) then
-				valorewind = 2		
-			elseif (forzawind >=3 and forzawind< 4) then
-				valorewind = 3	
-			elseif (forzawind >=4 and forzawind< 5) then
-				valorewind = 4		
-			elseif (forzawind >=5 and forzawind< 6) then
-				valorewind = 5	
-			elseif (forzawind >=6 and forzawind< 7) then
-				valorewind = 6	
-			elseif (forzawind >=7 and forzawind< 8) then
-				valorewind = 7	
-			elseif (forzawind >=8 and forzawind< 9) then
-				valorewind = 8	
-			elseif (forzawind >=9 and forzawind< 10) then
-				valorewind = 9	
-			elseif (forzawind >=10 and forzawind< 11) then
-				valorewind = 10	
-			elseif (forzawind >=11 and forzawind< 12) then
-				valorewind = 11			
-			elseif (forzawind >=12 and forzawind< 13) then
-				valorewind = 12		
-			elseif (forzawind >=13 and forzawind< 14) then
-				valorewind = 13	
-			elseif (forzawind >=14 and forzawind< 15) then
-				valorewind = 14	
-			elseif (forzawind >=15 and forzawind< 16) then
-				valorewind = 15	
-			elseif (forzawind >=16 and forzawind< 17) then
-				valorewind = 16	
-			elseif (forzawind >=17 and forzawind< 18) then
-				valorewind = 17	
-			elseif (forzawind >=18 and forzawind< 19) then
-				valorewind = 18	
-			elseif (forzawind >=19 and forzawind< 20) then
-				valorewind = 19	
-			elseif (forzawind >=20 and forzawind< 21) then
-				valorewind = 20	
-			elseif (forzawind >=21 and forzawind< 22) then
-				valorewind = 21			
-			elseif (forzawind >=22 and forzawind< 23) then
-				valorewind = 22		
-			elseif (forzawind >=23 and forzawind< 24) then
-				valorewind = 23	
-			elseif (forzawind >=24 and forzawind< 25) then
-				valorewind = 24	
-			elseif (forzawind >=25 and forzawind< 26) then
-				valorewind = 25	
-			elseif (forzawind >=26 and forzawind< 27) then
-				valorewind = 26	
-			elseif (forzawind >=27 and forzawind< 28) then
-				valorewind = 27	
-			elseif (forzawind >=28 and forzawind< 29) then
-				valorewind = 28	
-			elseif (forzawind >=29 and forzawind< 30) then
-				valorewind = 29	
-			elseif (forzawind >=30 and forzawind< 31) then
-				valorewind = 30		
-			elseif (forzawind >=31) then
-				Spring.Echo("valore massimo vento raggiunto, sistemare logica in WMRTS_minimenu.lua")				
-			end -- arrivo fino ad un massimo di 30 come valore, se nelle mappe è superiore, aumentare la logica
+	forzawind = math.floor(forzawind) -- vado a far diventare intero il valore di forzawind (che avrebbe 9 decimali)
 end
 	
 --------------------------------------
 -- ALLA PRESSIONE DEI TASTI --------------------------------------------------------------- spostare questa funzione nel minimenu! in modo da gestire l'apertura del menu col tasto esc solamente quando non ci sono altri elementi aperti
 --------------------------------------
 function widget:KeyPress(key, mods, isRepeat) 
--- se premo il tasto L mostro o nascondo il LOS
+-- se premo il tasto L 
 	if key == 108 then -- TASTO L
-		if Spring.GetMapDrawMode()=="los" then
+		if Spring.GetMapDrawMode()=="los" then --mostro o nascondo il LOS
         Spring.SendCommands("togglelos")
 		show_losmenu = false	
 		return true
@@ -483,12 +423,21 @@ function widget:KeyPress(key, mods, isRepeat)
 		show_losmenu = true	
 		return true		
 		end
---------------------------------------------------------------------------------------------------------------- introdurre queste righe per disabilitare lo shader, quando lo installi nel drawing
---				if (WG['guishader_api'] ~= nil) then
---					WG['guishader_api'].RemoveRect('WMRTS_snd_option')
---				end			
 	end
-
+-- se premo il tasto esc 
+	if key == 27 then -- TASTO esc 0x01B
+		-- se non ci sono selezionate le unità, ed il mainmenu è disattivato e il sndmenu non è attivo: apro il mainmenu
+		if not show_mainmenu and not show_sndmenu and not Spring.IsGUIHidden() and Spring.GetSelectedUnitsCount() == 0 then
+		Spring.SendCommands("open_WMRTS_menu") 				-- apro il mainmenu (widget main menu)
+		show_mainmenu = true								-- accendo il minipulsante menu del minimenu
+		return true
+		-- se ci sono selezionate le unità, il menu non si apre e si deselezionano le unità selezionate (o si interrompono le funzioni che si stanno eseguendo col mouse, come costruzione, ordini, waypoint ecc)
+		elseif not show_mainmenu and not Spring.IsGUIHidden() and Spring.GetSelectedUnitsCount() > 0 then
+		Spring.SendCommands("Deselect")	
+		show_mainmenu = false
+		return true
+		end
+	end	 													-- lo spegnimento del minipulsante menu del minimenu e la chiusura del menu (widget), avviene dai rispettivi widget (main menu & co). 	
 	return false
 end
 	
@@ -650,7 +599,7 @@ local function DrawMapDataMinimenu()
 	Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante tidal (se sarà presente)
 	-- Valore del vento	
     font_generale:Begin()
-	font_generale:Print(valorewind, Pos_x_wind_button+17, Pos_y_minimenu_button+12, 15, "ocn") -- valore del vento trasformato in stringa
+	font_generale:Print(forzawind, Pos_x_wind_button+17, Pos_y_minimenu_button+12, 15, "ocn") -- valore del vento trasformato in stringa
 	font_generale:End()	
 		end		
 	
@@ -674,7 +623,7 @@ local function DrawMapDataMinimenu()
 			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante successivo (se sarà presente)
 		-- Valore delle maree
     font_generale:Begin()
-	font_generale:Print(valoretidal, Pos_x_tidal_button+17, Pos_y_minimenu_button+12, 15, "ocn") -- valore del vento trasformato in stringa
+	font_generale:Print(forzatidal, Pos_x_tidal_button+17, Pos_y_minimenu_button+12, 15, "ocn") -- valore del vento
 	font_generale:End()	
 		end		
 	
@@ -720,7 +669,7 @@ function widget:DrawScreen()
 		DrawSeparatorMiniMenu() 	-- inserisco il separatore
 		DrawVisualsMiniMenu()		-- inserisco il minimenu visuals (LOS e Builder)
 		DrawSeparatorMiniMenu() 	-- inserisco il separatore
-		DrawMapDataMinimenu()		-- inserisco il minimenu mapdata (Wind value e Tidal value
+		DrawMapDataMinimenu()		-- inserisco il minimenu mapdata (Wind value e Tidal value)
 	end
 end
 

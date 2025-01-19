@@ -85,23 +85,21 @@ end
 -- GESTIONE DEI COMANDI SPRING RICEVUTI
 --------------------------------------	
 function widget:TextCommand(command)
-	if command == 'open_WMRTS_exit' and not mostra_exitmenu then
+	if command == 'open_WMRTS_exit' then
 		mostra_exitmenu = true
---		Spring.SendCommands("open_WMRTS_minimenuexit")  -- invio il comando open_WMRTS_xxxx per gestire la rispettiva icona del minimenu
-	elseif command ==  'open_WMRTS_exit' and mostra_exitmenu then
+	elseif command ==  'close_WMRTS_exit' then
 		mostra_exitmenu = false
---		Spring.SendCommands("close_WMRTS_minimenuexit")  -- invio il comando close_WMRTS_xxxx per gestire la rispettiva icona del minimenu
--- invio il comando close_WMRTS_minimenu per gestire l'icona minimenu		---------------------------------------------------------------------------		
 	end
 end
 
 --------------------------------------
--- ALLA PRESSIONE DEI PULSANTI
+-- ALLA PRESSIONE DEI TASTI
 --------------------------------------
 function widget:KeyPress(key, mods, isRepeat) 
 if mostra_exitmenu and not Spring.IsGUIHidden() then
 	if key == 0x01B then -- TASTO esc
 	mostra_exitmenu = false  
+	Spring.SendCommands("close_WMRTS_minimenu")		-- invia comando per spegnere il minibutton mainmenu del minimenu
 -- remove gui shader
 			if (WG['guishader_api'] ~= nil) then
 				WG['guishader_api'].RemoveRect('WMRTS_exit_option')
@@ -122,7 +120,6 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 				if 	
 				((mousex >= posx_menu+posx_menu_button) and (mousex <= posx_menu+posx_menu_button+larghezza_menu_buttons) and (mousey >= posy_menu+posy_menu_button) and (mousey <= posy_menu+posy_menu_button+altezza_menu_buttons)) then -- .... il pulsante back
 				selettore_buttons_visibile = true
-				Spring.Echo("test")
 				posx_selettore_buttons = posx_menu+posx_menu_button 
 				posy_selettore_buttons = posy_menu+posy_menu_button
 				-- closebutton
@@ -188,6 +185,7 @@ if mostra_exitmenu and not Spring.IsGUIHidden() then
 				return true        
 			elseif  ((x >= posx_menu+posx_menu_button+distance_x_menu_button) and (x <= posx_menu+posx_menu_button+larghezza_menu_buttons+distance_x_menu_button) and (y >= posy_menu+posy_menu_button) and (y <= posy_menu+posy_menu_button+altezza_menu_buttons)) then -- .... il pulsante close
 				mostra_exitmenu = false  
+				Spring.SendCommands("close_WMRTS_minimenu")		-- invia comando per spegnere il minibutton mainmenu del minimenu
 					if (WG['guishader_api'] ~= nil) then
 					WG['guishader_api'].RemoveRect('WMRTS_exit_option')
 					end		

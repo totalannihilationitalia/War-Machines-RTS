@@ -41,8 +41,8 @@ local Echo 								= Spring.Echo
 -- definizione variabili di posizione e lunghezza menu e icone
 local graphicsmenu_attivo				= false 							-- Indica se questo menu è attivo o meno
 local vsx, vsy 						  	= widgetHandler:GetViewSizes()
-local larghezza_mainmenu				= 800 							-- doppia rispetto a mainmenu
-local altezza_mainmenu					= 275							-- + 2 opzioni (da 25 l'una), rispetto a mainmenu
+local larghezza_mainmenu				= 700 								-- doppia rispetto a mainmenu
+local altezza_mainmenu					= 276								-- + 2 opzioni (da 25 l'una), rispetto a mainmenu ATTENZIONE!!!! utilizzare solo numeri pari per divisioni /2!!! altrimenti le immagini potrebbero diventare sgranate!
 local Pos_x_mainmenu					= 20  								-- NON EDITARE posizione in basso a sinistra del menu (valore gestito poi autonomamente dallo script)
 local Pos_y_mainmenu					= 20  								-- NON EDITARE posizione in basso a sinistra del menu (valore gestito poi autonomamente dallo script)
 local margine_sx_scritte				= 80  								-- margine sinistro da cui partono le scritte del menu
@@ -89,7 +89,7 @@ local margine_su_icona_graphicsmenu			= -30 	-- distanza di quanto sborda l'imma
 -- pulsanti back / close
 local larghezza_menu_buttons 			= 76  		-- like back button, close button
 local altezza_menu_buttons 				= 25  		-- like back button, close button
-local distance_x_menu_button 			= 300 		-- distanza tra i due pulsanti 
+local distance_x_menu_button 			= 250 		-- distanza tra i due pulsanti 
 local posx_menu_button = 11					  		-- position x of first menu button (from 0 ,0 of main menu)
 local posy_menu_button = -10				 		-- position y of first menu button (from 0 ,0 of main menu)
 local selettore_buttons_visibile 		= false		-- visibile o no
@@ -138,30 +138,25 @@ function widget:TextCommand(command)
 	end
 end
 
---[[
 --------------------------------------
--- ALLA PRESSIONE DEI TASTI --------------------------------------------------------------- spostare questa funzione nel minimenu! in modo da gestire l'apertura del menu col tasto esc solamente quando non ci sono altri elementi aperti
+-- ALLA PRESSIONE DEI TASTI 
 --------------------------------------
 function widget:KeyPress(key, mods, isRepeat) 
-if graphicsmenu_attivo and not Spring.IsGUIHidden() then
-	if key == 27 then -- TASTO esc  0x01B
-	Spring.SendCommands("close_WMRTS_menu")
+	if graphicsmenu_attivo and not Spring.IsGUIHidden() then
+		if key == 27 then -- TASTO esc  0x01B
+			graphicsmenu_attivo = false 						-- chiudo graphicsmenu
+			Spring.SendCommands("close_WMRTS_minimenu")			-- spengo il minipulsante menu del minimenu
 --------------------------------------------------------------------------------------------------------------- introdurre queste righe per disabilitare lo shader, quando lo installi nel drawing
 --				if (WG['guishader_api'] ~= nil) then
 --					WG['guishader_api'].RemoveRect('WMRTS_snd_option')
 --				end			
 			return true
+		end
+
 	end
-elseif not graphicsmenu_attivo 	and not Spring.IsGUIHidden() then
-	if key == 27 then -- TASTO esc 0x01B
-	Spring.SendCommands("open_WMRTS_menu")
-			return true
-	end
-end
 	
-	return false
+return false
 end
-]]--
 
 --------------------------------------
 -- FUNZIONE CHECK STATO OPZIONI, viene richiamata in diverse fasi dello script per controllare lo stato delle opzioni 
@@ -617,7 +612,7 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	-- testo
 	font_intestazione:SetTextColor(1, 1, 1, 1)
 	font_intestazione:Begin()
-	font_intestazione:Print("Grapichs options", Pos_x_mainmenu+70, Pos_y_mainmenu + 220,14,'ds')
+	font_intestazione:Print("Grapichs options", Pos_x_mainmenu+70, Pos_y_mainmenu + 220+25,14,'ds')
 	font_intestazione:End()	
 	
 -- icona principale del menu
@@ -774,7 +769,7 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Standard VSynk", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga3,12,'ds')
+	font_generale:Print("Standard VSync", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga3,12,'ds')
 	font_generale:End()		
 	-- icona
 	gl.Color(1,1,1,1)

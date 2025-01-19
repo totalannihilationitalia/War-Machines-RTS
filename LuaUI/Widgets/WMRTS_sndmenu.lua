@@ -104,6 +104,9 @@ function widget:TextCommand(command)
 	end
 	if command == 'close_WMRTS_snd' then
 		mostra_soundsetting = false
+		if (WG['guishader_api'] ~= nil) then
+			WG['guishader_api'].RemoveRect('WMRTS_Guishader')
+		end				
 	end	
 end
 
@@ -114,15 +117,16 @@ function widget:KeyPress(key, mods, isRepeat)
 if mostra_soundsetting and not Spring.IsGUIHidden() then
 	if key == 0x01B then -- TASTO esc
 	mostra_soundsetting = false  
+	Spring.SendCommands("close_WMRTS_snd") 		-- invia comando per spegnere il minibutton snd del minimenu
+	Spring.SendCommands("close_WMRTS_minimenu") -- invia comando per spegnere il minibutton mainmenu del minimenu	
 --		if ButtonMenu.click then
 --			ButtonMenu.click = false
 --			PlaySoundFile(TEST_SOUND)		
 			-- remove gui shader
-				if (WG['guishader_api'] ~= nil) then
-					WG['guishader_api'].RemoveRect('WMRTS_snd_option')
-				end			
-			return true
---		end
+		if (WG['guishader_api'] ~= nil) then
+			WG['guishader_api'].RemoveRect('WMRTS_Guishader')
+		end			
+	return true
 	end
 end
 	
@@ -262,22 +266,24 @@ if mostra_soundsetting and not Spring.IsGUIHidden() then
 --			PlaySoundFile(TEST_SOUND)		
 			-- remove gui shader
 		if (WG['guishader_api'] ~= nil) then
-			WG['guishader_api'].RemoveRect('WMRTS_snd_option')
+			WG['guishader_api'].RemoveRect('WMRTS_Guishader')
 		end		
 	Spring.SendCommands("close_WMRTS_snd") -- invia il comando per chiudere il snd button sul minimenu
 	Spring.SendCommands("open_WMRTS_menu") -- invia comando per aprire menu principale di WMRTS
 	 return true        
 	
 	  elseif  ((x >= posx_menu+posx_menu_button+distance_x_menu_button) and (x <= posx_menu+posx_menu_button+larghezza_menu_buttons+distance_x_menu_button) and (y >= posy_menu+posy_menu_button) and (y <= posy_menu+posy_menu_button+altezza_menu_buttons)) then -- .... il pulsante close
-	Spring.SendCommands("close_WMRTS_snd") -- invia il comando per chiudere il snd button sul minimenu	
-	mostra_soundsetting = false  -- chiudo il menu soundsettings
+	mostra_soundsetting = false
+	Spring.SendCommands("close_WMRTS_snd") 		-- invia comando per spegnere il minibutton snd del minimenu
+	Spring.SendCommands("close_WMRTS_minimenu") -- invia comando per spegnere il minibutton mainmenu del minimenu	
+		if (WG['guishader_api'] ~= nil) then
+			WG['guishader_api'].RemoveRect('WMRTS_Guishader')
+		end		
 --		if ButtonMenu.click then
 --			ButtonMenu.click = false
 --			PlaySoundFile(TEST_SOUND)		
 			-- remove gui shader
-		if (WG['guishader_api'] ~= nil) then
-			WG['guishader_api'].RemoveRect('WMRTS_snd_option')
-		end		
+
 	
    return true       
 	
@@ -502,7 +508,7 @@ local function DrawMenu()
 
 -- gui shader	
 	if (WG['guishader_api'] ~= nil) then
-		WG['guishader_api'].InsertRect( posx_menu,posy_menu, posx_menu+larghezza_menu, posy_menu+altezza_menu,'WMRTS_snd_option')
+		WG['guishader_api'].InsertRect( posx_menu,posy_menu, posx_menu+larghezza_menu, posy_menu+altezza_menu,'WMRTS_Guishader')
 	end
 
   return

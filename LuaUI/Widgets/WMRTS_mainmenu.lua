@@ -99,7 +99,6 @@ local function UpdateGeometry() -- aggiorno geometria
   Pos_y_mainmenu = vsy/2 - altezza_mainmenu/2
 end
 
-
 --- funzione rilevamento delle dimensioni della finestra durante il resizing
 function widget:ViewResize(viewSizeX, viewSizeY) -- quando si modifica la dimensione della finestra di spring, prelevane larghezza e altezza e fai partire la funzione "aggiorno geometria"
   vsx = viewSizeX
@@ -114,11 +113,13 @@ function widget:TextCommand(command)
 -- apertura e chiusura del main menu
 	if command == 'open_WMRTS_menu' and not mainmenu_attivo then
 		mainmenu_attivo = true
-		Spring.SendCommands("open_WMRTS_minimenu")  -- invio il comando open_WMRTS_minimenu per gestire l'icona minimenu
+		Spring.SendCommands("open_WMRTS_minimenu")			-- accendo il minipulsante menu del minimenu		
 	elseif command ==  'close_WMRTS_menu' and mainmenu_attivo then
 		mainmenu_attivo = false
-		Spring.SendCommands("close_WMRTS_minimenu")  -- invio il comando close_WMRTS_minimenu per gestire l'icona minimenu
--- invio il comando close_WMRTS_minimenu per gestire l'icona minimenu		---------------------------------------------------------------------------		
+	-- disabilito il guishader
+		if (WG['guishader_api'] ~= nil) then
+			WG['guishader_api'].RemoveRect('WMRTS_Guishader')
+		end					
 	end
 end
 
@@ -126,22 +127,17 @@ end
 -- ALLA PRESSIONE DEI TASTI --------------------------------------------------------------- spostare questa funzione nel minimenu! in modo da gestire l'apertura del menu col tasto esc solamente quando non ci sono altri elementi aperti
 --------------------------------------
 function widget:KeyPress(key, mods, isRepeat) 
-if mainmenu_attivo and not Spring.IsGUIHidden() then
-	if key == 27 then -- TASTO esc  0x01B
-	Spring.SendCommands("close_WMRTS_menu")
---------------------------------------------------------------------------------------------------------------- introdurre queste righe per disabilitare lo shader, quando lo installi nel drawing
---				if (WG['guishader_api'] ~= nil) then
---					WG['guishader_api'].RemoveRect('WMRTS_snd_option')
---				end			
+	if mainmenu_attivo and not Spring.IsGUIHidden() then
+		if key == 27 then -- TASTO esc  0x01B
+			Spring.SendCommands("close_WMRTS_menu")				-- chiudo il mainmenu (widget main menu)
+			Spring.SendCommands("close_WMRTS_minimenu")			-- spengo il minipulsante menu del minimenu
+	-- disabilito il guishader
+		if (WG['guishader_api'] ~= nil) then
+			WG['guishader_api'].RemoveRect('WMRTS_Guishader')
+		end			
 			return true
+		end
 	end
-elseif not mainmenu_attivo 	and not Spring.IsGUIHidden() then
-	if key == 27 then -- TASTO esc 0x01B
-	Spring.SendCommands("open_WMRTS_menu")
-			return true
-	end
-end
-	
 	return false
 end
 
@@ -152,7 +148,6 @@ function widget:Initialize()
 -- all'inizio imposto la posizione del mini menu
   Pos_x_mainmenu = vsx/2 - larghezza_mainmenu/2
   Pos_y_mainmenu = vsy/2 - altezza_mainmenu/2
---  endTime = false
 end
 
 --------------------------------------
@@ -197,7 +192,6 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 				end
 	end
 end
-
 
 --------------------------------------
 -- MOUSE IS OVER BUTTONS
@@ -270,9 +264,10 @@ if mainmenu_attivo and not Spring.IsGUIHidden() then
 				Spring.SendCommands("close_WMRTS_menu")				
 				Spring.SendCommands("open_WMRTS_exit")				
 				return true				
-				-- backbutton
+				-- closebutton
 			elseif ((mousex >= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button ) and (mousex <= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button +larghezza_menu_buttons) and (mousey >= Pos_y_mainmenu+posy_menu_button) and (mousey <= Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons)) then
-				Spring.SendCommands("close_WMRTS_menu")	
+				Spring.SendCommands("close_WMRTS_menu")			-- chiudi questo mainmenu
+				Spring.SendCommands("close_WMRTS_minimenu")		-- invia comando per spegnere il minibutton mainmenu del minimenu
 				return true
 				
 			end -- posizioni menu
@@ -396,6 +391,11 @@ if mainmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	gl.Texture(selettore_button)	
 	gl.TexRect(	posx_selettore_buttons,posy_selettore_buttons,posx_selettore_buttons+larghezza_menu_buttons ,posy_selettore_buttons + altezza_menu_buttons)	
 	gl.Texture(false)	-- fine texture		
+	end
+
+-- add gui shader----------------------------------------------
+	if (WG['guishader_api'] ~= nil) then
+	WG['guishader_api'].InsertRect(Pos_x_mainmenu,Pos_y_mainmenu,Pos_x_mainmenu+larghezza_mainmenu,Pos_y_mainmenu+altezza_mainmenu,'WMRTS_Guishader')
 	end
 	
 end -- if mainmenu_attivo	
