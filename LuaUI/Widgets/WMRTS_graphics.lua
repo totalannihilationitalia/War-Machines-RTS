@@ -26,6 +26,8 @@ end
 --------------------------------------------------------------------------------
 --[[
 to do list 
+-- inserire la condizione mouse sopra pulsante back o close e  gestirne le funzionalità
+-- inserire la condizione dei riquadri sulle opzioni, se sulla funzione on/off o sulla funzione +o- selettore on sull'intera voce dell'opzione
 -- fare apparire una volta sola la voce "				Echo("Restart is require for changes to take effect") " quando si modifica l' Antialiasing.
 -- includere GroundDecals
 -- includere MaxParticles
@@ -34,6 +36,7 @@ to do list
 --------------------------------------------------------------------------------
 -- rev 0 by molix -- 07/01/2025 -- designing WMRTS graphics menu
 -- rev 1 by molix -- 15/01/2025 -- adding mapBorder, Vsync options. Simplified the code
+-- rev 2 by molix -- 27/01/2025 -- add back shaderd to this menu
 
 
 -- definizione dei comandi
@@ -102,7 +105,7 @@ local selettore_button 				= "LuaUI/Images/menu/mainmenu/main_menu_buttonselecti
 local icona_on 						= "LuaUI/Images/menu/mainmenu/graphics_on.png"
 local icona_off 					= "LuaUI/Images/menu/mainmenu/graphics_off.png"
 local icona_prec 					= "LuaUI/Images/menu/mainmenu/graphics_prec.png"
-local icona_succ						= "LuaUI/Images/menu/mainmenu/graphics_succ.png"
+local icona_succ					= "LuaUI/Images/menu/mainmenu/graphics_succ.png"
 local icona_graphicsmenu			= "LuaUI/Images/menu/mainmenu/icona_main_menu.png"
 local button_back					= "LuaUI/Images/menu/mainmenu/menu_back.png"
 local button_close					= "LuaUI/Images/menu/mainmenu/menu_close.png"
@@ -146,10 +149,10 @@ function widget:KeyPress(key, mods, isRepeat)
 		if key == 27 then -- TASTO esc  0x01B
 			graphicsmenu_attivo = false 						-- chiudo graphicsmenu
 			Spring.SendCommands("close_WMRTS_minimenu")			-- spengo il minipulsante menu del minimenu
---------------------------------------------------------------------------------------------------------------- introdurre queste righe per disabilitare lo shader, quando lo installi nel drawing
---				if (WG['guishader_api'] ~= nil) then
---					WG['guishader_api'].RemoveRect('WMRTS_snd_option')
---				end			
+			-- disabilito il guishader
+				if (WG['guishader_api'] ~= nil) then
+				WG['guishader_api'].RemoveRect('WMRTS_Guishader')
+				end	
 			return true
 		end
 
@@ -596,6 +599,34 @@ if graphicsmenu_attivo and not Spring.IsGUIHidden() then
     return false
   end -- GUIHidden
 end -- function
+
+local function drawingpulsanti()
+-- pulsanti close e back 
+-- pulsante back, first button
+  	gl.Color(1,1,1,1)
+	gl.Texture(button_back)	-- add the icon
+	gl.TexRect(Pos_x_mainmenu+posx_menu_button,Pos_y_mainmenu+posy_menu_button, Pos_x_mainmenu+posx_menu_button+larghezza_menu_buttons,Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons)	
+	gl.Texture(false)	-- fine texture		
+
+	-- pulsante close
+  	gl.Color(1,1,1,1)
+	gl.Texture(button_close)	
+	gl.TexRect(Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_mainmenu/2,Pos_y_mainmenu+posy_menu_button, Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_menu_buttons+larghezza_mainmenu/2,Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons)	
+	gl.Texture(false)	-- fine texture		
+
+-- testi dei PULSANTI back e close
+	-- testo main menu (back)
+	font_generale:SetTextColor(1, 1, 1, 1)
+	font_generale:Begin()
+	font_generale:Print(("MAIN MENU"), Pos_x_mainmenu+posx_menu_button+ 45, Pos_y_mainmenu+posy_menu_button +9, 9, "ocn") -- BACK BUTTON	
+	font_generale:End()	
+	-- testo pulsante close	
+	font_generale:SetTextColor(1, 1, 1, 1)
+	font_generale:Begin()
+	font_generale:Print("Close", Pos_x_mainmenu+posx_menu_button+distance_x_menu_button + 28+larghezza_mainmenu/2, Pos_y_mainmenu+posy_menu_button+5 ,12,'ds')
+	font_generale:End()		
+end
+
 --------------------------------------
 -- DISEGNO IL MINIMENU
 --------------------------------------
@@ -904,20 +935,8 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	gl.TexRect(	Pos_x_mainmenu,Pos_y_mainmenu + posy_selettore+offsety_selettore,Pos_x_mainmenu + 400 ,Pos_y_mainmenu + posy_selettore+offsety_selettore+altezza_selettore)	
 	gl.Texture(false)	-- fine texture		
 	end
-	
--- pulsanti close e back (se presente)----------------------------------------------
-	-- pulsante close
-  	gl.Color(1,1,1,1)
-	gl.Texture(button_close)	
-	gl.TexRect(Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_mainmenu/2,Pos_y_mainmenu+posy_menu_button, Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_menu_buttons+larghezza_mainmenu/2,Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons)	
-	gl.Texture(false)	-- fine texture		
-
--- testo pulsante close	
-	-- testo
-	font_generale:SetTextColor(1, 1, 1, 1)
-	font_generale:Begin()
-	font_generale:Print("Close", Pos_x_mainmenu+posx_menu_button+distance_x_menu_button + 28+larghezza_mainmenu/2, Pos_y_mainmenu+posy_menu_button+5 ,12,'ds')
-	font_generale:End()		
+-- disegno i pulsanti close e back	
+drawingpulsanti()
 
 -- riquadro selettore dei pulsanti back, close ecc----------------------------------------------
 	if  selettore_buttons_visibile then
@@ -925,6 +944,11 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	gl.Texture(selettore_button)	
 	gl.TexRect(	posx_selettore_buttons,posy_selettore_buttons,posx_selettore_buttons+larghezza_menu_buttons ,posy_selettore_buttons + altezza_menu_buttons)	
 	gl.Texture(false)	-- fine texture		
+	end
+	
+-- add gui shader----------------------------------------------
+	if (WG['guishader_api'] ~= nil) then
+	WG['guishader_api'].InsertRect(Pos_x_mainmenu,Pos_y_mainmenu,Pos_x_mainmenu+larghezza_mainmenu,Pos_y_mainmenu+altezza_mainmenu,'WMRTS_Guishader')
 	end
 	
 end -- if graphicsmenu_attivo	
