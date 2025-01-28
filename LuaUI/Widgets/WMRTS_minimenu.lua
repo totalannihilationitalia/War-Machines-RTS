@@ -64,9 +64,10 @@ local Pos_x_statistics_button			= 5		-- servirà per capire la posizione del ris
 local Pos_x_obj_button					= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)	
 local Pos_x_snd_button					= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
 local Pos_x_los_button					= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
-local Pos_x_builder_button					= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
+local Pos_x_builder_button				= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
 local Pos_x_wind_button					= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
 local Pos_x_tidal_button				= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
+local Pos_x_resources_button				= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
 local Pos_x_riquadro_button				= 5		-- posizione X del riquadro per evidenziare l' "above" sui pulsanti generici
 local Pos_y_riquadro_button				= 5		-- posizione Y del riquadro per evidenziare l' "above" sui pulsanti generici
 local Pos_x_riquadro_mainbutton			= 5		-- posizione X del riquadro per evidenziare l' "above" sul pulsante main menu
@@ -81,6 +82,8 @@ local show_losmenu						= false					-- is LOS windows active? -- or function act
 local show_buildermenu					= false					-- is builder windows active? -- or function active?? --todo
 local show_wingmenu						= false					-- is wing windows active? -- or function active?? --todo
 local show_tidalmenu					= false					-- is tidal windows active? -- or function active?? --todo
+local show_resourcesmenu				= false					-- is resources widget active? 
+local valore_resourcesmenu				= 0						-- assumera un valore in funzione delle impostazioni caricate nel springconfig... indica l'ultimo stato del "show map resources"
 
 -- definizioni immagini ON/OFF bottoni e background
 local mainminimenubutton_off = "LuaUI/Images/menu/minimenu/main_menu_off.png"
@@ -138,12 +141,27 @@ function widget:ViewResize(viewSizeX, viewSizeY) -- quando si modifica la dimens
 end
 
 --------------------------------------
+-- FUNZIONE CHECK STATO OPZIONI, viene richiamata in diverse fasi dello script per controllare lo stato delle opzioni 
+--------------------------------------
+local function check_options()
+-- all'inizio verifico anche il valore delle configurazioni
+  valore_resourcesmenu = Spring.GetConfigInt("mostraresources", 0)				-- booleano di default è falso  -> disattivo successivamente anche il Widget			## widget
+	if valore_resourcesmenu == 0 then
+	  show_resourcesmenu = false
+	else
+		show_resourcesmenu = true
+	end
+end
+
+--------------------------------------
 -- INIZIALIZZO IL MENU 
 --------------------------------------
 function widget:Initialize()
 -- all'inizio imposto la posizione del mini menu
   Pos_x_minimenu_button = vsx - margine_dx_minimenu - larghezza_main_minimenu_button
   Pos_y_minimenu_button = vsy - margine_su_minimenu - altezza_minimenu_buttons
+-- avvio la funzione check_options()
+	check_options()  
 -- carico le impostazioni del LOS (se era visibile, diventa visibile, se era invisibile, non lo vedo)  
 	if (Spring.GetGameFrame() > 0 and UltimaMapDrawMode == "los") then
 		AttivaLOS()
@@ -305,6 +323,22 @@ function widget:MousePress(x, y, button)
 				-- eseguire codice
 				return true	
 				end-- posizioni
+		-- resources
+				elseif ((mousex >= Pos_x_resources_button) and (mousex <= Pos_x_resources_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then
+				valore_resourcesmenu = valore_resourcesmenu + 1
+				if valore_resourcesmenu > 1 then
+				 valore_resourcesmenu = 0
+				end
+				if valore_resourcesmenu == 0 then
+					Spring.SendCommands({"luaui disablewidget Mex Placement Handler"}) 				-- disabilito il widget
+					Spring.SetConfigInt("mostraresources", 0)
+					show_resourcesmenu = false
+				elseif valore_resourcesmenu == 1 then
+					Spring.SendCommands({"luaui enablewidget Mex Placement Handler"}) 				-- disabilito il widget
+					Spring.SetConfigInt("mostraresources", 1)		
+					show_resourcesmenu = true
+				end				
+				return true
 			end -- isabove
 		end -- button 1
 	end -- not gui hidden
@@ -406,7 +440,7 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 				Pos_x_riquadro_button =	Pos_x_tidal_button
 				show_selettore_minibutton = true	
 				-- Resources					
-				elseif  ((mousex >= Pos_x_resources_button) and (mousex <= Pos_x_resources_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su tidal minibutton
+				elseif  ((mousex >= Pos_x_resources_button) and (mousex <= Pos_x_resources_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su resources minibutton
 				Pos_x_riquadro_button =	Pos_x_resources_button
 				show_selettore_minibutton = true				
 				-- altrimenti se il cursore non è sopra alcuno dei suddetti buttons, nascondilo				
@@ -649,7 +683,7 @@ local function DrawMapDataMinimenu()
 	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giu_minimenu,Pos_x_next_button_drawing+larghezza_minimenu_buttons+interspazio_buttons,vsy)	
 	gl.Texture(false)	-- fine texture	
 	-- pulsante			
-				if show_tidalmenu then 				-- se la finestra (o funzione) di tidal è attiva:
+				if show_resourcesmenu then 				-- se la finestra (o funzione) di tidal è attiva:
 				gl.Texture(resourcebutton_on)			-- mostra il pulsante acceso
 				else
 				gl.Texture(resourcebutton_off)			-- altrimenti mostra il pulsante spento	
