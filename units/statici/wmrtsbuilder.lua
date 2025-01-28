@@ -134,6 +134,7 @@ return {
 			[72] = "treno_vagone_chiuso",
 			[73] = "treno_vagone_aperto",
 			[74] = "treno_vagone_container",
+			[75] = "andwall",
 		},
 		featuredefs = {
 			["1_dead"] = {
