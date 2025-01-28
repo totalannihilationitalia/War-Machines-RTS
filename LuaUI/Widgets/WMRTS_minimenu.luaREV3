@@ -34,7 +34,6 @@ to do list
 -- rev 0 by molix -- 02/12/2024 -- designing top right WMRTS mini-menù
 -- rev 1 by molix -- 24/12/2024 -- integrato il controllo del LOS cosi che si interfacci correttamente con il minimenu
 -- rev 2 by molix -- 03/01/2025 -- risolto problema di memoria e relativo crash in Spring. Ottimizzato il codice.
--- rev 3 by molix -- 28/01/2025 -- aggiunto minipulsante "show terrain resources"
 
 -- definizione pulsanti minimenu
 local larghezza_main_minimenu_button 	= 50 	-- larghezza del pulsante "main menu" del minimenu (più largo degli altri)
@@ -53,8 +52,6 @@ local show_minimenu_los_button			= true
 local show_minimenu_builder_button		= true
 local show_minimenu_wind_button			= true					-- non è un bottone ma è una finestrella con il valore del vento
 local show_minimenu_tidal_button		= true					-- non è un bottone ma è una finestrella con il valore delle maree
-local show_minimenu_resources_button 	= true
-
 -- definizione variabili di posizione e lunghezza
 local Pos_x_minimenu_button		        = 200					-- corrisponde alla distanza X tra il vertice in basso a sx del minimenu_buttons e il margine destro del monitor
 local Pos_y_minimenu_button				= 200 					-- corrisponde alla distanza Y tra il vertice in basso a sx del minimenu_buttons e il margine superiore del monitor
@@ -105,9 +102,6 @@ local minimenu_bkgnd_separator = "LuaUI/Images/menu/minimenu/minimenu_bkgnd_sepa
 local minimenu_bkgnd_sx = "LuaUI/Images/menu/minimenu/minimenu_bkgnd_sx.png"
 local selettore_mainmini = "LuaUI/Images/menu/minimenu/selettore_main.png"
 local selettore_minibutton = "LuaUI/Images/menu/minimenu/selettore_btn.png"
-local resourcebutton_on = "LuaUI/Images/menu/minimenu/resourcesbutton_on.png"
-local resourcebutton_off = "LuaUI/Images/menu/minimenu/resourcesbutton_off.png"
-
 local show_selettore_mainmini = false			-- mostra o no il selettore arancione sul mainmini
 local show_selettore_minibutton = false			-- mostra o no il selettore arancione sui minibutton
 
@@ -375,8 +369,6 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 				show_selettore_mainmini = false
 				end
 				-- tutti i minibutton menu:
-				-- ############################################################################### Inserire anche la condizione in cui il pulsante non è nascosto!! ################################
-				-- ############################################################################### Inserire anche la condizione in cui il pulsante non è nascosto!! ################################				
 				-- sound
 				if 	((mousex >= Pos_x_snd_button) and (mousex <= Pos_x_snd_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su snd minibutton
 				Pos_x_riquadro_button =	Pos_x_snd_button
@@ -404,11 +396,7 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 				-- Tidal					
 				elseif  ((mousex >= Pos_x_tidal_button) and (mousex <= Pos_x_tidal_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su tidal minibutton
 				Pos_x_riquadro_button =	Pos_x_tidal_button
-				show_selettore_minibutton = true	
-				-- Resources					
-				elseif  ((mousex >= Pos_x_resources_button) and (mousex <= Pos_x_resources_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su tidal minibutton
-				Pos_x_riquadro_button =	Pos_x_resources_button
-				show_selettore_minibutton = true				
+				show_selettore_minibutton = true									
 				-- altrimenti se il cursore non è sopra alcuno dei suddetti buttons, nascondilo				
 				else 
 				show_selettore_minibutton = false
@@ -584,9 +572,9 @@ local function DrawVisualsMiniMenu()
 				else
 				gl.Texture(builderbutton_off)			-- altrimenti mostra il pulsante spento	
 				end
-	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
-	gl.Texture(false)	-- fine texture	
-	Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante wind (se sarà presente)
+			gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
+			gl.Texture(false)	-- fine texture	
+			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante wind (se sarà presente)
 		end
 end
 
@@ -630,35 +618,15 @@ local function DrawMapDataMinimenu()
 				else
 				gl.Texture(tidebutton_off)			-- altrimenti mostra il pulsante spento	
 				end
-	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
-	gl.Texture(false)	-- fine texture	
-	Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante successivo (se sarà presente)
+			gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
+			gl.Texture(false)	-- fine texture	
+			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante successivo (se sarà presente)
 		-- Valore delle maree
     font_generale:Begin()
 	font_generale:Print(forzatidal, Pos_x_tidal_button+17, Pos_y_minimenu_button+12, 15, "ocn") -- valore del vento
 	font_generale:End()	
 		end		
-
--- inserisco resources minipulsante, se abilitato
-------------------------------------
-		if show_minimenu_resources_button then 				-- se il minipulsante è attivo per vederlo nel minimenù:
-	Pos_x_resources_button = Pos_x_next_button_drawing			-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
-	-- sfondo del blocco, se attivo
-	gl.Color(1,1,1,1)
-	gl.Texture(minimenu_bkgnd_btn)	
-	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giu_minimenu,Pos_x_next_button_drawing+larghezza_minimenu_buttons+interspazio_buttons,vsy)	
-	gl.Texture(false)	-- fine texture	
-	-- pulsante			
-				if show_tidalmenu then 				-- se la finestra (o funzione) di tidal è attiva:
-				gl.Texture(resourcebutton_on)			-- mostra il pulsante acceso
-				else
-				gl.Texture(resourcebutton_off)			-- altrimenti mostra il pulsante spento	
-				end
-	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
-	gl.Texture(false)	-- fine texture	
-	Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante successivo (se sarà presente)
-		end		
-		
+	
 -- inserisco l'ultima parte (sx) del background del minimenu	
 ------------------------------------
 	Pos_x_next_button_drawing = Pos_x_next_button_drawing + interspazio_buttons + larghezza_minimenu_buttons - margine_sx_minimenu -- riposiziono al precedente pulsante il "posizionatore_x_next_button" e lo sposto di quanto è largo il margine_sx_minimenu

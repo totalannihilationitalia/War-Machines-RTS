@@ -58,6 +58,8 @@ local altezza_icona_opzioni				= 20  								-- altezza icona opzioni
 local offsety_selettore					= -4								-- offset y selettore rispetto al testo selezionato
 local altezza_selettore					= 24  								-- altezza del selettore
 local selettore_visibile				= false 							-- visibile o no quando si passa sopra l'opzione (a casella singola) o sopra il pulsante + o - nel caso della casella doppia
+local posy_selettore					= 0									-- posizione Y del selettore delle opzioni (verrà calcolato successivamente)
+local posx_selettore					= 0									-- posizione x del selettore delle opzioni (verrà calcolato successivamente)
 local mousex, mousey				   										-- posizione x e y del mouse, usata per rilevare la sua posizione e far apparire il selettore
 local posy_riga1						= 25    							-- posizione y della prima riga di opzioni (dal fondo del background) di opzioni
 local posy_riga2						= 50    							-- posizione y della seconda riga di opzioni (dal fondo del background) di opzioni
@@ -195,29 +197,142 @@ function widget:Initialize()
 	check_options()
  end
 
---[[
 --------------------------------------
 -- SEMPRE
 --------------------------------------
 function widget:Update(dt)
 mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di aggiornamento
 	if graphicsmenu_attivo and not Spring.IsGUIHidden() then
-				-- ADVANCEMAPSHADING
-				if 	((mousex >= Pos_x_mainmenu) and (mousex <= Pos_x_mainmenu + larghezza_mainmenu/2) and (mousey >= Pos_y_mainmenu+Posy_menuset+offsety_selettore) and (mousey <= Pos_y_mainmenu+Posy_menuset + altezza_menu_buttons+offsety_selettore)) then
+			-- Advanced map shading A SINISTRA icona "ON/OFF"			
+			if ((mousex >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (mousex <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (mousey >= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi) and (mousey <= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				posy_selettore = posy_riga7
+				posx_selettore = Pos_x_mainmenu+ margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone
 				selettore_visibile = true
-				posy_selettore = Posy_menuset																
-				elseif
-				-- visualsetting
-				((mousex >= Pos_x_mainmenu) and (mousex <= Pos_x_mainmenu + larghezza_mainmenu) and (mousey >= Pos_y_mainmenu+Posy_visuals+offsety_selettore) and (mousey <= Pos_y_mainmenu+Posy_visuals + altezza_menu_buttons+offsety_selettore)) then
-				selettore_visibile = true
-				posy_selettore = Posy_visuals	
-				else
 				selettore_buttons_visibile = false
+			-- Advanced unit shading A DESTRA icona "ON/OFF"			
+			elseif ((mousex >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (mousex <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (mousey >= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi) and (mousey <= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				posy_selettore = posy_riga7
+				posx_selettore = Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone
+				selettore_visibile = true			
+				selettore_buttons_visibile = false
+			-- Show grass on maps  A SINISTRA icona "ON/OFF" 
+			elseif ((mousex >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (mousex <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (mousey >= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi) and (mousey <= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				posy_selettore = posy_riga6
+				posx_selettore = Pos_x_mainmenu+ margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone
+				selettore_visibile = true	
+				selettore_buttons_visibile = false				
+			-- Show mapborders  A SINISTRA icona "ON/OFF"
+			elseif((mousex >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (mousex <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (mousey >= Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi) and (mousey <= Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi+altezza_icona_opzioni)) then			
+				posy_selettore = posy_riga8
+				posx_selettore = Pos_x_mainmenu+ margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone
+				selettore_visibile = true			
+				selettore_buttons_visibile = false
+			-- hardware cursor A DESTRA  icona "ON/OFF"
+			elseif((mousex >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (mousex <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (mousey >= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi) and (mousey <= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi+altezza_icona_opzioni	)) then
+				posy_selettore = posy_riga6
+				posx_selettore = Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone
+				selettore_visibile = true	
+				selettore_buttons_visibile = false
+			-- LUPS effect  A SINISTRA icona "ON/OFF"
+			elseif((mousex >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (mousex <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (mousey >= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi) and (mousey <= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				posy_selettore = posy_riga5
+				posx_selettore = Pos_x_mainmenu+ margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone
+				selettore_visibile = true	
+				selettore_buttons_visibile = false
+			-- Bloom shader A DESTRA  icona "ON/OFF"	
+			elseif((mousex >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (mousex <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (mousey >= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi) and (mousey <= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				posy_selettore = posy_riga5
+				posx_selettore = Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone
+				selettore_visibile = true	
+				selettore_buttons_visibile = false
+			-- Show ground projectile light  A SINISTRA icona "ON/OFF"
+			elseif((mousex >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (mousex <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (mousey >= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi) and (mousey <= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				posy_selettore = posy_riga4
+				posx_selettore = Pos_x_mainmenu+ margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone
+				selettore_visibile = true	
+				selettore_buttons_visibile = false
+			-- X-RAmousey A DESTRA  icona "ON/OFF"
+			elseif((mousex >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (mousex <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (mousey >= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi) and (mousey <= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				posy_selettore = posy_riga4
+				posx_selettore = Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone
+				selettore_visibile = true
+				selettore_buttons_visibile = false
+			-- Fullscreen  A SINISTRA icona "ON/OFF"
+			elseif((mousex >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (mousex <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (mousey >= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi) and (mousey <= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				posy_selettore = posy_riga3
+				posx_selettore = Pos_x_mainmenu+ margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone
+				selettore_visibile = true	
+				selettore_buttons_visibile = false
+			-- Blinking units A DESTRA  icona "ON/OFF"
+			elseif((mousex >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (mousex <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (mousey >= Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi) and (mousey <= Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				posy_selettore = posy_riga8
+				posx_selettore = Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone
+				selettore_visibile = true	
+				selettore_buttons_visibile = false
+			-- Vsync A DESTRA  icona "ON/OFF"
+			elseif((mousex >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (mousex <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (mousey >= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi) and (mousey <= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				posy_selettore = posy_riga3
+				posx_selettore = Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone
+				selettore_visibile = true		
+				selettore_buttons_visibile = false
+			-- shadows icona "<-"
+			elseif((mousex >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (mousex <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (mousey >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (mousey <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				posy_selettore = posy_riga2
+				posx_selettore = Pos_x_mainmenu+ margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone
+				selettore_visibile = true	
+				selettore_buttons_visibile = false
+			-- shadows icona "->"
+			elseif((mousex >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi) and (mousex <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi) and (mousey >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (mousey <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni))then
+				posy_selettore = posy_riga2
+				posx_selettore = Pos_x_mainmenu+ margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone
+				selettore_visibile = true	
+				selettore_buttons_visibile = false
+---------------------- ################################################## correggere perchè questa opzione è di tipo ON/OFF -------------------------------				
+			-- Show environment effects (snow, rain, etc) 	icona "<-"		
+			elseif((mousex >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (mousex <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (mousey >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (mousey <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) then
+			-- Show environment effects (snow, rain, etc) 	icona "->"		
+			elseif((mousex >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi) and (mousex <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (mousey >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (mousey <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) then
+			-- Set Antialiasing level  icona "<-"
+			elseif((mousex >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (mousex <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (mousey >= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi) and (mousey <= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				posy_selettore = posy_riga1
+				posx_selettore = Pos_x_mainmenu+ margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone
+				selettore_visibile = true	
+				selettore_buttons_visibile = false
+			-- Set Antialiasing level  icona "->"
+			elseif((mousex >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi) and (mousex <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi) and (mousey >= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi) and (mousey <= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				posy_selettore = posy_riga1
+				posx_selettore = Pos_x_mainmenu+ margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone
+				selettore_visibile = true	
+				selettore_buttons_visibile = false
+			-- Water type 	icona "<-"		
+			elseif((mousex >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (mousex <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (mousey >= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi) and (mousey <= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				posy_selettore = posy_riga1
+				posx_selettore = Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone
+				selettore_visibile = true	
+				selettore_buttons_visibile = false
+			-- Water type 	icona "->"		
+			elseif((mousex >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi) and (mousex <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi) and (mousey >= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi) and (mousey <= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni))then
+				posy_selettore = posy_riga1
+				posx_selettore = Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone
+				selettore_visibile = true	
+				selettore_buttons_visibile = false
+			-- pulsante BACK
+			elseif ((mousex >=Pos_x_mainmenu+posx_menu_button) and (mousex <=Pos_x_mainmenu+posx_menu_button+larghezza_menu_buttons) and (mousey >= Pos_y_mainmenu+posy_menu_button) and (mouseY <= Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons)) then
+--------------------------- ########################################### inserire la posizione di selettore buttons
+				selettore_visibile = false	
+				selettore_buttons_visibile = true
+			-- pulsante close
+			elseif ((mousex >=Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_mainmenu/2) and (mousex <=Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_menu_buttons+larghezza_mainmenu/2) and (mousey >= Pos_y_mainmenu+posy_menu_button) and (mouseY <= Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons)) then
+				selettore_visibile = false	
+				selettore_buttons_visibile = true			
+			-- altrimenti nascondi selettori
+			else 
 				selettore_visibile = false
-				end
+				selettore_buttons_visibile = false
+			end --if posxy mouse
 	end
 end
-]]--
+
 --------------------------------------
 -- MOUSE IS OVER BUTTONS --> fare riferimento a "Elenco opzioni Graphics_visuals.ods" per la disposizione delle opzioni
 --------------------------------------
@@ -932,7 +1047,7 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	if  selettore_visibile then
 	gl.Color(1,1,1,1)
 	gl.Texture(selettore)	
-	gl.TexRect(	Pos_x_mainmenu,Pos_y_mainmenu + posy_selettore+offsety_selettore,Pos_x_mainmenu + 400 ,Pos_y_mainmenu + posy_selettore+offsety_selettore+altezza_selettore)	
+	gl.TexRect(	posx_selettore,posy_selettore,posx_selettore + larghezza_mainmenu/2 , posy_selettore + altezza_selettore)	
 	gl.Texture(false)	-- fine texture		
 	end
 -- disegno i pulsanti close e back	
