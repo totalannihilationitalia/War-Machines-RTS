@@ -37,6 +37,7 @@ to do list
 -- rev 0 by molix -- 07/01/2025 -- designing WMRTS graphics menu
 -- rev 1 by molix -- 15/01/2025 -- adding mapBorder, Vsync options. Simplified the code
 -- rev 2 by molix -- 27/01/2025 -- add back shaderd to this menu
+-- rev 3 by molix -- 31/01/2025 -- add back and close buttons code
 
 
 -- definizione dei comandi
@@ -102,7 +103,7 @@ local posx_selettore_buttons 						-- posizione x del selettore dei pulsanti clo
 local posy_selettore_buttons 						-- posizione y del selettore dei pulsanti close, back ecc
 -- definizioni immagini bottoni e background
 local backgroundmainmenu 			= "LuaUI/Images/menu/mainmenu/graph_menu_bkgnd.png"
-local selettore 					= "LuaUI/Images/menu/mainmenu/main_menu_selection.png"
+local selettore 					= "LuaUI/Images/menu/mainmenu/menu_options_selection.png"
 local selettore_button 				= "LuaUI/Images/menu/mainmenu/main_menu_buttonselection.png"
 local icona_on 						= "LuaUI/Images/menu/mainmenu/graphics_on.png"
 local icona_off 					= "LuaUI/Images/menu/mainmenu/graphics_off.png"
@@ -318,18 +319,14 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 				posx_selettore = Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone-20	
 				selettore_visibile = true	
 				selettore_buttons_visibile = false
---[[
-			-- pulsante BACK
-			elseif ((mousex >=Pos_x_mainmenu+posx_menu_button) and (mousex <=Pos_x_mainmenu+posx_menu_button+larghezza_menu_buttons) and (mousey >= Pos_y_mainmenu+posy_menu_button) and (mouseY <= Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons)) then
---------------------------- ########################################### inserire la posizione di selettore buttons
+			-- BACK button			
+			elseif((mousex >= Pos_x_mainmenu+posx_menu_button) and (mousex <= Pos_x_mainmenu+posx_menu_button+larghezza_menu_buttons) and (mousey >= Pos_y_mainmenu+posy_menu_button) and (mousey <= Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons))then
 				selettore_visibile = false	
 				selettore_buttons_visibile = true
-			-- pulsante close
-			elseif ((mousex >=Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_mainmenu/2) and (mousex <=Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_menu_buttons+larghezza_mainmenu/2) and (mousey >= Pos_y_mainmenu+posy_menu_button) and (mouseY <= Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons)) then
+			-- CLOSE button						
+			elseif((mousex >= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_mainmenu/2) and (mousex <= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_menu_buttons+larghezza_mainmenu/2) and (mousey >= Pos_y_mainmenu+posy_menu_button) and (mousey <= Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons))then
 				selettore_visibile = false	
-				selettore_buttons_visibile = true			
-			-- altrimenti nascondi selettori
-]]--
+				selettore_buttons_visibile = true				
 			else 
 				selettore_visibile = false
 				selettore_buttons_visibile = false
@@ -401,6 +398,12 @@ function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la 
 			-- Water type 	icona "->"		
 			or 
 			((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi) and (y >= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni))
+			-- BACK button	
+			or
+			((x >=Pos_x_mainmenu+posx_menu_button) and (x <= Pos_x_mainmenu+posx_menu_button+larghezza_menu_buttons) and (y >= Pos_y_mainmenu+posy_menu_button) and (y <= Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons))
+			-- CLOSE button						
+			or
+			((x >= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_mainmenu/2) and (x <= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_menu_buttons+larghezza_mainmenu/2) and (y >= Pos_y_mainmenu+posy_menu_button) and (y <= Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons))
 	end --is gui hidden
 end
 --------------------------------------
@@ -711,7 +714,20 @@ if graphicsmenu_attivo and not Spring.IsGUIHidden() then
 					Spring.SendCommands("VSync 1")
 					Spring.SetConfigInt("VSync", 1)		
 				end
-				return true			
+				return true		
+
+			-- BACK button	
+			elseif ((x >=Pos_x_mainmenu+posx_menu_button) and (x <= Pos_x_mainmenu+posx_menu_button+larghezza_menu_buttons) and (y >= Pos_y_mainmenu+posy_menu_button) and (y <= Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons)) then
+			Spring.Echo("tornare indietro")
+			return true
+			
+			-- CLOSE button						
+			elseif ((x >= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_mainmenu/2) and (x <= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_menu_buttons+larghezza_mainmenu/2) and (y >= Pos_y_mainmenu+posy_menu_button) and (y <= Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons)) then
+			Spring.Echo("chiudere")
+			return true		
+
+
+				
 			end -- posizioni menu
 		end -- isAbove
 	end -- button = 1
