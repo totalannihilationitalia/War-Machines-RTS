@@ -99,8 +99,8 @@ local distance_x_menu_button 			= 250 		-- distanza tra i due pulsanti
 local posx_menu_button = 11					  		-- position x of first menu button (from 0 ,0 of main menu)
 local posy_menu_button = -10				 		-- position y of first menu button (from 0 ,0 of main menu)
 local selettore_buttons_visibile 		= false		-- visibile o no
-local posx_selettore_buttons 						-- posizione x del selettore dei pulsanti close, back ecc
-local posy_selettore_buttons 						-- posizione y del selettore dei pulsanti close, back ecc
+local posx_selettore_buttons 		= 100					-- posizione x del selettore dei pulsanti close, back ecc
+local posy_selettore_buttons 		= 100			-- posizione y del selettore dei pulsanti close, back ecc
 -- definizioni immagini bottoni e background
 local backgroundmainmenu 			= "LuaUI/Images/menu/mainmenu/graph_menu_bkgnd.png"
 local selettore 					= "LuaUI/Images/menu/mainmenu/menu_options_selection.png"
@@ -321,10 +321,14 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 				selettore_buttons_visibile = false
 			-- BACK button			
 			elseif((mousex >= Pos_x_mainmenu+posx_menu_button) and (mousex <= Pos_x_mainmenu+posx_menu_button+larghezza_menu_buttons) and (mousey >= Pos_y_mainmenu+posy_menu_button) and (mousey <= Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons))then
+				posx_selettore_buttons = Pos_x_mainmenu+posx_menu_button
+				posy_selettore_buttons = Pos_y_mainmenu+posy_menu_button				
 				selettore_visibile = false	
 				selettore_buttons_visibile = true
 			-- CLOSE button						
 			elseif((mousex >= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_mainmenu/2) and (mousex <= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_menu_buttons+larghezza_mainmenu/2) and (mousey >= Pos_y_mainmenu+posy_menu_button) and (mousey <= Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons))then
+				posx_selettore_buttons = Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_mainmenu/2
+				posy_selettore_buttons = Pos_y_mainmenu+posy_menu_button
 				selettore_visibile = false	
 				selettore_buttons_visibile = true				
 			else 
