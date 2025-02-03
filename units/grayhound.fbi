@@ -2,7 +2,7 @@
 	{
 	UnitName=grayhound;
 	Side=ARM;
-	Objectname=grayhound.s3o;
+	Objectname=euf_grayhound.s3o;
 	Name=Greyhound;  //Changed from Grayhound. Although I wouldn't doubt that Gray would behind the wheel of this thing in the form I had for UH. It kicked arse. Probably more than it should have, even.
 	Description=Prototype Field/Command Tank;
 	FootprintX=3;
