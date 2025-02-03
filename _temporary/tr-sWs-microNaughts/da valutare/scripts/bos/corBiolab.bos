@@ -1,0 +1,270 @@
+// Core Bio Lab Script by Ninjato of sWs "skunkWorks"
+
+piece base,pad,arm,nano,beam,aplata,aplatb,bplata,bplatb,cplata,cplatb,dplata,dplatb,light;
+
+static-var spray,unitviewer;
+
+#define	SIG_ACTIVATE	2
+#define SMOKEPIECE1 arm
+#define ANIM_VARIABLE TRUE
+
+#include "StateChg.h"
+#include "smokeunit.h"
+#include "EXPtype.h"
+#include "yard.h"
+
+activatescr()
+	{
+		IF ( TRUE )
+			{
+			turn aplata to y-axis [45.0] speed <82.0>;
+			turn aplatb to y-axis [-45.0] speed <82.0>;
+			sleep <400>;
+			turn bplata to y-axis [45.0] speed <82.0>;
+			turn bplatb to y-axis [-45.0] speed <82.0>;
+			sleep <400>;
+			turn cplata to y-axis [45.0] speed <82.0>;
+			turn cplatb to y-axis [-45.0] speed <82.0>;
+			sleep <400>;
+			turn dplata to y-axis [45.0] speed <82.0>;
+			turn dplatb to y-axis [-45.0] speed <82.0>;
+			sleep <450>;
+			}
+		IF ( TRUE )
+			{
+			move arm to y-axis [14.0] speed <20.0>;
+			sleep <400>;
+			turn arm around x-axis [-45.0] speed <65.0>;
+			turn nano around x-axis [-90.0] speed <65.0>;
+			sleep <800>;
+			}
+	}
+
+deactivatescr()
+	{
+		IF ( TRUE )
+			{
+			turn arm around x-axis [0.0] speed <65.0>;
+			turn nano around x-axis [0.0] speed <65.0>;
+			sleep <200>;
+			move arm to y-axis [0.0] speed <20.0>;
+			sleep <450>;
+			}
+		IF ( TRUE )
+			{
+			turn dplata to y-axis [0.0] speed <82.0>;
+			turn dplatb to y-axis [0.0] speed <82.0>;
+			sleep <400>;
+			turn cplata to y-axis [0.0] speed <82.0>;
+			turn cplatb to y-axis [0.0] speed <82.0>;
+			sleep <400>;
+			turn bplata to y-axis [0.0] speed <82.0>;
+			turn bplatb to y-axis [0.0] speed <82.0>;
+			sleep <400>;
+			turn aplata to y-axis [0.0] speed <82.0>;
+			turn aplatb to y-axis [0.0] speed <82.0>;
+			sleep <468>;
+			}
+	}
+
+Go()
+	{
+	dont-cache arm;
+	dont-cache nano;
+	dont-cache beam;
+	dont-cache aplata;
+	dont-cache aplatb;
+	dont-cache bplata;
+	dont-cache bplatb;
+	dont-cache cplata;
+	dont-cache cplatb;
+	dont-cache dplata;
+	dont-cache dplatb;
+	dont-cache light;
+	call-script activatescr();
+	call-script OpenYard();
+	set INBUILDSTANCE to TRUE;
+	}
+
+Stop()
+	{
+	set INBUILDSTANCE to FALSE;
+	call-script CloseYard();
+	call-script deactivatescr();
+	cache arm;
+	cache nano;
+	cache beam;
+	cache aplata;
+	cache aplatb;
+	cache bplata;
+	cache bplatb;
+	cache cplata;
+	cache cplatb;
+	cache dplata;
+	cache dplatb;
+	cache light;
+	}
+
+#define ACTIVATECMD call-script Go();
+#define DEACTIVATECMD call-script Stop();
+#include "StateChg.h"
+
+Create()
+	{
+	cache pad;
+	cache arm;
+	cache nano;
+	cache beam;
+	cache aplata;
+	cache aplatb;
+	cache bplata;
+	cache bplatb;
+	cache cplata;
+	cache cplatb;
+	cache dplata;
+	cache dplatb;
+	cache light;
+	cache base;
+	dont-shade pad;
+	dont-shade arm;
+	dont-shade nano;
+	dont-shade beam;
+	dont-shade aplata;
+	dont-shade aplatb;
+	dont-shade bplata;
+	dont-shade bplatb;
+	dont-shade cplata;
+	dont-shade cplatb;
+	dont-shade light;
+	spray=0;
+	unitviewer = FALSE;
+	call-script InitState();
+	start-script SmokeUnit();
+	}
+
+QueryNanoPiece(piecenum)
+	{
+	piecenum=beam;
+	}
+
+Demo()
+	{
+	unitviewer = TRUE;
+	}
+
+Activate()
+	{
+	signal SIG_ACTIVATE;
+	start-script RequestState( ACTIVE );
+	}
+
+Deactivate()
+	{
+	signal SIG_ACTIVATE;
+	set-signal-mask SIG_ACTIVATE;
+	if (!unitviewer)
+		{
+		sleep 5000;
+		}
+	set-signal-mask 0;
+	start-script RequestState( INACTIVE );
+	}
+
+StartBuilding()
+	{
+	spin pad around y-axis speed <30>;
+	}
+
+StopBuilding()
+	{
+	stop-spin pad around y-axis;
+	}
+
+QueryBuildInfo(piecenum)
+	{
+	piecenum=pad;
+	}
+
+SweetSpot(piecenum)
+	{
+	piecenum=base;
+	}
+
+Killed( severity, corpsetype )
+	{
+	if (severity <= 25)
+		{
+		corpsetype = 1;
+		explode base type	BITMAPONLY | BITMAP1;
+		explode pad type	BITMAPONLY | BITMAP2;
+		explode arm type	BITMAPONLY | BITMAP3;
+		explode nano type	BITMAPONLY | BITMAP4;
+		explode beam type	BITMAPONLY | BITMAP5;
+		explode aplata type	BITMAPONLY | BITMAP1;
+		explode aplatb type	BITMAPONLY | BITMAP2;
+		explode bplata type	BITMAPONLY | BITMAP3;
+		explode bplatb type	BITMAPONLY | BITMAP4;
+		explode cplata type	BITMAPONLY | BITMAP5;
+		explode cplatb type	BITMAPONLY | BITMAP1;
+		explode dplata type	BITMAPONLY | BITMAP2;
+		explode dplatb type	BITMAPONLY | BITMAP3;
+		explode light type	BITMAPONLY | BITMAP4;
+		return( 0 );
+		}
+
+	if (severity <= 50)
+		{
+		corpsetype = 2;
+		explode base type	SHATTER | BITMAP1;
+		explode pad type	BITMAPONLY | BITMAP2;
+		explode arm type	BITMAPONLY | BITMAP3;
+		explode nano type	BITMAPONLY | BITMAP4;
+		explode beam type	BITMAPONLY | BITMAP5;
+		explode aplata type	FALL | BITMAP1;
+		explode aplatb type	FALL | BITMAP2;
+		explode bplata type	FALL | BITMAP3;
+		explode bplatb type	FALL | BITMAP4;
+		explode cplata type	FALL | BITMAP5;
+		explode cplatb type	FALL | BITMAP1;
+		explode dplata type	FALL | BITMAP2;
+		explode dplatb type	FALL | BITMAP3;
+		explode light type	SHATTER | BITMAP4;
+		return( 0 );
+		}
+
+	if (severity <= 99)
+		{
+		corpsetype = 3;
+		explode base type	SHATTER | BITMAP1;
+		explode pad type	BITMAPONLY | BITMAP2;
+		explode arm type	BITMAPONLY | BITMAP3;
+		explode nano type	BITMAPONLY | BITMAP4;
+		explode beam type	BITMAPONLY | BITMAP5;
+		explode aplata type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		explode aplatb type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode bplata type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode bplatb type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		explode cplata type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+		explode cplatb type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		explode dplata type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode dplata type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode light type	SHATTER | BITMAP4;
+		return( 0 );
+		}
+
+	corpsetype = 3;
+	explode base type	SHATTER | EXPLODE_ON_HIT | BITMAP1;
+	explode pad type	BITMAPONLY | BITMAP2;
+	explode arm type	BITMAPONLY | BITMAP3;
+	explode nano type	BITMAPONLY | BITMAP4;
+	explode beam type	BITMAPONLY | BITMAP5;
+	explode aplata type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+	explode aplatb type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	explode bplata type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+	explode bplatb type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+	explode cplata type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+	explode cplatb type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+	explode dplata type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	explode dplata type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+	explode light type	SHATTER | EXPLODE_ON_HIT | BITMAP4;
+	}

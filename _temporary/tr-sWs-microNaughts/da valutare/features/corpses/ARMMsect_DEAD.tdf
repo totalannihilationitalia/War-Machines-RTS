@@ -1,0 +1,40 @@
+[ARMMsect_DEAD]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=arm_corpses;
+	object=ARMMsect_DEAD;
+	featuredead=ARMMsect_HEAP;
+	footprintx=1;
+	footprintz=1;
+	height=3;
+	blocking=1;
+	hitdensity=100;
+	metal=20;
+	energy=150;
+	damage=50;
+	reclaimable=1;
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}
+
+[ARMMsect_HEAP]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=heaps;
+	object=1x1b;
+	footprintx=1;
+	footprintz=1;
+	height=1;
+	blocking=0;
+	hitdensity=100;
+	metal=10;
+	damage=25;
+	reclaimable=1;
+
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}
+
+// Copyright 1998 "sWs" -skunkWorks- Ninjato, Shawne & "TADD" - Blackthorn;

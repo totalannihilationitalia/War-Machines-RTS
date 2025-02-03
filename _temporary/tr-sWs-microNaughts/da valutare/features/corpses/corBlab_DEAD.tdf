@@ -1,0 +1,40 @@
+[corBlab_DEAD]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=core_corpses;
+	object=corBlab_DEAD;
+	featuredead=corBlab_HEAP;
+	footprintx=4;
+	footprintz=4;
+	height=40;
+	blocking=1;
+	hitdensity=100;
+	metal=500;
+	energy=233;
+	damage=1300;
+	reclaimable=1;
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}
+
+[corBlab_HEAP]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=heaps;
+	object=4x4b;
+	footprintx=4;
+	footprintz=4;
+	height=5;
+	blocking=0;
+	hitdensity=100;
+	metal=250;
+	damage=650;
+	reclaimable=1;
+
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}
+
+// Copyright 1998 "sWs" -skunkWorks- Ninjato, Shawne & "TADD" - Blackthorn;

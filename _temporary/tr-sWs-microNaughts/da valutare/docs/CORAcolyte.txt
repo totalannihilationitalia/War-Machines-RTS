@@ -1,0 +1,106 @@
+\     \ \_\     \ \_\	   \
+ :-----\/  \-----\/  \------:
+ :      |  |      |  |      :
+ :  ____|__|      |__|____  :
+ : /   __  \      /   __  \ :
+ : |  | |\_/      |  |  \_/ :
+ : |  \_|__|      |  \____  :
+ : \____   \  /\  \____   \ :
+ :  _   \  |_/  \_|_ | \  | :
+ : / \__|  |  /\  / \|_|  | :\
+\: \_______/_/  \_\_______/ : \
+ :--------skunkWorks--------:& \
+\______\    \      \_____  \____\   
+|__   __|   /\     |  __ \ |  __ \  
+   | |     /  \    | |  | || |  | | 
+\  | |    / /\ \   | |  | || |  | | 
+ \ | | _ / ____ \ _| |__| || |__| | 
+  \|_|(_)_/    \_(_)_____(_)_____(_)
+  Total Annihilation Design Division 
+
+-------------------------------------------------
+The Core Cloakable Acolyte Alien (Anglar Absorber)
+-------------------------------------------------
+
+Level 1
+Unit Death Wepon ID: 238
+
+Built by: Core Bio Hive (corBlab)
+          1st Menu, Top/Left Button (Menu 2, Button 2)
+
+Unit Energy Cost: 3003
+Unit Metal Cost: 28
+Unit Hit Points: 707
+Unit Build Time: 3340
+
+Specials: Cloak and energy transformation for war endurance factions.
+Energy Cost While Transformed: 45
+Energy Cost While Cloacked: 5 - 50
+
+Features:
+Eyes glow.
+Flesh flies off when hit.
+Customized transformation into Metabolic Energy Life Form (a real bitch to animate).
+
+Story:
+It is a Acolyte Alien...  the 2nd Anglar Generation...
+  The Anglars seem to be replicating unto themselves...The hive is taking form on certain planets
+left barren only for Core Experimentations to evaulate the Anglar birthing colonies. In a surprise
+intervention, the Anglars have genetically produced a 2nd Generation alien called the Acolyte. The 
+Acolyte bears similar resemblance to the 1st Generation kindred, but has evolved to a higher spirital
+state that which is warbread for the Anglar survival. They are twice the size of normal Anglars
+and weild a large hyperion stave of anti-matter. Acolytes can transform into Energy to protect
+its younger kindred during the fierce battles on Anglan IV. Once transformed...the metabolical
+transformation makes the Acolyte more endurant and able to withstand a furry of damage, but only when
+transformed. All Acolytes channel vast energy sources unto the hive, so in great numbers, energy 
+depletion is expected. Thus... the Acolyte has no weapons...  He is his own Weapon... a shield for his
+Youger Hive Kindred Anglars... A brooding war against the Micronaughts have superceeded the Anglars
+into horrific battles, with over 2 million Anglar casualties a day. Luckily the Replicators and Acolytes
+are reducing deaths and pushing forward towards the Micronaughts main production facilites.
+
+ - Copyright by Blackthorn -
+ Email: tadd@annihilated.org
+
+
+//----------------------------------------------------------------------------------------------;
+//												;
+//  		You need Patch 3.0 to be able to use this unit!					;
+//  Get it at the official Cavedog TA site (http://www.totalannihialtion.com/)			;
+//												;
+//		  Special thanx to: http://www.annihilated.com/					;
+//			     MANU of DCS for Cobbler						;
+//		  Kinboat of Hot Lizard Software for 3DOBuilder					;
+//			     & Cavedog Entertainment						;
+//												;
+//	This unit was made by: sWs (skunkWorks), http://skunkworks.annihilated.org/		;
+//	 TADD (Total Annihilation Design Division), http://tadd.annihilated.org/		;
+//												;
+//  If you have any questions, ideas or suggestions please email: shawne@bulloch.com		;
+//												;
+//  		       Thank you for downloading this unit					;
+//	  	 This unit is a combined effort of sWs and TADD					;
+//												;
+// 		  PS: Please do not change this unit! Thank you!				;
+//												;
+//  		       --- Copyright 1998 by sWs/TADD ---					;
+//												;
+//												;
+//  Credits for the Core Cloakable Acolyte:							;
+//												;
+//  Unit:											;
+//  Model 		Ninjato(sWs)								;
+//  Model SFX		Blackthorn(TADD)							;
+//  3D Animation	Ninjato(sWs) & Blackthorn(TADD)						;
+//  Graphics		Ninjato(sWs) & Blackthorn(TADD)						;
+//  Unit Parameter	Blackthorn(TADD)							;
+//  Idea		Blackthorn(TADD)							;
+//  Sounds		Blackthorn(TADD)							;
+//												;
+//  Build Menu Picture	Blackthorn(TADD)							;
+//  GAF pic(& textures) Blackthorn(TADD)							;
+//												;
+//  Story		Blackthorn (TADD)							;
+//												;
+//  Beta Testers: 	Ninjato, Iljalat & Shawne(sWs), Starfury7 & Blackthorn(TADD)		;
+//												;
+//----------------------------------------------------------------------------------------------;

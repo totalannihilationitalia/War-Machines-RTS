@@ -1,0 +1,637 @@
+// Core Alien Warrior -cLONe- Script by Ninjato of sWs "skunkWorks"
+
+piece	base,hips,head,eyel,eyer,blood,body,arml,frarml,handl,armr,frarmr,barrela,barrelb,flarer,shell,pac,legl,shinl,footl,legr,shinr,footr;
+
+static-var bMoving,bAiming,bCanAim,gun,restore_delay;
+
+#define SIG_MOVEMENT	2
+#define SIG_AIM		4
+#define ANIM_VARIABLE TRUE
+
+#include "hitweap.h"
+#include "exptype.h"
+
+walk()
+	{
+		IF ( TRUE )
+			{
+			TURN handl to x-axis <0> speed <55>;
+			MOVE hips to y-axis <-.45> NOW;
+			TURN legr to x-axis <24.0> NOW;
+			TURN legl to x-axis <-53.0> NOW;
+			TURN body to y-axis <12.0> NOW;
+			TURN head to y-axis <-2.5> NOW;
+			TURN hips to y-axis <-3.0> NOW;
+			TURN shinl to x-axis <57.0> NOW;
+			TURN shinr to x-axis <53.0> NOW;
+			TURN footr to x-axis <-42.0> NOW;
+			SLEEP <90>;
+			}
+		IF ( TRUE )
+			{
+			MOVE hips to y-axis <-.30> NOW;
+			TURN legr to x-axis <-5.0> NOW;
+			TURN legl to x-axis <-42.0> NOW;
+			TURN body to y-axis <6.0> NOW;
+			TURN head to y-axis <-1.3> NOW;
+			TURN hips to y-axis <-2.0> NOW;
+			TURN arml to x-axis <-18.0> speed <180>;
+			TURN armr to x-axis <31.0> speed <180>;
+			TURN frarmr to x-axis <-28.0> speed <170>;
+			TURN frarml to x-axis <21.0> speed <170>;
+			TURN footl to x-axis <-12.0> NOW;
+			TURN shinr to x-axis <82.0> NOW;
+			TURN footr to x-axis <-30.0> NOW;
+			SLEEP <70>;
+			}
+		IF ( TRUE )
+			{
+			MOVE hips to y-axis <-.15> NOW;
+			TURN legr to x-axis <-13.0> NOW;
+			TURN legl to x-axis <-25.0> NOW;
+			TURN body to y-axis <0> NOW;
+			TURN head to y-axis <0> NOW;
+			TURN hips to y-axis <0> NOW;
+			TURN shinl to x-axis <37.0> NOW;
+			TURN footl to x-axis <-16.0> NOW;
+			TURN shinr to x-axis <86.0> NOW;
+			TURN footr to x-axis <-20.0> NOW;
+			SLEEP <50>;
+			}
+		IF ( TRUE )
+			{
+			MOVE hips to y-axis <0> NOW;
+			TURN legr to x-axis <-42.0> NOW;
+			TURN legl to x-axis <5.0> NOW;
+			TURN body to y-axis <-6.0> NOW;
+			TURN head to y-axis <1.3> NOW;
+			TURN hips to y-axis <2.0> NOW;
+			TURN shinl to x-axis <7.0> NOW;
+			TURN footl to x-axis <-21.0> NOW;
+			TURN shinr to x-axis <105.0> NOW;
+			TURN footr to x-axis <-10.0> NOW;
+			SLEEP <40>;
+			}
+		IF ( TRUE )
+			{
+			MOVE hips to y-axis <-.15> NOW;
+			TURN legr to x-axis <-57.0> NOW;
+			TURN legl to x-axis <15.0> NOW;
+			TURN body to y-axis <-12.0> NOW;
+			TURN head to y-axis <2.5> NOW;
+			TURN hips to y-axis <3.0> NOW;
+			TURN footl to x-axis <-27.0> NOW;
+			TURN shinr to x-axis <107.0> NOW;
+			TURN footr to x-axis <0> NOW;
+			SLEEP <50>;
+			}
+		IF ( TRUE )
+			{
+			MOVE hips to y-axis <-.30> NOW;
+			TURN legr to x-axis <-67.0> NOW;
+			TURN legl to x-axis <20.0> NOW;
+			TURN body to y-axis <-18.0> NOW;
+			TURN head to y-axis <3.8> NOW;
+			TURN hips to y-axis <4.0> NOW;
+			TURN shinl to x-axis <25.0> NOW;
+			TURN footl to x-axis <-34.0> NOW;
+			TURN shinr to x-axis <65.0> NOW;
+			SLEEP <70>;
+			}
+		IF ( TRUE )
+			{
+			MOVE hips to y-axis <-.45> NOW;
+			TURN legr to x-axis <-53.0> NOW;
+			TURN legl to x-axis <24.0> NOW;
+			TURN body to y-axis <-12.0> NOW;
+			TURN head to y-axis <2.5> NOW;
+			TURN hips to y-axis <3.0> NOW;
+			TURN shinl to x-axis <53.0> NOW;
+			TURN footl to x-axis <-42.0> NOW;
+			TURN shinr to x-axis <57.0> NOW;
+			SLEEP <90>;
+			}
+		IF ( TRUE )
+			{
+			MOVE hips to y-axis <-.30> NOW;
+			TURN legr to x-axis <-42.0> NOW;
+			TURN legl to x-axis <5.0> NOW;
+			TURN body to y-axis <-6.0> NOW;
+			TURN head to y-axis <1.3> NOW;
+			TURN hips to y-axis <2.0> NOW;
+			TURN arml to x-axis <31.0> speed <180>;
+			TURN armr to x-axis <-18.0> speed <180>;
+			TURN frarml to x-axis <-28.0> speed <170>;
+			TURN frarmr to x-axis <21.0>  speed <170>;
+			TURN shinl to x-axis <82.0> NOW;
+			TURN footl to x-axis <-30.0> NOW;
+			TURN footr to x-axis <-12.0> NOW;
+			SLEEP <70>;
+			}
+		IF ( TRUE )
+			{
+			MOVE hips to y-axis <-.15> NOW;
+			TURN legr to x-axis <-25.0> NOW;
+			TURN legl to x-axis <-13.0> NOW;
+			TURN body to y-axis <0> NOW;
+			TURN head to y-axis <0> NOW;
+			TURN hips to y-axis <0> NOW;
+			TURN shinl to x-axis <86.0> NOW;
+			TURN footl to x-axis <-20.0> NOW;
+			TURN shinr to x-axis <37.0> NOW;
+			TURN footr to x-axis <-16.0> NOW;
+			SLEEP <50>;
+			}
+		IF ( TRUE )
+			{
+			MOVE hips to y-axis <0> NOW;
+			TURN legr to x-axis <5.0> NOW;
+			TURN legl to x-axis <-42.0> NOW;
+			TURN body to y-axis <6.0> NOW;
+			TURN head to y-axis <-1.3> NOW;
+			TURN hips to y-axis <-2.0> NOW;
+			TURN shinl to x-axis <105.0> NOW;
+			TURN footl to x-axis <-10.0> NOW;
+			TURN shinr to x-axis <7.0> NOW;
+			TURN footr to x-axis <-21.0> NOW;
+			SLEEP <40>;
+			}
+		IF ( TRUE )
+			{
+ 			MOVE hips to y-axis <-.15> NOW;
+			TURN legr to x-axis <15.0> NOW;
+			TURN legl to x-axis <-57.0> NOW;
+			TURN body to y-axis <12.0> NOW;
+			TURN head to y-axis <-2.5> NOW;
+			TURN hips to y-axis <-3.0> NOW;
+			TURN shinl to x-axis <107.0> NOW;
+			TURN footl to x-axis <0> NOW;
+			TURN footr to x-axis <-27.0> NOW;
+			SLEEP <50>;
+			}
+		MOVE hips to y-axis <-.30> NOW;
+		TURN legr to x-axis <20.0> NOW;
+		TURN legl to x-axis <-67.0> NOW;
+		TURN body to y-axis <18.0> NOW;
+		TURN head to y-axis <-3.75> NOW;
+		TURN hips to y-axis <-3.8> NOW;
+		TURN shinl to x-axis <65.0> NOW;
+		TURN shinr to x-axis <25.0> NOW;
+		TURN footr to x-axis <-34.0> NOW;
+		SLEEP <70>;
+	}
+
+walklegs()
+	{
+		IF ( TRUE )
+			{
+			MOVE hips to y-axis <-.45> NOW;
+			TURN legr to x-axis <24.0> NOW;
+			TURN legl to x-axis <-53.0> NOW;
+			TURN shinl to x-axis <57.0> NOW;
+			TURN shinr to x-axis <53.0> NOW;
+			TURN footr to x-axis <-42.0> NOW;
+			SLEEP <90>;
+			}
+		IF ( TRUE )
+			{
+			MOVE hips to y-axis <-.30> NOW;
+			TURN legr to x-axis <-5.0> NOW;
+			TURN legl to x-axis <-42.0> NOW;
+			TURN footl to x-axis <-12.0> NOW;
+			TURN shinr to x-axis <82.0> NOW;
+			TURN footr to x-axis <-30.0> NOW;
+			SLEEP <70>;
+			}
+		IF ( TRUE )
+			{
+			MOVE hips to y-axis <-.15> NOW;
+			TURN legr to x-axis <-13.0> NOW;
+			TURN legl to x-axis <-25.0> NOW;
+			TURN hips to y-axis <0> NOW;
+			TURN shinl to x-axis <37.0> NOW;
+			TURN footl to x-axis <-16.0> NOW;
+			TURN shinr to x-axis <86.0> NOW;
+			TURN footr to x-axis <-20.0> NOW;
+			SLEEP <50>;
+			}
+		IF ( TRUE )
+			{
+			MOVE hips to y-axis <0> NOW;
+			TURN legr to x-axis <-42.0> NOW;
+			TURN legl to x-axis <5.0> NOW;
+			TURN shinl to x-axis <7.0> NOW;
+			TURN footl to x-axis <-21.0> NOW;
+			TURN shinr to x-axis <105.0> NOW;
+			TURN footr to x-axis <-10.0> NOW;
+			SLEEP <40>;
+			}
+		IF ( TRUE )
+			{
+			MOVE hips to y-axis <-.15> NOW;
+			TURN legr to x-axis <-57.0> NOW;
+			TURN legl to x-axis <15.0> NOW;
+			TURN footl to x-axis <-27.0> NOW;
+			TURN shinr to x-axis <107.0> NOW;
+			TURN footr to x-axis <0> NOW;
+			SLEEP <50>;
+			}
+		IF ( TRUE )
+			{
+			MOVE hips to y-axis <-.30> NOW;
+			TURN legr to x-axis <-67.0> NOW;
+			TURN legl to x-axis <20.0> NOW;
+			TURN shinl to x-axis <25.0> NOW;
+			TURN footl to x-axis <-34.0> NOW;
+			TURN shinr to x-axis <65.0> NOW;
+			SLEEP <70>;
+			}
+		IF ( TRUE )
+			{
+			MOVE hips to y-axis <-.45> NOW;
+			TURN legr to x-axis <-53.0> NOW;
+			TURN legl to x-axis <24.0> NOW;
+			TURN shinl to x-axis <53.0> NOW;
+			TURN footl to x-axis <-42.0> NOW;
+			TURN shinr to x-axis <57.0> NOW;
+			SLEEP <90>;
+			}
+		IF ( TRUE )
+			{
+			MOVE hips to y-axis <-.30> NOW;
+			TURN legr to x-axis <-42.0> NOW;
+			TURN legl to x-axis <5.0> NOW;
+			TURN shinl to x-axis <82.0> NOW;
+			TURN footl to x-axis <-30.0> NOW;
+			TURN footr to x-axis <-12.0> NOW;
+			SLEEP <70>;
+			}
+		IF ( TRUE )
+			{
+			MOVE hips to y-axis <-.15> NOW;
+			TURN legr to x-axis <-25.0> NOW;
+			TURN legl to x-axis <-13.0> NOW;
+			TURN hips to y-axis <0> NOW;
+			TURN shinl to x-axis <86.0> NOW;
+			TURN footl to x-axis <-20.0> NOW;
+			TURN shinr to x-axis <37.0> NOW;
+			TURN footr to x-axis <-16.0> NOW;
+			SLEEP <50>;
+			}
+		IF ( TRUE )
+			{
+			MOVE hips to y-axis <0> NOW;
+			TURN legr to x-axis <5.0> NOW;
+			TURN legl to x-axis <-42.0> NOW;
+			TURN shinl to x-axis <105.0> NOW;
+			TURN footl to x-axis <-10.0> NOW;
+			TURN shinr to x-axis <7.0> NOW;
+			TURN footr to x-axis <-21.0> NOW;
+			SLEEP <40>;
+			}
+		IF ( TRUE )
+			{
+ 			MOVE hips to y-axis <-.15> NOW;
+			TURN legr to x-axis <15.0> NOW;
+			TURN legl to x-axis <-57.0> NOW;
+			TURN shinl to x-axis <107.0> NOW;
+			TURN footl to x-axis <0> NOW;
+			TURN footr to x-axis <-27.0> NOW;
+			SLEEP <50>;
+			}
+		MOVE hips to y-axis <-.30> NOW;
+		TURN legr to x-axis <20.0> NOW;
+		TURN legl to x-axis <-67.0> NOW;
+		TURN shinl to x-axis <65.0> NOW;
+		TURN shinr to x-axis <25.0> NOW;
+		TURN footr to x-axis <-34.0> NOW;
+		SLEEP <70>;
+	}
+
+MotionControl(moving,aiming,just_moved)
+	{
+	var	moving, aiming, just_moved;
+		just_moved = 1 ;
+		WHILE ( TRUE )
+			{
+			moving = bMoving ;
+			aiming = bAiming ;
+			IF (moving )
+				{
+				IF (aiming )
+					{
+					bCanAim = TRUE;
+					CALL-SCRIPT walklegs();
+					}
+				IF (!aiming )
+					{
+					bCanAim = FALSE;
+					turn head to x-axis <0> speed <10>;
+					CALL-SCRIPT walk();
+					}
+				just_moved = 1 ;
+				}
+			IF (!moving )
+				{
+				bCanAim = TRUE;
+				IF (just_moved )
+					{
+					MOVE hips to y-axis <0> SPEED <1.00>;
+					TURN hips to y-axis <0> SPEED <65.0>;
+					TURN legl to x-axis <0> SPEED <200.0>;
+					TURN shinl to x-axis <0> SPEED <200.0>;
+					TURN footl to x-axis <0> SPEED <200.0>;
+					TURN legr to x-axis <0> SPEED <200.0>;
+					TURN shinr to x-axis <0> SPEED <200.0>;
+					TURN footr to x-axis <0> SPEED <200.0>;
+					IF (!aiming )
+						{
+						turn head to x-axis <0> speed <50>;
+						turn head to y-axis <0> speed <100>;
+						TURN body to y-axis <0> SPEED <75.0>;
+						TURN frarml to x-axis <60> SPEED <55.0>;
+						TURN frarml to y-axis <0> SPEED <55.0>;
+						TURN handl to x-axis <-25> speed <45>;
+						TURN arml to x-axis <-2> SPEED <60.0>;
+						TURN frarmr to x-axis <70> SPEED <55.0>;
+						TURN armr to x-axis <-2> SPEED <60.0>;
+						}
+					just_moved = 0 ;
+					}
+				SLEEP <100>;
+				}
+			}
+	}
+
+Create()
+	{
+	hide flarer;
+	hide shell;
+	hide blood;
+	turn hips to x-axis <4> NOW;
+	turn body to x-axis <-3> NOW;
+	turn arml to x-axis <-2> NOW;
+	turn armr to x-axis <-2> NOW;
+	turn frarml to x-axis <60> NOW;
+	turn handl to x-axis <-25> NOW;
+	turn frarmr to x-axis <70> NOW;
+	cache eyel;
+	cache eyer;
+	cache barrela;
+	cache barrelb;
+	cache pac;
+	dont-cache blood;
+	dont-cache frarmr;
+	dont-cache flarer;
+	dont-shade eyel;
+	dont-shade eyer;
+	dont-shade blood;
+	dont-shade flarer;
+	dont-shade shell;
+	gun = 0;
+	bMoving = FALSE;
+	bAiming = FALSE;
+	bCanAim = TRUE;
+	restore_delay = 2500;
+	start-script MotionControl();
+	}
+
+StartMoving()
+	{
+	bMoving = TRUE;
+	}
+
+StopMoving()
+	{
+	bMoving = FALSE;
+	}
+
+SweetSpot(piecenum)
+	{
+	piecenum=body;
+	}
+
+RestoreAfterDelay()
+	{
+	sleep restore_delay;
+	cache shell;
+	move barrelb to z-axis <0> speed <10>;
+	wait-for-move barrelb around z-axis;
+	move barrela to z-axis <0> speed <10>;
+	cache pac;
+	cache barrela;
+	cache barrelb;
+	move hips to y-axis <0> speed <50>;
+	turn hips to y-axis <0> speed <65>;
+	turn head to y-axis <0> speed <150>;
+	turn body to y-axis <0> speed <75>;
+	turn arml to x-axis <-2> speed <60>;
+	turn arml to y-axis <0> speed <50>;
+	turn frarml to x-axis <30> speed <55>;
+	turn frarml to y-axis <0> speed <55>;
+	turn handl to y-axis <0> speed <55>;
+	turn handl to x-axis <-15> speed <35>;
+	turn armr to x-axis <-2> speed <60>;
+	turn frarmr to x-axis <35> speed <55>;
+	wait-for-move barrela around z-axis;
+	wait-for-move hips around y-axis;
+	wait-for-turn hips around x-axis;
+	wait-for-turn head around y-axis;
+	wait-for-turn body around y-axis;
+	wait-for-turn arml around x-axis;
+	wait-for-turn arml around y-axis;
+	wait-for-turn frarml around x-axis;
+	wait-for-turn frarml around y-axis;
+	wait-for-turn handl around y-axis;
+	wait-for-turn handl around x-axis;
+	wait-for-turn armr around x-axis;
+	wait-for-turn frarmr around x-axis;
+	cache eyel;
+	cache eyer;
+	bAiming = FALSE;
+	}
+
+AimFromPrimary(piecenum)
+	{
+	piecenum=armr;
+	}
+
+QueryPrimary(piecenum)
+	{
+	piecenum=flarer;
+	}
+
+FirePrimary()
+	{
+	move barrela to z-axis <0> speed <300>;
+	show flarer;
+	sleep 50;
+	EXPLODE	shell type		FALL;
+	sleep 50;
+	EXPLODE	shell type		FALL;
+	hide flarer;
+	move barrela to z-axis <2> speed <5>;
+	}
+
+AimPrimary(heading,pitch)
+	{
+	signal SIG_AIM;
+	set-signal-mask SIG_AIM;
+	bAiming = TRUE;
+	while (NOT bCanAim)
+		{
+		sleep 100;
+		}
+	dont-cache eyel;
+	dont-cache eyer;
+	dont-cache shell;
+	turn head to y-axis heading speed <200>;
+	turn head to x-axis (0 - pitch) speed <100>;
+	turn body to y-axis heading speed <150>;
+	turn arml to x-axis (0 - pitch) speed <150>;
+	turn arml to y-axis <15> speed <50>;
+	turn frarml to x-axis <-15> speed <150>;
+	turn frarml to y-axis <40> speed <150>;
+	turn handl to y-axis <20> speed <55>;
+	turn handl to x-axis <-5> speed <55>;
+	turn armr to x-axis (0 - pitch) speed <150>;
+	turn frarmr to x-axis <0> speed <150>;
+	wait-for-turn head around y-axis;
+	wait-for-turn head around x-axis;
+	wait-for-turn body around y-axis;
+	wait-for-turn arml around x-axis;
+	wait-for-turn arml around y-axis;
+	wait-for-turn frarml around x-axis;
+	wait-for-turn frarml around y-axis;
+	wait-for-turn handl around y-axis;
+	wait-for-turn handl around x-axis;
+	wait-for-turn armr around x-axis;
+	wait-for-turn frarmr around x-axis;
+	dont-cache pac;
+	dont-cache barrela;
+	dont-cache barrelb;
+	move barrela to z-axis <2> speed <10>;
+	wait-for-move barrela around z-axis;
+	move barrelb to z-axis <2> speed <10>;
+	wait-for-move barrelb around z-axis;
+	start-script RestoreAfterDelay();
+	return( TRUE );
+	}
+
+Killed( severity, corpsetype )
+	{
+	hide flarer;
+	hide shell;
+	show blood;
+		if (severity <= 25)
+		{
+		corpsetype = 1;
+
+		explode hips type	BITMAPONLY | BITMAP1;
+		explode head type	BITMAPONLY | BITMAP2;
+		explode eyel type	BITMAPONLY | BITMAP3;
+		explode eyer type	BITMAPONLY | BITMAP4;
+		explode blood type	SHATTER | BITMAP5;
+		explode body type	BITMAPONLY | BITMAP1;
+		explode arml type	BITMAPONLY | BITMAP2;
+		explode frarml type	BITMAPONLY | BITMAP3;
+		explode handl type	BITMAPONLY | BITMAP4;
+		explode armr type	BITMAPONLY | BITMAP5;
+		explode frarmr type	BITMAPONLY | BITMAP1;
+		explode barrela type	BITMAPONLY | BITMAP2;
+		explode barrelb type	BITMAPONLY | BITMAP3;
+		explode flarer type	BITMAPONLY | BITMAP4;
+		explode shell type	BITMAPONLY | BITMAP5;
+		explode pac type	BITMAPONLY | BITMAP1;
+		explode legl type	BITMAPONLY | BITMAP2;
+		explode shinl type	BITMAPONLY | BITMAP3;
+		explode footl type	BITMAPONLY | BITMAP4;
+		explode legr type	BITMAPONLY | BITMAP5;
+		explode shinr type	BITMAPONLY | BITMAP1;
+		explode footr type	BITMAPONLY | BITMAP2;
+		return( 0 );
+		}
+
+	if (severity <= 50)
+		{
+		corpsetype = 2;
+
+		explode hips type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		explode head type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode eyel type	SHATTER | BITMAP3;
+		explode eyer type	SHATTER | BITMAP4;
+		explode blood type	SHATTER | BITMAP5;
+		explode body type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		explode arml type	FALL | BITMAP2;
+		explode frarml type	FALL | BITMAP3;
+		explode handl type	FALL | BITMAP4;
+		explode armr type	FALL | BITMAP5;
+		explode frarmr type	FALL | BITMAP1;
+		explode barrela type	FALL | BITMAP2;
+		explode barrelb type	FALL | BITMAP3;
+		explode flarer type	FALL | BITMAP4;
+		explode shell type	FALL | BITMAP5;
+		explode pac type	FALL | BITMAP1;
+		explode legl type	FALL | BITMAP2;
+		explode shinl type	FALL | BITMAP3;
+		explode footl type	FALL | BITMAP4;
+		explode legr type	FALL | BITMAP5;
+		explode shinr type	FALL | BITMAP1;
+		explode footr type	FALL | BITMAP2;
+		return( 0 );
+		}
+
+	if (severity <= 99)
+		{
+		corpsetype = 3;
+
+		explode hips type	SHATTER | BITMAP1;
+		explode head type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode eyel type	SHATTER | BITMAP3;
+		explode eyer type	SHATTER | BITMAP4;
+		explode blood type	SHATTER | BITMAP5;
+		explode body type	SHATTER | BITMAP1;
+		explode arml type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode frarml type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode handl type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		explode armr type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+		explode frarmr type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		explode barrela type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode barrelb type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode flarer type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		explode shell type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+		explode pac type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		explode legl type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode shinl type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode footl type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		explode legr type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+		explode shinr type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		explode footr type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		return( 0 );
+		}
+
+		corpsetype = 3;
+
+		explode hips type	SHATTER | EXPLODE_ON_HIT | BITMAP1;
+		explode head type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode eyel type	SHATTER | EXPLODE_ON_HIT | BITMAP3;
+		explode eyer type	SHATTER | EXPLODE_ON_HIT | BITMAP4;
+		explode blood type	SHATTER | EXPLODE_ON_HIT | BITMAP5;
+		explode body type	SHATTER | EXPLODE_ON_HIT | BITMAP1;
+		explode arml type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode frarml type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode handl type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		explode armr type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+		explode frarmr type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		explode barrela type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode barrelb type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode flarer type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		explode shell type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+		explode pac type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		explode legl type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode shinl type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode footl type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		explode legr type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+		explode shinr type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		explode footr type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	}

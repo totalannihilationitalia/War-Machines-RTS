@@ -1,0 +1,149 @@
+\     \ \_\     \ \_\	   \
+ :-----\/  \-----\/  \------:
+ :      |  |      |  |      :
+ :  ____|__|      |__|____  :
+ : /   __  \      /   __  \ :
+ : |  | |\_/      |  |  \_/ :
+ : |  \_|__|      |  \____  :
+ : \____   \  /\  \____   \ :
+ :  _   \  |_/  \_|_ | \  | :
+ : / \__|  |  /\  / \|_|  | :
+\: \_______/_/  \_\_______/ :
+ :--------skunkWorks--------:
+
+-------------------------------------------
+The Core Cloakable Alien (Anglar BodyGuards)
+-------------------------------------------
+Level 1 Aliens
+Unit Death Wepon ID: 238
+
+Bio Hive
+--------
+Built by: Core Commander (CORCOM)
+	  4th Menu, Bottom/Left Button (Menu 5, Button 4)
+
+Unit Energy Cost: 756
+Unit Metal Cost: 570
+Unit Hit Points: 1311
+Unit Build Time: 4103
+
+Specials: Slow Regeneration.
+
+BodyGuard
+---------
+Built by: Core Bio Hive (corBlab)
+          1st Menu, Top/Right Button (Menu 2, Button 1)
+
+Unit Energy Cost: 1004
+Unit Metal Cost: 11
+Unit Hit Points: 148
+Unit Build Time: 1143
+
+Weapon ID#: 177
+
+Specials: Cloak, Medium Regeneration.
+Energy Cost While Cloacked: 2 - 20
+
+Features:
+Head turns to target while aiming.
+(A TA Unit that actually "looks" at it's target)
+Eyes glow while targeting.
+Flesh flies off when hit.
+Bloody Corpse
+
+Hunter
+------
+Built by: Core Bio Hive (corBlab)
+          1st Menu, Middle/Right Button (Menu 2, Button 3)
+
+Unit Energy Cost: 2508
+Unit Metal Cost: 52
+Unit Hit Points: 206
+Unit Build Time: 2386
+
+Weapon ID#: 217
+Weapon Energy Cost: 1 PerShot
+
+Specials: Cloak, Slow Regeneration.
+Energy Cost While Cloacked: 5 - 40
+
+Harvester
+---------
+Built by: Core Bio Hive (corBlab)
+          1st Menu, Top/Left Button (Menu 2, Button 0)
+
+Unit Energy Cost: 1270
+Unit Metal Cost: 26
+Unit Hit Points: 132
+Unit Build Time: 1640
+
+Specials: Cloak & Reclaim, Fast Regeneration.
+Energy Cost While Cloacked: 5 - 30
+
+
+Story:
+   Core interest in Anglan VI has been unsettling to ARM. Uncertainty as to why Core has
+inhabited the planet for an extended period has caused Arm to take a closer inspection. The one
+odd thing is the amount of Core science facilities on planet. Arm spies are preparing to
+infiltrate and learn more. Core's initial interest in Anglan VI was not unusual. The amount of
+metal and close proximity to a star made the planet ideal for resource gathering. It is not rare
+for a science kbot to find traces of DNA in soil or rock samples. Traces of DNA are found
+throughout the galaxies. Some are the DNA of single celled organisms while other traces have
+proven to be small reptiles and mammals. The DNA trace found on Anglar VI however was quite
+interesting. The DNA sequencing tests showed promise of an intelligent life form. Bio-engineering
+facilities were immediately set up and put to work. The high amount of resources on planet sped
+the process of building (or growing) the DNA into breathing life once again. The alien life
+form was named Anglar after the planet from which it was found. Core includes a neuro-
+manipulation process in the alien production. This assures loyalty to Core from all the aliens
+created. They are born with only two thoughts in mind: destroy Arm and defend the Core commander
+to the point of death. Now Core finally has a slight speed advantage over Arm.
+
+- Copyright by Shawne -
+
+//----------------------------------------------------------------------------------------------;
+//												;
+//  		You need Patch 3.0 to be able to use this unit!					;
+//  Get it at the official Cavedog TA site (http://www.totalannihialtion.com/)			;
+//												;
+//		  Special thanx to: http://www.annihilated.com/					;
+//			     MANU of DCS for Cobbler						;
+//		  Kinboat of Hot Lizard Software for 3DOBuilder					;
+//			     & Cavedog Entertainment						;
+//												;
+//	This unit was made by: sWs (skunkWorks), http://skunkworks.annihilated.org/		;
+//	 TADD (Total Annihilation Design Division), http://tadd.annihilated.org/		;
+//												;
+//  If you have any questions, ideas or suggestions please email: shawne@bulloch.com		;
+//												;
+//  		       Thank you for downloading this unit					;
+//	  	 This unit is a combined effort of sWs and TADD					;
+//												;
+// 		  PS: Please do not change this unit! Thank you!				;
+//												;
+//  		       --- Copyright 1998 by sWs/TADD ---					;
+//												;
+//												;
+//  Credits for the Core Cloakable Aliens:							;
+//												;
+//  Unit:											;
+//  Model 		Ninjato(sWs)								;
+//  3D Animation	Ninjato(sWs)								;
+//  Graphics		Ninjato(sWs)								;
+//  Unit Parameter	Ninjato(sWs)								;
+//  Idea		Ninjato(sWs) & Blackthorn(TADD)						;
+//  Sounds		Ninjato(sWs) & Blackthorn(TADD)						;
+//												;
+//  Build Menu Picture	Blackthorn(TADD)							;
+//  GAF pic(& textures) Ninjato(sWs) & Blackthorn(TADD)						;
+//												;
+//  Weapon:											;
+//  Model		Ninjato(sWs)								;
+//  Weapon Parameter	Ninjato(sWs)								;
+//  Idea		Ninjato(sWs) & Blackthorn(TADD)						;
+//  Sounds		Ninjato(sWs)								;
+//												;
+//  Story		Shawne(sWs)								;
+//												;
+//  Beta Testers: 	Ninjato, Iljalat & Shawne(sWs) & Starfury7 & Blackthorn(TADD)		;
+//												;
+//----------------------------------------------------------------------------------------------;

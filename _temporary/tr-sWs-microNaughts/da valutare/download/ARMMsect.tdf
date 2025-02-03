@@ -1,0 +1,9 @@
+[MENUENTRY1]
+	{
+	UNITMENU=armBlab;
+	MENU=2;
+	BUTTON=3;
+	UNITNAME=ARMMsect;
+	}
+
+// Copyright 1998 "sWs" -skunkWorks- Ninjato, Iljalat, Shawne & "TADD" - Blackthorn;

@@ -1,0 +1,40 @@
+[CORClone_DEAD]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=core_corpses;
+	object=CORClone_DEAD;
+	featuredead=CORClone_HEAP;
+	footprintx=1;
+	footprintz=1;
+	height=5;
+	blocking=1;
+	hitdensity=100;
+	metal=10;
+	energy=300;
+	damage=142;
+	reclaimable=1;
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}
+
+[CORClone_HEAP]
+	{
+	world=All Worlds;
+	description=Wreckage;
+	category=heaps;
+	object=1x1b;
+	footprintx=1;
+	footprintz=1;
+	height=1;
+	blocking=0;
+	hitdensity=100;
+	metal=5;
+	damage=71;
+	reclaimable=1;
+
+	featurereclamate=smudge01;
+	seqnamereclamate=tree1reclamate;
+	}
+
+// Copyright 1998 "sWs" -skunkWorks- Ninjato, Shawne & "TADD" - Blackthorn;

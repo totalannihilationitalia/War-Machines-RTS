@@ -35,7 +35,7 @@ return {
                maxwaterdepth = 0,
                name = "Lunatic",
                noAutoFire = false,
-               objectname = "eufloony",
+               objectname = "eufloony.s3o",
                selfdestructas = "MEDIUM_BUILDING",
                sightdistance = 320,
 --               soundcategory= "COR_KBOT",

@@ -1,0 +1,9 @@
+[MENUENTRY1]
+	{
+	UNITMENU=corBlab;
+	MENU=2;
+	BUTTON=3;
+	UNITNAME=CORWarrr;
+	}
+
+// Copyright 1998 "sWs" -skunkWorks- Ninjato, Iljalat, Shawne & "TADD" - Blackthorn;

@@ -1,0 +1,57 @@
+[UNITINFO]
+	{
+	UnitName=CORBLAB;
+	Version=3.0;
+	Side=CORE;
+	Objectname=CORBLAB;
+	Designation=sWs-CBL;
+	Name=Bio Hive;
+	Description=Regenerates Alien DNA;
+FrenchName=Bio Hive;
+FrenchDescription=Régénère l'ADN alien;
+GermanName=Bio Hive;
+GermanDescription=Regeneriert Alien DANN;
+	FootprintX=6;
+	FootprintZ=5;
+	BuildCostEnergy=754;
+	BuildCostMetal=570;
+	MaxDamage=1311;
+	MaxWaterDepth=0;
+	MaxSlope=10;
+	EnergyUse=0;
+	BuildTime=4103;
+	WorkerTime=71;
+	BMcode=0;
+	Builder=1;
+	ThreeD=1;
+	ZBuffer=1;
+	NoAutoFire=0;
+	SightDistance=202;
+	RadarDistance=0;
+	SoundCategory=KBOTPLANT;
+	EnergyStorage=80;
+	MetalStorage=80;
+	ExplodeAs=MEDIUM_BUILDINGEX;
+	SelfDestructAs=MEDIUM_BUILDING;
+	Category=CORE PLANT CTRL_F LEVEL1 NOWEAPON NOTAIR NOTSUB ;
+	TEDClass=PLANT;
+	Copyright=Copyright 1997 Humongous Entertainment. All rights reserved.;
+	// Copyright 1998 "sWs" -skunkWorks- Ninjato, Shawne & "TADD" - Blackthorn;
+	YardMap=oooooo oooooo ooccoo occcco occcco;
+	Corpse=corBlab_DEAD;
+	UnitNumber=2004;
+	FireStandOrders=1;
+	MobileStandOrders=1;
+	StandingMoveOrder=1;
+	HealTime=99;
+	CanMove=1;
+	CanPatrol=1;
+	CanStop=1;
+	BuildAngle=4096;
+	Ovradjust=1;
+	DownLoadable=1;
+	ai_weight=weight CORBLAB 6;
+	ai_limit=limit CORBLAB 1;
+	}
+
+// Copyright 1998 "sWs" -skunkWorks- Ninjato, Shawne & "TADD" - Blackthorn;

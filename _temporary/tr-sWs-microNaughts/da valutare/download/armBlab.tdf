@@ -1,0 +1,30 @@
+[MENUENTRY1]
+	{
+	UNITMENU=ARMCOM;
+	MENU=5;
+	BUTTON=5;
+	UNITNAME=armBlab;
+	}
+[MENUENTRY2]
+	{
+	UNITMENU=ARMCK;
+	MENU=5;
+	BUTTON=5;
+	UNITNAME=armBlab;
+	}
+[MENUENTRY3]
+	{
+	UNITMENU=armBlab;
+	MENU=2;
+	BUTTON=1;
+	UNITNAME=ARMClone;
+	}
+[MENUENTRY4]
+	{
+	UNITMENU=armBlab;
+	MENU=2;
+	BUTTON=0;
+	UNITNAME=ARMHelpr;
+	}
+
+// Copyright 1998 "sWs" -skunkWorks- Ninjato, Iljalat, Shawne & "TADD" - Blackthorn;

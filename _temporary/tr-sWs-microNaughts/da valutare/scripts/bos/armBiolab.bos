@@ -1,0 +1,236 @@
+// Arm Bio Lab Script by Ninjato of sWs "skunkWorks"
+
+piece base,pad,shell,panela,panelb,neck,nano,beam,lighta,lightb,lightc,lightd;
+
+static-var spray,unitviewer;
+
+#define	SIG_ACTIVATE	2
+#define SMOKEPIECE1 shell
+#define ANIM_VARIABLE TRUE
+
+#include "StateChg.h"
+#include "smokeunit.h"
+#include "EXPtype.h"
+#include "yard.h"
+
+activatescr()
+	{
+		IF ( TRUE )
+			{
+			turn shell around x-axis [-90.0] speed <80.0>;
+			sleep <800>;
+			turn panela to z-axis [135.0] speed <80.0>;
+			turn panelb to z-axis [-135.0] speed <80.0>;
+			sleep <400>;
+			}
+		IF ( TRUE )
+			{
+			turn neck to x-axis [-135.0] speed <100>;
+			sleep <500>;
+			turn nano to x-axis [-70.0] speed <40.0>;
+			sleep <800>;
+			}
+	}
+
+deactivatescr()
+	{
+		IF ( TRUE )
+			{
+			turn nano to x-axis [0.0] speed <40.0>;
+			sleep <500>;
+			turn neck to x-axis [0.0] speed <90.0>;
+			sleep <500>;
+			}
+		IF ( TRUE )
+			{
+			turn panela to z-axis [0.0] speed <80.0>;
+			turn panelb to z-axis [0.0] speed <80.0>;
+			sleep <1200>;
+			turn shell around x-axis [0.0] speed <80.0>;
+			sleep <648>;
+			}
+	}
+
+Go()
+	{
+	dont-cache shell;
+	dont-cache panela;
+	dont-cache panelb;
+	dont-cache neck;
+	dont-cache nano;
+	dont-cache beam;
+	dont-cache lighta;
+	dont-cache lightb;
+	dont-cache lightc;
+	dont-cache lightd;
+	call-script activatescr();
+	call-script OpenYard();
+	set INBUILDSTANCE to TRUE;
+	}
+
+Stop()
+	{
+	set INBUILDSTANCE to FALSE;
+	call-script CloseYard();
+	call-script deactivatescr();
+	cache shell;
+	cache panela;
+	cache panelb;
+	cache neck;
+	cache nano;
+	cache beam;
+	cache lighta;
+	cache lightb;
+	cache lightc;
+	cache lightd;
+	}
+
+#define ACTIVATECMD call-script Go();
+#define DEACTIVATECMD call-script Stop();
+#include "StateChg.h"
+
+Create()
+	{
+	cache base;
+	cache pad;
+	cache shell;
+	cache panela;
+	cache panelb;
+	cache neck;
+	cache nano;
+	cache beam;
+	cache lighta;
+	cache lightb;
+	cache lightc;
+	cache lightd;
+	dont-shade neck;
+	dont-shade nano;
+	dont-shade beam;
+	dont-shade lighta;
+	dont-shade lightb;
+	dont-shade lightc;
+	dont-shade lightd;
+	spray=0;
+	unitviewer = FALSE;
+	call-script InitState();
+	start-script SmokeUnit();
+	}
+
+QueryNanoPiece(piecenum)
+	{
+	piecenum=beam;
+	}
+
+Demo()
+	{
+	unitviewer = TRUE;
+	}
+
+Activate()
+	{
+	signal SIG_ACTIVATE;
+	start-script RequestState( ACTIVE );
+	}
+
+Deactivate()
+	{
+	signal SIG_ACTIVATE;
+	set-signal-mask SIG_ACTIVATE;
+	if (!unitviewer)
+		{
+		sleep 5000;
+		}
+	set-signal-mask 0;
+	start-script RequestState( INACTIVE );
+	}
+
+StartBuilding()
+	{
+	spin pad around y-axis speed <30>;
+	}
+
+StopBuilding()
+	{
+	stop-spin pad around y-axis;
+	}
+
+QueryBuildInfo(piecenum)
+	{
+	piecenum=pad;
+	}
+
+SweetSpot(piecenum)
+	{
+	piecenum=base;
+	}
+
+Killed( severity, corpsetype )
+	{
+	if (severity <= 25)
+		{
+		corpsetype = 1;
+		explode base type	BITMAPONLY | BITMAP1;
+		explode pad type	BITMAPONLY | BITMAP2;
+		explode shell type	BITMAPONLY | BITMAP3;
+		explode panela type	BITMAPONLY | BITMAP4;
+		explode panelb type	BITMAPONLY | BITMAP5;
+		explode neck type	BITMAPONLY | BITMAP1;
+		explode nano type	BITMAPONLY | BITMAP2;
+		explode beam type	BITMAPONLY | BITMAP3;
+		explode lighta type	BITMAPONLY | BITMAP4;
+		explode lightb type	BITMAPONLY | BITMAP5;
+		explode lightc type	BITMAPONLY | BITMAP1;
+		explode lightd type	BITMAPONLY | BITMAP2;
+		return( 0 );
+		}
+
+	if (severity <= 50)
+		{
+		corpsetype = 2;
+		explode base type	SHATTER | BITMAP1;
+		explode pad type	BITMAPONLY | BITMAP2;
+		explode shell type	FALL | BITMAP3;
+		explode panela type	FALL | BITMAP4;
+		explode panelb type	FALL | BITMAP5;
+		explode neck type	FALL | BITMAP1;
+		explode nano type	BITMAPONLY | BITMAP2;
+		explode beam type	FALL | BITMAP3;
+		explode lighta type	FALL | BITMAP4;
+		explode lightb type	FALL | BITMAP5;
+		explode lightc type	FALL | BITMAP1;
+		explode lightd type	FALL | BITMAP2;
+		return( 0 );
+		}
+
+	if (severity <= 99)
+		{
+		corpsetype = 3;
+		explode base type	SHATTER | BITMAP1;
+		explode pad type	BITMAPONLY | BITMAP2;
+		explode shell type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode panela type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		explode panelb type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+		explode neck type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		explode nano type	BITMAPONLY | BITMAP2;
+		explode beam type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode lighta type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		explode lightb type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+		explode lightc type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		explode lightd type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		return( 0 );
+		}
+
+	corpsetype = 3;
+	explode base type	SHATTER | EXPLODE_ON_HIT | BITMAP1;
+	explode pad type	BITMAPONLY | BITMAP2;
+	explode shell type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+	explode panela type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+	explode panelb type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+	explode neck type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+	explode nano type	BITMAPONLY | BITMAP2;
+	explode beam type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+	explode lighta type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+	explode lightb type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+	explode lightc type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+	explode lightd type	FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	}

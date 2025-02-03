@@ -1,0 +1,62 @@
+[Liquid]
+	{
+	ID=177;
+	Name=Liquid Plasma Shot;
+	RenderType=1;
+	LineOfSight=1;
+	Turret=1;
+
+	Range=200;
+	ReloadTime=.973;
+	WeaponTimer=1;
+	WeaponVelocity=190;
+	AreaOfEffect=8;
+	SoundStart=LiquidFire;
+	SoundHit=LiquidHit;
+	SoundWater=SplsSml;
+	Model=LRang;
+	ExplosionArt=Explode5;
+	WaterExplosionGAF=FX;
+	WaterExplosionart=H2O;
+	LavaExplosionGAF=FX;
+	LavaExplosionArt=LavaSplash;
+
+	[DAMAGE]
+		{
+		Default=51;
+		}
+	}
+
+[RLiquid]
+	{
+	ID=217;
+	Name=Rapid Fire Liquid Plasma Shot;
+	RenderType=1;
+	LineOfSight=1;
+	Turret=1;
+
+	Range=303;
+	ReloadTime=1.27;
+	WeaponTimer=2;
+	WeaponVelocity=190;
+	AreaOfEffect=10;
+	EnergyPerShot=1;
+	SoundStart=RapidFire;
+	SoundHit=LiquidHit;
+	SoundWater=SplsSml;
+	Model=LRang;
+	Burst=2;
+	BurstRate=.1;
+	ExplosionArt=Explode5;
+	WaterExplosionGAF=FX;
+	WaterExplosionart=H2O;
+	LavaExplosionGAF=FX;
+	LavaExplosionArt=LavaSplash;
+
+	[DAMAGE]
+		{
+		Default=64;
+		}
+	}
+
+// Copyright 1998 "sWs" -skunkWorks- Ninjato, Shawne & "TADD" - Blackthorn;

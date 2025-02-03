@@ -1,0 +1,142 @@
+\     \ \_\     \ \_\	   \
+ :-----\/  \-----\/  \------:
+ :      |  |      |  |      :
+ :  ____|__|      |__|____  :
+ : /   __  \      /   __  \ :
+ : |  | |\_/      |  |  \_/ :
+ : |  \_|__|      |  \____  :
+ : \____   \  /\  \____   \ :
+ :  _   \  |_/  \_|_ | \  | :
+ : / \__|  |  /\  / \|_|  | :
+\: \_______/_/  \_\_______/ :
+ :--------skunkWorks--------:
+
+-----------------------------------------------
+The Arm Bio-Armored Clone (Cloakable BodyGuards)
+-----------------------------------------------
+Level 1 Clones
+Unit Death Wepon ID: 239
+
+Bio Lab
+-------
+Built by: Arm Commander (ARMCOM)
+	  4th Menu, Bottom/Left Button (Menu 5, Button 4)
+
+Unit Energy Cost: 756
+Unit Metal Cost: 470
+Unit Hit Points: 1234
+Unit Build Time: 4004
+
+BodyGuard
+---------
+Built by: Arm Bio Lab (armBlab)
+	  1st Menu, Top/Right Button (Menu 2, Button 1)
+
+Unit Energy Cost: 817
+Unit Metal Cost: 49
+Unit Hit Points: 202
+Unit Build Time: 1301
+
+Specials: Cloak.
+Energy Cost While Cloacked: 5 - 30
+
+Features:
+Bloody Corpse
+
+Medic
+-----
+Built by: Arm Bio Lab (armBlab)
+	  1st Menu, Middle/Left Button (Menu 2, Button 2)
+
+Unit Energy Cost: 3801
+Unit Metal Cost: 111
+Unit Hit Points: 281
+Unit Build Time: 2489
+
+Specials: Repair, Aquatic, Reclaim, All Terrain & Fast Regeneration.
+
+Harvester
+---------
+Built by: Arm Bio Lab (armBlab)
+          1st Menu, Top/Right Button (Menu 2, Button 0)
+
+Unit Energy Cost: 1105
+Unit Metal Cost: 57
+Unit Hit Points: 172
+Unit Build Time: 1966
+
+Specials: Cloak & Reclaim.
+Energy Cost While Cloacked: 10 - 30
+
+Insector
+--------
+Built by: Arm Bio Lab (armBlab)
+	  1st Menu, Middle/Right Button (Menu 2, Button 3)
+
+Unit Energy Cost: 1000
+Unit Metal Cost: 20
+Unit Hit Points: 100
+Unit Build Time: 1200
+
+Specials: Aquatic, All Terrain.
+
+
+Story:
+   Size doesn't matter!  The microNaught is a small but effective clone who is strapped into
+the chassis of a cold fusion battle suit. Easy to build and nasty in numbers....especially since
+the suit has cloaking capabilities. ARM likes the idea of small, cheap, and effective units!
+The Insector uses an insect brain, wired to a micro neural net, mounted in a cold fusion
+mechanical insectoid chassis. With the insect's unpredictable tactics, it becomes almost more
+effective than CPU brains. It's thoughts are primitive, but to the point... kill Core.
+
+
+- Copyright by Shawne -
+
+//----------------------------------------------------------------------------------------------;
+//												;
+//  		You need Patch 3.0 to be able to use this unit!					;
+//  Get it at the official Cavedog TA site (http://www.totalannihialtion.com/)			;
+//												;
+//		  Special thanx to: http://www.annihilated.com/					;
+//			     MANU of DCS for Cobbler						;
+//		  Kinboat of Hot Lizard Software for 3DOBuilder					;
+//			     & Cavedog Entertainment						;
+//												;
+//	This unit was made by: sWs (skunkWorks), http://skunkworks.annihilated.org/		;
+//	 TADD (Total Annihilation Design Division), http://tadd.annihilated.org/		;
+//												;
+//  If you have any questions, ideas or suggestions please email: shawne@bulloch.com		;
+//												;
+//  		       Thank you for downloading this unit					;
+//	  	 This unit is a combined effort of sWs and TADD					;
+//												;
+// 		  PS: Please do not change this unit! Thank you!				;
+//												;
+//  		       --- Copyright 1998 by sWs/TADD ---					;
+//												;
+//												;
+//  Credits for the Arm Cloakable BodyGuards:							;
+//												;
+//  Unit:											;
+//  Model 		Ninjato(sWs)								;
+//  3D Animation	Ninjato(sWs)								;
+//  Graphics		Ninjato(sWs)								;
+//  Unit Parameter	Ninjato(sWs)								;
+//  Idea		Ninjato(sWs) & Blackthorn(TADD)						;
+//  Sounds		Ninjato(sWs) & Blackthorn(TADD)						;
+//												;
+//  Build Menu Picture	Blackthorn(TADD)							;
+//  GAF file		Ninjato(sWs) & Blackthorn(TADD)						;
+//												;
+//  Weapon:											;
+//  Model		Cavedog Entertainment							;
+//  Weapon Parameter	Cavedog Entertainment							;
+//  Idea		Ninjato(sWs) & Blackthorn(TADD)						;
+//  Sounds		Cavedog Entertainment							;
+//												;
+//  Story		Shawne(sWs)								;
+//												;
+//  Beta Testers: 	Ninjato, Iljalat & Shawne(sWs), Starfury7 & Blackthorn(TADD)		;
+// 			Liche(AF), TheBigZW(WG), Andrew(TotallyGA)				;
+//												;
+//----------------------------------------------------------------------------------------------;

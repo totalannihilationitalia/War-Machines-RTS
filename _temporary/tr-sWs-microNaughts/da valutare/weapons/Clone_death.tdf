@@ -1,0 +1,53 @@
+[Alien_Death]
+	{
+	ID=238;
+	Name=Alien Death;
+	RenderType=4;
+	Ballistic=1;
+	Turret=1;
+
+	ReloadTime=1;
+	Range=50;
+	Weaponvelocity=100;
+	AreaOfEffect=50;
+	SoundStart=MiniBoom;
+	SoundHit=AlienDeath;
+	SoundWater=AlienDeathWater;
+	ExplosionGAF=aliensplat;
+	ExplosionArt=alienblood_01_01;
+	WaterExplosionGAF=FX;
+	WaterExplosionart=H2O;
+
+	[DAMAGE]
+		{
+		Default=42;
+		}
+	}
+
+[Micro_Death]
+	{
+	ID=239;
+	Name=Micro Death;
+	RenderType=4;
+	Ballistic=1;
+	Turret=1;
+
+	ReloadTime=1;
+	Range=50;
+	WeaponVelocity=100;
+	AreaOfEffect=50;
+	SoundStart=MiniBoom;
+	SoundHit=McroDeath;
+	SoundWater=McroDeathWater;
+	ExplosionGAF=mcrosplat;
+	ExplosionArt=mcroblood_01_01;
+	WaterExplosionGAF=FX;
+	WaterExplosionart=H2O;
+
+	[DAMAGE]
+		{
+		Default=30;
+		}
+	}
+
+// Copyright 1998 "sWs" -skunkWorks- Ninjato, Shawne & "TADD" - Blackthorn;
