@@ -74,9 +74,9 @@ featuredefs = {
                metal = 148,
                damage = 20000,
                seqnamereclamate = "tree1reclamate",
---               collisionvolumeoffsets = ,
---               collisionvolumescales = ,
---               collisionvolumetype = ,
+	       collisionvolumeoffsets = "0.0 -1.5 1.2922744751",
+	       collisionvolumescales = "28 14.3981628418 30",
+	       collisionvolumetype = "Box",
                },  -- Close Dead Features
 },  --  Wreckage and heaps
 -----------------------------------------------------------
