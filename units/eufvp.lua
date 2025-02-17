@@ -5,15 +5,15 @@ return {
 --- UNITS FEATURES
 -----------------------------------------------------------
   eufvp = {
-               buildcostenergy = 1200,
-               buildcostmetal = 650,
+               buildcostenergy = 1853,
+               buildcostmetal = 743,
                builder = true,
                buildinggrounddecaldecayspeed= 0.01,
                buildinggrounddecalsizex= 11,
                buildinggrounddecalsizey = 11,
                buildinggrounddecaltype = "pavimentazione_euf.png",
                buildpic = "eufvp.png",
-               buildtime  = 6930,
+               buildtime  = 7192,
                canmove = true,
                canPatrol = true,
 --               canstop = 1,

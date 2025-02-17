@@ -12,7 +12,7 @@ return {
                builddistance = 170,
                builder = true,
                buildpic = "",
-               buildtime  = 5213,
+               buildtime  = 4066,
 	       canAttack = false,
                canGuard = true,
                canmove = true,
