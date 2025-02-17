@@ -15,7 +15,7 @@ return {
                buildpic = "stazione_radar_1.png",
                buildtime  = 1137,
                canAttack = false,
-               category = "OGGETTISTATICI",
+               category = "ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE OGGETTISTATICI",
                collisionvolumeoffsets = "0 20 0",
                collisionvolumescales = "60 50 150",
                collisionvolumetype = "Box",
