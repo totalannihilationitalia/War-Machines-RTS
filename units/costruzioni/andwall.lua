@@ -24,7 +24,7 @@ return {
                footprintx = 1,
                footprintz = 5,
                hidedamage = true,
-               isFeature= true,   --------------------------------------------- mettere sempre in true
+               isFeature= false,   --------------------------------------------- mettere sempre in true
 --               mass = 0 --definire massa,
                maxdamage = 1263,
                maxslope = 12,

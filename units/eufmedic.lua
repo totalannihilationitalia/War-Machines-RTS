@@ -9,7 +9,7 @@ return {
                brakerate  = 0.06,
                buildcostenergy = 3801,
                buildcostmetal = 111,
-               builddistance = 70,
+               builddistance = 200,
                builder = true,
                buildpic = "eufmedic.pcx",
                buildtime  = 2489,

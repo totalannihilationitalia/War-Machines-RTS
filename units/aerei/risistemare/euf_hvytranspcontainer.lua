@@ -2,6 +2,7 @@ return {
 	euf_hvytranspcontainer = {
 		acceleration = 0.06,
 		activatewhenbuilt = true,
+  	        airhoverfactor = 0, 		--add 18/02/2025 by molix
 		bankscale = 0.5,
 		bmcode = 1,
 		brakerate = 0.275,
