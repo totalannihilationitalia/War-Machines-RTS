@@ -24,7 +24,7 @@ return {
                --collisionvolumetype = "",
                corpse = "armpt_dead",
 --               defaultmissiontype = Standby,
-               description = "Scout Boat/Light Anti-Air",
+               description = "Scout Boat",
 --               firestandorders = 1,
                energymake = 0.2,
                energystorage = 0,
