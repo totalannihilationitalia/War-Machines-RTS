@@ -25,7 +25,7 @@ return {
 --               energystorage = 0,
 --               energyUse = 4,
                explodeas = "SMALL_BUILDINGEX",
-               footprintx = 2,
+               footprintx = 6,
                footprintz = 2,
                icontype = "building",
                idleautoheal = 0,
@@ -48,7 +48,7 @@ return {
                TEDClass = "SPECIAL", -- verificare se necessario
                turnrate = 0,
                workertime = 0,
-               YardMap= "oooo",
+               YardMap= "oooooooooooo",
 -----------------------------------------------------------
 --- Units wreckage and heaps
 -----------------------------------------------------------
