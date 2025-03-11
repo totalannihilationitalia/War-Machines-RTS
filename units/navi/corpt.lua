@@ -14,7 +14,7 @@ return {
 		collisionvolumetest = 1,
 		collisionvolumetype = "CylY",
 		corpse = "DEAD",
-		description = "Scout Boat/Light Anti-Air",
+		description = "Scout Boat",
 		energymake = 0.23000000417233,
 		energyuse = 0.23000000417233,
 		explodeas = "SMALL_UNITEX",
