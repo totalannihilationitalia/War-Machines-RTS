@@ -79,7 +79,7 @@ local valore_showenvironmental		-- ########################################### s
 local valore_antialiasing			-- ########################################### sostituire
 local valore_watertype				-- ########################################### sostituire
 local valore_showdps					-- ########################################### sostituire
-local valore_mapborders				-- ########################################### sostituire
+local valore_showspawnpos				
 -- icona principale del menu
 local larghezza_icona_graphicsmenu			= 40
 local altezza_icona_graphicsmenu			= 40
@@ -177,7 +177,7 @@ local function check_options()
   valore_antialiasing = Spring.GetConfigInt("MSAALevel", 0) 			-- valori da 0 a 32 MAX--################## definire configurazione da widget
   valore_watertype = Spring.GetConfigInt("Water", 1) 					-- Defines the type of water rendering. Can be set in game. Options are: 0 = Basic water, 1 = Reflective water, 2 = Reflective and Refractive water, 3 = Dynamic water, 4 = Bumpmapped water--################## definire configurazione da widget
   valore_showdps = Spring.GetConfigInt("VSync", 0)   						-- valori 1 o 0 (default) abilita o disabilita standard VSynk--################## definire configurazione da widget
-  valore_mapborders = Spring.GetConfigInt("MapBorder", 1)   			-- valori 1 (default) o 0 abilita o disabilita bordi della mappa--################## definire configurazione da widget
+  valore_showspawnpos = Spring.GetConfigInt("MapBorder", 1)   			-- valori 1 (default) o 0 abilita o disabilita bordi della mappa--################## definire configurazione da widget
 end
 
 --------------------------------------
@@ -468,16 +468,16 @@ if visualsmenu_attivo and not Spring.IsGUIHidden() then
 					Spring.SetConfigInt("GrassDetail", 1)		
 				end
 				return true
-				-- Show map borders A SINISTRA RIGA 8 icona "ON/OFF"
+				-- Show spawn position A SINISTRA RIGA 8 icona "ON/OFF"
 			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				valore_mapborders = valore_mapborders + 1
-				if valore_mapborders > 1 then
-					valore_mapborders = 0
+				valore_showspawnpos = valore_showspawnpos + 1
+				if valore_showspawnpos > 1 then
+					valore_showspawnpos = 0
 				end
-				if valore_mapborders == 0 then
+				if valore_showspawnpos == 0 then
 					Spring.SendCommands("MapBorder 0")
 					Spring.SetConfigInt("MapBorder", 0)	
-				elseif valore_mapborders == 1 then
+				elseif valore_showspawnpos == 1 then
 					Spring.SendCommands("MapBorder 1")
 					Spring.SetConfigInt("MapBorder", 1)		
 				end
@@ -944,17 +944,17 @@ if visualsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 
--- voce sx mapborders
+-- voce sx show spawn position
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Map borders", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga8 ,12,'ds')
+	font_generale:Print("Show initial spawn position", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga8 ,12,'ds')
 	font_generale:End()
 	-- icona	
 	gl.Color(1,1,1,1)
-	if valore_mapborders == 0 then
+	if valore_showspawnpos == 0 then
 	gl.Texture(icona_off)	
-	elseif valore_mapborders == 1 then
+	elseif valore_showspawnpos == 1 then
 	gl.Texture(icona_on)		
 	end	
 	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi+altezza_icona_opzioni)
