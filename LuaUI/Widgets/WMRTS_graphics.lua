@@ -38,6 +38,7 @@ to do list
 -- rev 1 by molix -- 15/01/2025 -- adding mapBorder, Vsync options. Simplified the code
 -- rev 2 by molix -- 27/01/2025 -- add back shaderd to this menu
 -- rev 3 by molix -- 31/01/2025 -- add back and close buttons code
+-- rev 4 by molix -- 31/03/2025 -- add fullscreen variable
 
 
 -- definizione dei comandi
@@ -86,6 +87,7 @@ local valore_antialiasing
 local valore_watertype
 local valore_vsynk
 local valore_mapborders
+local valore_fullscreen														-- rev4
 -- icona principale del menu
 local larghezza_icona_graphicsmenu			= 40
 local altezza_icona_graphicsmenu			= 40
