@@ -79,7 +79,6 @@ local valore_LUPS
 local valore_bloom_shader
 local valore_show_projeclight
 local valore_xray
-local valore_hardwarecur
 local valore_blinking				
 local valore_shadows
 local valore_showenvironmental
