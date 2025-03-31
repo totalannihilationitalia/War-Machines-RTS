@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 --
---  file:    WMRTS_graphics.lua
+--  file:    WMRTS_visuals.lua
 --  brief:   War Machines RTS options mainmenu
 --  author:  Dario Molinaroli ( Molixx81 )
 --
