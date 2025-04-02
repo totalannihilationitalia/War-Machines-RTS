@@ -247,7 +247,8 @@ if mainmenu_attivo and not Spring.IsGUIHidden() then
 				return true
 				-- visualsetting				
 			elseif ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_visuals) and (y <= Pos_y_mainmenu+Posy_visuals + altezza_menu_buttons)) then
-				Echo("test visual menu")
+				Spring.SendCommands("close_WMRTS_menu")
+				Spring.SendCommands("open_WMRTS_visuals")
 				return true		
 				-- sndsetting					
 				elseif ((x >= Pos_x_mainmenu) and (x <= Pos_x_mainmenu + larghezza_mainmenu) and (y >= Pos_y_mainmenu+Posy_snd) and (y <= Pos_y_mainmenu+Posy_snd + altezza_menu_buttons)) then
