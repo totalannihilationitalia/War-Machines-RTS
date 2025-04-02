@@ -59,7 +59,7 @@ return {
 --- Units wreckage and heaps
 -----------------------------------------------------------
 featuredefs = {
-  andbrskr_dead = {
+  dead = {
                world = "All Worlds",
                description = "Berseker Wreckage",
                category = "arm_corpses",
@@ -79,7 +79,7 @@ featuredefs = {
 				collisionvolumescales = "28 14.3981628418 30",
 				collisionvolumetype = "Box",
                },  -- Close Dead Features
-  andbrskr_heap = {
+  heap = {
                world = "All Worlds",
                description = "Berseker Wreckage",
                category = "heaps",

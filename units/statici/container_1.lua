@@ -47,6 +47,7 @@ return {
                name = "Alien",
                noAutoFire = false,
                objectname = "container_1.s3o",
+	       pushResistant = true,
                radardistance = 50,
                seismicsignature = 0,
                selfdestructas = "BIG_UNIT",

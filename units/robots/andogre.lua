@@ -79,9 +79,9 @@ featuredefs = {
                damage = 1982,
                reclaimable = true,
                seqnamereclamate = "tree1reclamate",
---               collisionvolumeoffsets = ,
---               collisionvolumescales = ,
---               collisionvolumetype = ,
+				collisionvolumeoffsets = "0.0 -1.2425585791 1.2922744751",
+				collisionvolumescales = "50.0 25 32.5845489502",
+				collisionvolumetype = "Box",
                },  -- Close Dead Features
   andogre_heap = {
                world = "All Worlds",
@@ -98,6 +98,8 @@ featuredefs = {
                reclaimable = true,
                featurereclamate = "smudge01",
                seqnamereclamate = "tree1reclamate",
+               collisionvolumescales = "55.0 4.0 6.0",
+               collisionvolumetype = "cylY",
                },  -- Close heap
 },  --  Wreckage and heaps
 -----------------------------------------------------------
