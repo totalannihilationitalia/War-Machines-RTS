@@ -5,7 +5,7 @@ return {
 --- UNITS FEATURES
 -----------------------------------------------------------
   euf_fence_gate= {
-               activatewhenbuilt = true,
+               activatewhenbuilt = false,
 --               buildangle = 0,
                buildcostenergy = 4432,
                buildcostmetal = 980,
@@ -14,7 +14,7 @@ return {
                buildtime  = 5705,
                category = "ARM NOWEAPON NOTAIR NOTSUB NOTSHIP SURFACE",
 --	       useFootPrintCollisionVolume = true,
---	       usePieceCollisionVolumes = true,
+	       usePieceCollisionVolumes = true,
 --               collisionvolumeoffsets = "0 -10 0",
 --               collisionvolumescales = "29 10 160", -- larghezza altezza lunghezza 
 --              collisionvolumetype = "Box",
@@ -39,9 +39,10 @@ return {
                selfdestructas = "LARGE_BUILDING",
                sightdistance = 100,
 --               soundcategory= "ARM_ESTOR",
+--               script = "Gate.lua",
                TEDClass = "PLANT", -- verificare se necessario
                workertime = 0,
-               YardMap= "ooooooooooccccccccccccccccccccccccccccccoooooooooo",
+               YardMap= "ooooo ooooo ccccc ccccc ccccc ccccc ccccc ccccc ooooo ooooo",
 -----------------------------------------------------------
 --- NO EFFECTS
 -----------------------------------------------------------
