@@ -775,7 +775,7 @@ if visualsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	-- testo
 	font_intestazione:SetTextColor(1, 1, 1, 1)
 	font_intestazione:Begin()
-	font_intestazione:Print("Grapichs options", Pos_x_mainmenu+70, Pos_y_mainmenu + 220+25,14,'ds')
+	font_intestazione:Print("Visual options", Pos_x_mainmenu+70, Pos_y_mainmenu + 220+25,14,'ds')
 	font_intestazione:End()	
 	
 -- icona principale del menu
@@ -836,7 +836,7 @@ if visualsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Show grass on maps", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga6 ,12,'ds')
+	font_generale:Print("Show ETA bars", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga6 ,12,'ds')
 	font_generale:End()
 	-- icona	
 	gl.Color(1,1,1,1)
@@ -848,7 +848,7 @@ if visualsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	gl.TexRect(	Pos_x_mainmenu+ margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 	
--- voce dx bloom shader cursor
+-- voce dx Show vertical lines
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
@@ -864,11 +864,11 @@ if visualsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 	
--- voce sx LUPS
+-- voce sx Camera shake during explosions
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Camera shake effect", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga5 ,12,'ds')
+	font_generale:Print("Camera shake during explosions", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga5 ,12,'ds')
 	font_generale:End()
 	-- icona	
 	gl.Color(1,1,1,1)
@@ -884,7 +884,7 @@ if visualsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Show teammates cursor", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga4,12,'ds')
+	font_generale:Print("Show ingame alerts", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga4,12,'ds')
 	font_generale:End()		
 	-- icona
 	gl.Color(1,1,1,1)
@@ -896,11 +896,11 @@ if visualsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 	
--- voce sx ground projectiles
+-- voce sx Multiplayer: Show teammates selected units
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Show teammates selected units", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga4 ,12,'ds')
+	font_generale:Print("Multiplayer: Show teammates selected units", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga4 ,12,'ds')
 	font_generale:End()
 	-- icona	
 	gl.Color(1,1,1,1)
@@ -912,11 +912,11 @@ if visualsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)
 	gl.Texture(false)	-- fine texture		
 
--- voce dx Blinking units
+-- voce dx Show game speed
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Blinking units", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga8,12,'ds')
+	font_generale:Print("Show game speed", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga8,12,'ds')
 	font_generale:End()		
 	-- icona
 	gl.Color(1,1,1,1)
@@ -964,7 +964,7 @@ if visualsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Map border", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga3 ,12,'ds')
+	font_generale:Print("Show map borders", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga3 ,12,'ds')
 	font_generale:End()
 	-- icona	
 	gl.Color(1,1,1,1)
@@ -976,11 +976,11 @@ if visualsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)
 	gl.Texture(false)	-- fine texture		
 	
--- voce dx environments
+-- voce dx Edge camera move (require restart)
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Show environment effects (snow, rain, etc)", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga2,12,'ds')
+	font_generale:Print("Edge camera move -require restart-", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga2,12,'ds')
 	font_generale:End()		
 	-- icona
 	gl.Color(1,1,1,1)
@@ -992,16 +992,16 @@ if visualsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture		
 	
--- voce sx shadows
+-- voce sx Commander name tag
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
 		if valore_shadows == 0 then
-			font_generale:Print("Shadows: OFF", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga2 ,12,'ds')	
+			font_generale:Print("Commander name tag: OFF", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga2 ,12,'ds')	
 		elseif valore_shadows == 1 then
-			font_generale:Print("Shadows: Full (Units + Terrains)", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga2 ,12,'ds')	
+			font_generale:Print("Commander name tag: Small", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga2 ,12,'ds')	
 		elseif valore_shadows == 2 then		
-			font_generale:Print("Shadows: Only units", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga2 ,12,'ds')			
+			font_generale:Print("Commander name tag: Big", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga2 ,12,'ds')			
 		end		
 	
 	font_generale:End()
@@ -1016,20 +1016,20 @@ if visualsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi,Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)
 	gl.Texture(false)	-- fine texture		
 
--- voce dx Water rendering
+-- voce dx Multiplayer: Show teammates cursoror / Show teammater cursor with name
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
 		if valore_watertype == 0 then
-			font_generale:Print("Water render: Basic", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga1,12,'ds')
+			font_generale:Print("Multiplayer: don't show teammates cursoror", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga1,12,'ds')
 		elseif valore_watertype == 1 then
-			font_generale:Print("Water render: Reflective",  Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga1,12,'ds')
+			font_generale:Print("Multiplayer: show teammates cursor",  Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga1,12,'ds')
 		elseif valore_watertype == 2 then		
-			font_generale:Print("Water render: Reflective and Refractive",  Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga1,12,'ds')	
-		elseif valore_watertype == 3 then		
-			font_generale:Print("Water render:  Dynamic water",  Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga1,12,'ds')
-		elseif valore_watertype == 4 then		
-			font_generale:Print("Water render:  Bumpmapped water",  Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga1,12,'ds')
+			font_generale:Print("Multiplayer: Show teammates cursor with name",  Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga1,12,'ds')	
+		elseif valore_watertype == 3 then	 -- ############################################################ eliminare!!!!!!	
+			font_generale:Print("eliminare",  Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga1,12,'ds')  -- ############################################################ eliminare!!!!!!
+		elseif valore_watertype == 4 then	 -- ############################################################ eliminare!!!!!!	
+			font_generale:Print("eliminare",  Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga1,12,'ds')  -- ############################################################ eliminare!!!!!!
 		end			
 	font_generale:End()		
 	-- icona down
@@ -1043,11 +1043,11 @@ if visualsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi,Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi,Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)	
 	gl.Texture(false)	-- fine texture			
 	
--- voce sx antialiasing  
+-- voce sx camera mode  
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print(("Antialiasing level: "..valore_antialiasing), Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga1 ,12,'ds')
+	font_generale:Print(("Camera mode: "..valore_antialiasing), Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga1 ,12,'ds')
 	font_generale:End()
 	-- icona down
 	gl.Color(1,1,1,1)
