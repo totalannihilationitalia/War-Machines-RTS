@@ -78,9 +78,10 @@ return {
 		[11] = "eufpathsmall",
 		[12] = "eufap",
 		[13] = "eufavp",
-		[14] = "eufblab",
+		[14] = "eufblab", -------------------- non funziona sistemare ################
 		[15] = "armarch",
 		[16] = "eufadvmetex",
+		[17] = "eufvp",
                },
 
 -----------------------------------------------------------
