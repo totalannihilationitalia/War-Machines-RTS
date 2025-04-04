@@ -102,8 +102,15 @@ return {
 				seqnamereclamate = "TREE1RECLAMATE",
 				world = "All Worlds",
 			},
-		},
-
+		}, --  Wreckage and heaps
+-----------------------------------------------------------
+--- EFFECTS
+-----------------------------------------------------------
+sfxtypes = {
+  explosiongenerators = {
+	       [1]="custom:Nano",
+               }, -- close effects list
+}, -- close section sfxtypes
 -----------------------------------
 --- INSERT BUILDLIST
 -----------------------------------

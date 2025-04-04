@@ -8,7 +8,7 @@ piece  ground, pelvis, rthigh, rleg, rfoot, lthigh, lleg, lfoot,
        rnano, ant;
 
 static-var  Static_Var_1, bMoving, Static_Var_3, Static_Var_4, spray,
-            statechg_DesiredState, statechg_StateChanging;
+            statechg_DesiredState, statechg_StateChanging, Static_Var_5;
 
 
 SmokeUnit(healthpercent, sleeptime, smoketype)
@@ -36,22 +36,31 @@ SmokeUnit(healthpercent, sleeptime, smoketype)
 		}
 		sleep sleeptime;
 	}
-	return (0);
-	// Build by COBBLER Ver4.0 Copyright @1998 DIGITAL CONCEPT SOFTWARE (MANU@inext.fr) / http://www.annihilationcenter.com/DCS/  
 }
+
+Build()
+{
+	while( Static_Var_5 )
+	{
+		emit-sfx 1024 from lnano;
+		emit-sfx 1024 from rnano;
+		sleep 100;
+	}
+}
+
 
 walk()
 {
 	if( TRUE )
 	{
-		move pelvis to y-axis [-0.539996] now;
+		move pelvis to y-axis [-0.539990] now;
 		turn rthigh to x-axis <10.692308> now;
 		turn lthigh to x-axis <-53.489011> now;
 		turn torso to y-axis <5.747253> now;
-		turn luparm to x-axis <38.675824> now;
+		turn luparm to x-axis <38.670330> now;
 		turn ruparm to x-axis <-18.093407> now;
-		turn rloarm to x-axis <48.961538> now;
-		turn lloarm to x-axis <48.961538> now;
+		turn rloarm to x-axis <48.956044> now;
+		turn lloarm to x-axis <48.956044> now;
 		turn lleg to x-axis <53.489011> now;
 		turn rleg to x-axis <53.489011> now;
 		turn rfoot to x-axis <-37.846154> now;
@@ -61,15 +70,15 @@ walk()
 	{
 		move pelvis to y-axis [-0.300000] now;
 		turn rthigh to x-axis <-10.280220> now;
-		turn lthigh to x-axis <-41.554945> now;
-		turn torso to y-axis <3.285714> now;
+		turn lthigh to x-axis <-41.549451> now;
+		turn torso to y-axis <3.280220> now;
 		turn luparm to x-axis <32.093407> now;
-		turn ruparm to x-axis <-11.098901> now;
-		turn rloarm to x-axis <48.961538> now;
-		turn lloarm to x-axis <48.961538> now;
+		turn ruparm to x-axis <-11.093407> now;
+		turn rloarm to x-axis <48.956044> now;
+		turn lloarm to x-axis <48.956044> now;
 		turn lleg to x-axis <41.967033> now;
-		turn rleg to x-axis <81.884615> now;
-		turn rfoot to x-axis <-31.263736> now;
+		turn rleg to x-axis <81.879121> now;
+		turn rfoot to x-axis <-31.258242> now;
 		sleep 70;
 	}
 	if( TRUE )
@@ -78,26 +87,26 @@ walk()
 		turn rthigh to x-axis <-18.093407> now;
 		turn lthigh to x-axis <-24.681319> now;
 		turn torso to y-axis <0.000000> now;
-		turn luparm to x-axis <27.153846> now;
+		turn luparm to x-axis <27.148352> now;
 		turn ruparm to x-axis <-7.401099> now;
 		turn lleg to x-axis <24.681319> now;
-		turn rleg to x-axis <85.587912> now;
-		turn rfoot to x-axis <-23.032967> now;
+		turn rleg to x-axis <85.582418> now;
+		turn rfoot to x-axis <-23.027473> now;
 		sleep 50;
 	}
 	if( TRUE )
 	{
 		move pelvis to y-axis [0.000000] now;
 		turn rthigh to x-axis <-42.379121> now;
-		turn lthigh to x-axis <5.340659> now;
-		turn torso to y-axis <-3.285714> now;
-		turn luparm to x-axis <8.219780> now;
+		turn lthigh to x-axis <5.335165> now;
+		turn torso to y-axis <-3.280220> now;
+		turn luparm to x-axis <8.214286> now;
 		turn ruparm to x-axis <9.027473> now;
-		turn rloarm to x-axis <48.961538> now;
-		turn lloarm to x-axis <48.961538> now;
-		turn lleg to x-axis <6.576923> now;
+		turn rloarm to x-axis <48.956044> now;
+		turn lloarm to x-axis <48.956044> now;
+		turn lleg to x-axis <6.571429> now;
 		turn lfoot to x-axis <-9.027473> now;
-		turn rleg to x-axis <104.521978> now;
+		turn rleg to x-axis <104.516484> now;
 		turn rfoot to x-axis <0.000000> now;
 		sleep 40;
 	}
@@ -107,9 +116,9 @@ walk()
 		turn rthigh to x-axis <-69.945055> now;
 		turn lthigh to x-axis <14.802198> now;
 		turn torso to y-axis <-6.159341> now;
-		turn luparm to x-axis <-3.697802> now;
+		turn luparm to x-axis <-3.692308> now;
 		turn ruparm to x-axis <17.681319> now;
-		turn lleg to x-axis <15.219780> now;
+		turn lleg to x-axis <15.214286> now;
 		turn lfoot to x-axis <-25.093407> now;
 		turn rleg to x-axis <107.401099> now;
 		sleep 50;
@@ -117,9 +126,9 @@ walk()
 	if( TRUE )
 	{
 		move pelvis to y-axis [-0.400000] now;
-		turn rthigh to x-axis <-75.296703> now;
-		turn lthigh to x-axis <20.142857> now;
-		turn torso to y-axis <-8.219780> now;
+		turn rthigh to x-axis <-75.291209> now;
+		turn lthigh to x-axis <20.137363> now;
+		turn torso to y-axis <-8.214286> now;
 		turn luparm to x-axis <-10.280220> now;
 		turn ruparm to x-axis <25.093407> now;
 		turn lleg to x-axis <26.324176> now;
@@ -131,14 +140,14 @@ walk()
 	{
 		move pelvis to y-axis [-0.550000] now;
 		turn rthigh to x-axis <-56.780220> now;
-		turn lthigh to x-axis <24.263736> now;
+		turn lthigh to x-axis <24.258242> now;
 		turn torso to y-axis <-6.159341> now;
-		turn luparm to x-axis <-23.862637> now;
-		turn ruparm to x-axis <31.263736> now;
-		turn rloarm to x-axis <48.961538> now;
-		turn lloarm to x-axis <48.961538> now;
-		turn lleg to x-axis <38.675824> now;
-		turn lfoot to x-axis <-38.675824> now;
+		turn luparm to x-axis <-23.857143> now;
+		turn ruparm to x-axis <31.258242> now;
+		turn rloarm to x-axis <48.956044> now;
+		turn lloarm to x-axis <48.956044> now;
+		turn lleg to x-axis <38.670330> now;
+		turn lfoot to x-axis <-38.670330> now;
 		turn rleg to x-axis <56.780220> now;
 		sleep 90;
 	}
@@ -146,26 +155,26 @@ walk()
 	{
 		move pelvis to y-axis [-0.300000] now;
 		turn rthigh to x-axis <-44.846154> now;
-		turn lthigh to x-axis <5.340659> now;
-		turn torso to y-axis <-3.285714> now;
+		turn lthigh to x-axis <5.335165> now;
+		turn torso to y-axis <-3.280220> now;
 		turn luparm to x-axis <-16.038462> now;
-		turn ruparm to x-axis <19.730769> now;
+		turn ruparm to x-axis <19.725275> now;
 		turn lleg to x-axis <67.071429> now;
-		turn rfoot to x-axis <-12.329670> now;
+		turn rfoot to x-axis <-12.324176> now;
 		sleep 70;
 	}
 	if( TRUE )
 	{
-		move pelvis to y-axis [-0.139996] now;
-		turn rthigh to x-axis <-22.620879> now;
-		turn lthigh to x-axis <-12.741758> now;
+		move pelvis to y-axis [-0.139990] now;
+		turn rthigh to x-axis <-22.615385> now;
+		turn lthigh to x-axis <-12.736264> now;
 		turn torso to y-axis <0.000000> now;
 		turn luparm to x-axis <-1.637363> now;
 		turn ruparm to x-axis <10.280220> now;
-		turn lleg to x-axis <79.417582> now;
-		turn lfoot to x-axis <-27.972527> now;
+		turn lleg to x-axis <79.412088> now;
+		turn lfoot to x-axis <-27.967033> now;
 		turn rleg to x-axis <37.027473> now;
-		turn rfoot to x-axis <-15.631868> now;
+		turn rfoot to x-axis <-15.626374> now;
 		sleep 50;
 	}
 	if( TRUE )
@@ -173,20 +182,20 @@ walk()
 		move pelvis to y-axis [0.000000] now;
 		turn rthigh to x-axis <2.868132> now;
 		turn lthigh to x-axis <-42.379121> now;
-		turn torso to y-axis <3.285714> now;
-		turn luparm to x-axis <11.510989> now;
+		turn torso to y-axis <3.280220> now;
+		turn luparm to x-axis <11.505495> now;
 		turn ruparm to x-axis <1.225275> now;
-		turn rloarm to x-axis <48.961538> now;
-		turn lloarm to x-axis <48.961538> now;
-		turn lleg to x-axis <90.109890> now;
-		turn lfoot to x-axis <-15.219780> now;
-		turn rleg to x-axis <6.576923> now;
-		turn rfoot to x-axis <-9.439560> now;
+		turn rloarm to x-axis <48.956044> now;
+		turn lloarm to x-axis <48.956044> now;
+		turn lleg to x-axis <90.104396> now;
+		turn lfoot to x-axis <-15.214286> now;
+		turn rleg to x-axis <6.571429> now;
+		turn rfoot to x-axis <-9.434066> now;
 		sleep 40;
 	}
 	if( TRUE )
 	{
-		move pelvis to y-axis [-0.189996] now;
+		move pelvis to y-axis [-0.189990] now;
 		turn rthigh to x-axis <13.159341> now;
 		turn lthigh to x-axis <-57.192308> now;
 		turn torso to y-axis <6.159341> now;
@@ -196,11 +205,11 @@ walk()
 		sleep 50;
 	}
 	move pelvis to y-axis [-0.400000] now;
-	turn rthigh to x-axis <16.450549> now;
+	turn rthigh to x-axis <16.445055> now;
 	turn lthigh to x-axis <-67.071429> now;
-	turn torso to y-axis <8.219780> now;
+	turn torso to y-axis <8.214286> now;
 	turn luparm to x-axis <25.093407> now;
-	turn ruparm to x-axis <-12.329670> now;
+	turn ruparm to x-axis <-12.324176> now;
 	turn lleg to x-axis <55.549451> now;
 	turn lfoot to x-axis <-2.868132> now;
 	turn rleg to x-axis <24.681319> now;
@@ -212,7 +221,7 @@ walklegs()
 {
 	if( TRUE )
 	{
-		move pelvis to y-axis [-0.539996] now;
+		move pelvis to y-axis [-0.539990] now;
 		turn rthigh to x-axis <10.692308> now;
 		turn lthigh to x-axis <-53.489011> now;
 		turn lleg to x-axis <53.489011> now;
@@ -224,10 +233,10 @@ walklegs()
 	{
 		move pelvis to y-axis [-0.300000] now;
 		turn rthigh to x-axis <-10.280220> now;
-		turn lthigh to x-axis <-41.554945> now;
+		turn lthigh to x-axis <-41.549451> now;
 		turn lleg to x-axis <41.967033> now;
-		turn rleg to x-axis <81.884615> now;
-		turn rfoot to x-axis <-31.263736> now;
+		turn rleg to x-axis <81.879121> now;
+		turn rfoot to x-axis <-31.258242> now;
 		sleep 70;
 	}
 	if( TRUE )
@@ -236,18 +245,18 @@ walklegs()
 		turn rthigh to x-axis <-18.093407> now;
 		turn lthigh to x-axis <-24.681319> now;
 		turn lleg to x-axis <24.681319> now;
-		turn rleg to x-axis <85.587912> now;
-		turn rfoot to x-axis <-23.032967> now;
+		turn rleg to x-axis <85.582418> now;
+		turn rfoot to x-axis <-23.027473> now;
 		sleep 50;
 	}
 	if( TRUE )
 	{
 		move pelvis to y-axis [0.000000] now;
 		turn rthigh to x-axis <-42.379121> now;
-		turn lthigh to x-axis <5.340659> now;
-		turn lleg to x-axis <6.576923> now;
+		turn lthigh to x-axis <5.335165> now;
+		turn lleg to x-axis <6.571429> now;
 		turn lfoot to x-axis <-9.027473> now;
-		turn rleg to x-axis <104.521978> now;
+		turn rleg to x-axis <104.516484> now;
 		turn rfoot to x-axis <0.000000> now;
 		sleep 40;
 	}
@@ -256,7 +265,7 @@ walklegs()
 		move pelvis to y-axis [-0.200000] now;
 		turn rthigh to x-axis <-69.945055> now;
 		turn lthigh to x-axis <14.802198> now;
-		turn lleg to x-axis <15.219780> now;
+		turn lleg to x-axis <15.214286> now;
 		turn lfoot to x-axis <-25.093407> now;
 		turn rleg to x-axis <107.401099> now;
 		sleep 50;
@@ -264,8 +273,8 @@ walklegs()
 	if( TRUE )
 	{
 		move pelvis to y-axis [-0.400000] now;
-		turn rthigh to x-axis <-75.296703> now;
-		turn lthigh to x-axis <20.142857> now;
+		turn rthigh to x-axis <-75.291209> now;
+		turn lthigh to x-axis <20.137363> now;
 		turn lleg to x-axis <26.324176> now;
 		turn lfoot to x-axis <-33.725275> now;
 		turn rleg to x-axis <64.604396> now;
@@ -275,9 +284,9 @@ walklegs()
 	{
 		move pelvis to y-axis [-0.550000] now;
 		turn rthigh to x-axis <-56.780220> now;
-		turn lthigh to x-axis <24.263736> now;
-		turn lleg to x-axis <38.675824> now;
-		turn lfoot to x-axis <-38.675824> now;
+		turn lthigh to x-axis <24.258242> now;
+		turn lleg to x-axis <38.670330> now;
+		turn lfoot to x-axis <-38.670330> now;
 		turn rleg to x-axis <56.780220> now;
 		sleep 90;
 	}
@@ -285,20 +294,20 @@ walklegs()
 	{
 		move pelvis to y-axis [-0.300000] now;
 		turn rthigh to x-axis <-44.846154> now;
-		turn lthigh to x-axis <5.340659> now;
+		turn lthigh to x-axis <5.335165> now;
 		turn lleg to x-axis <67.071429> now;
-		turn rfoot to x-axis <-12.329670> now;
+		turn rfoot to x-axis <-12.324176> now;
 		sleep 70;
 	}
 	if( TRUE )
 	{
-		move pelvis to y-axis [-0.139996] now;
-		turn rthigh to x-axis <-22.620879> now;
-		turn lthigh to x-axis <-12.741758> now;
-		turn lleg to x-axis <79.417582> now;
-		turn lfoot to x-axis <-27.972527> now;
+		move pelvis to y-axis [-0.139990] now;
+		turn rthigh to x-axis <-22.615385> now;
+		turn lthigh to x-axis <-12.736264> now;
+		turn lleg to x-axis <79.412088> now;
+		turn lfoot to x-axis <-27.967033> now;
 		turn rleg to x-axis <37.027473> now;
-		turn rfoot to x-axis <-15.631868> now;
+		turn rfoot to x-axis <-15.626374> now;
 		sleep 50;
 	}
 	if( TRUE )
@@ -306,22 +315,22 @@ walklegs()
 		move pelvis to y-axis [0.000000] now;
 		turn rthigh to x-axis <2.868132> now;
 		turn lthigh to x-axis <-42.379121> now;
-		turn lleg to x-axis <90.109890> now;
-		turn lfoot to x-axis <-15.219780> now;
-		turn rleg to x-axis <6.576923> now;
-		turn rfoot to x-axis <-9.439560> now;
+		turn lleg to x-axis <90.104396> now;
+		turn lfoot to x-axis <-15.214286> now;
+		turn rleg to x-axis <6.571429> now;
+		turn rfoot to x-axis <-9.434066> now;
 		sleep 40;
 	}
 	if( TRUE )
 	{
-		move pelvis to y-axis [-0.189996] now;
+		move pelvis to y-axis [-0.189990] now;
 		turn rthigh to x-axis <13.159341> now;
 		turn lthigh to x-axis <-57.192308> now;
 		turn rfoot to x-axis <-19.324176> now;
 		sleep 50;
 	}
 	move pelvis to y-axis [-0.400000] now;
-	turn rthigh to x-axis <16.450549> now;
+	turn rthigh to x-axis <16.445055> now;
 	turn lthigh to x-axis <-67.071429> now;
 	turn lleg to x-axis <55.549451> now;
 	turn lfoot to x-axis <-2.868132> now;
@@ -472,10 +481,10 @@ Create()
 	hide rnano;
 	hide lnano;
 	turn luparm to x-axis <0.000000> now;
-	turn lloarm to x-axis <60.010989> now;
+	turn lloarm to x-axis <60.005495> now;
 	turn lnano to x-axis <0.000000> now;
 	turn ruparm to x-axis <0.000000> now;
-	turn rloarm to x-axis <60.010989> now;
+	turn rloarm to x-axis <60.005495> now;
 	turn rnano to x-axis <0.000000> now;
 	turn ant to x-axis <-15.000000> now;
 	cache lfin;
@@ -507,11 +516,14 @@ StartBuilding(Func_Var_1)
 {
 	Static_Var_1 = Func_Var_1;
 	start-script RequestState(0);
+	start-script Build();
+	Static_Var_5 = 1;
 }
 
 StopBuilding()
 {
 	start-script RequestState(1);
+	Static_Var_5 = 0;
 }
 
 StartMoving()
