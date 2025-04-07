@@ -5,7 +5,7 @@ return {
 --- UNITS FEATURES
 -----------------------------------------------------------
   euf_fence_gate= {
-               activatewhenbuilt = false,
+               activatewhenbuilt = true,
 --               buildangle = 0,
                buildcostenergy = 4432,
                buildcostmetal = 980,
@@ -42,7 +42,7 @@ return {
 --               script = "Gate.lua",
                TEDClass = "PLANT", -- verificare se necessario
                workertime = 0,
-               YardMap= "ooooo ooooo ccccc ccccc ccccc ccccc ccccc ccccc ooooo ooooo",
+               YardMap= "ooooo ccccc ccccc ccccc ccccc ccccc ccccc ccccc ccccc ooooo",
 -----------------------------------------------------------
 --- NO EFFECTS
 -----------------------------------------------------------
