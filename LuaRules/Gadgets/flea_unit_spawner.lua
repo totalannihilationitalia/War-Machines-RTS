@@ -704,7 +704,9 @@ if (gadgetHandler:IsSyncedCode()) then
 	function gadget:UnitCreated(unitID, unitDefID, unitTeam)
 	  local name = UnitDefs[unitDefID].name
 	  if (name == "icucom" or
-		  name == "nfacom") then   ------ ################################################## aggiungere andcom e eufcom ????????????????
+		  name == "kicucom" or -- aggiunto il 08/04/2025
+		  name == "knfacom" or -- aggiunto il 08/04/2025
+		  name == "nfacom") then  
 		commanders[unitID] = true
 	  end
 	--  if (chickenTeamID == unitTeam and name ~= "arm_commander" and name ~= "core_commander" ) then
