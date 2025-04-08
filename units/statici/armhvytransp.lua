@@ -44,7 +44,7 @@ return {
                radardistance = 50,
                seismicsignature = 0,
                selfdestructas = "LARGE_BUILDING",
-               sightdistance = 286,
+               sightdistance = 350,
 --               soundcategory= "KBOTPLANT",
 --               standingfireorder = 2,
 --               standingmoveorder = 1,
@@ -107,8 +107,14 @@ featuredefs = {
                },  -- Close heap
 },  --  Wreckage and heaps
 -----------------------------------------------------------
---- NO EFFECTS
+--- EFFECTS
 -----------------------------------------------------------
+sfxtypes = {
+  explosiongenerators = {
+               [1]="custom:NUCKLEARMINI",
+               [2]="custom:hvytranspLanding",
+               }, -- close effects list
+}, -- close section sfxtypes
 -----------------------------------------------------------
 --- UNITS SOUND
 -----------------------------------------------------------
