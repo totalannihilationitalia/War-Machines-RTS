@@ -41,7 +41,7 @@ return {
                maxvelocity = 0.0004,
                maxwaterdepth = 18,
                metalmake = 0.1,
-               metalStorage = 50,
+               metalStorage = 200, -- era 50 08/04/2025 molix
 --               mobilestandorders= 1,
                movementclass = "TANK3",
                name = "Alien",
