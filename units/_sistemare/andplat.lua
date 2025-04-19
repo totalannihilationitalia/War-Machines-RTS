@@ -58,7 +58,8 @@ return {
 -----------------------------------
                buildoptions = { 
 			[1] = "andfig",
-			[2] = "andstr",
+			[2] = "andbomb",
+			[3] = "andstr",
                },
 
 
