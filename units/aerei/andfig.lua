@@ -23,13 +23,13 @@ return {
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
-               cruiseAlt = 110, --110
+               cruiseAlt = 110,
 --               defaultmissiontype = VTOL_standby,
                description = "Fighter",
 --               firestandorders = 1,
                energymake = 0.7,
                energystorage = 0,
-               energyUse = 0,
+               energyUse = 0.7,
                explodeas = "SMALL_UNITEX",
                footprintx = 2,
                footprintz = 2,
@@ -38,13 +38,13 @@ return {
                idletime = 1800,
 --               maneuverleashlength  = 1280,
 --               mass = 0 --definire massa,
-               maxdamage = 450,
+               maxdamage = 150,
                maxslope = 10,
                maxvelocity = 9.64,
                maxwaterdepth = 255,
                metalStorage = 0,
 --               mobilestandorders= 1,
-               name = "Andrionian Fighter",
+               name = "Freedom Fighter",
                noAutoFire = false,
                objectname = "andfight.s3o",
                seismicsignature = 0,
@@ -81,59 +81,57 @@ return {
                underattack = "warning1",
                },
 -----------------------------------------------------------
---- WEAPONS DEFINITION
+--- WEAPONS
 -----------------------------------------------------------
 weapondefs = {
-		arm_lightlaser = {
-                     areaofeffect = 12,
-                     avoidfeature = true,
-                     beamtime = 0.05,
---                     beamweapon = true,
-                     cegTag = "BLUCRAP",
-                     corethickness = 0.175,
---                     craterareaofeffect =  ,
-                     craterboost = 0,
-                     cratermult = 0,
-                     energypershot = 0,
-                     explosiongenerator = "custom:Gatorazzurro",
-                     firestarter = 30,
-                     impactonly = true,
-                     impulseboost = 0.123,
-                     impulsefactor = 0.123,
-                     name= "LightLaser",
-                     noselfdamage = true,
-                     laserflaresize = 10,
-                     range = 500,
-                     reloadtime = 0.28,
-                     rgbcolor = "0 0.5 1",
-                     soundhit = "lasrhit2",
- --                   soundhitdry = "",
---                    soundhitwet = "",
---                    soundhitwetvolume = "",
-                     soundstart = "lasrfir3",
-                     soundtrigger = "1",
-                     targetmoveerror = 0.1,
-                     thickness = 2.5,
-                     tolerance = 10000,
-                     turret  = false, 
-                     weapontype = "LaserCannon",
-                     weaponvelocity  = 3000,
-                     damage = {
-                         default = 75,
-                     }, -- close damage
-             }, --close single weapon definitions
+			armvtol_missile_a2a = {
+				areaofeffect = 48,
+				avoidfeature = false,
+				collidefriendly = false,
+				craterareaofeffect = 0,
+				craterboost = 0,
+				cratermult = 0,
+				explosiongenerator = "custom:FLASH2",
+				firestarter = 0,
+				impulseboost = 0,
+				impulsefactor = 0,
+				metalpershot = 0,
+				model = "missile",
+				name = "GuidedMissiles",
+				noselfdamage = true,
+				range = 530,
+				reloadtime = 0.9,
+				smoketrail = true,
+				soundhit = "xplosml2",
+				soundhitwet = "splshbig",
+				soundhitwetvolume = 0.5,
+				soundstart = "Rocklit3",
+				startvelocity = 625,
+				texture2 = "armsmoketrail",
+				tolerance = 12000,
+				tracks = true,
+				turnrate = 24000,
+				weaponacceleration = 150,
+				weapontimer = 4.25,
+				weapontype = "MissileLauncher",
+				weaponvelocity = 775,
+				damage = {
+					bombers = 125,
+					commanders = 5,
+					default = 23,
+					fighters = 200,
+					subs = 5,
+					vtol = 125,
+				},
+			},
+		},
 
-}, -- close weapon definition
------------------------------------------------------------
---- WEAPONS USAGE
------------------------------------------------------------
-weapons = {
+
+	   	       weapons = {
                  [1] = {
-                 badtargetcategory = "ANTILASER",
-                 def = "arm_lightlaser",
-                 onlytargetcategory = "SURFACE",
+                 def = "ARMVTOL_MISSILE_A2A",
+			  onlytargetcategory = "VTOL SURFACE",
                  },
-}, -- close weapon usage
-
-}, -- close unit data 
-} -- close total
+               },
+               }, 
+               }
