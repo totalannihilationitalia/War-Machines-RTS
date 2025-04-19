@@ -135,6 +135,10 @@ return {
 			[73] = "treno_vagone_aperto",
 			[74] = "treno_vagone_container",
 			[75] = "andwall",
+			[76] = "euf_fence_wall",
+			[77] = "pala008",
+			[78] = "pala009",
+			[79] = "crane",
 		},
 		featuredefs = {
 			["1_dead"] = {
