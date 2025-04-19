@@ -262,7 +262,12 @@ effectUnitDefs = {
   },
   armfig = {
     {class='AirJet', options={color={0.6,0.1,0.0}, width=3.5, length=55, piece="rearthrust", texture2=":c:bitmaps/gpl/lups/jet2.bmp", onActive=true}},
-   -- {class='AirJet', options={color={0.6,0.1,0.0}, width=3.5, length=55, piece="nozzle2", texture2=":c:bitmaps/gpl/lups/jet2.bmp", onActive=true}},
+    {class='Ribbon', options={width=1, piece="rearthrust"}},
+
+  },
+  andfig = {
+    {class='AirJet', options={color={0.6,0,0.8}, width=3.5, length=55, piece="ribbon1", texture2=":c:bitmaps/gpl/lups/jet2.bmp", onActive=true}},
+    {class='AirJet', options={color={0.6,0,0.8}, width=3.5, length=55, piece="ribbon2", texture2=":c:bitmaps/gpl/lups/jet2.bmp", onActive=true}},
     {class='Ribbon', options={width=1, piece="ribbon1"}},
     {class='Ribbon', options={width=1, piece="ribbon2"}},
   },
@@ -361,8 +366,14 @@ armthund = {
     {class='AirJet', options={color={0.1,0.4,0.6}, width=3.5, length=25, piece="thrust2", onActive=true,emitVector = {0, 1, 0}}},	
     {class='AirJet', options={color={0.1,0.4,0.6}, width=3.5, length=25, piece="thrust3", onActive=true,emitVector = {0, 1, 0}}},	
     {class='AirJet', options={color={0.1,0.4,0.6}, width=3.5, length=25, piece="thrust4", onActive=true,emitVector = {0, 1, 0}}},	
-	
   },
+andbomb= {
+    {class='AirJet', options={color={0.6,0,0.8}, width=3.5, length=25, piece="thrust1", onActive=true, emitVector = {0, 0, -1}}},
+    {class='AirJet', options={color={0.6,0,0.8}, width=3.5, length=25, piece="thrust2", onActive=true,emitVector = {0, 0, -1}}},	
+    {class='AirJet', options={color={0.6,0,0.8}, width=3.5, length=25, piece="thrust3", onActive=true,emitVector = {0, 0, -1}}},	
+    {class='AirJet', options={color={0.6,0,0.8}, width=3.5, length=25, piece="thrust4", onActive=true,emitVector = {0, 0, -1}}},	
+  },
+
 
   corawac = {
     {class='AirJet', options={color={0.9,0.2,0.2}, width=3.5, length=25, piece="thrust", onActive=true}},
