@@ -1,5 +1,5 @@
 return {
-  pala008_feature =
+  pala009_feature =
   {
     description = "A building",
     blocking = true,
