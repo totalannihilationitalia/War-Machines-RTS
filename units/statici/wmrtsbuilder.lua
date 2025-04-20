@@ -138,7 +138,9 @@ return {
 			[76] = "euf_fence_wall",
 			[77] = "pala008",
 			[78] = "pala009",
-			[79] = "crane",
+			[79] = "pala010",
+			[80] = "pala011",
+			[81] = "crane",
 		},
 		featuredefs = {
 			["1_dead"] = {
