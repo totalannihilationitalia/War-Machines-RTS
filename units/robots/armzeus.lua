@@ -104,8 +104,13 @@ featuredefs = {
                },  -- Close heap
 },  --  Wreckage and heaps
 -----------------------------------------------------------
---- NO EFFECTS
+--- EFFECTS
 -----------------------------------------------------------
+sfxtypes = {
+  explosiongenerators = {
+               [1]="custom:azzurroflare",
+               }, -- close effects list
+}, -- close section sfxtypes
 -----------------------------------------------------------
 --- UNITS SOUND
 -----------------------------------------------------------
@@ -153,7 +158,7 @@ weapondefs = {
                      Intensity = 12,
                      name= "LightningGun",
                      noselfdamage = true,
-                     range = 280,
+                     range = 320, --280
                      reloadtime = 1.7,
                      rgbcolor = "0.5 0.5 1",
                      soundhit = "xplomed3",

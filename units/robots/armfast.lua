@@ -105,8 +105,13 @@ featuredefs = {
                },  -- Close heap
 },  --  Wreckage and heaps
 -----------------------------------------------------------
---- NO EFFECTS
+--- EFFECTS
 -----------------------------------------------------------
+sfxtypes = {
+  explosiongenerators = {
+               [1]="custom:emgflare",
+               }, -- close effects list
+}, -- close section sfxtypes
 -----------------------------------------------------------
 --- UNITS SOUND
 -----------------------------------------------------------
