@@ -80,8 +80,13 @@ featuredefs = {
                },  -- Close Dead Features
 },  --  Wreckage and heaps
 -----------------------------------------------------------
---- NO EFFECTS
+--- EFFECTS
 -----------------------------------------------------------
+sfxtypes = {
+  explosiongenerators = {
+               [1]="custom:arancioflare",
+               }, -- close effects list
+}, -- close section sfxtypes
 -----------------------------------------------------------
 --- UNITS SOUND
 -----------------------------------------------------------
@@ -130,7 +135,7 @@ weapondefs = {
                      laserflaresize = 10,
                      range = 435,
                      reloadtime = 0.48,
-                     rgbcolor = "1 0.2 0",
+                     rgbcolor = "1 0.7 0",
                      soundhit = "lasrhit2",
  --                   soundhitdry = "",
 --                    soundhitwet = "",
