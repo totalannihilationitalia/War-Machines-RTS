@@ -98,8 +98,13 @@ featuredefs = {
                },  -- Close heap
 },  --  Wreckage and heaps
 -----------------------------------------------------------
---- NO EFFECTS
+--- EFFECTS
 -----------------------------------------------------------
+sfxtypes = {
+  explosiongenerators = {
+               [1]="custom:arancioflare",
+               }, -- close effects list
+}, -- close section sfxtypes
 -----------------------------------------------------------
 --- UNITS SOUND
 -----------------------------------------------------------
@@ -139,6 +144,7 @@ weapondefs = {
                      name= "Annihilator Weapon",
                      range = 275,
                      reloadtime = 0.38,
+                     rgbcolor = "1 0.6 0",
                      soundhit = "xplolrg1",
  --                   soundhitdry = "",
 --                    soundhitwet = "",
