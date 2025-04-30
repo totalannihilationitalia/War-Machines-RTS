@@ -144,6 +144,7 @@ weapondefs = {
                      name= "Annihilator Weapon",
                      range = 275,
                      reloadtime = 0.38,
+                     rgbcolor = "1 0.7 0",
                      soundhit = "xplolrg1",
  --                   soundhitdry = "",
 --                    soundhitwet = "",
