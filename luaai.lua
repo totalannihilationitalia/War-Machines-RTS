@@ -32,6 +32,10 @@ return {
     name = 'Fire Spirits Edition',
     desc = 'Alternative Spam, much laggier'
   },
+  {
+    name = 'WMRTSAI',
+    desc = 'War Machines RTS AI'
+  },
 }
 
 --------------------------------------------------------------------------------
