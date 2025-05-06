@@ -55,17 +55,16 @@ return {
 --- BUILDLIST
 -----------------------------------
                buildoptions = { 
-			[1] = "eufbomb",
-			[2] = "eufher",
-			[3] = "euflong",
-			[4] = "eufopp",
-			[5] = "eufrld",
-			[6] = "eufshat",
-			[7] = "eufbigfoot",
-			[8] = "eufkaat",
-			[9] = "eufpilonax",
-			[10] = "eufcd",
-			[11] = "coracd",
+			[1] = "coracd", -- sostituire con eufacd (solo 3D.s3o)
+			[2] = "eufbomb",
+			[3] = "eufher",
+			[4] = "euflong",
+			[5] = "eufopp",
+			[6] = "eufrld",
+			[7] = "eufshat",
+			[8] = "eufbigfoot",
+			[9] = "eufkaat",
+			[10] = "eufpilonax",
                },
 -----------------------------------------------------------
 --- Units wreckage and heaps
