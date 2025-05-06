@@ -66,22 +66,27 @@ return {
 --- INSERT BUILDLIST
 -----------------------------------
 		[1]= "eufsolar",
-		[2]= "eufmetex",
-		[3]= "euf_fence_gate",
-		[4]= "euf_fence_wall",
-		[5]= "eufmstor",
-		[6]= "eufestor",
-		[7]= "eufloony",
-		[8]= "eufsnpr",
-		[9]= "eufpath",
-		[10]= "euf_radar",
-		[11] = "eufpathsmall",
-		[12] = "eufap",
-		[13] = "eufavp",
+		[2]= "eufmstor",
+		[3]= "eufestor",
+		[4]= "eufmetex",
+		[5]= "eufametex",
+		[6] = "eufavp",
+		[7] = "eufvp",
+		[8] = "eufap",
+		[9]= "euf_radar",
+		[10] = "eufpathsmall",
+		[11]= "eufsnpr",
+		[12]= "eufpath",
+		[13] = "armarch", ------ fare versione "small"
+		[14]= "eufloony",
+------------------- creare il jammer
+------------------- creare il sonar
+------------------- creare il torpedol
+------------------  eventuali difese floating
 		[14] = "eufblab", -------------------- non funziona sistemare ################
-		[15] = "armarch",
-		[16] = "eufadvmetex",
-		[17] = "eufvp",
+---------		[16] = "eufadvmetex", --------------- spostare in avanzato tech2
+		[15]= "euf_fence_gate",
+		[16]= "euf_fence_wall",
                },
 
 -----------------------------------------------------------

@@ -8,6 +8,10 @@ local sideData = {
     startunit = 'icucom',
   },
   {
+    name = 'EUF',
+    startunit = 'eufcd',
+  },
+  {
     name = 'AND',
     startunit = 'andcom',
   },
