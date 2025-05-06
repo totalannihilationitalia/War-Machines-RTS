@@ -69,15 +69,16 @@ return {
 		[2]= "eufmstor",
 		[3]= "eufestor",
 		[4]= "eufmetex",
-		[5] = "eufavp",
-		[6] = "eufvp",
-		[7] = "eufap",
-		[8]= "euf_radar",
-		[9] = "eufpathsmall",
-		[10]= "eufsnpr",
-		[11]= "eufpath",
-		[12] = "armarch", ------ fare versione "small"
-		[13]= "eufloony",
+		[5]= "eufametex",
+		[6] = "eufavp",
+		[7] = "eufvp",
+		[8] = "eufap",
+		[9]= "euf_radar",
+		[10] = "eufpathsmall",
+		[11]= "eufsnpr",
+		[12]= "eufpath",
+		[13] = "armarch", ------ fare versione "small"
+		[14]= "eufloony",
 ------------------- creare il jammer
 ------------------- creare il sonar
 ------------------- creare il torpedol
