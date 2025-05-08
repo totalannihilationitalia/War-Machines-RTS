@@ -365,7 +365,7 @@ if (gadgetHandler:IsSyncedCode()) then
               end
           end
       end
-      Log(teamData.teamID,"FindGoodEnergySpot: Could not find suitable (non-metal) spot near builder after " .. attempt .. " attempts.")
+ Log(teamData.teamID,"FindGoodEnergySpot: Could not find suitable (non-metal) spot near builder after multiple attempts (30).") -- NUOVA RIGA (senza 'attempt')
       return nil
   end
 
@@ -515,24 +515,29 @@ if (gadgetHandler:IsSyncedCode()) then
       end
   end
 
-  local function ManageEconomy(teamID, frame)
+    local function ManageEconomy(teamID, frame)
       local data = teamData[teamID]
-      if not data or data.techLevel == nil then return end
+      if not data or data.techLevel == nil then Log(teamID, "ManageEconomy: Skipping, no data or techLevel."); return end
       local config = aiConfig[data.techLevel]
-      if not config or not config.economyTargets then return end
+      if not config or not config.economyTargets then Log(teamID, "ManageEconomy: Skipping, no config or economyTargets for TechLevel " .. data.techLevel); return end
 
       local res = data.resourceInfo
       local currentEnergyIncome = res.energyIncome or 0
       local currentEnergyUsage = res.energyUsage or 0
       local energyBalance = currentEnergyIncome - currentEnergyUsage
-      local desiredEnergySurplus = 15 -- Potresti abbassare leggermente questa, es. 10 o 5
+      local desiredEnergySurplus = 15 
       local prioritizeEnergy = (energyBalance < desiredEnergySurplus)
+      
+      if prioritizeEnergy then
+          Log(teamID, "ManageEconomy: Energy balance ("..string.format("%.1f", energyBalance)..") is below desired surplus ("..desiredEnergySurplus.."). Prioritizing energy.")
+      end
 
-      local orderGivenThisFrame = false -- Flag per dare solo un ordine per ciclo
+      local orderGivenThisFrame = false 
 
-      -- 1. Controlla PRIMA se dobbiamo costruire ENERGIA (se prioritaria o no)
+      -- 1. Controlla PRIMA se dobbiamo costruire ENERGIA
       local powerTargetConfig = nil
-      local targetPowerRole = (data.techLevel >= 2 and GetUnitDataByRole(data.faction, 2, "T2_PowerPlant") and "T2_PowerPlant") or "T1_PowerPlant" -- Cerca T2 se possibile, altrimenti T1
+      local targetPowerRole = (data.techLevel >= 2 and GetUnitDataByRole(data.faction, 2, "T2_PowerPlant") and "T2_PowerPlant") or "T1_PowerPlant" 
+      Log(teamID, "ManageEconomy: Checking need for Power Role: " .. targetPowerRole)
 
       for _, target in ipairs(config.economyTargets) do
           if target.role == targetPowerRole then
@@ -546,55 +551,62 @@ if (gadgetHandler:IsSyncedCode()) then
           if unitData then
               local unitDefID = unitData.id; local unitDef = UnitDefs[unitDefID]
               if unitDef then
-                  -- Determina l'obiettivo numerico random per le centrali
                   if not data.economyObjectives[targetPowerRole] then
                       data.economyObjectives[targetPowerRole] = { targetCount = math.random(powerTargetConfig.min, powerTargetConfig.max), reached = false }
-                      Log(teamID, "New Economy Objective for " .. targetPowerRole .. ": Build " .. data.economyObjectives[targetPowerRole].targetCount)
+                      Log(teamID, "ManageEconomy: New Objective for " .. targetPowerRole .. ": Build " .. data.economyObjectives[targetPowerRole].targetCount .. " (Min: "..powerTargetConfig.min..", Max: "..powerTargetConfig.max..")")
                   end
                   local currentObjective = data.economyObjectives[targetPowerRole]
                   local currentCount = #Spring.GetTeamUnitsByDefs(teamID, unitDefID)
+                  Log(teamID, "ManageEconomy: "..targetPowerRole.." Count: " .. currentCount .. "/" .. currentObjective.targetCount .. " (Reached: "..tostring(currentObjective.reached)..")")
 
                   if currentCount < currentObjective.targetCount then
                       if data:CanAfford(unitDefID, frame) then
-                          -- Se l'energia è prioritaria OPPURE se semplicemente ne servono di più (sotto obiettivo)
-                          if prioritizeEnergy or (not currentObjective.reached) then
+                          if prioritizeEnergy or (not currentObjective.reached) then -- Costruisci se priorità o se non ancora raggiunto l'obiettivo
                               local builderTier = math.max(0, roleTier - 1)
                               local builderID = data:FindIdleConstructor(builderTier)
                               if builderID then
                                   local buildPos = data:FindGoodEnergySpot(builderID)
                                   if buildPos then
-                                      Log(teamID, ">>>>>> Ordering T"..builderTier.." builder "..builderID.." to build "..targetPowerRole.." #"..(currentCount+1).."/"..currentObjective.targetCount.. (prioritizeEnergy and " (PRIORITY)" or ""))
+                                      Log(teamID, ">>>> ManageEconomy: Ordering T"..builderTier.." builder "..builderID.." to build "..targetPowerRole.." #"..(currentCount+1).."/"..currentObjective.targetCount.. (prioritizeEnergy and " (ENERGY PRIORITY)" or " (Objective Not Met)"))
                                       Spring.GiveOrderToUnit(builderID, -unitDefID, { buildPos.x, buildPos.y, buildPos.z }, {})
                                       if data.constructors[builderID] then data.constructors[builderID].state = "busy" end
-                                      orderGivenThisFrame = true -- Segna che abbiamo dato un ordine
-                                      -- NON USCIRE SUBITO, potremmo voler costruire metallo se non era priorità energia
+                                      orderGivenThisFrame = true 
+                                  else
+                                      Log(teamID, "ManageEconomy: Found builder " .. builderID .. " for " .. targetPowerRole .. " but no suitable build position.")
                                   end
+                              else
+                                  Log(teamID, "ManageEconomy: Need "..targetPowerRole..", Can Afford, but no idle T"..builderTier.." constructor found.")
                               end
+                          else
+                             Log(teamID, "ManageEconomy: Need "..targetPowerRole..", Can Afford, Objective not met, but Energy NOT priority. Holding off for now.")
                           end
-                      elseif currentCount >= currentObjective.targetCount and not currentObjective.reached then
-                           -- Log(teamID, "Economy Objective for " .. targetPowerRole .. " reached.")
-                           currentObjective.reached = true
+                      elseif not data:CanAfford(unitDefID, frame) then
+                          Log(teamID, "ManageEconomy: Need "..targetPowerRole..", but cannot afford.")
                       end
-                  elseif not currentObjective.reached then -- Marcala come raggiunta se >= target
-                      -- Log(teamID, "Economy Objective for " .. targetPowerRole .. " already met or exceeded.")
+                  elseif not currentObjective.reached then 
+                      Log(teamID, "ManageEconomy: Objective for " .. targetPowerRole .. " reached (" .. currentCount .. "/" .. currentObjective.targetCount .. ").")
                       currentObjective.reached = true
                   end
+              else Log(teamID, "ManageEconomy: Could not find UnitDef for ID: " .. (unitDefID or "nil"))
               end
+          else Log(teamID, "ManageEconomy: Could not get AI Unit Data for Role: " .. targetPowerRole)
           end
+      else Log(teamID, "ManageEconomy: No economy target defined for role: " .. targetPowerRole)
       end
 
-      -- 2. Se NON abbiamo dato un ordine per l'energia O l'energia non era prioritaria, controlla ALTRI obiettivi (Estrattori)
+      -- 2. Se NON abbiamo dato un ordine per l'energia, controlla ALTRI obiettivi (Estrattori)
       if not orderGivenThisFrame then
+          Log(teamID, "ManageEconomy: Energy order not given this frame, checking other objectives.")
           for i, targetConfig in ipairs(config.economyTargets) do
-              -- Salta le centrali, le abbiamo già considerate
-              if not targetConfig.role:find("PowerPlant") then
+              if not targetConfig.role:find("PowerPlant") then -- Salta energia
                   local role = targetConfig.role
                   local minCount = targetConfig.min; local maxCount = targetConfig.max
+                  Log(teamID, "ManageEconomy: Checking Objective for: " .. role)
 
                   if not data.economyObjectives[role] then
                       local targetNum = math.random(minCount, maxCount)
                       data.economyObjectives[role] = { targetCount = targetNum, reached = false }
-                      Log(teamID, "New Economy Objective for " .. role .. ": Build " .. targetNum)
+                      Log(teamID, "ManageEconomy: New Objective for " .. role .. ": Build " .. targetNum .. " (Min: "..minCount..", Max: "..maxCount..")")
                   end
                   local currentObjective = data.economyObjectives[role]
 
@@ -605,124 +617,356 @@ if (gadgetHandler:IsSyncedCode()) then
                           local unitDefID = unitData.id; local unitDef = UnitDefs[unitDefID]
                           if unitDef then
                               local currentCount = #Spring.GetTeamUnitsByDefs(teamID, unitDefID)
+                              Log(teamID, "ManageEconomy: "..role.." Count: " .. currentCount .. "/" .. currentObjective.targetCount .. " (Reached: "..tostring(currentObjective.reached)..")")
+
                               if currentCount < currentObjective.targetCount then
                                   if data:CanAfford(unitDefID, frame) then
                                       local builderTier = math.max(0, roleTier - 1)
                                       local builderID = data:FindIdleConstructor(builderTier)
                                       if builderID then
                                           local buildPos = nil
-                                          if role:find("Extractor") then buildPos = data:FindBestMetalSpot(builderID) end
+                                          if role:find("Extractor") then 
+                                             buildPos = data:FindBestMetalSpot(builderID) 
+                                             if not buildPos then Log(teamID, "ManageEconomy: Found builder " .. builderID .. " for " .. role .. " but no suitable metal spot.") end
+                                          -- Aggiungere else if per altri tipi di edifici economici se necessario
+                                          else 
+                                             Log(teamID, "ManageEconomy: Role '"..role.."' is not Extractor, cannot find position yet.") -- Gestire altri tipi?
+                                          end
+
                                           if buildPos then
-                                              Log(teamID, ">>>>>> Ordering builder "..builderID.." to build "..role.." #"..(currentCount+1).."/"..currentObjective.targetCount)
+                                              Log(teamID, ">>>> ManageEconomy: Ordering T"..builderTier.." builder "..builderID.." to build "..role.." #"..(currentCount+1).."/"..currentObjective.targetCount)
                                               Spring.GiveOrderToUnit(builderID, -unitDefID, { buildPos.x, buildPos.y, buildPos.z }, {})
                                               if data.constructors[builderID] then data.constructors[builderID].state = "busy" end
-                                              orderGivenThisFrame = true -- Abbiamo dato un ordine
-                                              -- Esci dal ciclo interno DOPO aver dato un ordine per altri edifici
-                                              break
+                                              orderGivenThisFrame = true 
+                                              break -- Esci dal ciclo for degli obiettivi dopo aver dato un ordine
                                           end
+                                      else 
+                                          Log(teamID, "ManageEconomy: Need "..role..", Can Afford, but no idle T"..builderTier.." constructor found.")
                                       end
+                                  else 
+                                      Log(teamID, "ManageEconomy: Need "..role..", but cannot afford.")
                                   end
-                              elseif currentCount >= currentObjective.targetCount then
-                                  -- Log(teamID, "Economy Objective for " .. role .. " reached.")
+                              elseif not currentObjective.reached then
+                                  Log(teamID, "ManageEconomy: Objective for " .. role .. " reached (" .. currentCount .. "/" .. currentObjective.targetCount .. ").")
                                   currentObjective.reached = true
                               end
-                          end
-                      end
-                  end
-              end -- fine if not PowerPlant
+                          else Log(teamID, "ManageEconomy: Could not find UnitDef for ID: " .. (unitDefID or "nil")) end
+                      else Log(teamID, "ManageEconomy: Could not get AI Unit Data for Role: " .. role) end
+                  end -- if not reached
+              end -- if not PowerPlant
           end -- fine for altri obiettivi
-      end -- fine if not orderGivenThisFrame
-  end -- Fine ManageEconomy
+      end -- fine if not orderGivenThisFrame for energy
+  end 
 
-  -- ManageProduction con correzione ordine fabbrica
-  local function ManageProduction(teamID, frame)
+    local function ManageProduction(teamID, frame)
       local data = teamData[teamID]
-      if not data or not data.faction or data.faction == "UNKNOWN" or data.techLevel == nil then return end
+      if not data or not data.faction or data.faction == "UNKNOWN" or data.techLevel == nil then Log(teamID, "ManageProduction: Skipping, invalid data."); return end
       local config = aiConfig[data.techLevel]
-      if not config then return end
+      if not config then Log(teamID, "ManageProduction: Skipping, no config for TechLevel " .. data.techLevel); return end
 
       local faction = data.faction
       local techLevel = data.techLevel
       local allowedMoveTypes = {}
-      if currentMapCategory == "LAND" then allowedMoveTypes = { LAND = true, AIR = true, VEHICLE = true, BUILDING = true }
-      elseif currentMapCategory == "NAVAL_ISLANDS" then allowedMoveTypes = { NAVAL = true, AIR = true, BUILDING = true }
-      elseif currentMapCategory == "SPACE" then allowedMoveTypes = { AIR = true, SPACE = true, BUILDING = true }
-      elseif currentMapCategory == "NAVAL_PURE" then allowedMoveTypes = { NAVAL = true, BUILDING = true }
-      end
+      -- ... (logica allowedMoveTypes esistente) ...
+      -- Log(teamID, "ManageProduction: Allowed MoveTypes for map category '"..currentMapCategory.."': ".. table.concat(tableKeys(allowedMoveTypes), ", ")) -- Log opzionale
 
       -- 1. Costruire Fabbriche?
       if config.factoryTargets then
           local totalFactories = 0
-          for tier=1, data.techLevel + 1 do
+          local factoryCountsByTier = {}
+          for tier=1, 3 do factoryCountsByTier[tier] = 0 end -- Inizializza
+
+          for tier=1, 3 do -- Controlla tutti i tier fino al massimo possibile
               local facData = GetUnitDataByRole(faction, tier, "T"..tier.."_Factory")
-              if facData then totalFactories = totalFactories + #Spring.GetTeamUnitsByDefs(teamID, facData.id) end
+              if facData and facData.id then 
+                 local count = #Spring.GetTeamUnitsByDefs(teamID, facData.id)
+                 totalFactories = totalFactories + count 
+                 factoryCountsByTier[tier] = count
+              end
           end
+          Log(teamID, "ManageProduction: Current total factories: " .. totalFactories .. " (T1:"..factoryCountsByTier[1]..", T2:"..factoryCountsByTier[2]..", T3:"..factoryCountsByTier[3]..")")
+          Log(teamID, "ManageProduction: Factory Targets - MinTotal: " .. config.factoryTargets.minTotal .. ", TargetTier: " .. config.factoryTargets.targetTier)
 
           if totalFactories < config.factoryTargets.minTotal then
               local targetTier = config.factoryTargets.targetTier
+              -- Assicurati che il targetTier non superi il livello tecnologico + 1 (evita T3 a tech 0)
+              targetTier = math.min(targetTier, data.techLevel + 1)
+              
+              Log(teamID, "ManageProduction: Below minimum factories. Attempting to build T" .. targetTier .. " factory.")
               local factoryData = GetUnitDataByRole(faction, targetTier, "T"..targetTier.."_Factory")
-              if factoryData and allowedMoveTypes[factoryData.moveType] then
-                   if data:CanAfford(factoryData.id, frame) then
-                       local builderID = data:FindIdleConstructor(targetTier - 1)
-                       if builderID then
-                           local buildPos = data:FindGoodFactoryPos(builderID)
-                           if buildPos then
-                               Log(teamID, "Ordering T"..(targetTier-1).." builder " .. builderID .. " to build T"..targetTier.." factory ("..factoryData.name..") at " .. string.format("%.0f,%.0f", buildPos.x, buildPos.z))
-                               Spring.GiveOrderToUnit(builderID, -factoryData.id, { buildPos.x, buildPos.y, buildPos.z }, {})
-                               if data.constructors[builderID] then data.constructors[builderID].state = "busy" end
-                               return
+              if factoryData then
+                  if allowedMoveTypes[factoryData.moveType] then
+                       if data:CanAfford(factoryData.id, frame) then
+                           -- Trova un costruttore del tier PRECEDENTE per costruire la fabbrica
+                           local builderTier = math.max(0, targetTier - 1) 
+                           local builderID = data:FindIdleConstructor(builderTier)
+                           if builderID then
+                               local buildPos = data:FindGoodFactoryPos(builderID)
+                               if buildPos then
+                                   Log(teamID, ">>>> ManageProduction: Ordering T"..builderTier.." builder " .. builderID .. " to build T"..targetTier.." factory ("..factoryData.name..") at " .. string.format("%.0f,%.0f", buildPos.x, buildPos.z))
+                                   Spring.GiveOrderToUnit(builderID, -factoryData.id, { buildPos.x, buildPos.y, buildPos.z }, {})
+                                   if data.constructors[builderID] then data.constructors[builderID].state = "busy" end
+                                   return -- Esce dopo aver dato ordine di costruzione fabbrica
+                               else
+                                   Log(teamID, "ManageProduction: Found T"..builderTier.." builder " .. builderID .. " for T"..targetTier.." factory but no suitable position.")
+                               end
+                           else
+                               Log(teamID, "ManageProduction: Need T"..targetTier.." factory, Can Afford, but no idle T"..builderTier.." constructor found.")
                            end
+                       else
+                            Log(teamID, "ManageProduction: Need T"..targetTier.." factory ("..factoryData.name.."), but cannot afford.")
                        end
-                   end
+                  else
+                      Log(teamID, "ManageProduction: Cannot build T"..targetTier.." factory ("..factoryData.name..") - MoveType '" .. factoryData.moveType .. "' not allowed on this map.")
+                  end
+              else
+                  Log(teamID, "ManageProduction: Could not find AI data for T"..targetTier.." factory.")
               end
           end
+      else
+          Log(teamID, "ManageProduction: No factory targets defined in config for TechLevel " .. data.techLevel)
       end -- Fine costruzione fabbriche
 
       -- 2. Produrre Unità dalle Fabbriche Esistenti
-      if config.productionList then
+      if config.productionList and #config.productionList > 0 then
           local sortedProdList = {}
           for _, item in ipairs(config.productionList) do table.insert(sortedProdList, item) end
-          table.sort(sortedProdList, function(a,b) return a.priority > b.priority end)
-
-          for factoryTier = 1, data.techLevel do
+          table.sort(sortedProdList, function(a,b) return (a.priority or 0) > (b.priority or 0) end) -- Ordina per priorità DESC
+          
+          Log(teamID, "ManageProduction: Checking production queues...")
+          -- Itera sulle fabbriche esistenti, dal tier più alto al più basso
+          for factoryTier = 3, 1, -1 do 
               local factoryData = GetUnitDataByRole(faction, factoryTier, "T"..factoryTier.."_Factory")
-              if factoryData then
+              if factoryData and factoryData.id then
                   local factories = Spring.GetTeamUnitsByDefs(teamID, factoryData.id)
-                  if factories then
+                  if factories and #factories > 0 then
+                      Log(teamID, "ManageProduction: Found " .. #factories .. " T" .. factoryTier .. " factories.")
                       for _, factoryID in ipairs(factories) do
                           local orderGivenToThisFactory = false
                           local queue = Spring.GetFactoryCommands(factoryID)
-                          if not queue or #queue < 3 then
+                          local queueLength = (queue and #queue) or 0
+                          local queueLimit = 3 -- Limite coda (aggiustabile)
+
+                          if queueLength < queueLimit then
+                              Log(teamID, "ManageProduction: T"..factoryTier.." Factory " .. factoryID .. " has queue space ("..queueLength.."/"..queueLimit.."). Evaluating production list.")
+                              -- Itera sulla lista di produzione ORDINATA per priorità
                               for _, prodItem in ipairs(sortedProdList) do
-                                  local unitTier = tonumber(prodItem.role:match("T(%d+)")) or 0
-                                  if unitTier <= factoryTier then
-                                      local unitData = GetUnitDataByRole(faction, unitTier, prodItem.role)
-                                      if unitData and allowedMoveTypes[unitData.moveType] then
-                                          local unitDefID = unitData.id
-                                          local currentCount = #Spring.GetTeamUnitsByDefs(teamID, unitDefID)
-                                          local maxCount = prodItem.max
-                                          local buildThis = false
-                                          if prodItem.role:find("Constructor") then
-                                               if data:NeedsConstructor(unitTier) then buildThis = true end
-                                          elseif maxCount == 0 or currentCount < maxCount then
-                                               buildThis = true
+                                  local unitRole = prodItem.role
+                                  local unitTier = tonumber(unitRole:match("T(%d+)")) or 0
+                                  
+                                  -- Una fabbrica T[N] può costruire unità T[N] o inferiori? (Dipende dal gioco, assumiamo di sì)
+                                  -- Aggiustare questa condizione se le fabbriche possono costruire solo il loro tier.
+                                  if unitTier > 0 and unitTier <= factoryTier then 
+                                      local unitData = GetUnitDataByRole(faction, unitTier, unitRole)
+                                      if unitData and unitData.id then
+                                          -- Verifica se il tipo di unità è permesso sulla mappa
+                                          if allowedMoveTypes[unitData.moveType] then
+                                              local unitDefID = unitData.id
+                                              local currentCount = #Spring.GetTeamUnitsByDefs(teamID, unitDefID)
+                                              local maxCount = prodItem.max or 0 -- Max 0 significa illimitato
+                                              local buildThis = false
+
+                                              Log(teamID, "LOG_DETAILED ManageProduction: Factory "..factoryID.." considering "..unitRole.." (Prio:"..(prodItem.priority or "N/A")..", Tier:"..unitTier..", Curr:"..currentCount..", Max:"..maxCount..")")
+
+                                              if unitRole:find("Constructor") then
+                                                   if data:NeedsConstructor(unitTier) then 
+                                                       buildThis = true 
+                                                       Log(teamID, "LOG_DETAILED ManageProduction: Needs T"..unitTier.." constructor.")
+                                                   end
+                                              elseif maxCount == 0 or currentCount < maxCount then
+                                                   buildThis = true -- Costruisci se illimitato o sotto il limite
+                                              else
+                                                   Log(teamID, "LOG_DETAILED ManageProduction: Unit "..unitRole.." limit reached ("..currentCount.."/"..maxCount..").")
+                                              end
+
+                                              if buildThis then
+                                                  if data:CanAfford(unitDefID, frame) then
+                                                      Log(teamID, ">>>> ManageProduction: Ordering T"..factoryTier.." factory " .. factoryID .. " to build "..unitRole.." (ID "..unitDefID..")")
+                                                      Spring.GiveOrderToUnit(factoryID, -unitDefID, {}, {}) -- Aggiungi alla coda
+                                                      orderGivenToThisFactory = true
+                                                      break -- Passa alla prossima fabbrica dopo aver aggiunto un ordine
+                                                  else
+                                                      Log(teamID, "LOG_DETAILED ManageProduction: Cannot afford "..unitRole.." (ID "..unitDefID..").")
+                                                      -- Non fare break qui, prova l'item successivo di priorità inferiore
+                                                  end
+                                              end
+                                          else
+                                              Log(teamID, "LOG_DETAILED ManageProduction: Unit "..unitRole.." (MoveType: "..unitData.moveType..") not allowed on this map.")
                                           end
-                                          if buildThis and data:CanAfford(unitDefID, frame) then
-                                              Log(teamID, "Ordering T"..factoryTier.." factory " .. factoryID .. " to build "..prodItem.role.." (DefID "..unitDefID..")")
-                                              Spring.GiveOrderToUnit(factoryID, -unitDefID, {}, {})
-                                              orderGivenToThisFactory = true
-                                              break
-                                          end
+                                      else 
+                                          Log(teamID, "WARN ManageProduction: Could not get AI data for Role: "..unitRole)
                                       end
+                                  end -- fine if unitTier <= factoryTier
+                              end -- fine loop productionList
+                          else
+                              Log(teamID, "ManageProduction: T"..factoryTier.." Factory " .. factoryID .. " queue full ("..queueLength.."/"..queueLimit..").")
+                          end -- fine if queueLength < queueLimit
+                      end -- fine loop factories of this tier
+                  end -- fine if factories found
+              end -- fine if factoryData exists
+          end -- fine loop factoryTier
+      else
+          Log(teamID, "ManageProduction: No production list defined in config for TechLevel " .. data.techLevel)
+      end -- Fine produzione unità
+  end 
+
+
+
+  -- === NUOVA FUNZIONE HELPER ===
+  -- Trova l'hotspot più adatto per un gruppo specifico
+  -- attackingGroupData: la tabella dati del gruppo che cerca un target
+  -- data: la tabella dati del team (contiene data.hotspots)
+  -- Restituisce la tabella dell'hotspot scelto, o nil se non ne trova uno adatto.
+    local function FindBestHotspotToAttack(teamID, data, attackingGroupData)
+      local bestHotspot = nil
+      local highestScore = -math.huge -- Inizializza a un valore molto basso
+      local consideredCount = 0
+      local suitableCount = 0
+
+      if not attackingGroupData or not attackingGroupData.units or #attackingGroupData.units == 0 then
+          Log(teamID, "WARN FindBestHotspot: Attacking group data invalid or empty.")
+          return nil 
+      end
+      
+      -- Calcola posizione gruppo (codice esistente)
+      -- ... (calcolo groupX, groupY, groupZ) ...
+      if validUnitCount == 0 then Log(teamID, "WARN FindBestHotspot: Could not get group position."); return nil end
+      groupX = groupX / validUnitCount; groupY = groupY / validUnitCount; groupZ = groupZ / validUnitCount;
+      
+      Log(teamID, "LOG_DETAILED FindBestHotspot: Group " .. attackingGroupData.id .. " at ~"..string.format("%.0f,%.0f", groupX, groupZ).." searching for hotspot. GroupCaps L/A/N: "..tostring(attackingGroupData.canAttackLand).."/"..tostring(attackingGroupData.canAttackAir).."/"..tostring(attackingGroupData.canAttackNaval))
+
+      for hotspotID, hotspot in pairs(data.hotspots) do
+          consideredCount = consideredCount + 1
+          local score = 0
+          local canEngage = false
+          local reasonCannotEngage = "OK"
+
+          -- Controllo Compatibilità
+          if hotspot.hasLandEnemies and attackingGroupData.canAttackLand then canEngage = true 
+          elseif hotspot.hasAirEnemies and attackingGroupData.canAttackAir then canEngage = true 
+          elseif hotspot.hasNavalEnemies and attackingGroupData.canAttackNaval then canEngage = true 
+          -- Se non può colpire specifici, ma l'hotspot è misto/sconosciuto E il gruppo può attaccare *qualcosa*
+          elseif (hotspot.dominantEnemyMoveType == "UNKNOWN" or hotspot.dominantEnemyMoveType == "MIXED" or not hotspot.dominantEnemyMoveType) then -- Aggiunto not hotspot.dominantEnemyMoveType
+               if attackingGroupData.canAttackLand or attackingGroupData.canAttackAir or attackingGroupData.canAttackNaval then
+                   canEngage = true 
+               else reasonCannotEngage = "Group cannot attack anything" end
+          else reasonCannotEngage = "Group cannot attack required type"
+          end
+
+          Log(teamID, "LOG_DETAILED FindBestHotspot: Evaluating Hotspot "..hotspotID.." (Type:"..(hotspot.dominantEnemyMoveType or "N/A").." L/A/N:"..tostring(hotspot.hasLandEnemies).."/"..tostring(hotspot.hasAirEnemies).."/"..tostring(hotspot.hasNavalEnemies)..") - CanEngage: " .. tostring(canEngage) .. " ("..reasonCannotEngage..")")
+
+          if canEngage then
+              suitableCount = suitableCount + 1
+              -- Calcolo Punteggio
+              score = score + (hotspot.strength or 1) * 10 
+              local dx, dz = hotspot.x - groupX, hotspot.z - groupZ
+              local distSq = dx*dx + dz*dz
+              local maxAttackDistSq = 1500 * 1500 
+              local distPenalty = 0
+              local agePenalty = 0
+              
+              if distSq < maxAttackDistSq and distSq > 1 then 
+                  distPenalty = math.sqrt(distSq) * 0.1 
+                  score = score - distPenalty
+              else 
+                 score = score - 10000 
+                 distPenalty = 10000 -- Per log
+              end
+
+              local ageInSeconds = (Game.frame - hotspot.lastSeenFrame) / (Game.gameSpeed or 30)
+              agePenalty = ageInSeconds * 2
+              score = score - agePenalty 
+
+              Log(teamID, "LOG_DETAILED FindBestHotspot: Hotspot "..hotspotID.." ScoreCalc: Base(Str*10)= "..string.format("%.1f", (hotspot.strength or 1)*10).." - DistPenalty="..string.format("%.1f", distPenalty).." - AgePenalty="..string.format("%.1f", agePenalty).." = FINAL SCORE: "..string.format("%.1f", score))
+
+              if score > highestScore then
+                  highestScore = score
+                  bestHotspot = hotspot
+                  Log(teamID, "LOG_DETAILED FindBestHotspot: >>> Hotspot "..hotspotID.." is new best candidate (Score: "..string.format("%.1f", highestScore)..")")
+              end
+          end 
+      end 
+
+      if bestHotspot then
+        Log(teamID, "FindBestHotspot: Group " .. attackingGroupData.id .. " chose Hotspot " .. bestHotspot.id .. " (Type: "..(bestHotspot.dominantEnemyMoveType or "N/A")..") with score " .. string.format("%.1f", highestScore) .. ". Considered: "..consideredCount..", Suitable: "..suitableCount)
+      else 
+          Log(teamID, "FindBestHotspot: Group " .. attackingGroupData.id .. " found no suitable hotspot. Considered: "..consideredCount..", Suitable: "..suitableCount)
+      end
+      
+      return bestHotspot
+  end
+
+
+
+
+    function UpdateCombatGroupStates(teamID, frame, data)
+      local groupIDsToIterate = {}; for id,_ in pairs(data.combatGroups) do table.insert(groupIDsToIterate, id) end
+      
+      for _, groupID in ipairs(groupIDsToIterate) do
+          local groupData = data.combatGroups[groupID]
+          if groupData then
+              -- ... (rimozione unità morte) ...
+
+              if #groupData.units == 0 then
+                  -- ... (rimozione gruppo vuoto) ...
+              else
+                  -- Logica di Reattività Locale (se non sta già attaccando un hotspot)
+                  local groupEngagedEnemyLocally = false
+                  if groupData.state == "patrolling_area" or groupData.state == "moving_to_patrol" then
+                      -- Calcola centro gruppo
+                      local groupCenterX, groupCenterY, groupCenterZ = 0, 0, 0
+                      local validUnitCount = 0
+                      for _, unitID in ipairs(groupData.units) do
+                          local ux, uy, uz = Spring.GetUnitPosition(unitID)
+                          if ux then
+                              groupCenterX = groupCenterX + ux; groupCenterY = groupCenterY + uy; groupCenterZ = groupCenterZ + uz;
+                              validUnitCount = validUnitCount + 1
+                          end
+                      end
+
+                      if validUnitCount > 0 then
+                          groupCenterX = groupCenterX / validUnitCount
+                          groupCenterY = groupCenterY / validUnitCount
+                          groupCenterZ = groupCenterZ / validUnitCount
+
+                          local detectionRadius = 400 -- Raggio per reattività locale
+
+                          -- !!! QUI È LA CHIAMATA CORRETTA !!!
+                          local allUnitsInSphere = Spring.GetUnitsInSphere(groupCenterX, groupCenterY, groupCenterZ, detectionRadius) 
+                          local enemiesNearby = {}
+                          if allUnitsInSphere then
+                              for _, unitIDinSphere in ipairs(allUnitsInSphere) do
+                                  local unitActualTeam = Spring.GetUnitTeam(unitIDinSphere)
+                                  if unitActualTeam ~= teamID and not Spring.AreTeamsAllied(teamID, unitActualTeam) then
+                                      table.insert(enemiesNearby, unitIDinSphere)
                                   end
                               end
                           end
-                      end
-                  end
-              end
-          end
-      end
-  end -- Fine ManageProduction
+                          -- !!! FINE SEZIONE CORRETTA !!!
+
+                          if #enemiesNearby > 0 then
+                              Log(teamID, "Group " .. groupID .. " detected " .. #enemiesNearby .. " enemies nearby while patrolling! Engaging locally.")
+                              groupData.state = "engaging_enemy" 
+                              groupData.lastEngageOrderFrame = frame 
+                              local firstEnemyID = enemiesNearby[1]
+                              local ex, ey, ez = Spring.GetUnitPosition(firstEnemyID)
+                              if ex then
+                                  Spring.GiveOrderToUnitArray(groupData.units, 16, {ex,ey,ez}, {}) -- CMD.FIGHT
+                                  for _, uID in ipairs(groupData.units) do if data.combatUnits[uID] then data.combatUnits[uID].state = "attacking" end end
+                              end
+                              groupEngagedEnemyLocally = true
+                          end
+                      end -- if validUnitCount > 0
+                  end -- if patrolling or moving
+
+                  -- ... (resto della funzione con gestione attacking_hotspot, engaging_enemy, ecc.) ...
+
+              end -- if #groupData.units > 0
+          end -- if groupData
+      end -- for groupID
+  end
+
+
 
 
    function GeneratePatrolPoints(teamID, data)
@@ -993,102 +1237,71 @@ if (gadgetHandler:IsSyncedCode()) then
 
 
 
-  -- Funzione per assegnare un compito a un gruppo (Pattugliamento con un po' più di logica)
-  local function AssignTaskToGroup(teamID, data, groupID, frame)
+
+  -- Funzione per assegnare un compito a un gruppo (MODIFICATA per Priorità Hotspot)
+    local function AssignTaskToGroup(teamID, data, groupID, frame)
       local groupData = data.combatGroups[groupID]
       if not groupData or #groupData.units == 0 then
           Log(teamID, "AssignTaskToGroup: Group " .. groupID .. " is empty or nil, removing.")
           data.combatGroups[groupID] = nil
           return
       end
+      Log(teamID, "AssignTaskToGroup: Assigning task to Group " .. groupID .. " (Current state: "..(groupData.state or "N/A")..")")
 
-      if #data.patrolPoints == 0 then
-          Log(teamID, "Group " .. groupID .. ": No patrol points defined. Remaining idle.")
-          groupData.state = "idle"
-          return
-      end
+      -- === PRIORITÀ 1: ATTACCA HOTSPOT ===
+      local targetHotspot = FindBestHotspotToAttack(teamID, data, groupData) 
 
-      local startX, _, startZ = Spring.GetTeamStartPosition(teamID)
-      local patrolPointData = nil
-      local assignedPatrolIndex = -1
-
-      -- Tentativo 1: Trova un punto di pattuglia "lontano" e non attualmente bersagliato da altri gruppi attivi
-      -- Ordiniamo i punti per distanza dalla base (decrescente) per favorire l'esplorazione
-      local sortedPatrolPoints = {}
-      for i, p in ipairs(data.patrolPoints) do
-          if startX and p.x then -- Assicurati che le coordinate siano valide
-            local dx, dz = p.x - startX, p.z - startZ
-            table.insert(sortedPatrolPoints, { index = i, point = p, distSq = dx*dx + dz*dz })
-          end
-      end
-      table.sort(sortedPatrolPoints, function(a,b) return a.distSq > b.distSq end) -- Più lontano prima
-
-      local activePatrolIndices = {} -- Teniamo traccia dei punti già assegnati a gruppi attivi
-      for otherGroupID, otherGroupData in pairs(data.combatGroups) do
-          if otherGroupID ~= groupID and otherGroupData.currentPatrolIndex and
-             (otherGroupData.state == "patrolling_area" or otherGroupData.state == "moving_to_patrol") then -- Aggiungi altri stati se necessario
-              activePatrolIndices[otherGroupData.currentPatrolIndex] = true
-          end
-      end
-
-      for _, sortedPInfo in ipairs(sortedPatrolPoints) do
-          if not activePatrolIndices[sortedPInfo.index] then
-              patrolPointData = sortedPInfo.point
-              assignedPatrolIndex = sortedPInfo.index
-              Log(teamID, "Group " .. groupID .. ": Assigning preferred distant/unassigned patrol point #" .. assignedPatrolIndex)
-              break
-          end
-      end
-
-      -- Tentativo 2: Se non abbiamo trovato un punto "preferito" (magari tutti i lontani sono occupati, o pochi punti)
-      -- usiamo il vecchio sistema ciclico per assicurare che un compito venga comunque assegnato.
-      if not patrolPointData then
-          Log(teamID, "Group " .. groupID .. ": No preferred distant/unassigned point found, using next available.")
-          local attempts = 0
-          local maxAttempts = #data.patrolPoints
-          local startIndex = data.nextPatrolPointIndex -- Usa l'indice successivo globale
+      if targetHotspot then
+          Log(teamID, ">>>> AssignTaskToGroup: Group " .. groupID .. " assigned to ATTACK Hotspot " .. targetHotspot.id .. " (Type: "..(targetHotspot.dominantEnemyMoveType or "N/A")..") at " .. string.format("%.0f,%.0f", targetHotspot.x, targetHotspot.z))
           
-          while attempts < maxAttempts do
-              local currentIndex = ((startIndex -1 + attempts) % #data.patrolPoints) + 1 -- Cicla correttamente
-              if not activePatrolIndices[currentIndex] or #data.patrolPoints <= 2 then -- Se ci sono pochi punti, permetti sovrapposizione
-                  patrolPointData = data.patrolPoints[currentIndex]
-                  assignedPatrolIndex = currentIndex
-                  data.nextPatrolPointIndex = (currentIndex % #data.patrolPoints) + 1 -- Aggiorna l'indice globale per il prossimo gruppo
-                  break
-              end
-              attempts = attempts + 1
+          groupData.state = "attacking_hotspot" 
+          groupData.targetPoint = {targetHotspot.x, targetHotspot.y, targetHotspot.z} 
+          groupData.targetHotspotID = targetHotspot.id 
+          groupData.currentPatrolIndex = nil 
+
+          local CMD_FIGHT_ID = 16
+          Spring.GiveOrderToUnitArray(groupData.units, CMD_FIGHT_ID, groupData.targetPoint, {}) 
+          
+          for _, unitID in ipairs(groupData.units) do
+              if data.combatUnits[unitID] then data.combatUnits[unitID].state = "attacking" end 
           end
-          -- Fallback definitivo se tutti i punti sono 'attivamente' pattugliati e ce ne sono molti
-          if not patrolPointData then
-              assignedPatrolIndex = data.nextPatrolPointIndex
-              patrolPointData = data.patrolPoints[assignedPatrolIndex]
-              data.nextPatrolPointIndex = (data.nextPatrolPointIndex % #data.patrolPoints) + 1
-              Log(teamID, "Group " .. groupID .. ": Fallback - assigning patrol point #" .. assignedPatrolIndex .. " (next in global sequence)")
-          end
+          groupData.lastOrderFrame = frame
+          return 
       end
+
+      -- === PRIORITÀ 2: PATTUGLIAMENTO ===
+      Log(teamID, "AssignTaskToGroup: Group " .. groupID .. ": No suitable hotspot found, assigning patrol task.")
+      
+      -- ... (logica esistente per selezionare patrolPointData e assignedPatrolIndex) ...
+      -- Aggiungere magari log dentro la selezione per capire quale punto viene scelto e perché
+      -- Es: Log(teamID, "LOG_DETAILED AssignTask: Trying distant point "..sortedPInfo.index)
+      -- Es: Log(teamID, "LOG_DETAILED AssignTask: Using cyclic fallback, index "..currentIndex)
       
       if not patrolPointData or assignedPatrolIndex == -1 then
-          -- Questo non dovrebbe succedere se #data.patrolPoints > 0, ma per sicurezza
-          Log(teamID, "Group " .. groupID .. ": CRITICAL - Could not assign any patrol point. Idling.")
+          Log(teamID, "AssignTaskToGroup: Group " .. groupID .. ": CRITICAL - Could not assign any patrol point. Idling.")
           groupData.state = "idle"
           return
       end
 
-      Log(teamID, "Group " .. groupID .. " assigned to PATROL point #" .. assignedPatrolIndex .. " ("..(patrolPointData.type or "N/A")..") at " .. string.format("%.0f,%.0f", patrolPointData.x, patrolPointData.z))
-      groupData.state = "patrolling_area" -- Potresti voler uno stato "moving_to_patrol" e poi cambiarlo una volta arrivati
+      Log(teamID, ">>>> AssignTaskToGroup: Group " .. groupID .. " assigned to PATROL point #" .. assignedPatrolIndex .. " ("..(patrolPointData.type or "N/A")..") at " .. string.format("%.0f,%.0f", patrolPointData.x, patrolPointData.z))
+      groupData.state = "patrolling_area" 
       groupData.targetPoint = {patrolPointData.x, patrolPointData.y, patrolPointData.z}
       groupData.currentPatrolIndex = assignedPatrolIndex
+      groupData.targetHotspotID = nil 
 
-      local CMD_PATROL_ID = 15 -- CMD.PATROL
-      Spring.GiveOrderToUnitArray(groupData.units, CMD_PATROL_ID, groupData.targetPoint, {"SHIFT"}) -- SHIFT è importante per il comando PATROL
+      local CMD_PATROL_ID = 15 
+      Spring.GiveOrderToUnitArray(groupData.units, CMD_PATROL_ID, groupData.targetPoint, {"SHIFT"}) 
       
       for _, unitID in ipairs(groupData.units) do
-          if data.combatUnits[unitID] then data.combatUnits[unitID].state = "patrolling" end -- Stato della singola unità
+          if data.combatUnits[unitID] then data.combatUnits[unitID].state = "patrolling" end 
       end
       groupData.lastOrderFrame = frame
-      -- Non aggiorniamo `data.nextPatrolPointIndex` qui se abbiamo scelto un punto specifico, 
-      -- l'abbiamo già fatto nel blocco di fallback se necessario.
   end
+
+
+
+
+  
   
   -- altra utility per debug unitsdef
   function PrintUnitDefViaMetaPairs(teamID, uDef, unitDefName)
@@ -1145,179 +1358,90 @@ end
 ]]--
 
 
-  function UpdateCombatGroupStates(teamID, frame, data)
+    function UpdateCombatGroupStates(teamID, frame, data)
       local groupIDsToIterate = {}; for id,_ in pairs(data.combatGroups) do table.insert(groupIDsToIterate, id) end
       
       for _, groupID in ipairs(groupIDsToIterate) do
           local groupData = data.combatGroups[groupID]
           if groupData then
-              -- Rimuovi unità morte dal gruppo
-              local aliveUnits = {}
-              for _,unitID in ipairs(groupData.units) do
-                  if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
-                      table.insert(aliveUnits, unitID)
-                  else
-                      if data.combatUnits[unitID] then
-                          data.combatUnits[unitID].groupID = nil
-                          data.combatUnits[unitID].state = "idle" -- O "destroyed"
-                      end
-                  end
-              end
+              local originalState = groupData.state -- Salva stato iniziale per log cambio stato
+              
+              -- Rimuovi unità morte (codice esistente)
+              -- ...
               groupData.units = aliveUnits
 
               if #groupData.units == 0 then
-                  Log(teamID, "Group " .. groupID .. " empty (all units destroyed or removed), removing group.")
+                  Log(teamID, "UpdateCombatGroupStates: Group " .. groupID .. " empty, removing group.")
                   data.combatGroups[groupID] = nil
-                  -- continue -- Usa 'goto continue_loop' se preferisci, o semplicemente struttura con if/else
               else
-                  -- === INIZIO NUOVA LOGICA DI REATTIVITÀ ===
-                  local groupEngagedEnemy = false
+                  -- Logica Reattività Locale (se non sta già attaccando un hotspot)
+                  local groupEngagedEnemyLocally = false
                   if groupData.state == "patrolling_area" or groupData.state == "moving_to_patrol" then
-                      local groupCenterX, groupCenterY, groupCenterZ = 0, 0, 0
-                      local validUnitCount = 0
-                      for _, unitID in ipairs(groupData.units) do
-                          local ux, uy, uz = Spring.GetUnitPosition(unitID)
-                          if ux then
-                              groupCenterX = groupCenterX + ux
-                              groupCenterY = groupCenterY + uy
-                              groupCenterZ = groupCenterZ + uz
-                              validUnitCount = validUnitCount + 1
-                          end
-                      end
-
-                      if validUnitCount > 0 then
-                          groupCenterX = groupCenterX / validUnitCount
-                          groupCenterY = groupCenterY / validUnitCount
-                          groupCenterZ = groupCenterZ / validUnitCount
-
-                          -- Raggio di rilevamento nemici per il gruppo (aggiustabile)
-                          local detectionRadius = 400 -- Aumenta se le tue unità hanno molta portata o velocità
-							local allUnitsNearby = Spring.GetUnitsInSphere(groupCenterX, groupCenterY, groupCenterZ, detectionRadius)
-							local enemiesNearby = {}
-if allUnitsNearby then
-    for _, unitIDinSphere in ipairs(allUnitsNearby) do
-        local unitActualTeam = Spring.GetUnitTeam(unitIDinSphere)
-        if unitActualTeam ~= teamID then -- Assicurati che non sia una mia unità
-            if not Spring.AreTeamsAllied(teamID, unitActualTeam) then
-                -- Se non sono alleati, è un nemico (o neutrale ostile)
-                table.insert(enemiesNearby, unitIDinSphere)
-            end
-        end
-    end
-end
-
-
-                          if enemiesNearby and #enemiesNearby > 0 then
-                              Log(teamID, "Group " .. groupID .. " detected " .. #enemiesNearby .. " enemies nearby while patrolling! Engaging.")
-                              groupData.state = "engaging_enemy"
-                              groupData.lastEngageOrderFrame = frame -- Per evitare spam di ordini
-                              -- Dai un ordine di attacco generico all'area o alla prima unità nemica
-                              -- CMD.ATTACK è 10. Potrebbe essere più efficace dare un ordine di ATTACK_MOVE (CMD.MOVE con opzione ATTACK)
-                              -- o attaccare specificamente la prima unità nemica.
-                              -- Per semplicità, un ATTACK verso la posizione del primo nemico:
-                              local firstEnemyID = enemiesNearby[1]
-                              local ex, ey, ez = Spring.GetUnitPosition(firstEnemyID)
-                              if ex then
-                                  Spring.GiveOrderToUnitArray(groupData.units, 10, {ex,ey,ez}, {"SHIFT"}) -- CMD.ATTACK
-                                  -- Aggiorna stato singole unità se vuoi
-                                  for _, uID in ipairs(groupData.units) do if data.combatUnits[uID] then data.combatUnits[uID].state = "attacking" end end
-                              end
-                              groupEngagedEnemy = true
-                          end
+                     -- ... (codice calcolo centro gruppo e ricerca nemici 'enemiesNearby') ...
+                      if #enemiesNearby > 0 then
+                          Log(teamID, "UpdateCombatGroupStates: Group " .. groupID .. " (State:"..originalState..") detected " .. #enemiesNearby .. " enemies locally! Switching to ENGAGING_ENEMY.")
+                          groupData.state = "engaging_enemy" 
+                          -- ... (resto della logica di ingaggio locale) ...
+                          groupEngagedEnemyLocally = true
                       end
                   end
-                  -- === FINE NUOVA LOGICA DI REATTIVITÀ ===
 
-                  -- Se il gruppo non ha ingaggiato un nemico, procedi con la logica di completamento pattuglia
-                  if not groupEngagedEnemy then
-                      if groupData.state == "patrolling_area" then
-                          local allIdleNearTarget = true
-                          if not groupData.targetPoint then
-                              allIdleNearTarget = false
-                          else
-                              local groupX, groupZ, unitCountInGroup = 0,0,0
-                              local allCommandsDoneForGroup = true
-                              for _,unitID in ipairs(groupData.units) do
-                                  local ux,_,uz = Spring.GetUnitPosition(unitID)
-                                  if ux then groupX = groupX+ux; groupZ = groupZ+uz; unitCountInGroup = unitCountInGroup+1 end
-                                  local cmds = Spring.GetUnitCommands(unitID)
-                                  -- Un gruppo in pattuglia (CMD.PATROL) ha sempre almeno 1 comando finché non viene interrotto
-                                  -- Dobbiamo considerare se sono "vicini" al targetPoint e non hanno ordini *diversi* da CMD.PATROL
-                                  if cmds and #cmds > 0 and cmds[1].id ~= 15 then -- Se ha un comando diverso da PATROL
-                                     allCommandsDoneForGroup = false -- Non è "idle" nel senso di aver finito la pattuglia
-                                  end
-                                  -- Se vuoi un controllo più stretto sulla fine della pattuglia:
-                                  -- if cmds and #cmds > 0 then allCommandsDoneForGroup = false; break end
-                              end
-
-                              if unitCountInGroup > 0 and allCommandsDoneForGroup then
-                                  groupX = groupX / unitCountInGroup
-                                  groupZ = groupZ / unitCountInGroup
-                                  local dx = groupX - groupData.targetPoint[1]
-                                  local dz = groupZ - groupData.targetPoint[3]
-                                  local arrivalDistanceSq = 200*200 -- Raggio entro cui consideriamo arrivati (aggiustabile)
-                                  if (dx*dx + dz*dz) > arrivalDistanceSq then
-                                      allIdleNearTarget = false
-                                  end
-                              elseif unitCountInGroup == 0 or not allCommandsDoneForGroup then
-                                  allIdleNearTarget = false
-                              end
-                          end
-
-                          if allIdleNearTarget then
-                              Log(teamID, "Group " .. groupID .. " completed patrol at point #" .. tostring(groupData.currentPatrolIndex) .. " or is sufficiently idle near target.")
-                              groupData.state = "patrol_complete"
-                              groupData.targetPoint = nil
-                              groupData.currentPatrolIndex = nil
-                              -- Potrebbe essere utile cancellare gli ordini esistenti per assicurarsi che siano pronti per un nuovo task
-                              Spring.GiveOrderToUnitArray(groupData.units, CMD.STOP, {}, {})
-                          end
-                      elseif groupData.state == "engaging_enemy" then
-                          -- Logica per quando un gruppo è in combattimento
-                          -- Controlla se ci sono ancora nemici vicini. Se no, torna a "idle" o "patrol_complete"
-                          -- Questo previene che rimangano bloccati in "engaging_enemy"
-                          if frame - (groupData.lastEngageOrderFrame or 0) > 90 then -- Controlla ogni tot frame
-                              local groupCenterX, groupCenterY, groupCenterZ, validUnitCount = 0,0,0,0
-                              for _, unitID in ipairs(groupData.units) do
-                                  local ux, uy, uz = Spring.GetUnitPosition(unitID)
-                                  if ux then groupCenterX=groupCenterX+ux; groupCenterY=groupCenterY+uy; groupCenterZ=groupCenterZ+uz; validUnitCount=validUnitCount+1 end
-                              end
-                              if validUnitCount > 0 then
-                                  groupCenterX = groupCenterX / validUnitCount; groupCenterY = groupCenterY / validUnitCount; groupCenterZ = groupCenterZ / validUnitCount;
-
-								local allUnitsInEngageArea = Spring.GetUnitsInSphere(groupCenterX, groupCenterY, groupCenterZ, 450) -- Raggio leggermente più grande
-								local enemiesNearby = {} -- Riusiamo la variabile enemiesNearby, o usane una nuova se preferisci
-if allUnitsInEngageArea then
-    for _, unitIDinSphere in ipairs(allUnitsInEngageArea) do
-        local unitActualTeam = Spring.GetUnitTeam(unitIDinSphere)
-        if unitActualTeam ~= teamID then -- Assicurati che non sia una mia unità
-            if not Spring.AreTeamsAllied(teamID, unitActualTeam) then
-                -- Se non sono alleati, è un nemico
-                table.insert(enemiesNearby, unitIDinSphere)
-            end
-        end
-    end
-end
-
-
-                                  if not enemiesNearby or #enemiesNearby == 0 then
-                                      Log(teamID, "Group " .. groupID .. " no longer finds enemies in engagement area. Setting to patrol_complete.")
-                                      groupData.state = "patrol_complete"
-                                      Spring.GiveOrderToUnitArray(groupData.units, CMD.STOP, {}, {}) -- Ferma le unità
-                                      -- Potrebbe essere utile inviarli a un punto di regroup vicino prima di assegnare un nuovo task
-                                  else
-                                      groupData.lastEngageOrderFrame = frame -- Resetta il timer se vede ancora nemici
-                                  end
-                              else -- Il gruppo è stato distrutto mentre era in engaging
-                                  Log(teamID, "Group " .. groupID .. " seems to have no units left while engaging. Will be removed if truly empty.")
-                              end
+                  -- Gestione Stato "attacking_hotspot"
+                  if groupData.state == "attacking_hotspot" then
+                      local targetHotspot = data.hotspots[groupData.targetHotspotID]
+                      if not targetHotspot then
+                          Log(teamID, "UpdateCombatGroupStates: Group " .. groupID .. " target hotspot " .. groupData.targetHotspotID .. " vanished. Switching to IDLE.")
+                          groupData.state = "idle" 
+                          -- ... (reset target, STOP) ...
+                          Spring.GiveOrderToUnitArray(groupData.units, CMD.STOP, {}, {}) 
+                      else
+                          -- Controlla se l'hotspot è troppo vecchio
+                          local hotspotAgeLimit = (Game.gameSpeed or 30) * 20 -- Es. 20 secondi
+                          if frame - targetHotspot.lastSeenFrame > hotspotAgeLimit then
+                              Log(teamID, "UpdateCombatGroupStates: Group " .. groupID .. " target hotspot " .. groupData.targetHotspotID .. " is old (Age: "..string.format("%.1f", (frame - targetHotspot.lastSeenFrame)/(Game.gameSpeed or 30)).."s). Switching to IDLE.")
+                              groupData.state = "idle" 
+                              -- ... (reset target, STOP) ...
+                              Spring.GiveOrderToUnitArray(groupData.units, CMD.STOP, {}, {}) 
+                          -- else Log(teamID, "LOG_DETAILED UpdateCombat: Group "..groupID.." continuing attack on hotspot "..groupData.targetHotspotID) -- Log opzionale molto verboso
                           end
                       end
-                  end -- fine 'if not groupEngagedEnemy'
-              end -- fine 'if #groupData.units == 0 else'
-          end -- fine 'if groupData'
-          -- :continue_loop -- Se usi goto
-      end -- fine ciclo for groupID
+                  
+                  -- Gestione altri stati (se non ingaggiato localmente e non in stato attacking_hotspot)
+                  elseif not groupEngagedEnemyLocally then 
+                      if groupData.state == "patrolling_area" then
+                         -- ... (logica esistente per verificare se la pattuglia è completata - allIdleNearTarget) ...
+                         if allIdleNearTarget then
+                              Log(teamID,"UpdateCombatGroupStates: Group "..groupID.." completed patrol at point #"..tostring(groupData.currentPatrolIndex) .. ". Switching to IDLE.")
+                              groupData.state = "idle" 
+                              -- ... (reset target, STOP) ...
+                              Spring.GiveOrderToUnitArray(groupData.units, CMD.STOP, {}, {}) 
+                         end
+                      elseif groupData.state == "engaging_enemy" then
+                         -- ... (logica esistente per vedere se l'ingaggio locale è finito) ...
+                         if frame - (groupData.lastEngageOrderFrame or 0) > 90 then 
+                             -- ... (codice per cercare nemici vicini - enemiesStillNearby) ...
+                             if #enemiesStillNearby == 0 then
+                                 Log(teamID, "UpdateCombatGroupStates: Group " .. groupID .. " no longer finds enemies in local engagement area. Switching to IDLE.")
+                                 groupData.state = "idle" 
+                                 Spring.GiveOrderToUnitArray(groupData.units, CMD.STOP, {}, {}) 
+                             else
+                                 groupData.lastEngageOrderFrame = frame 
+                             end
+                         end
+                      elseif groupData.state == "patrol_complete" then 
+                          Log(teamID, "UpdateCombatGroupStates: Group "..groupID.." was patrol_complete. Setting to IDLE.")
+                          groupData.state = "idle"
+                      end
+                  end -- Fine gestione altri stati
+                  
+                  -- Log cambio stato finale (se è cambiato)
+                  -- if groupData and groupData.state ~= originalState then
+                  --    Log(teamID, "LOG_DETAILED UpdateCombat: Group " .. groupID .. " state changed from " .. originalState .. " to " .. groupData.state)
+                  -- end
+
+              end -- if #units > 0
+          end -- if groupData
+      end -- for groupID
   end
 
   -- Placeholder per Funzioni Hotspot (da implementare in futuro)
