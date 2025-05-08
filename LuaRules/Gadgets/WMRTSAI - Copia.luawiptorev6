@@ -1576,13 +1576,11 @@ end
               if uDef then -- Solo se uDef è valido
 			  
 			  ---------------------------------- inizio per debug
-			  
-			  if not data.debug_uDefPairsLogged_icupatroller then -- Flag per loggare solo una volta
-			if uDef and uDef.name and uDef.name:lower() == "icupatroller" then -- o il nome esatto case-sensitive
-			 PrintUnitDefViaMetaPairs(teamID, uDef, "icupatroller")
+			  if not data.debug_uDefLogged_icupatroller then -- Rinominato per chiarezza
+    if uDef.name == "icupatroller" then -- Assicurati che "icupatroller" sia il case-sensitive name corretto dell'unità
         Log(teamID, "DEBUG: UnitDef fields for " .. uDef.name .. ":")
 --		LogAllUnitDefFields(teamID, uDefID, uDef.name) ----- debug
-			data.debug_uDefPairsLogged_icupatroller = true
+		data.debug_uDefLogged_icupatroller_deep = true --- debugg
         for k,v in pairs(uDef) do
             if type(v) == "number" or type(v) == "string" or type(v) == "boolean" then
                 Log(teamID, "  " .. tostring(k) .. " = " .. tostring(v))
@@ -1862,7 +1860,7 @@ local function ManageMilitary(teamID, frame)
               Log(teamID, "Team detected for AI control.")
               local startX, startY, startZ = Spring.GetTeamStartPosition(teamID)
               teamData[teamID] = {
-			      debug_uDefPairsLogged_icupatroller = false,
+			      debug_uDefLogged_icupatroller_deep = false,  ---------- per debug
 			      debug_uDefLogged_icupatroller = false,  ---------------------- per DEBUG
                   teamID = teamID, initialized = true, faction = nil, techLevel = 0,
                   commanderInfo = nil, startPos = { x = startX, y = startY, z = startZ },
