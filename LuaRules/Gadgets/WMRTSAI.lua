@@ -52,7 +52,7 @@ if (gadgetHandler:IsSyncedCode()) then
               powerPlant =  { name = "armsolar", moveType="BUILDING", role="Power_T1"},
               factory =     { name = "armlab", moveType = "BUILDING", role="Factory_Land_T1"},
               constructor = { name = "icuck", moveType = "LAND", role="Constructor_T1" },
-              attackers = { { name = "icupatroller", moveType = "LAND", role="Basic_T1" }, },
+              attackers = { { name = "icupatroller", moveType = "LAND", role="Basic_T1", viewradius = 429 }, },
               defenses = { { name = "iculighlturr", moveType = "BUILDING", role="Light_T1" }, }
           },
           T2 = {
@@ -725,6 +725,170 @@ if (gadgetHandler:IsSyncedCode()) then
   end -- Fine ManageProduction
 
 
+
+  -- === NUOVA FUNZIONE HELPER ===
+  -- Trova l'hotspot più adatto per un gruppo specifico
+  -- attackingGroupData: la tabella dati del gruppo che cerca un target
+  -- data: la tabella dati del team (contiene data.hotspots)
+  -- Restituisce la tabella dell'hotspot scelto, o nil se non ne trova uno adatto.
+  local function FindBestHotspotToAttack(teamID, data, attackingGroupData)
+      local bestHotspot = nil
+      local highestScore = -1 -- Iniziamo con un punteggio basso
+
+      if not attackingGroupData or not attackingGroupData.units or #attackingGroupData.units == 0 then
+          return nil -- Gruppo non valido
+      end
+      
+      -- Calcola la posizione approssimativa del gruppo AI
+      local groupX, groupY, groupZ = 0, 0, 0
+      local validUnitCount = 0
+      for _, unitID in ipairs(attackingGroupData.units) do
+          local ux, uy, uz = Spring.GetUnitPosition(unitID)
+          if ux then
+              groupX = groupX + ux; groupY = groupY + uy; groupZ = groupZ + uz;
+              validUnitCount = validUnitCount + 1
+          end
+      end
+      if validUnitCount == 0 then return nil end -- Non si può calcolare la posizione del gruppo
+      groupX = groupX / validUnitCount
+      groupY = groupY / validUnitCount
+      groupZ = groupZ / validUnitCount
+
+      -- Itera sugli hotspot attivi
+      for hotspotID, hotspot in pairs(data.hotspots) do
+          local score = 0
+          local canEngage = false
+
+          -- === Controllo Compatibilità Gruppo vs Hotspot ===
+          -- Il gruppo può effettivamente danneggiare i tipi di unità presenti nell'hotspot?
+          if hotspot.hasLandEnemies and attackingGroupData.canAttackLand then canEngage = true end
+          if not canEngage and hotspot.hasAirEnemies and attackingGroupData.canAttackAir then canEngage = true end
+          if not canEngage and hotspot.hasNavalEnemies and attackingGroupData.canAttackNaval then canEngage = true end
+          
+          -- Caso speciale: se l'hotspot è UNKNOWN o MIXED, un gruppo dovrebbe poter provare ad attaccare se può fare *qualcosa*
+          if not canEngage and (hotspot.dominantEnemyMoveType == "UNKNOWN" or hotspot.dominantEnemyMoveType == "MIXED") then
+               if attackingGroupData.canAttackLand or attackingGroupData.canAttackAir or attackingGroupData.canAttackNaval then
+                   canEngage = true -- Tentiamo comunque se il tipo non è chiaro ma il gruppo può attaccare qualcosa
+               end
+          end
+
+          if canEngage then
+              -- === Calcolo Punteggio Hotspot ===
+              -- Fattori da considerare: Forza, Distanza, Recenza
+              
+              -- 1. Forza dell'hotspot (più è forte, più è importante)
+              score = score + (hotspot.strength or 1) * 10 -- Moltiplicatore per la forza
+
+              -- 2. Distanza (più vicino è meglio)
+              local dx, dz = hotspot.x - groupX, hotspot.z - groupZ
+              local distSq = dx*dx + dz*dz
+              local maxAttackDistSq = 1500 * 1500 -- Non considerare hotspot troppo lontani (aggiustabile)
+              if distSq < maxAttackDistSq and distSq > 1 then -- Evita distanza zero e troppo lontani
+                  -- Punteggio inversamente proporzionale alla distanza (più complesso, ma migliore)
+                  -- score = score + (500000 / distSq) -- Aggiusta il numeratore per bilanciare
+                  -- Oppure più semplice: sottrai punti per la distanza
+                  score = score - math.sqrt(distSq) * 0.1 -- Sottrai un decimo della distanza lineare
+              else 
+                 -- Se troppo lontano, dagli un punteggio molto basso o ignora
+                 score = score - 10000 -- Penalità forte per distanza eccessiva
+              end
+
+              -- 3. Recenza (più recente è meglio)
+              local ageInSeconds = (Game.frame - hotspot.lastSeenFrame) / (Game.gameSpeed or 30)
+              score = score - ageInSeconds * 2 -- Penalità per ogni secondo di "vecchiaia" (aggiustabile)
+
+              -- 4. Bonus/Malus per tipo? (Opzionale)
+              -- Es. priorità a hotspot di tipo "UNDER_ATTACK" se esistesse
+
+              -- Confronta con il miglior punteggio trovato finora
+              if score > highestScore then
+                  highestScore = score
+                  bestHotspot = hotspot
+              end
+          end -- fine if canEngage
+      end -- fine for pairs(data.hotspots)
+
+      if bestHotspot then
+        Log(teamID, "FindBestHotspot: Group " .. attackingGroupData.id .. " chose Hotspot " .. bestHotspot.id .. " (Type: "..(bestHotspot.dominantEnemyMoveType or "N/A")..") with score " .. string.format("%.1f", highestScore))
+      -- else Log(teamID, "FindBestHotspot: Group " .. attackingGroupData.id .. " found no suitable hotspot.")
+      end
+      
+      return bestHotspot
+  end
+
+
+
+
+    function UpdateCombatGroupStates(teamID, frame, data)
+      local groupIDsToIterate = {}; for id,_ in pairs(data.combatGroups) do table.insert(groupIDsToIterate, id) end
+      
+      for _, groupID in ipairs(groupIDsToIterate) do
+          local groupData = data.combatGroups[groupID]
+          if groupData then
+              -- ... (rimozione unità morte) ...
+
+              if #groupData.units == 0 then
+                  -- ... (rimozione gruppo vuoto) ...
+              else
+                  -- Logica di Reattività Locale (se non sta già attaccando un hotspot)
+                  local groupEngagedEnemyLocally = false
+                  if groupData.state == "patrolling_area" or groupData.state == "moving_to_patrol" then
+                      -- Calcola centro gruppo
+                      local groupCenterX, groupCenterY, groupCenterZ = 0, 0, 0
+                      local validUnitCount = 0
+                      for _, unitID in ipairs(groupData.units) do
+                          local ux, uy, uz = Spring.GetUnitPosition(unitID)
+                          if ux then
+                              groupCenterX = groupCenterX + ux; groupCenterY = groupCenterY + uy; groupCenterZ = groupCenterZ + uz;
+                              validUnitCount = validUnitCount + 1
+                          end
+                      end
+
+                      if validUnitCount > 0 then
+                          groupCenterX = groupCenterX / validUnitCount
+                          groupCenterY = groupCenterY / validUnitCount
+                          groupCenterZ = groupCenterZ / validUnitCount
+
+                          local detectionRadius = 400 -- Raggio per reattività locale
+
+                          -- !!! QUI È LA CHIAMATA CORRETTA !!!
+                          local allUnitsInSphere = Spring.GetUnitsInSphere(groupCenterX, groupCenterY, groupCenterZ, detectionRadius) 
+                          local enemiesNearby = {}
+                          if allUnitsInSphere then
+                              for _, unitIDinSphere in ipairs(allUnitsInSphere) do
+                                  local unitActualTeam = Spring.GetUnitTeam(unitIDinSphere)
+                                  if unitActualTeam ~= teamID and not Spring.AreTeamsAllied(teamID, unitActualTeam) then
+                                      table.insert(enemiesNearby, unitIDinSphere)
+                                  end
+                              end
+                          end
+                          -- !!! FINE SEZIONE CORRETTA !!!
+
+                          if #enemiesNearby > 0 then
+                              Log(teamID, "Group " .. groupID .. " detected " .. #enemiesNearby .. " enemies nearby while patrolling! Engaging locally.")
+                              groupData.state = "engaging_enemy" 
+                              groupData.lastEngageOrderFrame = frame 
+                              local firstEnemyID = enemiesNearby[1]
+                              local ex, ey, ez = Spring.GetUnitPosition(firstEnemyID)
+                              if ex then
+                                  Spring.GiveOrderToUnitArray(groupData.units, 16, {ex,ey,ez}, {}) -- CMD.FIGHT
+                                  for _, uID in ipairs(groupData.units) do if data.combatUnits[uID] then data.combatUnits[uID].state = "attacking" end end
+                              end
+                              groupEngagedEnemyLocally = true
+                          end
+                      end -- if validUnitCount > 0
+                  end -- if patrolling or moving
+
+                  -- ... (resto della funzione con gestione attacking_hotspot, engaging_enemy, ecc.) ...
+
+              end -- if #groupData.units > 0
+          end -- if groupData
+      end -- for groupID
+  end
+
+
+
+
    function GeneratePatrolPoints(teamID, data)
       if #data.patrolPoints > 0 and not data.regeneratePatrolPoints then
           Log(teamID, "GeneratePatrolPoints: Points already exist and no regeneration forced. Count: " .. #data.patrolPoints)
@@ -993,7 +1157,8 @@ if (gadgetHandler:IsSyncedCode()) then
 
 
 
-  -- Funzione per assegnare un compito a un gruppo (Pattugliamento con un po' più di logica)
+
+  -- Funzione per assegnare un compito a un gruppo (MODIFICATA per Priorità Hotspot)
   local function AssignTaskToGroup(teamID, data, groupID, frame)
       local groupData = data.combatGroups[groupID]
       if not groupData or #groupData.units == 0 then
@@ -1002,31 +1167,59 @@ if (gadgetHandler:IsSyncedCode()) then
           return
       end
 
+      -- === NUOVA PRIORITÀ 1: ATTACCA HOTSPOT ===
+      local targetHotspot = FindBestHotspotToAttack(teamID, data, groupData) 
+
+      if targetHotspot then
+          Log(teamID, "Group " .. groupID .. " assigned to ATTACK Hotspot " .. targetHotspot.id .. " (Type: "..(targetHotspot.dominantEnemyMoveType or "N/A")..") at " .. string.format("%.0f,%.0f", targetHotspot.x, targetHotspot.z))
+          
+          groupData.state = "attacking_hotspot" -- Nuovo stato
+          groupData.targetPoint = {targetHotspot.x, targetHotspot.y, targetHotspot.z} -- Salva le coordinate target
+          groupData.targetHotspotID = targetHotspot.id -- Salva l'ID dell'hotspot bersaglio
+          groupData.currentPatrolIndex = nil -- Non sta pattugliando
+
+          -- Comando da dare: CMD.FIGHT (ID 16) è spesso buono per attacco-movimento verso un'area
+          -- O CMD.ATTACK (ID 10) se vuoi che attacchino specificamente quel punto (utile se ci sono edifici)
+          local CMD_ATTACK_ID = 10 
+          local CMD_FIGHT_ID = 16
+          Spring.GiveOrderToUnitArray(groupData.units, CMD_FIGHT_ID, groupData.targetPoint, {}) -- No SHIFT, nuovo ordine primario
+          
+          for _, unitID in ipairs(groupData.units) do
+              if data.combatUnits[unitID] then data.combatUnits[unitID].state = "attacking" end 
+          end
+          groupData.lastOrderFrame = frame
+          return -- Compito assegnato (Hotspot)
+      end
+      -- === FINE PRIORITÀ 1 ===
+
+      -- === PRIORITÀ 2: PATTUGLIAMENTO (Logica Esistente) ===
+      -- Se non è stato trovato nessun hotspot adatto, procedi con l'assegnazione del pattugliamento
+      Log(teamID, "Group " .. groupID .. ": No suitable hotspot found, assigning patrol task.")
+      
       if #data.patrolPoints == 0 then
           Log(teamID, "Group " .. groupID .. ": No patrol points defined. Remaining idle.")
           groupData.state = "idle"
           return
       end
 
-      local startX, _, startZ = Spring.GetTeamStartPosition(teamID)
+      local startX, _, startZ = Spring.GetTeamStartPosition(teamID) -- Serve per ordinare
       local patrolPointData = nil
       local assignedPatrolIndex = -1
 
-      -- Tentativo 1: Trova un punto di pattuglia "lontano" e non attualmente bersagliato da altri gruppi attivi
-      -- Ordiniamo i punti per distanza dalla base (decrescente) per favorire l'esplorazione
+      -- Logica per scegliere il punto di pattuglia (quella che avevamo prima, con priorità a punti lontani/non occupati)
       local sortedPatrolPoints = {}
       for i, p in ipairs(data.patrolPoints) do
-          if startX and p.x then -- Assicurati che le coordinate siano valide
+          if startX and p.x then 
             local dx, dz = p.x - startX, p.z - startZ
             table.insert(sortedPatrolPoints, { index = i, point = p, distSq = dx*dx + dz*dz })
           end
       end
-      table.sort(sortedPatrolPoints, function(a,b) return a.distSq > b.distSq end) -- Più lontano prima
+      table.sort(sortedPatrolPoints, function(a,b) return a.distSq > b.distSq end) 
 
-      local activePatrolIndices = {} -- Teniamo traccia dei punti già assegnati a gruppi attivi
+      local activePatrolIndices = {} 
       for otherGroupID, otherGroupData in pairs(data.combatGroups) do
           if otherGroupID ~= groupID and otherGroupData.currentPatrolIndex and
-             (otherGroupData.state == "patrolling_area" or otherGroupData.state == "moving_to_patrol") then -- Aggiungi altri stati se necessario
+             (otherGroupData.state == "patrolling_area" or otherGroupData.state == "moving_to_patrol" or otherGroupData.state == "engaging_enemy") then -- Considera anche gruppi impegnati
               activePatrolIndices[otherGroupData.currentPatrolIndex] = true
           end
       end
@@ -1035,60 +1228,60 @@ if (gadgetHandler:IsSyncedCode()) then
           if not activePatrolIndices[sortedPInfo.index] then
               patrolPointData = sortedPInfo.point
               assignedPatrolIndex = sortedPInfo.index
-              Log(teamID, "Group " .. groupID .. ": Assigning preferred distant/unassigned patrol point #" .. assignedPatrolIndex)
+              -- Log(teamID, "Group " .. groupID .. ": Assigning preferred distant/unassigned patrol point #" .. assignedPatrolIndex)
               break
           end
       end
 
-      -- Tentativo 2: Se non abbiamo trovato un punto "preferito" (magari tutti i lontani sono occupati, o pochi punti)
-      -- usiamo il vecchio sistema ciclico per assicurare che un compito venga comunque assegnato.
       if not patrolPointData then
-          Log(teamID, "Group " .. groupID .. ": No preferred distant/unassigned point found, using next available.")
+          -- Log(teamID, "Group " .. groupID .. ": No preferred distant/unassigned point found, using next available cyclic.")
+          -- Logica di fallback ciclica (come prima)
           local attempts = 0
           local maxAttempts = #data.patrolPoints
-          local startIndex = data.nextPatrolPointIndex -- Usa l'indice successivo globale
-          
+          local startIndex = data.nextPatrolPointIndex           
           while attempts < maxAttempts do
-              local currentIndex = ((startIndex -1 + attempts) % #data.patrolPoints) + 1 -- Cicla correttamente
-              if not activePatrolIndices[currentIndex] or #data.patrolPoints <= 2 then -- Se ci sono pochi punti, permetti sovrapposizione
+              local currentIndex = ((startIndex -1 + attempts) % #data.patrolPoints) + 1 
+              if not activePatrolIndices[currentIndex] or #data.patrolPoints <= 2 then 
                   patrolPointData = data.patrolPoints[currentIndex]
                   assignedPatrolIndex = currentIndex
-                  data.nextPatrolPointIndex = (currentIndex % #data.patrolPoints) + 1 -- Aggiorna l'indice globale per il prossimo gruppo
+                  data.nextPatrolPointIndex = (currentIndex % #data.patrolPoints) + 1 
                   break
               end
               attempts = attempts + 1
           end
-          -- Fallback definitivo se tutti i punti sono 'attivamente' pattugliati e ce ne sono molti
-          if not patrolPointData then
+          if not patrolPointData then -- Fallback definitivo
               assignedPatrolIndex = data.nextPatrolPointIndex
               patrolPointData = data.patrolPoints[assignedPatrolIndex]
               data.nextPatrolPointIndex = (data.nextPatrolPointIndex % #data.patrolPoints) + 1
-              Log(teamID, "Group " .. groupID .. ": Fallback - assigning patrol point #" .. assignedPatrolIndex .. " (next in global sequence)")
+              -- Log(teamID, "Group " .. groupID .. ": Fallback - assigning patrol point #" .. assignedPatrolIndex .. " (next in global sequence)")
           end
       end
       
       if not patrolPointData or assignedPatrolIndex == -1 then
-          -- Questo non dovrebbe succedere se #data.patrolPoints > 0, ma per sicurezza
-          Log(teamID, "Group " .. groupID .. ": CRITICAL - Could not assign any patrol point. Idling.")
+          Log(teamID, "Group " .. groupID .. ": CRITICAL - Could not assign any patrol point after checking hotspots. Idling.")
           groupData.state = "idle"
           return
       end
 
       Log(teamID, "Group " .. groupID .. " assigned to PATROL point #" .. assignedPatrolIndex .. " ("..(patrolPointData.type or "N/A")..") at " .. string.format("%.0f,%.0f", patrolPointData.x, patrolPointData.z))
-      groupData.state = "patrolling_area" -- Potresti voler uno stato "moving_to_patrol" e poi cambiarlo una volta arrivati
+      groupData.state = "patrolling_area" 
       groupData.targetPoint = {patrolPointData.x, patrolPointData.y, patrolPointData.z}
       groupData.currentPatrolIndex = assignedPatrolIndex
+      groupData.targetHotspotID = nil -- Assicura sia nil
 
-      local CMD_PATROL_ID = 15 -- CMD.PATROL
-      Spring.GiveOrderToUnitArray(groupData.units, CMD_PATROL_ID, groupData.targetPoint, {"SHIFT"}) -- SHIFT è importante per il comando PATROL
+      local CMD_PATROL_ID = 15 
+      Spring.GiveOrderToUnitArray(groupData.units, CMD_PATROL_ID, groupData.targetPoint, {"SHIFT"}) 
       
       for _, unitID in ipairs(groupData.units) do
-          if data.combatUnits[unitID] then data.combatUnits[unitID].state = "patrolling" end -- Stato della singola unità
+          if data.combatUnits[unitID] then data.combatUnits[unitID].state = "patrolling" end 
       end
       groupData.lastOrderFrame = frame
-      -- Non aggiorniamo `data.nextPatrolPointIndex` qui se abbiamo scelto un punto specifico, 
-      -- l'abbiamo già fatto nel blocco di fallback se necessario.
   end
+
+
+
+
+  
   
   -- altra utility per debug unitsdef
   function PrintUnitDefViaMetaPairs(teamID, uDef, unitDefName)
@@ -1375,141 +1568,228 @@ end
   -- hCreatorUnitID: (opzionale) ID dell'unità AI che ha fatto l'avvistamento
   -- hEnemyUnitDefID: (opzionale) UnitDefID del nemico avvistato, per determinare il tipo
   -- Firma modificata
-local function CreateOrUpdateHotspot(teamID, data, frameValue, hx, hy, hz, htype, hstrength, hradius, hCreatorUnitID, hEnemyUnitDefID)
-    -- Rimuovi: local frame = Game.frame
-    -- Log(teamID, "DEBUG CreateOrUpdateHotspot: Game.frame is " .. tostring(Game.frame) .. ", local frame value is " .. tostring(frame)) -- Questo log non serve più se frameValue è passato
+  -- Funzione per creare o aggiornare un hotspot
+  -- USA GetAiUnitDataByDefID per determinare il tipo di nemico basandosi su factionUnits
+   -- Funzione per creare o aggiornare un hotspot
+  -- USA GetAiUnitDataByDefID per determinare il tipo di nemico basandosi su factionUnits
+  local function CreateOrUpdateHotspot(teamID, data, frameValue, hx, hy, hz, htype, hstrength, hradius, hCreatorUnitID, hEnemyUnitDefID)
+      -- Log iniziale per debug, mostra il frame ricevuto
+      -- Log(teamID, "DEBUG CreateOrUpdateHotspot: Called. Received frameValue: " .. tostring(frameValue)) 
 
-    Log(teamID, "DEBUG CreateOrUpdateHotspot: Received frameValue: " .. tostring(frameValue)) -- NUOVO LOG per verificare
+      -- === 1. Controlli di Validità Input ===
+      if not hx or not hy or not hz then
+          Log(teamID, "WARN CreateOrUpdateHotspot: Invalid coordinates (nil). Aborting.")
+          return nil
+      end
+       if not hstrength or type(hstrength) ~= "number" or hstrength <= 0 then
+          Log(teamID, "WARN CreateOrUpdateHotspot: Invalid strength ("..tostring(hstrength).."). Aborting.")
+          return nil
+      end
+      if frameValue == nil or type(frameValue) ~= "number" then 
+          Log(teamID, "WARN CreateOrUpdateHotspot: CRITICAL - frameValue is invalid ("..tostring(frameValue)..")! Aborting.")
+          return nil
+      end
 
-    if not hx or not hstrength or hstrength <= 0 then
-        Log(teamID, "CreateOrUpdateHotspot: Invalid parameters (coords or strength missing/zero).")
-        return nil
-    end
-    if frameValue == nil then -- Controllo aggiuntivo
-        Log(teamID, "CreateOrUpdateHotspot: CRITICAL - frameValue is nil!")
-        return nil
-    end
+      -- Imposta valori di default se necessario
+      hradius = hradius or 350 
+      htype = htype or "ENEMY_CONTACT"
+      local mergeDistanceSq = (hradius * 0.75) * (hradius * 0.75) -- Distanza per unire hotspot
 
-    hradius = hradius or 350 
-    local mergeDistanceSq = (hradius * 0.75) * (hradius * 0.75)
-
-    local existingHotspotID = nil
+      -- === 2. Cerca Hotspot Esistente Vicino ===
+      local existingHotspotID = nil
+      local existingSpot = nil
       for id, spot in pairs(data.hotspots) do
-          local dx, dz = spot.x - hx, spot.z - hz
+          local dx = spot.x - hx
+          local dz = spot.z - hz -- Confronto solo su XZ per unire più facilmente
           if (dx*dx + dz*dz) < mergeDistanceSq then
-              -- Trovato un hotspot esistente abbastanza vicino, lo aggiorniamo
               existingHotspotID = id
+              existingSpot = spot -- Salva la tabella dell'hotspot trovato
               break
           end
       end
 
-      local enemyMoveType = nil
-      local canAttackLand, canAttackAir, canAttackNaval = false, false, false -- Capacità del *nemico*
+      -- === 3. Determina Tipo e Capacità del Nemico (se DefID è fornito) ===
+      local enemyMoveType = "UNKNOWN" -- Default
+      local isLandEnemy = false 
+      local isAirEnemy = false
+      local isNavalEnemy = false -- Include sub
+      local isHoverEnemy = false
 
-      if hEnemyUnitDefID and UnitDefs[hEnemyUnitDefID] then
---          local enemyDef = UnitDefs[hEnemyUnitDefID]
------------------------------
-local enemyDef = UnitDefs[hEnemyUnitDefID]
-enemyMoveType = "UNKNOWN" -- Default
---------------
-if enemyDef then
-        Log(teamID, "DEBUG CreateHotspot: For enemy " .. enemyDef.name)
-        Log(teamID, "DEBUG CreateHotspot: Inspecting enemyDef.movementclass. Value: [" .. tostring(enemyDef.movementclass) .. "], Type: " .. type(enemyDef.movementclass) ) -- <<< NUOVO LOG DI ISPEZIONE
-
-        if enemyDef.movedata and enemyDef.movedata.moveType then
-            enemyMoveType = enemyDef.movedata.moveType
-		-----------------------------
-        Log(teamID, "DEBUG CreateHotspot: Found moveType in movedata: " .. enemyMoveType)
-        elseif enemyDef.movementclass and type(enemyDef.movementclass) == "string" then -- Aggiunto controllo che sia una stringa
-            Log(teamID, "DEBUG CreateHotspot: No movedata, trying movementclass: " .. enemyDef.movementclass)
-            local mc = enemyDef.movementclass:lower() 
-        if mc == "kbot2" or mc == "kbot" or mc == "tank" or mc == "ground" then -- Aggiungi altri movementclass terrestri
-            enemyMoveType = "LAND"
-        elseif mc == "hover" then -- Esempio per hover
-            enemyMoveType = "LAND" -- O potresti trattarlo diversamente
-        elseif mc == "ship" or mc == "boat" then
-            enemyMoveType = "NAVAL"
-        elseif mc == "airplane" or mc == "gunship" or mc == "vtol" then --VTOL potrebbe essere ambiguo
-            enemyMoveType = "AIR"
-        end
-        Log(teamID, "DEBUG CreateHotspot: Mapped movementclass to moveType: " .. enemyMoveType)
-    else
-                    Log(teamID, "DEBUG CreateHotspot: No movedata or valid movementclass string found for enemy " .. enemyDef.name)
-		
-    end
---end
-
-		  ----------------- INIZIO DEBUG
-		  if enemyDef then
-    Log(teamID, "DEBUG CreateHotspot: For enemy " .. enemyDef.name .. ", enemyDef.movedata is: " .. tostring(enemyDef.movedata))
-    if enemyDef.movedata then
-        Log(teamID, "DEBUG CreateHotspot: enemyDef.movedata.moveType is: " .. tostring(enemyDef.movedata.moveType))
-    end
-	end -- aggiunto
-end
-------------------------- FINE DEBUG
-          enemyMoveType = enemyDef.movedata and enemyDef.movedata.moveType or "UNKNOWN"
-		  Log(teamID, "DEBUG CreateHotspot: Enemy " .. enemyDef.name .. " has moveType: " .. enemyMoveType) -- NUOVO LOG
-          -- Determina cosa può attaccare il nemico (per ora semplificato, non guardiamo le armi)
-          -- Questo è più per sapere CHE TIPO di nemico è, non cosa può fare
-if enemyMoveType == "LAND" then canAttackLand = true
-elseif enemyMoveType == "AIR" then canAttackAir = true
-elseif enemyMoveType == "NAVAL" then canAttackNaval = true
-end
+      if hEnemyUnitDefID then
+          local enemyAiData = GetAiUnitDataByDefID(hEnemyUnitDefID) -- <<< USA HELPER PER DATI NEMICO DA factionUnits
+          if enemyAiData then
+              enemyMoveType = enemyAiData.moveType or "UNKNOWN" -- Leggi moveType dai nostri dati
+              -- Log(teamID, "DEBUG CreateHotspot: Found AI data for enemy DefID " .. hEnemyUnitDefID .. ". Name: "..(enemyAiData.name or "N/A")..". MoveType from AI data: " .. enemyMoveType)
+              
+              -- Determina i flag basati sul nostro moveType definito manualmente
+              local mtLower = enemyMoveType:lower()
+              if mtLower == "land" or mtLower == "building" or mtLower == "kbot" or mtLower == "vehicle" or mtLower == "spider" then
+                  isLandEnemy = true
+              elseif mtLower == "air" then
+                  isAirEnemy = true
+              elseif mtLower == "naval" or mtLower == "submarine" then
+                  isNavalEnemy = true
+              elseif mtLower == "hover" then 
+                  isHoverEnemy = true
+                  -- Un hover è sia una minaccia terrestre che navale
+                  isLandEnemy = true  
+                  isNavalEnemy = true 
+              end
+          else
+               -- Log(teamID, "WARN CreateHotspot: Could not find AI Unit Data in factionUnits for enemy DefID: " .. hEnemyUnitDefID)
+          end
+      -- else Log(teamID, "DEBUG CreateHotspot: No hEnemyUnitDefID provided.") -- Avviso se non viene passato l'ID nemico
       end
 
+      -- === 4. Aggiorna Hotspot Esistente o Creane Uno Nuovo ===
+      if existingSpot then 
+          -- === Aggiorna Esistente ===
+          existingSpot.lastSeenFrame = frameValue
+          
+          -- Aggiorna posizione (media pesata) e forza
+          -- Usiamo una forza minima di 1 per evitare divisioni per zero se la forza iniziale fosse 0
+          local currentStrength = existingSpot.strength or 1
+          local newStrength = hstrength or 1
+          local totalStrength = currentStrength + newStrength
+          
+          -- Puoi scegliere come aggiornare la forza: max, somma, media... Somma è semplice.
+          existingSpot.strength = currentStrength + newStrength 
+          -- O prendi il massimo: existingSpot.strength = math.max(currentStrength, newStrength)
+          
+          -- Media pesata per la posizione
+          existingSpot.x = (existingSpot.x * currentStrength + hx * newStrength) / totalStrength 
+          existingSpot.y = (existingSpot.y * hy * newStrength) / totalStrength -- Aggiunto hy mancante
+          existingSpot.z = (existingSpot.z * currentStrength + hz * newStrength) / totalStrength 
+          
+          if hCreatorUnitID then existingSpot.lastCreatorUnitID = hCreatorUnitID end -- Opzionale: ultimo vedente
 
-    if existingHotspotID then
-        local spot = data.hotspots[existingHotspotID]
-        spot.lastSeenFrame = frameValue -- Usa frameValue
-        spot.strength = math.max(spot.strength, hstrength) 
-        spot.x = (spot.x * spot.strength + hx * hstrength) / (spot.strength + hstrength)
-        spot.y = (spot.y * spot.strength + hy * hstrength) / (spot.strength + hstrength)
-        spot.z = (spot.z * spot.strength + hz * hstrength) / (spot.strength + hstrength)
-        if hCreatorUnitID then spot.lastCreatorUnitID = hCreatorUnitID end
-
-          -- Aggiorna i tipi di nemici presenti
-          if canAttackLand then spot.hasLandEnemies = true end
-          if canAttackAir then spot.hasAirEnemies = true end
-          if canAttackNaval then spot.hasNavalEnemies = true end
-          if enemyMoveType then -- Aggiorna il tipo dominante se necessario
-              if not spot.dominantEnemyMoveType or spot.dominantEnemyMoveType ~= enemyMoveType then
-                  if spot.hasLandEnemies and (spot.hasAirEnemies or spot.hasNavalEnemies) then spot.dominantEnemyMoveType = "MIXED"
-                  elseif (spot.hasLandEnemies or spot.hasAirEnemies) and spot.hasNavalEnemies then spot.dominantEnemyMoveType = "MIXED"
-                  else spot.dominantEnemyMoveType = enemyMoveType end
-              end
+          -- Aggiungi i tipi di nemici visti a quelli già presenti nell'hotspot (logica OR)
+          if isLandEnemy then existingSpot.hasLandEnemies = true end
+          if isAirEnemy then existingSpot.hasAirEnemies = true end
+          if isNavalEnemy then existingSpot.hasNavalEnemies = true end
+          -- Potremmo aggiungere un flag specifico per hover se serve:
+          -- if isHoverEnemy then existingSpot.hasHoverEnemies = true end 
+          
+          -- Aggiorna tipo dominante (logica migliorata)
+          local currentDominant = existingSpot.dominantEnemyMoveType or "UNKNOWN"
+          if currentDominant ~= "MIXED" then
+             if isHoverEnemy then -- Se vediamo un hover, la situazione è complessa
+                if currentDominant == "UNKNOWN" or currentDominant == "HOVER" then existingSpot.dominantEnemyMoveType = "HOVER" -- Se c'era solo hover o niente, rimane/diventa HOVER
+                else existingSpot.dominantEnemyMoveType = "MIXED" end -- Se c'era LAND/NAVAL/AIR, diventa MIXED
+             elseif enemyMoveType ~= "UNKNOWN" and currentDominant ~= "UNKNOWN" and enemyMoveType ~= currentDominant then
+                existingSpot.dominantEnemyMoveType = "MIXED" -- Se vediamo un tipo diverso da quello esistente (e non sono UNKNOWN o HOVER), diventa MIXED
+             elseif currentDominant == "UNKNOWN" and enemyMoveType ~= "UNKNOWN" then
+                existingSpot.dominantEnemyMoveType = enemyMoveType -- Se era UNKNOWN, prende il nuovo tipo
+             end
           end
-		  
-		  ----------------------
-       Log(teamID, "Updated existing hotspot " .. existingHotspotID .. " at ~" .. string.format("%.0f,%.0f", spot.x, spot.z) .. " (Str: " .. spot.strength .. ") LastSeen: " .. spot.lastSeenFrame)
-        return existingHotspotID
-    else
-        local newID = data.nextHotspotID
-        data.nextHotspotID = data.nextHotspotID + 1
-        
-        local newSpot = {
-            id = newID,
-            x = hx, y = hy, z = hz,
-            type = htype or "ENEMY_CONTACT",
-            strength = hstrength,
-            radius = hradius,
-            lastSeenFrame = frameValue, -- Usa frameValue
-            creationFrame = frameValue, -- Usa frameValue
-            creatorUnitID = hCreatorUnitID,      
-              hasLandEnemies = canAttackLand,
-              hasAirEnemies = canAttackAir,
-              hasNavalEnemies = canAttackNaval,
-              dominantEnemyMoveType = enemyMoveType or "UNKNOWN"
+
+          Log(teamID, "Updated existing hotspot " .. existingHotspotID .. " at ~" .. string.format("%.0f,%.0f", existingSpot.x, existingSpot.z) .. " (Str: " .. string.format("%.0f", existingSpot.strength) .. ") LastSeen: " .. existingSpot.lastSeenFrame .. " DomType: " .. existingSpot.dominantEnemyMoveType)
+          return existingHotspotID
+          
+      else
+          -- === Crea Nuovo Hotspot ===
+          local newID = data.nextHotspotID
+          data.nextHotspotID = data.nextHotspotID + 1
+          
+          local newSpot = {
+              id = newID,
+              x = hx, y = hy, z = hz,
+              type = htype, -- Usa il tipo passato o default
+              strength = hstrength,
+              radius = hradius,
+              lastSeenFrame = frameValue, 
+              creationFrame = frameValue, 
+              creatorUnitID = hCreatorUnitID, -- Può essere nil
+              
+              -- Imposta flag basati su questo primo avvistamento
+              hasLandEnemies = isLandEnemy,
+              hasAirEnemies = isAirEnemy,
+              hasNavalEnemies = isNavalEnemy,
+              -- hasHoverEnemies = isHoverEnemy, -- Aggiungi se vuoi tracciarlo specificamente
+              dominantEnemyMoveType = enemyMoveType -- Imposta tipo iniziale (potrebbe essere UNKNOWN)
           }
-          if newSpot.hasLandEnemies and (newSpot.hasAirEnemies or newSpot.hasNavalEnemies) then newSpot.dominantEnemyMoveType = "MIXED"
-          elseif (newSpot.hasLandEnemies or newSpot.hasAirEnemies) and newSpot.hasNavalEnemies then newSpot.dominantEnemyMoveType = "MIXED"
+          -- Raffina dominantEnemyMoveType se il primo avvistamento è Hover
+          if isHoverEnemy then newSpot.dominantEnemyMoveType = "HOVER" end 
+          
+          data.hotspots[newID] = newSpot
+          Log(teamID, "Created new hotspot " .. newID .. " type '"..newSpot.type.."' at " .. string.format("%.0f,%.0f", hx, hz) .. " (Str: " .. hstrength .. ", EnemyMoveType: "..(newSpot.dominantEnemyMoveType)..") LastSeen: " .. newSpot.lastSeenFrame .. " Created: " .. newSpot.creationFrame .. " L/A/N: "..tostring(newSpot.hasLandEnemies).."/"..tostring(newSpot.hasAirEnemies).."/"..tostring(newSpot.hasNavalEnemies))
+          return newID
+      end
+  end
+ 
+ 
+ 
+ 
+   -- === NUOVA FUNZIONE HELPER ===
+  -- Trova i dati AI per un unitDefID specifico nella nostra struttura factionUnits.
+  -- Richiede che factionUnits sia popolata con gli ID tramite PopulateUnitDefIDs.
+  -- Restituisce la tabella dell'unità {name=..., moveType=..., role=..., viewradius=..., id=...} o nil se non trovata.
+  local function GetAiUnitDataByDefID(unitDefID)
+      if not unitDefID then return nil end -- Controllo base
+
+      -- Itera su tutte le fazioni definite in factionUnits
+      for factionName, factionData in pairs(factionUnits) do
+          -- Salta le chiavi speciali o non-fazione
+          if factionName ~= "_unitDefIDs" and factionName ~= "common" and factionName ~= "_commonUnitDefIDs" then
+              
+              -- Controlla il Comandante (se definito come tabella con id)
+              if factionData.commander and type(factionData.commander) == "table" and factionData.commander.id and factionData.commander.id == unitDefID then
+                  return factionData.commander 
+              end
+              
+              -- Itera sui tier (T1, T2, T3) all'interno della fazione
+              for tierKey, tierData in pairs(factionData) do
+                  -- Considera solo le tabelle che rappresentano tier (iniziano con T seguito da numero)
+                  if type(tierData) == "table" and tierKey:find("^T%d") then
+                      
+                      -- Itera sui tipi di unità nel tier (es. extractor, powerPlant, attackers, defenses, constructor, factory)
+                      for unitTypeKey, unitTypeValue in pairs(tierData) do
+                          
+                          if unitTypeKey == "attackers" or unitTypeKey == "defenses" then
+                              -- Caso 1: È una lista di unità (es. attackers = { {..}, {..} })
+                              if type(unitTypeValue) == "table" then
+                                  for _, unitEntry in ipairs(unitTypeValue) do
+                                      -- Confronta l'ID pre-calcolato (assumendo che PopulateUnitDefIDs aggiunga .id)
+                                      if type(unitEntry) == "table" and unitEntry.id and unitEntry.id == unitDefID then
+                                          return unitEntry -- Trovato!
+                                      end
+                                  end
+                              end
+                          elseif type(unitTypeValue) == "table" and unitTypeValue.id then
+                              -- Caso 2: È una singola unità definita come tabella con un id (es. extractor = { name=..., id=... })
+                              if unitTypeValue.id == unitDefID then
+                                 return unitTypeValue -- Trovato!
+                              end
+                          end
+                          -- Potremmo aggiungere altri controlli espliciti se la struttura fosse diversa,
+                          -- ma assumiamo che le unità singole (factory, constructor, ecc.) 
+                          -- e quelle nelle liste (attackers, defenses) abbiano un campo .id 
+                          -- dopo l'esecuzione di PopulateUnitDefIDs.
+                      end
+                  end
+              end -- Fine ciclo Tier
           end
----------------------------
-        data.hotspots[newID] = newSpot
-        Log(teamID, "Created new hotspot " .. newID .. " type '"..newSpot.type.."' at " .. string.format("%.0f,%.0f", hx, hz) .. " (Str: " .. hstrength .. ", EnemyMoveType: "..(newSpot.dominantEnemyMoveType or "N/A")..") LastSeen: " .. newSpot.lastSeenFrame .. " Created: " .. newSpot.creationFrame)
-        return newID
-    end
-end
+      end -- Fine ciclo Fazioni
+
+      -- Se arriviamo qui, non è stato trovato in nessuna fazione/tier
+      -- Log(nil, "GetAiUnitDataByDefID: WARNING - Could not find AI data for DefID: " .. unitDefID) -- Log opzionale
+      return nil 
+  end
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
    -- Funzione per far decadere e rimuovere vecchi hotspot
   local function DecayHotspots(teamID, data, frame)
@@ -1552,113 +1832,67 @@ end
   end
  
  
-   -- === NUOVA FUNZIONE PER RILEVARE NEMICI E CREARE HOTSPOT ===
-  -- Verrà chiamata periodicamente
-     local function UpdateEnemyDetectionsAndHotspots(teamID, data, frame) -- 'frame' è già qui
-      local unitsScannedThisFrame = 0
-      local hotspotsCreatedOrUpdatedThisFrame = 0
 
-      local combatUnitCount = 0
-      for _ in pairs(data.combatUnits) 
-	  do 
-	  combatUnitCount = combatUnitCount + 1
-	  Log(teamID, "DEBUG: UEDAH - Combat units count: " .. combatUnitCount)
-	  break 
-	  end
-      if combatUnitCount == 0 then return end
 
-      for unitID, unitData in pairs(data.combatUnits) do
-          if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
-		  Log(teamID, "DEBUG: UEDAH - Attempting to scan from unit " .. unitID) -- Esempio di log nel posto giusto
-              local uDefID = Spring.GetUnitDefID(unitID)
-              local uDef = UnitDefs[uDefID]
+   local function UpdateEnemyDetectionsAndHotspots(teamID, data, frame)
+    local unitsScannedThisFrame = 0
+    local hotspotsCreatedOrUpdatedThisFrame = 0
+    local combatUnitCount = 0
+    for _ in pairs(data.combatUnits) do combatUnitCount=combatUnitCount+1; break end
+    if combatUnitCount == 0 then return end
 
-              if uDef then -- Solo se uDef è valido
-			  
-			  ---------------------------------- inizio per debug
-			  
-			  if not data.debug_uDefPairsLogged_icupatroller then -- Flag per loggare solo una volta
-			if uDef and uDef.name and uDef.name:lower() == "icupatroller" then -- o il nome esatto case-sensitive
-			 PrintUnitDefViaMetaPairs(teamID, uDef, "icupatroller")
-        Log(teamID, "DEBUG: UnitDef fields for " .. uDef.name .. ":")
---		LogAllUnitDefFields(teamID, uDefID, uDef.name) ----- debug
-			data.debug_uDefPairsLogged_icupatroller = true
-        for k,v in pairs(uDef) do
-            if type(v) == "number" or type(v) == "string" or type(v) == "boolean" then
-                Log(teamID, "  " .. tostring(k) .. " = " .. tostring(v))
-            end
-        end
-        data.debug_uDefLogged_icupatroller = true -- Usa un nome specifico per l'unità
+    for unitID, unitData in pairs(data.combatUnits) do
+        if Spring.ValidUnitID(unitID) and not Spring.GetUnitIsDead(unitID) then
+            local uDefID = Spring.GetUnitDefID(unitID)
+            local aiUnitData = GetAiUnitDataByDefID(uDefID) 
+
+            if aiUnitData then 
+                local scanRadius = aiUnitData.viewradius or 450 -- Leggi dalla TUA tabella factionUnits
+                if type(scanRadius) ~= "number" or scanRadius <= 0 then 
+                    Log(teamID, "WARN: Invalid/missing viewradius for "..aiUnitData.name.." in factionUnits, using fallback 450.")
+                    scanRadius = 450 
+                end 
+                
+                local ux, uy, uz = Spring.GetUnitPosition(unitID)
+                if ux then
+                    local allUnitsNearby = Spring.GetUnitsInSphere(ux, uy, uz, scanRadius)
+                    local enemiesFoundInScan = {}
+                    if allUnitsNearby then
+                        for _, otherUnitID in ipairs(allUnitsNearby) do
+                            local otherUnitTeam = Spring.GetUnitTeam(otherUnitID)
+                            if otherUnitTeam ~= teamID and not Spring.AreTeamsAllied(teamID, otherUnitTeam) then
+                                table.insert(enemiesFoundInScan, otherUnitID)
+                            end
+                        end
+                    end
+
+                    if #enemiesFoundInScan > 0 then
+                        local firstEnemyID = enemiesFoundInScan[1]
+                        local ex, ey, ez = Spring.GetUnitPosition(firstEnemyID)
+                        local enemyDefID = Spring.GetUnitDefID(firstEnemyID)
+
+                        if ex then 
+                            local hotspotType = "ENEMY_UNIT_SIGHTING"
+                            local hotspotStrength = #enemiesFoundInScan 
+                            local hotspotRadius = 250 + (#enemiesFoundInScan * 10)
+                                                    
+                            local createdHotspotID = CreateOrUpdateHotspot(teamID, data, frame, ex, ey, ez, hotspotType, hotspotStrength, hotspotRadius, unitID, enemyDefID)
+                            if createdHotspotID then
+                                hotspotsCreatedOrUpdatedThisFrame = hotspotsCreatedOrUpdatedThisFrame + 1
+                            end
+                        end
+                    end
+                    unitsScannedThisFrame = unitsScannedThisFrame + 1
+                end 
+             else
+                -- Log(teamID, "WARN: UEDAH - Could not find AI Unit Data for DefID: " .. uDefID .. " UnitID: " .. unitID)
+             end
+        end 
+    end 
+    if hotspotsCreatedOrUpdatedThisFrame > 0 then
+       Log(teamID, "UpdateEnemyDetections: Created/Updated " .. hotspotsCreatedOrUpdatedThisFrame .. " hotspot(s) this frame. Scanned " .. unitsScannedThisFrame .. " units.")
     end
 end
------------------------ fine per debug
-			  
-			  
-			  Log(teamID, "DEBUG: UEDAH - Unit " .. unitID .. " Def: " .. uDef.name .. " LOS: " .. tostring(uDef.losRadius))
-                  local ux, uy, uz = Spring.GetUnitPosition(unitID)
-                  if ux then -- Solo se l'unità ha una posizione
-						
-                --      local scanRadius = uDef.losRadius or 450
-				--	 local scanRadius = uDef.sightDistance or 450 -- NUOVA RIGA, PROVA QUESTA 
-				
-				local scanRadius = uDef.sightdistance or 450 -- <<< USA QUESTA (tutto minuscolo)
-					  if scanRadius <= 0 then scanRadius = 450 end
-				
-                      
---						Log(teamID, "DEBUG: UEDAH - Unit " .. unitID .. " Pos: " .. ux .. "," .. uy .. "," .. uz .. " ScanRadius: " .. scanRadius)
-						Log(teamID, "DEBUG: UEDAH - Unit " .. unitID .. " (" .. uDef.name .. ") uDef.sightdistance: " .. tostring(uDef.sightdistance) .. ", Actual ScanRadius: " .. scanRadius)
-                      local allUnitsNearby = Spring.GetUnitsInSphere(ux, uy, uz, scanRadius)
-                      local enemiesFoundInScan = {}
-                      if allUnitsNearby then
-					  Log(teamID, "DEBUG: UEDAH - Unit " .. unitID .. " found " .. #allUnitsNearby .. " total units in sphere.")
-                          for _, otherUnitID in ipairs(allUnitsNearby) do
-                              local otherUnitTeam = Spring.GetUnitTeam(otherUnitID)
-                              if otherUnitTeam ~= teamID and not Spring.AreTeamsAllied(teamID, otherUnitTeam) then
-                                  table.insert(enemiesFoundInScan, otherUnitID)
-                              end
-                          end
-					else
-					Log(teamID, "DEBUG: UEDAH - Unit " .. unitID .. " GetUnitsInSphere returned nil.")
-                      end
-
-                      if #enemiesFoundInScan > 0 then
-					  Log(teamID, "DEBUG: UEDAH - Unit " .. unitID .. " filtered " .. #enemiesFoundInScan .. " enemy units.")
-                          local firstEnemyID = enemiesFoundInScan[1]
-                          local ex, ey, ez = Spring.GetUnitPosition(firstEnemyID)
-                          local enemyDefID = Spring.GetUnitDefID(firstEnemyID)
--------------------------
-    if ex then 
-        local hotspotType = "ENEMY_UNIT_SIGHTING"
-        local hotspotStrength = #enemiesFoundInScan 
-        local hotspotRadius = 250 + (#enemiesFoundInScan * 10)
-                                
-        -- Chiamata modificata
-        local createdHotspotID = CreateOrUpdateHotspot(teamID, data, frame, -- Passa frame qui
-                                                      ex, ey, ez,
-                                                      hotspotType, hotspotStrength, hotspotRadius,
-                                                      unitID, enemyDefID)
-        if createdHotspotID then
-            hotspotsCreatedOrUpdatedThisFrame = hotspotsCreatedOrUpdatedThisFrame + 1
-        end
-    end
-                      end
-                      unitsScannedThisFrame = unitsScannedThisFrame + 1
-                      if unitsScannedThisFrame >= 15 and frame % 3 ~= 0 then
-                          -- Log(teamID,"UpdateEnemyDetections: Scan limit per frame reached ("..unitsScannedThisFrame..")")
-                          -- break -- Attenzione: 'break' qui uscirebbe dal ciclo 'for unitID, unitData...'
-                                  -- Se vuoi solo limitare, dovrai gestirlo diversamente o accettare che lo scan
-                                  -- possa essere più lungo in alcuni frame.
-                                  -- Per ora, commentiamo il break per evitare confusione finché non decidiamo una strategia di limitazione migliore.
-                      end
-                  end -- if ux then
-              end -- if uDef then
-          end -- if Spring.ValidUnitID...
-      end -- fine for unitID, unitData
-
-      if hotspotsCreatedOrUpdatedThisFrame > 0 then
-         Log(teamID, "UpdateEnemyDetections: Created/Updated " .. hotspotsCreatedOrUpdatedThisFrame .. " hotspot(s) this frame. Scanned " .. unitsScannedThisFrame .. " units.")
-      end
-  end
  
  
  
@@ -1863,6 +2097,7 @@ local function ManageMilitary(teamID, frame)
               local startX, startY, startZ = Spring.GetTeamStartPosition(teamID)
               teamData[teamID] = {
 			      debug_uDefPairsLogged_icupatroller = false,
+				  debug_PrintUnitDef_icupatroller = false,
 			      debug_uDefLogged_icupatroller = false,  ---------------------- per DEBUG
                   teamID = teamID, initialized = true, faction = nil, techLevel = 0,
                   commanderInfo = nil, startPos = { x = startX, y = startY, z = startZ },
