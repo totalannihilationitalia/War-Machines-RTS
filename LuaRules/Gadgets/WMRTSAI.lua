@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- War Machines RTS - AI Gadget (v0.6 - Correzioni Multiple)
+-- War Machines RTS - AI Gadget (v0.7 - Correzioni Multiple)
 -- Nome AI: WMRTSAI
 --------------------------------------------------------------------------------
 
@@ -7,9 +7,9 @@ function gadget:GetInfo()
   return {
     name      = "WMRTSAI", -- Nome usato per assegnare l'IA ai team!
     desc      = "AI con gestione fazioni, tiers, tipi mappa e config per livello tech.",
-    author    = "Il Tuo Nome", -- Cambia questo!
-    date      = "Data Corrente", -- Cambia questo!
-    license   = "La Tua Licenza", -- Cambia questo!
+    author    = "Molix & Gemini", -- Cambia questo!
+    date      = "09/05/2025", -- Cambia questo!
+    license   = "Free to use", -- Cambia questo!
     layer     = 90, -- Layer alto per eseguire dopo altri gadget (come Mexspot Fetcher)
     enabled   = true
   }
@@ -491,7 +491,7 @@ if (gadgetHandler:IsSyncedCode()) then
               end
           end
       end
-      Log(teamData.teamID,"FindGoodEnergySpot: Could not find suitable (non-metal) spot near builder after " .. attempt .. " attempts.")
+      Log(teamData.teamID,"FindGoodEnergySpot: Could not find suitable (non-metal) spot near builder after multiple attempts (30).") 
       return nil
   end
 
@@ -1040,35 +1040,29 @@ if (gadgetHandler:IsSyncedCode()) then
 
 
    -- Funzione per creare un nuovo gruppo di combattimento (versione con analisi capacità)
-  local function CreateNewCombatGroup(teamID, data, unitIDs, frame)
+    local function CreateNewCombatGroup(teamID, data, unitIDs, frame)
       local newGroupID = data.nextGroupID
       data.nextGroupID = data.nextGroupID + 1
 
       local newGroup = {
-          id = newGroupID,
-          units = {},
-          state = "idle",
-          targetPoint = nil,
-          currentPatrolIndex = nil,
-          lastOrderFrame = frame,
-          
-          groupMoveType = "UNKNOWN", 
-          canAttackLand = false,
-          canAttackAir = false,
-          canAttackNaval = false,
-          isHomogeneous = true 
+          id = newGroupID, units = {}, state = "idle", targetPoint = nil,
+          currentPatrolIndex = nil, lastOrderFrame = frame,
+          groupMoveType = "UNKNOWN", canAttackLand = false, canAttackAir = false,
+          canAttackNaval = false, isHomogeneous = true 
       }
 
-      local moveTypesInGroup = {}
+      local moveTypesInGroup = {} -- Tabella per tracciare i moveType visti
       local firstMoveType = nil
+      Log(teamID, "DEBUG CNCG "..newGroupID..": START. Unit IDs to add: " .. #unitIDs) -- CNCG = CreateNewCombatGroup
 
-      if not unitIDs or #unitIDs == 0 then -- Aggiunto controllo per unitIDs vuoto
-          Log(teamID, "CreateNewCombatGroup: Attempted to create group with no unitIDs. Skipping group ID " .. newGroupID)
-          data.nextGroupID = data.nextGroupID - 1 -- Rilascia l'ID
-          return -- Non creare un gruppo vuoto
+      if not unitIDs or #unitIDs == 0 then 
+          Log(teamID, "WARN CNCG "..newGroupID..": No unitIDs provided.")
+          data.nextGroupID = data.nextGroupID - 1 
+          return 
       end
 
-      for _, unitIDinGroup in ipairs(unitIDs) do
+      for i, unitIDinGroup in ipairs(unitIDs) do
+          Log(teamID, "DEBUG CNCG "..newGroupID..": Processing unit #"..i..", ID: " .. unitIDinGroup)
           if data.combatUnits[unitIDinGroup] then
               table.insert(newGroup.units, unitIDinGroup)
               data.combatUnits[unitIDinGroup].state = "assigned_to_group"
@@ -1076,64 +1070,75 @@ if (gadgetHandler:IsSyncedCode()) then
               
               local unitDefID = Spring.GetUnitDefID(unitIDinGroup)
               if unitDefID then
-                  -- === USA GetAiUnitDataByDefID PER OTTENERE DATI DELL'UNITÀ DEL GRUPPO ===
                   local aiUnitData = GetAiUnitDataByDefID(unitDefID) 
                   if aiUnitData and aiUnitData.moveType then
                       local currentUnitMoveType = aiUnitData.moveType
-                      Log(teamID, "LOG_DETAILED CreateNewCombatGroup: Unit " .. unitIDinGroup .. " (DefID " .. unitDefID .. ", Name: "..(aiUnitData.name or "N/A")..") has AI MoveType: " .. currentUnitMoveType)
+                      Log(teamID, "DEBUG CNCG "..newGroupID..": Unit " .. unitIDinGroup .. " (DefID " .. unitDefID .. ", Name: "..(aiUnitData.name or "N/A")..") got AI MoveType: " .. currentUnitMoveType)
 
-                      if not firstMoveType then firstMoveType = currentUnitMoveType end
-                      if firstMoveType ~= currentUnitMoveType then newGroup.isHomogeneous = false end
-                      moveTypesInGroup[currentUnitMoveType] = true
+                      if not firstMoveType then 
+                          firstMoveType = currentUnitMoveType 
+                          Log(teamID, "DEBUG CNCG "..newGroupID..": Set firstMoveType to: " .. firstMoveType)
+                      end
+                      if firstMoveType ~= currentUnitMoveType then 
+                          newGroup.isHomogeneous = false 
+                          Log(teamID, "DEBUG CNCG "..newGroupID..": Group no longer homogeneous.")
+                      end
+                      moveTypesInGroup[currentUnitMoveType] = true -- Registra il tipo
+                      Log(teamID, "DEBUG CNCG "..newGroupID..": Added "..currentUnitMoveType.." to moveTypesInGroup. Current content:")
+                      for mt_key, _ in pairs(moveTypesInGroup) do Log(teamID, "    "..mt_key) end
                       
-                      -- Determina capacità di attacco basate sul nostro moveType definito in factionUnits
                       local mtLower = currentUnitMoveType:lower()
                       if mtLower == "land" or mtLower == "building" or mtLower == "kbot" or mtLower == "vehicle" or mtLower == "spider" then
                           newGroup.canAttackLand = true
                       end
                       if mtLower == "air" then
                           newGroup.canAttackAir = true
-                          newGroup.canAttackLand = true -- Assumendo che molti aerei possano attaccare terra
+                          newGroup.canAttackLand = true 
                       end
                       if mtLower == "naval" or mtLower == "submarine" then
                           newGroup.canAttackNaval = true
-                          newGroup.canAttackLand = true -- Assumendo che molte navi possano bombardare terra
+                          newGroup.canAttackLand = true 
                       end
                       if mtLower == "hover" then
                           newGroup.canAttackLand = true
                           newGroup.canAttackNaval = true
                       end
+                      Log(teamID, "DEBUG CNCG "..newGroupID..": Unit " ..unitIDinGroup.. " set caps L/A/N: "..tostring(newGroup.canAttackLand).."/"..tostring(newGroup.canAttackAir).."/"..tostring(newGroup.canAttackNaval))
                   else
-                      Log(teamID, "WARN CreateNewCombatGroup: Could not get AI Unit Data (or moveType is missing) from factionUnits for own unitDefID " .. unitDefID .. " (UnitID: "..unitIDinGroup..") in group " .. newGroupID)
+                      Log(teamID, "WARN CNCG "..newGroupID..": Could not get AI Unit Data or moveType for own unitDefID " .. unitDefID .. " (UnitID: "..unitIDinGroup..")")
                   end
               else 
-                  Log(teamID, "WARN CreateNewCombatGroup: Could not get DefID for UnitID: " .. unitIDinGroup .. " in group " .. newGroupID)
+                  Log(teamID, "WARN CNCG "..newGroupID..": Could not get DefID for UnitID: " .. unitIDinGroup)
               end
           else
-              Log(teamID, "CreateNewCombatGroup: Warning - Unit " .. unitIDinGroup .. " not found in data.combatUnits while forming group " .. newGroupID)
+              Log(teamID, "WARN CNCG "..newGroupID..": Unit " .. unitIDinGroup .. " not in data.combatUnits.")
           end
-      end
+      end -- Fine loop su unitIDs
 
-      -- Determina il groupMoveType aggregato
+      -- Logga lo stato delle variabili PRIMA di determinare groupMoveType
+      Log(teamID, "DEBUG CNCG "..newGroupID..": END OF LOOP. firstMoveType: " .. tostring(firstMoveType) .. ". moveTypesInGroup content:")
+      for mt_key, _ in pairs(moveTypesInGroup) do Log(teamID, "    "..mt_key) end
+
       local numMoveTypes = 0; for _ in pairs(moveTypesInGroup) do numMoveTypes = numMoveTypes + 1 end
-      if numMoveTypes == 1 and firstMoveType then -- Assicurati che firstMoveType sia stato impostato
+      Log(teamID, "DEBUG CNCG "..newGroupID..": numMoveTypes calculated: " .. numMoveTypes)
+
+      if numMoveTypes == 1 and firstMoveType then 
           newGroup.groupMoveType = firstMoveType
       elseif numMoveTypes > 1 then
           newGroup.groupMoveType = "MIXED"
           newGroup.isHomogeneous = false
-      elseif #newGroup.units > 0 then -- Se ci sono unità ma nessun moveType valido trovato
-          Log(teamID, "WARN CreateNewCombatGroup: Group " .. newGroupID .. " has units but no valid AI moveTypes found, setting groupMoveType to UNKNOWN.")
+      elseif #newGroup.units > 0 then 
+          Log(teamID, "WARN CNCG "..newGroupID..": Group has units but numMoveTypes is 0. Setting UNKNOWN. firstMoveType was: "..tostring(firstMoveType))
           newGroup.groupMoveType = "UNKNOWN" 
       end
+      Log(teamID, "DEBUG CNCG "..newGroupID..": Final groupMoveType: " .. newGroup.groupMoveType)
       
-      -- Log finale creazione gruppo
       if #newGroup.units > 0 then
          data.combatGroups[newGroupID] = newGroup
          Log(teamID, "Created new combat group " .. newGroupID .. " with " .. #newGroup.units .. " units. MoveType: "..newGroup.groupMoveType ..
                      " Caps L/A/N: " ..tostring(newGroup.canAttackLand).."/"..tostring(newGroup.canAttackAir).."/"..tostring(newGroup.canAttackNaval))
       else
-         -- Questo non dovrebbe succedere se il controllo unitIDs all'inizio funziona
-         Log(teamID, "CreateNewCombatGroup: Attempted to create an empty group (ID " .. newGroupID .. ") AFTER unit processing, skipping.")
+         Log(teamID, "WARN CNCG "..newGroupID..": Attempted to create an empty group AFTER unit processing (should not happen if initial check works).")
          data.nextGroupID = data.nextGroupID - 1
       end
   end
@@ -1433,7 +1438,7 @@ else
  
  
  
- local function FindBestHotspotToAttack(teamID, data, attackingGroupData)
+ local function FindBestHotspotToAttack(teamID, data, attackingGroupData, currentFrame) -- Aggiunto currentFrame
       local bestHotspot = nil
       local highestScore = -1000000 -- Inizializza a un valore molto basso (usiamo math.huge se disponibile, ma -1M è sicuro)
       local consideredCount = 0
@@ -1511,9 +1516,35 @@ else
                  distPenalty = 10000 
                  score = score - distPenalty 
               end
-
+------------------------ inizio debug
               -- 3. Recenza (penalità per età)
-              local ageInSeconds = (Game.frame - hotspot.lastSeenFrame) / (Game.gameSpeed or 30)
+			  
+		      Log(teamID, "DEBUG FindBestHotspot "..hotspotID..": Calculating age. Received currentFrame: " .. tostring(currentFrame) .. ", hotspot.lastSeenFrame: " .. tostring(hotspot.lastSeenFrame) .. ", Game.gameSpeed: " .. tostring(Game.gameSpeed))
+			  Log(teamID, "DEBUG FindBestHotspot "..hotspotID..": Calculating age. Game.frame: " .. tostring(Game.frame) .. ", hotspot.lastSeenFrame: " .. tostring(hotspot.lastSeenFrame) .. ", Game.gameSpeed: " .. tostring(Game.gameSpeed))
+			  Log(teamID, "DEBUG FindBestHotspot: Type of 'Game' is: " .. type(Game))
+			  
+			  -- 3. Recenza (penalità per età)
+              Log(teamID, "DEBUG FindBestHotspot "..hotspotID..": Calculating age.")
+              Log(teamID, "DEBUG FindBestHotspot: Type of GLOBAL Game is: " .. type(_G.Game)) -- Controlla la globale
+              Log(teamID, "DEBUG FindBestHotspot: Type of LOCAL Game is: " .. type(Game))   -- Controlla la locale
+              
+              if type(Game) == "table" then
+                  Log(teamID, "DEBUG FindBestHotspot: LOCAL Game.frame is: " .. tostring(Game.frame) .. " (Type: " .. type(Game.frame) .. ")")
+                  Log(teamID, "DEBUG FindBestHotspot: GLOBAL Game.frame is: " .. tostring(_G.Game.frame) .. " (Type: " .. type(_G.Game.frame) .. ")") -- Accedi direttamente alla globale
+                  Log(teamID, "DEBUG FindBestHotspot: hotspot.lastSeenFrame is: " .. tostring(hotspot.lastSeenFrame) .. " (Type: " .. type(hotspot.lastSeenFrame) .. ")")
+                  Log(teamID, "DEBUG FindBestHotspot: Game.gameSpeed is: " .. tostring(Game.gameSpeed) .. " (Type: " .. type(Game.gameSpeed) .. ")")
+              else
+                  Log(teamID, "WARN FindBestHotspot: LOCAL Game is not a table!")
+              end
+              
+              -- RIGA PROBLEMATICA (~1523):
+              local ageInSeconds = (currentFrame - hotspot.lastSeenFrame) / (Game.gameSpeed or 30) 
+              local agePenalty = ageInSeconds * 2
+              score = score - agePenalty
+			  
+			  --------------------------- fine debug
+			  
+              local ageInSeconds = (currentFrame - hotspot.lastSeenFrame) / (Game.gameSpeed or 30)
               local agePenalty = ageInSeconds * 2 -- Penalità per secondo (aggiustabile)
               score = score - agePenalty 
 
@@ -1776,7 +1807,7 @@ else
 
       -- === NUOVA PRIORITÀ 1: ATTACCA HOTSPOT ===
       -- Trova il miglior hotspot per questo gruppo specifico
-      local targetHotspot = FindBestHotspotToAttack(teamID, data, groupData) 
+      local targetHotspot = FindBestHotspotToAttack(teamID, data, groupData, frame) -- Passa 'frame'
 
       if targetHotspot then
           Log(teamID, ">>>> AssignTaskToGroup: Group " .. groupID .. " assigned to ATTACK Hotspot " .. targetHotspot.id .. " (Type: "..(targetHotspot.dominantEnemyMoveType or "N/A").." NeedsReinforce:"..tostring(targetHotspot.needsReinforcement)..") at " .. string.format("%.0f,%.0f", targetHotspot.x, targetHotspot.z))
