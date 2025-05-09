@@ -1,0 +1,7 @@
+WMRTSAI - Copia.luarev4_funzionante basic
+WMRTSAI - Copia.luarev5_funzionantecon patrol basic
+WMRTSAI - Copia.luarev6_patrol basic hotspot ready
+
+da qui stiamo creando un hotspot con rinforzi.
+WMRTSAI - Copia.luarev7_patrol con hotspot NON VA
+WMRTSAI.lua - lavoro attuale 
