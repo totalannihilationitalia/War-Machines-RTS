@@ -1137,11 +1137,11 @@
 [f=0000000] Warning: [CCEG::Load] table for CEG "FIREBALLTRAIL" invalid (parse errors?)
 [f=0000000] Warning: [CCEG::Load] EMGFLASH: Unknown tag smoke::sizegrowth
 [f=0000000] Warning: [CCEG::Load] PURPLELASER: Unknown tag smoke::sizegrowth
-[f=0000000] Warning: [CCEG::Load] table for CEG "KBOTMISSILETRAIL" invalid (parse errors?) -- esiste in units:minigoth.lua e weapon:flrabowlweapons2 ma non è configurata
+xxxxxx [f=0000000] Warning: [CCEG::Load] table for CEG "KBOTMISSILETRAIL" invalid (parse errors?) -- esiste in units:minigoth.lua e weapon:flrabowlweapons2 ma non è configurata
 [f=0000000] Warning: [CCEG::Load] table for CEG "KBOTMISSILEHIT" invalid (parse errors?)
 [f=0000000] Warning: [CCEG::Load] table for CEG "fireballbloom" invalid (parse errors?)
 [f=0000000] Warning: [CCEG::Load] table for CEG "plasmaballbloom" invalid (parse errors?)
-[f=0000000] Warning: [CCEG::Load] table for CEG "Debree0" invalid (parse errors?)
+-----[f=0000000] Warning: [CCEG::Load] table for CEG "Debree0" invalid (parse errors?) non trova niente con "Debree0" 
 [f=0000000] Warning: [CCEG::Load] table for CEG "Debree1" invalid (parse errors?)
 [f=0000000] Warning: [CCEG::Load] table for CEG "Debree2" invalid (parse errors?)
 [f=0000000] Warning: [CCEG::Load] table for CEG "Debree3" invalid (parse errors?)
