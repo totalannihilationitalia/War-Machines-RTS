@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- War Machines RTS - AI Gadget (v0.8 - Correzioni Multiple)
+-- War Machines RTS - AI Gadget (v0.6 - Correzioni Multiple)
 -- Nome AI: WMRTSAI
 --------------------------------------------------------------------------------
 
@@ -42,41 +42,17 @@ if (gadgetHandler:IsSyncedCode()) then
     end
   end
 
--- === GESTIONE DELLE ISOLE ===
-  local DEFAULT_FOOTPRINT_MAP_UNITS = 5 -- Il tuo default suggerito
-  local ISLAND_DEFAULT_ROWS = 2
-  local ISLAND_DEFAULT_COLS = 3
-  local ISLAND_SPACING_X = 40       -- Distanza centro-centro tra slot X (es. footprint medio 32-48 + spazio)
-  local ISLAND_SPACING_Z = 40       -- Distanza centro-centro tra slot Z (rinominato da Y per coerenza con coordinate mappa)
-  local ISLAND_BORDER_SPACING = 40  -- Spazio libero attorno al perimetro dell'isola
-  local ISLAND_MAX_DIST_FROM_START = 600
-  local ISLAND_MIN_DIST_FROM_METAL_DEFAULT = 100 -- Default, potrebbe essere sovrascritto
-  local ISLAND_MIN_DIST_FROM_GEOTHERMAL = 150 -- Se applicheremo logica per geotermici
-  local ISLAND_DISTANCE_BETWEEN_ISLANDS = 250
-  local ISLAND_MAX_SLOPE_DIFFERENCE = 10 -- Massima differenza di altezza Y tra angoli di uno slot (per piattezza)
-  local ISLAND_MAX_ATTEMPTS_TO_PLACE = 5 -- Quanti tentativi per piazzare un'isola prima di ridurre dimensioni
-  -- ==================================================
-
-
-
   -- === 1. DEFINIZIONE FAZIONI E UNITÀ PER TIER ===
-  -- !! IMPORTANTE: !!
-  -- footx e y sono i footprint x e z della unitdef, le scrivo qui per personalizzarle. di default è 5 definito nella local DEFAULT_FOOTPRINT_MAP_UNITS = 5
-  -- role è il ruolo dell'unità utilizzato nella logica della AI (es: quande costruire "Extractor_T1", sara icumetex per facione ICU, cormetex per NFA, ecc
-  -- moveType building ??? ################################### che è ??? ####
-  -- name = "nomeunità" di warmachinesrts
-  -- viewradius = xxx è il raggio visivo delle unità mobili, serve ad intercettare le unità nemiche per ingaggiarle ######### se non specificato il valore di default è 429??? #####
+  -- !! IMPORTANTE: Compila con NOMI ESATTI, moveType e role corretti !!
   local factionUnits = {
       ICU = {
           commander = "icucom",
           T1 = {
-              extractor =   { name = "icumetex", moveType="BUILDING", role="Extractor_T1", footX = 3, footZ = 3 },
-              powerPlant =  { name = "armsolar", moveType="BUILDING", role="Power_T1",   footX = 5, footZ = 5 }, -- 
-              factory =     { name = "armlab",   moveType = "BUILDING", role="Factory_Land_T1", footX = 9, footZ = 9 },
-              estorage =    { name = "icuestor", moveType = "BUILDING", role="Estorage_T1",  footX = 3, footZ = 3 }, -- aggiunto ver 0.8
-              mstorage =    { name = "armmstor", moveType = "BUILDING", role="Mstorage_T1",  footX = 4, footZ = 4 }, -- aggiunto ver 0.8
---			  radar = 		{ name = "armrad", moveType = "BUILDING", role="radar_T1", footX = 3, footZ = 3 }, -- aggiunto ver 0.8 determinare foot x e y
---			  jammer = 		{ name = "armjamt", moveType = "BUILDING", role="radar_T1", footX = 3, footZ = 3 }, -- aggiunto ver 0.8	 determinare foot x e y		  
+              extractor =   { name = "icumetex", moveType="BUILDING", role="Extractor_T1"},
+              powerPlant =  { name = "armsolar", moveType="BUILDING", role="Power_T1"},
+              factory =     { name = "armlab", moveType = "BUILDING", role="Factory_Land_T1"},
+			  estorage =	{ name = "icuestor", moveType = "BUILDING", role="Estorage_T1"}, -- aggiunto
+			  mstorage =	{ name = "armmstor", moveType = "BUILDING", role="Mstorage_T1"}, -- aggiunto			  
               constructor = { name = "icuck", moveType = "LAND", role="Constructor_T1" },
 			  attackers = { 
 							{ name = "icupatroller", moveType = "LAND", role="Basic_T1", viewradius = 429 } 
@@ -231,25 +207,22 @@ if (gadgetHandler:IsSyncedCode()) then
   local currentMapCategory = "LAND" -- Default
 
   -- === 4. CONFIGURAZIONE AI PER TECH LEVEL ===
-  -- NB: la logica per avanzare di livello è definita in   -- === 3. LOGICA AVANZAMENTO TECNOLOGICO ===
-  -- la logica include: min metallo, min energia, fabbriche costruite.
   local aiConfig = {
       [0] = {
           economyTargets = {
-              { role = "T1_Extractor", min = 1, max = 2, buildInIsland = false  },
-                            { role = "T1_PowerPlant", min = 6, max = 6, buildInIsland = true  }, --  solo per test!
---			  { role = "T1_PowerPlant", min = 1, max = 2, buildInIsland = true  }, --  buildInIsland = costruisci la struttura nel primo slot dell'isola disponibile?
+              { role = "T1_Extractor", min = 1, max = 2 },
+              { role = "T1_PowerPlant", min = 1, max = 2 },
           },
-          factoryTargets = { minTotal = 1, maxTotal = 1, targetTier = 1 }, -- targerTier = livello della fabbrica (la tipologia è stabilita nella logica del codice e va in funzione delle mappe.
+          factoryTargets = { minTotal = 1, maxTotal = 1, targetTier = 1 },
           productionList = { },
           attackGroup = { min = 5, max = 8, target = "PATROL_NEARBY" }
       },
-      [1] = { -- requisiti per passare al livello successivo sono: energia e metallo definiti in 
+      [1] = {
           economyTargets = {
-              { role = "T1_Extractor", min = 3, max = 3, buildInIsland = false   },
-              { role = "T1_PowerPlant", min = 9, max = 9, buildInIsland = true   },
-			  { role = "T1_Estorage", min = 1, max = 1, buildInIsland = true   }, -- aggiunto magazzino energia x1
-			  { role = "T1_Mstorage", min = 1, max = 1, buildInIsland = true   }, -- aggiunto magazzino metallo x1
+              { role = "T1_Extractor", min = 2, max = 3 },
+              { role = "T1_PowerPlant", min = 2, max = 3 },
+			  { role = "T1_Estorage", min = 1, max = 1 }, -- aggiunto magazzino energia x1
+			  { role = "T1_Mstorage", min = 1, max = 1 }, -- aggiunto magazzino metallo x1
           },
           factoryTargets = { minTotal = 2, maxTotal = 3, targetTier = 1 },
           productionList = {
@@ -672,634 +645,137 @@ if (gadgetHandler:IsSyncedCode()) then
       end
   end
 
-  -- === NUOVE FUNZIONI PER LA GESTIONE DELLE ISOLE DI COSTRUZIONE ===
-
-  local function GetEligibleIslandRoles(teamID, data)
-      local eligibleRoles = {}
-      local currentConfig = aiConfig[data.techLevel]
-      if currentConfig and currentConfig.economyTargets then
-          for _, ecoTarget in ipairs(currentConfig.economyTargets) do
-              if ecoTarget.buildInIsland then
-                  table.insert(eligibleRoles, ecoTarget.role)
-              end
-          end
-      end
-      -- Log(teamID, "Eligible island roles for T"..data.techLevel..": " .. table.concat(eligibleRoles, ", "))
-      return eligibleRoles
-  end
-
-  -- Funzione per marcare uno slot come in attesa di costruzione o completato
-  local function UpdateIslandSlotState(teamID, data, islandID, slotRow, slotCol, unitDefID_being_built, actualUnitID_built)
-      for i, island in ipairs(data.buildingIslands) do
-          if island.islandID == islandID then
-              if island.slots[slotRow] and island.slots[slotRow][slotCol] then
-                  local slot = island.slots[slotRow][slotCol]
-                  if unitDefID_being_built then -- Chiamato quando si dà l'ordine
-                      slot.unitDefIDToBuild = unitDefID_being_built
-                      slot.unitID = nil -- Resetta in caso di ricostruzione
-                      Log(teamID, "Island "..islandID.." Slot("..slotRow..","..slotCol..") marked for building: "..UnitDefs[unitDefID_being_built].humanName)
-                  elseif actualUnitID_built then -- Chiamato da UnitFinished
-                      slot.unitID = actualUnitID_built
-                      slot.unitDefIDToBuild = nil -- Costruzione completata
-                      Log(teamID, "Island "..islandID.." Slot("..slotRow..","..slotCol..") construction complete: UnitID "..actualUnitID_built)
-                  end
-
-                  -- Controlla se l'isola è completa
-                  local allSlotsFilled = true
-                  for r = 1, island.actualRows do
-                      for c = 1, island.actualCols do
-                          if not island.slots[r][c].unitID and island.slots[r][c].isBuildable then
-                              allSlotsFilled = false; break
-                          end
-                      end
-                      if not allSlotsFilled then break end
-                  end
-                  island.isComplete = allSlotsFilled
-                  if island.isComplete then
-                      Log(teamID, "Island "..islandID.." is now complete.")
-                  end
-                  return true
-              end
-          end
-      end
-      Log(teamID, "Error: Could not find island/slot to update state for IslandID "..islandID)
-      return false
-  end
-
-  local function ValidateIslandLayout(teamID, data, anchorX, anchorZ, numRows, numCols, isRotated)
-      local orientationStr = isRotated and ("Rotated " .. numCols .. "x" .. numRows) or ("Standard " .. numRows .. "x" .. numCols)
-      Log(teamID, "ValidateIslandLayout: Attempting "..orientationStr.." at "..string.format("%.0f,%.0f", anchorX, anchorZ))
-
-      -- 1. Ottenere i dati dell'edificio di test (es. T1 Power Plant) DAI NOSTRI factionUnits
-      local testBuildingUnitData = nil
-      local t1PowerPlant_FactionData = GetUnitDataByRole(data.faction, 1, "T1_PowerPlant") -- Ottiene la tabella da factionUnits._unitDefIDs...
-
-      if t1PowerPlant_FactionData and t1PowerPlant_FactionData.id then
-          testBuildingUnitData = t1PowerPlant_FactionData -- Questa tabella ora dovrebbe contenere footX, footZ
-      else
-          Log(teamID, "ValidateIslandLayout: CRITICAL - Cannot get T1 PowerPlant UnitData from factionUnits for build testing.")
-          return nil
-      end
-
-      if not testBuildingUnitData.id then -- Controllo aggiuntivo
-          Log(teamID, "ValidateIslandLayout: CRITICAL - T1 PowerPlant UnitData found, but 'id' is missing.")
-          return nil
-      end
-      local testBuildingDefID = testBuildingUnitData.id -- Usiamo l'ID per TestBuildOrder
-
-      -- === USARE I FOOTPRINT CUSTOM DA factionUnits ===
-      local buildingFootprintX_mapUnits = testBuildingUnitData.footX or DEFAULT_FOOTPRINT_MAP_UNITS
-      local buildingFootprintZ_mapUnits = testBuildingUnitData.footZ or DEFAULT_FOOTPRINT_MAP_UNITS
-      -- ==============================================
-
-      Log(teamID, "ValidateIslandLayout: TestBuilding: ".. (testBuildingUnitData.name or "N/A") ..
-                    ", Using Custom Footprint X: "..buildingFootprintX_mapUnits..
-                    ", Z: "..buildingFootprintZ_mapUnits)
-
-      -- Struttura dati per l'isola se la validazione ha successo
-      local islandBlueprint = {
-          islandID = 0, -- Sarà assegnato da PlanNewIsland o FindOrCreate
-          anchorX = anchorX, anchorZ = anchorZ,
-          actualRows = numRows, actualCols = numCols,
-          isRotated = isRotated,
-          slots = {}, -- Verrà popolata sotto
-          isReserved = true,
-          isComplete = false,
-          nextSlotToBuild = {row = 1, col = 1}, -- 1-based indexing
-          allowedUnitRoles = GetEligibleIslandRoles(teamID, data)
-      }
-
-      -- Calcola le dimensioni effettive dell'edificio di test in coordinate del mondo
-      local buildingSizeWorldX = buildingFootprintX_mapUnits * 8
-      local buildingSizeWorldZ = buildingFootprintZ_mapUnits * 8
-
-      -- Calcola lo spacing MINIMO necessario basato sulla dimensione dell'edificio di test + un piccolo buffer
-      local minRequiredSpacingX = buildingSizeWorldX + 16 -- +2 map squares buffer (16 pixels)
-      local minRequiredSpacingZ = buildingSizeWorldZ + 16
-
-      local actualSpacingX = math.max(ISLAND_SPACING_X, minRequiredSpacingX)
-      local actualSpacingZ = math.max(ISLAND_SPACING_Z, minRequiredSpacingZ)
-      Log(teamID, "ValidateIslandLayout: Using Effective Spacing X="..actualSpacingX..", Z="..actualSpacingZ)
-
-      -- 2. Validare ogni slot
-      for r = 1, numRows do
-          islandBlueprint.slots[r] = {} -- Inizializza la riga della tabella slots
-          for c = 1, numCols do
-              local slotCenterX, slotCenterZ
-              -- Calcola il centro dello slot corrente
-              if not isRotated then
-                  slotCenterX = anchorX + (c - 0.5) * actualSpacingX -- Centro dello slot
-                  slotCenterZ = anchorZ + (r - 0.5) * actualSpacingZ -- Centro dello slot
-              else -- Se ruotato
-                  slotCenterX = anchorX + (r - 0.5) * actualSpacingZ
-                  slotCenterZ = anchorZ + (c - 0.5) * actualSpacingX
-              end
-
-              local slotCenterY = Spring.GetGroundHeight(slotCenterX, slotCenterZ)
-
-              -- 2a. Esistenza sul terreno
-              if not slotCenterY then
-                  Log(teamID, "ValidateIslandLayout: Slot("..r..","..c..") center at "..string.format("%.0f,%.0f", slotCenterX, slotCenterZ).." is off-map or water.")
-                  return nil
-              end
-
-              -- 2b. Piattezza dello slot
-              local halfFootprintWorldX = buildingSizeWorldX / 2
-              local halfFootprintWorldZ = buildingSizeWorldZ / 2
-              local cornersY = {
-                  Spring.GetGroundHeight(slotCenterX - halfFootprintWorldX, slotCenterZ - halfFootprintWorldZ), -- Alto-Sx
-                  Spring.GetGroundHeight(slotCenterX + halfFootprintWorldX, slotCenterZ - halfFootprintWorldZ), -- Alto-Dx
-                  Spring.GetGroundHeight(slotCenterX - halfFootprintWorldX, slotCenterZ + halfFootprintWorldZ), -- Basso-Sx
-                  Spring.GetGroundHeight(slotCenterX + halfFootprintWorldX, slotCenterZ + halfFootprintWorldZ), -- Basso-Dx
-              }
-              local minY = slotCenterY
-              local maxY = slotCenterY
-              for _, y_val in ipairs(cornersY) do
-                  if not y_val then
-                      Log(teamID, "ValidateIslandLayout: Slot("..r..","..c..") corner ("..tostring(_)..") is off-map/water.")
-                      return nil
-                  end
-                  minY = math.min(minY, y_val)
-                  maxY = math.max(maxY, y_val)
-              end
-              if (maxY - minY) > ISLAND_MAX_SLOPE_DIFFERENCE then
-                  Log(teamID, "ValidateIslandLayout: Slot("..r..","..c..") FAILED flatness check. Diff: "..(maxY-minY).." > "..ISLAND_MAX_SLOPE_DIFFERENCE)
-                  return nil
-              end
-
-              -- 2c. Costruibilità generica
-              local buildResult = Spring.TestBuildOrder(testBuildingDefID, slotCenterX, slotCenterY, slotCenterZ, 1) -- Facing 1
-              if not (buildResult == 0 or buildResult == 2) then
-                  Log(teamID, "ValidateIslandLayout: Slot("..r..","..c..") at "..string.format("%.0f,%.0f,%.0f", slotCenterX, slotCenterY, slotCenterZ).." FAILED TestBuildOrder (Code: "..buildResult..") for "..(testBuildingUnitData.name or "N/A"))
-                  return nil
-              end
-
-              -- 2d. Distanza da metal spot
-              local minMetalDistSq = (Game.extractorRadius and (Game.extractorRadius * 2.5) or ISLAND_MIN_DIST_FROM_METAL_DEFAULT)^2
-              local mexCount = Spring.GetGameRulesParam("mex_count") or 0
-              for i = 1, mexCount do
-                  local mexX = Spring.GetGameRulesParam("mex_x" .. i)
-                  local mexZ = Spring.GetGameRulesParam("mex_z" .. i)
-                  if mexX and mexZ then -- Aggiunto controllo mexZ
-                      local dx, dz = slotCenterX - mexX, slotCenterZ - mexZ
-                      if (dx*dx + dz*dz) < minMetalDistSq then
-                          Log(teamID, "ValidateIslandLayout: Slot("..r..","..c..") is TOO CLOSE to metal spot #"..i)
-                          return nil
-                      end
-                  end
-              end
-              -- TODO: Aggiungere controllo distanza da geotermici se necessario
-
-              -- Se tutti i controlli per questo slot passano
-              islandBlueprint.slots[r][c] = {
-                  unitDefIDToBuild = nil, unitID = nil,
-                  x = slotCenterX, y = slotCenterY, z = slotCenterZ,
-                  isBuildable = true,
-                  isOccupiedByNonIslandUnit = false
-              }
-              Log(teamID, "ValidateIslandLayout: Slot("..r..","..c..") at "..string.format("%.0f,%.0f,%.0f",slotCenterX, slotCenterY, slotCenterZ).." PASSED initial checks.")
-          end
-      end
-
-      -- 3. Validare il perimetro dell'isola (ISLAND_BORDER_SPACING)
-      local totalIslandWidth, totalIslandHeight
-      if not isRotated then
-          totalIslandWidth  = numCols * actualSpacingX
-          totalIslandHeight = numRows * actualSpacingZ
-      else
-          totalIslandWidth  = numRows * actualSpacingZ
-          totalIslandHeight = numCols * actualSpacingX
-      end
-
-      local borderPointsToCheck = {
-          {x = anchorX - ISLAND_BORDER_SPACING,                 z = anchorZ - ISLAND_BORDER_SPACING},
-          {x = anchorX + totalIslandWidth + ISLAND_BORDER_SPACING, z = anchorZ - ISLAND_BORDER_SPACING},
-          {x = anchorX - ISLAND_BORDER_SPACING,                 z = anchorZ + totalIslandHeight + ISLAND_BORDER_SPACING},
-          {x = anchorX + totalIslandWidth + ISLAND_BORDER_SPACING, z = anchorZ + totalIslandHeight + ISLAND_BORDER_SPACING},
-          {x = anchorX + totalIslandWidth / 2,                z = anchorZ - ISLAND_BORDER_SPACING},
-          {x = anchorX + totalIslandWidth / 2,                z = anchorZ + totalIslandHeight + ISLAND_BORDER_SPACING},
-          {x = anchorX - ISLAND_BORDER_SPACING,                 z = anchorZ + totalIslandHeight / 2},
-          {x = anchorX + totalIslandWidth + ISLAND_BORDER_SPACING, z = anchorZ + totalIslandHeight / 2},
-          {x = anchorX,                                     z = anchorZ},
-          {x = anchorX + totalIslandWidth,                  z = anchorZ},
-          {x = anchorX,                                     z = anchorZ + totalIslandHeight},
-          {x = anchorX + totalIslandWidth,                  z = anchorZ + totalIslandHeight},
-      }
-
-      local firstBorderY = Spring.GetGroundHeight(anchorX, anchorZ) -- Usa l'altezza dell'ancora come riferimento per il bordo
-      if not firstBorderY then
-          Log(teamID, "ValidateIslandLayout: Border check FAILED. Anchor point for border ref is off-map/water.")
-          return nil
-      end
-
-      for i, point in ipairs(borderPointsToCheck) do
-          local borderY = Spring.GetGroundHeight(point.x, point.z)
-          if not borderY then
-              Log(teamID, "ValidateIslandLayout: Border check FAILED. Point "..i.." ("..string.format("%.0f,%.0f",point.x,point.z)..") is off-map/water.")
-              return nil
-          end
-          if math.abs(borderY - firstBorderY) > (ISLAND_MAX_SLOPE_DIFFERENCE * 2.5) then -- Tolleranza leggermente maggiore per il bordo esteso
-              Log(teamID, "ValidateIslandLayout: Border check FAILED. Excessive slope around island perimeter. Point Y: "..borderY..", Ref Y: "..firstBorderY..", Diff: "..math.abs(borderY - firstBorderY))
-              return nil
-          end
-      end
-      Log(teamID, "ValidateIslandLayout: Border spacing check PASSED.")
-
-      -- Se tutti i controlli passano
-      Log(teamID, "ValidateIslandLayout: All checks PASSED for "..orientationStr .." at "..string.format("%.0f,%.0f", anchorX, anchorZ))
-      return islandBlueprint
-  end
-  
-  
-  
-  
-
-   local function PlanNewIsland(teamID, data)
-      Log(teamID, "PlanNewIsland: Attempting to plan a new island.")
-
-      local mapW, mapH = Game.mapSizeX, Game.mapSizeZ -- Utili per i limiti
-
-      -- 1. Determinare l'area di ricerca e il punto di riferimento iniziale
-      local searchCenterX, searchCenterZ
-      local searchRadius
-
-      if #data.buildingIslands == 0 then -- Prima isola
-          local startX, _, startZ = Spring.GetTeamStartPosition(teamID)
-          if not startX then
-              Log(teamID, "PlanNewIsland: CRITICAL - Cannot get team start position for first island.")
-              return nil
-          end
-          searchCenterX = startX
-          searchCenterZ = startZ
-          searchRadius = ISLAND_MAX_DIST_FROM_START
-          Log(teamID, "PlanNewIsland: Planning FIRST island. Search center: "..string.format("%.0f,%.0f", searchCenterX, searchCenterZ)..", Radius: "..searchRadius)
-      else -- Isole successive
-          -- Cerca vicino all'ultima isola, ma non troppo addosso.
-          -- Potremmo cercare in direzioni diverse dall'ultima isola.
-          local lastIsland = data.buildingIslands[#data.buildingIslands]
-          -- Punto di partenza della ricerca: un po' distante dall'ultima isola
-          -- Scegli una direzione casuale o predefinita (es. +X, +Z, -X, -Z rispetto all'ancora dell'ultima isola)
-          local angleOffset = math.random() * 2 * math.pi -- Angolo casuale per la nuova isola
-          local lastIslandTotalWidth = 0
-          local lastIslandTotalHeight = 0
-          if not lastIsland.isRotated then
-              lastIslandTotalWidth  = lastIsland.actualCols * ISLAND_SPACING_X -- Approssimazione, usare spacing effettivo se diverso
-              lastIslandTotalHeight = lastIsland.actualRows * ISLAND_SPACING_Z
-          else
-              lastIslandTotalWidth  = lastIsland.actualRows * ISLAND_SPACING_Z
-              lastIslandTotalHeight = lastIsland.actualCols * ISLAND_SPACING_X
-          end
-
-          searchCenterX = lastIsland.anchorX + (lastIslandTotalWidth / 2) + math.cos(angleOffset) * (ISLAND_DISTANCE_BETWEEN_ISLANDS + lastIslandTotalWidth / 2)
-          searchCenterZ = lastIsland.anchorZ + (lastIslandTotalHeight / 2) + math.sin(angleOffset) * (ISLAND_DISTANCE_BETWEEN_ISLANDS + lastIslandTotalHeight / 2)
-          searchRadius = ISLAND_DISTANCE_BETWEEN_ISLANDS -- Raggio di ricerca per il punto di ancoraggio della nuova isola
-          Log(teamID, "PlanNewIsland: Planning SUBSEQUENT island. Last island #"..lastIsland.islandID..". Search center: "..string.format("%.0f,%.0f", searchCenterX, searchCenterZ)..", Radius: "..searchRadius)
-      end
-
-      -- 2. Lista delle configurazioni di isola da provare, dalla preferita alla meno preferita
-      local islandConfigurationsToTry = {
-          {rows = ISLAND_DEFAULT_ROWS, cols = ISLAND_DEFAULT_COLS, rotated = false, name = "Default ("..ISLAND_DEFAULT_ROWS.."x"..ISLAND_DEFAULT_COLS..")"},
-          {rows = ISLAND_DEFAULT_COLS, cols = ISLAND_DEFAULT_ROWS, rotated = true,  name = "Default Rotated ("..ISLAND_DEFAULT_COLS.."x"..ISLAND_DEFAULT_ROWS..")"},
-          {rows = 2, cols = 2, rotated = false, name = "Compact (2x2)"},
-          -- Potresti aggiungere altre configurazioni più piccole o più lunghe/strette
-          {rows = 1, cols = math.max(2, ISLAND_DEFAULT_COLS -1), rotated = false, name = "Line (1x"..(math.max(2,ISLAND_DEFAULT_COLS -1))..")"},
-          {rows = math.max(2, ISLAND_DEFAULT_ROWS -1), cols = 1, rotated = true,  name = "Line Rotated ("..(math.max(2,ISLAND_DEFAULT_ROWS -1)).."x1)"},
-          {rows = 1, cols = 1, rotated = false, name = "Single (1x1)"},
-      }
-
-      -- 3. Iterare sulle configurazioni
-      for _, config in ipairs(islandConfigurationsToTry) do
-          Log(teamID, "PlanNewIsland: Trying configuration: "..config.name)
-          -- 4. Per ogni configurazione, provare diversi punti di ancoraggio nell'area di ricerca
-          for attempt = 1, ISLAND_MAX_ATTEMPTS_TO_PLACE do
-              local anchorCandidateX, anchorCandidateZ
-              if attempt == 1 then -- Il primo tentativo è al centro dell'area di ricerca
-                  anchorCandidateX = searchCenterX
-                  anchorCandidateZ = searchCenterZ
-              else -- Tentativi successivi: punti casuali nel raggio di ricerca
-                  local randomAngle = math.random() * 2 * math.pi
-                  local randomDist = math.random() * searchRadius
-                  anchorCandidateX = searchCenterX + math.cos(randomAngle) * randomDist
-                  anchorCandidateZ = searchCenterZ + math.sin(randomAngle) * randomDist
-              end
-
-              -- Assicurati che il candidato ancoraggio sia entro i limiti della mappa
-              anchorCandidateX = math.max(0, math.min(mapW, anchorCandidateX))
-              anchorCandidateZ = math.max(0, math.min(mapH, anchorCandidateZ))
-
-              Log(teamID, "PlanNewIsland: Attempt #"..attempt.." for "..config.name..". Anchor candidate: "..string.format("%.0f,%.0f", anchorCandidateX, anchorCandidateZ))
-
-              -- 5. Chiamare ValidateIslandLayout
-              local validatedIslandStructure = ValidateIslandLayout(teamID, data, anchorCandidateX, anchorCandidateZ, config.rows, config.cols, config.rotated)
-
-              if validatedIslandStructure then
-                  -- Successo!
-                  data.nextIslandID = data.nextIslandID + 1
-                  validatedIslandStructure.islandID = data.nextIslandID
-                  -- validatedIslandStructure.allowedUnitRoles già impostato da ValidateIslandLayout (tramite GetEligible...)
-
-                  table.insert(data.buildingIslands, validatedIslandStructure)
-                  Log(teamID, "PlanNewIsland: SUCCESS! Planned new Island #"..validatedIslandStructure.islandID.." ("..validatedIslandStructure.actualRows.."x"..validatedIslandStructure.actualCols..(validatedIslandStructure.isRotated and " Rotated" or "")..") at "..string.format("%.0f,%.0f", validatedIslandStructure.anchorX, validatedIslandStructure.anchorZ))
-                  return validatedIslandStructure.islandID -- Restituisce l'ID della nuova isola
-              end
-              -- Se ValidateIslandLayout restituisce nil, il loop continua con il prossimo tentativo/configurazione
-          end
-          Log(teamID, "PlanNewIsland: All "..ISLAND_MAX_ATTEMPTS_TO_PLACE.." anchor attempts FAILED for configuration: "..config.name)
-      end
-
-      Log(teamID, "PlanNewIsland: FAILED to plan any new island configuration after all attempts.")
-      return nil -- Nessuna configurazione valida trovata
-  end
-
- 
-    local function FindOrCreateIslandSlot(teamID, data, unitDefIDToBuild)
-      local unitDef_external = UnitDefs[unitDefIDToBuild] 
-      if not unitDef_external then
-          Log(teamID, "FindOrCreateIslandSlot: Invalid unitDefIDToBuild: " .. tostring(unitDefIDToBuild))
-          return nil
-      end
-
-      Log(teamID, "FindOrCreateIslandSlot: Requesting slot for " .. unitDef_external.humanName)
-
-      -- ============================================================================
-      -- === DEFINIZIONE DELLA FUNZIONE HELPER LOCALE (UNA SOLA VOLTA ALL'INIZIO) ===
-      -- ============================================================================
-      local function findAvailableSlotInIsland(island_param, unitDefIDForSlot_param)
-          -- unitDefIDForSlot_param è l'ID dell'edificio che vogliamo piazzare.
-          
-          Log(teamID, "findAvailableSlotInIsland: Checking Island #"..island_param.islandID..
-                        " for DefID "..unitDefIDForSlot_param..
-                        ". NextSlotToBuild: ("..island_param.nextSlotToBuild.row..","..island_param.nextSlotToBuild.col..")"..
-                        ". IsComplete: "..tostring(island_param.isComplete))
-
-          local unitDataForSlot = GetAiUnitDataByDefID(unitDefIDForSlot_param) 
-
-          if not unitDataForSlot then
-              Log(teamID, "findAvailableSlotInIsland: Could not get Custom UnitData (for footX/Z) for DefID: " .. unitDefIDForSlot_param .. " using GetAiUnitDataByDefID. Using defaults for foreign unit check.")
-          end
-
-          local footprintX_map_units_for_check = DEFAULT_FOOTPRINT_MAP_UNITS 
-          local footprintZ_map_units_for_check = DEFAULT_FOOTPRINT_MAP_UNITS 
-
-          if unitDataForSlot and unitDataForSlot.footX and unitDataForSlot.footZ then
-              footprintX_map_units_for_check = unitDataForSlot.footX
-              footprintZ_map_units_for_check = unitDataForSlot.footZ
-              Log(teamID, "findAvailableSlotInIsland: For DefID "..unitDefIDForSlot_param..", using custom footprint "..footprintX_map_units_for_check.."x"..footprintZ_map_units_for_check.." for foreign unit check.")
-          else
-              Log(teamID, "findAvailableSlotInIsland: For DefID "..unitDefIDForSlot_param..", custom footX/Z not found in UnitData. Using DEFAULT footprint "..footprintX_map_units_for_check.."x"..footprintZ_map_units_for_check.." for foreign unit check.")
-          end
-          
-          local halfWidthWorld = (footprintX_map_units_for_check * 8) / 2
-          local halfDepthWorld = (footprintZ_map_units_for_check * 8) / 2
-          
-          for r = island_param.nextSlotToBuild.row, island_param.actualRows do
-              local startCol = (r == island_param.nextSlotToBuild.row) and island_param.nextSlotToBuild.col or 1
-              for c = startCol, island_param.actualCols do
-                  if island_param.slots[r] and island_param.slots[r][c] then
-                      local slot = island_param.slots[r][c]
-                      Log(teamID, "findAvailableSlotInIsland: Island #"..island_param.islandID.." Checking Slot("..r..","..c.."): "..
-                                    "Buildable="..tostring(slot.isBuildable)..
-                                    ", DefToBuild="..tostring(slot.unitDefIDToBuild)..
-                                    ", UnitID="..tostring(slot.unitID)..
-                                    ", ForeignOccupiedFlag="..tostring(slot.isOccupiedByNonIslandUnit) ) 
-
-                      if slot.isBuildable and not slot.unitDefIDToBuild and not slot.unitID then
-                          local foreignUnitActuallyOccupying = false 
-                          
-                          -- === INIZIO BLOCCO TEMPORANEAMENTE COMMENTATO PER TEST ===
-                          --[[
-                          local unitsInSlotFootprint = Spring.GetUnitsInRectangle(
-                              slot.x - halfWidthWorld, slot.z - halfDepthWorld,
-                              slot.x + halfWidthWorld, slot.z + halfDepthWorld
-                          )
-                          if unitsInSlotFootprint and #unitsInSlotFootprint > 0 then
-                              local unitBlocking = false
-                              for _, otherUnitID in ipairs(unitsInSlotFootprint) do
-                                  unitBlocking = true 
-                                  local otherDefID = Spring.GetUnitDefID(otherUnitID)
-                                  local otherUnitDefName = UnitDefs[otherDefID] and UnitDefs[otherDefID].name or "UnknownDef"
-                                  Log(teamID, "findAvailableSlotInIsland: Slot("..r..","..c..") in Island #"..island_param.islandID.." has unit "..otherUnitDefName.." (ID: "..otherUnitID..") in its footprint during check.")
-                              end
-                              if unitBlocking then foreignUnitActuallyOccupying = true end
-                          end
-                          ]]--
-                          -- === FINE BLOCCO TEMPORANEAMENTE COMMENTATO ===
-                          
-                          if foreignUnitActuallyOccupying then 
-                              Log(teamID, "findAvailableSlotInIsland: Slot("..r..","..c..") in Island #"..island_param.islandID.." is considered occupied by a foreign unit (DURING CHECK). Marking and skipping.")
-                              slot.isOccupiedByNonIslandUnit = true 
-                          else
-                              slot.isOccupiedByNonIslandUnit = false 
-                              local unitDefForSlot_Name = UnitDefs[unitDefIDForSlot_param] and UnitDefs[unitDefIDForSlot_param].humanName or "Unknown Unit"
-                              Log(teamID, "findAvailableSlotInIsland: Found available Slot ("..r..","..c..") in Island #"..island_param.islandID.." for "..unitDefForSlot_Name)
-                              
-                              local next_c = c + 1; local next_r = r
-                              if next_c > island_param.actualCols then
-                                  next_r = r + 1; next_c = 1
-                              end
-                              island_param.nextSlotToBuild = {row = next_r, col = next_c}
-
-                              return {
-                                  islandID = island_param.islandID, slotRow = r, slotCol = c,
-                                  x = slot.x, y = slot.y, z = slot.z, isIslandSlot = true 
-                              }
-                          end
-                      end
-                  end
-              end
-          end
-          return nil 
-      end
-      -- ============================================================================
-      -- === FINE DEFINIZIONE HELPER ===
-      -- ============================================================================
-
-      -- Fase A: Cercare uno slot libero in isole esistenti non complete
-      if data.buildingIslands and #data.buildingIslands > 0 then
-          for _, island_A_loop_var in ipairs(data.buildingIslands) do 
-              if not island_A_loop_var.isComplete then
-                  local slotData = findAvailableSlotInIsland(island_A_loop_var, unitDefIDToBuild) -- Chiamata all'helper locale
-                  if slotData then
-                      return slotData
-                  end
-              end
-          end
-      end
-
-      -- Fase B: Se nessuno slot disponibile nelle isole esistenti, tentare di crearne una nuova
-      Log(teamID, "FindOrCreateIslandSlot: Attempting to plan a new island for " .. unitDef_external.humanName)
-      local newIslandID = PlanNewIsland(teamID, data)
-
-      if newIslandID then
-          Log(teamID, "FindOrCreateIslandSlot: Successfully planned new Island #" .. newIslandID .. ". Searching for slot in it.")
-          
-          local newly_created_island_ref = nil -- Variabile per referenziare l'isola appena creata
-          for _, island_B_loop_var in ipairs(data.buildingIslands) do 
-              if island_B_loop_var.islandID == newIslandID then
-                  newly_created_island_ref = island_B_loop_var -- Trovata l'isola appena creata
-                  break
-              end
-          end
-
-          if newly_created_island_ref then -- Assicurati che l'isola sia stata trovata
-              if not newly_created_island_ref.isComplete then -- Dovrebbe essere non completa
-                  local slotData = findAvailableSlotInIsland(newly_created_island_ref, unitDefIDToBuild) -- Chiamata all'helper locale
-                  if slotData then
-                      return slotData
-                  else
-                      Log(teamID, "FindOrCreateIslandSlot: CRITICAL ERROR - Newly planned island #"..newIslandID.." has no available slot immediately after creation. Check PlanNewIsland/ValidateIslandLayout or slot finding logic.")
-                      return nil
-                  end
-              else
-                  Log(teamID, "FindOrCreateIslandSlot: CRITICAL ERROR - Newly planned island #"..newIslandID.." is somehow already complete immediately after creation.")
-                  return nil
-              end
-          else
-              Log(teamID, "FindOrCreateIslandSlot: CRITICAL ERROR - Could not find the newly planned island #"..newIslandID.." in data.buildingIslands after successful planning.")
-              return nil
-          end
-      else
-          Log(teamID, "FindOrCreateIslandSlot: Failed to plan a new island for " .. unitDef_external.humanName .. ". Cannot place building in an island slot.")
-          return nil
-      end
-  end
- 
- 
- 
-
-  -- === FINE NUOVE FUNZIONI PER ISOLE ===
-  
-  
-  
-    local function ManageEconomy(teamID, frame)
+  local function ManageEconomy(teamID, frame)
       local data = teamData[teamID]
       if not data or data.techLevel == nil then return end
       local config = aiConfig[data.techLevel]
       if not config or not config.economyTargets then return end
 
       local res = data.resourceInfo
-      -- ... (logica bilancio energetico esistente) ...
-      local prioritizeEnergy = ( (data.resourceInfo.energyIncome or 0) - (data.resourceInfo.energyUsage or 0) < 15 )
-      local orderGivenThisFrame = false
+      local currentEnergyIncome = res.energyIncome or 0
+      local currentEnergyUsage = res.energyUsage or 0
+      local energyBalance = currentEnergyIncome - currentEnergyUsage
+      local desiredEnergySurplus = 15 -- Potresti abbassare leggermente questa, es. 10 o 5
+      local prioritizeEnergy = (energyBalance < desiredEnergySurplus)
 
-      -- Funzione helper interna per gestire la logica di costruzione di un singolo obiettivo eco
-      local function tryBuildEcoTarget(teamID_local, data_local, ecoTargetConfig, isPriorityBuild)
-	      Log(teamID_local, "ManageEconomy: tryBuildEcoTarget for ROLE: " .. ecoTargetConfig.role ..
-                      ", buildInIsland: " .. tostring(ecoTargetConfig.buildInIsland) ..
-                      ", Min: " .. ecoTargetConfig.min .. ", Max: " .. ecoTargetConfig.max)
-    -- ... resto della funzione
-          local role = ecoTargetConfig.role
-          local roleTier = tonumber(role:match("^T(%d+)")) or 1 -- Assumiamo T1 se non specificato
-          local unitData = GetUnitDataByRole(data_local.faction, roleTier, role)
+      local orderGivenThisFrame = false -- Flag per dare solo un ordine per ciclo
 
-          if not unitData or not unitData.id then
-              Log(teamID_local, "ManageEconomy: No unit data or ID for role " .. role)
-              return false -- Non può costruire questo
+      -- 1. Controlla PRIMA se dobbiamo costruire ENERGIA (se prioritaria o no)
+      local powerTargetConfig = nil
+      local targetPowerRole = (data.techLevel >= 2 and GetUnitDataByRole(data.faction, 2, "T2_PowerPlant") and "T2_PowerPlant") or "T1_PowerPlant" -- Cerca T2 se possibile, altrimenti T1
+
+      for _, target in ipairs(config.economyTargets) do
+          if target.role == targetPowerRole then
+              powerTargetConfig = target; break
           end
-          local unitDefID = unitData.id
-          local unitDef = UnitDefs[unitDefID]
-          if not unitDef then
-              Log(teamID_local, "ManageEconomy: UnitDef not found for ID " .. unitDefID .. " (Role: " .. role .. ")")
-              return false
-          end
+      end
 
-          -- Inizializza/Recupera l'obiettivo numerico per questo ruolo
-          if not data_local.economyObjectives[role] then
-              data_local.economyObjectives[role] = {
-                  targetCount = math.random(ecoTargetConfig.min, ecoTargetConfig.max),
-                  reached = false
-              }
-              Log(teamID_local, "ManageEconomy: New Objective for " .. role .. ": Build " .. data_local.economyObjectives[role].targetCount)
-          end
-          local currentObjective = data_local.economyObjectives[role]
-          local currentCount = #Spring.GetTeamUnitsByDefs(teamID_local, unitDefID)
+      if powerTargetConfig then
+          local roleTier = tonumber(targetPowerRole:match("^T(%d+)")) or 1
+          local unitData = GetUnitDataByRole(data.faction, roleTier, targetPowerRole)
+          if unitData then
+              local unitDefID = unitData.id; local unitDef = UnitDefs[unitDefID]
+              if unitDef then
+                  -- Determina l'obiettivo numerico random per le centrali
+                  if not data.economyObjectives[targetPowerRole] then
+                      data.economyObjectives[targetPowerRole] = { targetCount = math.random(powerTargetConfig.min, powerTargetConfig.max), reached = false }
+                      Log(teamID, "New Economy Objective for " .. targetPowerRole .. ": Build " .. data.economyObjectives[targetPowerRole].targetCount)
+                  end
+                  local currentObjective = data.economyObjectives[targetPowerRole]
+                  local currentCount = #Spring.GetTeamUnitsByDefs(teamID, unitDefID)
 
-          if currentCount < currentObjective.targetCount then
-              if data_local:CanAfford(unitDefID, frame) then
-                  if isPriorityBuild or not currentObjective.reached then -- Se è prioritario O l'obiettivo non è ancora raggiunto
-                      local builderTier = math.max(0, roleTier - 1)
-                      local builderID = data_local:FindIdleConstructor(builderTier)
-                      if builderID then
-                          local placementData = nil
-                          if ecoTargetConfig.buildInIsland then
-                              Log(teamID_local, "ManageEconomy: "..unitDef.humanName.." (Role: "..role..") is an island building. Requesting slot...")
-                              placementData = FindOrCreateIslandSlot(teamID_local, data_local, unitDefID)
-                          elseif role:find("Extractor") then
-                              local pos = data_local:FindBestMetalSpot(builderID)
-                              if pos then placementData = {x=pos.x, y=pos.y, z=pos.z, isIslandSlot=false} end
-                          else -- Fallback per edifici non-isola e non-estrattori
-                              local pos = data_local:FindGoodEnergySpot(builderID) -- Usa il vecchio metodo
-                              if pos then placementData = {x=pos.x, y=pos.y, z=pos.z, isIslandSlot=false} end
-                          end
-
-                          if placementData then
-                              local posType = placementData.isIslandSlot and ("Island " .. placementData.islandID .. " Slot("..placementData.slotRow..","..placementData.slotCol..")") or "generic/metal spot"
-                              Log(teamID_local, "ManageEconomy: >>>> Ordering T"..builderTier.." builder "..builderID.." to build "..role.." #"..(currentCount+1).."/"..currentObjective.targetCount.. (isPriorityBuild and " (PRIORITY)" or "") .. " at " .. posType)
-                              Spring.GiveOrderToUnit(builderID, -unitDefID, { placementData.x, placementData.y, placementData.z }, {})
-                              if data_local.constructors[builderID] then data_local.constructors[builderID].state = "busy" end
-                              
-                              if placementData.isIslandSlot then
-                                  UpdateIslandSlotState(teamID_local, data_local, placementData.islandID, placementData.slotRow, placementData.slotCol, unitDefID, nil)
+                  if currentCount < currentObjective.targetCount then
+                      if data:CanAfford(unitDefID, frame) then
+                          -- Se l'energia è prioritaria OPPURE se semplicemente ne servono di più (sotto obiettivo)
+                          if prioritizeEnergy or (not currentObjective.reached) then
+                              local builderTier = math.max(0, roleTier - 1)
+                              local builderID = data:FindIdleConstructor(builderTier)
+                              if builderID then
+                                  local buildPos = data:FindGoodEnergySpot(builderID)
+                                  if buildPos then
+                                      Log(teamID, ">>>>>> Ordering T"..builderTier.." builder "..builderID.." to build "..targetPowerRole.." #"..(currentCount+1).."/"..currentObjective.targetCount.. (prioritizeEnergy and " (PRIORITY)" or ""))
+                                      Spring.GiveOrderToUnit(builderID, -unitDefID, { buildPos.x, buildPos.y, buildPos.z }, {})
+                                      if data.constructors[builderID] then data.constructors[builderID].state = "busy" end
+                                      orderGivenThisFrame = true -- Segna che abbiamo dato un ordine
+                                      -- NON USCIRE SUBITO, potremmo voler costruire metallo se non era priorità energia
+                                  end
                               end
-                              return true -- Ordine dato con successo
-                          else Log(teamID_local, "ManageEconomy: Could not find placement for "..role) end
-                      else Log(teamID_local, "ManageEconomy: No idle T"..builderTier.." builder for "..role) end
-                  end
-              elseif currentCount >= currentObjective.targetCount and not currentObjective.reached then
-                  currentObjective.reached = true -- Marcalo come raggiunto se > target ma non ancora marcato
-                  Log(teamID_local, "ManageEconomy: Objective for " .. role .. " reached ("..currentCount.."/"..currentObjective.targetCount..").")
-              end
-          elseif not currentObjective.reached then -- Se >= target e non ancora marcato come `reached`
-              currentObjective.reached = true
-              Log(teamID_local, "ManageEconomy: Objective for " .. role .. " already met or exceeded ("..currentCount.."/"..currentObjective.targetCount..").")
-          end
-          return false -- Nessun ordine dato per questo specifico target in questo momento
-      end
-
-      -- 1. Gestione Centrali Elettriche (con priorità se necessario)
-      local mainPowerRole = (data.techLevel >= 2 and "T2_PowerPlant") or "T1_PowerPlant" -- Scegli T2 se disponibile, altrimenti T1
-      local mainPowerConfig = nil
-      for _, ecoTarget in ipairs(config.economyTargets) do
-          if ecoTarget.role == mainPowerRole then
-              mainPowerConfig = ecoTarget
-              break
-          end
-      end
-
-      if mainPowerConfig then
-          Log(teamID, "ManageEconomy: Checking main power target: " .. mainPowerRole .. (prioritizeEnergy and " (Energy is PRIORITY)" or ""))
-          if tryBuildEcoTarget(teamID, data, mainPowerConfig, prioritizeEnergy) then
-              orderGivenThisFrame = true
-          end
-      else
-          Log(teamID, "ManageEconomy: No configuration found for main power role: " .. mainPowerRole)
-      end
-
-      -- 2. Gestione Altri Obiettivi Economici (se non è stato dato un ordine per le centrali prioritarie)
-      if not orderGivenThisFrame then
-          Log(teamID, "ManageEconomy: Checking other non-priority economy targets.")
-          for _, ecoTarget in ipairs(config.economyTargets) do
-              if ecoTarget.role ~= mainPowerRole then -- Non processare di nuovo la centrale principale
-                  if tryBuildEcoTarget(teamID, data, ecoTarget, false) then -- false = non è un build prioritario di energia
-                      orderGivenThisFrame = true
-                      break -- Un solo ordine di questo tipo per ciclo di ManageEconomy
+                          end
+                      elseif currentCount >= currentObjective.targetCount and not currentObjective.reached then
+                           -- Log(teamID, "Economy Objective for " .. targetPowerRole .. " reached.")
+                           currentObjective.reached = true
+                      end
+                  elseif not currentObjective.reached then -- Marcala come raggiunta se >= target
+                      -- Log(teamID, "Economy Objective for " .. targetPowerRole .. " already met or exceeded.")
+                      currentObjective.reached = true
                   end
               end
           end
       end
+
+      -- 2. Se NON abbiamo dato un ordine per l'energia O l'energia non era prioritaria, controlla ALTRI obiettivi (Estrattori)
       if not orderGivenThisFrame then
-         Log(teamID, "ManageEconomy: No economy build orders given this frame.")
-      end
+          for i, targetConfig in ipairs(config.economyTargets) do
+              -- Salta le centrali, le abbiamo già considerate
+              if not targetConfig.role:find("PowerPlant") then
+                  local role = targetConfig.role
+                  local minCount = targetConfig.min; local maxCount = targetConfig.max
+
+                  if not data.economyObjectives[role] then
+                      local targetNum = math.random(minCount, maxCount)
+                      data.economyObjectives[role] = { targetCount = targetNum, reached = false }
+                      Log(teamID, "New Economy Objective for " .. role .. ": Build " .. targetNum)
+                  end
+                  local currentObjective = data.economyObjectives[role]
+
+                  if not currentObjective.reached then
+                      local roleTier = tonumber(role:match("^T(%d+)")) or 1
+                      local unitData = GetUnitDataByRole(data.faction, roleTier, role)
+                      if unitData then
+                          local unitDefID = unitData.id; local unitDef = UnitDefs[unitDefID]
+                          if unitDef then
+                              local currentCount = #Spring.GetTeamUnitsByDefs(teamID, unitDefID)
+                              if currentCount < currentObjective.targetCount then
+                                  if data:CanAfford(unitDefID, frame) then
+                                      local builderTier = math.max(0, roleTier - 1)
+                                      local builderID = data:FindIdleConstructor(builderTier)
+                                      if builderID then
+                                          local buildPos = nil
+                                          if role:find("Extractor") then 
+										  buildPos = data:FindBestMetalSpot(builderID) 
+                                          -- === NUOVA CONDIZIONE PER POSIZIONE STORAGE ===
+                                          elseif role:find("Estorage") or role:find("Mstorage") then
+                                              -- Riusiamo la logica di posizionamento delle centrali
+                                              -- o potresti creare una nuova funzione FindGoodStorageSpot se necessario
+                                              buildPos = data:FindGoodEnergySpot(builderID) -- Usiamo questo per ora
+                                              if buildPos then
+                                                  Log(teamID, "Found spot for " .. role .. " using EnergySpot logic.")
+                                              else
+                                                  Log(teamID, "Could NOT find spot for " .. role .. " using EnergySpot logic.")
+                                              end
+                                          -- ==========================================										  
+										  end
+                                          if buildPos then
+                                              Log(teamID, ">>>>>> Ordering builder "..builderID.." to build "..role.." #"..(currentCount+1).."/"..currentObjective.targetCount)
+                                              Spring.GiveOrderToUnit(builderID, -unitDefID, { buildPos.x, buildPos.y, buildPos.z }, {})
+                                              if data.constructors[builderID] then data.constructors[builderID].state = "busy" end
+                                              orderGivenThisFrame = true -- Abbiamo dato un ordine
+                                              -- Esci dal ciclo interno DOPO aver dato un ordine per altri edifici
+                                              break
+                                          end
+                                      end
+                                  end
+                              elseif currentCount >= currentObjective.targetCount then
+                                  -- Log(teamID, "Economy Objective for " .. role .. " reached.")
+                                  currentObjective.reached = true
+                              end
+                          end
+                      end
+                  end
+              end -- fine if not PowerPlant
+          end -- fine for altri obiettivi
+      end -- fine if not orderGivenThisFrame
   end -- Fine ManageEconomy
-  
-
-
-
-
-
-
-
-  
 
   -- ManageProduction con correzione ordine fabbrica
   local function ManageProduction(teamID, frame)
@@ -2893,11 +2369,6 @@ end
                   -- === NUOVE CHIAVI PER HOTSPOT ===
                   hotspots = {},          -- Tabella per gli hotspot (ID hotspot -> dati hotspot)
                   nextHotspotID = 1,    -- Contatore per ID hotspot unici
-				  -- === NUOVE CHIAVI PER LE ISOLE DI COSTRUZIONE ===
-                  buildingIslands = {}, -- Array di tabelle, ogni tabella è un'isola
-				  nextIslandID = 1,
-				  pendingIslandBuilders = {}, -- { builderID = islandID_target }
-				  -- ==============================================				  
                   HasFactoryOfTier = TeamHasFactoryOfTier,
                   FindIdleConstructor = FindIdleConstructorForTeam,
                   NeedsConstructor = TeamNeedsConstructor,
@@ -2954,73 +2425,31 @@ end
     end
   end
 
-   function gadget:UnitFinished(unitID, unitDefID, unitTeam)
+  function gadget:UnitFinished(unitID, unitDefID, unitTeam)
     if teamData[unitTeam] then
       local data = teamData[unitTeam]
       if not data.faction then return end
       local unitDef = UnitDefs[unitDefID]
-      -- ... (categorizzazione esistente per foundType) ...
+      local faction = data.faction
+      local foundType = nil; local unitData = nil;
+      for tier = 1, 3 do
+          local tierKey = "T"..tier
+          local tierDefs = factionUnits[faction]._unitDefIDs[tierKey]
+          if tierDefs then
+              if tierDefs.constructor and unitDefID == tierDefs.constructor.id then unitData=tierDefs.constructor;data.constructors[unitID] = { tier = tier, state = "idle", task = nil, moveType=unitData.moveType }; foundType = "Con "..tierKey; break end
+              if tierDefs.factory and unitDefID == tierDefs.factory.id then unitData=tierDefs.factory;data.factories[unitID] = { tier = tier, producing = nil, moveType=unitData.moveType }; foundType = "Fac "..tierKey; break end
+              if tierDefs.extractor and unitDefID == tierDefs.extractor.id then unitData=tierDefs.extractor;data.buildings[unitID] = { tier = tier, type = "extractor", moveType=unitData.moveType }; foundType = "Ext "..tierKey; break end
+              if tierDefs.powerPlant and unitDefID == tierDefs.powerPlant.id then unitData=tierDefs.powerPlant;data.buildings[unitID] = { tier = tier, type = "power", moveType=unitData.moveType }; foundType = "Pow "..tierKey; break end
+              -- === NUOVE CONDIZIONI PER GLI STORAGE IN UNITFINISHED ===
+              if tierDefs.estorage and unitDefID == tierDefs.estorage.id then unitData=tierDefs.estorage; data.buildings[unitID] = { tier = tier, type = "estorage", moveType=unitData.moveType }; foundType = "ESto "..tierKey; break end
+              if tierDefs.mstorage and unitDefID == tierDefs.mstorage.id then unitData=tierDefs.mstorage; data.buildings[unitID] = { tier = tier, type = "mstorage", moveType=unitData.moveType }; foundType = "MSto "..tierKey; break end
+              -- ======================================================			  
+              if tierDefs.attackers then for _, d in ipairs(tierDefs.attackers) do if unitDefID == d.id then unitData=d; data.combatUnits[unitID] = { tier = tier, type = "attacker", group = nil, state = "idle", moveType=unitData.moveType }; foundType = "Atk "..tierKey; break end end; if foundType then break end end
+              if tierDefs.defenses then for _, d in ipairs(tierDefs.defenses) do if unitDefID == d.id then unitData=d; data.buildings[unitID] = { tier = tier, type = "defense", moveType=unitData.moveType }; foundType = "Def "..tierKey; break end end; if foundType then break end end
+          end
+      end
       if foundType then Log(unitTeam, "UnitFinished: " .. unitID .. " (" .. (unitDef and unitDef.humanName or "N/A") .. ") - Categorized as: " .. foundType .." (MoveType: ".. (unitData and unitData.moveType or 'N/A') .. ")")
       else Log(unitTeam, "UnitFinished: " .. unitID .. " (" .. (unitDef and unitDef.humanName or "N/A") .. ") - Not categorized.") end
-
-      -- === LOGICA AGGIORNATA PER ISOLE ===
-      -- Determina se questo unitDefID era destinato a un'isola
-      -- Questo è un po' complesso perché dobbiamo capire quale "ruolo" economico ha unitDefID
-      -- e poi vedere se quel ruolo ha buildInIsland=true.
-      local buildInIslandFlag = false
-      local roleNameForUnitDef = nil -- Da determinare
-
-      -- Cerca in tutti i ruoli economici di tutti i tech level (semplificazione, potrebbe essere lento)
-      -- Idealmente, dovremmo sapere il ruolo da cui è stato originato l'ordine.
-      for techLvl = 0, 3 do -- Controlla tutti i livelli tech definiti
-          local cfgForLvl = aiConfig[techLvl]
-          if cfgForLvl and cfgForLvl.economyTargets then
-              for _, ecoTarget in ipairs(cfgForLvl.economyTargets) do
-                  local roleTier = tonumber(ecoTarget.role:match("^T(%d+)")) or 0
-                  local roleUnitData = GetUnitDataByRole(data.faction, roleTier, ecoTarget.role)
-                  if roleUnitData and roleUnitData.id == unitDefID then
-                      roleNameForUnitDef = ecoTarget.role
-                      if ecoTarget.buildInIsland then
-                          buildInIslandFlag = true
-                      end
-                      break
-                  end
-              end
-          end
-          if roleNameForUnitDef then break end
-      end
-
-      if buildInIslandFlag then
-          Log(unitTeam, "UnitFinished: "..unitDef.humanName.." (ID "..unitID..", Role: "..tostring(roleNameForUnitDef)..") was an island building.")
-          local foundAndUpdatedSlot = false
-          if data.buildingIslands then
-              for islandIdx, island in ipairs(data.buildingIslands) do
-                  -- Non serve controllare isComplete qui, un edificio potrebbe essere stato distrutto e ricostruito
-                  for r = 1, island.actualRows do
-                      for c = 1, island.actualCols do
-                          if island.slots[r] and island.slots[r][c] then
-                              local slot = island.slots[r][c]
-                              -- Se lo slot era in attesa di QUESTO unitDefID
-                              if slot.unitDefIDToBuild == unitDefID and not slot.unitID then
-                                  UpdateIslandSlotState(unitTeam, data, island.islandID, r, c, nil, unitID)
-                                  foundAndUpdatedSlot = true; break
-                              end
-                          end
-                      end
-                      if foundAndUpdatedSlot then break end
-                  end
-                  if foundAndUpdatedSlot then break end
-              end
-          end
-          if not foundAndUpdatedSlot then
-              Log(unitTeam, "UnitFinished: Island building "..unitDef.humanName.." completed, but could NOT find its designated slot in UpdateIslandSlotState. (Role: "..tostring(roleNameForUnitDef)..")")
-          end
-      else
-          if roleNameForUnitDef then
-             -- Log(unitTeam, "UnitFinished: "..unitDef.humanName.." (Role: "..roleNameForUnitDef..") was NOT an island building.")
-          end
-      end
-      -- ==========================================
     end
   end
 
