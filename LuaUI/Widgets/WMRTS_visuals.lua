@@ -81,10 +81,10 @@ local valore_watertype				-- ########################################### sostitu
 local valore_showdps					-- ########################################### sostituire
 local valore_showspawnpos				
 -- icona principale del menu
-local larghezza_icona_graphicsmenu			= 40
-local altezza_icona_graphicsmenu			= 40
-local margine_sx_icona_graphicsmenu			= 20  	-- distanza dal margine sinistro del background e l'icona del menu
-local margine_su_icona_graphicsmenu			= -30 	-- distanza di quanto sborda l'immagine dal bordo superiore del background
+local larghezza_icona_visualsmenu			= 40
+local altezza_icona_visualsmenu			= 40
+local margine_sx_icona_visualsmenu			= 20  	-- distanza dal margine sinistro del background e l'icona del menu
+local margine_su_icona_visualsmenu			= -30 	-- distanza di quanto sborda l'immagine dal bordo superiore del background
 -- pulsanti back / close
 local larghezza_menu_buttons 			= 76  		-- like back button, close button
 local altezza_menu_buttons 				= 25  		-- like back button, close button
@@ -102,7 +102,7 @@ local icona_on 						= "LuaUI/Images/menu/mainmenu/graphics_on.png"
 local icona_off 					= "LuaUI/Images/menu/mainmenu/graphics_off.png"
 local icona_prec 					= "LuaUI/Images/menu/mainmenu/graphics_prec.png"
 local icona_succ					= "LuaUI/Images/menu/mainmenu/graphics_succ.png"
-local icona_graphicsmenu			= "LuaUI/Images/menu/mainmenu/icona_main_menu.png"
+local icona_visualsmenu			= "LuaUI/Images/menu/mainmenu/menu_visual_icon.png"
 local button_back					= "LuaUI/Images/menu/mainmenu/menu_back.png"
 local button_close					= "LuaUI/Images/menu/mainmenu/menu_close.png"
 -- impostazione dei fonts
@@ -799,13 +799,13 @@ if visualsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	-- testo
 	font_intestazione:SetTextColor(1, 1, 1, 1)
 	font_intestazione:Begin()
-	font_intestazione:Print("Visual options", Pos_x_mainmenu+70, Pos_y_mainmenu + 220+25,14,'ds')
+	font_intestazione:Print("Visual settings", Pos_x_mainmenu+70, Pos_y_mainmenu + 220+25,14,'ds')
 	font_intestazione:End()	
 	
 -- icona principale del menu
 	gl.Color(1,1,1,1)
-	gl.Texture(icona_graphicsmenu)	
-	gl.TexRect(	Pos_x_mainmenu+margine_sx_icona_graphicsmenu,Pos_y_mainmenu+altezza_mainmenu+margine_su_icona_graphicsmenu,Pos_x_mainmenu+margine_sx_icona_graphicsmenu+larghezza_icona_graphicsmenu,Pos_y_mainmenu+altezza_mainmenu+margine_su_icona_graphicsmenu+altezza_icona_graphicsmenu)	
+	gl.Texture(icona_visualsmenu)	
+	gl.TexRect(	Pos_x_mainmenu+margine_sx_icona_visualsmenu,Pos_y_mainmenu+altezza_mainmenu+margine_su_icona_visualsmenu,Pos_x_mainmenu+margine_sx_icona_visualsmenu+larghezza_icona_visualsmenu,Pos_y_mainmenu+altezza_mainmenu+margine_su_icona_visualsmenu+altezza_icona_visualsmenu)	
 	gl.Texture(false)	-- fine texture	
 
 -- voce dx unit healt

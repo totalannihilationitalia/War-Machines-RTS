@@ -110,7 +110,7 @@ local icona_on 						= "LuaUI/Images/menu/mainmenu/graphics_on.png"
 local icona_off 					= "LuaUI/Images/menu/mainmenu/graphics_off.png"
 local icona_prec 					= "LuaUI/Images/menu/mainmenu/graphics_prec.png"
 local icona_succ					= "LuaUI/Images/menu/mainmenu/graphics_succ.png"
-local icona_graphicsmenu			= "LuaUI/Images/menu/mainmenu/icona_main_menu.png"
+local icona_graphicsmenu			= "LuaUI/Images/menu/mainmenu/menu_graphics_icon.png"
 local button_back					= "LuaUI/Images/menu/mainmenu/menu_back.png"
 local button_close					= "LuaUI/Images/menu/mainmenu/menu_close.png"
 -- impostazione dei fonts
@@ -787,7 +787,7 @@ if graphicsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	-- testo
 	font_intestazione:SetTextColor(1, 1, 1, 1)
 	font_intestazione:Begin()
-	font_intestazione:Print("Grapichs options", Pos_x_mainmenu+70, Pos_y_mainmenu + 220+25,14,'ds')
+	font_intestazione:Print("Grapichs settings", Pos_x_mainmenu+70, Pos_y_mainmenu + 220+25,14,'ds')
 	font_intestazione:End()	
 	
 -- icona principale del menu

@@ -82,7 +82,7 @@ local icona_snd = "LuaUI/Images/menu/mainmenu/mainmenuicon_snd.png"
 local icona_graphics = "LuaUI/Images/menu/mainmenu/mainmenuicon_graphics.png"
 local icona_visuals = "LuaUI/Images/menu/mainmenu/mainmenuicon_visual.png"
 local icona_menuset = "LuaUI/Images/menu/mainmenu/mainmenuicon_minimenu.png"
-local icona_mainmenu = "LuaUI/Images/menu/mainmenu/icona_main_menu.png"
+local icona_mainmenu = "LuaUI/Images/menu/mainmenu/menu_main.png"
 local button_back					= "LuaUI/Images/menu/mainmenu/menu_back.png"
 local button_close					= "LuaUI/Images/menu/mainmenu/menu_close.png"
 

@@ -51,7 +51,7 @@ local posy_selettore_buttons 			 	= 0						-- posizione y del selettore dei puls
 
 -- definizione immagini
 local main_background				= "LuaUI/Images/menu/mainmenu/sfondo_sound.png"
-local icona_menu_exit				= "LuaUI/Images/menu/mainmenu/icona_exit.png"
+local icona_menu_exit				= "LuaUI/Images/menu/mainmenu/menu_exit.png"
 local buttons_back					= "LuaUI/Images/menu/mainmenu/menu_back.png"
 local buttons_close					= "LuaUI/Images/menu/mainmenu/menu_close.png"
 local buttons_ok					= "LuaUI/Images/menu/mainmenu/menu_ok.png"
