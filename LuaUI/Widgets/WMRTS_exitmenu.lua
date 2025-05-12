@@ -218,7 +218,7 @@ function widget:DrawScreen()
 -- icona menu
 	gl.Color(1,1,1,1)
 	gl.Texture(icona_menu_exit)	-- add the icon
-	gl.TexRect(posx_menu+30,posy_menu+altezza_menu-30, posx_menu+30+60,posy_menu+altezza_menu+30)	
+	gl.TexRect(posx_menu+20,posy_menu+altezza_menu-30, posx_menu+20+40,posy_menu+altezza_menu+10)	
 	gl.Texture(false)	-- fine texture		
 	
 --titolo menu
