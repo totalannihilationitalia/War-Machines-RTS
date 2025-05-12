@@ -13,7 +13,7 @@
 
 function widget:GetInfo()
   return {
-    name      = "Display DPS - XTA",
+    name      = "Display DPS",
     desc      = "Displays damage per second done to your allies units v2.1",
     author    = "TheFatController",
     date      = "May 27, 2008",

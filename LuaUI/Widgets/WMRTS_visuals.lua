@@ -72,7 +72,7 @@ local valore_camerashake
 local valore_verticalline			
 local valore_teammateselunits		
 local valore_showingamealert
-local 					
+			
 local valore_blinking				-- ########################################### sostituire
 local valore_shadows				-- ########################################### sostituire
 local valore_showenvironmental		-- ########################################### sostituire
@@ -144,7 +144,8 @@ function widget:KeyPress(key, mods, isRepeat)
 	if visualsmenu_attivo and not Spring.IsGUIHidden() then
 		if key == 27 then -- TASTO esc  0x01B
 			visualsmenu_attivo = false 						-- chiudo graphicsmenu
-			Spring.SendCommands("close_WMRTS_minimenu")			-- spengo il minipulsante menu del minimenu
+			Spring.SendCommands("close_WMRTS_minimenu")				-- con ESC esco dal sottomenu graphich e apro mainmenu
+			Spring.SendCommands("close_WMRTS_visuals")			-- spengo il minipulsante menu del minimenu 
 			-- disabilito il guishader
 				if (WG['guishader_api'] ~= nil) then
 				WG['guishader_api'].RemoveRect('WMRTS_Guishader')
@@ -425,19 +426,41 @@ if visualsmenu_attivo and not Spring.IsGUIHidden() then
   end
 	if button== 1 then -- aggiunto rev1
 		if (widget:IsAbove(x, y)) then
-				-- SHOW UNITS RANK A SINISTRA icona "ON/OFF" -- ########################################## se clicco sull'icona della relativa opzione, aggiungo +1 al valore, di conseguenza diventa 0 o 1. Serve per impostare poi la grafica corretta della casella di selezione ON/OFF
+		
+		--[[ esempio
+	-- Camera shake effect  A SINISTRA icona "ON/OFF"	 WIDGET
+			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)) then
+				valore_camerashake = valore_camerashake + 1
+				if valore_camerashake > 1 then
+				 valore_camerashake = 0
+				end
+				if valore_camerashake == 0 then
+					Spring.SendCommands({"luaui disablewidget Lups"}) 				-- disabilito il widget --- 
+					Spring.SendCommands({"luaui disablewidget LupsManager"}) 		-- disabilito il widget
+					Spring.SetConfigInt("LupsActive", 0)							-- imposto il widget nel springcongig
+				elseif valore_camerashake == 1 then
+					Spring.SendCommands({"luaui enablewidget Lups"}) 				-- abilito il widget
+					Spring.SendCommands({"luaui enablewidget LupsManager"}) 		-- abilito il widget
+					Spring.SetConfigInt("LupsActive", 1)						    -- imposto il widget nel springcongig				
+				end				
+				return true		
+		
+		
+		]]--
+			
+		
+				-- SHOW UNITS RANK A SINISTRA icona "ON/OFF" -- se clicco sull'icona della relativa opzione, aggiungo +1 al valore, di conseguenza diventa 0 o 1. Serve per impostare poi la grafica corretta della casella di selezione ON/OFF
 			if ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi+altezza_icona_opzioni)) then
 				valore_showunitrank = valore_showunitrank + 1
 				if valore_showunitrank > 1 then
 				 valore_showunitrank = 0
 				end
 				if valore_showunitrank == 0 then
-					Spring.SendCommands("AdvMapShading 0") -- ##########################
-					Spring.SetConfigInt("AdvMapShading", 0)	-- ##########################
+					Spring.SendCommands({"luaui disablewidget Rank Icons"}) 				-- disabilito il widget
+					Spring.SetConfigInt("optvisual_ShowUnitRank", 0)							-- imposto il widget nel springcongig
 				elseif valore_showunitrank == 1 then
-					Spring.SendCommands("AdvMapShading 1") -- ##########################
-					Spring.SetConfigInt("AdvMapShading", 1)		-- ##########################
-					Echo("May require a reboot for the changes to take effect")
+					Spring.SendCommands({"luaui enablewidget Rank Icons"}) 				-- abilito il widget
+					Spring.SetConfigInt("optvisual_ShowUnitRank", 1)		
 				end
 				return true
 				-- show unit healt A DESTRA icona "ON/OFF" -- ################################# se clicco sull'icona della relativa opzione, aggiungo +1 al valore, di conseguenza diventa 0 o 1. Serve per impostare poi la grafica corretta della casella di selezione ON/OFF			
@@ -447,11 +470,11 @@ if visualsmenu_attivo and not Spring.IsGUIHidden() then
 					valore_unitshealt = 0
 				end
 				if valore_unitshealt == 0 then
-					Spring.SendCommands("AdvModelShading 0") -- ##########################
-					Spring.SetConfigInt("AdvModelShading", 0)	-- ##########################
+					Spring.SendCommands({"luaui disablewidget HealthBars"}) 				-- disabilito il widget
+					Spring.SetConfigInt("optvisual_HealthBars", 0)							-- imposto il widget nel springcongig
 				elseif valore_unitshealt == 1 then
-					Spring.SendCommands("AdvModelShading 1") -- ##########################
-					Spring.SetConfigInt("AdvModelShading", 1)	-- ##########################	
+					Spring.SendCommands({"luaui enablewidget HealthBars"}) 				-- abilito il widget
+					Spring.SetConfigInt("optvisual_HealthBars", 1)		
 				end
 				return true		
 				-- Show ETA  A SINISTRA icona "ON/OFF"
@@ -461,11 +484,11 @@ if visualsmenu_attivo and not Spring.IsGUIHidden() then
 					valore_showeta = 0
 				end
 				if valore_showeta == 0 then
-					Spring.SendCommands("GrassDetail 0")
-					Spring.SetConfigInt("GrassDetail", 0)	
+					Spring.SendCommands({"luaui disablewidget BuildETA"}) 				-- disabilito il widget
+					Spring.SetConfigInt("optvisual_BuildETA", 0)							-- imposto il widget nel springcongig
 				elseif valore_showeta == 1 then
-					Spring.SendCommands("GrassDetail 1")
-					Spring.SetConfigInt("GrassDetail", 1)		
+					Spring.SendCommands({"luaui enablewidget BuildETA"}) 				-- abilito il widget
+					Spring.SetConfigInt("optvisual_BuildETA", 1)		
 				end
 				return true
 				-- Show spawn position A SINISTRA RIGA 8 icona "ON/OFF"
@@ -475,25 +498,25 @@ if visualsmenu_attivo and not Spring.IsGUIHidden() then
 					valore_showspawnpos = 0
 				end
 				if valore_showspawnpos == 0 then
-					Spring.SendCommands("MapBorder 0")
-					Spring.SetConfigInt("MapBorder", 0)	
+					Spring.SendCommands({"luaui disablewidget Start Point Adder"}) 				-- disabilito il widget
+					Spring.SetConfigInt("optvisual_howspawnpos", 0)							-- imposto il widget nel springcongig
 				elseif valore_showspawnpos == 1 then
-					Spring.SendCommands("MapBorder 1")
-					Spring.SetConfigInt("MapBorder", 1)		
+					Spring.SendCommands({"luaui enablewidget Start Point Adder"}) 				-- abilito il widget
+					Spring.SetConfigInt("optvisual_howspawnpos", 1)		
 				end
 				return true				
-				-- units AUREA A DESTRA  icona "ON/OFF" -- se clicco sull'icona della relativa opzione, aggiungo +1 al valore, di conseguenza diventa 0 o 1. Serve per impostare poi la grafica corretta della casella di selezione ON/OFF
+				--  units AUREA A DESTRA  icona "ON/OFF" -- se clicco sull'icona della relativa opzione, aggiungo +1 al valore, di conseguenza diventa 0 o 1. Serve per impostare poi la grafica corretta della casella di selezione ON/OFF
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga6 - distanzay_icone_testi+altezza_icona_opzioni	)) then
 				valore_showunitsaura = valore_showunitsaura + 1
 				if valore_showunitsaura > 1 then
 					valore_showunitsaura = 0
 				end
 				if valore_showunitsaura == 0 then
-					Spring.SendCommands("HardwareCursor 0")
-					Spring.SetConfigInt("HardwareCursor", 0)	
+					Spring.SendCommands({"luaui disablewidget Spotter"}) 				-- disabilito il widget
+					Spring.SetConfigInt("optvisual_Spotter", 0)							-- imposto il widget nel springcongig
 				elseif valore_showunitsaura == 1 then
-					Spring.SendCommands("HardwareCursor 1")
-					Spring.SetConfigInt("HardwareCursor", 1)	
+					Spring.SendCommands({"luaui enablewidget Spotter"}) 				-- abilito il widget
+					Spring.SetConfigInt("optvisual_Spotter", 1)		
 				end
 				return true				
 				-- Camera shake effect  A SINISTRA icona "ON/OFF"	 WIDGET
@@ -503,14 +526,12 @@ if visualsmenu_attivo and not Spring.IsGUIHidden() then
 				 valore_camerashake = 0
 				end
 				if valore_camerashake == 0 then
-					Spring.SendCommands({"luaui disablewidget Lups"}) 				-- disabilito il widget
-					Spring.SendCommands({"luaui disablewidget LupsManager"}) 		-- disabilito il widget
-					Spring.SetConfigInt("LupsActive", 0)	
+					Spring.SendCommands({"luaui disablewidget CameraShake"}) 				-- disabilito il widget
+					Spring.SetConfigInt("optvisual_CameraShake", 0)							-- imposto il widget nel springcongig
 				elseif valore_camerashake == 1 then
-					Spring.SendCommands({"luaui enablewidget Lups"}) 				-- abilito il widget
-					Spring.SendCommands({"luaui enablewidget LupsManager"}) 		-- abilito il widget
-					Spring.SetConfigInt("LupsActive", 1)					
-				end				
+					Spring.SendCommands({"luaui enablewidget CameraShake"}) 				-- abilito il widget
+					Spring.SetConfigInt("optvisual_CameraShake", 1)		
+				end			
 				return true
 				-- show vertical line A DESTRA  icona "ON/OFF"	 WIDGET	
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga5 - distanzay_icone_testi+altezza_icona_opzioni)) then
@@ -519,12 +540,12 @@ if visualsmenu_attivo and not Spring.IsGUIHidden() then
 				 valore_verticalline = 0
 				end
 				if valore_verticalline == 0 then
-					Spring.SendCommands({"luaui disablewidget Bloom Shader"}) 		-- disabilito il widget
-					Spring.SetConfigInt("BloomshaderActive", 0)	
+					Spring.SendCommands({"luaui disablewidget Vertical Line on Radar Dots"}) 				-- disabilito il widget
+					Spring.SetConfigInt("optvisual_verticalline", 0)							-- imposto il widget nel springcongig
 				elseif valore_verticalline == 1 then
-					Spring.SendCommands({"luaui enablewidget Bloom Shader"}) 		-- abilito il widget
-					Spring.SetConfigInt("BloomshaderActive", 1)					
-				end				
+					Spring.SendCommands({"luaui enablewidget Vertical Line on Radar Dots"}) 				-- abilito il widget
+					Spring.SetConfigInt("optvisual_verticalline", 1)		
+				end						
 				return true		
 				-- Show teammates selected units  A SINISTRA icona "ON/OFF"	 WIDGET
 			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)) then
@@ -533,14 +554,14 @@ if visualsmenu_attivo and not Spring.IsGUIHidden() then
 				 valore_teammateselunits = 0
 				end
 				if valore_teammateselunits == 0 then
-					Spring.SendCommands({"luaui disablewidget Projectile lights"}) 		-- disabilito il widget
-					Spring.SetConfigInt("ShowProjectile", 0)	
+					Spring.SendCommands({"luaui disablewidget Ally Selected Units"}) 				-- disabilito il widget
+					Spring.SetConfigInt("optvisual_teammateselunits", 0)							-- imposto il widget nel springcongig
 				elseif valore_teammateselunits == 1 then
-					Spring.SendCommands({"luaui enablewidget Projectile lights"}) 		-- abilito il widget
-					Spring.SetConfigInt("ShowProjectile", 1)					
+					Spring.SendCommands({"luaui enablewidget Ally Selected Units"}) 				-- abilito il widget
+					Spring.SetConfigInt("optvisual_teammateselunits", 1)		
 				end		
 				return true
-				-- shown ingame alert A DESTRA  icona "ON/OFF"	 WIDGET
+				-- shown ingame alert A DESTRA  icona "ON/OFF"	 WIDGET ######################################## da concludere #################################
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga4 - distanzay_icone_testi+altezza_icona_opzioni)) then
 				valore_showingamealert = valore_showingamealert + 1
 				if valore_showingamealert > 1 then
@@ -561,14 +582,14 @@ if visualsmenu_attivo and not Spring.IsGUIHidden() then
 					valore_mapborder = 0
 				end
 				if valore_mapborder == 0 then
-					Spring.SendCommands("Fullscreen 0")
-					Spring.SetConfigInt("Fullscreen", 0)	
+					Spring.SendCommands("MapBorder 0")
+					Spring.SetConfigInt("MapBorder", 0)	
 				elseif valore_mapborder == 1 then
-					Spring.SendCommands("Fullscreen 1")
-					Spring.SetConfigInt("Fullscreen", 1)		
+					Spring.SendCommands("MapBorder 1")
+					Spring.SetConfigInt("MapBorder", 1)		
 				end
 				return true
-				-- Blinking units A DESTRA  icona "ON/OFF"
+				-- Blinking units A DESTRA  icona "ON/OFF" --- le unità non controllate lampeggiano
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi+altezza_icona_opzioni)) then
 				valore_blinking = valore_blinking + 1
 				if valore_blinking > 1 then
@@ -624,10 +645,10 @@ if visualsmenu_attivo and not Spring.IsGUIHidden() then
 				end 
 				if valore_showenvironmental == 0 then
 					Spring.SendCommands({"luaui disablewidget Snow"}) 		-- disabilito il widget
-					Spring.SetConfigInt("EnviroActive", 0)	
+					Spring.SetConfigInt("optvisual_EnviroActive", 0)	
 				elseif valore_showenvironmental == 1 then
 					Spring.SendCommands({"luaui enablewidget Snow"}) 		-- abilito il widget
-					Spring.SetConfigInt("EnviroActive", 1)					
+					Spring.SetConfigInt("optvisual_EnviroActive", 1)					
 				end					
 --			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) then
 --				Echo("test environment")
@@ -705,22 +726,25 @@ if visualsmenu_attivo and not Spring.IsGUIHidden() then
 					valore_showdps = 0
 				end
 				if valore_showdps == 0 then
-					Spring.SendCommands("VSync 0")
-					Spring.SetConfigInt("VSync", 0)	
+					Spring.SendCommands({"luaui disablewidget Display DPS"}) 				-- disabilito il widget
+					Spring.SetConfigInt("optvisual_Display DPS", 0)							-- imposto il widget nel springcongig
 				elseif valore_showdps == 1 then
-					Spring.SendCommands("VSync 1")
-					Spring.SetConfigInt("VSync", 1)		
-				end
+					Spring.SendCommands({"luaui enablewidget Display DPS"}) 				-- abilito il widget
+					Spring.SetConfigInt("optvisual_Display DPS", 1)		
+				end		
 				return true		
 
 			-- BACK button	
 			elseif ((x >=Pos_x_mainmenu+posx_menu_button) and (x <= Pos_x_mainmenu+posx_menu_button+larghezza_menu_buttons) and (y >= Pos_y_mainmenu+posy_menu_button) and (y <= Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons)) then
-			Spring.Echo("tornare indietro")
+			Spring.SendCommands("open_WMRTS_menu")		-- invia comando per spegnere il minibutton mainmenu del minimenu
+			Spring.SendCommands("close_WMRTS_visuals")		-- invia comando per spegnere il visualsmenu		
 			return true
 			
 			-- CLOSE button						
 			elseif ((x >= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_mainmenu/2) and (x <= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_menu_buttons+larghezza_mainmenu/2) and (y >= Pos_y_mainmenu+posy_menu_button) and (y <= Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons)) then
-			Spring.Echo("chiudere")
+			Spring.SendCommands("close_WMRTS_minimenu")		-- invia comando per spegnere il minibutton mainmenu del minimenu
+			Spring.SendCommands("close_WMRTS_visuals")		-- invia comando per spegnere il visualsmenu			
+--			Spring.Echo("chiudere")
 			return true		
 
 

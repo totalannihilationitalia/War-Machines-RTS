@@ -152,7 +152,8 @@ function widget:KeyPress(key, mods, isRepeat)
 	if graphicsmenu_attivo and not Spring.IsGUIHidden() then
 		if key == 27 then -- TASTO esc  0x01B
 			graphicsmenu_attivo = false 						-- chiudo graphicsmenu
-			Spring.SendCommands("close_WMRTS_minimenu")			-- spengo il minipulsante menu del minimenu
+			Spring.SendCommands("close_WMRTS_minimenu")				-- con ESC esco dal sottomenu graphich e apro mainmenu
+			Spring.SendCommands("close_WMRTS_graphics")			-- spengo il minipulsante menu del minimenu 
 			-- disabilito il guishader
 				if (WG['guishader_api'] ~= nil) then
 				WG['guishader_api'].RemoveRect('WMRTS_Guishader')
@@ -723,12 +724,15 @@ if graphicsmenu_attivo and not Spring.IsGUIHidden() then
 
 			-- BACK button	
 			elseif ((x >=Pos_x_mainmenu+posx_menu_button) and (x <= Pos_x_mainmenu+posx_menu_button+larghezza_menu_buttons) and (y >= Pos_y_mainmenu+posy_menu_button) and (y <= Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons)) then
-			Spring.Echo("tornare indietro")
+			Spring.SendCommands("open_WMRTS_menu")		-- invia comando per spegnere il minibutton mainmenu del minimenu
+			Spring.SendCommands("close_WMRTS_graphics")		-- invia comando per spegnere il graphicsmenu
 			return true
 			
 			-- CLOSE button						
 			elseif ((x >= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_mainmenu/2) and (x <= Pos_x_mainmenu+posx_menu_button+distance_x_menu_button+larghezza_menu_buttons+larghezza_mainmenu/2) and (y >= Pos_y_mainmenu+posy_menu_button) and (y <= Pos_y_mainmenu+posy_menu_button+altezza_menu_buttons)) then
-			Spring.Echo("chiudere")
+			Spring.SendCommands("close_WMRTS_minimenu")		-- invia comando per spegnere il minibutton mainmenu del minimenu
+			Spring.SendCommands("close_WMRTS_graphics")		-- invia comando per spegnere il graphicsmenu
+--			Spring.Echo("chiudere")
 			return true		
 
 
