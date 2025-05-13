@@ -100,6 +100,34 @@ local gl_Text			  = gl.Text
 local gl_GetTextWidth	  = gl.GetTextWidth
 local gl_GetTextHeight  = gl.GetTextHeight
 
+--------------------------------------------------------------------------------
+-- CARICO BASE64
+--------------------------------------------------------------------------------
+local base64 -- Dichiara la variabile base64 qui
+
+-- Tentativo di caricare la libreria base64
+-- VFS.Include esegue il file e restituisce il suo valore di ritorno (la tabella del modulo)
+local success, module_or_error = pcall(function()
+    -- Assicurati che il percorso sia corretto. Se base64.lua è nella stessa cartella di advplayerslist.lua:
+    return VFS.Include("LuaUI/Widgets/base64.lua", nil, VFS.LUA_CONTEXT)
+    -- VFS.LUA_CONTEXT è generalmente più sicuro per includere moduli Lua.
+    -- Se non funziona, prova VFS.RAW_FIRST, ma LUA_CONTEXT è preferibile.
+end)
+
+if success and type(module_or_error) == "table" and module_or_error.encode then
+    base64 = module_or_error
+    Spring.Echo("AdvPlayersList: Libreria base64.lua caricata con successo.")
+else
+    Spring.Echo("AdvPlayersList: ERRORE CRITICO: Impossibile caricare la libreria base64.lua.")
+    Spring.Echo("  Successo pcall: " .. tostring(success))
+    Spring.Echo("  Tipo del risultato: " .. type(module_or_error))
+    if type(module_or_error) == "string" then
+        Spring.Echo("  Messaggio di errore: " .. module_or_error)
+    end
+    base64 = nil -- Assicurati che sia nil se il caricamento fallisce
+end
+
+
 --local avatar = 0 -- verificare se lasciare questa variabile ##################################################################################################################
 
 --------------------------------------------------------------------------------
@@ -986,10 +1014,36 @@ end
 function CreatePlayer(playerID)
 	
 	--generic player data
-	local tname,_, tspec, tteam, tallyteam, tping, tcpu, tcountry, trank = Spring_GetPlayerInfo(playerID)  -- tolgo tavatar alla fine @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	local tname,_, tspec, tteam, tallyteam, tping, tcpu, tcountry, trank = Spring_GetPlayerInfo(playerID)  
+
+	
+ local tavatar = nil -- inizializzo la variabile tavatar
+     if base64 and base64.encode then -- se la libreria è inizializzata
+        local tname_base64 = base64.encode(tname) -- utilizzo la libreria base 64 per coficifare tname
+        if not tname_base64 then
+--            Spring.Echo("AdvPlayersList - CreatePlayer: ERRORE: base64.encode ha fallito per il nome: " .. tname)
+        else
+            local modOptionKey_Avatar_OriginalCase = "avatar_" .. tname_base64 -- se invece è inizializzada crea la variabile = avatar_(tname in base64)
+            
+            -- CONVERTI LA CHIAVE IN MINUSCOLO PRIMA DI CERCARE -- è importante perchè SPRING la gestirà solo in minuscolo (mentre base64 utilizza maiuscole e minuscole per criptare, quindi solo DOPO aver criptato, la stringa va in minuscolo
+            local modOptionKey_Avatar_Lowercase = string.lower(modOptionKey_Avatar_OriginalCase)
+            
+			-- pertanto ora cerca nelle [modoptions] dello script la variabile modOptionKey_Avatar_Lowercase
+            tavatar = Spring.GetModOptions()[modOptionKey_Avatar_Lowercase]
+
+--            Spring.Echo("AdvPlayersList - CreatePlayer: PlayerID: " .. playerID .. ", Name: '" .. tname .. "', Base64 Encoded (original case from widget): '" .. tname_base64 .. "'")
+--            Spring.Echo("  Original key attempted (widget generated): '" .. modOptionKey_Avatar_OriginalCase .. "'")
+--            Spring.Echo("  LOWERCASE key attempted: '" .. modOptionKey_Avatar_Lowercase .. "', Value: " .. tostring(tavatar))
+        end
+    else
+ --       Spring.Echo("AdvPlayersList - CreatePlayer: ATTENZIONE: Libreria Base64 non disponibile o non caricata correttamente. Impossibile recuperare l'avatar per " .. tname)
+    end
+
+
+	
 	local _,_,_,_, tside, tallyteam                                      = Spring_GetTeamInfo(tteam)
 	local tred, tgreen, tblue  										     = Spring_GetTeamColor(tteam)
---	Spring.Echo("debug: "..tostring(avatar)) --debug	
+
 	--skill
 	local tskill 
 	tskill = GetSkill(playerID)
@@ -1026,7 +1080,7 @@ function CreatePlayer(playerID)
 		cpuLvl           = tcpuLvl,
 		ping             = tping,
 		cpu              = tcpu,
---		avatar           = tavatar,
+        avatar           = tavatar, 
 		country          = tcountry,
 		tdead            = false,
 		spec             = tspec,
@@ -1764,7 +1818,7 @@ function DrawPlayer(playerID, leader, vOffset, mouseX, mouseY)
 	local cpuLvl         = player[playerID].cpuLvl
 	local ping           = player[playerID].ping
 	local cpu            = player[playerID].cpu
---	local avatar         = player[playerID].avatar    					-- aggiunto avatar
+    local avatar         = player[playerID].avatar   
 	local country        = player[playerID].country
 	local spec           = player[playerID].spec
 	local totake         = player[playerID].totake
@@ -1851,43 +1905,9 @@ function DrawPlayer(playerID, leader, vOffset, mouseX, mouseY)
 		if m_rank.active == true then
 			DrawRank(rank, posY)
 		end
-		-- setting WMRTS avatar from modoptions ------------------  to do ---> move this from playeroption table (molix)
-		if (playerID == 0) then 
-		avatar = Spring.GetModOptions().avatar0
-		elseif (playerID == 1) then
-		avatar = Spring.GetModOptions().avatar1		
-		elseif (playerID == 2) then
-		avatar = Spring.GetModOptions().avatar2
-		elseif (playerID == 3) then
-		avatar = Spring.GetModOptions().avatar3
-		elseif (playerID == 4) then
-		avatar = Spring.GetModOptions().avatar4
-		elseif (playerID == 5) then
-		avatar = Spring.GetModOptions().avatar5
-		elseif (playerID == 6) then
-		avatar = Spring.GetModOptions().avatar6
-		elseif (playerID == 7) then
-		avatar = Spring.GetModOptions().avatar7		
-		elseif (playerID == 8) then
-		avatar = Spring.GetModOptions().avatar8
-		elseif (playerID == 9) then
-		avatar = Spring.GetModOptions().avatar9
-		elseif (playerID == 10) then
-		avatar = Spring.GetModOptions().avatar10		
-		elseif (playerID == 11) then
-		avatar = Spring.GetModOptions().avatar11
-		elseif (playerID == 12) then
-		avatar = Spring.GetModOptions().avatar12
-		elseif (playerID == 13) then
-		avatar = Spring.GetModOptions().avatar13	
-		elseif (playerID == 14) then
-		avatar = Spring.GetModOptions().avatar14
-		elseif (playerID == 15) then
-		avatar = Spring.GetModOptions().avatar15	
-		else 
-		avatar = nil
-		end
-		-- avatar debug
+	
+	
+	
 
 --		local playername,_ = Spring.GetPlayerInfo (playerID) 
 --		if (playername ~= nil and avatar ~= nil) then
@@ -1895,8 +1915,8 @@ function DrawPlayer(playerID, leader, vOffset, mouseX, mouseY)
 --		end
 		-- end avatar debug
 
-		
-		if m_avatar.active == true and (avatar ~= "" or avatar ~= nil)  then
+		if m_avatar.active == true and avatar and avatar ~= "" and avatar ~= "??" then -- Aggiunto check per nil e stringa vuota
+--		if m_avatar.active == true and (avatar ~= "" or avatar ~= nil)  then
 			DrawAvatar(avatar, posY)
 		end
 		if m_country.active == true and country ~= "" then
@@ -2166,10 +2186,29 @@ function DrawAlly(posY, team)
 	DrawRect(m_alliance.posX + widgetPosX + 3, posY+1, m_alliance.posX + widgetPosX + 17, posY + 15)
 end
 -- aggiungo avatar 
+function DrawAvatar(avatarValue, posY) -- avatarValue sarà "av5", "av1", ecc.
+    if avatarValue ~= nil and avatarValue ~= "??" and avatarValue ~= "" then -- Aggiunto check per stringa vuota
+        local texturePath = avatarDirectory .. avatarValue .. ".png"
+        -- Spring.Echo("Trying to load avatar: " .. texturePath) -- Utile per debug
+        gl_Texture(texturePath)
+        --if gl.GetTextureInfo(texturePath) then -- Controlla se la texture è stata caricata correttamente
+            gl_Color(1,1,1)
+            DrawRect(m_avatar.posX + widgetPosX + 3, posY+1, m_avatar.posX + widgetPosX + 17, posY + 15)
+        --else
+            -- Spring.Echo("Failed to load avatar texture: " .. texturePath) -- Utile per debug
+            -- Potresti disegnare un placeholder o nulla se l'avatar non viene trovato
+        --end
+        gl_Texture(false)
+    end
+end
+
+
+--[[
 function DrawAvatar(avatar, posY)
 --		local avatar = "1" -- debug
 -- Spring.Echo(avatar) -- debug
-	if avatar ~= nil and avatar ~= "??" then  -- ################################################ correggere "??"
+    if avatarValue ~= nil and avatarValue ~= "??" and avatarValue ~= "" then -- Aggiunto check per stringa vuota
+	--if avatar ~= nil and avatar ~= "??" then  -- ################################################ correggere "??"
 --		gl_Texture(avatarDirectory..string.upper(avatar)..".png")
 		gl_Texture(avatarDirectory..tostring(avatar)..".png")
 		gl_Color(1,1,1)
@@ -2178,6 +2217,7 @@ function DrawAvatar(avatar, posY)
 --									Spring.Echo(avatar) --debug
 	end
 end
+]]--
 
 function DrawCountry(country, posY)
 	if country ~= nil and country ~= "??" then
