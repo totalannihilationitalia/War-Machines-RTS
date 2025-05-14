@@ -44,6 +44,7 @@ end
 -- v21   (Molix): added WMRTS Avatars 04/02/2022
 -- v22   (Molix): changed graphic configuration (for WMRTS game)
 -- v23   (Molix): removed interface with widget "mission_messagebox.lua", now warning messages code is entirely inside the "mission_messagebox.lua" widget
+-- v24   (Molix): enanched avatar system (for WMRTS game)
 
 --------------------------------------------------------------------------------
 -- Widget Scale
@@ -1013,18 +1014,18 @@ function CreatePlayer(playerID)
 
  -- Trasforma il nome utente in Hex per usarlo nella chiave della modoption
     local tname_hex = stringToHex(tname) 
-    -- Per "forgie90", questo dovrebbe essere "666f726769653930"
+
 
     Spring.Echo("AdvPlayersList - CreatePlayer: PlayerID: " .. playerID .. ", Name: '" .. tname .. "'")
     Spring.Echo("  Hex Encoded name part for key: '" .. tname_hex .. "'")
 
     local modOptionKey_OriginalCase = "avatar_" .. tname_hex
-    -- Per "forgie90": "avatar_666f726769653930"
 
-    -- Spring converte le chiavi delle modoptions in minuscolo
+
+    -- Spring converte le chiavi delle modoptions in minuscolo, perchè SPRING le vuole solo in minuscolo (tanto serve per cercare una corrispondenza)
     local modOptionKey_Lowercase = string.lower(modOptionKey_OriginalCase)
-    -- Per "forgie90": "avatar_666f726769653930" (le lettere a-f sono già minuscole da string.format '%02x')
-    -- Quindi string.lower() non cambierà la parte hex se '%02x' è usato.
+    -- Se lo username in HEX ha già lettere minuscole
+    -- string.lower() non cambierà la parte hex se '%02x' è usato.
     -- Se usassi '%02X' (maiuscolo), allora string.lower() sarebbe cruciale.
     -- Per sicurezza e coerenza, mantenere string.lower() è una buona pratica.
     
