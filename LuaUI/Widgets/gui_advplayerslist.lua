@@ -100,32 +100,6 @@ local gl_Text			  = gl.Text
 local gl_GetTextWidth	  = gl.GetTextWidth
 local gl_GetTextHeight  = gl.GetTextHeight
 
---------------------------------------------------------------------------------
--- CARICO BASE64
---------------------------------------------------------------------------------
-local base64 -- Dichiara la variabile base64 qui
-
--- Tentativo di caricare la libreria base64
--- VFS.Include esegue il file e restituisce il suo valore di ritorno (la tabella del modulo)
-local success, module_or_error = pcall(function()
-    -- Assicurati che il percorso sia corretto. Se base64.lua è nella stessa cartella di advplayerslist.lua:
-    return VFS.Include("LuaUI/Widgets/base64.lua", nil, VFS.LUA_CONTEXT)
-    -- VFS.LUA_CONTEXT è generalmente più sicuro per includere moduli Lua.
-    -- Se non funziona, prova VFS.RAW_FIRST, ma LUA_CONTEXT è preferibile.
-end)
-
-if success and type(module_or_error) == "table" and module_or_error.encode then
-    base64 = module_or_error
-    Spring.Echo("AdvPlayersList: Libreria base64.lua caricata con successo.")
-else
-    Spring.Echo("AdvPlayersList: ERRORE CRITICO: Impossibile caricare la libreria base64.lua.")
-    Spring.Echo("  Successo pcall: " .. tostring(success))
-    Spring.Echo("  Tipo del risultato: " .. type(module_or_error))
-    if type(module_or_error) == "string" then
-        Spring.Echo("  Messaggio di errore: " .. module_or_error)
-    end
-    base64 = nil -- Assicurati che sia nil se il caricamento fallisce
-end
 
 
 --local avatar = 0 -- verificare se lasciare questa variabile ##################################################################################################################
@@ -603,6 +577,26 @@ m_seespec = {
 local specsLabelOffset = 0
 local teamsizeVersusText = ""
 
+
+--------------------------------------------------------------------------------
+-- FUNZIONE PER CODIFICA HEX
+--------------------------------------------------------------------------------
+local function stringToHex(str)
+    if type(str) ~= "string" then
+        Spring.Echo("AdvPlayersList - stringToHex: Input non è una stringa, ricevuto: " .. type(str))
+        return "INVALID_INPUT_TO_HEX" -- o gestisci l'errore come preferisci
+    end
+    if #str == 0 then return "" end -- Stringa vuota rimane vuota
+
+    local hex = ''
+    for i = 1, #str do
+        hex = hex .. string.format('%02x', string.byte(str, i))
+    end
+    return hex
+end
+
+
+
 ---------------------------------------------------------------------------------------------------
 --  Geometry
 ---------------------------------------------------------------------------------------------------
@@ -1015,29 +1009,27 @@ function CreatePlayer(playerID)
 	
 	--generic player data
 	local tname,_, tspec, tteam, tallyteam, tping, tcpu, tcountry, trank = Spring_GetPlayerInfo(playerID)  
+    local tavatar = nil -- inizializzo la variabile tavatar
 
-	
- local tavatar = nil -- inizializzo la variabile tavatar
-     if base64 and base64.encode then -- se la libreria è inizializzata
-        local tname_base64 = base64.encode(tname) -- utilizzo la libreria base 64 per coficifare tname
-        if not tname_base64 then
---            Spring.Echo("AdvPlayersList - CreatePlayer: ERRORE: base64.encode ha fallito per il nome: " .. tname)
-        else
-            local modOptionKey_Avatar_OriginalCase = "avatar_" .. tname_base64 -- se invece è inizializzada crea la variabile = avatar_(tname in base64)
-            
-            -- CONVERTI LA CHIAVE IN MINUSCOLO PRIMA DI CERCARE -- è importante perchè SPRING la gestirà solo in minuscolo (mentre base64 utilizza maiuscole e minuscole per criptare, quindi solo DOPO aver criptato, la stringa va in minuscolo
-            local modOptionKey_Avatar_Lowercase = string.lower(modOptionKey_Avatar_OriginalCase)
-            
-			-- pertanto ora cerca nelle [modoptions] dello script la variabile modOptionKey_Avatar_Lowercase
-            tavatar = Spring.GetModOptions()[modOptionKey_Avatar_Lowercase]
+ -- Trasforma il nome utente in Hex per usarlo nella chiave della modoption
+    local tname_hex = stringToHex(tname) 
+    -- Per "forgie90", questo dovrebbe essere "666f726769653930"
 
---            Spring.Echo("AdvPlayersList - CreatePlayer: PlayerID: " .. playerID .. ", Name: '" .. tname .. "', Base64 Encoded (original case from widget): '" .. tname_base64 .. "'")
---            Spring.Echo("  Original key attempted (widget generated): '" .. modOptionKey_Avatar_OriginalCase .. "'")
---            Spring.Echo("  LOWERCASE key attempted: '" .. modOptionKey_Avatar_Lowercase .. "', Value: " .. tostring(tavatar))
-        end
-    else
- --       Spring.Echo("AdvPlayersList - CreatePlayer: ATTENZIONE: Libreria Base64 non disponibile o non caricata correttamente. Impossibile recuperare l'avatar per " .. tname)
-    end
+    Spring.Echo("AdvPlayersList - CreatePlayer: PlayerID: " .. playerID .. ", Name: '" .. tname .. "'")
+    Spring.Echo("  Hex Encoded name part for key: '" .. tname_hex .. "'")
+
+    local modOptionKey_OriginalCase = "avatar_" .. tname_hex
+    -- Per "forgie90": "avatar_666f726769653930"
+
+    -- Spring converte le chiavi delle modoptions in minuscolo
+    local modOptionKey_Lowercase = string.lower(modOptionKey_OriginalCase)
+    -- Per "forgie90": "avatar_666f726769653930" (le lettere a-f sono già minuscole da string.format '%02x')
+    -- Quindi string.lower() non cambierà la parte hex se '%02x' è usato.
+    -- Se usassi '%02X' (maiuscolo), allora string.lower() sarebbe cruciale.
+    -- Per sicurezza e coerenza, mantenere string.lower() è una buona pratica.
+    
+    tavatar = Spring.GetModOptions()[modOptionKey_Lowercase]
+    Spring.Echo("  LOWERCASE key attempted: '" .. modOptionKey_Lowercase .. "', Value: " .. tostring(tavatar))
 
 
 	
