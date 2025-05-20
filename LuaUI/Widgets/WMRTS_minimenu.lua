@@ -19,7 +19,7 @@ function widget:GetInfo()
     date      = "02 Dicember, 2024",
     license   = "GNU GPL, v2 or later",
     layer     = 0,
-    enabled   = false -- false at the moment, under test 
+    enabled   = true -- false at the moment, under test 
   }
 end
 
