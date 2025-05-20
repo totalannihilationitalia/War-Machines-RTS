@@ -462,25 +462,25 @@ else  -- UNSYNCED
 
 function gadget:GameStart()
 	Spring.Utilities = Spring.Utilities or {}  -- rimosso
-	VFS.Include("LuaRules/Utilities/json.lua"); -- rimosso
+--	VFS.Include("LuaRules/Utilities/json.lua"); -- rimosso
 
 	local teamlist = Spring.GetTeamList();
 	local localPlayer = Spring.GetLocalPlayerID();
-	local mexes = "";
-	local encoded = false;
+--	local mexes = "";
+--	local encoded = false;
 	
 	for _, teamID in pairs(teamlist) do
 		local _,_,_,isAI = Spring.GetTeamInfo(teamID)
 		if isAI then
 			local aiid, ainame, aihost = Spring.GetAIInfo(teamID);
-			if (aihost == localPlayer) then
-				if not encoded then
-					local metalSpots = GetMexSpotsFromGameRules();
-					mexes = 'METAL_SPOTS:'..Spring.Utilities.json.encode(metalSpots);
-					encoded = true;
-				end
-				Spring.SendSkirmishAIMessage(teamID, mexes);
-			end
+--			if (aihost == localPlayer) then
+--				if not encoded then
+--					local metalSpots = GetMexSpotsFromGameRules();
+--					mexes = 'METAL_SPOTS:'..Spring.Utilities.json.encode(metalSpots);
+--					encoded = true;
+--				end
+--				Spring.SendSkirmishAIMessage(teamID, mexes);
+--			end
 		end
 	end
 end
