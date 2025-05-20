@@ -1016,8 +1016,8 @@ function CreatePlayer(playerID)
     local tname_hex = stringToHex(tname) 
 
 
-    Spring.Echo("AdvPlayersList - CreatePlayer: PlayerID: " .. playerID .. ", Name: '" .. tname .. "'")
-    Spring.Echo("  Hex Encoded name part for key: '" .. tname_hex .. "'")
+ --   Spring.Echo("AdvPlayersList - CreatePlayer: PlayerID: " .. playerID .. ", Name: '" .. tname .. "'")
+ --   Spring.Echo("  Hex Encoded name part for key: '" .. tname_hex .. "'")
 
     local modOptionKey_OriginalCase = "avatar_" .. tname_hex
 
@@ -1030,7 +1030,7 @@ function CreatePlayer(playerID)
     -- Per sicurezza e coerenza, mantenere string.lower() è una buona pratica.
     
     tavatar = Spring.GetModOptions()[modOptionKey_Lowercase]
-    Spring.Echo("  LOWERCASE key attempted: '" .. modOptionKey_Lowercase .. "', Value: " .. tostring(tavatar))
+--    Spring.Echo("  LOWERCASE key attempted: '" .. modOptionKey_Lowercase .. "', Value: " .. tostring(tavatar))
 
 
 	
