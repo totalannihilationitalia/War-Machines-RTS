@@ -33,8 +33,8 @@ return {
     desc = 'Alternative Spam, much laggier'
   },
   {
-    name = 'WMRTSAI',
-    desc = 'War Machines RTS AI'
+    name = 'WMRTS AI_LAND',
+    desc = 'War Machines RTS AI for land maps'
   },
 }
 

@@ -6,3 +6,9 @@ da qui stiamo creando un hotspot con rinforzi.
 WMRTSAI - Copia.luarev7_funzionante: VER 0.7= patrol + hotspot dinamici che si spostano sui nemici nel raggio d'azione + rinforzi gruppi
 WMRTSAIto8_rev1 -- aggiunti i magazzini di metallo
 WMRTSAI.lua - lavoro attuale costruzioni in isole
+
+
+
+
+wmrts_ai_land - Copia.revto1
+versione funzionante ma con bug

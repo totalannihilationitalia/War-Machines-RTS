@@ -7,9 +7,9 @@ function gadget:GetInfo()
   return {
     name      = "WMRTSAI", -- Nome usato per assegnare l'IA ai team!
     desc      = "AI con gestione fazioni, tiers, tipi mappa e config per livello tech.",
-    author    = "Il Tuo Nome", -- Cambia questo!
-    date      = "Data Corrente", -- Cambia questo!
-    license   = "La Tua Licenza", -- Cambia questo!
+    author    = "Molix", 
+    date      = "21/05/2025", 
+    license   = "Free to use", 
     layer     = 90, -- Layer alto per eseguire dopo altri gadget (come Mexspot Fetcher)
     enabled   = true
   }
