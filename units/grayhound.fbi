@@ -53,7 +53,7 @@
 	MetalMake=0;
 	DefaultMissionType=Standby;
 	maneuverleashlength=640;
-	MovementClass=TANK3;
+	MovementClass=HTANK3;
 	canattack=1;
 	Weapon1=MASS_DRIVER; //the big gun
 	Weapon2=ARM_LIGHTLASER; //the pest control gun
