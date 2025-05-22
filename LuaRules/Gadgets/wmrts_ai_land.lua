@@ -331,24 +331,14 @@ if (gadgetHandler:IsSyncedCode()) then
   end
 
   -- Funzione per trovare una posizione di costruzione semplice
-     local function FindSimpleBuildSpot(teamID, builderID, dataForBuilding, isExtractor)
+  local function FindSimpleBuildSpot(teamID, builderID, unitToBuildDefID, isExtractor)
       local data = teamData[teamID]
       local bx, by, bz = Spring.GetUnitPosition(builderID)
       if not bx then Log(teamID, "FindSimpleBuildSpot: Builder " .. builderID .. " position not found."); return nil end
 
-      local unitDefIDToBuild = dataForBuilding.id 
-      local buildingNameForLog = dataForBuilding.name or "UnknownBuilding"
-
-      if not unitDefIDToBuild then
-          Log(teamID, "FindSimpleBuildSpot: ERROR - dataForBuilding is missing .id field for " .. buildingNameForLog)
-          return nil
-      end
-
       if isExtractor then
-          Log(teamID, "FindSimpleBuildSpot: Attempting to find BEST metal spot for builder " .. builderID .. " to build " .. buildingNameForLog)
+          Log(teamID, "FindSimpleBuildSpot: Attempting to find metal spot for builder " .. builderID)
           local mexCount = Spring.GetGameRulesParam("mex_count")
-          local suitableSpots = {}
-
           if mexCount and mexCount > 0 then
               for i = 1, mexCount do
                   local spotX = Spring.GetGameRulesParam("mex_x" .. i)
@@ -357,94 +347,57 @@ if (gadgetHandler:IsSyncedCode()) then
                   if spotX and spotZ then
                       spotY = spotY or Spring.GetGroundHeight(spotX, spotZ)
                       if spotY then
-                          local unitsNear = Spring.GetUnitsInRectangle(spotX - 1, spotZ - 1, spotX + 1, spotZ + 1) 
+                          local unitsNear = Spring.GetUnitsInRectangle(spotX - 5, spotZ - 5, spotX + 5, spotZ + 5)
                           local occupied = false
                           if unitsNear then
                               for _, nearID in ipairs(unitsNear) do
-                                  local nearDefID = Spring.GetUnitDefID(nearID)
-                                  if nearDefID then
-                                      local nearDef = UnitDefs[nearDefID]
-                                      if nearDef and nearDef.extractsMetal and nearDef.extractsMetal > 0 then occupied = true; break end
-                                  end
+                                  local nearDef = UnitDefs[Spring.GetUnitDefID(nearID)]
+                                  if nearDef and nearDef.extractsMetal and nearDef.extractsMetal > 0 then occupied = true; break end
                               end
                           end
                           if not occupied then
-                              local buildTestResult = Spring.TestBuildOrder(unitDefIDToBuild, spotX, spotY, spotZ, 1) 
+                              local buildTestResult = Spring.TestBuildOrder(unitToBuildDefID, spotX, spotY, spotZ, 1)
                               if buildTestResult == 0 or buildTestResult == 2 then
-                                  local dx, dz = spotX - bx, spotZ - bz
-                                  local distSq = dx*dx + dz*dz
-                                  table.insert(suitableSpots, {x = spotX, y = spotY, z = spotZ, distSq = distSq})
+                                  Log(teamID, "FindSimpleBuildSpot: Found metal spot at " .. spotX .. "," .. spotZ .. " (Test: "..buildTestResult..")")
+                                  return { x = spotX, y = spotY, z = spotZ }
                               end
                           end
                       end
                   end
               end
           end
-
-          if #suitableSpots == 0 then
-              Log(teamID, "FindSimpleBuildSpot: No suitable free metal spots found for " .. buildingNameForLog)
-              return nil
-          end
-
-          table.sort(suitableSpots, function(a,b) return a.distSq < b.distSq end)
-          local bestSpot = suitableSpots[1]
-          Log(teamID, "FindSimpleBuildSpot: Selected BEST metal spot for " .. buildingNameForLog .. " at " .. string.format("%.0f,%.0f", bestSpot.x, bestSpot.z) .. " (DistSq: "..bestSpot.distSq..")")
-          return { x = bestSpot.x, y = bestSpot.y, z = bestSpot.z }
-
-      else -- Per altre strutture (NON ESTRATTORI)
-          Log(teamID, "FindSimpleBuildSpot: Attempting to find general spot for " .. buildingNameForLog)
-          
-          local buildingFootX_tiles = dataForBuilding.footX 
-          local buildingFootZ_tiles = dataForBuilding.footZ 
-
-          if not buildingFootX_tiles or not buildingFootZ_tiles then
-              Log(teamID, "FindSimpleBuildSpot: ERROR - Missing footX or footZ in dataForBuilding for " .. buildingNameForLog .. ". Using fallback.")
-              local springDef = UnitDefs[unitDefIDToBuild] 
-              buildingFootX_tiles = springDef and springDef.footprintX or 3 
-              buildingFootZ_tiles = springDef and springDef.footprintZ or 3
-              Log(teamID, "FindSimpleBuildSpot: Using fallback footprint "..buildingFootX_tiles.."x"..buildingFootZ_tiles.." for "..buildingNameForLog)
-          end
-
-          local buildingHalfX_units = (buildingFootX_tiles / 2) * 8
-          local buildingHalfZ_units = (buildingFootZ_tiles / 2) * 8
-          local buildingClearanceRadius = math.max(buildingHalfX_units, buildingHalfZ_units) + 8 
-
-          for attempt = 1, 30 do 
+          Log(teamID, "FindSimpleBuildSpot: No suitable free metal spot found for extractor.")
+          return nil
+      else
+          for attempt = 1, 20 do
               local angle = math.random() * 2 * math.pi
-              local dist = buildingClearanceRadius + 20 + math.random(100) 
+              local dist = 60 + math.random(80)
               local testX = bx + math.cos(angle) * dist
               local testZ = bz + math.sin(angle) * dist
               local testY = Spring.GetGroundHeight(testX, testZ)
-
               if testY then
                   local onMetalSpot = false
-                  local metalSpotExclusionRadius = 16 + buildingClearanceRadius 
-                  local metalSpotExclusionRadiusSq = metalSpotExclusionRadius * metalSpotExclusionRadius
-
-                  local mexCount_other = Spring.GetGameRulesParam("mex_count")
-                  if mexCount_other and mexCount_other > 0 then
-                      for i = 1, mexCount_other do
+                  local mexCount = Spring.GetGameRulesParam("mex_count")
+                  if mexCount and mexCount > 0 then
+                      for i = 1, mexCount do
                           local spotX = Spring.GetGameRulesParam("mex_x" .. i)
                           local spotZ = Spring.GetGameRulesParam("mex_z" .. i)
                           if spotX and spotZ then
-                              local dx_metal, dz_metal = testX - spotX, testZ - spotZ 
-                              if (dx_metal*dx_metal + dz_metal*dz_metal) < metalSpotExclusionRadiusSq then
-                                  onMetalSpot = true; break
-                              end
+                              local dx, dz = testX - spotX, testZ - spotZ
+                              if (dx*dx + dz*dz) < (16*16) then onMetalSpot = true; break end
                           end
                       end
                   end
-
                   if not onMetalSpot then
-                      local buildTestResult = Spring.TestBuildOrder(unitDefIDToBuild, testX, testY, testZ, 1) 
+                      local buildTestResult = Spring.TestBuildOrder(unitToBuildDefID, testX, testY, testZ, 1)
                       if buildTestResult == 0 or buildTestResult == 2 then
-                          Log(teamID, "FindSimpleBuildSpot: Found general spot for " .. buildingNameForLog .. " at " .. string.format("%.0f,%.0f",testX,testZ) .. " (Test: "..buildTestResult..")")
+                          Log(teamID, "FindSimpleBuildSpot: Found general spot at " .. testX .. "," .. testZ .. " (Test: "..buildTestResult..")")
                           return { x = testX, y = testY, z = testZ }
                       end
                   end
               end
           end
-          Log(teamID, "FindSimpleBuildSpot: No suitable general spot found near builder for " .. buildingNameForLog)
+          Log(teamID, "FindSimpleBuildSpot: No suitable general spot found near builder.")
           return nil
       end
   end
@@ -723,27 +676,33 @@ if (gadgetHandler:IsSyncedCode()) then
       Log(nil, gadget:GetInfo().name .. " Game Start processing complete. Final teamData entries: " .. finalTeamDataCount) -- Questo log lo vedi
   end
 
- 
-   function gadget:GameFrame(frame)
-    if frame == 1 or frame % 300 == 7 then 
-        Log(nil, "GameFrame DBG: Current Game.gameSpeed = " .. tostring(Game.gameSpeed) .. 
-                   ", Game.speedFactor = " .. tostring(Game.speedFactor) .. 
-                   ", Game.wantedSpeedFactor = " ..tostring(Game.wantedSpeedFactor))
-    end
 
+  function gadget:GameFrame(frame)
+      -- DEBUG LOG: ALL'INIZIO ASSOLUTO DI GAMEFRAME
+ --   if frame % 60 == 0 then -- Logga ogni 2 secondi
+ --       Spring.Echo("WMRTSAI: GameFrame CALLED. Frame: " .. frame .. ", Paused: " .. tostring(Game.gamePaused) .. ", GameOver: " .. tostring(Game.gameOver))
+ --   end
     if Game.gamePaused or Game.gameOver then return end
 
+    -- DEBUG LOG: Controlla se teamData è vuoto
+ --   if frame % 60 == 5 then
+ --       local teamCount = 0
+ --       if teamData then for _ in pairs(teamData) do teamCount = teamCount + 1 end end
+ --       Spring.Echo("WMRTSAI: GameFrame - teamData has " .. teamCount .. " entries. DebugMode: " .. tostring(WMRTSAI_Debug_Mode))
+ --   end
+
     for teamID, data in pairs(teamData) do
-      if frame % 120 == (teamID * 2 + 1) then 
-          if data.initialized and data.factionKey then
-              -- Log(teamID, "GF Debug: Processing team. Tech: " .. data.currentTechLevel .. ", Faction: " .. data.factionKey) 
-          else
-              Log(teamID, "GF Debug: SKIPPING team. Initialized: " .. tostring(data.initialized) .. ", FactionKey: " .. tostring(data.factionKey))
-          end
-      end
+      -- DEBUG LOG: Controlla se il team viene processato
+   --   if frame % 120 == (teamID * 2 + 1) then -- Logga ogni 4 secondi circa, sfalsato
+    --      if data.initialized and data.factionKey then
+     --         Log(teamID, "GF Debug: Processing team. Tech: " .. data.currentTechLevel .. ", Faction: " .. data.factionKey)
+     --     else
+   --           Log(teamID, "GF Debug: SKIPPING team. Initialized: " .. tostring(data.initialized) .. ", FactionKey: " .. tostring(data.factionKey))
+     --     end
+     -- end
 
       if data.initialized and data.factionKey then
-        if frame % 31 == 0 then 
+        if frame % 31 == 0 then -- Ogni ~1 secondo (31 è un primo per desincronizzare aggiornamenti)
             local metal, energy = Spring.GetTeamResources(teamID, "metal", "energy")
             if metal and energy then
                 data.resourceInfo.metal = metal
@@ -754,239 +713,69 @@ if (gadgetHandler:IsSyncedCode()) then
         if data.currentTechLevel == 0 then
             local tech0Config = techLevels[0]
             
+            -- DEBUG LOG: Controlla lo stato del comandante e il tech config
+            if frame % 120 == (teamID * 2 + 5) and tech0Config then
+                Log(teamID, "GF T0 Debug: CommanderID = " .. tostring(data.commanderUnitID) .. ", Behavior = " .. tostring(tech0Config.commanderbehaviour))
+                if data.commanderUnitID and data.constructors[data.commanderUnitID] then
+                    Log(teamID, "GF T0 Debug: Commander constructor data exists. State: " .. data.constructors[data.commanderUnitID].state)
+                elseif data.commanderUnitID then
+                    Log(teamID, "GF T0 Debug: ERROR - Commander constructor data MISSING for ID: " .. data.commanderUnitID)
+                else
+                    Log(teamID, "GF T0 Debug: ERROR - CommanderID is nil.")
+                end
+            end
+
             if tech0Config and tech0Config.commanderbehaviour == "comm_builder" then
                 local commanderID = data.commanderUnitID
-                if commanderID and data.constructors[commanderID] then 
-                    local commanderConstructorData = data.constructors[commanderID]
-                    local commanderState = commanderConstructorData.state
-                    local performIdleLogic = true 
+                if commanderID and data.constructors[commanderID] then -- Assicurati che il comandante esista e sia nei costruttori
+                    local commanderState = data.constructors[commanderID].state
 
-                    if commanderState == "busy_building" then
-                        local task = commanderConstructorData.currentTask
-                        if not task or not task.buildingDefID then 
-                            Log(teamID, "Tech 0 WARN: Commander is busy_building but currentTask is nil or invalid! Resetting to idle. Frame: " .. frame)
-                            Spring.GiveOrderToUnit(commanderID, CMD.STOP, {}, {""})
-                            commanderConstructorData.state = "idle"
-                            commanderConstructorData.currentTask = nil
-                            commanderConstructorData.buildStartTime = nil
-                            commanderConstructorData.buildAttempts = 0
-                            commanderState = "idle" 
-                            performIdleLogic = true 
-                        else
-                            if not commanderConstructorData.buildStartTime then
-                                commanderConstructorData.buildStartTime = frame
-                                commanderConstructorData.buildAttempts = (commanderConstructorData.buildAttempts or 0) + 1
-                                Log(teamID, "Tech 0: Commander STARTING build (Frame: " .. frame .. ") for task (Role: "..(task.role or "N/A").."), Attempt: " .. commanderConstructorData.buildAttempts .. ", TargetDefID: " .. task.buildingDefID)
-                            end
-
-                            local unitDefForTimeout = UnitDefs[task.buildingDefID]
-                            local buildTimeSeconds_task = unitDefForTimeout and unitDefForTimeout.buildTime or 90 
-                            
-                            local speedFactorToUse = Game.speedFactor 
-                            if not speedFactorToUse or speedFactorToUse <= 0 then speedFactorToUse = Game.wantedSpeedFactor end
-                            if not speedFactorToUse or speedFactorToUse <= 0 then speedFactorToUse = Game.gameSpeed end 
-                            if not speedFactorToUse or speedFactorToUse <= 0 then speedFactorToUse = 1.0 end
-
-                            -- LOG SPOSTATO QUI, PRIMA DEI CALCOLI CHE LO USANO
-                            if frame == commanderConstructorData.buildStartTime or frame % 150 == (teamID * 5 + 1) % 150 then -- Logga all'inizio del task e poi periodicamente
-                                Log(teamID, "DEBUG TIMEOUT CALC (Frame " .. frame .. "): DefID=" .. task.buildingDefID .. 
-                                            ", RawUnitDef.buildTime=" .. tostring(unitDefForTimeout and unitDefForTimeout.buildTime) .. 
-                                            ", buildTimeSeconds_task=" .. buildTimeSeconds_task .. 
-                                            ", Name=" .. (unitDefForTimeout and unitDefForTimeout.humanName or "N/A") .. 
-                                            ", SpeedFactorToUse=" .. string.format("%.2f", speedFactorToUse))
-                            end
-                            
-                            local expectedFramesToComplete = (buildTimeSeconds_task * 30) / speedFactorToUse 
-                            local timeoutFramesBuffer = 300 
-                            local timeoutMultiplier = 2.5 
-                            
-                            local calculatedTimeoutLimit = math.floor(expectedFramesToComplete * timeoutMultiplier) + timeoutFramesBuffer
-                            if calculatedTimeoutLimit < 300 then calculatedTimeoutLimit = 300 end 
-
-                            local framesOnCurrentTask = frame - (commanderConstructorData.buildStartTime or frame)
-
-                            if frame % 150 == (teamID * 5) % 150 then 
-                                Log(teamID, "Tech 0 TIMEOUT_CHECK: On task (Role: "..(task.role or "N/A")..") for " .. framesOnCurrentTask .. " frames. Limit: " .. calculatedTimeoutLimit .. ". BuildStartTime: " .. (commanderConstructorData.buildStartTime or "N/A") .. ". SpeedFactorUsed: " .. string.format("%.2f", speedFactorToUse))
-                            end
-
-                            if framesOnCurrentTask > calculatedTimeoutLimit then
-                                Log(teamID, "Tech 0 TIMEOUT DETECTED: Commander stuck on building (Role: "..(task.role or "N/A")..") for too long (" .. framesOnCurrentTask .. " frames, Limit: " .. calculatedTimeoutLimit .. "). Attempt: " .. commanderConstructorData.buildAttempts)
-                                Spring.GiveOrderToUnit(commanderID, CMD.STOP, {}, {""}) 
-                                commanderConstructorData.state = "idle"                 
-                                commanderConstructorData.currentTask = nil              
-                                commanderConstructorData.buildStartTime = nil           
-                                local wasSequentialTimeout = task.isSequential          
-
-                                if commanderConstructorData.buildAttempts >= 3 then 
-                                    Log(teamID, "Tech 0 TIMEOUT: Too many attempts ("..commanderConstructorData.buildAttempts..") for role "..(task.role or "N/A")..". Advancing sequential index if applicable.")
-                                    if wasSequentialTimeout then 
-                                       data.currentSequentialBuildIndex = data.currentSequentialBuildIndex + 1
-                                       Log(teamID, "Tech 0 TIMEOUT: Sequential index advanced to " .. data.currentSequentialBuildIndex)
-                                    end
-                                    commanderConstructorData.buildAttempts = 0 
-                                else
-                                    Log(teamID, "Tech 0 TIMEOUT: Build attempt " .. commanderConstructorData.buildAttempts .. " for this task. Will retry if task is re-selected.")
-                                end
-                                Log(teamID, "Tech 0 TIMEOUT: Commander has been reset to IDLE state.")
-                                commanderState = "idle" 
-                                performIdleLogic = true 
-                            else
-                                performIdleLogic = false 
-                            end
+                    if commanderState == "idle" then
+                        local buildQueue = tech0Config.sequentialBuildOrder
+                        
+                        -- DEBUG LOG: Controlla la build queue e l'indice
+                        if frame % 120 == (teamID * 2 + 10) then
+                            Log(teamID, "GF T0 IdleCom Debug: BuildIndex = " .. data.currentSequentialBuildIndex .. ", QueueLength = " .. #buildQueue)
                         end
-                    elseif commanderState ~= "busy_building" then 
-                        commanderConstructorData.buildStartTime = nil
-                        commanderConstructorData.buildAttempts = 0
+
+                        if data.currentSequentialBuildIndex <= #buildQueue then
+                            local itemToBuild = buildQueue[data.currentSequentialBuildIndex]
+                            local unitDataToBuild = GetUnitDataByFactionTierRole(data.factionKey, "T1", itemToBuild.role, itemToBuild.type)
+
+                            if unitDataToBuild and unitDataToBuild.id then
+                                if (data.resourceInfo.metal >= (unitDataToBuild.metalCost or 0)) and
+                                   (data.resourceInfo.energy >= (unitDataToBuild.energyCost or 0)) then
+                                    local isExtractor = (itemToBuild.type == "extractor")
+                                    local buildPos = FindSimpleBuildSpot(teamID, commanderID, unitDataToBuild.id, isExtractor)
+                                    if buildPos then
+                                        Log(teamID, "Tech 0 ORDER: Commander " .. commanderID .. " to build " .. unitDataToBuild.name .. " (Role: " .. itemToBuild.role .. ") at " .. string.format("%.0f,%.0f", buildPos.x, buildPos.z) )
+                                        Spring.GiveOrderToUnit(commanderID, -unitDataToBuild.id, {buildPos.x, buildPos.y, buildPos.z}, {})
+                                        data.constructors[commanderID].state = "busy_building"
+                                        data.constructors[commanderID].currentTask = { buildingDefID = unitDataToBuild.id, role = itemToBuild.role }
+                                    else
+                                        if frame % 180 == (teamID *2 + 15) then -- Log non troppo frequente
+                                           Log(teamID, "Tech 0 INFO: Commander " .. commanderID .. " wants to build " .. unitDataToBuild.name .. " but no suitable build spot found.")
+                                        end
+                                    end
+                                else
+                                     if frame % 180 == (teamID *2 + 20) then -- Log non troppo frequente
+                                        Log(teamID, "Tech 0 INFO: Commander " .. commanderID .. " wants to build " .. unitDataToBuild.name .. " but cannot afford. M: " .. data.resourceInfo.metal .. "/" .. (unitDataToBuild.metalCost or 0) .. ", E: " .. data.resourceInfo.energy .. "/" .. (unitDataToBuild.energyCost or 0))
+                                     end
+                                end
+                            else
+                                Log(teamID, "Tech 0 ERROR: Could not find UnitData for role: " .. itemToBuild.role .. " (type: "..(itemToBuild.type or "N/A")..") in seqBuildOrder index " .. data.currentSequentialBuildIndex)
+                                data.currentSequentialBuildIndex = data.currentSequentialBuildIndex + 1 -- Avanza per non bloccarsi
+                            end
+                        else
+                            -- Log(teamID, "Tech 0 INFO: Commander idle, sequential build order complete. Waiting for tech req check.") -- Log verboso
+                        end
                     end
+                end
+            end
+        end
 
-                    if performIdleLogic and commanderState == "idle" then
-                        local buildIndexToUse = data.currentSequentialBuildIndex
-                        local isFromSequentialFlag = false 
-                        local finalItemToBuildRole = nil
-                        local finalItemToBuildType = nil
-                        local finalUnitDataToBuild = nil
-                        
-                        if frame % 15 == (teamID * 1) % 15 or WMRTSAI_Debug_Mode > 1 then 
-                           Log(teamID, "---------------- TECH 0 COMMANDER IDLE START (Frame: " .. frame .. ") ----------------")
-                           Log(teamID, "ULTRALOG: Commander " .. commanderID .. " is IDLE. Current SeqBuildIdx: " .. data.currentSequentialBuildIndex .. ", SeqQueueLength: " .. #tech0Config.sequentialBuildOrder)
-                        end
-                        
-                        Log(teamID, "ULTRALOG IdleCom: 1. Checking allMainRequirementsMet...")
-                        local allMainRequirementsMet = CheckTechRequirements(teamID) 
-                        Log(teamID, "ULTRALOG IdleCom: 1. allMainRequirementsMet = " .. tostring(allMainRequirementsMet))
-                        
-                        if not allMainRequirementsMet then
-                            Log(teamID, "ULTRALOG IdleCom: 2. Main requirements NOT met. Iterating requirementsToAdvance...")
-                            for reqIdx, req in ipairs(tech0Config.requirementsToAdvance) do
-                                local currentCount = 0
-                                local reqActualRoleToEvaluate = req.role or req.roleMatch 
-                                local reqActualTypeToEvaluate = req.type 
-                                if req.role then
-                                    local categoryData = factionUnits[data.factionKey]._unitDefIDs.T1[reqActualTypeToEvaluate]
-                                    if categoryData then
-                                        if categoryData.name then 
-                                            if categoryData.role == req.role then
-                                                local units = Spring.GetTeamUnitsByDefs(teamID, categoryData.id)
-                                                currentCount = units and #units or 0
-                                            end
-                                        elseif type(categoryData) == "table" then 
-                                            for _, entry in ipairs(categoryData) do
-                                                if entry.role == req.role then
-                                                    local units = Spring.GetTeamUnitsByDefs(teamID, entry.id)
-                                                    currentCount = currentCount + (units and #units or 0)
-                                                end
-                                            end
-                                        end
-                                    end
-                                elseif req.roleMatch and reqActualTypeToEvaluate == "factory" then
-                                    local factionT1Factories = factionUnits[data.factionKey]._unitDefIDs.T1.factory
-                                    if factionT1Factories then
-                                        for _, factoryDef_reqCount in ipairs(factionT1Factories) do 
-                                            if factoryDef_reqCount.role:find(req.roleMatch) then
-                                                local units = Spring.GetTeamUnitsByDefs(teamID, factoryDef_reqCount.id)
-                                                currentCount = currentCount + (units and #units or 0)
-                                            end
-                                        end
-                                    end
-                                end
-
-                                if currentCount < req.targetCount then
-                                    Log(teamID, "ULTRALOG IdleCom: 2.3. MISSING REQ FOUND! Role: " .. reqActualRoleToEvaluate .. ", Type: " .. reqActualTypeToEvaluate)
-                                    finalItemToBuildRole = reqActualRoleToEvaluate 
-                                    finalItemToBuildType = reqActualTypeToEvaluate
-                                    if req.role then
-                                        finalUnitDataToBuild = GetUnitDataByFactionTierRole(data.factionKey, "T1", req.role, req.type)
-                                    elseif req.roleMatch and req.type == "factory" then
-                                        for _, seqItem_fallback in ipairs(tech0Config.sequentialBuildOrder) do 
-                                            if seqItem_fallback.type == "factory" and seqItem_fallback.role:find(req.roleMatch) then
-                                                finalUnitDataToBuild = GetUnitDataByFactionTierRole(data.factionKey, "T1", seqItem_fallback.role, seqItem_fallback.type)
-                                                finalItemToBuildRole = seqItem_fallback.role 
-                                                break
-                                            end
-                                        end
-                                        if not finalUnitDataToBuild and factionUnits[data.factionKey]._unitDefIDs.T1.factory and #factionUnits[data.factionKey]._unitDefIDs.T1.factory > 0 then
-                                            finalUnitDataToBuild = factionUnits[data.factionKey]._unitDefIDs.T1.factory[1]
-                                            if finalUnitDataToBuild then finalItemToBuildRole = finalUnitDataToBuild.role end
-                                        end
-                                    end
-                                    isFromSequentialFlag = false 
-                                    Log(teamID, "ULTRALOG IdleCom: 2.4. Set to build missing req: " .. (finalItemToBuildRole or "RoleNil") .. ", UnitData: " .. (finalUnitDataToBuild and finalUnitDataToBuild.name or "UnitDataNil"))
-                                    break 
-                                end
-                            end 
-                        else Log(teamID, "ULTRALOG IdleCom: 2. All main requirements ARE met.") end 
-                        
-                        if not finalUnitDataToBuild then 
-                            if buildIndexToUse <= #tech0Config.sequentialBuildOrder then
-                                local currentSeqItem = tech0Config.sequentialBuildOrder[buildIndexToUse]
-                                local tempSeqUnitData = GetUnitDataByFactionTierRole(data.factionKey, "T1", currentSeqItem.role, currentSeqItem.type)
-                                finalItemToBuildRole = currentSeqItem.role
-                                finalItemToBuildType = currentSeqItem.type
-                                finalUnitDataToBuild = tempSeqUnitData
-                                isFromSequentialFlag = true
-                                Log(teamID, "ULTRALOG IdleCom: 3.2. Set to build from sequence: " .. (finalItemToBuildRole or "RoleNil") .. ", UnitData: " .. (finalUnitDataToBuild and finalUnitDataToBuild.name or "UnitDataNil"))
-                            end
-                        end
-                        
-                        Log(teamID, "ULTRALOG IdleCom: 4. FINAL DECISION - Role: "..(finalItemToBuildRole or "NONE")..", Type: "..(finalItemToBuildType or "NONE")..", Name: "..(finalUnitDataToBuild and finalUnitDataToBuild.name or "NONE")..", IsSeq: "..tostring(isFromSequentialFlag))
-                        
-                        if finalUnitDataToBuild and finalUnitDataToBuild.id then
-                            if (data.resourceInfo.metal >= (finalUnitDataToBuild.metalCost or 0)) and
-                               (data.resourceInfo.energy >= (finalUnitDataToBuild.energyCost or 0)) then
-                                local isExtractor = (finalItemToBuildType == "extractor")
-                                local buildPos = FindSimpleBuildSpot(teamID, commanderID, finalUnitDataToBuild, isExtractor) 
-                                if buildPos then
-                                    Log(teamID, "Tech 0 ORDER: Commander " .. commanderID .. " to build " .. finalUnitDataToBuild.name .. " (Role: " .. (finalItemToBuildRole or "N/A") .. ", Seq: "..tostring(isFromSequentialFlag)..") at " .. string.format("%.0f,%.0f", buildPos.x, buildPos.z) )
-                                    Spring.GiveOrderToUnit(commanderID, -finalUnitDataToBuild.id, {buildPos.x, buildPos.y, buildPos.z}, {})
-                                    commanderConstructorData.state = "busy_building" 
-                                    commanderConstructorData.currentTask = { 
-                                        buildingDefID = finalUnitDataToBuild.id, 
-                                        role = finalItemToBuildRole,
-                                        isSequential = isFromSequentialFlag 
-                                    }
-                                    commanderConstructorData.buildStartTime = nil 
-                                    commanderConstructorData.buildAttempts = 0 
-                                else
-                                    if frame % 181 == (teamID * 3 + 7) % 181 then 
-                                       Log(teamID, "Tech 0 INFO (Periodic): Commander " .. commanderID .. " wants to build " .. (finalUnitDataToBuild.name or "UnitDataNil") .. " but no suitable build spot found (attempted for role: "..(finalItemToBuildRole or "N/A")..").")
-                                    end
-                                end
-                            else
-                                if frame % 181 == (teamID * 3 + 14) % 181 then 
-                                   Log(teamID, "Tech 0 INFO (Periodic): Commander " .. commanderID .. " wants to build " .. (finalUnitDataToBuild.name or "UnitDataNil") .. " but cannot afford. M: " .. data.resourceInfo.metal .. "/" .. (finalUnitDataToBuild.metalCost or 0) .. ", E: " .. data.resourceInfo.energy .. "/" .. (finalUnitDataToBuild.energyCost or 0))
-                                end
-                            end
-                        else
-                             if finalItemToBuildRole or (itemToBuildFromSeq and itemToBuildFromSeq.role and not finalUnitDataToBuild) then 
-                                Log(teamID, "Tech 0 ERROR (Periodic): Could not get UnitData to build for role: " .. (finalItemToBuildRole or (itemToBuildFromSeq and itemToBuildFromSeq.role) or "UNKNOWN") .. " (type: ".. (finalItemToBuildType or (itemToBuildFromSeq and itemToBuildFromSeq.type) or "N/A")..")")
-                                if isFromSequentialFlag and itemToBuildFromSeq then 
-                                   Log(teamID, "Tech 0: Advancing sequential build index due to error finding UnitData for current sequential item.")
-                                   data.currentSequentialBuildIndex = data.currentSequentialBuildIndex + 1
-                                end
-                             elseif buildIndexToUse > #tech0Config.sequentialBuildOrder and allMainRequirementsMet then
-                                if frame % 301 == (teamID * 7 + 55) % 301 then 
-                                   Log(teamID, "Tech 0 IdleCom (Periodic): All sequential items and all requirements appear to be met. Commander remains idle. Waiting for tech up on next UnitFinished or other logic.")
-                                end
-                             else
-                                if frame % 60 == (teamID * 2 + 3) % 60 then 
-                                    Log(teamID, "ULTRALOG IdleCom: No specific item identified to build this cycle. Commander remains idle.")
-                                end
-                             end
-                        end 
-                        if commanderState == "idle" and (frame % 15 == (teamID * 1) % 15 or WMRTSAI_Debug_Mode > 1) then 
-                            if (finalUnitDataToBuild and finalUnitDataToBuild.id) == nil and commanderConstructorData.state == "idle" then 
-                               Log(teamID, "---------------- TECH 0 COMMANDER IDLE END (NO ACTION TAKEN THIS CYCLE) (Frame: " .. frame .. ") ----------------")
-                            else
-                               Log(teamID, "---------------- TECH 0 COMMANDER IDLE END (ACTION ATTEMPTED/GIVEN) (Frame: " .. frame .. ") ----------------")
-                            end
-                        end
-                    end 
-                end 
-            end 
-        end 
-        
         if frame % 301 == (teamID * 7 + 50) % 301 then
-             Log(teamID, "Heartbeat - Tech: " .. data.currentTechLevel .. ", State: " .. data.warAIState .. ", M: " .. string.format("%.0f", data.resourceInfo.metal or 0) .. ", E: " .. string.format("%.0f", data.resourceInfo.energy or 0) .. ", SeqBuildIdx: " .. (data.currentSequentialBuildIndex or "N/A"))
+             Log(teamID, "Heartbeat - Tech: " .. data.currentTechLevel .. ", State: " .. data.warAIState .. ", M: " .. string.format("%.0f", data.resourceInfo.metal or 0) .. ", E: " .. string.format("%.0f", data.resourceInfo.energy or 0) .. ", BuildIdx: " .. (data.currentSequentialBuildIndex or "N/A"))
              if data.currentTechLevel == 0 and data.commanderUnitID and data.constructors[data.commanderUnitID] then
                 Log(teamID, " Commander State: " .. data.constructors[data.commanderUnitID].state)
              end
@@ -994,155 +783,54 @@ if (gadgetHandler:IsSyncedCode()) then
       end
     end
   end
-  
-   
-   
-   
-  
- 
-   function gadget:UnitFinished(unitID, unitDefID, unitTeam)
-    -- ULTRALOG: All'inizio assoluto di UnitFinished
-    if WMRTSAI_Debug_Mode > 0 then -- Controllo manuale perché Log() usa teamID che potremmo non avere subito
-        local teamPrefix = unitTeam and ("WMRTSAI Team[" .. unitTeam .. "] ") or ("WMRTSAI UF: ")
-        Spring.Echo(teamPrefix .. "UnitFinished CALLED - UnitID: " .. unitID .. ", DefID: " .. unitDefID .. ", Team: " .. unitTeam)
-    end
 
+  function gadget:UnitFinished(unitID, unitDefID, unitTeam)
     if teamData[unitTeam] and teamData[unitTeam].initialized and teamData[unitTeam].factionKey then
         local data = teamData[unitTeam]
         local uDef = UnitDefs[unitDefID]
-        Log(unitTeam, "UF LOG 1: Processing UnitFinished for " .. unitID .. " (" .. (uDef and uDef.humanName or "Unknown") .. ")")
+        Log(unitTeam, "UnitFinished: " .. unitID .. " (" .. (uDef and uDef.humanName or "Unknown") .. " - DefID: "..unitDefID..")")
 
-        if data.currentTechLevel == 0 and data.commanderUnitID and data.constructors[data.commanderUnitID] then
-            Log(unitTeam, "UF LOG 2: In Tech 0, commander data exists.")
-            local commanderData_UF = data.constructors[data.commanderUnitID] -- Rinomina per evitare conflitto scope
-
-            if commanderData_UF.state == "busy_building" then
-                Log(unitTeam, "UF LOG 3: Commander was busy_building.")
-                local task = commanderData_UF.currentTask
-                if task and task.buildingDefID == unitDefID then
-                    Log(unitTeam, "UF LOG 4: Task matched! Commander finished building " .. (uDef and uDef.humanName or "Unknown") .. " (Role: "..(task.role or "N/A").." / Seq: "..tostring(task.isSequential)..")")
-                    
-                    commanderData_UF.state = "idle"
-                    commanderData_UF.currentTask = nil
-                    Log(unitTeam, "UF LOG 5: Commander state set to 'idle', task cleared.")
-
-                    if task.isSequential then
-                        Log(unitTeam, "UF LOG 6: Task was sequential.")
-                        local tech0Config_UF = techLevels[0] -- Rinomina
-                        local buildQueue_UF = tech0Config_UF.sequentialBuildOrder -- Rinomina
-                        if data.currentSequentialBuildIndex <= #buildQueue_UF then
-                            local expectedItem_UF = buildQueue_UF[data.currentSequentialBuildIndex] -- Rinomina
-                            Log(unitTeam, "UF LOG 6.1: Current SeqIdx="..data.currentSequentialBuildIndex..", Expected Role="..(expectedItem_UF and expectedItem_UF.role or "N/A"))
-                            if expectedItem_UF and expectedItem_UF.role == task.role then
-                                data.currentSequentialBuildIndex = data.currentSequentialBuildIndex + 1
-                                Log(unitTeam, "UF LOG 6.2: Advanced sequential build index to: " .. data.currentSequentialBuildIndex)
-                            else
-                                Log(unitTeam, "UF LOG 6.2 WARN: Task role ".. (task.role or "N/A") .." did NOT match expected sequential role "..(expectedItem_UF and expectedItem_UF.role or "N/A")..". SeqIdx not advanced.")
-                            end
-                        else
-                            Log(unitTeam, "UF LOG 6.1: Sequential build index " .. data.currentSequentialBuildIndex .. " is beyond queue length " .. #buildQueue_UF)
-                        end
+        if data.currentTechLevel == 0 and data.commanderUnitID and data.constructors[data.commanderUnitID] and data.constructors[data.commanderUnitID].state == "busy_building" then
+            local task = data.constructors[data.commanderUnitID].currentTask
+            if task and task.buildingDefID == unitDefID then
+                Log(unitTeam, "Tech 0: Commander finished building " .. (uDef and uDef.humanName or "Unknown") .. " (Role: "..(task.role or "N/A")..")")
+                data.constructors[data.commanderUnitID].state = "idle"
+                data.constructors[data.commanderUnitID].currentTask = nil
+                local tech0Config = techLevels[0]
+                local buildQueue = tech0Config.sequentialBuildOrder
+                if data.currentSequentialBuildIndex <= #buildQueue then
+                    local expectedItem = buildQueue[data.currentSequentialBuildIndex]
+                    if expectedItem.role == task.role then
+                        data.currentSequentialBuildIndex = data.currentSequentialBuildIndex + 1
+                        Log(unitTeam, "Tech 0: Advanced sequential build index to: " .. data.currentSequentialBuildIndex)
                     else
-                        Log(unitTeam, "UF LOG 6: Task was NOT sequential. SeqIdx not advanced.")
+                        Log(unitTeam, "Tech 0 WARN: Commander built "..task.role..", but expected "..expectedItem.role..". Not advancing index.")
                     end
-
-                    Log(unitTeam, "UF LOG 7: Calling CheckTechRequirements...")
-                    if CheckTechRequirements(unitTeam) then
-                        Log(unitTeam, "UF LOG 8: CheckTechRequirements returned TRUE.")
-                        data.currentTechLevel = 1
-                        Log(unitTeam, "----------------------------------------------------")
-                        Log(unitTeam, "TECH LEVEL UP! Advanced to Tech Level 1.")
-                        Log(unitTeam, "----------------------------------------------------")
-                    else
-                        Log(unitTeam, "UF LOG 8: CheckTechRequirements returned FALSE.")
-                        Log(unitTeam, "Tech 0: Requirements to advance to Tech 1 NOT YET met after building " .. (uDef and uDef.humanName or "Unknown") .. ".")
-                    end
+                end
+                if CheckTechRequirements(unitTeam) then
+                    data.currentTechLevel = 1
+                    data.currentSequentialBuildIndex = 1 
+                    Log(unitTeam, "----------------------------------------------------")
+                    Log(unitTeam, "TECH LEVEL UP! Advanced to Tech Level 1.")
+                    Log(unitTeam, "----------------------------------------------------")
                 else
-                    Log(unitTeam, "UF LOG 4: Task did NOT match, or no task. Commander built UnitDefID " .. unitDefID .. ", but expected " .. (task and task.buildingDefID or "NO_TASK_DefID"))
+                    Log(unitTeam, "Tech 0: Requirements to advance NOT YET met after building " .. (uDef and uDef.humanName or "Unknown") .. ".")
                 end
-            else
-                 Log(unitTeam, "UF LOG 3: Commander was NOT busy_building. Current state: " .. commanderData_UF.state .. ". (Unit finished: "..(uDef and uDef.humanName or "Unknown")..")")
             end
-        else
-            if not (data.currentTechLevel == 0) then Log(unitTeam, "UF LOG 2: Not in Tech 0. Current Tech: " .. data.currentTechLevel) end
-            if not (data.commanderUnitID) then Log(unitTeam, "UF LOG 2: CommanderUnitID is nil.") end
-            if data.commanderUnitID and not data.constructors[data.commanderUnitID] then Log(unitTeam, "UF LOG 2: Commander data in constructors is nil for ID: " .. data.commanderUnitID) end
-        end
-        Log(unitTeam, "UF LOG 9: UnitFinished processing END for " .. unitID)
-    else
-        if WMRTSAI_Debug_Mode > 0 then
-            local reason = ""
-            if not teamData[unitTeam] then reason = "teamData[unitTeam] is nil. " end
-            if teamData[unitTeam] and not teamData[unitTeam].initialized then reason = reason .. "data not initialized. " end
-            if teamData[unitTeam] and teamData[unitTeam].initialized and not teamData[unitTeam].factionKey then reason = reason .. "factionKey is nil." end
-            Spring.Echo("WMRTSAI UF: SKIPPING UnitFinished for Team " .. unitTeam .. ". Reason: " .. reason)
         end
     end
   end
 
-   
-      function gadget:UnitIdle(unitID, unitDefID, unitTeam)
-    local currentFrame_UnitIdle = Game.frame -- Variabile locale con nome univoco
-
-    if currentFrame_UnitIdle == nil then
-        if WMRTSAI_Debug_Mode > 0 then
-            Spring.Echo("WMRTSAI UnitIdle CRITICAL: Game.frame is nil! Using fallback frame 0.")
-        end
-        currentFrame_UnitIdle = 0 
-    end
-
-    -- Temporaneamente commentato per debug errore 'arithmetic on nil value'
-    -- if WMRTSAI_Debug_Mode > 1 then 
-    --      Log(unitTeam, "UnitIdle Event: UnitID " .. unitID .. " (DefID: " .. unitDefID .. 
-    --                    ") reported IDLE by Spring at frame " .. currentFrame_UnitIdle)
-    -- end
-
-    if not teamData[unitTeam] or 
-       not teamData[unitTeam].initialized or 
-       not teamData[unitTeam].factionKey then
-        return 
-    end
-
-    local data = teamData[unitTeam]
-
-    if data.commanderUnitID and unitID == data.commanderUnitID and data.constructors[unitID] then
-        local commanderConstructorData = data.constructors[unitID]
-        
-        -- Temporaneamente commentato
-        -- if WMRTSAI_Debug_Mode > 1 then
-        --      Log(unitTeam, "UnitIdle - Commander specific. AI Task Role: " .. 
-        --                    (commanderConstructorData.currentTask and commanderConstructorData.currentTask.role or "NONE") ..
-        --                    ", AI State in teamData: " .. commanderConstructorData.state)
-        -- end
-
-        if commanderConstructorData.currentTask then
-            if commanderConstructorData.state == "busy_building" then
-                -- Temporaneamente commentato
-                -- if WMRTSAI_Debug_Mode > 0 and (currentFrame_UnitIdle % 150 == (unitTeam * 5) % 150) then 
-                --      Log(unitTeam, "UnitIdle WARN: Commander " .. unitID .. " is 'busy_building' in AI state (Task: "..
-                --                  (commanderConstructorData.currentTask.role or "N/A")..") but Spring reports unit as idle. Frame: "..currentFrame_UnitIdle..". Waiting for Timeout/UnitFinished.")
-                -- end
-                if WMRTSAI_Debug_Mode > 0 then -- Log non condizionato da modulo
-                     Log(unitTeam, "UnitIdle INFO (Com Tasked & Busy): Commander " .. unitID .. " (Task: ".. (commanderConstructorData.currentTask.role or "N/A") .. ") reported idle by Spring. Frame: "..currentFrame_UnitIdle)
-                end
-            end
-        else 
-            if commanderConstructorData.state ~= "idle" then
-                Log(unitTeam, "UnitIdle: Commander " .. unitID .. 
-                               " became IDLE (no current AI task). Previous state in teamData: " .. 
-                               commanderConstructorData.state .. ". Resetting to idle in teamData. Frame: " .. currentFrame_UnitIdle)
-                commanderConstructorData.state = "idle"
-                commanderConstructorData.buildStartTime = nil 
-                commanderConstructorData.buildAttempts = 0
-            end
-        end
-    end
+  function gadget:UnitIdle(unitID, unitDefID, unitTeam)
+      if teamData[unitTeam] and teamData[unitTeam].initialized and teamData[unitTeam].factionKey then
+          local data = teamData[unitTeam]
+          if data.commanderUnitID and unitID == data.commanderUnitID and data.constructors[unitID] and data.constructors[unitID].state ~= "idle" then
+              Log(unitTeam, "Commander " .. unitID .. " became IDLE. Previous state: " .. data.constructors[unitID].state .. ". Resetting to idle.")
+              data.constructors[unitID].state = "idle"
+              data.constructors[unitID].currentTask = nil
+          end
+      end
   end
- 
-	
-	
- 
- 
 
   function gadget:UnitDestroyed(unitID, unitDefID, unitTeam, attackerUnitID, attackerUnitDefID, attackerTeamID)
       if teamData[unitTeam] and teamData[unitTeam].initialized then
