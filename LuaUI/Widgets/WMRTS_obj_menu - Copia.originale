@@ -64,8 +64,6 @@ local buttons_back					= "LuaUI/Images/menu/mainmenu/menu_back.png"
 local buttons_close					= "LuaUI/Images/menu/mainmenu/menu_close.png"
 local selettore_button 				= "LuaUI/Images/menu/mainmenu/main_menu_buttonselection.png"
 
-local iconaobj1					-- definirà il tipo di icona
-local basePath 						= "LuaUI/Images/menu/mainmenu/"  -- percorso base per icone
 --caratteristche testo
 local myFont	 					= gl.LoadFont("FreeSansBold.otf",12, 1.9, 40)
 local titolo_menu_col				= {0.8, 0.8, 1.0, 1}
@@ -204,9 +202,9 @@ end
 function widget:GameFrame(frame)
 	if frame%30 == 0 then
 		-- ricevo il numero degli obiettivi attivi per la missione
---		missionData["numero_obiettivi_attivi"] 	= Spring.GetGameRulesParam("noobjactive")
+		missionData["numero_obiettivi_attivi"] 	= Spring.GetGameRulesParam("noobjactive")
 		
-	    -- ricevo lo stato della missione 1 -- example Spring.SetGameRulesParam("uploadobj1", "Defend the containers around the trains")
+	    -- ricevo lo stato della missione 1
 		missionData["Objective 1"] 	= Spring.GetGameRulesParam("uploadobj1")
 		-- ricevo lo stato della missione 2
 		missionData["Objective 2"] 	= Spring.GetGameRulesParam("uploadobj2")
@@ -216,7 +214,7 @@ function widget:GameFrame(frame)
 		missionData["Objective 4"] 	= Spring.GetGameRulesParam("uploadobj4")
 	    -- ricevo lo stato della missione 5
 		missionData["Objective 5"] 	= Spring.GetGameRulesParam("uploadobj5")
-		-- ricevo il titolo della missione 1 -- example Spring.SetGameRulesParam("settitolo1", "In progress")
+		-- ricevo il titolo della missione 1
 		missionData["titoloobj1"] 	= Spring.GetGameRulesParam("settitolo1")
 		-- ricevo il titolo della missione 2
 		missionData["titoloobj2"] 	= Spring.GetGameRulesParam("settitolo2")
@@ -226,46 +224,15 @@ function widget:GameFrame(frame)
 		missionData["titoloobj4"] 	= Spring.GetGameRulesParam("settitolo4")
 		-- ricevo il titolo della missione 5
 		missionData["titoloobj5"] 	= Spring.GetGameRulesParam("settitolo5")
-		-- ricevo la tipologia di missione 1, serve per stabilire l'icona -- example Spring.SetGameRulesParam("setobjtype", "defend") -- defend, secure, attack, destroy, aggiungere qui altre se si vuole
-		missionData["typeobj1"] 	= Spring.GetGameRulesParam("settype1")
-		
-		-----------------
-		-- elaboro le informazioni delle icone
-		-----------------
-		
-		-- carico la tipologia di missione per stabilire l'icona
-	local tipoObiettivo1 = missionData["typeobj1"]
-	local tipoObiettivo2 = missionData["typeobj2"]
-	local tipoObiettivo3 = missionData["typeobj3"]
-	local tipoObiettivo4 = missionData["typeobj4"]
-	local tipoObiettivo5 = missionData["typeobj5"]
 
-		-- setto le rispettiva icone
-		-- icona 1
-	if tipoObiettivo1 then -- Controlla se tipoObiettivo1 non è nil
-		iconaobj1 = basePath .. "obj_"..tipoObiettivo1 .. ".png"
-		else		 -- se è di tipo nil	
-		iconaobj1 = basePath .. "obj_none.png"	
 	end
-		-- icona 2
-		
-		-- icona 3
-		
-		-- icona 4
-		
-		-- icona 5		
-		
-	end -- frame%30
 end
 
 --------------------------------------
 -- DISEGNO L' OBJ MENU
 --------------------------------------
 function widget:DrawScreen()
-
 	if mostra_objsetting then
-
-
 
 -- inserisco lo sfondo
  	gl.Color(1,1,1,1)
@@ -296,13 +263,6 @@ function widget:DrawScreen()
 	myFont:SetTextColor(1,1,1,1)	
 	myFont:Print(("CLOSE"), posx_menu+posx_menu_button+distance_x_menu_button +45 , posy_menu+posy_menu_button +9, 9, "ocn") -- close button
 	myFont:End()
-
--- disegno le icone delle missioni
-	-- icona missione 1	
-	gl.Color(1,1,1,1)
-	gl.Texture(iconaobj1)	 
-	gl.TexRect(	posx_menu+10,posy_menu + altezza_menu - margine_superiore-5,posx_menu+10+12,posy_menu + altezza_menu - margine_superiore-5+12)	
-	gl.Texture(false)	-- fine texture		
 
 -- testi delle missioni
 	
