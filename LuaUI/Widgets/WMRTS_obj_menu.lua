@@ -298,38 +298,90 @@ function widget:DrawScreen()
 	myFont:End()
 
 -- disegno le icone delle missioni
-	-- icona missione 1	
-	gl.Color(1,1,1,1)
-	gl.Texture(iconaobj1)	 
-	gl.TexRect(	posx_menu+10,posy_menu + altezza_menu - margine_superiore-5,posx_menu+10+12,posy_menu + altezza_menu - margine_superiore-5+12)	
-	gl.Texture(false)	-- fine texture		
+	
 
 -- testi delle missioni
 	
 -- scrivo nel menu i titoli degli obiettivi (distruggi x, difendi y ecc) impostabili dalla funzione function widget:GameFrame(frame)
+if missionData["Objective 1"] ~= nil then --disegna la riga dell'obiettivo 1
+	-- icona missione
+	gl.Color(1,1,1,1)
+	gl.Texture(iconaobj1)	 
+	gl.TexRect(	posx_menu+10,posy_menu + altezza_menu - margine_superiore-5,posx_menu+10+12,posy_menu + altezza_menu - margine_superiore-5+12)	
+	gl.Texture(false)		
+	-- titolo
 	myFont:Begin()	
 	myFont:Print(missionData["titoloobj1"] or "-", posx_menu+margine_sx, posy_menu + altezza_menu - margine_superiore ,12,'vs')
-	myFont:End()
-	myFont:Begin()		
-	myFont:Print(missionData["titoloobj2"] or "-", posx_menu+margine_sx, posy_menu + altezza_menu - margine_superiore - interasse_righe * 1,12,'vs')
-	myFont:End()
-	myFont:Begin()		
-	myFont:Print(missionData["titoloobj3"] or "-", posx_menu+margine_sx, posy_menu + altezza_menu - margine_superiore - interasse_righe * 2,12,'vs')
-	myFont:End()	
-	myFont:Begin()		
-	myFont:Print(missionData["titoloobj4"] or "-", posx_menu+margine_sx, posy_menu + altezza_menu - margine_superiore - interasse_righe * 3,12,'vs')
-	myFont:End()
-	myFont:Begin()		
-	myFont:Print(missionData["titoloobj5"] or "-", posx_menu+margine_sx, posy_menu + altezza_menu - margine_superiore - interasse_righe * 4,12,'vs')
-	myFont:End()
---	myFont:SetTextColor(cWhite) ------------------------------------------------------------------------------------------------------------------ cancellare
-
--- ricevo lo stato degli obiettivi (in progess, complete, failed ecc) impostabili dalla funzione function widget:GameFrame(frame)
-	myFont:Begin()	
+	-- descrizione
 	myFont:Print(missionData["Objective 1"] or "-", posx_menu+margine_sx+100, posy_menu + altezza_menu - margine_superiore ,12,'vs')
-	myFont:End()	
-	myFont:Begin()		
+	myFont:End()
+	end	-- obiettivo 1
+if missionData["Objective 2"] ~= nil then --disegna la riga dell'obiettivo 2
+	-- icona missione
+	gl.Color(1,1,1,1)
+	gl.Texture(iconaobj2)	 
+	gl.TexRect(	posx_menu+10,posy_menu + altezza_menu - margine_superiore-5,posx_menu+10+12,posy_menu + altezza_menu - margine_superiore-5+12)	
+	gl.Texture(false)		
+	-- titolo
+	myFont:Begin()	
+	myFont:Print(missionData["titoloobj2"] or "-", posx_menu+margine_sx, posy_menu + altezza_menu - margine_superiore - interasse_righe * 1 ,12,'vs')
+	-- descrizione
 	myFont:Print(missionData["Objective 2"] or "-", posx_menu+margine_sx+100, posy_menu + altezza_menu - margine_superiore - interasse_righe * 1,12,'vs')
+	myFont:End()
+	end	-- obiettivo 2
+if missionData["Objective 3"] ~= nil then --disegna la riga dell'obiettivo 3
+--	calcolo riga
+--    interasse_righe = interasse_righe + interasse_righe
+	-- icona missione
+	gl.Color(1,1,1,1)
+	gl.Texture(iconaobj3)	 
+	gl.TexRect(	posx_menu+10,posy_menu + altezza_menu - margine_superiore-5,posx_menu+10+12,posy_menu + altezza_menu - margine_superiore-5+12)	
+	gl.Texture(false)		
+	-- titolo
+	myFont:Begin()	
+	myFont:Print(missionData["titoloobj3"] or "-", posx_menu+margine_sx, posy_menu + altezza_menu - margine_superiore - interasse_righe * 2 ,12,'vs')
+	-- descrizione
+	myFont:Print(missionData["Objective 3"] or "-", posx_menu+margine_sx+100, posy_menu + altezza_menu - margine_superiore - interasse_righe * 2,12,'vs')
+	myFont:End()
+	end	-- obiettivo 3
+if missionData["Objective 4"] ~= nil then --disegna la riga dell'obiettivo 4
+--	calcolo riga
+--    interasse_righe = interasse_righe + interasse_righe
+	-- icona missione
+	gl.Color(1,1,1,1)
+	gl.Texture(iconaobj4)	 
+	gl.TexRect(	posx_menu+10,posy_menu + altezza_menu - margine_superiore-5,posx_menu+10+12,posy_menu + altezza_menu - margine_superiore-5+12)	
+	gl.Texture(false)		
+	-- titolo
+	myFont:Begin()	
+	myFont:Print(missionData["titoloobj4"] or "-", posx_menu+margine_sx, posy_menu + altezza_menu - margine_superiore - interasse_righe * 3 ,12,'vs')
+	-- descrizione
+	myFont:Print(missionData["Objective 4"] or "-", posx_menu+margine_sx+100, posy_menu + altezza_menu - margine_superiore - interasse_righe * 3,12,'vs')
+	myFont:End()
+	end	-- obiettivo 4
+if missionData["Objective 5"] ~= nil then --disegna la riga dell'obiettivo 5
+--	calcolo riga
+--    interasse_righe = interasse_righe + interasse_righe
+	-- icona missione
+	gl.Color(1,1,1,1)
+	gl.Texture(iconaobj5)	 
+	gl.TexRect(	posx_menu+10,posy_menu + altezza_menu - margine_superiore-5,posx_menu+10+12,posy_menu + altezza_menu - margine_superiore-5+12)	
+	gl.Texture(false)		
+	-- titolo
+	myFont:Begin()	
+	myFont:Print(missionData["titoloobj5"] or "-", posx_menu+margine_sx, posy_menu + altezza_menu - margine_superiore - interasse_righe * 4 ,12,'vs')
+	-- descrizione
+	myFont:Print(missionData["Objective 5"] or "-", posx_menu+margine_sx+100, posy_menu + altezza_menu - margine_superiore - interasse_righe * 4,12,'vs')
+	myFont:End()
+	end	-- obiettivo 5	
+	
+	
+-- ricevo lo stato degli obiettivi (in progess, complete, failed ecc) impostabili dalla funzione function widget:GameFrame(frame)
+--	myFont:Begin()	
+--[[	
+--	myFont:End()	
+	myFont:Begin()		
+
 	myFont:End()	
 	myFont:Begin()		
 	myFont:Print(missionData["Objective 3"] or "-", posx_menu+margine_sx+100, posy_menu + altezza_menu - margine_superiore - interasse_righe * 2,12,'vs')
@@ -344,7 +396,7 @@ function widget:DrawScreen()
 	--reset state
 --	gl.Texture(false)
 --	gl.Color(1,1,1,1)
-
+]]--
 -- riquadri di selezione dei menubuttons (close o back)
   	if selettore_buttons_visibile then
 		gl.Color(1,1,1,1)
