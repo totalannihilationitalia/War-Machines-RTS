@@ -35,6 +35,7 @@ to do list
 -- rev 1 by molix -- 24/12/2024 -- integrato il controllo del LOS cosi che si interfacci correttamente con il minimenu
 -- rev 2 by molix -- 03/01/2025 -- risolto problema di memoria e relativo crash in Spring. Ottimizzato il codice.
 -- rev 3 by molix -- 28/01/2025 -- aggiunto minipulsante "show terrain resources"
+-- rev 4 by molix -- 02/06/2025 -- aggiunta la funzione "blinking" al pulsante objective quando si riceve il comando: Spring.SendCommands("blink_WMRTS_obj")
 
 -- definizione pulsanti minimenu
 local larghezza_main_minimenu_button 	= 50 	-- larghezza del pulsante "main menu" del minimenu (più largo degli altri)
@@ -46,6 +47,7 @@ local margine_giu_minimenu 				= 5 	-- margine dal sotto il pulsante al bordo de
 local margine_sx_minimenu 				= 5 	-- margine da sinistra dell'ultimo pulsante a sx, serve a creare l'ultimo blocco del background image
 local interspazio_buttons				= 2 	-- spazio tra un pulsante e l altro
 local interspazio_button_separator		= 5 	-- spazio tra una serie di pulsanti (menu) e l'altro (funzionali), ad esempio distanzio i pulsanti menu, sound ecc con i pulsanti builder, wind, ecc
+local objbuttosinblinking				= 0		-- 1 se c'è una notifica
 local show_minimenu_statistics_button	= true
 local show_minimenu_object_button		= true
 local show_minimenu_snd_button			= true
@@ -92,6 +94,7 @@ local statisticsbutton_off = "LuaUI/Images/menu/minimenu/statisticsbutton_off.pn
 local statisticsbutton_on = "LuaUI/Images/menu/minimenu/statisticsbutton_on.png"
 local objbutton_off = "LuaUI/Images/menu/minimenu/objbutton_off.png"
 local objbutton_on = "LuaUI/Images/menu/minimenu/objbutton_on.png"
+local objbutton_blinking = "LuaUI/Images/menu/minimenu/objbutton_blinking.png"
 local builderbutton_off = "LuaUI/Images/menu/minimenu/builderbutton_off.png"
 local builderbutton_on = "LuaUI/Images/menu/minimenu/builderbutton_on.png"
 local losbutton_off = "LuaUI/Images/menu/minimenu/losbutton_off.png"
@@ -285,6 +288,7 @@ function widget:MousePress(x, y, button)
 				-- si attiva			
 				elseif not show_objmenu and (show_minimenu_object_button and((x >= Pos_x_obj_button) and (x <= Pos_x_obj_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				Spring.SendCommands("open_WMRTS_obj")
+				objbuttosinblinking = 0 -- set blinking to 0 cosi nel caso resetta le notifiche all'apertura degli obiettivi	
 				return true			
 				-- si disattiva			
 				elseif show_objmenu and (show_minimenu_object_button and((x >= Pos_x_obj_button) and (x <= Pos_x_obj_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
@@ -361,6 +365,11 @@ function widget:TextCommand(command)
 	end
 	if command == 'close_WMRTS_obj' then
 		show_objmenu = false
+	end		
+-- blinking del obj menu
+	if command == 'blink_WMRTS_obj' and show_objmenu == false then
+	-- evidenza obj button
+	objbuttosinblinking = 1
 	end		
 -- apertura e chiusura statistics menu
 	if command == 'open_WMRTS_statistics' then
@@ -561,7 +570,11 @@ local function DrawMainMiniMenu()
 				if show_objmenu then 				-- se la finestra (o funzione) degli obiettivi è attiva:
 				gl.Texture(objbutton_on)			-- mostra il pulsante acceso
 				else
-				gl.Texture(objbutton_off)			-- altrimenti mostra il pulsante spento	
+					if objbuttosinblinking == 1 then
+						gl.Texture(objbutton_blinking)			-- mostra il pulsante blinking
+					else				
+						gl.Texture(objbutton_off)			-- altrimenti mostra il pulsante spento	
+					end
 				end
 			gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
 			gl.Texture(false)	-- fine texture	
