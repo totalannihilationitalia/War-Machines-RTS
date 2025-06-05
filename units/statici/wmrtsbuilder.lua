@@ -141,6 +141,10 @@ return {
 			[79] = "pala010",
 			[80] = "pala011",
 			[81] = "crane",
+			[82] = "andbarracs",
+			[83] = "andhangar_close",
+			[84] = "andmuos",
+			[85] = "andtowercontrol",
 		},
 		featuredefs = {
 			["1_dead"] = {
