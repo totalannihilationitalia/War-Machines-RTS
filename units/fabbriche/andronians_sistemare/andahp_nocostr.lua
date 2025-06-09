@@ -8,7 +8,7 @@ return {
                buildcostenergy = 14000,
                buildcostmetal = 3607,
                builder = true,
-               buildpic = "andahp.png",
+               buildpic = "andahp_noconstr.png",
                buildtime  = 18492,
                canmove = true,
                canPatrol = true,

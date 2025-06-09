@@ -2,13 +2,13 @@
 return {
 
 -----------------------------------------------------------
---- UNITS FEATURES
+--- UNITS FEATURES -- usata per non essere controllata dalla shard, produce unità controllabili dalla shard e quelle non controllate dalla ai (_noai)
 -----------------------------------------------------------
   andhp_noai = {
                buildcostenergy = 1772,
                buildcostmetal = 723,
                builder = true,
-               buildpic = "andhp.png",
+               buildpic = "andhpnoai.png",
                buildtime  = 7151,
                canmove = true,
                canPatrol = true,
