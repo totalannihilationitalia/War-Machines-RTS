@@ -24,7 +24,6 @@
 {y=39,x=5768,name="andwall",z=6424,rot="south"},
 
 -- avamposto accesso al centromappa da spazioporto
-
 {y=163,x=6208,name="tank_2",z=7296,rot="south"},
 {y=161,x=6160,name="tank_2",z=7248,rot="south"},
 {y=163,x=5976,name="andwind",z=6888,rot="east"},
@@ -70,7 +69,7 @@
 {y=163,x=6632,name="andmexun",z=7464,rot="east"},
 
 
--- base centro sud
+-- difesa perimetrale base centro sud
 
 {y=69,x=5544,name="andwall",z=9144,rot="north"},
 {y=71,x=5464,name="andsolar",z=9352,rot="north"},
@@ -93,7 +92,7 @@
 {y=69,x=5496,name="andwall",z=9112,rot="west"},
 
 
--- base centro mappa sul cocuzzolo del ponte distrutto
+-- base centro mappa sul cocuzzolo del ponte distrutto lato sud
 {y=327,x=4048,name="andametex",z=6528,rot="east"},
 {y=331,x=4184,name="andwall",z=6888,rot="north"},
 {y=322,x=3968,name="andametex",z=6160,rot="east"},
