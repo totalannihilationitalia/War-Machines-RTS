@@ -12,7 +12,7 @@ return {
                buildcostenergy = 600,
                buildcostmetal = 54,
                builder = false,
-               buildpic = "stazione_radar_1.png",
+               buildpic = "tank_1.png",
                buildtime  = 1137,
                canAttack = false,
                category = "OGGETTISTATICI",

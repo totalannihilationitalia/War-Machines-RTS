@@ -11,7 +11,7 @@ return {
                buildcostmetal = 128,
                builddistance = 150,
                builder = true,
-               buildpic = "stazione_radar_1.png",
+               buildpic = "container_1.png",
                buildtime  = 4066,
                canGuard = true,
                canmove = true,

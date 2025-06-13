@@ -10,7 +10,7 @@ return {
                buildinggrounddecaldecayspeed= 0.01,
                buildinggrounddecalsizex= 3,
                buildinggrounddecalsizey = 3,
-               buildinggrounddecaltype = "sfondo_pini.png",
+               buildinggrounddecaltype = "crane.png",
                buildpic = "crane.png",
                buildtime  = 300,
                canAttack = false,
