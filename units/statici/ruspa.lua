@@ -11,7 +11,7 @@ return {
                buildinggrounddecalsizex= 4,
                buildinggrounddecalsizey = 4,
                buildinggrounddecaltype = "Blotch05.dds",
-               buildpic = "",
+               buildpic = "ruspa.png",
                buildtime  = 100,
                canAttack = false,
                category = "OGGETTISTATICI",
