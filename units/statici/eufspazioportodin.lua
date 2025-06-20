@@ -56,6 +56,7 @@ return {
                YardMap= "occccooccccooccccooccccooccccoocccco",
                buildoptions = { 
 			[1] = "euftrasparte",
+			[2] = "ruspa_builder",
                },
 
 
