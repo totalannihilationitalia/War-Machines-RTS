@@ -57,6 +57,8 @@ return {
                buildoptions = { 
 			[1] = "euftrasparte",
 			[2] = "corgol",
+			[3] = "ruspa_builder",
+
                },
 
 
