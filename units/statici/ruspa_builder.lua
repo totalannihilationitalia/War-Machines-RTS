@@ -69,6 +69,7 @@ return {
 -----------------------------------
                buildoptions = { 
 		[1] = "controllo_spazioporto",
+		[2] = "eufhq",
                },
 -----------------------------------------------------------
 --- Units wreckage and heaps
