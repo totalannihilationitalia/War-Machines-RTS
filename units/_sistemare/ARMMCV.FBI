@@ -3,7 +3,7 @@
 	UnitName=ARMMCV;
 	Version=1;
 	Side=ARM;
-	Objectname=ARMMCV;
+	Objectname=andmcv.s3o;
 	Designation=ARM-MCV;
 	Name=Empyrrean;
 	Description=Mobile Command Vehicle;
