@@ -83,10 +83,10 @@ return {
 ------------------- creare il sonar
 ------------------- creare il torpedol
 ------------------  eventuali difese floating
-		[14] = "eufblab", -------------------- non funziona sistemare ################
+		[15] = "eufblab", -------------------- non funziona sistemare ################
 ---------		[16] = "eufadvmetex", --------------- spostare in avanzato tech2
-		[15]= "euf_fence_gate",
-		[16]= "euf_fence_wall",
+		[16]= "euf_fence_gate",
+		[17]= "euf_fence_wall",
                },
 
 -----------------------------------------------------------
