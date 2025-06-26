@@ -150,6 +150,7 @@ return {
 			[84] = "livrium02",
 			[85] = "livrium03",
 			[86] = "livrium04",
+			[87] = "andflag",
 		},
 		featuredefs = {
 			["1_dead"] = {
