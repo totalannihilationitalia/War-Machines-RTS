@@ -15,7 +15,7 @@ return {
                buildpic = "andhangar_close.png",
                buildtime  = 1137,
                canAttack = false,
-               category = "OGGETTISTATICI",
+               category = "SURFACE",
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
@@ -26,7 +26,7 @@ return {
 --               energyUse = 4,
                explodeas = "SMALL_BUILDINGEX",
                footprintx = 5,
-               footprintz = 5,
+               footprintz = 4,
                icontype = "building",
                idleautoheal = 5,
                idletime = 1800,
@@ -48,7 +48,7 @@ return {
                TEDClass = "SPECIAL", -- verificare se necessario
                turnrate = 0,
                workertime = 0,
-               YardMap= "oooo",
+               YardMap= "oooooooooooooooooooo",
 -----------------------------------------------------------
 --- Units wreckage and heaps
 -----------------------------------------------------------
@@ -61,7 +61,7 @@ featuredefs = {
                featuredead = "heap",
                featurereclamate = "SMUDGE01",
                footprintx = 5,
-               footprintz = 5,
+               footprintz = 4,
                height = 20,
                blocking= true,
                hitdensity = 100,

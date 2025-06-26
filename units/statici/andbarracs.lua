@@ -15,7 +15,7 @@ return {
                buildpic = "andbarracs.png",
                buildtime  = 1137,
                canAttack = false,
-               category = "OGGETTISTATICI",
+               category = "SURFACE",
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
@@ -25,13 +25,13 @@ return {
 --               energystorage = 0,
 --               energyUse = 4,
                explodeas = "SMALL_BUILDINGEX",
-               footprintx = 2,
+               footprintx = 1,
                footprintz = 2,
                icontype = "building",
                idleautoheal = 5,
                idletime = 1800,
 --               mass = 0 --definire massa,
-               maxdamage = 600,
+               maxdamage = 1200,
                maxslope = 10,
                maxvelocity = 0,
                maxwaterdepth = 0,
@@ -48,7 +48,7 @@ return {
                TEDClass = "SPECIAL", -- verificare se necessario
                turnrate = 0,
                workertime = 0,
-               YardMap= "oooo",
+               YardMap= "oo",
 -----------------------------------------------------------
 --- Units wreckage and heaps
 -----------------------------------------------------------
@@ -60,7 +60,7 @@ featuredefs = {
                object = "andbarracs_wreck.s3o",
                featuredead = "heap",
                featurereclamate = "SMUDGE01",
-               footprintx = 2,
+               footprintx = 1,
                footprintz = 2,
                height = 20,
                blocking= true,

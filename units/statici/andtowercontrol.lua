@@ -15,7 +15,7 @@ return {
                buildpic = "andtowercontrol.png",
                buildtime  = 1137,
                canAttack = false,
-               category = "OGGETTISTATICI",
+               category = "SURFACE",
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
