@@ -57,9 +57,10 @@ return {
 --- BUILDLIST
 -----------------------------------
                buildoptions = { 
-			[1] = "andfig",
-			[2] = "andbomb",
-			[3] = "andstr",
+			[1] = "andca",
+			[2] = "andfig",
+			[3] = "andbomb",
+			[4] = "andstr",
                },
 
 
