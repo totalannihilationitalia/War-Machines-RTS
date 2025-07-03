@@ -182,3 +182,14 @@ function widget:Initialize()
 -- avvio la funzione check_options()
 	check_options()
  end
+ 
+--------------------------------------
+-- DISEGNO IL DIARY
+-------------------------------------- 
+ function widget:DrawScreen()
+if diarymenu_attivo then -- se il main menu è attivo, allora disegnalo
+
+
+
+end -- if diarymenu_attivo	
+end --drawscreen
