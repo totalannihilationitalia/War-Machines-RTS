@@ -65,8 +65,9 @@ local new_units
 
 
 -- definizioni immagini bottoni e background
-local backgroundmainmenu 			= "LuaUI/Images/menu/mainmenu/diary_menu_bkgnd.png"
+local backgrounddiarymenu 			= "LuaUI/Images/menu/mainmenu/diary_menu_bkgnd.png"
 local button_close					= "LuaUI/Images/menu/mainmenu/menu_close.png"
+local icona_diarymenu				= "LuaUI/Images/menu/mainmenu/menu_diary_icon.png"
 
 -- definizione delle news (le news sono le schede con il contenuto interamente in formato immagine)
 
@@ -189,7 +190,24 @@ function widget:Initialize()
  function widget:DrawScreen()
 if diarymenu_attivo then -- se il main menu è attivo, allora disegnalo
 
+-- inserisco il background del mainmenu
+	gl.Color(1,1,1,1)
+	gl.Texture(backgrounddiarymenu)	
+	gl.TexRect(	Pos_x_mainmenu,Pos_y_mainmenu,Pos_x_mainmenu+larghezza_mainmenu,Pos_y_mainmenu+altezza_mainmenu)	
+	gl.Texture(false)	-- fine texture	
 
+-- Intestazione del menu
+	-- testo
+	font_intestazione:SetTextColor(1, 1, 1, 1)
+	font_intestazione:Begin()
+	font_intestazione:Print("Grapichs settings", Pos_x_mainmenu+70, Pos_y_mainmenu + 220+25,14,'ds')
+	font_intestazione:End()	
+	
+-- icona principale del menu
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_diarymenu)	
+	gl.TexRect(	Pos_x_mainmenu+margine_sx_icona_graphicsmenu,Pos_y_mainmenu+altezza_mainmenu+margine_su_icona_graphicsmenu,Pos_x_mainmenu+margine_sx_icona_graphicsmenu+larghezza_icona_graphicsmenu,Pos_y_mainmenu+altezza_mainmenu+margine_su_icona_graphicsmenu+altezza_icona_graphicsmenu)	
+	gl.Texture(false)	-- fine texture	
 
 end -- if diarymenu_attivo	
 end --drawscreen
