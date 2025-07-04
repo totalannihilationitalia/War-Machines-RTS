@@ -33,7 +33,7 @@ return {
                footprintz = 2,
                icontype = "robots",
 --               maneuverleashlength  = 640,
-               mass = 3000, -- come SUMO 
+               mass = 200,
                maxdamage = 1700,
                maxslope = 17,
                maxvelocity = 0.95,

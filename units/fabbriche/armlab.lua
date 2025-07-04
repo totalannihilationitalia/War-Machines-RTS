@@ -67,7 +67,6 @@ return {
 			[4] = "icuinv",
 			[5] = "armjeth",
 			[6] = "armwar",
---			[7] = "andcsp",
 		},
 -----------------------------------------------------------
 --- Units wreckage and heaps

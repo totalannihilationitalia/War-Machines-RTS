@@ -30,7 +30,7 @@ return {
                footprintx = 2,
                footprintz = 2,
 --               maneuverleashlength  = 650,
---               mass = 0 --definire massa,
+               mass = 200,
                maxdamage = 850,
                maxslope = 15,
                maxvelocity = 1.55,
