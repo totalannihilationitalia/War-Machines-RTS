@@ -43,48 +43,83 @@ Al momento ogni scheda sarà un immagine con nomeimmagine_ing.png (cosi da diver
 
 local Pos_x_mainmenu					= 20  								-- NON EDITARE posizione in basso a sinistra del menu (valore gestito poi autonomamente dallo script)
 local Pos_y_mainmenu					= 20  								-- NON EDITARE posizione in basso a sinistra del menu (valore gestito poi autonomamente dallo script)
-local larghezza_mainmenu				= 800 								-- larghezza
-local altezza_mainmenu					= 400								-- altezza
-local autopopup							= 1									-- attiva l'apertura del diario quando si riceve il comando
+local altezza_header					= 30								-- altezza header menu
+local altezza_content					= 400								-- altezza contenuto
+local larghezza_diarymenu				= 800 								-- larghezza
+local altezza_diarymenu					= altezza_header+altezza_content	-- altezza ( h header + h contenuto)
+local altezza_menubutton				= 25								-- altezza pulsanti di navigazione (maps, units, character ecc)
+local larghezza_menubutton				= 76
+local posy_menuicone             	    = 366									-- altezza del primo pulsante a destra del menu diario rispetto al fondo del content
+local interassey_menuicone		        = 25+10								-- distanza y tra le origini di due pulsanti consecutivi
+local autopopup							= 1									-- attiva l'apertura del diario quando si riceve il comando di nuova news
+local autopause							= 1									-- attiva la pausa quando si riceve il comando di nuova news
 local diarymenu_attivo					= false 							-- Indica se questo menu è aperto o meno
+local margine_sx_icona_diarymenu			= 20  	-- distanza dal margine sinistro del background e l'icona del menu
+local margine_dx_icone_diarymenu			= 10  	-- distanza dal bordo del diario alle icone di destra del menu
+local margine_su_icona_diarymenu			= -30 	-- distanza di quanto sborda l'immagine dal bordo superiore del background
+local mousex, mousey				   										-- posizione x e y del mouse, usata per rilevare la sua posizione e far apparire il selettore
 
--- Variabili n° massimo di item per categoria
-local val_maps			-- n° news attive inerenti alle mappe
-local val_story			-- n° news attive inerenti alla storia
-local val_hints			-- n° news attive inerenti ai suggerimenti
-local val_character		-- n° news attive inerenti ai personaggi
-local val_units			-- n° news attive inerenti alle unità
+-- Variabili che definiscono le news, per categoria, visualizzabili
+local pagtot_maps				= 0		-- n° news attive inerenti alle mappe
+local pagtot_story				= 0		-- n° news attive inerenti alla storia
+local pagtot_hints				= 0		-- n° news attive inerenti ai suggerimenti
+local pagtot_character			= 0		-- n° news attive inerenti ai personaggi
+local pagtot_units				= 0		-- n° news attive inerenti alle unità
 
--- variabili per "blinking" nuove news -- alla ricezione della rispettiva news la categoria lampeggia per indicare una nuova news
-local new_maps
-local new_story
-local new_hints
-local new_character
-local new_units
+-- variabile che definisce la categoria di news da mostrare (cambia al cliccare dei pulsanti) e le pagine di categoria fino ad un max stabilito dalle variabili pagtot_xxx
+local diarycategory				= 0		-- 0) visualizza le mappe, 1) la storia, 2) i suggerimenti, 3) i personaggi, 4) le unità
+local pagcur_maps				= 0		-- pagina corrente di lettura (variabile con i tasti avanti e dietro fino ad un max definito da pagtot_xxx
+local pagcur_story				= 0		-- pagina corrente di lettura (variabile con i tasti avanti e dietro fino ad un max definito da pagtot_xxx
+local pagcur_hints				= 0		-- pagina corrente di lettura (variabile con i tasti avanti e dietro fino ad un max definito da pagtot_xxx
+local pagcur_character			= 0		-- pagina corrente di lettura (variabile con i tasti avanti e dietro fino ad un max definito da pagtot_xxx
+local pagcur_units				= 0		-- pagina corrente di lettura (variabile con i tasti avanti e dietro fino ad un max definito da pagtot_xxx
 
-
+-- variabili per "blinking" nuove news -- alla ricezione della rispettiva news la categoria lampeggia per indicare una nuova news: new_maps = 1 -> lampeggia news map
+local new_maps				= 0
+local new_story				= 0
+local new_hints				= 0
+local new_character			= 0
+local new_units				= 0
 
 -- definizioni immagini bottoni e background
-local backgrounddiarymenu 			= "LuaUI/Images/menu/mainmenu/diary_menu_bkgnd.png"
-local button_close					= "LuaUI/Images/menu/mainmenu/menu_close.png"
-local icona_diarymenu				= "LuaUI/Images/menu/mainmenu/menu_diary_icon.png"
+local headerdiarymenu 			= "LuaUI/Images/menu/diary/header_menu_bkgnd.png"
+local contentdiarymenu			= "LuaUI/Images/menu/diary/content_menu_bkgnd.png"  				-- assumerà il valore di una delle news sotto, a seconda di cosa si sta guardando
+local button_close					= "LuaUI/Images/menu/diary/menu_close.png"
+local icona_diarymenu				= "LuaUI/Images/menu/diary/menu_diary_icon.png"
 
--- definizione delle news (le news sono le schede con il contenuto interamente in formato immagine)
-
-
-
+-- definizione delle hints (le news sono le schede con il contenuto interamente in formato immagine)
+--local wmrtshints000 			= "LuaUI/Images/menu/diary/wmrtshints0.png"				-- hints vuoto
+--local wmrtshints001 			= "LuaUI/Images/menu/diary/wmrtshints1.png"
+--local wmrtshints002 			= "LuaUI/Images/menu/diary/wmrtshints21.png"
 
 -- impostazione dei fonts
 local font_intestazione				= gl.LoadFont("FreeSansBold.otf",14, 1.9, 40)
 local font_generale					= gl.LoadFont("FreeSansBold.otf",12, 1.9, 40)
 
 --------------------------------------
+-- GESTIONE DEL CONTENUTO DEL DIARIO -- Ogni volta che viene chiamata questa funziona si setta l'immagine del contenuto del diario
+--------------------------------------
+local function diarycontentmanagement()
+	if diarycategory == 0 then 			-- sto leggendo categoria mappe globali
+	contentdiarymenu = "LuaUI/Images/menu/diary/wmrtsmaps"..pagcur_maps..".png"
+	elseif diarycategory == 1 then		-- sto leggendo categoria storia
+	contentdiarymenu = "LuaUI/Images/menu/diary/wmrtsstory"..pagcur_story..".png"
+	elseif diarycategory == 2 then		-- sto leggendo categoria suggerimenti
+	contentdiarymenu = "LuaUI/Images/menu/diary/wmrtshints"..pagcur_hints..".png"
+	elseif diarycategory == 3 then		-- sto leggendo categoria personaggi
+	contentdiarymenu = "LuaUI/Images/menu/diary/wmrtschara"..pagcur_character..".png"
+	elseif diarycategory == 4 then		-- sto leggendo categoria unità
+	contentdiarymenu = "LuaUI/Images/menu/diary/wmrtsunits"..pagcur_units..".png"
+	end
+end
+
+--------------------------------------
 -- AGGIORNAMENTO DELLA GEOMETRIA
 --------------------------------------
 -- funzione aggiorno la posizione del minimenu button in alto a destra
 local function UpdateGeometry() -- aggiorno geometria
-  Pos_x_mainmenu = vsx/2 - larghezza_mainmenu/2
-  Pos_y_mainmenu = vsy/2 - altezza_mainmenu/2
+  Pos_x_mainmenu = vsx/2 - larghezza_diarymenu/2
+  Pos_y_mainmenu = vsy/2 - altezza_diarymenu/2
 end
 
 --- funzione rilevamento delle dimensioni della finestra durante il resizing
@@ -94,6 +129,55 @@ function widget:ViewResize(viewSizeX, viewSizeY) -- quando si modifica la dimens
   UpdateGeometry()
 end
 
+--------------------------------------
+-- SEMPRE
+--------------------------------------
+function widget:Update(dt)
+mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di aggiornamento
+	if diarymenu_attivo and not Spring.IsGUIHidden() then
+--[[		if ((mousex >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (mousex <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (mousey >= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi) and (mousey <= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi+altezza_icona_opzioni)) then
+					posy_selettore = Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi - 2
+					posx_selettore = Pos_x_mainmenu+ margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone-20
+					selettore_visibile = true
+					selettore_buttons_visibile = false	
+		elseif xxxx then
+		
+		end
+]]--		
+	end
+end
+
+
+--------------------------------------
+-- GESTIONE TOOLTIP ------------------------------------------------------------------------------------------------ IMPLEMENTARE INSERENDO LE SPIEGAZIONI DEI PULSANTI ----------------------------
+--------------------------------------
+function widget:GetTooltip(x, y) -- questa condizione è vera quando isAbove è vera, modificare aggiungendo  le condizioni dei quadrati
+if diarymenu_attivo and not Spring.IsGUIHidden() then
+  if (Spring.GetGameSeconds() < 0.1) then
+    return "Diary menu  (only works in game)"
+  else
+    return "Diary menu"
+  end
+end
+end
+
+--------------------------------------
+-- RICEVO GLI "HINTS" DURANTE LA MISSIONE
+--------------------------------------
+function widget:GameFrame(frame)
+	if frame%30 == 0 then
+-- ricevo il numero globale della mappa
+		missionData["pagtot_maps"] 	= Spring.GetGameRulesParam("wmrts_diary_maps")	
+-- ricevo il numero globale dello storyboard
+		missionData["pagtot_story"] = Spring.GetGameRulesParam("wmrts_diary_story")	
+-- ricevo il numero globale dei suggerimenti
+		missionData["pagtot_hints"] = Spring.GetGameRulesParam("wmrts_diary_hints")	
+-- ricevo il numero globale dei personaggi
+		missionData["pagtot_character"]= Spring.GetGameRulesParam("wmrts_diary_character")	
+-- ricevo il numero globale delle unità
+		missionData["pagtot_units"]= Spring.GetGameRulesParam("wmrts_diary_units")			
+	end
+end
 --------------------------------------
 -- GESTIONE DEI COMANDI SPRING RICEVUTI
 --------------------------------------	
@@ -178,8 +262,8 @@ end
 --------------------------------------
 function widget:Initialize()
 -- all'inizio imposto la posizione del mini menu
-	Pos_x_mainmenu = vsx/2 - larghezza_mainmenu/2
-	Pos_y_mainmenu = vsy/2 - altezza_mainmenu/2
+	Pos_x_mainmenu = vsx/2 - larghezza_diarymenu/2
+	Pos_y_mainmenu = vsy/2 - altezza_diarymenu/2
 -- avvio la funzione check_options()
 	check_options()
  end
@@ -190,24 +274,95 @@ function widget:Initialize()
  function widget:DrawScreen()
 if diarymenu_attivo then -- se il main menu è attivo, allora disegnalo
 
--- inserisco il background del mainmenu
+-- inserisco il contenuto del diary
 	gl.Color(1,1,1,1)
-	gl.Texture(backgrounddiarymenu)	
-	gl.TexRect(	Pos_x_mainmenu,Pos_y_mainmenu,Pos_x_mainmenu+larghezza_mainmenu,Pos_y_mainmenu+altezza_mainmenu)	
+	gl.Texture(contentdiarymenu)	
+	gl.TexRect(	Pos_x_mainmenu,Pos_y_mainmenu,Pos_x_mainmenu+larghezza_diarymenu,Pos_y_mainmenu+altezza_contenuto)	
+	gl.Texture(false)	-- fine texture		
+	
+-- inserisco l'header del diary
+	gl.Color(1,1,1,1)
+	gl.Texture(headerdiarymenu)	
+	gl.TexRect(	Pos_x_mainmenu,Pos_y_mainmenu+altezza_contenuto,Pos_x_mainmenu+larghezza_diarymenu,Pos_y_mainmenu+altezza_contenuto+altezza_header)	
 	gl.Texture(false)	-- fine texture	
-
+	
 -- Intestazione del menu
 	-- testo
 	font_intestazione:SetTextColor(1, 1, 1, 1)
 	font_intestazione:Begin()
-	font_intestazione:Print("Grapichs settings", Pos_x_mainmenu+70, Pos_y_mainmenu + 220+25,14,'ds')
+	font_intestazione:Print("Commander's logbook", Pos_x_mainmenu+70, Pos_y_mainmenu + 220+25,14,'ds')
 	font_intestazione:End()	
 	
 -- icona principale del menu
 	gl.Color(1,1,1,1)
 	gl.Texture(icona_diarymenu)	
-	gl.TexRect(	Pos_x_mainmenu+margine_sx_icona_graphicsmenu,Pos_y_mainmenu+altezza_mainmenu+margine_su_icona_graphicsmenu,Pos_x_mainmenu+margine_sx_icona_graphicsmenu+larghezza_icona_graphicsmenu,Pos_y_mainmenu+altezza_mainmenu+margine_su_icona_graphicsmenu+altezza_icona_graphicsmenu)	
+	gl.TexRect(	Pos_x_mainmenu+margine_sx_icona_diarymenu,Pos_y_mainmenu+altezza_diarymenu+margine_su_icona_diarymenu,Pos_x_mainmenu+margine_sx_icona_diarymenu+larghezza_icona_graphicsmenu,Pos_y_mainmenu+altezza_diarymenu+margine_su_icona_diarymenu+altezza_icona_graphicsmenu)	
 	gl.Texture(false)	-- fine texture	
+	
+-- pulsante mappe
+	-- back
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_mapmenu)	-- definire icona ######################################################################################################################
+	gl.TexRect(	Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu,Pos_y_mainmenu+posy_menuicone,Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton,Pos_y_mainmenu+posy_menuicone+altezza_menubutton)	
+	gl.Texture(false)	-- fine texture	
+	-- testo
+	font_intestazione:SetTextColor(1, 1, 1, 1)
+	font_intestazione:Begin()
+	font_intestazione:Print("Global Map", Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+10,Pos_y_mainmenu+posy_menuicone,9,'ds')
+	font_intestazione:End()		
+	
+-- pulsante story
+	-- back
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_storymenu)	-- definire icona ######################################################################################################################
+	gl.TexRect(	Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu,Pos_y_mainmenu+posy_menuicone-interassey_menuicone,Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton,Pos_y_mainmenu+posy_menuicone+altezza_menubutton-interassey_menuicone)	
+	gl.Texture(false)	-- fine texture	
+	-- testo
+	font_intestazione:SetTextColor(1, 1, 1, 1)
+	font_intestazione:Begin()
+	font_intestazione:Print("Story", Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+10,Pos_y_mainmenu+posy_menuicone-interassey_menuicone,9,'ds')
+	font_intestazione:End()		
+
+-- pulsante hints
+	-- back
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_hintsmenu)	-- definire icona ######################################################################################################################
+	gl.TexRect(	Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu,Pos_y_mainmenu+posy_menuicone-2*interassey_menuicone,Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton,Pos_y_mainmenu+posy_menuicone+altezza_menubutton-2*interassey_menuicone)	
+	gl.Texture(false)	-- fine texture	
+	-- testo
+	font_intestazione:SetTextColor(1, 1, 1, 1)
+	font_intestazione:Begin()
+	font_intestazione:Print("Hints", Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+10,Pos_y_mainmenu+posy_menuicone-2*interassey_menuicone,9,'ds')
+	font_intestazione:End()			
+
+-- pulsante characters
+	-- back
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_charmenu)	-- definire icona ######################################################################################################################
+	gl.TexRect(	Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu,Pos_y_mainmenu+posy_menuicone-3*interassey_menuicone,Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton,Pos_y_mainmenu+posy_menuicone+altezza_menubutton-3*interassey_menuicone)	
+	gl.Texture(false)	-- fine texture	
+	-- testo
+	font_intestazione:SetTextColor(1, 1, 1, 1)
+	font_intestazione:Begin()
+	font_intestazione:Print("Hints", Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+10,Pos_y_mainmenu+posy_menuicone-3*interassey_menuicone,9,'ds')
+	font_intestazione:End()		
+
+-- pulsante units
+	-- back
+	gl.Color(1,1,1,1)
+	gl.Texture(icona_unitsmenu)	-- definire icona ######################################################################################################################
+	gl.TexRect(	Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu,Pos_y_mainmenu+posy_menuicone-4*interassey_menuicone,Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton,Pos_y_mainmenu+posy_menuicone+altezza_menubutton-4*interassey_menuicone)	
+	gl.Texture(false)	-- fine texture	
+	-- testo
+	font_intestazione:SetTextColor(1, 1, 1, 1)
+	font_intestazione:Begin()
+	font_intestazione:Print("Hints", Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+10,Pos_y_mainmenu+posy_menuicone-4*interassey_menuicone,9,'ds')
+	font_intestazione:End()	
+
+	-- gui shader	
+	if (WG['guishader_api'] ~= nil) then
+	WG['guishader_api'].InsertRect( posx_menu,posy_menu, posx_menu+larghezza_diarymenu, posy_menu+altezza_header + altezza_content,'WMRTS_diary_shad')
+	end
 
 end -- if diarymenu_attivo	
 end --drawscreen
