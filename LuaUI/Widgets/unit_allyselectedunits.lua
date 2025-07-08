@@ -74,7 +74,7 @@ local showAlly = true 		--also show allies (besides coop)
 local useHotColor = false --use RED for all hot units, if false use playerColor starting with transparency
 local minZlibSize = 130  --minimum size threshold of msg to use zlib (msg smaller than this will not be compressed before sending)
 local updateInt = 0.1  --seconds for the ::update loop -- just controls isSpec check interval
-local circleDivsCoop = 32  --nice circle
+local circleDivsCoop = 8 --32  --nice circle
 local circleDivsAlly = 5  --aka pentagon
 local selectionDrawScaleFactor = 1.1
 
@@ -448,7 +448,7 @@ end
 function DrawSelectedUnits()
 	glDepthTest(false)
 	glColor(0.0, 1.0, 0.0, 1.0 )
-	glLineWidth( 2 )
+	glLineWidth( 1.5 )
 	
 	local now = spGetGameSeconds()
 	for playerId, selUnits in pairs( coopSelectedUnits ) do
