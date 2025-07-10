@@ -199,11 +199,18 @@ function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la 
 	if diarymenu_attivo and not Spring.IsGUIHidden() then
 			-- Maps button
 			return ((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton)) 
-			-- Advanced unit shading A DESTRA icona "ON/OFF"			
 			or
 			-- story button
 			((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone-interassey_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-interassey_menuicone)) 
-			-- Show grass on maps  A SINISTRA icona "ON/OFF"
+			or
+			-- hints button			
+			((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone-2*interassey_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-2*interassey_menuicone)) 
+			or
+			-- character button			
+			((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone-3*interassey_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-3*interassey_menuicone)) 
+			or
+			-- units button			
+			((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone-4*interassey_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-4*interassey_menuicone)) 
 	end --is gui hidden
 end
 
@@ -237,6 +244,7 @@ function widget:GameFrame(frame)
 		diaryData["pagtot_units"]= Spring.GetGameRulesParam("wmrts_diary_units")			
 	end
 end
+
 --------------------------------------
 -- GESTIONE DEI COMANDI SPRING RICEVUTI
 --------------------------------------	
@@ -285,7 +293,6 @@ function widget:KeyPress(key, mods, isRepeat)
 		end
 
 	end
-	
 return false
 end
 
