@@ -32,10 +32,6 @@ return {
     name = 'Fire Spirits Edition',
     desc = 'Alternative Spam, much laggier'
   },
-  {
-    name = 'WMRTS AI_LAND',
-    desc = 'War Machines RTS AI for land maps'
-  },
 }
 
 --------------------------------------------------------------------------------
