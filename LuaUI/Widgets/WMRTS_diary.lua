@@ -91,11 +91,11 @@ local button_close					= "LuaUI/Images/menu/diary/menu_close.png"
 local icona_diarymenu				= "LuaUI/Images/menu/diary/menu_diary_icon.png"
 
 -- definizione delle immagini dei pulsanti
-local button_mapmenu			= "LuaUI/Images/menu/diary/header_menu_bkgnd.png" -- ################## DEFINIRE IMMAGINE ####################
-local button_storymenu			= "LuaUI/Images/menu/diary/header_menu_bkgnd.png" -- ################## DEFINIRE IMMAGINE ####################
-local button_hintsmenu			= "LuaUI/Images/menu/diary/header_menu_bkgnd.png" -- ################## DEFINIRE IMMAGINE ####################
-local button_charmenu			= "LuaUI/Images/menu/diary/header_menu_bkgnd.png" -- ################## DEFINIRE IMMAGINE ####################
-local button_unitsmenu			= "LuaUI/Images/menu/diary/header_menu_bkgnd.png" -- ################## DEFINIRE IMMAGINE ####################
+local button_mapmenu			= "LuaUI/Images/menu/diary/buttondiary_maps_" -- ################## DEFINIRE IMMAGINE ####################
+local button_storymenu			= "LuaUI/Images/menu/diary/buttondiary_story_" -- ################## DEFINIRE IMMAGINE ####################
+local button_hintsmenu			= "LuaUI/Images/menu/diary/buttondiary_hint_" -- ################## DEFINIRE IMMAGINE ####################
+local button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_" -- ################## DEFINIRE IMMAGINE ####################
+local button_unitsmenu			= "LuaUI/Images/menu/diary/buttondiary_units_" -- ################## DEFINIRE IMMAGINE ####################
 
 -- impostazione dei fonts
 local font_intestazione				= gl.LoadFont("FreeSansBold.otf",14, 1.9, 40)
@@ -105,7 +105,7 @@ local font_generale					= gl.LoadFont("FreeSansBold.otf",12, 1.9, 40)
 local diaryData						= {}
 
 --------------------------------------
--- GESTIONE DEL CONTENUTO DEL DIARIO -- Ogni volta che viene chiamata questa funziona si setta l'immagine del contenuto del diario
+-- GESTIONE DEL CONTENUTO DEL DIARIO -- Ogni volta che viene chiamata questa funziona si setta l'immagine del contenuto del diario ############################ al momento non viene mai richiamata.
 --------------------------------------
 local function diarycontentmanagement()
 	if diarycategory == 0 then 			-- sto leggendo categoria mappe globali
@@ -120,7 +120,7 @@ local function diarycontentmanagement()
 	contentdiarymenu = "LuaUI/Images/menu/diary/wmrtsunits"..pagcur_units..".png"
 	end
 end
-
+	
 --------------------------------------
 -- FUNZIONE CHECK STATO OPZIONI, viene richiamata in diverse fasi dello script per controllare lo stato delle opzioni 
 --------------------------------------
@@ -252,23 +252,23 @@ function widget:TextCommand(command)
 -- apertura e chiusura del menu
 	if command == 'diary_WMRTS_maps' then -- se ricevo una news inerente alla mappa globale
 		new_maps = 1
-		if autopopup == 1 then diarymenu_attivo = true end -- se l'opzione autopopup è abilitata, apri automaticamente il diario
+		if autopopup == 1 then diarymenu_attivo == true end -- se l'opzione autopopup è abilitata, apri automaticamente il diario
 --		Inserire invio comando per "blinking" dell'icona diario nel minimenu		####################################
 	elseif command == 'diary_WMRTS_story' then -- se ricevo una news inerente alla storia
 		new_story = 1
-		if autopopup == 1 then diarymenu_attivo = true end 
+		if autopopup == 1 then diarymenu_attivo == true end 
 --		Inserire invio comando per "blinking" dell'icona diario nel minimenu		####################################
 	elseif command == 'diary_WMRTS_hints' then -- se ricevo una news inerente ai suggerimenti
 		new_hints = 1	
-		if autopopup == 1 then diarymenu_attivo = true end
+		if autopopup == 1 then diarymenu_attivo == true end
 --		Inserire invio comando per "blinking" dell'icona diario nel minimenu		####################################
 	elseif command == 'diary_WMRTS_character' then -- se ricevo una news inerente ai personaggi
 		new_character = 1		
-		if autopopup == 1 then diarymenu_attivo = true end
+		if autopopup == 1 then diarymenu_attivo == true end
 --		Inserire invio comando per "blinking" dell'icona diario nel minimenu		####################################
 	elseif command == 'diary_WMRTS_units' then -- se ricevo una news inerente alle unità
 		new_units = 1			
-		if autopopup == 1 then diarymenu_attivo = true end		
+		if autopopup == 1 then diarymenu_attivo == true end		
 --		Inserire invio comando per "blinking" dell'icona diario nel minimenu		####################################
 	elseif command == 'diary_WMRTS_open' then -- se ricevo il comando di aprire il diario (dal minimenu)
 		diarymenu_attivo = true
@@ -287,7 +287,7 @@ function widget:KeyPress(key, mods, isRepeat)
 			Spring.SendCommands("diary_WMRTS_close")			-- spengo il minipulsante menu del minimenu 
 			-- disabilito il guishader
 				if (WG['guishader_api'] ~= nil) then
-				WG['guishader_api'].RemoveRect('WMRTS_Guishader')
+				WG['guishader_api'].RemoveRect('WMRTS_diary_shad')
 				end	
 			return true
 		end
@@ -388,6 +388,12 @@ end
 		font_intestazione:Begin()
 		font_intestazione:Print("Hints", Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+10,Pos_y_mainmenu+posy_menuicone-4*interassey_menuicone,9,'ds')
 		font_intestazione:End()	
+
+	-- pulsante pagina precedente
+
+	
+	
+	-- pulsante pagina successiva
 
 	-- gui shader	
 		if (WG['guishader_api'] ~= nil) then
