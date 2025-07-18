@@ -50,34 +50,41 @@ local larghezza_diarymenu				= 800 								-- larghezza
 local altezza_diarymenu					= altezza_header+altezza_content	-- altezza ( h header + h contenuto)
 local altezza_menubutton				= 25								-- altezza pulsanti di navigazione (maps, units, character ecc)
 local larghezza_menubutton				= 76
-local posy_menuicone             	    = 366									-- altezza del primo pulsante a destra del menu diario rispetto al fondo del content
+local larghezza_avantidietro			= 25								-- larghezza pulsanti avanti / dietro
+local altezza_avantidietro				= 25								-- altezza pulsanti avanti / dietro
+local posy_menuicone             	    = 366								-- altezza del primo pulsante a destra del menu diario rispetto al fondo del content
 local interassey_menuicone		        = 25+10								-- distanza y tra le origini di due pulsanti consecutivi
 local autopopup							= 1									-- attiva l'apertura del diario quando si riceve il comando di nuova news
 local autopause							= 1									-- attiva la pausa quando si riceve il comando di nuova news
-local diarymenu_attivo					= true 							-- Indica se questo menu è aperto o meno
-local margine_sx_icona_diarymenu			= 20  	-- distanza dal margine sinistro del background e l'icona del menu
-local margine_dx_icone_diarymenu			= 10  	-- distanza dal bordo del diario alle icone di destra del menu
-local margine_su_icona_diarymenu			= -30 	-- distanza di quanto sborda l'immagine dal bordo superiore del background
+local diarymenu_attivo					= true 								-- Indica se questo menu è aperto o meno
+local margine_sx_icona_diarymenu		= 20  								-- distanza dal margine sinistro del background e l'icona del menu
+local margine_dx_icone_diarymenu		= 10  								-- distanza dal bordo del diario alle icone di destra del menu
+local margine_su_icona_diarymenu		= -30 								-- distanza di quanto sborda l'immagine dal bordo superiore del background
 local mousex, mousey				   										-- posizione x e y del mouse, usata per rilevare la sua posizione e far apparire il selettore
 local larghezza_icona_diary				= 40
 local altezza_icona_diary				= 40
+local posx_pulsavantidietro				= 700 								-- posizione x dei pulsanti avanti e dietro rispetto alla posizione del menu
+local posy_pulsavantidietro				= -10								-- posizione y dei pulsanti avanti e dietro rispetto alla posizione del menu
+local larghezza_pagxdiy					= 75								-- larghezza intermezzo tra pulsante precedente e successivo (dove c'è il testo pagina 1 di 20 ad esempio)
 
--- Variabili che definiscono le news, per categoria, visualizzabili
---local pagtot_maps				    = 0		-- n° news attive inerenti alle mappe
---local pagtot_story				= 0		-- n° news attive inerenti alla storia
---local pagtot_hints				= 0		-- n° news attive inerenti ai suggerimenti
---local pagtot_character			= 0		-- n° news attive inerenti ai personaggi
---local pagtot_units				= 0		-- n° news attive inerenti alle unità
-
--- variabile che definisce la categoria di news da mostrare (cambia al cliccare dei pulsanti) e le pagine di categoria fino ad un max stabilito dalle variabili pagtot_xxx
+-- categoria di news da mostrare (cambia al cliccare dei pulsanti) e le pagine di categoria fino ad un max stabilito dalle variabili pagtot_xxx
 local diarycategory				= 0		-- 0) visualizza le mappe, 1) la storia, 2) i suggerimenti, 3) i personaggi, 4) le unità
-local pagcur_maps				= 0		-- pagina corrente di lettura (variabile con i tasti avanti e dietro fino ad un max definito da pagtot_xxx
-local pagcur_story				= 0		-- pagina corrente di lettura (variabile con i tasti avanti e dietro fino ad un max definito da pagtot_xxx
-local pagcur_hints				= 0		-- pagina corrente di lettura (variabile con i tasti avanti e dietro fino ad un max definito da pagtot_xxx
-local pagcur_character			= 0		-- pagina corrente di lettura (variabile con i tasti avanti e dietro fino ad un max definito da pagtot_xxx
-local pagcur_units				= 0		-- pagina corrente di lettura (variabile con i tasti avanti e dietro fino ad un max definito da pagtot_xxx
 
--- variabili per "blinking" nuove news -- alla ricezione della rispettiva news la categoria lampeggia per indicare una nuova news: new_maps = 1 -> lampeggia news map
+-- Variabili che definiscono le pagine totali leggibili per ogni categoria
+local pagtot_maps				= 0		-- n° news attive inerenti alle mappe
+local pagtot_story				= 0		-- n° news attive inerenti alla storia
+local pagtot_hints				= 0		-- n° news attive inerenti ai suggerimenti
+local pagtot_character			= 0		-- n° news attive inerenti ai personaggi
+local pagtot_units				= 0		-- n° news attive inerenti alle unità
+
+-- pagine correnti in visualizzazione per categoria
+local pagcur_maps				= 0		-- pagina corrente di lettura (variabile con i tasti avanti e dietro fino ad un max definito da pagtot_xxx definito sopra
+local pagcur_story				= 0		-- pagina corrente di lettura (variabile con i tasti avanti e dietro fino ad un max definito da pagtot_xxx definito sopra
+local pagcur_hints				= 0		-- pagina corrente di lettura (variabile con i tasti avanti e dietro fino ad un max definito da pagtot_xxx definito sopra
+local pagcur_character			= 0		-- pagina corrente di lettura (variabile con i tasti avanti e dietro fino ad un max definito da pagtot_xxx definito sopra
+local pagcur_units				= 0		-- pagina corrente di lettura (variabile con i tasti avanti e dietro fino ad un max definito da pagtot_xxx definito sopra
+
+-- variabili per "blinking" nuove news -- alla ricezione della rispettiva news il pulsante della categoria lampeggia per indicare una nuova news: new_maps = 1 -> lampeggia news map fino al suo click
 local new_maps				= 0
 local new_story				= 0
 local new_hints				= 0
@@ -90,12 +97,16 @@ local contentdiarymenu			= "LuaUI/Images/menu/diary/content_menu_bkgnd.png"  			
 local button_close					= "LuaUI/Images/menu/diary/menu_close.png"
 local icona_diarymenu				= "LuaUI/Images/menu/diary/menu_diary_icon.png"
 
--- definizione delle immagini dei pulsanti
+-- definizione delle immagini dei pulsanti di categoria
 local button_mapmenu			= "LuaUI/Images/menu/diary/buttondiary_maps_" -- ################## DEFINIRE IMMAGINE ####################
 local button_storymenu			= "LuaUI/Images/menu/diary/buttondiary_story_" -- ################## DEFINIRE IMMAGINE ####################
 local button_hintsmenu			= "LuaUI/Images/menu/diary/buttondiary_hint_" -- ################## DEFINIRE IMMAGINE ####################
 local button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_" -- ################## DEFINIRE IMMAGINE ####################
 local button_unitsmenu			= "LuaUI/Images/menu/diary/buttondiary_units_" -- ################## DEFINIRE IMMAGINE ####################
+
+-- definizione delle immagini dei pulsanti avanti e dietro
+local button_successiva			= "LuaUI/Images/menu/diary/successiva.png"
+local button_precedente			= "LuaUI/Images/menu/diary/precedente.png"
 
 -- impostazione dei fonts
 local font_intestazione				= gl.LoadFont("FreeSansBold.otf",14, 1.9, 40)
@@ -198,7 +209,8 @@ end
 function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la variabile graphicsmenu_attivo è true.....
 	if diarymenu_attivo and not Spring.IsGUIHidden() then
 			-- Maps button
-			return ((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton)) 
+			return 
+			((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton)) 
 			or
 			-- story button
 			((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone-interassey_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-interassey_menuicone)) 
@@ -211,9 +223,85 @@ function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la 
 			or
 			-- units button			
 			((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone-4*interassey_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-4*interassey_menuicone)) 
+			or
+			-- pagina precedente
+			((x >= Pos_x_mainmenu+posx_pulsavantidietro) and (x <= Pos_x_mainmenu+posx_pulsavantidietro+larghezza_avantidietro) and (y >= Pos_y_mainmenu-posy_pulsavantidietro) and (y <= Pos_y_mainmenu-posy_pulsavantidietro-altezza_avantidietro))
+			or
+			-- pagina successiva
+			((x >= Pos_x_mainmenu+posx_pulsavantidietro+75) and (x <= Pos_x_mainmenu+posx_pulsavantidietro+75+larghezza_avantidietro) and (y >= Pos_y_mainmenu-posy_pulsavantidietro) and (y <= Pos_y_mainmenu-posy_pulsavantidietro-altezza_avantidietro))
 	end --is gui hidden
 end
 
+--------------------------------------
+-- MOUSE PRESS BUTTONS 1 (SX)
+--------------------------------------
+function widget:MousePress(x, y, button)
+	if diarymenu_attivo and not Spring.IsGUIHidden() then
+	  if (Spring.GetGameSeconds() < 0.1) then
+		return false
+	  end
+		if button== 1 then 
+			if (widget:IsAbove(x, y)) then
+				-- clicco su Maps button	--------------------------------------------------------------------------------------------
+				if((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton)) then
+				new_maps = 0 -- resetto il blinking della categoria
+					if ((pagcur_maps == 0) and (pagtot_maps > 0)) then -- se la pagina della categoria selezionata = 0 (0 = no news di categoria) ma c'è almeno una pagina (pagtot_xxxx >0 ) inerente alla categoria, allora imposta la prima pagina di categoria
+					pagcur_maps = 1
+					end
+				diarycategory = 0 -- setto la categoria da mostrare su mappe 
+				return true
+				-- clicco su Story button	--------------------------------------------------------------------------------------------
+				elseif
+				((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone-interassey_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-interassey_menuicone)) then
+				new_story = 0 -- resetto il blinking della categoria			
+					if ((pagcur_story == 0) and (pagtot_story > 0)) then -- se la pagina della categoria selezionata = 0 (0 = no news di categoria) ma c'è almeno una pagina (pagtot_xxxx >0 ) inerente alla categoria, allora imposta la prima pagina di categoria
+					pagcur_story = 1
+					end				
+				diarycategory = 1 -- setto la categoria da mostrare su story 				
+				return true
+				-- clicco su hints button	--------------------------------------------------------------------------------------------		
+				elseif
+				((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone-2*interassey_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-2*interassey_menuicone)) then
+				new_hints = 0 -- resetto il blinking della categoria
+					if ((pagcur_hints == 0) and (pagtot_hints > 0)) then -- se la pagina della categoria selezionata = 0 (0 = no news di categoria) ma c'è almeno una pagina (pagtot_xxxx >0 ) inerente alla categoria, allora imposta la prima pagina di categoria
+					pagcur_hints = 1
+					end								
+				diarycategory = 2 -- setto la categoria da mostrare su hint 				
+				return true			
+				-- clicco su character button	--------------------------------------------------------------------------------------------
+				elseif
+				((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone-3*interassey_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-3*interassey_menuicone)) then
+				new_character = 0 -- resetto il blinking della categoria			
+					if ((pagcur_character == 0) and (pagtot_character > 0)) then -- se la pagina della categoria selezionata = 0 (0 = no news di categoria) ma c'è almeno una pagina (pagtot_xxxx >0 ) inerente alla categoria, allora imposta la prima pagina di categoria
+					pagcur_character = 1
+					end		
+				diarycategory = 3 -- setto la categoria da mostrare su character 				
+				return true		
+				-- clicco su units button	--------------------------------------------------------------------------------------------	
+				elseif
+				((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone-4*interassey_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-4*interassey_menuicone)) then
+				new_units = 0 -- resetto il blinking della categoria
+					if ((pagcur_units == 0) and (pagtot_units > 0)) then -- se la pagina della categoria selezionata = 0 (0 = no news di categoria) ma c'è almeno una pagina (pagtot_xxxx >0 ) inerente alla categoria, allora imposta la prima pagina di categoria
+					pagcur_units = 1
+					end		
+				diarycategory = 4 -- setto la categoria da mostrare su units 				
+				return true		
+				-- clicco su pagina precedente	--------------------------------------------------------------------------------------------	
+				elseif
+				((x >= Pos_x_mainmenu+posx_pulsavantidietro) and (x <= Pos_x_mainmenu+posx_pulsavantidietro+larghezza_avantidietro) and (y >= Pos_y_mainmenu-posy_pulsavantidietro) and (y <= Pos_y_mainmenu-posy_pulsavantidietro-altezza_avantidietro)) then
+-- ############## inserire istruzioni pagina precedente				
+				return true		
+				-- clicco su pagina successiva	--------------------------------------------------------------------------------------------	
+				elseif
+				((x >= Pos_x_mainmenu+posx_pulsavantidietro+75) and (x <= Pos_x_mainmenu+posx_pulsavantidietro+75+larghezza_avantidietro) and (y >= Pos_y_mainmenu-posy_pulsavantidietro) and (y <= Pos_y_mainmenu-posy_pulsavantidietro-altezza_avantidietro)) then
+-- ############## inserire istruzioni pagina successiva				
+				return true		
+				end
+			end
+		end
+	end 
+end
+			
 --------------------------------------
 -- GESTIONE TOOLTIP ------------------------------------------------------------------------------------------------ IMPLEMENTARE INSERENDO LE SPIEGAZIONI DEI PULSANTI ----------------------------
 --------------------------------------
@@ -228,7 +316,7 @@ function widget:GetTooltip(x, y) -- questa condizione è vera quando isAbove è 
 end
 
 --------------------------------------
--- RICEVO GLI "HINTS" DURANTE LA MISSIONE
+-- RICEVO LE INFORMAZIONI DURANTE LA MISSIONE SULLE PAGINE TOTALI DISPONIBILI
 --------------------------------------
 function widget:GameFrame(frame)
 	if frame%30 == 0 then
@@ -252,29 +340,29 @@ function widget:TextCommand(command)
 -- apertura e chiusura del menu
 	if command == 'diary_WMRTS_maps' then -- se ricevo una news inerente alla mappa globale
 		new_maps = 1
-		if autopopup == 1 then diarymenu_attivo == true end -- se l'opzione autopopup è abilitata, apri automaticamente il diario
+		if autopopup == 1 then diarymenu_attivo = true end -- se l'opzione autopopup è abilitata, apri automaticamente il diario
 --		Inserire invio comando per "blinking" dell'icona diario nel minimenu		####################################
 	elseif command == 'diary_WMRTS_story' then -- se ricevo una news inerente alla storia
 		new_story = 1
-		if autopopup == 1 then diarymenu_attivo == true end 
+		if autopopup == 1 then diarymenu_attivo = true end 
 --		Inserire invio comando per "blinking" dell'icona diario nel minimenu		####################################
 	elseif command == 'diary_WMRTS_hints' then -- se ricevo una news inerente ai suggerimenti
 		new_hints = 1	
-		if autopopup == 1 then diarymenu_attivo == true end
+		if autopopup == 1 then diarymenu_attivo = true end
 --		Inserire invio comando per "blinking" dell'icona diario nel minimenu		####################################
 	elseif command == 'diary_WMRTS_character' then -- se ricevo una news inerente ai personaggi
 		new_character = 1		
-		if autopopup == 1 then diarymenu_attivo == true end
+		if autopopup == 1 then diarymenu_attivo = true end
 --		Inserire invio comando per "blinking" dell'icona diario nel minimenu		####################################
 	elseif command == 'diary_WMRTS_units' then -- se ricevo una news inerente alle unità
 		new_units = 1			
-		if autopopup == 1 then diarymenu_attivo == true end		
+		if autopopup == 1 then diarymenu_attivo = true end		
 --		Inserire invio comando per "blinking" dell'icona diario nel minimenu		####################################
 	elseif command == 'diary_WMRTS_open' then -- se ricevo il comando di aprire il diario (dal minimenu)
 		diarymenu_attivo = true
 	elseif command == 'diary_WMRTS_close' then -- se ricevo il comando di chiudere il diario (dal minimenu)
 		diarymenu_attivo = false		
-	end
+	end	
 end
 
 --------------------------------------
@@ -344,7 +432,7 @@ end
 	-- pulsante story
 		-- back
 		gl.Color(1,1,1,1)
-		gl.Texture(button_storymenu)	-- definire icona ######################################################################################################################
+		gl.Texture(button_storymenu)	
 		gl.TexRect(	Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu,Pos_y_mainmenu+posy_menuicone-interassey_menuicone,Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton,Pos_y_mainmenu+posy_menuicone+altezza_menubutton-interassey_menuicone)	
 		gl.Texture(false)	-- fine texture	
 		-- testo
@@ -356,7 +444,7 @@ end
 	-- pulsante hints
 		-- back
 		gl.Color(1,1,1,1)
-		gl.Texture(button_hintsmenu)	-- definire icona ######################################################################################################################
+		gl.Texture(button_hintsmenu)	
 		gl.TexRect(	Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu,Pos_y_mainmenu+posy_menuicone-2*interassey_menuicone,Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton,Pos_y_mainmenu+posy_menuicone+altezza_menubutton-2*interassey_menuicone)	
 		gl.Texture(false)	-- fine texture	
 		-- testo
@@ -368,7 +456,7 @@ end
 	-- pulsante characters
 		-- back
 		gl.Color(1,1,1,1)
-		gl.Texture(button_charmenu)	-- definire icona ######################################################################################################################
+		gl.Texture(button_charmenu)	
 		gl.TexRect(	Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu,Pos_y_mainmenu+posy_menuicone-3*interassey_menuicone,Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton,Pos_y_mainmenu+posy_menuicone+altezza_menubutton-3*interassey_menuicone)	
 		gl.Texture(false)	-- fine texture	
 		-- testo
@@ -380,7 +468,7 @@ end
 	-- pulsante units
 		-- back
 		gl.Color(1,1,1,1)
-		gl.Texture(button_unitsmenu)	-- definire icona ######################################################################################################################
+		gl.Texture(button_unitsmenu)	
 		gl.TexRect(	Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu,Pos_y_mainmenu+posy_menuicone-4*interassey_menuicone,Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton,Pos_y_mainmenu+posy_menuicone+altezza_menubutton-4*interassey_menuicone)	
 		gl.Texture(false)	-- fine texture	
 		-- testo
@@ -390,10 +478,18 @@ end
 		font_intestazione:End()	
 
 	-- pulsante pagina precedente
-
-	
+	-- ########## da mostrare solo se la categoria corrente ha almeno 1 pagina ! ####################
+		gl.Color(1,1,1,1)
+		gl.Texture(button_precedente)	
+		gl.TexRect(	Pos_x_mainmenu+posx_pulsavantidietro,Pos_y_mainmenu-posy_pulsavantidietro,Pos_x_mainmenu+posx_pulsavantidietro+larghezza_avantidietro,Pos_y_mainmenu-posy_pulsavantidietro-altezza_avantidietro)	
+		gl.Texture(false)	-- fine texture	
 	
 	-- pulsante pagina successiva
+	-- ########## da mostrare solo se la categoria corrente ha almeno 1 pagina ! ####################
+		gl.Color(1,1,1,1)
+		gl.Texture(button_successiva)	
+		gl.TexRect(	Pos_x_mainmenu+posx_pulsavantidietro+larghezza_pagxdiy,Pos_y_mainmenu-posy_pulsavantidietro,Pos_x_mainmenu+posx_pulsavantidietro+larghezza_pagxdiy+larghezza_avantidietro,Pos_y_mainmenu-posy_pulsavantidietro-altezza_avantidietro)	
+		gl.Texture(false)	-- fine texture		
 
 	-- gui shader	
 		if (WG['guishader_api'] ~= nil) then
