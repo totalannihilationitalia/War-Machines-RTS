@@ -116,11 +116,12 @@ local font_generale					= gl.LoadFont("FreeSansBold.otf",12, 1.9, 40)
 local diaryData						= {}
 
 --------------------------------------
--- GESTIONE DEL CONTENUTO DEL DIARIO -- Ogni volta che viene chiamata questa funziona si setta l'immagine del contenuto del diario ############################ al momento non viene mai richiamata.
+-- GESTIONE DELLE CATEGORIE DEL DIARIO -- Ogni volta che viene chiamata questa funziona si setta la categoria del diario ############################ al momento non viene mai richiamata#################
 --------------------------------------
-local function diarycontentmanagement()
+local function diarycategorymanagement()
+		-- imposto la categoria del diario
 	if diarycategory == 0 then 			-- sto leggendo categoria mappe globali
-	contentdiarymenu = "LuaUI/Images/menu/diary/wmrtsmaps"..pagcur_maps..".png"
+	contentdiarymenu = "LuaUI/Images/menu/diary/wmrtsmaps"..pagcur_maps..".png" -- imposto l'immagine che sarà inizialmente "wmrtsmaps0.png"
 	elseif diarycategory == 1 then		-- sto leggendo categoria storia
 	contentdiarymenu = "LuaUI/Images/menu/diary/wmrtsstory"..pagcur_story..".png"
 	elseif diarycategory == 2 then		-- sto leggendo categoria suggerimenti
@@ -131,6 +132,42 @@ local function diarycontentmanagement()
 	contentdiarymenu = "LuaUI/Images/menu/diary/wmrtsunits"..pagcur_units..".png"
 	end
 end
+
+local function diarypagemanagementnext()
+		-- imposto la pagina successiva per categoria, funzione richiamata quanto si preme sul pulsante "pagina successiva"
+	if ((diarycategory == 0) and (pagcur_maps < pagtot_maps)) then -- se la categoria è mappe globali e la pagina è minore delle pagine totali, vai alla scheda successiva	
+		pagcur_maps = pagcur_maps+1
+		-- imposto la pagina successiva per categoria, funzione richiamata quanto si preme sul pulsante "pagina successiva"
+	elseif ((diarycategory == 1) and (pagcur_story < pagtot_story)) then -- se la categoria è storyboard e la pagina è minore delle pagine totali, vai alla scheda successiva	
+		pagcur_story = pagcur_story+1
+		-- imposto la pagina successiva per categoria, funzione richiamata quanto si preme sul pulsante "pagina successiva"
+	elseif ((diarycategory == 2) and (pagcur_hints < pagtot_hints)) then -- se la categoria è hint e la pagina è minore delle pagine totali, vai alla scheda successiva	
+		pagcur_hints = pagcur_hints+1	
+	-- imposto la pagina successiva per categoria, funzione richiamata quanto si preme sul pulsante "pagina successiva"
+	elseif ((diarycategory == 3) and (pagcur_character < pagtot_character)) then -- se la categoria è personaggi e la pagina è minore delle pagine totali, vai alla scheda successiva	
+		pagcur_character = pagcur_character+1	
+	-- imposto la pagina successiva per categoria, funzione richiamata quanto si preme sul pulsante "pagina successiva"
+	elseif ((diarycategory == 4) and (pagcur_units < pagtot_units)) then -- se la categoria è unità e la pagina è minore delle pagine totali, vai alla scheda successiva	
+		pagcur_units = pagcur_units+1		
+	end
+	
+local function diarypagemanagementprevious()
+		-- imposto la pagina precedente per categoria, funzione richiamata quanto si preme sul pulsante "pagina precedente"
+	if ((diarycategory == 0) and (pagcur_maps > 1)) then -- se la categoria è mappe globali e la pagina è minore delle pagine totali, vai alla scheda precedente	
+		pagcur_maps = pagcur_maps-1
+		-- imposto la pagina precedente per categoria, funzione richiamata quanto si preme sul pulsante "pagina precedente"
+	elseif ((diarycategory == 1) and (pagcur_story > 1)) then -- se la categoria è storyboard e la pagina è minore delle pagine totali, vai alla scheda precedente	
+		pagcur_story = pagcur_story-1
+		-- imposto la pagina precedente per categoria, funzione richiamata quanto si preme sul pulsante "pagina precedente"
+	elseif ((diarycategory == 2) and (pagcur_hints > 1)) then -- se la categoria è hint e la pagina è minore delle pagine totali, vai alla scheda precedente	
+		pagcur_hints = pagcur_hints-1	
+	-- imposto la pagina precedente per categoria, funzione richiamata quanto si preme sul pulsante "pagina precedente"
+	elseif ((diarycategory == 3) and (pagcur_character > 1)) then -- se la categoria è personaggi e la pagina è minore delle pagine totali, vai alla scheda precedente	
+		pagcur_character = pagcur_character-1	
+	-- imposto la pagina precedente per categoria, funzione richiamata quanto si preme sul pulsante "pagina precedente"
+	elseif ((diarycategory == 4) and (pagcur_units > 1)) then -- se la categoria è unità e la pagina è minore delle pagine totali, vai alla scheda precedente	
+		pagcur_units = pagcur_units-1		
+	end	
 	
 --------------------------------------
 -- FUNZIONE CHECK STATO OPZIONI, viene richiamata in diverse fasi dello script per controllare lo stato delle opzioni 
@@ -249,6 +286,7 @@ function widget:MousePress(x, y, button)
 					pagcur_maps = 1
 					end
 				diarycategory = 0 -- setto la categoria da mostrare su mappe 
+				diarycategorymanagement() -- chiamo la funzione per settare le immagini del diario
 				return true
 				-- clicco su Story button	--------------------------------------------------------------------------------------------
 				elseif
@@ -257,7 +295,8 @@ function widget:MousePress(x, y, button)
 					if ((pagcur_story == 0) and (pagtot_story > 0)) then -- se la pagina della categoria selezionata = 0 (0 = no news di categoria) ma c'è almeno una pagina (pagtot_xxxx >0 ) inerente alla categoria, allora imposta la prima pagina di categoria
 					pagcur_story = 1
 					end				
-				diarycategory = 1 -- setto la categoria da mostrare su story 				
+				diarycategory = 1 -- setto la categoria da mostrare su story 	
+				diarycategorymanagement() -- chiamo la funzione per settare le immagini del diario				
 				return true
 				-- clicco su hints button	--------------------------------------------------------------------------------------------		
 				elseif
@@ -266,7 +305,8 @@ function widget:MousePress(x, y, button)
 					if ((pagcur_hints == 0) and (pagtot_hints > 0)) then -- se la pagina della categoria selezionata = 0 (0 = no news di categoria) ma c'è almeno una pagina (pagtot_xxxx >0 ) inerente alla categoria, allora imposta la prima pagina di categoria
 					pagcur_hints = 1
 					end								
-				diarycategory = 2 -- setto la categoria da mostrare su hint 				
+				diarycategory = 2 -- setto la categoria da mostrare su hint 	
+				diarycategorymanagement() -- chiamo la funzione per settare le immagini del diario				
 				return true			
 				-- clicco su character button	--------------------------------------------------------------------------------------------
 				elseif
@@ -275,7 +315,8 @@ function widget:MousePress(x, y, button)
 					if ((pagcur_character == 0) and (pagtot_character > 0)) then -- se la pagina della categoria selezionata = 0 (0 = no news di categoria) ma c'è almeno una pagina (pagtot_xxxx >0 ) inerente alla categoria, allora imposta la prima pagina di categoria
 					pagcur_character = 1
 					end		
-				diarycategory = 3 -- setto la categoria da mostrare su character 				
+				diarycategory = 3 -- setto la categoria da mostrare su character 	
+				diarycategorymanagement() -- chiamo la funzione per settare le immagini del diario				
 				return true		
 				-- clicco su units button	--------------------------------------------------------------------------------------------	
 				elseif
@@ -284,7 +325,8 @@ function widget:MousePress(x, y, button)
 					if ((pagcur_units == 0) and (pagtot_units > 0)) then -- se la pagina della categoria selezionata = 0 (0 = no news di categoria) ma c'è almeno una pagina (pagtot_xxxx >0 ) inerente alla categoria, allora imposta la prima pagina di categoria
 					pagcur_units = 1
 					end		
-				diarycategory = 4 -- setto la categoria da mostrare su units 				
+				diarycategory = 4 -- setto la categoria da mostrare su units 			
+				diarycategorymanagement() -- chiamo la funzione per settare le immagini del diario				
 				return true		
 				-- clicco su pagina precedente	--------------------------------------------------------------------------------------------	
 				elseif
@@ -294,7 +336,7 @@ function widget:MousePress(x, y, button)
 				-- clicco su pagina successiva	--------------------------------------------------------------------------------------------	
 				elseif
 				((x >= Pos_x_mainmenu+posx_pulsavantidietro+75) and (x <= Pos_x_mainmenu+posx_pulsavantidietro+75+larghezza_avantidietro) and (y >= Pos_y_mainmenu-posy_pulsavantidietro) and (y <= Pos_y_mainmenu-posy_pulsavantidietro-altezza_avantidietro)) then
--- ############## inserire istruzioni pagina successiva				
+					diarypagemanagementnext() -- esegui funzione per pagina successiva
 				return true		
 				end
 			end
