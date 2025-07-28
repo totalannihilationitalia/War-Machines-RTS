@@ -98,11 +98,11 @@ local button_close					= "LuaUI/Images/menu/diary/menu_close.png"
 local icona_diarymenu				= "LuaUI/Images/menu/diary/menu_diary_icon.png"
 
 -- definizione delle immagini dei pulsanti di categoria
-local button_mapmenu			= "LuaUI/Images/menu/diary/buttondiary_maps_" -- ################## DEFINIRE IMMAGINE ####################
-local button_storymenu			= "LuaUI/Images/menu/diary/buttondiary_story_" -- ################## DEFINIRE IMMAGINE ####################
-local button_hintsmenu			= "LuaUI/Images/menu/diary/buttondiary_hint_" -- ################## DEFINIRE IMMAGINE ####################
-local button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_" -- ################## DEFINIRE IMMAGINE ####################
-local button_unitsmenu			= "LuaUI/Images/menu/diary/buttondiary_units_" -- ################## DEFINIRE IMMAGINE ####################
+local button_mapmenu			= "LuaUI/Images/menu/diary/buttondiary_maps_off.png" -- ################## DEFINIRE IMMAGINE ####################
+local button_storymenu			= "LuaUI/Images/menu/diary/buttondiary_story_off.png" -- ################## DEFINIRE IMMAGINE ####################
+local button_hintsmenu			= "LuaUI/Images/menu/diary/buttondiary_hint_off.png" -- ################## DEFINIRE IMMAGINE ####################
+local button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_off.png" -- ################## DEFINIRE IMMAGINE ####################
+local button_unitsmenu			= "LuaUI/Images/menu/diary/buttondiary_units_off.png" -- ################## DEFINIRE IMMAGINE ####################
 
 -- definizione delle immagini dei pulsanti avanti e dietro
 local button_successiva			= "LuaUI/Images/menu/diary/successiva.png"
@@ -150,6 +150,7 @@ local function diarypagemanagementnext()
 	elseif ((diarycategory == 4) and (pagcur_units < pagtot_units)) then -- se la categoria è unità e la pagina è minore delle pagine totali, vai alla scheda successiva	
 		pagcur_units = pagcur_units+1		
 	end
+end
 	
 local function diarypagemanagementprevious()
 		-- imposto la pagina precedente per categoria, funzione richiamata quanto si preme sul pulsante "pagina precedente"
@@ -168,6 +169,7 @@ local function diarypagemanagementprevious()
 	elseif ((diarycategory == 4) and (pagcur_units > 1)) then -- se la categoria è unità e la pagina è minore delle pagine totali, vai alla scheda precedente	
 		pagcur_units = pagcur_units-1		
 	end	
+end
 	
 --------------------------------------
 -- FUNZIONE CHECK STATO OPZIONI, viene richiamata in diverse fasi dello script per controllare lo stato delle opzioni 
@@ -458,7 +460,7 @@ end
 		gl.Texture(false)	-- fine texture	
 		
 	-- pulsante mappe
-		if diaryData["pagtot_maps"] ~= nil then --disegna la riga dell'obiettivo 1	
+		if pagtot_maps > 0 then --disegna la riga dell'obiettivo 1	
 			-- back
 			gl.Color(1,1,1,1)
 			gl.Texture(button_mapmenu)	-- definire icona ######################################################################################################################
@@ -535,7 +537,7 @@ end
 
 	-- gui shader	
 		if (WG['guishader_api'] ~= nil) then
-		WG['guishader_api'].InsertRect( posx_menu,posy_menu, posx_menu+larghezza_diarymenu, posy_menu+altezza_header + altezza_content,'WMRTS_diary_shad')
+		WG['guishader_api'].InsertRect( Pos_x_mainmenu,Pos_y_mainmenu, Pos_x_mainmenu+larghezza_diarymenu, Pos_y_mainmenu+altezza_header + altezza_content,'WMRTS_diary_shad')
 		end
 
 	end -- if diarymenu_attivo	
