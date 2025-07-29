@@ -66,16 +66,21 @@ local altezza_icona_diary				= 40
 local posx_pulsavantidietro				= 700 								-- posizione x dei pulsanti avanti e dietro rispetto alla posizione del menu
 local posy_pulsavantidietro				= -10								-- posizione y dei pulsanti avanti e dietro rispetto alla posizione del menu
 local larghezza_pagxdiy					= 75								-- larghezza intermezzo tra pulsante precedente e successivo (dove c'è il testo pagina 1 di 20 ad esempio)
+-- variabili del selettore pulsanti categoria
+local selettore_visibile = true
+local selettore_buttons_visibile = false				
+local posy_selettore					= 0									-- verrà determinata quando il mouse ci passa sopra i pulsanti di categoria (nella funzione "sempre")
+local posx_selettore					= 0									-- verrà determinata quando il mouse ci passa sopra i pulsanti di categoria (nella funzione "sempre")
 
 -- categoria di news da mostrare (cambia al cliccare dei pulsanti) e le pagine di categoria fino ad un max stabilito dalle variabili pagtot_xxx
 local diarycategory				= 0		-- 0) visualizza le mappe, 1) la storia, 2) i suggerimenti, 3) i personaggi, 4) le unità
 
 -- Variabili che definiscono le pagine totali leggibili per ogni categoria
-local pagtot_maps				= 0		-- n° news attive inerenti alle mappe
-local pagtot_story				= 0		-- n° news attive inerenti alla storia
-local pagtot_hints				= 0		-- n° news attive inerenti ai suggerimenti
-local pagtot_character			= 0		-- n° news attive inerenti ai personaggi
-local pagtot_units				= 0		-- n° news attive inerenti alle unità
+local pagtot_maps				= 0		-- n° news attive inerenti alle mappe, parametro ricevuto dalla missione
+local pagtot_story				= 0		-- n° news attive inerenti alla storia, parametro ricevuto dalla missione
+local pagtot_hints				= 0		-- n° news attive inerenti ai suggerimenti, parametro ricevuto dalla missione
+local pagtot_character			= 0		-- n° news attive inerenti ai personaggi, parametro ricevuto dalla missione
+local pagtot_units				= 0		-- n° news attive inerenti alle unità, parametro ricevuto dalla missione
 
 -- pagine correnti in visualizzazione per categoria
 local pagcur_maps				= 0		-- pagina corrente di lettura (variabile con i tasti avanti e dietro fino ad un max definito da pagtot_xxx definito sopra
@@ -93,17 +98,17 @@ local new_units				= 0
 
 -- definizioni immagini bottoni e background
 local headerdiarymenu 			= "LuaUI/Images/menu/diary/header_menu_bkgnd.png"
-local contentdiarymenu			= "LuaUI/Images/menu/diary/content_menu_bkgnd.png"  				-- assumerà il valore di una delle news sotto, a seconda di cosa si sta guardando
+local contentdiarymenu			= "LuaUI/Images/menu/diary/content_menu_bkgnd.png"  				-- assumerà il valore di una delle news sotto, a seconda della categoria e della pagina che si sta guardando
 local button_close					= "LuaUI/Images/menu/diary/menu_close.png"
 local icona_diarymenu				= "LuaUI/Images/menu/diary/menu_diary_icon.png"
 
 -- definizione delle immagini dei pulsanti di categoria
-local button_mapmenu			= "LuaUI/Images/menu/diary/buttondiary_maps_off.png" -- ################## DEFINIRE IMMAGINE ####################
-local button_storymenu			= "LuaUI/Images/menu/diary/buttondiary_story_off.png" -- ################## DEFINIRE IMMAGINE ####################
-local button_hintsmenu			= "LuaUI/Images/menu/diary/buttondiary_hint_off.png" -- ################## DEFINIRE IMMAGINE ####################
-local button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_off.png" -- ################## DEFINIRE IMMAGINE ####################
-local button_unitsmenu			= "LuaUI/Images/menu/diary/buttondiary_units_off.png" -- ################## DEFINIRE IMMAGINE ####################
-
+local button_mapmenu			= "LuaUI/Images/menu/diary/buttondiary_maps_off.png"
+local button_storymenu			= "LuaUI/Images/menu/diary/buttondiary_story_off.png" 
+local button_hintsmenu			= "LuaUI/Images/menu/diary/buttondiary_hint_off.png" 
+local button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_off.png" 
+local button_unitsmenu			= "LuaUI/Images/menu/diary/buttondiary_units_off.png" 
+local button_catover			= "LuaUI/Images/menu/diary/buttondiary_over.png" 
 -- definizione delle immagini dei pulsanti avanti e dietro
 local button_successiva			= "LuaUI/Images/menu/diary/successiva.png"
 local button_precedente			= "LuaUI/Images/menu/diary/precedente.png"
@@ -122,33 +127,68 @@ local function diarycategorymanagement()
 		-- imposto la categoria del diario
 	if diarycategory == 0 then 			-- sto leggendo categoria mappe globali
 	contentdiarymenu = "LuaUI/Images/menu/diary/wmrtsmaps"..pagcur_maps..".png" -- imposto l'immagine che sarà inizialmente "wmrtsmaps0.png"
+	-- imposto lo stato ON/OFF dei bottoni
+	button_mapmenu			= "LuaUI/Images/menu/diary/buttondiary_maps_on.png"
+	button_storymenu		= "LuaUI/Images/menu/diary/buttondiary_story_off.png" 
+	button_hintsmenu		= "LuaUI/Images/menu/diary/buttondiary_hint_off.png" 
+	button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_off.png" 
+	button_unitsmenu		= "LuaUI/Images/menu/diary/buttondiary_units_off.png" 
 	elseif diarycategory == 1 then		-- sto leggendo categoria storia
 	contentdiarymenu = "LuaUI/Images/menu/diary/wmrtsstory"..pagcur_story..".png"
+	-- imposto lo stato ON/OFF dei bottoni	
+	button_mapmenu			= "LuaUI/Images/menu/diary/buttondiary_maps_off.png"
+	button_storymenu		= "LuaUI/Images/menu/diary/buttondiary_story_on.png" 
+	button_hintsmenu		= "LuaUI/Images/menu/diary/buttondiary_hint_off.png" 
+	button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_off.png" 
+	button_unitsmenu		= "LuaUI/Images/menu/diary/buttondiary_units_off.png" 	
 	elseif diarycategory == 2 then		-- sto leggendo categoria suggerimenti
 	contentdiarymenu = "LuaUI/Images/menu/diary/wmrtshints"..pagcur_hints..".png"
+	-- imposto lo stato ON/OFF dei bottoni	
+	button_mapmenu			= "LuaUI/Images/menu/diary/buttondiary_maps_off.png"
+	button_storymenu		= "LuaUI/Images/menu/diary/buttondiary_story_off.png" 
+	button_hintsmenu		= "LuaUI/Images/menu/diary/buttondiary_hint_on.png" 
+	button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_off.png" 
+	button_unitsmenu		= "LuaUI/Images/menu/diary/buttondiary_units_off.png" 	
 	elseif diarycategory == 3 then		-- sto leggendo categoria personaggi
 	contentdiarymenu = "LuaUI/Images/menu/diary/wmrtschara"..pagcur_character..".png"
+	-- imposto lo stato ON/OFF dei bottoni	
+	button_mapmenu			= "LuaUI/Images/menu/diary/buttondiary_maps_off.png"
+	button_storymenu		= "LuaUI/Images/menu/diary/buttondiary_story_off.png" 
+	button_hintsmenu		= "LuaUI/Images/menu/diary/buttondiary_hint_off.png" 
+	button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_on.png" 
+	button_unitsmenu		= "LuaUI/Images/menu/diary/buttondiary_units_off.png" 	
 	elseif diarycategory == 4 then		-- sto leggendo categoria unità
 	contentdiarymenu = "LuaUI/Images/menu/diary/wmrtsunits"..pagcur_units..".png"
+	-- imposto lo stato ON/OFF dei bottoni	
+	button_mapmenu			= "LuaUI/Images/menu/diary/buttondiary_maps_off.png"
+	button_storymenu		= "LuaUI/Images/menu/diary/buttondiary_story_off.png" 
+	button_hintsmenu		= "LuaUI/Images/menu/diary/buttondiary_hint_off.png" 
+	button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_off.png" 
+	button_unitsmenu		= "LuaUI/Images/menu/diary/buttondiary_units_on.png" 	
 	end
 end
 
-local function diarypagemanagementnext()
+local function diarypagemanagementnext() -- in questa funzione imposto il contenuto in funzione della categoria selezionata e della pagina che si stà visualizzando
 		-- imposto la pagina successiva per categoria, funzione richiamata quanto si preme sul pulsante "pagina successiva"
 	if ((diarycategory == 0) and (pagcur_maps < pagtot_maps)) then -- se la categoria è mappe globali e la pagina è minore delle pagine totali, vai alla scheda successiva	
 		pagcur_maps = pagcur_maps+1
+		contentdiarymenu = "LuaUI/Images/menu/diary/contents/diarycontent_map_"..pagcur_maps..".png"  			
 		-- imposto la pagina successiva per categoria, funzione richiamata quanto si preme sul pulsante "pagina successiva"
 	elseif ((diarycategory == 1) and (pagcur_story < pagtot_story)) then -- se la categoria è storyboard e la pagina è minore delle pagine totali, vai alla scheda successiva	
 		pagcur_story = pagcur_story+1
+		contentdiarymenu = "LuaUI/Images/menu/diary/contents/diarycontent_story_"..pagcur_story..".png"  				
 		-- imposto la pagina successiva per categoria, funzione richiamata quanto si preme sul pulsante "pagina successiva"
 	elseif ((diarycategory == 2) and (pagcur_hints < pagtot_hints)) then -- se la categoria è hint e la pagina è minore delle pagine totali, vai alla scheda successiva	
 		pagcur_hints = pagcur_hints+1	
+		contentdiarymenu = "LuaUI/Images/menu/diary/contents/diarycontent_hints_"..pagcur_hints..".png"  				
 	-- imposto la pagina successiva per categoria, funzione richiamata quanto si preme sul pulsante "pagina successiva"
 	elseif ((diarycategory == 3) and (pagcur_character < pagtot_character)) then -- se la categoria è personaggi e la pagina è minore delle pagine totali, vai alla scheda successiva	
 		pagcur_character = pagcur_character+1	
+		contentdiarymenu = "LuaUI/Images/menu/diary/contents/diarycontent_character_"..pagcur_character..".png"  			
 	-- imposto la pagina successiva per categoria, funzione richiamata quanto si preme sul pulsante "pagina successiva"
 	elseif ((diarycategory == 4) and (pagcur_units < pagtot_units)) then -- se la categoria è unità e la pagina è minore delle pagine totali, vai alla scheda successiva	
-		pagcur_units = pagcur_units+1		
+		pagcur_units = pagcur_units+1	
+		contentdiarymenu = "LuaUI/Images/menu/diary/contents/diarycontent_units_"..pagcur_units..".png"  					
 	end
 end
 	
@@ -156,18 +196,23 @@ local function diarypagemanagementprevious()
 		-- imposto la pagina precedente per categoria, funzione richiamata quanto si preme sul pulsante "pagina precedente"
 	if ((diarycategory == 0) and (pagcur_maps > 1)) then -- se la categoria è mappe globali e la pagina è minore delle pagine totali, vai alla scheda precedente	
 		pagcur_maps = pagcur_maps-1
+		contentdiarymenu = "LuaUI/Images/menu/diary/contents/diarycontent_map_"..pagcur_maps..".png"  					
 		-- imposto la pagina precedente per categoria, funzione richiamata quanto si preme sul pulsante "pagina precedente"
 	elseif ((diarycategory == 1) and (pagcur_story > 1)) then -- se la categoria è storyboard e la pagina è minore delle pagine totali, vai alla scheda precedente	
 		pagcur_story = pagcur_story-1
+		contentdiarymenu = "LuaUI/Images/menu/diary/contents/diarycontent_story_"..pagcur_story..".png"  					
 		-- imposto la pagina precedente per categoria, funzione richiamata quanto si preme sul pulsante "pagina precedente"
 	elseif ((diarycategory == 2) and (pagcur_hints > 1)) then -- se la categoria è hint e la pagina è minore delle pagine totali, vai alla scheda precedente	
 		pagcur_hints = pagcur_hints-1	
+		contentdiarymenu = "LuaUI/Images/menu/diary/contents/diarycontent_hints_"..pagcur_hints..".png"  			
 	-- imposto la pagina precedente per categoria, funzione richiamata quanto si preme sul pulsante "pagina precedente"
 	elseif ((diarycategory == 3) and (pagcur_character > 1)) then -- se la categoria è personaggi e la pagina è minore delle pagine totali, vai alla scheda precedente	
 		pagcur_character = pagcur_character-1	
+		contentdiarymenu = "LuaUI/Images/menu/diary/contents/diarycontent_character_"..pagcur_character..".png"  			
 	-- imposto la pagina precedente per categoria, funzione richiamata quanto si preme sul pulsante "pagina precedente"
 	elseif ((diarycategory == 4) and (pagcur_units > 1)) then -- se la categoria è unità e la pagina è minore delle pagine totali, vai alla scheda precedente	
-		pagcur_units = pagcur_units-1		
+		pagcur_units = pagcur_units-1	
+		contentdiarymenu = "LuaUI/Images/menu/diary/contents/diarycontent_units_"..pagcur_units..".png"  			
 	end	
 end
 	
@@ -230,17 +275,39 @@ end
 function widget:Update(dt)
 mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di aggiornamento
 	if diarymenu_attivo and not Spring.IsGUIHidden() then
---[[		if ((mousex >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (mousex <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (mousey >= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi) and (mousey <= Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi+altezza_icona_opzioni)) then
-					posy_selettore = Pos_y_mainmenu +posy_riga7 - distanzay_icone_testi - 2
-					posx_selettore = Pos_x_mainmenu+ margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone-20
+	-- Maps button
+		if ((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton))  then
+					posx_selettore = Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu
+					posy_selettore = Pos_y_mainmenu+posy_menuicone
 					selettore_visibile = true
 					selettore_buttons_visibile = false	
-		elseif xxxx then
-		
-		end
-]]--		
-	end
-end
+	-- Story button					
+		elseif ((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone-interassey_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-interassey_menuicone))   then
+					posx_selettore = Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu
+					posy_selettore = Pos_y_mainmenu+posy_menuicone-interassey_menuicone
+					selettore_visibile = true
+					selettore_buttons_visibile = false	
+	-- hints button					
+		elseif ((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone-2*interassey_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-2*interassey_menuicone))   then
+					posx_selettore = Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu
+					posy_selettore = Pos_y_mainmenu+posy_menuicone-2*interassey_menuicone
+					selettore_visibile = true
+					selettore_buttons_visibile = false	
+	-- character button					
+		elseif ((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone-3*interassey_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-3*interassey_menuicone))   then
+					posx_selettore = Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu
+					posy_selettore = Pos_y_mainmenu+posy_menuicone-3*interassey_menuicone
+					selettore_visibile = true
+					selettore_buttons_visibile = false	
+	-- units button					
+		elseif ((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone-4*interassey_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-4*interassey_menuicone))   then		
+					posx_selettore = Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu
+					posy_selettore = Pos_y_mainmenu+posy_menuicone-4*interassey_menuicone
+					selettore_visibile = true
+					selettore_buttons_visibile = false	
+		end -- condizioni if mouse etc
+	end -- diary menu attivo etc
+end -- function update
 
 --------------------------------------
 -- MOUSE IS OVER BUTTONS 
@@ -333,7 +400,7 @@ function widget:MousePress(x, y, button)
 				-- clicco su pagina precedente	--------------------------------------------------------------------------------------------	
 				elseif
 				((x >= Pos_x_mainmenu+posx_pulsavantidietro) and (x <= Pos_x_mainmenu+posx_pulsavantidietro+larghezza_avantidietro) and (y >= Pos_y_mainmenu-posy_pulsavantidietro) and (y <= Pos_y_mainmenu-posy_pulsavantidietro-altezza_avantidietro)) then
--- ############## inserire istruzioni pagina precedente				
+					diarypagemanagementprevious() -- esegui funzione per pagina precedente
 				return true		
 				-- clicco su pagina successiva	--------------------------------------------------------------------------------------------	
 				elseif
