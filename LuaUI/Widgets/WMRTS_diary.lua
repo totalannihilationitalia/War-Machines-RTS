@@ -99,8 +99,8 @@ local new_units				= 0
 -- definizioni immagini bottoni e background
 local headerdiarymenu 			= "LuaUI/Images/menu/diary/header_menu_bkgnd.png"
 local contentdiarymenu			= "LuaUI/Images/menu/diary/content_menu_bkgnd.png"  				-- assumerà il valore di una delle news sotto, a seconda della categoria e della pagina che si sta guardando
-local button_close					= "LuaUI/Images/menu/diary/menu_close.png"
-local icona_diarymenu				= "LuaUI/Images/menu/diary/menu_diary_icon.png"
+local button_close				= "LuaUI/Images/menu/diary/menu_close.png"
+local icona_diarymenu			= "LuaUI/Images/menu/diary/menu_diary_icon.png"
 
 -- definizione delle immagini dei pulsanti di categoria
 local button_mapmenu			= "LuaUI/Images/menu/diary/buttondiary_maps_off.png"
