@@ -276,31 +276,31 @@ function widget:Update(dt)
 mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di aggiornamento
 	if diarymenu_attivo and not Spring.IsGUIHidden() then
 	-- Maps button
-		if ((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton))  then
+		if ((mousex >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (mousex <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (mousey >= Pos_y_mainmenu+posy_menuicone) and (mousey <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton))  then
 					posx_selettore = Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu
 					posy_selettore = Pos_y_mainmenu+posy_menuicone
 					selettore_visibile = true
 					selettore_buttons_visibile = false	
 	-- Story button					
-		elseif ((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone-interassey_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-interassey_menuicone))   then
+		elseif ((mousex >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (mousex <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (mousey >= Pos_y_mainmenu+posy_menuicone-interassey_menuicone) and (mousey <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-interassey_menuicone))   then
 					posx_selettore = Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu
 					posy_selettore = Pos_y_mainmenu+posy_menuicone-interassey_menuicone
 					selettore_visibile = true
 					selettore_buttons_visibile = false	
 	-- hints button					
-		elseif ((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone-2*interassey_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-2*interassey_menuicone))   then
+		elseif ((mousex >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (mousex <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (mousey >= Pos_y_mainmenu+posy_menuicone-2*interassey_menuicone) and (mousey <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-2*interassey_menuicone))   then
 					posx_selettore = Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu
 					posy_selettore = Pos_y_mainmenu+posy_menuicone-2*interassey_menuicone
 					selettore_visibile = true
 					selettore_buttons_visibile = false	
 	-- character button					
-		elseif ((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone-3*interassey_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-3*interassey_menuicone))   then
+		elseif ((mousex >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (mousex <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (mousey >= Pos_y_mainmenu+posy_menuicone-3*interassey_menuicone) and (mousey <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-3*interassey_menuicone))   then
 					posx_selettore = Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu
 					posy_selettore = Pos_y_mainmenu+posy_menuicone-3*interassey_menuicone
 					selettore_visibile = true
 					selettore_buttons_visibile = false	
 	-- units button					
-		elseif ((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone-4*interassey_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-4*interassey_menuicone))   then		
+		elseif ((mousex >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (mousex <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (mousey >= Pos_y_mainmenu+posy_menuicone-4*interassey_menuicone) and (mousey <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-4*interassey_menuicone))   then		
 					posx_selettore = Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu
 					posy_selettore = Pos_y_mainmenu+posy_menuicone-4*interassey_menuicone
 					selettore_visibile = true
@@ -431,7 +431,7 @@ end
 --------------------------------------
 function widget:GameFrame(frame)
 	if frame%30 == 0 then
--- ricevo il numero globale della mappa
+-- ricevo il numero globale della mappa  ######################################### tramutare queste da tabella diarYdata a variabili
 		diaryData["pagtot_maps"] 	= Spring.GetGameRulesParam("wmrts_diary_maps")	
 -- ricevo il numero globale dello storyboard
 		diaryData["pagtot_story"] = Spring.GetGameRulesParam("wmrts_diary_story")	
