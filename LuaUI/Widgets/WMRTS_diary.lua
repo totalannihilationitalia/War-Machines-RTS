@@ -63,8 +63,8 @@ local margine_su_icona_diarymenu		= -30 								-- distanza di quanto sborda l'i
 local mousex, mousey				   										-- posizione x e y del mouse, usata per rilevare la sua posizione e far apparire il selettore
 local larghezza_icona_diary				= 40
 local altezza_icona_diary				= 40
-local posx_pulsavantidietro				= 700 								-- posizione x dei pulsanti avanti e dietro rispetto alla posizione del menu
-local posy_pulsavantidietro				= -10								-- posizione y dei pulsanti avanti e dietro rispetto alla posizione del menu
+local posx_pulsavantidietro				= 650 								-- posizione x dei pulsanti avanti e dietro rispetto alla posizione del menu
+local posy_pulsavantidietro				= 15 								-- posizione y dei pulsanti avanti e dietro rispetto alla posizione del menu
 local larghezza_pagxdiy					= 75								-- larghezza intermezzo tra pulsante precedente e successivo (dove c'è il testo pagina 1 di 20 ad esempio)
 -- variabili del selettore pulsanti categoria
 local selettore_visibile = true
@@ -110,15 +110,15 @@ local button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_off.png
 local button_unitsmenu			= "LuaUI/Images/menu/diary/buttondiary_units_off.png" 
 local button_catover			= "LuaUI/Images/menu/diary/buttondiary_over.png" 
 -- definizione delle immagini dei pulsanti avanti e dietro
-local button_successiva			= "LuaUI/Images/menu/diary/successiva.png"
-local button_precedente			= "LuaUI/Images/menu/diary/precedente.png"
+local button_successiva			= "LuaUI/Images/menu/diary/btnprevious.png"
+local button_precedente			= "LuaUI/Images/menu/diary/btnnext.png"
 
 -- impostazione dei fonts
 local font_intestazione				= gl.LoadFont("FreeSansBold.otf",14, 1.9, 40)
 local font_generale					= gl.LoadFont("FreeSansBold.otf",12, 1.9, 40)
 
 -- tabella diario
-local diaryData						= {}
+local diaryData						= {}  -- ############################### ELIMINARE TABELLA, SI USANO LE VARIABILI
 
 --------------------------------------
 -- GESTIONE DELLE CATEGORIE DEL DIARIO -- Ogni volta che viene chiamata questa funziona si setta la categoria del diario ############################ al momento non viene mai richiamata#################
@@ -126,7 +126,7 @@ local diaryData						= {}
 local function diarycategorymanagement()
 		-- imposto la categoria del diario
 	if diarycategory == 0 then 			-- sto leggendo categoria mappe globali
-	contentdiarymenu = "LuaUI/Images/menu/diary/wmrtsmaps"..pagcur_maps..".png" -- imposto l'immagine che sarà inizialmente "wmrtsmaps0.png"
+	contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtsmaps"..pagcur_maps..".png" -- imposto l'immagine che sarà inizialmente "wmrtsmaps0.png"
 	-- imposto lo stato ON/OFF dei bottoni
 	button_mapmenu			= "LuaUI/Images/menu/diary/buttondiary_maps_on.png"
 	button_storymenu		= "LuaUI/Images/menu/diary/buttondiary_story_off.png" 
@@ -134,7 +134,7 @@ local function diarycategorymanagement()
 	button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_off.png" 
 	button_unitsmenu		= "LuaUI/Images/menu/diary/buttondiary_units_off.png" 
 	elseif diarycategory == 1 then		-- sto leggendo categoria storia
-	contentdiarymenu = "LuaUI/Images/menu/diary/wmrtsstory"..pagcur_story..".png"
+	contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtsstory"..pagcur_story..".png"
 	-- imposto lo stato ON/OFF dei bottoni	
 	button_mapmenu			= "LuaUI/Images/menu/diary/buttondiary_maps_off.png"
 	button_storymenu		= "LuaUI/Images/menu/diary/buttondiary_story_on.png" 
@@ -142,7 +142,7 @@ local function diarycategorymanagement()
 	button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_off.png" 
 	button_unitsmenu		= "LuaUI/Images/menu/diary/buttondiary_units_off.png" 	
 	elseif diarycategory == 2 then		-- sto leggendo categoria suggerimenti
-	contentdiarymenu = "LuaUI/Images/menu/diary/wmrtshints"..pagcur_hints..".png"
+	contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtshints"..pagcur_hints..".png"
 	-- imposto lo stato ON/OFF dei bottoni	
 	button_mapmenu			= "LuaUI/Images/menu/diary/buttondiary_maps_off.png"
 	button_storymenu		= "LuaUI/Images/menu/diary/buttondiary_story_off.png" 
@@ -150,7 +150,7 @@ local function diarycategorymanagement()
 	button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_off.png" 
 	button_unitsmenu		= "LuaUI/Images/menu/diary/buttondiary_units_off.png" 	
 	elseif diarycategory == 3 then		-- sto leggendo categoria personaggi
-	contentdiarymenu = "LuaUI/Images/menu/diary/wmrtschara"..pagcur_character..".png"
+	contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtschara"..pagcur_character..".png"
 	-- imposto lo stato ON/OFF dei bottoni	
 	button_mapmenu			= "LuaUI/Images/menu/diary/buttondiary_maps_off.png"
 	button_storymenu		= "LuaUI/Images/menu/diary/buttondiary_story_off.png" 
@@ -158,7 +158,7 @@ local function diarycategorymanagement()
 	button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_on.png" 
 	button_unitsmenu		= "LuaUI/Images/menu/diary/buttondiary_units_off.png" 	
 	elseif diarycategory == 4 then		-- sto leggendo categoria unità
-	contentdiarymenu = "LuaUI/Images/menu/diary/wmrtsunits"..pagcur_units..".png"
+	contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtsunits"..pagcur_units..".png"
 	-- imposto lo stato ON/OFF dei bottoni	
 	button_mapmenu			= "LuaUI/Images/menu/diary/buttondiary_maps_off.png"
 	button_storymenu		= "LuaUI/Images/menu/diary/buttondiary_story_off.png" 
@@ -196,23 +196,23 @@ local function diarypagemanagementprevious()
 		-- imposto la pagina precedente per categoria, funzione richiamata quanto si preme sul pulsante "pagina precedente"
 	if ((diarycategory == 0) and (pagcur_maps > 1)) then -- se la categoria è mappe globali e la pagina è minore delle pagine totali, vai alla scheda precedente	
 		pagcur_maps = pagcur_maps-1
-		contentdiarymenu = "LuaUI/Images/menu/diary/contents/diarycontent_map_"..pagcur_maps..".png"  					
+		contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtsmaps"..pagcur_maps..".png"  					
 		-- imposto la pagina precedente per categoria, funzione richiamata quanto si preme sul pulsante "pagina precedente"
 	elseif ((diarycategory == 1) and (pagcur_story > 1)) then -- se la categoria è storyboard e la pagina è minore delle pagine totali, vai alla scheda precedente	
 		pagcur_story = pagcur_story-1
-		contentdiarymenu = "LuaUI/Images/menu/diary/contents/diarycontent_story_"..pagcur_story..".png"  					
+		contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtsstory"..pagcur_story..".png"  					
 		-- imposto la pagina precedente per categoria, funzione richiamata quanto si preme sul pulsante "pagina precedente"
 	elseif ((diarycategory == 2) and (pagcur_hints > 1)) then -- se la categoria è hint e la pagina è minore delle pagine totali, vai alla scheda precedente	
 		pagcur_hints = pagcur_hints-1	
-		contentdiarymenu = "LuaUI/Images/menu/diary/contents/diarycontent_hints_"..pagcur_hints..".png"  			
+		contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtshints"..pagcur_hints..".png"  			
 	-- imposto la pagina precedente per categoria, funzione richiamata quanto si preme sul pulsante "pagina precedente"
 	elseif ((diarycategory == 3) and (pagcur_character > 1)) then -- se la categoria è personaggi e la pagina è minore delle pagine totali, vai alla scheda precedente	
 		pagcur_character = pagcur_character-1	
-		contentdiarymenu = "LuaUI/Images/menu/diary/contents/diarycontent_character_"..pagcur_character..".png"  			
+		contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtschar"..pagcur_character..".png"  			
 	-- imposto la pagina precedente per categoria, funzione richiamata quanto si preme sul pulsante "pagina precedente"
 	elseif ((diarycategory == 4) and (pagcur_units > 1)) then -- se la categoria è unità e la pagina è minore delle pagine totali, vai alla scheda precedente	
 		pagcur_units = pagcur_units-1	
-		contentdiarymenu = "LuaUI/Images/menu/diary/contents/diarycontent_units_"..pagcur_units..".png"  			
+		contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtsunits"..pagcur_units..".png"  			
 	end	
 end
 	
@@ -221,7 +221,7 @@ end
 --------------------------------------
 local function check_options()
 --[[
-############## inserire le opzioni corrette (tipo autopopup ed eventuali numerazioni)
+############## inserire le opzioni corrette (tipo autopopup ed eventuali numerazioni) ##################################
 -- all'inizio verifico anche il valore delle configurazioni
   valore_mapshading = Spring.GetConfigInt("AdvMapShading", 1)			-- booleano di default è true
   valore_unitshading = Spring.GetConfigInt("AdvModelShading", 1)			-- booleano di default è true
@@ -331,13 +331,12 @@ function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la 
 			((x >= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu) and (x <= Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+larghezza_menubutton) and (y >= Pos_y_mainmenu+posy_menuicone-4*interassey_menuicone) and (y <= Pos_y_mainmenu+posy_menuicone+altezza_menubutton-4*interassey_menuicone)) 
 			or
 			-- pagina precedente
-			((x >= Pos_x_mainmenu+posx_pulsavantidietro) and (x <= Pos_x_mainmenu+posx_pulsavantidietro+larghezza_avantidietro) and (y >= Pos_y_mainmenu-posy_pulsavantidietro) and (y <= Pos_y_mainmenu-posy_pulsavantidietro-altezza_avantidietro))
+			((x >= Pos_x_mainmenu+posx_pulsavantidietro) and (x <= Pos_x_mainmenu+posx_pulsavantidietro+larghezza_avantidietro) and (y >= Pos_y_mainmenu-posy_pulsavantidietro) and (y <= Pos_y_mainmenu-posy_pulsavantidietro+altezza_avantidietro))
 			or
 			-- pagina successiva
-			((x >= Pos_x_mainmenu+posx_pulsavantidietro+75) and (x <= Pos_x_mainmenu+posx_pulsavantidietro+75+larghezza_avantidietro) and (y >= Pos_y_mainmenu-posy_pulsavantidietro) and (y <= Pos_y_mainmenu-posy_pulsavantidietro-altezza_avantidietro))
+			((x >= Pos_x_mainmenu+posx_pulsavantidietro+75) and (x <= Pos_x_mainmenu+posx_pulsavantidietro+75+larghezza_avantidietro) and (y >= Pos_y_mainmenu-posy_pulsavantidietro) and (y <= Pos_y_mainmenu-posy_pulsavantidietro+altezza_avantidietro))
 	end --is gui hidden
 end
-
 --------------------------------------
 -- MOUSE PRESS BUTTONS 1 (SX)
 --------------------------------------
@@ -396,23 +395,27 @@ function widget:MousePress(x, y, button)
 					end		
 				diarycategory = 4 -- setto la categoria da mostrare su units 			
 				diarycategorymanagement() -- chiamo la funzione per settare le immagini del diario				
+				Spring.Echo(pagtot_units)	
+				Spring.Echo("click_units")
 				return true		
 				-- clicco su pagina precedente	--------------------------------------------------------------------------------------------	
 				elseif
-				((x >= Pos_x_mainmenu+posx_pulsavantidietro) and (x <= Pos_x_mainmenu+posx_pulsavantidietro+larghezza_avantidietro) and (y >= Pos_y_mainmenu-posy_pulsavantidietro) and (y <= Pos_y_mainmenu-posy_pulsavantidietro-altezza_avantidietro)) then
+				((x >= Pos_x_mainmenu+posx_pulsavantidietro) and (x <= Pos_x_mainmenu+posx_pulsavantidietro+larghezza_avantidietro) and (y >= Pos_y_mainmenu-posy_pulsavantidietro) and (y <= Pos_y_mainmenu-posy_pulsavantidietro+altezza_avantidietro)) then
 					diarypagemanagementprevious() -- esegui funzione per pagina precedente
+					Spring.Echo("test_indietro")
 				return true		
 				-- clicco su pagina successiva	--------------------------------------------------------------------------------------------	
 				elseif
-				((x >= Pos_x_mainmenu+posx_pulsavantidietro+75) and (x <= Pos_x_mainmenu+posx_pulsavantidietro+75+larghezza_avantidietro) and (y >= Pos_y_mainmenu-posy_pulsavantidietro) and (y <= Pos_y_mainmenu-posy_pulsavantidietro-altezza_avantidietro)) then
+				((x >= Pos_x_mainmenu+posx_pulsavantidietro+75) and (x <= Pos_x_mainmenu+posx_pulsavantidietro+75+larghezza_avantidietro) and (y >= Pos_y_mainmenu-posy_pulsavantidietro) and (y <= Pos_y_mainmenu-posy_pulsavantidietro+altezza_avantidietro)) then
 					diarypagemanagementnext() -- esegui funzione per pagina successiva
+					Spring.Echo("test_avanti")
 				return true		
 				end
 			end
 		end
 	end 
 end
-			
+
 --------------------------------------
 -- GESTIONE TOOLTIP ------------------------------------------------------------------------------------------------ IMPLEMENTARE INSERENDO LE SPIEGAZIONI DEI PULSANTI ----------------------------
 --------------------------------------
@@ -592,14 +595,14 @@ end
 	-- ########## da mostrare solo se la categoria corrente ha almeno 1 pagina ! ####################
 		gl.Color(1,1,1,1)
 		gl.Texture(button_precedente)	
-		gl.TexRect(	Pos_x_mainmenu+posx_pulsavantidietro,Pos_y_mainmenu-posy_pulsavantidietro,Pos_x_mainmenu+posx_pulsavantidietro+larghezza_avantidietro,Pos_y_mainmenu-posy_pulsavantidietro-altezza_avantidietro)	
+		gl.TexRect(	Pos_x_mainmenu+posx_pulsavantidietro,Pos_y_mainmenu-posy_pulsavantidietro,Pos_x_mainmenu+posx_pulsavantidietro+larghezza_avantidietro,Pos_y_mainmenu-posy_pulsavantidietro+altezza_avantidietro)	
 		gl.Texture(false)	-- fine texture	
 	
 	-- pulsante pagina successiva
 	-- ########## da mostrare solo se la categoria corrente ha almeno 1 pagina ! ####################
 		gl.Color(1,1,1,1)
 		gl.Texture(button_successiva)	
-		gl.TexRect(	Pos_x_mainmenu+posx_pulsavantidietro+larghezza_pagxdiy,Pos_y_mainmenu-posy_pulsavantidietro,Pos_x_mainmenu+posx_pulsavantidietro+larghezza_pagxdiy+larghezza_avantidietro,Pos_y_mainmenu-posy_pulsavantidietro-altezza_avantidietro)	
+		gl.TexRect(	Pos_x_mainmenu+posx_pulsavantidietro+larghezza_pagxdiy,Pos_y_mainmenu-posy_pulsavantidietro,Pos_x_mainmenu+posx_pulsavantidietro+larghezza_pagxdiy+larghezza_avantidietro,Pos_y_mainmenu-posy_pulsavantidietro+altezza_avantidietro)	
 		gl.Texture(false)	-- fine texture		
 
 	-- gui shader	
