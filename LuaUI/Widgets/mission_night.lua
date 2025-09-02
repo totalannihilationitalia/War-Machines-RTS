@@ -500,7 +500,7 @@ end
 
 local update = 0
 local updatePeriod = 0.25
-function widget:Update(dt)
+--[[function widget:Update(dt)
   local userSpeed, speedFactor, paused = GetGameSpeed()
   if (not paused) then
     update = update + dt
@@ -525,6 +525,30 @@ function widget:Update(dt)
      end
      update = 0
     end
+  end
+end
+]]--
+
+--revisione
+function widget:Update(dt)
+  local userSpeed, speedFactor, paused = GetGameSpeed()
+  if (not paused) then
+    searchlightBuildingAngle = searchlightBuildingAngle + dt * userSpeed
+    
+    -- Fai avanzare il tempo solo se il ciclo è attivo o se dobbiamo raggiungere un'ora specifica
+    if dayNightCycle or (wantedTime ~= currDayTime) then
+        local gameTimeElapsed = dt * userSpeed
+        currDayTime = currDayTime + gameTimeElapsed / secondsPerDay
+        currDayTime = currDayTime - math.floor(currDayTime) -- Mantiene currDayTime nell'intervallo [0, 1]
+
+        -- Se ci avviciniamo abbastanza a wantedTime, "agganciamoci" per precisione e fermiamo il ciclo (se dayNightCycle è false)
+        if (not dayNightCycle) and (math.abs(currDayTime - wantedTime) < 0.01) then
+            currDayTime = wantedTime
+        end
+    end
+    
+    -- Ricalcola i colori ad ogni frame. È abbastanza leggero da non causare problemi di performance.
+    UpdateColors()
   end
 end
 
