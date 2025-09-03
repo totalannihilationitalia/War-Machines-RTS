@@ -19,7 +19,7 @@ end
 --config
 --------------------------------------------------------------------------------
 
-local nightColorMap        = {{0.1, 0.1, 0.1}, --midnight
+local nightColorMap        = {{0.2, 0.2, 0.2}, --notte
                               {0.0, 0.0, 0.0},
                               {0.0, 0.0, 0.0},
                               
@@ -28,7 +28,7 @@ local nightColorMap        = {{0.1, 0.1, 0.1}, --midnight
                               {1, 1, 1},
                               {1, 1, 1},
                               
-                              {1, 1, 1}, --noon
+                              {1, 1, 1}, --giorno
                               {1, 1, 1},
                               {1, 1, 1},
                               
@@ -37,23 +37,23 @@ local nightColorMap        = {{0.1, 0.1, 0.1}, --midnight
 							  {0.2, 0.2, 0.2},
                               {0.2, 0.2, 0.2},}
                               
-local searchlightBeamColor = {1, 1, 0.75, 0.05}  --searchlight beam color
-local searchlightStrength  = 0.6                 --searchlight strength; <= 0 to turn off
-local searchlightHeightOffset = 1              --raises searchlight above unit's feet by this multiple of the unit's radius
-local preUnit              = true                --if true, night is applied pre-unit
-local drawBeam             = true                --if true, will draw the searchlight beam
-local baseType             = 2               --0: off, 1: simple, 2: full
+local searchlightBeamColor = {1, 1, 0.75, 0.05} 	--searchlight beam color
+local searchlightStrength  = 0.6               	  	--searchlight strength; <= 0 to turn off
+local searchlightHeightOffset = 1            	 	--raises searchlight above unit's feet by this multiple of the unit's radius
+local preUnit              = true              		--if true, night is applied pre-unit
+local drawBeam             = true              		--if true, will draw the searchlight beam
+local baseType             = 2              		--0: off, 1: simple, 2: full
 
-local searchlightVertexCount       = 16          --roughly many vertices to use
+local searchlightVertexCount       = 16          	--roughly many vertices to use
 
-local searchlightAirLeadTime       = 0.5           --roughly how many seconds ahead the searchlight aims
-local searchlightGroundLeadTime    = 1           --roughly how many seconds ahead the searchlight aims
+local searchlightAirLeadTime       = 0.5           	--roughly how many seconds ahead the searchlight aims
+local searchlightGroundLeadTime    = 1           	--roughly how many seconds ahead the searchlight aims
 
-local dayNightCycle        = true                --enables day/night cycle
-local startDayTime         = 0                   --start time, between 0 and 1; 0 = midnight, 0.5 = noon
-local secondsPerDay        = 30                 --seconds per day
+local dayNightCycle        = true                	--enables day/night cycle
+local startDayTime         = 0                   	--start time, between 0 and 1; 0 = midnight, 0.5 = noon
+local secondsPerDay        = 30                 	--seconds per day
 
-local maxBeamDivergent = 2 					--how big the light beam can expand if unit get further away from ground
+local maxBeamDivergent = 2 							--how big the light beam can expand if unit get further away from ground
 
 local reverseCompatibility = Game.version:find('91.') or (Game.version:find('94') and not Game.version:find('94.1.1')) -- for UnitDef Tag
 --------------------------------------------------------------------------------
@@ -81,7 +81,7 @@ options = {
 	coloredUnits = {
 		name = "Bright Units",
 		type = 'bool',
-		value = true,
+		value = false,
 		desc = 'Bright units even at night',
 	},	
 	beam = {
