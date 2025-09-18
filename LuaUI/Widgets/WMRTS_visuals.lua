@@ -72,19 +72,18 @@ local valore_camerashake
 local valore_verticalline			
 local valore_teammateselunits		
 local valore_showingamealert
-			
-local valore_blinking				-- ########################################### sostituire
-local valore_shadows				-- ########################################### sostituire
-local valore_showenvironmental		-- ########################################### sostituire
-local valore_antialiasing			-- ########################################### sostituire
-local valore_watertype				-- ########################################### sostituire
-local valore_showdps					-- ########################################### sostituire
+local valore_gamespeed				
+local valore_comnametag				
+local valore_showenvironmental		-- ########################################### eliminare / opzione avanzata
+local valore_cameramode			
+local valore_allycur				-- ########################################### sistemare il widget
+local valore_showdps				-
 local valore_showspawnpos				
 -- icona principale del menu
-local larghezza_icona_visualsmenu			= 40
+local larghezza_icona_visualsmenu		= 40
 local altezza_icona_visualsmenu			= 40
-local margine_sx_icona_visualsmenu			= 20  	-- distanza dal margine sinistro del background e l'icona del menu
-local margine_su_icona_visualsmenu			= -30 	-- distanza di quanto sborda l'immagine dal bordo superiore del background
+local margine_sx_icona_visualsmenu		= 20  	-- distanza dal margine sinistro del background e l'icona del menu
+local margine_su_icona_visualsmenu		= -30 	-- distanza di quanto sborda l'immagine dal bordo superiore del background
 -- pulsanti back / close
 local larghezza_menu_buttons 			= 76  		-- like back button, close button
 local altezza_menu_buttons 				= 25  		-- like back button, close button
@@ -102,7 +101,7 @@ local icona_on 						= "LuaUI/Images/menu/mainmenu/graphics_on.png"
 local icona_off 					= "LuaUI/Images/menu/mainmenu/graphics_off.png"
 local icona_prec 					= "LuaUI/Images/menu/mainmenu/graphics_prec.png"
 local icona_succ					= "LuaUI/Images/menu/mainmenu/graphics_succ.png"
-local icona_visualsmenu			= "LuaUI/Images/menu/mainmenu/menu_visual_icon.png"
+local icona_visualsmenu				= "LuaUI/Images/menu/mainmenu/menu_visual_icon.png"
 local button_back					= "LuaUI/Images/menu/mainmenu/menu_back.png"
 local button_close					= "LuaUI/Images/menu/mainmenu/menu_close.png"
 -- impostazione dei fonts
@@ -163,22 +162,22 @@ end
 --------------------------------------
 local function check_options()
 -- all'inizio verifico anche il valore delle configurazioni
-  valore_showunitrank = Spring.GetConfigInt("AdvMapShading", 1)			-- booleano di default è true  --################## definire configurazione da widget
-  valore_unitshealt = Spring.GetConfigInt("AdvModelShading", 1)		-- booleano di default è true  --################## definire configurazione da widget
-  valore_showeta = Spring.GetConfigInt("GrassDetail", 1)   				-- booleano di default è true --################## definire configurazione da widget
-  valore_showunitsaura = Spring.GetConfigInt("HardwareCursor", 0) 		-- booleano di default è falso --################## definire configurazione da widget
-  valore_camerashake = Spring.GetConfigInt("LupsActive", 0) 					-- booleano di default è falso -> disattivo successivamente anche il Widget				## widget --################## definire configurazione da widget
-  valore_verticalline = Spring.GetConfigInt("BloomshaderActive", 0)		-- booleano di default è falso -> disattivo successivamente anche il Widget			## widget --################## definire configurazione da widget
-  valore_teammateselunits = Spring.GetConfigInt("ShowProjectile", 0)	-- booleano di default è falso  -> disattivo successivamente anche il Widget	## widget --################## definire configurazione da widget
-  valore_showingamealert = Spring.GetConfigInt("XrayActive", 0)					-- booleano di default è falso  -> disattivo successivamente anche il Widget			## widget--################## definire configurazione da widget
-  valore_mapborder = Spring.GetConfigInt("Fullscreen", 1) 				-- booleano di default è true--################## definire configurazione da widget
-  valore_blinking = Spring.GetConfigInt("teamhighlight", 1)   			-- booleano di default è true--################## definire configurazione da widget
-  valore_shadows = Spring.GetConfigInt("Shadows", 2) 					-- -1:=forceoff, 0:=off, 1:=full, 2:=fast (skip terrain)--################## definire configurazione da widget
-  valore_showenvironmental = Spring.GetConfigInt("EnviroActive", 0)		-- booleano di default è falso ->  -> disattivo successivamente anche il Widget			## widget--################## definire configurazione da widget
-  valore_antialiasing = Spring.GetConfigInt("MSAALevel", 0) 			-- valori da 0 a 32 MAX--################## definire configurazione da widget
-  valore_watertype = Spring.GetConfigInt("Water", 1) 					-- Defines the type of water rendering. Can be set in game. Options are: 0 = Basic water, 1 = Reflective water, 2 = Reflective and Refractive water, 3 = Dynamic water, 4 = Bumpmapped water--################## definire configurazione da widget
-  valore_showdps = Spring.GetConfigInt("VSync", 0)   						-- valori 1 o 0 (default) abilita o disabilita standard VSynk--################## definire configurazione da widget
-  valore_showspawnpos = Spring.GetConfigInt("MapBorder", 1)   			-- valori 1 (default) o 0 abilita o disabilita bordi della mappa--################## definire configurazione da widget
+  valore_showunitrank = Spring.GetConfigInt("optvisual_ShowUnitRank", 1)			
+  valore_unitshealt = Spring.GetConfigInt("optvisual_HealthBars", 1)		
+  valore_showeta = Spring.GetConfigInt("optvisual_BuildETA", 1)   			
+  valore_showunitsaura = Spring.GetConfigInt("optvisual_Spotter", 1) 		
+  valore_camerashake = Spring.GetConfigInt("optvisual_CameraShake", 1) 		
+  valore_verticalline = Spring.GetConfigInt("optvisual_verticalline", 1)	
+  valore_teammateselunits = Spring.GetConfigInt("optvisual_teammateselunits", 1)	
+  valore_showingamealert = Spring.GetConfigInt("optvisual_showingamealert", 0)			-- ############## widget da implementare
+  valore_WindowedEdgeMove = Spring.GetConfigInt("WindowedEdgeMove", 1) 				
+  valore_gamespeed = Spring.GetConfigInt("ShowSpeed", 0)   			
+  valore_comnametag = Spring.GetConfigInt("optvisual_comnametag", 2) 					-- ##### da implementare // old -> -1:=forceoff, 0:=off, 1:=full, 2:=fast (skip terrain)--################## definire configurazione da widget
+  valore_showenvironmental = Spring.GetConfigInt("optvisual_EnviroActive", 0)			-- ########################################### eliminare / opzione avanzata
+  valore_cameramode = Spring.GetConfigInt("CamMode", 3) 			
+  valore_allycur = Spring.GetConfigInt("optvisual_allycur", 1) 					
+  valore_showdps = Spring.GetConfigInt("optvisual_DisplayDPS", 0)   						-- valori 1 o 0 (default) abilita o disabilita standard VSynk--################## definire configurazione da widget
+  valore_showspawnpos = Spring.GetConfigInt("optvisual_howspawnpos", 1)   			-- valori 1 (default) o 0 abilita o disabilita bordi della mappa--################## definire configurazione da widget
 end
 
 --------------------------------------
@@ -568,76 +567,76 @@ if visualsmenu_attivo and not Spring.IsGUIHidden() then
 				 valore_showingamealert = 0
 				end
 				if valore_showingamealert == 0 then
-					Spring.SendCommands({"luaui disablewidget XrayShader"}) 		-- disabilito il widget
-					Spring.SetConfigInt("XrayActive", 0)	
+					Spring.SendCommands({"luaui disablewidget alert"}) 		-- disabilito il widget ################# da implementare!!!!!!
+					Spring.SetConfigInt("optvisual_showingamealert", 0)	
 				elseif valore_showingamealert == 1 then
-					Spring.SendCommands({"luaui enablewidget XrayShader"}) 		-- abilito il widget
-					Spring.SetConfigInt("XrayActive", 1)					
+					Spring.SendCommands({"luaui enablewidget alert"}) 		-- abilito il widget ################# da implementare!!!!!!
+					Spring.SetConfigInt("optvisual_showingamealert", 1)					
 				end		
 				return true					
 				-- Mapborder  A SINISTRA icona "ON/OFF" -- se clicco sull'icona della relativa opzione, aggiungo +1 al valore, di conseguenza diventa 0 o 1. Serve per impostare poi la grafica corretta della casella di selezione ON/OFF
 			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				valore_mapborder = valore_mapborder + 1
-				if valore_mapborder > 1 then
-					valore_mapborder = 0
+				valore_WindowedEdgeMove = valore_WindowedEdgeMove + 1
+				if valore_WindowedEdgeMove > 1 then
+					valore_WindowedEdgeMove = 0
 				end
-				if valore_mapborder == 0 then
-					Spring.SendCommands("MapBorder 0")
-					Spring.SetConfigInt("MapBorder", 0)	
-				elseif valore_mapborder == 1 then
-					Spring.SendCommands("MapBorder 1")
-					Spring.SetConfigInt("MapBorder", 1)		
+				if valore_WindowedEdgeMove == 0 then
+					Spring.SendCommands("WindowedEdgeMove 0")
+					Spring.SetConfigInt("WindowedEdgeMove", 0)	
+				elseif valore_WindowedEdgeMove == 1 then
+					Spring.SendCommands("WindowedEdgeMove 1")
+					Spring.SetConfigInt("WindowedEdgeMove", 1)		
 				end
 				return true
 				-- Blinking units A DESTRA  icona "ON/OFF" --- le unità non controllate lampeggiano
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				valore_blinking = valore_blinking + 1
-				if valore_blinking > 1 then
-					valore_blinking = 0
+				valore_gamespeed = valore_gamespeed + 1
+				if valore_gamespeed > 1 then
+					valore_gamespeed = 0
 				end
-				if valore_blinking == 0 then
-					Spring.SendCommands("TeamHighlight 0")
-					Spring.SetConfigInt("TeamHighlight", 0)	
-				elseif valore_blinking == 1 then
-					Spring.SendCommands("TeamHighlight 1")
-					Spring.SetConfigInt("TeamHighlight", 1)		
+				if valore_gamespeed == 0 then
+					Spring.SendCommands("ShowSpeed 0")
+					Spring.SetConfigInt("ShowSpeed", 0)	
+				elseif valore_gamespeed == 1 then
+					Spring.SendCommands("ShowSpeed 1")
+					Spring.SetConfigInt("ShowSpeed", 1)		
 				end
 				return true						
 				-- shadows icona "<-"
 			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				valore_shadows = valore_shadows - 1
-				if valore_shadows < 0 then
-					valore_shadows = 0
+				valore_comnametag = valore_comnametag - 1
+				if valore_comnametag < 0 then
+					valore_comnametag = 0
 				end
-				if valore_shadows == 0 then
+				if valore_comnametag == 0 then
 					Spring.SendCommands("Shadows 0")
 					Spring.SetConfigInt("Shadows", 0)	
-				elseif valore_shadows == 1 then
+				elseif valore_comnametag == 1 then
 					Spring.SendCommands("Shadows 1")
 					Spring.SetConfigInt("Shadows", 1)		
-				elseif valore_shadows == 2 then
+				elseif valore_comnametag == 2 then
 					Spring.SendCommands("Shadows 2")
 					Spring.SetConfigInt("Shadows", 2)	
 				end
 				return true
 				-- shadows icona "->"
 			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) then							
-				valore_shadows = valore_shadows + 1
-				if valore_shadows > 2 then
-					valore_shadows = 2
+				valore_comnametag = valore_comnametag + 1
+				if valore_comnametag > 2 then
+					valore_comnametag = 2
 				end
-				if valore_shadows == 0 then
+				if valore_comnametag == 0 then
 					Spring.SendCommands("Shadows 0")
 					Spring.SetConfigInt("Shadows", 0)	
-				elseif valore_shadows == 1 then
+				elseif valore_comnametag == 1 then
 					Spring.SendCommands("Shadows 1")
 					Spring.SetConfigInt("Shadows", 1)		
-				elseif valore_shadows == 2 then
+				elseif valore_comnametag == 2 then
 					Spring.SendCommands("Shadows 2")
 					Spring.SetConfigInt("Shadows", 2)	
 				end				
 				return true				
-					-- Show environment effects (snow, rain, etc) 	icona "ON/OFF"	 WIDGET
+					-- Show environment effects (snow, rain, etc) 	icona "ON/OFF"	 WIDGET -- ########################################### eliminare / opzione avanzata
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) then
 				valore_showenvironmental = valore_showenvironmental + 1
 				if valore_showenvironmental > 1 then	
@@ -653,70 +652,68 @@ if visualsmenu_attivo and not Spring.IsGUIHidden() then
 --			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga2 - distanzay_icone_testi+altezza_icona_opzioni)) then
 --				Echo("test environment")
 --				return true		
-				-- Set Antialiasing level  icona "<-"
+				-- Set cameramode   icona "<-"
 			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				valore_antialiasing = valore_antialiasing - 1
-				Echo("Restart is require for changes to take effect")
-				if valore_antialiasing < 0 then
-					valore_antialiasing = 0
+				valore_cameramode = valore_cameramode - 1
+				if valore_cameramode < 0 then
+					valore_cameramode = 0
 				end
-				Spring.SendCommands("MSAALevel "..valore_antialiasing)
-				Spring.SetConfigInt("MSAALevel", valore_antialiasing)					
+				Spring.SendCommands("CamMode"..valore_cameramode)
+				Spring.SetConfigInt("CamMode", valore_cameramode)					
 				return true
-				-- Set Antialiasing level  icona "->"
+				-- Set cameramode icona "->"
 			elseif ((x >= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi) and (x <= Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi) and (y >= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)) then							
-				valore_antialiasing = valore_antialiasing + 1
-				Echo("Restart is require for changes to take effect")				
-				if valore_antialiasing > 32 then
-					valore_antialiasing = 32	
+				valore_cameramode = valore_cameramode + 1
+				if valore_cameramode > 5 then
+					valore_cameramode = 5	
 				end
-				Spring.SendCommands("MSAALevel "..valore_antialiasing)
-				Spring.SetConfigInt("MSAALevel", valore_antialiasing)	
+				Spring.SendCommands("CamMode"..valore_cameramode)
+				Spring.SetConfigInt("CamMode", valore_cameramode)		
 				return true		
 				-- Water type 	icona "<-"		
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone) and (y >= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				valore_watertype = valore_watertype - 1
-				if valore_watertype < 0 then
-					valore_watertype = 0
+				valore_allycur = valore_allycur - 1
+				if valore_allycur < 0 then
+					valore_allycur = 0
 				end
-				if valore_watertype == 0 then
-					Spring.SendCommands("Water 0")
-					Spring.SetConfigInt("Water", 0)	
-				elseif valore_watertype == 1 then
-					Spring.SendCommands("Water 1")
-					Spring.SetConfigInt("Water", 1)		
-				elseif valore_watertype == 2 then
-					Spring.SendCommands("Water 2")
-					Spring.SetConfigInt("Water", 2)	
-				elseif valore_watertype == 3 then
-					Spring.SendCommands("Water 3")
-					Spring.SetConfigInt("Water", 3)	
-				elseif valore_watertype == 4 then
-					Spring.SendCommands("Water 4")
-					Spring.SetConfigInt("Water", 4)						
+				if valore_allycur == 0 then
+					Spring.SendCommands("luaui disablewidget AllyCursors")
+					Spring.SetConfigInt("optvisual_allycur", 0)	
+				elseif valore_allycur == 1 then
+					Spring.SendCommands("luaui enablewidget AllyCursors")  	---########### sistemare valori e widget (allo stato attuale il widget è solo ON/OFF e non un valore, pertanto andrà modificato il widget
+					Spring.SetConfigInt("optvisual_allycur", 1)		
+				elseif valore_allycur == 2 then
+					Spring.SendCommands("luaui enablewidget AllyCursors")	---########### sistemare valori e widget (allo stato attuale il widget è solo ON/OFF
+					Spring.SetConfigInt("optvisual_allycur", 2)	
+				elseif valore_allycur == 3 then
+					Spring.SendCommands("luaui enablewidget AllyCursors")	---########### sistemare valori e widget (allo stato attuale il widget è solo ON/OFF
+					Spring.SetConfigInt("optvisual_allycur", 3)	
+				elseif valore_allycur == 4 then
+					Spring.SendCommands("luaui enablewidget AllyCursors")	---########### sistemare valori e widget (allo stato attuale il widget è solo ON/OFF
+					Spring.SetConfigInt("optvisual_allycur", 4)						
 				end		
 				return true		
 				-- Water type 	icona "->"		
 			elseif ((x >= Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi) and (x <= Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi) and (y >= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi) and (y <= Pos_y_mainmenu +posy_riga1 - distanzay_icone_testi+altezza_icona_opzioni)) then
-				valore_watertype = valore_watertype + 1
-				if valore_watertype > 4 then
-					valore_watertype = 4
+				valore_allycur = valore_allycur + 1
+				if valore_allycur > 4 then
+					valore_allycur = 4
 				end
-				if valore_watertype == 0 then
-					Spring.SendCommands("Water 0")
-					Spring.SetConfigInt("Water", 0)	
-				elseif valore_watertype == 1 then
-					Spring.SendCommands("Water 1")
-					Spring.SetConfigInt("Water", 1)		
-				elseif valore_watertype == 2 then
-					Spring.SendCommands("Water 2")
-					Spring.SetConfigInt("Water", 2)	
-				elseif valore_watertype == 3 then
-					Spring.SendCommands("Water 3")
-					Spring.SetConfigInt("Water", 3)	
-				elseif valore_watertype == 4 then
-					Spring.SendCommands("Water 4")
-					Spring.SetConfigInt("Water", 4)						
+				if valore_allycur == 0 then
+					Spring.SendCommands("luaui disablewidget AllyCursors")	---########### sistemare valori e widget (allo stato attuale il widget è solo ON/OFF
+					Spring.SetConfigInt("optvisual_allycur", 0)	
+				elseif valore_allycur == 1 then
+					Spring.SendCommands("luaui enablewidget AllyCursors")	---########### sistemare valori e widget (allo stato attuale il widget è solo ON/OFF
+					Spring.SetConfigInt("optvisual_allycur", 1)		
+				elseif valore_allycur == 2 then
+					Spring.SendCommands("luaui enablewidget AllyCursors")	---########### sistemare valori e widget (allo stato attuale il widget è solo ON/OFF
+					Spring.SetConfigInt("optvisual_allycur", 2)	
+				elseif valore_allycur == 3 then
+					Spring.SendCommands("luaui enablewidget AllyCursors")	---########### sistemare valori e widget (allo stato attuale il widget è solo ON/OFF
+					Spring.SetConfigInt("optvisual_allycur", 3)	
+				elseif valore_allycur == 4 then
+					Spring.SendCommands("luaui enablewidget AllyCursors")	---########### sistemare valori e widget (allo stato attuale il widget è solo ON/OFF
+					Spring.SetConfigInt("optvisual_allycur", 4)						
 				end		
 				return true			
 				-- Show DPS A DESTRA RIGA 3  icona "ON/OFF"
@@ -727,10 +724,10 @@ if visualsmenu_attivo and not Spring.IsGUIHidden() then
 				end
 				if valore_showdps == 0 then
 					Spring.SendCommands({"luaui disablewidget Display DPS"}) 				-- disabilito il widget
-					Spring.SetConfigInt("optvisual_Display DPS", 0)							-- imposto il widget nel springcongig
+					Spring.SetConfigInt("optvisual_DisplayDPS", 0)							-- imposto il widget nel springcongig
 				elseif valore_showdps == 1 then
 					Spring.SendCommands({"luaui enablewidget Display DPS"}) 				-- abilito il widget
-					Spring.SetConfigInt("optvisual_Display DPS", 1)		
+					Spring.SetConfigInt("optvisual_DisplayDPS", 1)		
 				end		
 				return true		
 
@@ -944,9 +941,9 @@ if visualsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	font_generale:End()		
 	-- icona
 	gl.Color(1,1,1,1)
-	if valore_blinking == 0 then
+	if valore_gamespeed == 0 then
 	gl.Texture(icona_off)	
-	elseif valore_blinking == 1 then
+	elseif valore_gamespeed == 1 then
 	gl.Texture(icona_on)		
 	end		
 	gl.TexRect(	Pos_x_mainmenu+larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi,Pos_x_mainmenu +larghezza_mainmenu/2 + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi+altezza_icona_opzioni)	
@@ -984,27 +981,27 @@ if visualsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga8 - distanzay_icone_testi+altezza_icona_opzioni)
 	gl.Texture(false)	-- fine texture		
 	
--- voce sx mapborder
+-- voce sx WindowedEdgeMove
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Show map borders", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga3 ,12,'ds')
+	font_generale:Print("Edge camera move -require restart", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga3 ,12,'ds')
 	font_generale:End()
 	-- icona	
 	gl.Color(1,1,1,1)
-	if valore_mapborder == 0 then
+	if valore_WindowedEdgeMove == 0 then
 	gl.Texture(icona_off)	
-	elseif valore_mapborder == 1 then
+	elseif valore_WindowedEdgeMove == 1 then
 	gl.Texture(icona_on)		
 	end	
 	gl.TexRect(	Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni*2-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi,Pos_x_mainmenu + margine_sx_scritte-larghezza_icona_opzioni-distanzax_icone_testi-interpazio_icone,Pos_y_mainmenu +posy_riga3 - distanzay_icone_testi+altezza_icona_opzioni)
 	gl.Texture(false)	-- fine texture		
 	
--- voce dx Edge camera move (require restart)
+-- voce dx Edge camera move (require restart) ################################################ opzione vuota da eliminare
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Edge camera move -require restart-", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga2,12,'ds')
+	font_generale:Print("remove this option", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga2,12,'ds')
 	font_generale:End()		
 	-- icona
 	gl.Color(1,1,1,1)
@@ -1020,11 +1017,11 @@ if visualsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-		if valore_shadows == 0 then
+		if valore_comnametag == 0 then
 			font_generale:Print("Commander name tag: OFF", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga2 ,12,'ds')	
-		elseif valore_shadows == 1 then
+		elseif valore_comnametag == 1 then
 			font_generale:Print("Commander name tag: Small", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga2 ,12,'ds')	
-		elseif valore_shadows == 2 then		
+		elseif valore_comnametag == 2 then		
 			font_generale:Print("Commander name tag: Big", Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga2 ,12,'ds')			
 		end		
 	
@@ -1044,15 +1041,15 @@ if visualsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-		if valore_watertype == 0 then
+		if valore_allycur == 0 then
 			font_generale:Print("Multiplayer: don't show teammates cursoror", Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga1,12,'ds')
-		elseif valore_watertype == 1 then
+		elseif valore_allycur == 1 then
 			font_generale:Print("Multiplayer: show teammates cursor",  Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga1,12,'ds')
-		elseif valore_watertype == 2 then		
+		elseif valore_allycur == 2 then		
 			font_generale:Print("Multiplayer: Show teammates cursor with name",  Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga1,12,'ds')	
-		elseif valore_watertype == 3 then	 -- ############################################################ eliminare!!!!!!	
+		elseif valore_allycur == 3 then	 -- ############################################################ eliminare!!!!!!	
 			font_generale:Print("eliminare",  Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga1,12,'ds')  -- ############################################################ eliminare!!!!!!
-		elseif valore_watertype == 4 then	 -- ############################################################ eliminare!!!!!!	
+		elseif valore_allycur == 4 then	 -- ############################################################ eliminare!!!!!!	
 			font_generale:Print("eliminare",  Pos_x_mainmenu + margine_sx_scritte+ larghezza_mainmenu/2, Pos_y_mainmenu + posy_riga1,12,'ds')  -- ############################################################ eliminare!!!!!!
 		end			
 	font_generale:End()		
@@ -1071,7 +1068,7 @@ if visualsmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print(("Camera mode: "..valore_antialiasing), Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga1 ,12,'ds')
+	font_generale:Print(("Camera mode: "..valore_cameramode), Pos_x_mainmenu + margine_sx_scritte, Pos_y_mainmenu + posy_riga1 ,12,'ds')
 	font_generale:End()
 	-- icona down
 	gl.Color(1,1,1,1)
