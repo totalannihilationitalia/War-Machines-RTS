@@ -74,7 +74,7 @@ return {
 featuredefs = {
   dead = {
                world = "All Worlds",
-               description = "Construction Vehicle Wreckage",
+               description = "Vehicle Wreckage",
                category = "corpses",
                object = "ARMCV_DEAD",
                featuredead = "armcv_heap",
@@ -95,7 +95,7 @@ featuredefs = {
                },  -- Close Dead Features
   heap = {
                world = "All Worlds",
-               description = "Construction Vehicle Heap",
+               description = "Vehicle Heap",
                category = "heaps",
                object = "3X3C",
                footprintx = 3,
