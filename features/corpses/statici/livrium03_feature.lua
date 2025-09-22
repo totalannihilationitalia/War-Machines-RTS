@@ -2,7 +2,7 @@ return {
   livrium03_feature =
   {
     description = "A livrium crystal",
-    blocking = true,
+    blocking = false,
     damage = 1000,
     energy = 0,
     flammable = false,
@@ -14,7 +14,6 @@ return {
     object = "livrium03.s3o",
     reclaimable = true,
     upright = true,
-    crushResistance = 10000,
     crushResistance = 10000,
     collisionvolumeoffsets = "0 7 0",
     collisionvolumescales = "35 15 35",
