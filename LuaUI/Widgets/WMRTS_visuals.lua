@@ -77,7 +77,7 @@ local valore_comnametag
 local valore_showenvironmental		-- ########################################### eliminare / opzione avanzata
 local valore_cameramode			
 local valore_allycur				-- ########################################### sistemare il widget
-local valore_showdps				-
+local valore_showdps				
 local valore_showspawnpos				
 -- icona principale del menu
 local larghezza_icona_visualsmenu		= 40
