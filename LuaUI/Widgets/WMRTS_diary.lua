@@ -66,6 +66,7 @@ local altezza_icona_diary				= 40
 local posx_pulsavantidietro				= 650 								-- posizione x dei pulsanti avanti e dietro rispetto alla posizione del menu
 local posy_pulsavantidietro				= 15 								-- posizione y dei pulsanti avanti e dietro rispetto alla posizione del menu
 local larghezza_pagxdiy					= 75								-- larghezza intermezzo tra pulsante precedente e successivo (dove c'è il testo pagina 1 di 20 ad esempio)
+local missione_attiva					= 0									-- se 0 partita skirmish, se 1 partita WMRTSmission, se 2 partita FLEAmission. Definira quali pulsanti devono apparire o meno (OBJ e diary)
 -- variabili del selettore pulsanti categoria
 local selettore_visibile = true
 local selettore_buttons_visibile = false				
@@ -246,11 +247,19 @@ end
 -- INIZIALIZZO IL MENU 
 --------------------------------------
 function widget:Initialize()
+-- eseguire verifica per capire se è richiesto il widget (ossia si sta giocando una missione, WMRTSmission == 1, altrimenti chiudi widget)
+	if (Spring.GetGameRulesParam('WMRTSmission') == 1 or Spring.GetGameRulesParam('WMRTSmission') == '1') then
+		missione_attiva = 1 -- mostrerà il diario per WMRTS Missions
+	elseif (Spring.GetGameRulesParam('Fleabowl') == 1 or Spring.GetGameRulesParam('Fleabowl') == '1') then
+		missione_attiva = 2 -- mostrerà il diario per FLEA Missions	
+	else		
+		widgetHandler:RemoveWidget() -- rimuovi il widget diario, è una partita skirmish
+	end
 -- all'inizio imposto la posizione del mini menu
 	Pos_x_mainmenu = vsx/2 - larghezza_diarymenu/2
 	Pos_y_mainmenu = vsy/2 - altezza_diarymenu/2
 -- avvio la funzione check_options()
-	check_options()
+	check_options()	
  end
 
 --------------------------------------
@@ -472,9 +481,9 @@ function widget:TextCommand(command)
 		new_units = 1			
 		if autopopup == 1 then diarymenu_attivo = true end		
 --		Inserire invio comando per "blinking" dell'icona diario nel minimenu		####################################
-	elseif command == 'diary_WMRTS_open' then -- se ricevo il comando di aprire il diario (dal minimenu)
+	elseif command == 'open_WMRTS_diary' then -- se ricevo il comando di aprire il diario (dal minimenu)
 		diarymenu_attivo = true
-	elseif command == 'diary_WMRTS_close' then -- se ricevo il comando di chiudere il diario (dal minimenu)
+	elseif command == 'close_WMRTS_diary' then -- se ricevo il comando di chiudere il diario (dal minimenu)
 		diarymenu_attivo = false		
 	end	
 end
@@ -486,7 +495,7 @@ function widget:KeyPress(key, mods, isRepeat)
 	if diarymenu_attivo and not Spring.IsGUIHidden() then
 		if key == 27 then -- TASTO esc  0x01B
 			diarymenu_attivo = false 							-- chiudo il diario
-			Spring.SendCommands("diary_WMRTS_close")			-- spengo il minipulsante menu del minimenu 
+			Spring.SendCommands("close_WMRTS_diary")			-- spengo il minipulsante menu del minimenu 
 			-- disabilito il guishader
 				if (WG['guishader_api'] ~= nil) then
 				WG['guishader_api'].RemoveRect('WMRTS_diary_shad')
