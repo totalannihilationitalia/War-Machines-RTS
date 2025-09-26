@@ -29,6 +29,7 @@ to do list
 -- pulsanti piccoli / grossi
 -- gestire se si vuole il LOS attivo alla partenza oppure no
 -- inserire nel DrawMapDataMinimenu() i markers sugli estrattori di metallo
+-- inserire il pulsante harvester
 ]]--
 --------------------------------------------------------------------------------
 -- rev 0 by molix -- 02/12/2024 -- designing top right WMRTS mini-menù
@@ -36,6 +37,7 @@ to do list
 -- rev 2 by molix -- 03/01/2025 -- risolto problema di memoria e relativo crash in Spring. Ottimizzato il codice.
 -- rev 3 by molix -- 28/01/2025 -- aggiunto minipulsante "show terrain resources"
 -- rev 4 by molix -- 02/06/2025 -- aggiunta la funzione "blinking" al pulsante objective quando si riceve il comando: Spring.SendCommands("blink_WMRTS_obj")
+-- rev 5 by molix -- 26/09/2025 -- aggiunto check is WMRTSmission ? se si fai apparire i pulsante objectives e diary
 
 -- definizione pulsanti minimenu
 local larghezza_main_minimenu_button 	= 50 	-- larghezza del pulsante "main menu" del minimenu (più largo degli altri)
@@ -48,14 +50,17 @@ local margine_sx_minimenu 				= 5 	-- margine da sinistra dell'ultimo pulsante a
 local interspazio_buttons				= 2 	-- spazio tra un pulsante e l altro
 local interspazio_button_separator		= 5 	-- spazio tra una serie di pulsanti (menu) e l'altro (funzionali), ad esempio distanzio i pulsanti menu, sound ecc con i pulsanti builder, wind, ecc
 local objbuttosinblinking				= 0		-- 1 se c'è una notifica
+local diarybuttosinblinking				= 0		-- 1 se c'è una notifica
 local show_minimenu_statistics_button	= true
 local show_minimenu_object_button		= true
+local show_minimenu_diary_button		= true
 local show_minimenu_snd_button			= true
 local show_minimenu_los_button			= true
 local show_minimenu_builder_button		= true
 local show_minimenu_wind_button			= true					-- non è un bottone ma è una finestrella con il valore del vento
 local show_minimenu_tidal_button		= true					-- non è un bottone ma è una finestrella con il valore delle maree
 local show_minimenu_resources_button 	= true
+local missione_attiva					= 0						-- se 0 partita skirmish, se 1 partita WMRTSmission, se 2 partita FLEAmission. Definira quali pulsanti devono apparire o meno (OBJ e diary)
 
 -- definizione variabili di posizione e lunghezza
 local Pos_x_minimenu_button		        = 200					-- corrisponde alla distanza X tra il vertice in basso a sx del minimenu_buttons e il margine destro del monitor
@@ -64,12 +69,13 @@ local vsx, vsy 						  	= widgetHandler:GetViewSizes()
 local Pos_x_next_button_drawing					-- Usato nel drawing, il valore della posizione si sposterà man mano di quanti pulsanti sono attivi, cosi da disegnarli uno di fianco all'altro
 local Pos_x_statistics_button			= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
 local Pos_x_obj_button					= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)	
+local Pos_x_diary_button				= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)	
 local Pos_x_snd_button					= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
 local Pos_x_los_button					= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
 local Pos_x_builder_button				= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
 local Pos_x_wind_button					= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
 local Pos_x_tidal_button				= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
-local Pos_x_resources_button				= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
+local Pos_x_resources_button			= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
 local Pos_x_riquadro_button				= 5		-- posizione X del riquadro per evidenziare l' "above" sui pulsanti generici
 local Pos_y_riquadro_button				= 5		-- posizione Y del riquadro per evidenziare l' "above" sui pulsanti generici
 local Pos_x_riquadro_mainbutton			= 5		-- posizione X del riquadro per evidenziare l' "above" sul pulsante main menu
@@ -80,6 +86,7 @@ local show_mainmenu						= false					-- is mainmenu active?
 local show_sndmenu 						= false 				-- is sound menu options active?
 local show_statisticsmenu				= false					-- is statistics table active?
 local show_objmenu						= false 				-- is obj windows active? 
+local show_diarymenu					= false 				-- is diary windows active?
 local show_losmenu						= false					-- is LOS windows active? -- or function active?? --todo
 local show_buildermenu					= false					-- is builder windows active? -- or function active?? --todo
 local show_wingmenu						= false					-- is wing windows active? -- or function active?? --todo
@@ -95,6 +102,9 @@ local statisticsbutton_on = "LuaUI/Images/menu/minimenu/statisticsbutton_on.png"
 local objbutton_off = "LuaUI/Images/menu/minimenu/objbutton_off.png"
 local objbutton_on = "LuaUI/Images/menu/minimenu/objbutton_on.png"
 local objbutton_blinking = "LuaUI/Images/menu/minimenu/objbutton_blinking.png"
+local diarybutton_off = "LuaUI/Images/menu/minimenu/diarybutton_off.png"
+local diarybutton_on = "LuaUI/Images/menu/minimenu/diarybutton_on.png"
+local diarybutton_blinking = "LuaUI/Images/menu/minimenu/diarybutton_blinking.png"
 local builderbutton_off = "LuaUI/Images/menu/minimenu/builderbutton_off.png"
 local builderbutton_on = "LuaUI/Images/menu/minimenu/builderbutton_on.png"
 local losbutton_off = "LuaUI/Images/menu/minimenu/losbutton_off.png"
@@ -160,6 +170,14 @@ end
 -- INIZIALIZZO IL MENU 
 --------------------------------------
 function widget:Initialize()
+-- eseguire verifica per capire che partita si sta giocando (WMRTSMission, FLEA, skirmish)
+	if (Spring.GetGameRulesParam('WMRTSmission') == 1 or Spring.GetGameRulesParam('WMRTSmission') == '1') then
+		missione_attiva = 1 -- missione tipo WMRTS
+	elseif (Spring.GetGameRulesParam('Fleabowl') == 1 or Spring.GetGameRulesParam('Fleabowl') == '1') then
+		missione_attiva = 2 -- missione tipo FLEA	
+	else		
+		missione_attiva = 0 -- skirmish
+	end
 -- all'inizio imposto la posizione del mini menu
   Pos_x_minimenu_button = vsx - margine_dx_minimenu - larghezza_main_minimenu_button
   Pos_y_minimenu_button = vsy - margine_su_minimenu - altezza_minimenu_buttons
@@ -191,6 +209,9 @@ function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la 
 				-- obj
 				or 
 				((x >= Pos_x_obj_button) and (x <= Pos_x_obj_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))   --se è sopra il minibutton 
+				-- diary
+				or 
+				((x >= Pos_x_diary_button) and (x <= Pos_x_diary_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))   --se è sopra il minibutton 
 				-- LOS
 				or 
 				((x >= Pos_x_los_button) and (x <= Pos_x_los_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))   --se è sopra il minibutton 
@@ -293,7 +314,17 @@ function widget:MousePress(x, y, button)
 				-- si disattiva			
 				elseif show_objmenu and (show_minimenu_object_button and((x >= Pos_x_obj_button) and (x <= Pos_x_obj_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				Spring.SendCommands("close_WMRTS_obj")
-				return true							
+				return true		
+		-- diary
+				-- si attiva			
+				elseif not show_diarymenu and (show_minimenu_diary_button and((x >= Pos_x_diary_button) and (x <= Pos_x_diary_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				Spring.SendCommands("open_WMRTS_diary") 
+				diarybuttosinblinking = 0 -- set blinking to 0 cosi nel caso resetta le notifiche all'apertura del diario	
+				return true			
+				-- si disattiva			
+				elseif show_objmenu and (show_minimenu_diary_button and((x >= Pos_x_diary_button) and (x <= Pos_x_diary_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				Spring.SendCommands("close_WMRTS_diary")
+				return true				
 		-- LOS
 				-- si attiva		
 				elseif (show_minimenu_los_button and((x >= Pos_x_los_button) and (x <= Pos_x_los_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
@@ -371,6 +402,18 @@ function widget:TextCommand(command)
 	-- evidenza obj button
 	objbuttosinblinking = 1
 	end		
+-- apertura e chiusura diary menu
+	if command == 'open_WMRTS_diary' then
+		show_diarymenu = true
+	end
+	if command == 'close_WMRTS_diary' then
+		show_diarymenu = false
+	end		
+-- blinking del diary menu
+	if command == 'blink_WMRTS_diary' and show_diarymenu == false then
+	-- evidenza diary button
+	diarybuttosinblinking = 1
+	end			
 -- apertura e chiusura statistics menu
 	if command == 'open_WMRTS_statistics' then
 		show_statisticsmenu = true
@@ -428,6 +471,10 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 				elseif  ((mousex >= Pos_x_obj_button) and (mousex <= Pos_x_obj_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su obj minibutton
 				Pos_x_riquadro_button =	Pos_x_obj_button
 				show_selettore_minibutton = true
+				-- diary			
+				elseif  ((mousex >= Pos_x_diary_button) and (mousex <= Pos_x_diary_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su obj minibutton
+				Pos_x_riquadro_button =	Pos_x_diary_button
+				show_selettore_minibutton = true				
 				-- statistics				
 				elseif  ((mousex >= Pos_x_statistics_button) and (mousex <= Pos_x_statistics_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su statistics minibutton
 				Pos_x_riquadro_button =	Pos_x_statistics_button
@@ -574,6 +621,31 @@ local function DrawMainMiniMenu()
 						gl.Texture(objbutton_blinking)			-- mostra il pulsante blinking
 					else				
 						gl.Texture(objbutton_off)			-- altrimenti mostra il pulsante spento	
+					end
+				end
+			gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
+			gl.Texture(false)	-- fine texture	
+			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante LOS (se sarà presente)
+		end
+
+
+-- inserisco diary minipulsante, se abilitato
+------------------------------------
+		if show_minimenu_diary_button then 	-- se il minipulsante è attivo per vederlo nel minimenù:
+	Pos_x_diary_button = Pos_x_next_button_drawing		-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
+	-- sfondo del blocco, se attivo
+	gl.Color(1,1,1,1)
+	gl.Texture(minimenu_bkgnd_btn)	
+	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giu_minimenu,Pos_x_next_button_drawing+larghezza_minimenu_buttons+interspazio_buttons,vsy)	
+	gl.Texture(false)	-- fine texture	
+	-- pulsante
+				if show_diarymenu then 				-- se la finestra (o funzione) del diario è attiva:
+				gl.Texture(diarybutton_on)			-- mostra il pulsante acceso
+				else
+					if diarybuttosinblinking == 1 then
+						gl.Texture(diarybutton_blinking)			-- mostra il pulsante blinking
+					else				
+						gl.Texture(diarybutton_off)			-- altrimenti mostra il pulsante spento	
 					end
 				end
 			gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
