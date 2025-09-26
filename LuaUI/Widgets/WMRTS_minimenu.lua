@@ -627,7 +627,7 @@ local function DrawMainMiniMenu()
 			gl.Texture(false)	-- fine texture	
 			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante LOS (se sarà presente)
 		end
-end
+
 
 -- inserisco diary minipulsante, se abilitato
 ------------------------------------

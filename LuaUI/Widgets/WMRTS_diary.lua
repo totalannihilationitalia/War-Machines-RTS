@@ -247,6 +247,8 @@ end
 -- INIZIALIZZO IL MENU 
 --------------------------------------
 function widget:Initialize()
+--[[ rimuovo temporaneamente fino a conclusione test ###########
+
 -- eseguire verifica per capire se è richiesto il widget (ossia si sta giocando una missione, WMRTSmission == 1, altrimenti chiudi widget)
 	if (Spring.GetGameRulesParam('WMRTSmission') == 1 or Spring.GetGameRulesParam('WMRTSmission') == '1') then
 		missione_attiva = 1 -- mostrerà il diario per WMRTS Missions
@@ -255,6 +257,7 @@ function widget:Initialize()
 	else		
 		widgetHandler:RemoveWidget() -- rimuovi il widget diario, è una partita skirmish
 	end
+	]]--
 -- all'inizio imposto la posizione del mini menu
 	Pos_x_mainmenu = vsx/2 - larghezza_diarymenu/2
 	Pos_y_mainmenu = vsy/2 - altezza_diarymenu/2
