@@ -19,7 +19,7 @@ function widget:GetInfo()
     date      = "02 Dicember, 2024",
     license   = "GNU GPL, v2 or later",
     layer     = 0,
-    enabled   = true -- false at the moment, under test 
+    enabled   = true 
   }
 end
 
@@ -170,17 +170,11 @@ end
 -- INIZIALIZZO IL MENU 
 --------------------------------------
 function widget:Initialize()
--- eseguire verifica per capire che partita si sta giocando (WMRTSMission, FLEA, skirmish)
-	if (Spring.GetGameRulesParam('WMRTSmission') == 1 or Spring.GetGameRulesParam('WMRTSmission') == '1') then
-		missione_attiva = 1 -- missione tipo WMRTS
-	elseif (Spring.GetGameRulesParam('Fleabowl') == 1 or Spring.GetGameRulesParam('Fleabowl') == '1') then
-		missione_attiva = 2 -- missione tipo FLEA	
-	else		
-		missione_attiva = 0 -- skirmish
-	end
+-- preleva il valore da modoptions
+	missione_attiva = tonumber(Spring.GetModOptions().wmrtsmission) or 0 -- prendi il valore dalle opzioni wmrtsmission o 0
 -- all'inizio imposto la posizione del mini menu
-  Pos_x_minimenu_button = vsx - margine_dx_minimenu - larghezza_main_minimenu_button
-  Pos_y_minimenu_button = vsy - margine_su_minimenu - altezza_minimenu_buttons
+	Pos_x_minimenu_button = vsx - margine_dx_minimenu - larghezza_main_minimenu_button
+	Pos_y_minimenu_button = vsy - margine_su_minimenu - altezza_minimenu_buttons
 -- avvio la funzione check_options()
 	check_options()  
 -- carico le impostazioni del LOS (se era visibile, diventa visibile, se era invisibile, non lo vedo)  
@@ -274,22 +268,33 @@ function widget:MousePress(x, y, button)
 				-- si attiva
 				if not show_mainmenu and((x >= Pos_x_minimenu_button) and (x <= Pos_x_minimenu_button + larghezza_main_minimenu_button) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))  then --se è sopra il minibutton main menu
 				Spring.SendCommands("open_WMRTS_menu") 	-- open_WMRTS_menu
-				Spring.SendCommands("close_WMRTS_snd")	-- close_WMRTS_sndmenu				
+				Spring.SendCommands("close_WMRTS_obj") 			-- chiudo gli obiettivi	
+				Spring.SendCommands("close_WMRTS_graphics") 	-- close WMRTS_graphics	
+				Spring.SendCommands("close_WMRTS_visuals") 		-- close WMRTS_graphics					
+				Spring.SendCommands("close_WMRTS_exit") 		-- close WMRTS_exit	
+				Spring.SendCommands("close_WMRTS_snd")			-- close wmrts_sndmenu		
+				Spring.SendCommands("close_WMRTS_diary") 		-- chiudo le altre cose		
+				Spring.SendCommands("close_WMRTS_statistics")	-- chiuso le statistiche				
+				
 				show_mainmenu = true					-- attivo il pulsante "menu" del minimenu
 				return true
 				-- si disattiva
 				elseif show_mainmenu and((x >= Pos_x_minimenu_button) and (x <= Pos_x_minimenu_button + larghezza_main_minimenu_button) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))  then --se è sopra il minibutton main menu
 				Spring.SendCommands("close_WMRTS_menu") -- close_WMRTS_menu
-				Spring.SendCommands("close_WMRTS_snd")	-- close_WMRTS_sndmenu
+--				Spring.SendCommands("close_WMRTS_snd")	-- close_WMRTS_sndmenu
 				show_mainmenu = false					-- disattivo il pulsante "menu" del minimenu
 				return true				
 		-- sound 
 				-- si attiva
 				elseif not show_sndmenu and (show_minimenu_snd_button and ((x >= Pos_x_snd_button) and (x <= Pos_x_snd_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton sound
 				Spring.SendCommands("open_WMRTS_snd")		-- open wmrts_sndmenu
-				Spring.SendCommands("close_WMRTS_menu") 	-- close WMRTS_menu	
-				Spring.SendCommands("close_WMRTS_graphics") -- close WMRTS_graphics	
-				Spring.SendCommands("close_WMRTS_exit") 	-- close WMRTS_exit					
+				Spring.SendCommands("close_WMRTS_obj") 			-- chiudo gli obiettivi	
+				Spring.SendCommands("close_WMRTS_menu") 		-- close_WMRTS_menu
+				Spring.SendCommands("close_WMRTS_graphics") 	-- close WMRTS_graphics	
+				Spring.SendCommands("close_WMRTS_visuals") 		-- close WMRTS_graphics					
+				Spring.SendCommands("close_WMRTS_exit") 		-- close WMRTS_exit	
+				Spring.SendCommands("close_WMRTS_diary") 		-- chiudo le altre cose		
+				Spring.SendCommands("close_WMRTS_statistics")	-- chiuso le statistiche		
 				show_mainmenu = false
 				return true	
 				-- si disattiva
@@ -300,6 +305,14 @@ function widget:MousePress(x, y, button)
 				-- si attiva				
 				elseif not show_statisticsmenu and (show_minimenu_statistics_button and((x >= Pos_x_statistics_button) and (x <= Pos_x_statistics_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				Spring.SendCommands("open_WMRTS_statistics")
+				Spring.SendCommands("close_WMRTS_obj") 			-- chiudo gli obiettivi	
+				Spring.SendCommands("close_WMRTS_menu") 		-- close_WMRTS_menu
+				Spring.SendCommands("close_WMRTS_graphics") 	-- close WMRTS_graphics	
+				Spring.SendCommands("close_WMRTS_visuals") 		-- close WMRTS_graphics					
+				Spring.SendCommands("close_WMRTS_exit") 		-- close WMRTS_exit	
+				Spring.SendCommands("close_WMRTS_snd")			-- close wmrts_sndmenu		
+				Spring.SendCommands("close_WMRTS_diary") 		-- chiudo le altre cose		
+				show_mainmenu = false				
 				return true	
 				-- si disattiva				
 				elseif show_statisticsmenu and (show_minimenu_statistics_button and((x >= Pos_x_statistics_button) and (x <= Pos_x_statistics_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
@@ -309,7 +322,15 @@ function widget:MousePress(x, y, button)
 				-- si attiva			
 				elseif not show_objmenu and (show_minimenu_object_button and((x >= Pos_x_obj_button) and (x <= Pos_x_obj_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				Spring.SendCommands("open_WMRTS_obj")
+				Spring.SendCommands("close_WMRTS_menu") 		-- close_WMRTS_menu
+				Spring.SendCommands("close_WMRTS_graphics") 	-- close WMRTS_graphics	
+				Spring.SendCommands("close_WMRTS_visuals") 		-- close WMRTS_graphics					
+				Spring.SendCommands("close_WMRTS_exit") 		-- close WMRTS_exit	
+				Spring.SendCommands("close_WMRTS_snd")			-- close wmrts_sndmenu		
+				Spring.SendCommands("close_WMRTS_diary") 		-- chiudo le altre cose		
+				Spring.SendCommands("close_WMRTS_statistics")	-- chiuso le statistiche			
 				objbuttosinblinking = 0 -- set blinking to 0 cosi nel caso resetta le notifiche all'apertura degli obiettivi	
+				show_mainmenu = false				
 				return true			
 				-- si disattiva			
 				elseif show_objmenu and (show_minimenu_object_button and((x >= Pos_x_obj_button) and (x <= Pos_x_obj_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
@@ -319,10 +340,18 @@ function widget:MousePress(x, y, button)
 				-- si attiva			
 				elseif not show_diarymenu and (show_minimenu_diary_button and((x >= Pos_x_diary_button) and (x <= Pos_x_diary_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				Spring.SendCommands("open_WMRTS_diary") 
+				Spring.SendCommands("close_WMRTS_obj") 			-- chiudo gli obiettivi	
+				Spring.SendCommands("close_WMRTS_menu") 		-- close_WMRTS_menu
+				Spring.SendCommands("close_WMRTS_graphics") 	-- close WMRTS_graphics	
+				Spring.SendCommands("close_WMRTS_visuals") 		-- close WMRTS_graphics					
+				Spring.SendCommands("close_WMRTS_exit") 		-- close WMRTS_exit	
+				Spring.SendCommands("close_WMRTS_snd")			-- close wmrts_sndmenu		
+				Spring.SendCommands("close_WMRTS_statistics")	-- chiuso le statistiche
+				show_mainmenu = false				
 				diarybuttosinblinking = 0 -- set blinking to 0 cosi nel caso resetta le notifiche all'apertura del diario	
 				return true			
 				-- si disattiva			
-				elseif show_objmenu and (show_minimenu_diary_button and((x >= Pos_x_diary_button) and (x <= Pos_x_diary_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				elseif show_diarymenu and (show_minimenu_diary_button and((x >= Pos_x_diary_button) and (x <= Pos_x_diary_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				Spring.SendCommands("close_WMRTS_diary")
 				return true				
 		-- LOS
@@ -528,8 +557,8 @@ function widget:KeyPress(key, mods, isRepeat)
 	end
 -- se premo il tasto esc 
 	if key == 27 then -- TASTO esc 0x01B
-		-- se non ci sono selezionate le unità, ed il mainmenu è disattivato e il sndmenu non è attivo: apro il mainmenu
-		if not show_mainmenu and not show_sndmenu and not Spring.IsGUIHidden() and Spring.GetSelectedUnitsCount() == 0 then
+		-- se non ci sono selezionate le unità, ed il mainmenu è disattivato e il sndmenu (e altri menu) non è attivo: apro il mainmenu
+		if not show_mainmenu and not show_sndmenu and not show_objmenu and not show_diarymenu and not show_statisticsmenu and not Spring.IsGUIHidden() and Spring.GetSelectedUnitsCount() == 0 then
 		Spring.SendCommands("open_WMRTS_menu") 				-- apro il mainmenu (widget main menu)
 		show_mainmenu = true								-- accendo il minipulsante menu del minimenu
 		return true
@@ -631,7 +660,7 @@ local function DrawMainMiniMenu()
 
 -- inserisco diary minipulsante, se abilitato
 ------------------------------------
-		if show_minimenu_diary_button then 	-- se il minipulsante è attivo per vederlo nel minimenù:
+		if (show_minimenu_diary_button and (missione_attiva ~= 0)) then 	-- se il minipulsante è attivo e non si sta giocando una partita skirmish (diverso da 0) per vederlo nel minimenù:
 	Pos_x_diary_button = Pos_x_next_button_drawing		-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
 	-- sfondo del blocco, se attivo
 	gl.Color(1,1,1,1)
