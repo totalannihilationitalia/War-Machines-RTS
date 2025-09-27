@@ -24,6 +24,7 @@ function widget:GetInfo()
 	}
 -- rev 0 by molix -- 23/12/2024 -- New WMRTS obj interface, integrated with WMRTS minimenu
 -- rev 1 by molix -- 03/01/2025 -- risolto problema di memoria e relativo crash in Spring 
+-- rev 2 by molix -- 26/09/2025 -- rimosso il gui shader quando si riceve il comando di chiudere obj menu
 end
 
 --------------------------------------------------------------------------------
@@ -108,6 +109,10 @@ function widget:TextCommand(command)
 	end
 	if command == 'close_WMRTS_obj' then
 		mostra_objsetting = false
+			-- remove gui shader
+				if (WG['guishader_api'] ~= nil) then
+					WG['guishader_api'].RemoveRect('WMRTS_obj_option')
+				end				
 	end	
 end
 
@@ -118,6 +123,7 @@ function widget:KeyPress(key, mods, isRepeat)
 if mostra_objsetting and not Spring.IsGUIHidden() then
 	if key == 0x01B then -- TASTO esc
 	mostra_objsetting = false  
+	Spring.SendCommands("close_WMRTS_obj") 		-- invia comando per spegnere il minibutton obj del minimenu	
 --		if ButtonMenu.click then ------------------------------------------------------------------------------- inserire il suono di chiusura finestra
 --			ButtonMenu.click = false
 --			PlaySoundFile(TEST_SOUND)		
