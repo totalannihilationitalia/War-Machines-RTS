@@ -56,7 +56,7 @@ local posy_menuicone             	    = 366								-- altezza del primo pulsante
 local interassey_menuicone		        = 25+10								-- distanza y tra le origini di due pulsanti consecutivi
 local autopopup							= 1									-- attiva l'apertura del diario quando si riceve il comando di nuova news
 local autopause							= 1									-- attiva la pausa quando si riceve il comando di nuova news
-local diarymenu_attivo					= true 								-- Indica se questo menu è aperto o meno
+local diarymenu_attivo					= false 							-- Indica se questo menu è aperto o meno
 local margine_sx_icona_diarymenu		= 20  								-- distanza dal margine sinistro del background e l'icona del menu
 local margine_dx_icone_diarymenu		= 10  								-- distanza dal bordo del diario alle icone di destra del menu
 local margine_su_icona_diarymenu		= -30 								-- distanza di quanto sborda l'immagine dal bordo superiore del background
@@ -99,7 +99,7 @@ local new_units				= 0
 
 -- definizioni immagini bottoni e background
 local headerdiarymenu 			= "LuaUI/Images/menu/diary/header_menu_bkgnd.png"
-local contentdiarymenu			= "LuaUI/Images/menu/diary/content_menu_bkgnd.png"  				-- assumerà il valore di una delle news sotto, a seconda della categoria e della pagina che si sta guardando
+local contentdiarymenu			= "LuaUI/Images/menu/diary/contents/wmrtschara0.png"  				-- assumerà il valore di una delle news sotto, a seconda della categoria e della pagina che si sta guardando
 local button_close				= "LuaUI/Images/menu/diary/menu_close.png"
 local icona_diarymenu			= "LuaUI/Images/menu/diary/menu_diary_icon.png"
 
@@ -111,15 +111,12 @@ local button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_off.png
 local button_unitsmenu			= "LuaUI/Images/menu/diary/buttondiary_units_off.png" 
 local button_catover			= "LuaUI/Images/menu/diary/buttondiary_over.png" 
 -- definizione delle immagini dei pulsanti avanti e dietro
-local button_successiva			= "LuaUI/Images/menu/diary/btnprevious.png"
-local button_precedente			= "LuaUI/Images/menu/diary/btnnext.png"
+local button_successiva			= "LuaUI/Images/menu/diary/btnnext.png"
+local button_precedente			= "LuaUI/Images/menu/diary/btnprevious.png"
 
 -- impostazione dei fonts
 local font_intestazione				= gl.LoadFont("FreeSansBold.otf",14, 1.9, 40)
 local font_generale					= gl.LoadFont("FreeSansBold.otf",12, 1.9, 40)
-
--- tabella diario
-local diaryData						= {}  -- ############################### ELIMINARE TABELLA, SI USANO LE VARIABILI
 
 --------------------------------------
 -- GESTIONE DELLE CATEGORIE DEL DIARIO -- Ogni volta che viene chiamata questa funziona si setta la categoria del diario ############################ al momento non viene mai richiamata#################
@@ -247,7 +244,7 @@ end
 -- INIZIALIZZO IL MENU 
 --------------------------------------
 function widget:Initialize()
---[[ rimuovo temporaneamente fino a conclusione test ###########
+--[[ rimuovo temporaneamente fino a conclusione test ##########################################################################################################################################
 
 -- eseguire verifica per capire se è richiesto il widget (ossia si sta giocando una missione, WMRTSmission == 1, altrimenti chiudi widget)
 	if (Spring.GetGameRulesParam('WMRTSmission') == 1 or Spring.GetGameRulesParam('WMRTSmission') == '1') then
@@ -446,16 +443,16 @@ end
 --------------------------------------
 function widget:GameFrame(frame)
 	if frame%30 == 0 then
--- ricevo il numero globale della mappa  ######################################### tramutare queste da tabella diarYdata a variabili
-		diaryData["pagtot_maps"] 	= Spring.GetGameRulesParam("wmrts_diary_maps")	
+-- ricevo il numero globale della mappa
+		pagtot_maps = Spring.GetGameRulesParam("wmrts_diary_maps") or 0
 -- ricevo il numero globale dello storyboard
-		diaryData["pagtot_story"] = Spring.GetGameRulesParam("wmrts_diary_story")	
+		pagtot_story = Spring.GetGameRulesParam("wmrts_diary_story") or 0
 -- ricevo il numero globale dei suggerimenti
-		diaryData["pagtot_hints"] = Spring.GetGameRulesParam("wmrts_diary_hints")	
+		pagtot_hints = Spring.GetGameRulesParam("wmrts_diary_hints") or 0
 -- ricevo il numero globale dei personaggi
-		diaryData["pagtot_character"]= Spring.GetGameRulesParam("wmrts_diary_character")	
+		pagtot_character = Spring.GetGameRulesParam("wmrts_diary_character") or 0
 -- ricevo il numero globale delle unità
-		diaryData["pagtot_units"]= Spring.GetGameRulesParam("wmrts_diary_units")			
+		pagtot_units = Spring.GetGameRulesParam("wmrts_diary_units") or 0
 	end
 end
 
@@ -466,28 +463,32 @@ function widget:TextCommand(command)
 -- apertura e chiusura del menu
 	if command == 'diary_WMRTS_maps' then -- se ricevo una news inerente alla mappa globale
 		new_maps = 1
-		if autopopup == 1 then diarymenu_attivo = true end -- se l'opzione autopopup è abilitata, apri automaticamente il diario
+		if autopopup == 1 then diarymenu_attivo = false end -- se l'opzione autopopup è abilitata e il diario è chiuso, apri automaticamente il diario
 --		Inserire invio comando per "blinking" dell'icona diario nel minimenu		####################################
 	elseif command == 'diary_WMRTS_story' then -- se ricevo una news inerente alla storia
 		new_story = 1
-		if autopopup == 1 then diarymenu_attivo = true end 
+		if autopopup == 1 then diarymenu_attivo = false end 
 --		Inserire invio comando per "blinking" dell'icona diario nel minimenu		####################################
 	elseif command == 'diary_WMRTS_hints' then -- se ricevo una news inerente ai suggerimenti
 		new_hints = 1	
-		if autopopup == 1 then diarymenu_attivo = true end
+		if autopopup == 1 then diarymenu_attivo = false end
 --		Inserire invio comando per "blinking" dell'icona diario nel minimenu		####################################
 	elseif command == 'diary_WMRTS_character' then -- se ricevo una news inerente ai personaggi
 		new_character = 1		
-		if autopopup == 1 then diarymenu_attivo = true end
+		if autopopup == 1 then diarymenu_attivo = false end
 --		Inserire invio comando per "blinking" dell'icona diario nel minimenu		####################################
 	elseif command == 'diary_WMRTS_units' then -- se ricevo una news inerente alle unità
 		new_units = 1			
-		if autopopup == 1 then diarymenu_attivo = true end		
+		if autopopup == 1 then diarymenu_attivo = false end		
 --		Inserire invio comando per "blinking" dell'icona diario nel minimenu		####################################
 	elseif command == 'open_WMRTS_diary' then -- se ricevo il comando di aprire il diario (dal minimenu)
 		diarymenu_attivo = true
 	elseif command == 'close_WMRTS_diary' then -- se ricevo il comando di chiudere il diario (dal minimenu)
-		diarymenu_attivo = false		
+		diarymenu_attivo = false	
+			-- disabilito il guishader
+				if (WG['guishader_api'] ~= nil) then
+				WG['guishader_api'].RemoveRect('WMRTS_diary_shad')
+				end			
 	end	
 end
 
@@ -496,8 +497,8 @@ end
 --------------------------------------
 function widget:KeyPress(key, mods, isRepeat) 
 	if diarymenu_attivo and not Spring.IsGUIHidden() then
-		if key == 27 then -- TASTO esc  0x01B
-			diarymenu_attivo = false 							-- chiudo il diario
+	if key == 0x01B then -- TASTO esc
+			diarymenu_attivo = false 							-- chiudo il diario			
 			Spring.SendCommands("close_WMRTS_diary")			-- spengo il minipulsante menu del minimenu 
 			-- disabilito il guishader
 				if (WG['guishader_api'] ~= nil) then
@@ -542,7 +543,7 @@ end
 		gl.Texture(false)	-- fine texture	
 		
 	-- pulsante mappe
-		if pagtot_maps > 0 then --disegna la riga dell'obiettivo 1	
+		if pagtot_maps > 0 then -- disegna il relativo pulsante  solo se è presente il contenuto
 			-- back
 			gl.Color(1,1,1,1)
 			gl.Texture(button_mapmenu)	-- definire icona ######################################################################################################################
@@ -556,6 +557,7 @@ end
 		end
 		
 	-- pulsante story
+		if pagtot_story > 0 then -- disegna il relativo pulsante  solo se è presente il contenuto	
 		-- back
 		gl.Color(1,1,1,1)
 		gl.Texture(button_storymenu)	
@@ -566,8 +568,10 @@ end
 		font_intestazione:Begin()
 		font_intestazione:Print("Story", Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+10,Pos_y_mainmenu+posy_menuicone-interassey_menuicone,9,'ds')
 		font_intestazione:End()		
-
+		end
+		
 	-- pulsante hints
+		if pagtot_hints > 0 then -- disegna il relativo pulsante  solo se è presente il contenuto		
 		-- back
 		gl.Color(1,1,1,1)
 		gl.Texture(button_hintsmenu)	
@@ -578,8 +582,10 @@ end
 		font_intestazione:Begin()
 		font_intestazione:Print("Hints", Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+10,Pos_y_mainmenu+posy_menuicone-2*interassey_menuicone,9,'ds')
 		font_intestazione:End()			
-
+		end
+		
 	-- pulsante characters
+		if pagtot_character > 0 then -- disegna il relativo pulsante  solo se è presente il contenuto	
 		-- back
 		gl.Color(1,1,1,1)
 		gl.Texture(button_charmenu)	
@@ -590,8 +596,10 @@ end
 		font_intestazione:Begin()
 		font_intestazione:Print("Hints", Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+10,Pos_y_mainmenu+posy_menuicone-3*interassey_menuicone,9,'ds')
 		font_intestazione:End()		
-
+		end
+		
 	-- pulsante units
+		if pagtot_units > 0 then -- disegna il relativo pulsante  solo se è presente il contenuto		
 		-- back
 		gl.Color(1,1,1,1)
 		gl.Texture(button_unitsmenu)	
@@ -602,7 +610,8 @@ end
 		font_intestazione:Begin()
 		font_intestazione:Print("Hints", Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+10,Pos_y_mainmenu+posy_menuicone-4*interassey_menuicone,9,'ds')
 		font_intestazione:End()	
-
+		end
+		
 	-- pulsante pagina precedente
 	-- ########## da mostrare solo se la categoria corrente ha almeno 1 pagina ! ####################
 		gl.Color(1,1,1,1)
