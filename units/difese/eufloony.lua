@@ -42,7 +42,7 @@ return {
 --               standingfireorder = 2,
                TEDClass = "FORT", -- verificare se necessario
                usebuildinggrounddecal = true,
-               YardMap= "oooo",
+               YardMap= "ooooooooo",
 -----------------------------------------------------------
 --- Units wreckage and heaps
 -----------------------------------------------------------

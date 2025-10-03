@@ -6,7 +6,6 @@ return {
 -----------------------------------------------------------
   piratesfig= {
                acceleration = 2.5,
-		    badTargetCategory = "OGGETTISTATICI",
                brakerate  = 7.5,
                buildcostenergy = 2687,
                buildcostmetal = 68,

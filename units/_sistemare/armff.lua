@@ -19,7 +19,7 @@ return {
                canmove = true,
                canPatrol = true,
 --               canstop = 1,
-		category = "ALL MOBILE NOTDEFENSE NOTSUB NOTSUBNOTSHIP SMALLVTOL VTOL WEAPON",
+		category = "ALL MOBILE NOTSUB VTOL WEAPON",
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",

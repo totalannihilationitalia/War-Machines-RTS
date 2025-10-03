@@ -13,7 +13,7 @@ return {
 		buildpic = "icupcan.png",
 		canattack = true,
 		canstop = 1,
-		category = "ALL NOTMOBILE NOTSUB NOTSUBNOTSHIP NOTVTOL WEAPON SURFACE",
+		category = "ALL NOTSUB NOTVTOL WEAPON SURFACE",
 		corpse = "DEAD",
 		defaultmissiontype = "GUARD_NOMOVE",
 		description = "Patroller Cannon",

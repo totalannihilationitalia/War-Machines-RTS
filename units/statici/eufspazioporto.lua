@@ -54,7 +54,7 @@ return {
                turnrate = 0,
                usebuildinggrounddecal = true,
                workertime = 200,
-               YardMap= "occccooccccooccccooccccooccccoocccco",
+               YardMap= "oooooooooo oooccccooo oooccccooo oooccccooo oooccccooo oooccccooo oooccccooo oooccccooo oooccccooo oooccccooo ",
                buildoptions = { 
 -----------------------------------
 --- INSERT BUILDLIST

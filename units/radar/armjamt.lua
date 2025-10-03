@@ -19,7 +19,7 @@ return {
                buildpic = "icujamt.png",
                buildtime  = 9955,
                canAttack = false,
-               category = "ALL NOTSUB NOWEAPON JAM SPECIAL NOTAIR SURFACE",
+               category = "ALL NOTSUB NOWEAPON SPECIAL NOTAIR SURFACE",
                cloakcost = 25,
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",

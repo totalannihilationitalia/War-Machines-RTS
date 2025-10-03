@@ -47,7 +47,7 @@ return {
                TEDClass = "PLANT", -- verificare se necessario
                usebuildinggrounddecal = true,
                workertime = 400,
-               YardMap= "oooooooooooo oyyyyyyyyyyo oyyyyyyyyyyo oyyyyyyyyyyo oyyyyyyyyyyo oyyyyyyyyyyo oyyyyyyyyyyo oyyyyyyyyyyo oyyyyyyyyyyo oyyyyyyyyyyo oooooooooooo",
+               YardMap= "oooooooooooo oyyyyyyyyyyo oyyyyyyyyyyo oyyyyyyyyyyo oyyyyyyyyyyo oyyyyyyyyyyo oyyyyyyyyyyo oyyyyyyyyyyo oyyyyyyyyyyo oyyyyyyyyyyo oooooooooooo oooooooooooo",
 -----------------------------------
 --- BUILDLIST
 -----------------------------------

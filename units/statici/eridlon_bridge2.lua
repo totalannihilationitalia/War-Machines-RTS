@@ -10,7 +10,7 @@ return {
                buildpic = "",
                buildtime  = 100,
                canAttack = false,
-               category = "LAND LANDAIR",
+               category = "SURFACE",
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",

@@ -19,7 +19,7 @@ return {
                buildpic = "nfajamt.png",
                buildtime  = 4577,
                canAttack = false,
-               category = "ALL NOTSUB JAM NOWEAPON SPECIAL NOTAIR SURFACE",
+               category = "ALL NOTSUB NOWEAPON SPECIAL NOTAIR SURFACE",
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
