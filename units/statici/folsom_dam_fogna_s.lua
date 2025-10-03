@@ -4,7 +4,7 @@ return {
 -----------------------------------------------------------
 --- UNITS FEATURES
 -----------------------------------------------------------
-  folsom_dam_fogna = {
+  folsom_dam_fogna_s = {
                acceleration = 0,
                activatewhenbuilt = true,
                brakerate  = 0,
@@ -38,7 +38,7 @@ return {
                metalStorage = 0,
                name = "Sewage Outfalls",
                noAutoFire = false,
-               objectname = "folsom_dam_fogna.s3o",
+               objectname = "folsom_dam_fogna_s.s3o",
                onoffable = true,
 --               radardistance = 2100,
                seismicsignature = 0,
