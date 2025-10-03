@@ -282,7 +282,7 @@ weapondefs = {
 --                    soundhitwetvolume = "",
                      weapontype = " ",
                      damage = {
-                         default = ,
+                         default = 0, -- mancava un valore 03/10/2025
                      }, -- close damage
              }, --close single weapon definitions
 
