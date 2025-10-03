@@ -41,7 +41,7 @@ return {
 --               soundcategory= "CORE_MOHO",
                TEDClass = "METAL", -- verificare se necessario
                workertime = 0,
-               YardMap= "ooooooooooooooooooooooooo",
+               YardMap= "oooooooooooooooooooooooooooooooooooo",
 -----------------------------------------------------------
 --- Units wreckage and heaps
 -----------------------------------------------------------
