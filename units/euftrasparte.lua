@@ -149,7 +149,7 @@ weapondefs = {
 weapons = {
                  [1] = {
                  def = "buildlaser",
-                 onlytargetcategory = "VOID",
+--                 onlytargetcategory = "VOID",
                  },
 }, -- close weapon usage
 }, -- close unit data 

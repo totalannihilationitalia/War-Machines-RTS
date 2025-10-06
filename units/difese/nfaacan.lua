@@ -13,7 +13,7 @@ return {
 		buildpic = "nfaacan.png",
 		canattack = true,
 		canstop = 1,
-		category = "ALL NOTDEFENSE NOTHOVERNOTVTOL NOTMOBILE NOTSUB NOTSUBNOTSHIP NOTVTOL WEAPON SURFACE",
+		category = "ALL NOTHOVER NOTVTOL NOTSUB NOTVTOL WEAPON SURFACE",
 		corpse = "DEAD",
 		defaultmissiontype = "GUARD_NOMOVE",
 		description = "Ak Cannon",

@@ -198,6 +198,8 @@ weapons = {
 			[3] = {
 				def = "ARM_DISINTEGRATOR",
 			},
+				  } -- mancava una parentesi 03/10/2025
+
 }, -- close weapon usage
 
 }, -- close unit data 

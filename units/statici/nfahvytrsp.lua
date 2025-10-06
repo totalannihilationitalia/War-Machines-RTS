@@ -68,7 +68,7 @@ sfxtypes = {
                [2]="custom:YellowLight",
                [3]="custom:WhiteLight",
                }, -- close effects list
-}, -- close section sfxtypes
-}, --close sound section
+			}, -- close section sfxtypes
+--}, --close sound section
 }, -- close unit data 
 } -- close total

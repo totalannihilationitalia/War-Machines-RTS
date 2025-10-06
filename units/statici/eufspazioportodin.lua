@@ -53,7 +53,7 @@ return {
                turnrate = 0,
                usebuildinggrounddecal = true,
                workertime = 3500,
-               YardMap= "occccooccccooccccooccccooccccoocccco",
+               YardMap= "oooooooooo oooccccooo oooccccooo oooccccooo oooccccooo oooccccooo oooccccooo oooccccooo oooccccooo oooccccooo ",
                buildoptions = { 
 			[1] = "euftrasparte",
 			[2] = "corgol",

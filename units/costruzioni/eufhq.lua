@@ -48,7 +48,7 @@ return {
                TEDClass = "SPECIAL", -- verificare se necessario
                turnrate = 0,
                workertime = 0,
-               YardMap= "oooo",
+               YardMap= "ooooooooooooooooooooooooo",
 -----------------------------------------------------------
 --- Units wreckage and heaps
 -----------------------------------------------------------

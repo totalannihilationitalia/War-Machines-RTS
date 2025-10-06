@@ -11,7 +11,7 @@ function widget:GetInfo()
     date      = "28 September 2008, 2012, 12 September 2013",
     license   = "GNU LGPL, v2.1 or later",
     layer     = 6, --draw stuff after gui_showeco_action.lua(0) & gui_ally_cursor.lua(5) have drawn theirs to avoid disturbing their color
-    enabled   = true  --  loaded by default?
+    enabled   = false  --  loaded by default?
   }
 end
 

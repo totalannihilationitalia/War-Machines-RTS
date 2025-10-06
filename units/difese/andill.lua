@@ -44,7 +44,7 @@ return {
                TEDClass = "FORT", -- verificare se necessario
                workertime = 0,
                wpri_badtargetcategory = "VTOL",
-               YardMap= "ooooooooo",
+               YardMap= "ooooooooooooooo",
 -----------------------------------------------------------
 --- Units wreckage and heaps
 -----------------------------------------------------------
