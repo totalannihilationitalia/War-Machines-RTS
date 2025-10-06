@@ -12,7 +12,7 @@ return {
                builddistance = 170,
                builder = true,
                buildpic = "da_fare.png",
-               buildtime  = 4066,
+               buildtime  = 12397,
 	       canAttack = false,
                canGuard = true,
                canmove = true,
@@ -25,7 +25,7 @@ return {
                --collisionvolumetype = "",
                corpse = "eufacd_dead",
 --               defaultmissiontype = Standby,
-               description = "Tech Level 1",
+               description = "Tech Level 2",
                energymake = 20,
                energystorage = 100,
                energyUse = 20,
@@ -33,7 +33,7 @@ return {
                footprintx = 3,
                footprintz = 3,
 --               maneuverleashlength  = 640,
-               mass = 3000,
+               mass = 200,
                maxdamage = 1860,
                maxslope = 16,
                maxvelocity = 1.925,
@@ -42,9 +42,9 @@ return {
                metalStorage = 100,
 --               mobilestandorders= 1,
                movementclass = "TANK3",
-               name = "Construction Drone",
+               name = "Adv. Construction Drone",
                noAutoFire = false,
-               objectname = "eufacd.s3o",
+               objectname = "eufacd",
 	       pushResistant = true,
                radardistance = 50,
                seismicsignature = 0,
@@ -86,9 +86,9 @@ return {
 ------------------- creare il torpedol
 ------------------  eventuali difese floating
 		[14] = "eufblab", -------------------- non funziona sistemare ################
----------		[16] = "eufadvmetex", --------------- spostare in avanzato tech2
 		[15]= "euf_fence_gate",
 		[16]= "euf_fence_wall",
+		[17] = "eufadvmetex", 
                },
 
 -----------------------------------------------------------
@@ -96,10 +96,45 @@ return {
 -----------------------------------------------------------
 featuredefs = {
   dead = {
---               collisionvolumeoffsets = ,
---               collisionvolumescales = ,
---               collisionvolumetype = ,
+               world = "All Worlds",
+               description = "Advanced Construction Drone Wreckage",
+               category = "corpses",
+               object = "eufacd_dead",
+               featuredead = "eufacd_heap",
+               featurereclamate = "SMUDGE01",
+               footprintx = 3,
+               footprintz = 3,
+               height = 20,
+               blocking= true,
+               hitdensity = 100,
+               metal = 280,
+               damage = 1116,
+               reclaimable = true,
+               seqnamereclamate = "TREE1RECLAMATE",
+               energy = 0,
+				collisionvolumeoffsets = "0.0 -1.2425585791 1.2922744751",
+				collisionvolumescales = "30.0 14.3981628418 32.5845489502",
+				collisionvolumetype = "Box",
                },  -- Close Dead Features
+  heap = {
+               world = "All Worlds",
+               description = "Advanced Construction Drone Heap",
+               category = "heaps",
+               object = "3X3A",
+               footprintx = 3,
+               footprintz = 3,
+               height = 4,
+               blocking = false,
+               hitdensity= 100,
+               metal = 112,
+               damage = 558,
+               reclaimable = true,
+               featurereclamate = "SMUDGE01",
+               seqnamereclamate = "TREE1RECLAMATE",
+               energy = 0,
+               collisionvolumescales = "55.0 4.0 6.0",
+               collisionvolumetype = "cylY",
+               },  -- Close heap
 },  --  Wreckage and heaps
 -----------------------------------------------------------
 --- EFFECTS
