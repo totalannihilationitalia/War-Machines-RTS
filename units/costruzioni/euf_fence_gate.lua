@@ -22,7 +22,7 @@ return {
                energystorage = 0,
                energyUse = 0.8,
                explodeas = "LARGE_BUILDINGEX",
-               footprintx = 5,
+               footprintx = 3,
                footprintz = 10,
                hidedamage = true,
 --               mass = 0 --definire massa,
@@ -42,7 +42,7 @@ return {
 --               script = "Gate.lua",
                TEDClass = "PLANT", -- verificare se necessario
                workertime = 0,
-               YardMap= "ooooo ccccc ccccc ccccc ccccc ccccc ccccc ccccc ccccc ooooo",
+               YardMap= "ooo ccc ccc ccc ccc ccc ccc ccc ccc ooo",
 -----------------------------------------------------------
 --- NO EFFECTS
 -----------------------------------------------------------
