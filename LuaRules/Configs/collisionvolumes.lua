@@ -77,10 +77,10 @@ local dynamicPieceCollisionVolume = {}    --dynamic per piece collision volume d
         on={49,45,49,-0.5,0,0,0,1,0},
         off={49,26,49,-0.5,0,0,0,1,0},
     }
---    unitCollisionVolume["euf_fence_gate"] = {
---        on={49,45,49,-0.5,0,0,0,1,0},
---        off={49,26,49,-0.5,0,0,0,1,0},
---    }
+   unitCollisionVolume["euf_fence_gate"] = {
+        on={49,45,49,-0.5,0,0,0,1,0},
+        off={49,100,49,-0.5,0,0,0,1,0},
+    }
     unitCollisionVolume["armanni"] = {
         on={54,81,54,0,-2,0,2,1,0},
         off={54,56,54,0,-15,0,2,1,0},

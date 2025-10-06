@@ -1,4 +1,4 @@
-﻿function gadget:GetInfo()
+function gadget:GetInfo()
   return {
     name      = "Dynamic collision volume & Hitsphere Scaledown",
     desc      = "Adjusts collision volume for pop-up style units & Reduces the diameter of default sphere collision volume for 3DO models",
@@ -45,9 +45,9 @@ if (gadgetHandler:IsSyncedCode()) then
 		if (pieceCollisionVolume[UnitDefs[unitDefID].name]) then
 			for pieceIndex, p in pairs(pieceCollisionVolume[UnitDefs[unitDefID].name]) do
 				if (p[1]==true) then
-					spSetPieceCollisionData(unitID, pieceIndex, p[1], p[1],p[1],p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9])
+					spSetPieceCollisionData(unitID, pieceIndex, p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9])   --spSetPieceCollisionData(unitID, pieceIndex, p[1], p[1],p[1],p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9])
 				else
-					spSetPieceCollisionData(unitID, pieceIndex, false, false,false,false, 1, 1, 1, 0, 0, 0, 1, 1)
+					spSetPieceCollisionData(unitID, pieceIndex, false, 1, 1, 1, 0, 0, 0, 1, 1)   --spSetPieceCollisionData(unitID, pieceIndex, false, false,false,false, 1, 1, 1, 0, 0, 0, 1, 1)
 				end
 			end
 		else
@@ -94,10 +94,10 @@ if (gadgetHandler:IsSyncedCode()) then
         if featureModel:find(".3do") then
             local rs, hs
             --//rimuovo temporaneamente//-- if ed else --////in quanto con spring 100.0 dà errore *************************************** 
-			-- if (spGetFeatureRadius(featureID)>47) then
+			 if (spGetFeatureRadius(featureID)>47) then
                 rs, hs = 0.68, 0.60
-            --else
-            --    rs, hs = 0.75, 0.67
+            else
+                rs, hs = 0.75, 0.67
             end
             local xs, ys, zs, xo, yo, zo, vtype, htype, axis, _ = spGetFeatureCollisionData(featureID)
             if (vtype>=3 and xs==ys and ys==zs) then
