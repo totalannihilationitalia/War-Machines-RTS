@@ -81,10 +81,6 @@ return {
 		[11]= "eufpath",
 		[12] = "armarch", ------ fare versione "small"
 		[13]= "eufloony",
-------------------- creare il jammer
-------------------- creare il sonar
-------------------- creare il torpedol
-------------------  eventuali difese floating
 		[14] = "eufblab", -------------------- non funziona sistemare ################
 		[15]= "euf_fence_gate",
 		[16]= "euf_fence_wall",
