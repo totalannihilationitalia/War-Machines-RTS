@@ -6,6 +6,7 @@ return {
 -----------------------------------------------------------
   demr= {
                acceleration = 0.03,
+			   airhoverfactor=0,
                brakerate  = 1,
                buildcostenergy = 47644,
                buildcostmetal = 5264,
@@ -32,6 +33,7 @@ return {
                explodeas = "AATOMIC_BLAST",
                footprintx = 5,
                footprintz = 5,
+			   hoverattack = true,
 --               maneuverleashlength  = 1280,
                mass = 300,
                maxdamage = 5230,
@@ -93,7 +95,7 @@ weapondefs = {
                      turret  = true, 
                      weaponacceleration = 200,
                      weapontimer = 10,
-                     weapontype = " ",
+                     weapontype = "MissileLauncher",
                      weaponvelocity  = 1600,
                      damage = {
                          default = 221,
@@ -124,7 +126,7 @@ weapondefs = {
                      soundstart = "cannon3",
                      turret  = true, 
                      weapontimer = 14,
-                     weapontype = " ",
+                     weapontype = "EmgCannon",
                      weaponvelocity  = 1100,
                      damage = {
                          default = 50,

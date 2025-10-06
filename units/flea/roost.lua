@@ -47,7 +47,7 @@ return {
 sfxtypes = {
   explosiongenerators = {
                [1]="custom:fleanuklearmini",  -- NUCKLEARMINIFLEA scia che lascia l'oggetto mentre cade
-	       [2]="custom:fleareactorbigsequence", -- luce centrale che rimane permanente
+			   [2]="custom:fleareactorbigsequence", -- luce centrale che rimane permanente
                [3]="custom:flealongnano", -- esplosione nano
                [4]="custom:fleafireLanding", -- esplosione durante l'impatto
                [5]="custom:fleaesplosionipostatterraggio", -- esplosioni nucleari post atterraggio
@@ -77,6 +77,11 @@ sounds = {
                         },
                underattack = "warning1",
 }, --close sound section
+-----------------------------------------------------------
+--- WEAPONS DEFINITION
+-----------------------------------------------------------
+weapondefs = {
+}, -- close weapon definition
 
 }, -- close unit data 
 } -- close total

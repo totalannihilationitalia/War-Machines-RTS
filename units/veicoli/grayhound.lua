@@ -34,7 +34,7 @@ return {
                footprintz = 3,
 --               maneuverleashlength  = 640,
 --               mass = 0 --definire massa,
-               maxdamage = 2230,
+               maxdamage = 3000,
                maxslope = 10,
                maxvelocity = 1.1,
                maxwaterdepth = 12,
@@ -121,25 +121,32 @@ sounds = {
 -----------------------------------------------------------
 weapondefs = {
 		mass_driver = {
-                     accuracy = 12,
+
                      areaofeffect = 1,
                      avoidfeature = true,
 --                     cegTag = "",
 --                     craterareaofeffect =  ,
-                     energypershot = 20,
-                     name= "Massdriver MDC-80/Tank-Killer Gauss Canno",
-                     range = 59,
-                     reloadtime = 3.,
+                     craterboost = 0,
+                     cratermult = 0,
+                     energypershot = 200,					 
+                     explosiongenerator = "custom:FLASH96",
+                     impulseboost = 0.123,
+                     impulsefactor = 0.123,
+                     name= "Massdriver MDC-80",
+                     noselfdamage = true,
+                     range = 596,
+                     reloadtime = 3,
                      soundhit = "xplosml",
  --                   soundhitdry = "",
 --                    soundhitwet = "",
 --                    soundhitwetvolume = "",
                      soundstart = "cannhvy",
-                     tolerance = 50,
-                     weapontype = " ",
-                     weaponvelocity  = 82,
+                     turret  = true, 
+                     tolerance = 500,					 
+                     weapontype = "Cannon",
+                     weaponvelocity  = 825,
                      damage = {
-                         default = 16,
+                         default = 160,
                      }, -- close damage
              }, --close single weapon definitions
 
@@ -175,7 +182,7 @@ weapondefs = {
                      thickness = 2.5,
                      tolerance = 10000,
                      turret  = true, 
-                     weapontype = " ",
+                     weapontype = "LaserCannon",
                      weaponvelocity  = 2250,
                      damage = {
                          default = 75,
@@ -213,7 +220,7 @@ weapondefs = {
                      turnrate = 50000,
                      weaponacceleration = 230,
                      weapontimer = 2,
-                     weapontype = " ",
+                     weapontype = "StarburstLauncher",
                      weaponvelocity  = 4000,
                      damage = {
                          default = 360,
@@ -226,11 +233,12 @@ weapondefs = {
 -----------------------------------------------------------
 weapons = {
                  [1] = {
-                 badtargetcategory = "VTOL",
+                 badtargetcategory = "VTOL",				 
                  def = "mass_driver",
                  onlytargetcategory = "SURFACE",
                  },
                  [2] = {
+                 badtargetcategory = "VTOL",
                  def = "arm_lightlaser",
                  onlytargetcategory = "SURFACE VTOL", -- weapon 2
                  },
