@@ -81,6 +81,7 @@ weapondefs = {
 --                     beamweapon = true,
 --                     cegTag = "",
 --                     craterareaofeffect =  ,
+				     canattackground = false,
                      duration = 2,
                      energypershot = 0,
                      firestarter = 100,
@@ -94,7 +95,7 @@ weapondefs = {
                      soundstart = "annigun1",
                      tolerance = 0,
                      turret  = true, 
-                     weapontype = " ",
+                     weapontype = "LaserCannon",
                      weaponvelocity  = 2000,
                      damage = {
                          default = 7500,
@@ -108,7 +109,7 @@ weapondefs = {
 weapons = {
                  [1] = {
                  def = "omega_weapon_aria",
---               onlytargetcategory = " ",
+                 onlytargetcategory = "VTOL",
                  },
 }, -- close weapon usage
 
