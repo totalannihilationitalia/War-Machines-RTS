@@ -14,7 +14,7 @@ return {
                buildinggrounddecalsizex= 6,
                buildinggrounddecalsizey = 6,
                buildinggrounddecaltype = "pavimento_piccolo_euf.png",
-               buildpic = "eufpath_small.png",
+               buildpic = "eufpathsmall.png",
                buildtime  = 2724,
                canAttack = true,
 --               canstop = 1,
