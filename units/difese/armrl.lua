@@ -14,7 +14,6 @@ return {
 		category = "ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE",
 		collisionvolumeoffsets = "0 1 0",
 		collisionvolumescales = "36 57 36",
-		collisionvolumetest = 1,
 		collisionvolumetype = "CylY",
 		corpse = "dead",
 		description = "Anti-air Tower",

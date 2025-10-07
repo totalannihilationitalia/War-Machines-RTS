@@ -56,5 +56,5 @@
 	Weapon1=dem_weapon;
 	downloadable=1;
 	NoChaseCategory=VTOL;
-	cantbetransported=0; //era 1!
+	cantbetransported=0;
 	}
