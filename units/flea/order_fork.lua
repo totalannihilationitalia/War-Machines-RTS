@@ -6,6 +6,7 @@ return {
 -----------------------------------------------------------
   Order_fork= {
                acceleration = 1,
+			   airhoverfactor=0,			   
                autoheal = 4,
 --               badTargetCategory = VTOL,
                brakerate  = 1,
@@ -20,7 +21,7 @@ return {
                canmove = true,
                canPatrol = true,
 --               canstop = 1,
-               category = "ALL VTOL NOTSHIP SURFACE",
+               category = "ALL VTOL NOTSHIP",
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
@@ -33,6 +34,7 @@ return {
                explodeas = "noexplode",
                footprintx = 4,
                footprintz = 4,
+			   hoverattack = true,
 --               maneuverleashlength  = 1280,
 --               mass = 0 --definire massa,
                maxdamage = 2000,
