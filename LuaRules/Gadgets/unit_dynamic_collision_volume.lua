@@ -3,18 +3,19 @@ function gadget:GetInfo()
     name      = "Dynamic collision volume & Hitsphere Scaledown",
     desc      = "Adjusts collision volume for pop-up style units & Reduces the diameter of default sphere collision volume for 3DO models",
     author    = "Deadnight Warrior",
-    date      = "Oct 9, 2011",
+    date      = "Oct 9, 2011 (Updated 2025)", -- Data aggiornata per riflettere le modifiche
     license   = "GNU GPL, v2 or later",
     layer     = 0,
     enabled   = true  --  loaded by default?
   }
 end
+-- update gadget for spring v. 100 by molix	07/10/2025
 
 -- Pop-up style unit and per piece collision volume definitions
 local popupUnits = {}		--list of pop-up style units
 local unitCollisionVolume, pieceCollisionVolume = include("LuaRules/Configs/CollisionVolumes.lua")
 
--- Localization and speedups
+-- Localization and speedups for Spring API calls
 local spGetPieceCollisionData = Spring.GetUnitPieceCollisionVolumeData
 local spSetPieceCollisionData = Spring.SetUnitPieceCollisionVolumeData
 local spGetUnitCollisionData = Spring.GetUnitCollisionVolumeData
@@ -28,6 +29,7 @@ local pairs = pairs
 
 function gadget:Initialize()
 	-- Spring 0.83 doesn't scale collision volumes of aircraft by additional 0.5 like Spring 0.82 does
+	-- Questo controllo garantisce compatibilità con versioni più vecchie
 	if spGetFeatureCollisionData then
 		airScalX, airScalY, airScalZ = 0.375, 0.225, 0.45
 	else
@@ -38,27 +40,28 @@ end
 	
 if (gadgetHandler:IsSyncedCode()) then
 
-	--Reduces the diameter of default (unspecified) collision volume for 3DO models,
-	--for S3O models it's not needed and will in fact result in wrong collision volume
-	--also handles per piece collision volume definitions, can't be dynamic ATM (and usually doesn't need to be)
+	-- Gestisce le collisioni alla creazione di un'unità
 	function gadget:UnitCreated(unitID, unitDefID, unitTeam)
+		-- Caso 1: L'unità ha una collisione "per pezzo" definita in CollisionVolumes.lua
 		if (pieceCollisionVolume[UnitDefs[unitDefID].name]) then
 			for pieceIndex, p in pairs(pieceCollisionVolume[UnitDefs[unitDefID].name]) do
 				if (p[1]==true) then
-					spSetPieceCollisionData(unitID, pieceIndex, p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9])   --spSetPieceCollisionData(unitID, pieceIndex, p[1], p[1],p[1],p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9])
+					-- Firma corretta: (unitID, pieceIndex, enable, scaleX, scaleY, scaleZ, offsetX, offsetY, offsetZ, vType, Axis)
+					spSetPieceCollisionData(unitID, pieceIndex, p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9])
 				else
-					spSetPieceCollisionData(unitID, pieceIndex, false, 1, 1, 1, 0, 0, 0, 1, 1)   --spSetPieceCollisionData(unitID, pieceIndex, false, false,false,false, 1, 1, 1, 0, 0, 0, 1, 1)
+					spSetPieceCollisionData(unitID, pieceIndex, false, 1, 1, 1, 0, 0, 0, 1, 1)
 				end
 			end
 		else
+			-- Caso 2: L'unità è un modello 3DO generico, ridimensioniamo la sua sfera di collisione di default
 			if UnitDefs[unitDefID].model.type=="3do" then
 				local xs, ys, zs, xo, yo, zo, vtype, htype, axis, _ = spGetUnitCollisionData(unitID)
-				if (vtype==4 and xs==ys and ys==zs) then
+				if (vtype==4 and xs==ys and ys==zs) then -- Controlla se è una sfera di default
 					if (xs>47 and not UnitDefs[unitDefID].canFly) then
 						spSetUnitCollisionData(unitID, xs*0.68, ys*0.68, zs*0.68,  xo, yo, zo,  vtype, htype, axis)
 					elseif (not UnitDefs[unitDefID].canFly) then
 						spSetUnitCollisionData(unitID, xs*0.75, ys*0.75, zs*0.75,  xo, yo, zo,  vtype, htype, axis)
-					else
+					else -- Caso specifico per le unità volanti
 						spSetUnitCollisionData(unitID, xs*airScalX, ys*airScalY, zs*airScalZ,  xo, yo, zo,  vtype, htype, axis)
 					end
 				end
@@ -66,50 +69,33 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 	end
 
-
-	-- Requires Spring 0.83 and up, same as for 3DO units, but for features,
-	-- disabled on Spring <0.83
-	if spGetFeatureCollisionData then
-		function gadget:FeatureCreated(featureID, allyTeam)
-			local featureModel = FeatureDefs[Spring.GetFeatureDefID(featureID)].modelname
-			featureModel = featureModel:lower()
-			if featureModel:find(".3do") then
-				local xs, ys, zs, xo, yo, zo, vtype, htype, axis, _ = spGetFeatureCollisionData(featureID)
-				if (vtype==4 and xs==ys and ys==zs) then
-					if (xs>47) then
-						spSetFeatureCollisionData(featureID, xs*0.68, ys*0.60, zs*0.68,  xo, yo, zo,  vtype, htype, axis)
-					else
-						spSetFeatureCollisionData(featureID, xs*0.75, ys*0.67, zs*0.75,  xo, yo, zo,  vtype, htype, axis)
-					end
-				end
-			end
-		end
-	end
-	
-	
-	-- aggiungo questa funzione 23/10/2019 ***********************************
-    -- Same as for 3DO units, but for features
-    function gadget:FeatureCreated(featureID, allyTeam)
+	-- Gestisce le collisioni alla creazione di una "feature" (es. relitti)
+	-- Questa è l'unica, corretta implementazione per Spring 100
+	function gadget:FeatureCreated(featureID, allyTeam)
         local featureModel = FeatureDefs[Spring.GetFeatureDefID(featureID)].modelname:lower()
         if featureModel:find(".3do") then
             local rs, hs
-            --//rimuovo temporaneamente//-- if ed else --////in quanto con spring 100.0 dà errore *************************************** 
-			 if (spGetFeatureRadius(featureID)>47) then
+            -- Otteniamo i dati della collisione usando una funzione valida
+            local xs, ys, zs, xo, yo, zo, vtype, htype, axis, _ = spGetFeatureCollisionData(featureID)
+
+            -- Eseguiamo il codice solo se la feature ha un volume sferico (vtype 3 o 4)
+            if (vtype < 3 or xs ~= ys or ys ~= zs) then
+                return
+            end
+
+            -- Usiamo 'xs' (la dimensione della sfera) al posto della vecchia funzione 'spGetFeatureRadius'
+			if (xs > 47) then
                 rs, hs = 0.68, 0.60
             else
                 rs, hs = 0.75, 0.67
             end
-            local xs, ys, zs, xo, yo, zo, vtype, htype, axis, _ = spGetFeatureCollisionData(featureID)
-            if (vtype>=3 and xs==ys and ys==zs) then
-                spSetFeatureCollisionData(featureID, xs*rs, ys*hs, zs*rs,  xo, yo-ys*0.09, zo,  vtype, htype, axis)
-            end
-            spSetFeatureRadiusAndHeight(featureID, spGetFeatureRadius(featureID)*rs, spGetFeatureHeight(featureID)*hs)            
+            
+            -- Applichiamo la nuova collisione
+            spSetFeatureCollisionData(featureID, xs*rs, ys*hs, zs*rs,  xo, yo-ys*0.09, zo,  vtype, htype, axis)
         end
     end
 
-
-
-	--check if a unit is pop-up type (the list must be entered manually)
+	-- Registra un'unità "pop-up" quando viene completata la costruzione
 	function gadget:UnitFinished(unitID, unitDefID, unitTeam)
 		local un = UnitDefs[unitDefID].name
 		if unitCollisionVolume[un] then
@@ -117,30 +103,29 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 	end
 
-
-	--check if a pop-up type unit was destroyed
+	-- Rimuove un'unità "pop-up" dalla lista di controllo quando viene distrutta
 	function gadget:UnitDestroyed(unitID, unitDefID, unitTeam)
 		if popupUnits[unitID] then
 			popupUnits[unitID] = nil
 		end
 	end
-
 	
-	--Dynamic adjustment of pop-up style of units' collision volumes based on
-	--unit's ARMORED status, runs twice per second
+	-- Ciclo principale che aggiorna dinamicamente le hitbox delle unità "pop-up"
 	function gadget:GameFrame(n)
-		if (n%15 ~= 0) then
+		if (n%15 ~= 0) then -- Esegui due volte al secondo (per un gioco a 30 FPS)
 			return
 		end
+		
 		local p
 		for unitID,defs in pairs(popupUnits) do
-			if spArmor(unitID) then
+			-- Controlla lo stato "ARMORED" per decidere se l'unità è attiva o nascosta
+			if spArmor(unitID) then -- Nascosta / Chiusa
 				if (defs.state ~= 0) then
 					p = unitCollisionVolume[defs.name].off
 					spSetUnitCollisionData(unitID, p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9])
 					popupUnits[unitID].state = 0
 				end
-			else
+			else -- Attiva / Aperta
 				if (defs.state ~= 1) then
 					p = unitCollisionVolume[defs.name].on
 					spSetUnitCollisionData(unitID, p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9])
