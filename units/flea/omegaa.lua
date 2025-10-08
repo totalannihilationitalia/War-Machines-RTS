@@ -48,7 +48,7 @@ return {
 -----------------------------------------------------------
 sfxtypes = {
   explosiongenerators = {
-               [1]="custom:greenflare",
+               [1]="custom:arancioflare",
                }, -- close effects list
 }, -- close section sfxtypes
 -----------------------------------------------------------
@@ -89,10 +89,12 @@ weapondefs = {
 				     canattackground = false,
                      duration = 2,
                      energypershot = 0,
+                     explosiongenerator = "custom:SMALL_ARANCIO_BURN",					 
                      firestarter = 100,
                      name= "The Omega Weapon",
                      range = 1000,
                      reloadtime = 0.5,
+                     rgbcolor = "1 0.6 0",					 
                      soundhit = "XPLONUK4",
  --                   soundhitdry = "",
 --                    soundhitwet = "",

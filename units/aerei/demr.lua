@@ -75,7 +75,7 @@ sounds = {
 --- WEAPONS DEFINITION
 -----------------------------------------------------------
 weapondefs = {
-		heavyflying_missile = {
+		heavyflying_missile_surface = {
                      areaofeffect = 96,
                      avoidfeature = true,
 --                     cegTag = "",
@@ -85,6 +85,39 @@ weapondefs = {
                      metalpershot = 0,
                      model = "DEMR1",
                      name= "Missiles",
+                     range = 900,
+                     reloadtime = 2.8,
+                     smoketrail = true,
+                     soundhit = "WASP2",
+ --                   soundhitdry = "",
+--                    soundhitwet = "",
+--                    soundhitwetvolume = "",
+                     soundstart = "WASP1",
+                     startvelocity = 1000,
+                     tolerance = 9000,
+                     tracks = true, 
+                     turnrate = 50000,
+                     turret  = true, 
+                     weaponacceleration = 200,
+                     weapontimer = 10,
+                     weapontype = "MissileLauncher",
+                     weaponvelocity  = 1600,
+                     damage = {
+                         default = 221,
+                     }, -- close damage
+             }, --close single weapon definitions
+
+		heavyflying_missile_air = {
+                     areaofeffect = 96,
+                     avoidfeature = true,
+				     canattackground = false,					 
+--                     cegTag = "",
+--                     craterareaofeffect =  ,
+                     explosiongenerator = "custom:popupcannon",
+                     firestarter = 70,
+                     metalpershot = 0,
+                     model = "DEMR1",
+                     name= "Missiles air",
                      range = 900,
                      reloadtime = 2.8,
                      smoketrail = true,
@@ -145,7 +178,7 @@ weapondefs = {
 -----------------------------------------------------------
 weapons = {
                  [1] = {
-                 def = "heavyflying_missile",
+                 def = "heavyflying_missile_air",
                  onlytargetcategory = "VTOL",
                  },
                  [2] = {
@@ -158,12 +191,12 @@ weapons = {
                  },
                  [4] = {
                  badtargetcategory = "VTOL",
-                 def = "heavyflying_missile",
+                 def = "heavyflying_missile_surface",
                  onlytargetcategory = "SURFACE VTOL",-- weapon 4
                  },
                  [5] = {
                  badtargetcategory = "VTOL",
-                 def = "heavyflying_missile",
+                 def = "heavyflying_missile_surface",
                  onlytargetcategory = "SURFACE VTOL",-- weapon 5
                  },
 }, -- close weapon usage

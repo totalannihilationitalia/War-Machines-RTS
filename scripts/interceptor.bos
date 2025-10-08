@@ -41,8 +41,6 @@ SmokeUnit(healthpercent, sleeptime, smoketype)
 		}
 		sleep sleeptime;
 	}
-	return (0);
-	// Build by COBBLER Ver4.0 Copyright @1998 DIGITAL CONCEPT SOFTWARE (MANU@inext.fr) / http://www.annihilationcenter.com/DCS/  
 }
 
 walk()
@@ -59,9 +57,9 @@ walk()
 		turn lfoot to x-axis <20.000000> speed <100.000000>;
 		turn rfoot to x-axis <10.000000> speed <50.000000>;
 		turn rlowerleg to x-axis <40.005495> speed <100.000000>;
-		turn ltoea to x-axis <45.010989> speed <100.000000>;
-		turn ltoeb to x-axis <45.010989> speed <100.000000>;
-		turn lthumb to x-axis <-45.010989> speed <100.000000>;
+		turn ltoea to x-axis <45.005495> speed <100.000000>;
+		turn ltoeb to x-axis <45.005495> speed <100.000000>;
+		turn lthumb to x-axis <-45.005495> speed <100.000000>;
 		turn rtoea to x-axis <0.000000> speed <100.000000>;
 		turn rtoeb to x-axis <0.000000> speed <100.000000>;
 		sleep 600;
@@ -81,9 +79,9 @@ walk()
 		move hips to y-axis [0.000000] speed [2.000000];
 		turn ltoea to x-axis <0.000000> speed <100.000000>;
 		turn ltoeb to x-axis <0.000000> speed <100.000000>;
-		turn rtoea to x-axis <45.010989> speed <100.000000>;
-		turn rtoeb to x-axis <45.010989> speed <100.000000>;
-		turn rthumb to x-axis <-45.010989> speed <100.000000>;
+		turn rtoea to x-axis <45.005495> speed <100.000000>;
+		turn rtoeb to x-axis <45.005495> speed <100.000000>;
+		turn rthumb to x-axis <-45.005495> speed <100.000000>;
 		sleep 600;
 		turn lthumb to x-axis <0.000000> speed <100.000000>;
 		move hips to y-axis [2.000000] speed [2.000000];
@@ -104,9 +102,9 @@ walk()
 			turn rfoot to x-axis <20.000000> speed <70.000000>;
 			turn rlowerleg to x-axis <40.005495> speed <100.000000>;
 			move hips to y-axis [0.000000] speed [2.000000];
-			turn ltoea to x-axis <45.010989> speed <100.000000>;
-			turn ltoeb to x-axis <45.010989> speed <100.000000>;
-			turn lthumb to x-axis <-45.010989> speed <100.000000>;
+			turn ltoea to x-axis <45.005495> speed <100.000000>;
+			turn ltoeb to x-axis <45.005495> speed <100.000000>;
+			turn lthumb to x-axis <-45.005495> speed <100.000000>;
 			turn rtoea to x-axis <0.000000> speed <100.000000>;
 			turn rtoeb to x-axis <0.000000> speed <100.000000>;
 			sleep 600;
@@ -128,9 +126,9 @@ walk()
 			move hips to y-axis [0.000000] speed [2.000000];
 			turn ltoea to x-axis <0.000000> speed <100.000000>;
 			turn ltoeb to x-axis <0.000000> speed <100.000000>;
-			turn rtoea to x-axis <45.010989> speed <100.000000>;
-			turn rtoeb to x-axis <45.010989> speed <100.000000>;
-			turn rthumb to x-axis <-45.010989> speed <100.000000>;
+			turn rtoea to x-axis <45.005495> speed <100.000000>;
+			turn rtoeb to x-axis <45.005495> speed <100.000000>;
+			turn rthumb to x-axis <-45.005495> speed <100.000000>;
 			sleep 600;
 			turn lthumb to x-axis <0.000000> speed <100.000000>;
 			move hips to y-axis [2.000000] speed [2.000000];
@@ -270,20 +268,16 @@ FirePrimary()
 {
 	if( gun_2 == 0 )
 	{
-	    emit-sfx 1024 + 0 from flare3;
-	//	show flare3;
+		emit-sfx 1024 + 1 from flare3;
 		move barrel3 to z-axis [-1.000000] now;
 		sleep 350;
-	//	hide flare3;
 		move barrel3 to z-axis [0.000000] speed [4.000000];
 	}
 	if( gun_2 == 1 )
 	{
-	//	show flare4;
-		emit-sfx 1024 + 0 from flare4;
+		emit-sfx 1024 + 1 from flare4;
 		move barrel4 to z-axis [-1.000000] now;
 		sleep 350;
-		//hide flare4;
 		move barrel4 to z-axis [0.000000] speed [4.000000];
 	}
 	gun_2 = !gun_2;
@@ -334,19 +328,15 @@ FireSecondary()
 	if( gun_2 == 0 )
 	{
 		move barrel1 to z-axis [-1.000000] now;
-		emit-sfx 1024 + 1 from flare1;
-	//	show flare1;
+		emit-sfx 1024 + 0 from flare1;
 		sleep 150;
-	//	hide flare1;
 		move barrel1 to z-axis [0.000000] speed [4.000000];
 	}
 	if( gun_2 == 1 )
 	{
 		move barrel2 to z-axis [-1.000000] now;
-		emit-sfx 1024 + 1 from flare2;
-		//show flare2;
+		emit-sfx 1024 + 0 from flare2;
 		sleep 150;
-		//hide flare2;
 		move barrel2 to z-axis [0.000000] speed [4.000000];
 	}
 	gun_2 = !gun_2;

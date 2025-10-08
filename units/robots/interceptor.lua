@@ -106,7 +106,7 @@ featuredefs = {
 -----------------------------------------------------------
 sfxtypes = {
   explosiongenerators = {
-               [1]="custom:MEDIUMFLARE",
+               [1]="custom:pinkflareflea",
                [2]="custom:andplasmaflare",			   
                }, -- close effects list
 }, -- close section sfxtypes
@@ -174,7 +174,7 @@ weapondefs = {
                      craterboost = 0,
                      cratermult = 0,
                      energypershot = 20,
-                     explosiongenerator = "custom:Gatorazzurro",
+                     explosiongenerator = "custom:SMALL_PINK_BURN",
                      firestarter = 30,
                      impactonly = true,
                      impulseboost = 0.123,
@@ -183,8 +183,8 @@ weapondefs = {
                      noselfdamage = true,
                      laserflaresize = 10,
                      range = 430,
-                     reloadtime = 0.48,
-                     rgbcolor = "0 0.5 1",
+                     reloadtime = 0.4,
+                     rgbcolor = "1 0 1",
                      soundhit = "lasrhit2",
  --                   soundhitdry = "",
 --                    soundhitwet = "",

@@ -75,6 +75,6 @@
 		circlegrowth=0;
 		circlealpha=1;
 		ttl=12;
-		color=0,0.5,1;
+		color=1,0,1;
 	}
 }

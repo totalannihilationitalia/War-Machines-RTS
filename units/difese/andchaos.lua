@@ -90,7 +90,7 @@ featuredefs = {
 -----------------------------------------------------------
 sfxtypes = {
   explosiongenerators = {
-               [1]="custom:andplasmaflare",
+               [1]="custom:pinkflare",
                }, -- close effects list
 }, -- close section sfxtypes
 -----------------------------------------------------------
@@ -131,11 +131,13 @@ weapondefs = {
 --                     craterareaofeffect =  ,
                      duration = 0.1,
                      energypershot = 100,
+                     explosiongenerator = "custom:SMALL_PINK_BURN",					 
                      firestarter = 0,
                      name= "Medusa Stun",
                      paralyzer = true,
                      range = 600,
                      reloadtime = 7,
+		             rgbcolor = "1 0.2 1",					 
                      soundhit = "capture1",
  --                   soundhitdry = "",
 --                    soundhitwet = "",
@@ -199,7 +201,7 @@ weapondefs = {
                      craterboost = 0,
                      cratermult = 0,
                      energypershot = 125,
-                     explosiongenerator = "custom:LARGE_GREEN_LASER_BURN",
+                     explosiongenerator = "custom:LARGE_ARANCIO_LASER_BURN",
                      firestarter = 90,
                      impactonly = true,
                      impulseboost = 0.123,
@@ -209,7 +211,7 @@ weapondefs = {
                      laserflaresize = 15,
                      range = 950,
                      reloadtime = 1.1,
-                     rgbcolor = "0 1 0",
+                     rgbcolor = "1 0.2 0",
                      soundhit = "lasrhit1",
  --                   soundhitdry = "",
 --                    soundhitwet = "",
@@ -232,17 +234,16 @@ weapondefs = {
 -----------------------------------------------------------
 weapons = {
                  [1] = {
-                 badtargetcategory = "VTOL",
                  def = "medusa_stun",
---               onlytargetcategory = "SURFACE",
+                 onlytargetcategory = "SURFACE",
                  },
                  [2] = {
                  def = "ata",
---               onlytargetcategory = "SURFACE", -- weapon 2
+                 onlytargetcategory = "SURFACE", -- weapon 2
                  },
                  [3] = {
                  def = "core_batslaser",
---               onlytargetcategory = "SURFACE", -- weapon 3
+                 onlytargetcategory = "SURFACE", -- weapon 3
                  },
 }, -- close weapon usage
 

@@ -145,17 +145,13 @@ FirePrimary()
 	if( gun_1 == 0 )
 	{
 		emit-sfx 1024 + 0 from flare1;
-		//show flare1;
 		sleep 150;
-		//hide flare1;
 		return (0);
 	}
 	if( gun_1 == 1 )
 	{
-		//show flare2;
 		emit-sfx 1024 + 0 from flare2;
 		sleep 150;
-		//hide flare2;
 		return (0);
 	}
 }
@@ -189,36 +185,28 @@ FireWeapon2()
 	{
 		move barrel1 to z-axis [-1.200000] now;
 		emit-sfx 1024 + 0 from flarea;
-		//show flarea;
 		sleep 45;
-		//hide flarea;
 		move barrel1 to z-axis [0.000000] speed [5.000000];
 	}
 	if( Static_Var_3 == 1 )
 	{
 		move barrel2 to z-axis [-1.200000] now;
 		emit-sfx 1024 + 0 from flareb;
-		//show flareb;
 		sleep 45;
-		//hide flareb;
 		move barrel2 to z-axis [0.000000] speed [5.000000];
 	}
 	if( Static_Var_3 == 2 )
 	{
 		move barrel3 to z-axis [-1.200000] now;
-		//show flare3;
 		emit-sfx 1024 + 0 from flare3;
 		sleep 45;
-		//hide flare3;
 		move barrel3 to z-axis [0.000000] speed [5.000000];
 	}
 	if( Static_Var_3 == 3 )
 	{
 		move barrel4 to z-axis [-1.200000] now;
 		emit-sfx 1024 + 0 from flare4;
-		//show flare4;
 		sleep 45;
-		//hide flare4;
 		move barrel4 to z-axis [0.000000] speed [5.000000];
 	}
 	++Static_Var_3;
@@ -292,36 +280,28 @@ FireWeapon3()
 	{
 		move barrel12 to z-axis [-1.200000] now;
 		emit-sfx 1024 + 0 from flarec;
-		//show flarec;
 		sleep 45;
-		//hide flarec;
 		move barrel1 to z-axis [0.000000] speed [5.000000];
 	}
 	if( Static_Var_4 == 1 )
 	{
 		move barrel22 to z-axis [-1.200000] now;
-		//show flared;
 		emit-sfx 1024 + 0 from flared;
 		sleep 45;
-		//hide flared;
 		move barrel22 to z-axis [0.000000] speed [5.000000];
 	}
 	if( Static_Var_4 == 2 )
 	{
 		move barrel32 to z-axis [-1.200000] now;
-		//show flare32;
 		emit-sfx 1024 + 0 from flare32;
 		sleep 45;
-		//hide flare32;
 		move barrel32 to z-axis [0.000000] speed [5.000000];
 	}
 	if( Static_Var_4 == 3 )
 	{
 		move barrel42 to z-axis [-1.200000] now;
-		//show flare42;
 		emit-sfx 1024 + 0 from flare42;
 		sleep 45;
-		//hide flare42;
 		move barrel42 to z-axis [0.000000] speed [5.000000];
 	}
 	++Static_Var_4;
@@ -380,6 +360,8 @@ AimWeapon4()
 
 FireWeapon4()
 {
+		emit-sfx 1024 + 0 from rocket2;
+		sleep 45;
 }
 
 QueryWeapon4(Func_Var_1)
@@ -396,6 +378,8 @@ AimWeapon5()
 
 FireWeapon5()
 {
+		emit-sfx 1024 + 0 from rocket1;
+		sleep 45;
 }
 
 QueryWeapon5(Func_Var_1)

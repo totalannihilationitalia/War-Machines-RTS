@@ -11,7 +11,7 @@
 			length=2; //60;
 			alpha=1;
 			alphadecay=0.2;
-			color=0.2, 0.9, 0.1;
+			color=1, 0.9, 0.25;
 
 		}
 		air=1;
@@ -31,7 +31,7 @@
 		
 
 		airdrag=0.87;
-			colorMap= 0.1 0.8 0.1 0.05   0.1 0.8 0.1 0.5     0.1 0.8 0.1 0.5    0.1 0.8 0.1 0.2   0.01 0.01 0.01 0.1;
+		colorMap= 0.7 0.7 0.5 0.05   0.75 0.75 0.55 0.5     0.8 0.8 0.6 0.5    0.7 0.7 0.5 0.05   0.01 0.01 0.01 0.1;
 			Texture=fireball;
 		particleLifeSpread=10; 
 		particleSpeedSpread=1;  
@@ -67,7 +67,7 @@
 		
 
 		airdrag=0.87;
-			colorMap= 0.1 0.8 0.1 0.05   0.1 0.8 0.1 0.5     0.1 0.8 0.1 0.5    0.1 0.8 0.1 0.2   0.01 0.01 0.01 0.1;
+			colorMap= 0.4 0.4 0.4 0.05   0.45 0.45 0.45 0.5     0.5 0.5 0.5 0.5    0.4 0.4 0.4 0.05   0.01 0.01 0.01 0.1;
 			Texture=fireball;
 		particleLifeSpread=10; 
 		particleSpeedSpread=1;  

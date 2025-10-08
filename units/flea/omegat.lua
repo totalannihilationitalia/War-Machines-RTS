@@ -48,7 +48,7 @@ return {
 -----------------------------------------------------------
 sfxtypes = {
   explosiongenerators = {
-               [1]="custom:greenflare",
+               [1]="custom:pinkflare",
                }, -- close effects list
 }, -- close section sfxtypes
 -----------------------------------------------------------
@@ -88,10 +88,12 @@ weapondefs = {
 --                     craterareaofeffect =  ,
                      duration = 2,
                      energypershot = 0,
+                     explosiongenerator = "custom:SMALL_PINK_BURN",					 
                      firestarter = 100,
                      name= "The Omega Weapon",
                      range = 1400,
                      reloadtime = 0.5,
+                     rgbcolor = "1 0 1",					 
                      soundhit = "XPLONUK4",
  --                   soundhitdry = "",
 --                    soundhitwet = "",

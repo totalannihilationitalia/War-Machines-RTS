@@ -6,7 +6,7 @@
    	
 		[properties]
       		{
-		alwaysVisible=1;
+		alwaysVisible=0;
 		texture=laserendpink;
       		heat = 10;
       		maxheat = 15;
@@ -47,7 +47,7 @@
 			length=30;
 			alpha=0.8;
 			alphadecay=0.1;
-			color=0.6,1,0.6;
+			color=1,0.6,1;
 
 		}
 	air=1;
@@ -62,6 +62,6 @@
 		circlegrowth=0;
 		circlealpha=1;
 		ttl=12;
-		color=0,0.8,0;
+		color=1,0,1;
 	}
 }

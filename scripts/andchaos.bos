@@ -40,8 +40,6 @@ SmokeUnit(healthpercent, sleeptime, smoketype)
 		}
 		sleep sleeptime;
 	}
-	return (0);
-	// Build by COBBLER Ver4.0 Copyright @1998 DIGITAL CONCEPT SOFTWARE (MANU@inext.fr) / http://www.annihilationcenter.com/DCS/  
 }
 
 Create()
@@ -86,17 +84,19 @@ FirePrimary()
 {
 	if( gun_1 == 1 )
 	{
-		show flare3a;
+		emit-sfx 1024 + 0 from flare3a;	
+//		show flare3a;
 		sleep 150;
-		hide flare3a;
+//		hide flare3a;
 		gun_1 = axelc;
 		return (0);
 	}
 	if( gun_1 == 2 )
 	{
-		show flare3b;
+//		show flare3b;
+		emit-sfx 1024 + 0 from flare3b;	
 		sleep 150;
-		hide flare3b;
+//		hide flare3b;
 		gun_1 = cap;
 		return (0);
 	}
@@ -134,17 +134,17 @@ FireSecondary()
 {
 	if( gun_2 == 1 )
 	{
-		show flare2a;
+//		show flare2a;
 		sleep 150;
-		hide flare2a;
+//		hide flare2a;
 		gun_2 = axelc;
 		return (0);
 	}
 	if( gun_2 == 2 )
 	{
-		show flare2b;
+//		show flare2b;
 		sleep 150;
-		hide flare2b;
+//		hide flare2b;
 		gun_2 = cap;
 		return (0);
 	}
@@ -180,7 +180,6 @@ FireTertiary()
 {
 	if( gun_3 == 1 )
 	{
-		emit-sfx 1024 + 0 from flare1a;
 		show flare1a;
 		sleep 150;
 		hide flare1a;
@@ -189,7 +188,6 @@ FireTertiary()
 	}
 	if( gun_3 == 2 )
 	{
-		emit-sfx 1024 + 0 from flare1b;
 		show flare1b;
 		sleep 150;
 		hide flare1b;
