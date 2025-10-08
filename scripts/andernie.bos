@@ -3,8 +3,7 @@
 #include "sfxtype.h"
 #include "exptype.h"
 
-piece  base, flare2, turret2, flare3, turret3, barrel2, barrel3, turrethold,
-       AATURRET1, AATURRET2, AA1, AA2, AA3, AA4;
+piece  base, flare2, turret2, flare3, turret3, barrel2, barrel3, turrethold,aaturret1, aa1, aa2, aa3, aa4;
 
 static-var  gun_1, Static_Var_2, Static_Var_3, Static_Var_4, Static_Var_5,
             Static_Var_6, Static_Var_7, Static_Var_8, Static_Var_9, Static_Var_10,
@@ -40,13 +39,11 @@ SmokeUnit(healthpercent, sleeptime, smoketype)
 		}
 		sleep sleeptime;
 	}
-	return (0);
-	// Build by COBBLER Ver4.0 Copyright @1998 DIGITAL CONCEPT SOFTWARE (MANU@inext.fr) / http://www.annihilationcenter.com/DCS/  
 }
 
 Create()
 {
-	gun_1 = flare2;
+	gun_1 = 1;
 	Static_Var_2 = 1;
 	hide flare2;
 	hide flare3;
@@ -74,9 +71,7 @@ FirePrimary()
 	{
 		move barrel2 to z-axis [-5.000000] speed [500.000000];
 		emit-sfx 1024 + 0 from flare2;
-		//show flare2;
 		sleep 250;
-		//hide flare2;
 		wait-for-move barrel2 along z-axis;
 		move barrel2 to z-axis [0.000000] speed [3.000000];
 		gun_1 = turret2;
@@ -87,7 +82,6 @@ FirePrimary()
 		move barrel3 to z-axis [-5.000000] speed [500.000000];
 		emit-sfx 1024 + 0 from flare3;
 		sleep 250;
-//		hide flare3;
 		wait-for-move barrel3 along z-axis;
 		move barrel3 to z-axis [0.000000] speed [3.000000];
 		gun_1 = flare2;
@@ -99,14 +93,10 @@ AimSecondary(heading, pitch)
 {
 	signal SIG_AIM_2;
 	set-signal-mask SIG_AIM_2;
-	turn AATURRET1 to y-axis heading speed <60.000000>;
-	turn AATURRET2 to y-axis heading speed <60.000000>;
-	turn AATURRET1 to x-axis <0.000000> - pitch speed <60.000000>;
-	turn AATURRET2 to x-axis <0.000000> - pitch speed <60.000000>;
+	turn AATURRET1 to y-axis heading speed <200.000000>;
+	turn AATURRET1 to x-axis <0.000000> - pitch speed <200.000000>;
 	wait-for-turn AATURRET1 around y-axis;
-	wait-for-turn AATURRET2 around y-axis;
 	wait-for-turn AATURRET1 around x-axis;
-	wait-for-turn AATURRET2 around x-axis;
 	return (1);
 }
 
@@ -188,7 +178,6 @@ Killed(severity, corpsetype)
 		explode AATURRET1 type BITMAPONLY | BITMAP1;
 		explode AA1 type BITMAPONLY | BITMAP1;
 		explode AA2 type BITMAPONLY | BITMAP1;
-		explode AATURRET2 type BITMAPONLY | BITMAP1;
 		explode AA3 type BITMAPONLY | BITMAP1;
 		explode AA4 type BITMAPONLY | BITMAP1;
 		return (0);
@@ -207,7 +196,6 @@ Killed(severity, corpsetype)
 		explode AATURRET1 type SHATTER | BITMAP4;
 		explode AA1 type SHATTER | BITMAP4;
 		explode AA2 type SHATTER | BITMAP4;
-		explode AATURRET2 type SHATTER | BITMAP4;
 		explode AA3 type SHATTER | BITMAP4;
 		explode AA4 type SHATTER | BITMAP4;
 		return (0);
@@ -226,7 +214,6 @@ Killed(severity, corpsetype)
 		explode AATURRET1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
 		explode AA1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
 		explode AA2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
-		explode AATURRET2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
 		explode AA3 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
 		explode AA4 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
 		return (0);
@@ -243,7 +230,6 @@ Killed(severity, corpsetype)
 	explode AATURRET1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
 	explode AA1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
 	explode AA2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
-	explode AATURRET2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
 	explode AA3 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
 	explode AA4 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
 }
