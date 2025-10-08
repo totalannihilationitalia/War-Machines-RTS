@@ -98,9 +98,12 @@ featuredefs = {
                seqnamereclamate = "tree1reclamate",
                },  -- Close heap
 },  --  Wreckage and heaps
------------------------------------------------------------
---- NO EFFECTS
------------------------------------------------------------
+sfxtypes = {
+  explosiongenerators = {
+               [1]="custom:andplasmaflare",
+               [2]="custom:MEDIUMFLARE",			   
+               }, -- close effects list
+}, -- close section sfxtypes
 -----------------------------------------------------------
 --- UNITS SOUND
 -----------------------------------------------------------

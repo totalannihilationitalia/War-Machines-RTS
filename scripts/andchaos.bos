@@ -1,0 +1,251 @@
+#define TA			// This is a TA script
+
+#include "sfxtype.h"
+#include "exptype.h"
+
+piece  base, cap, axelc, rotatorc, flare3a, flare3b, fire3a, fire3b,
+       axelb, rotatorb, flare2a, flare2b, fire2a, fire2b, axela, flare1a,
+       flare1b, fire1a, fire1b;
+
+static-var  gun_3, gun_2, gun_1;
+
+// Signal definitions
+#define SIG_AIM				2
+#define SIG_AIM_2			4
+#define SIG_AIM_3			8
+
+
+SmokeUnit(healthpercent, sleeptime, smoketype)
+{
+	while( get BUILD_PERCENT_LEFT )
+	{
+		sleep 400;
+	}
+	while( TRUE )
+	{
+		healthpercent = get HEALTH;
+		if( healthpercent < 66 )
+		{
+			smoketype = 256 | 2;
+			if( Rand( 1, 66 ) < healthpercent )
+			{
+				smoketype = 256 | 1;
+			}
+			emit-sfx smoketype from base;
+		}
+		sleeptime = healthpercent * 50;
+		if( sleeptime < 200 )
+		{
+			sleeptime = 200;
+		}
+		sleep sleeptime;
+	}
+	return (0);
+	// Build by COBBLER Ver4.0 Copyright @1998 DIGITAL CONCEPT SOFTWARE (MANU@inext.fr) / http://www.annihilationcenter.com/DCS/  
+}
+
+Create()
+{
+	dont-shade cap;
+	hide flare1a;
+	hide flare1b;
+	hide flare2a;
+	hide flare2b;
+	hide flare3a;
+	hide flare3b;
+	dont-cache flare1a;
+	dont-cache flare1b;
+	dont-cache flare2a;
+	dont-cache flare2b;
+	dont-cache flare3a;
+	dont-cache flare3b;
+	dont-shade flare1a;
+	dont-shade flare1b;
+	dont-shade flare2a;
+	dont-shade flare2b;
+	dont-shade flare3a;
+	dont-shade flare3b;
+	gun_3 = cap;
+	gun_2 = cap;
+	gun_1 = cap;
+	start-script SmokeUnit();
+}
+
+AimPrimary(heading, pitch)
+{
+	signal SIG_AIM;
+	set-signal-mask SIG_AIM;
+	turn axelc to y-axis heading speed <75.000000>;
+	wait-for-turn axelc around y-axis;
+	turn rotatorc to x-axis <0.000000> - pitch speed <100.000000>;
+	wait-for-turn rotatorc around x-axis;
+	return (1);
+}
+
+FirePrimary()
+{
+	if( gun_1 == 1 )
+	{
+		show flare3a;
+		sleep 150;
+		hide flare3a;
+		gun_1 = axelc;
+		return (0);
+	}
+	if( gun_1 == 2 )
+	{
+		show flare3b;
+		sleep 150;
+		hide flare3b;
+		gun_1 = cap;
+		return (0);
+	}
+}
+
+QueryPrimary(piecenum)
+{
+	if( gun_1 == 1 )
+	{
+		piecenum = fire3a;
+	}
+	if( gun_1 == 2 )
+	{
+		piecenum = fire3b;
+	}
+}
+
+AimFromPrimary(piecenum)
+{
+	piecenum = axela;
+}
+
+AimSecondary(heading, pitch)
+{
+	signal SIG_AIM_2;
+	set-signal-mask SIG_AIM_2;
+	turn axelb to y-axis heading speed <75.000000>;
+	wait-for-turn axelb around y-axis;
+	turn rotatorb to x-axis <0.000000> - pitch speed <100.000000>;
+	wait-for-turn rotatorb around x-axis;
+	return (1);
+}
+
+FireSecondary()
+{
+	if( gun_2 == 1 )
+	{
+		show flare2a;
+		sleep 150;
+		hide flare2a;
+		gun_2 = axelc;
+		return (0);
+	}
+	if( gun_2 == 2 )
+	{
+		show flare2b;
+		sleep 150;
+		hide flare2b;
+		gun_2 = cap;
+		return (0);
+	}
+}
+
+QuerySecondary(piecenum)
+{
+	if( gun_2 == 1 )
+	{
+		piecenum = fire2a;
+	}
+	if( gun_2 == 2 )
+	{
+		piecenum = fire2b;
+	}
+}
+
+AimFromSecondary(piecenum)
+{
+	piecenum = axelb;
+}
+
+AimTertiary(heading, pitch)
+{
+	signal SIG_AIM_3;
+	set-signal-mask SIG_AIM_3;
+	turn axela to y-axis heading speed <100.000000>;
+	wait-for-turn axela around y-axis;
+	return (1);
+}
+
+FireTertiary()
+{
+	if( gun_3 == 1 )
+	{
+		emit-sfx 1024 + 0 from flare1a;
+		show flare1a;
+		sleep 150;
+		hide flare1a;
+		gun_3 = axelc;
+		return (0);
+	}
+	if( gun_3 == 2 )
+	{
+		emit-sfx 1024 + 0 from flare1b;
+		show flare1b;
+		sleep 150;
+		hide flare1b;
+		gun_3 = cap;
+		return (0);
+	}
+}
+
+QueryTertiary(piecenum)
+{
+	if( gun_3 == 1 )
+	{
+		piecenum = fire1a;
+	}
+	if( gun_3 == 2 )
+	{
+		piecenum = fire1b;
+	}
+}
+
+AimFromTertiary(piecenum)
+{
+	piecenum = axela;
+}
+
+SweetSpot(piecenum)
+{
+	piecenum = base;
+}
+
+Killed(severity, corpsetype)
+{
+	hide flare1a;
+	hide flare1b;
+	hide flare2a;
+	hide flare2b;
+	hide flare3a;
+	hide flare3b;
+	if( severity <= 25 )
+	{
+		corpsetype = 1;
+		explode base type BITMAPONLY | BITMAP1;
+		return (0);
+	}
+	if( severity <= 50 )
+	{
+		corpsetype = 2;
+		explode base type BITMAPONLY | BITMAP1;
+		return (0);
+	}
+	if( severity <= 99 )
+	{
+		corpsetype = 3;
+		explode base type BITMAPONLY | BITMAP1;
+		return (0);
+	}
+	corpsetype = 3;
+	explode base type BITMAPONLY | BITMAP1;
+}

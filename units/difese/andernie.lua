@@ -4,7 +4,7 @@ return {
 -----------------------------------------------------------
 --- UNITS FEATURES
 -----------------------------------------------------------
-  andernie= {
+  andernie = {
 --               buildangle = 4096,
                buildcostenergy = 84680,
                buildcostmetal = 7384,
@@ -44,8 +44,13 @@ return {
                wpri_badtargetcategory = "VTOL",
                YardMap= "ooooooooo",
 -----------------------------------------------------------
---- NO EFFECTS
+--- EFFECTS
 -----------------------------------------------------------
+sfxtypes = {
+  explosiongenerators = {
+               [1]="custom:MEDIUMFLARE",
+               }, -- close effects list
+}, -- close section sfxtypes
 -----------------------------------------------------------
 --- UNITS SOUND
 -----------------------------------------------------------
@@ -107,6 +112,7 @@ weapondefs = {
 		armrl_missile = {
                      areaofeffect = 48,
                      avoidfeature = true,
+                     burst = 4, -- lua:salvoSize					 
                      canattackground = false,
 --                     cegTag = "",
 --                     craterareaofeffect =  ,
