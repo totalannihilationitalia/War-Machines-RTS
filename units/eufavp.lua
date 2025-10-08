@@ -55,7 +55,7 @@ return {
 --- BUILDLIST
 -----------------------------------
                buildoptions = { 
-			[1] = "coracd", -- sostituire con eufacd (solo 3D.s3o)
+			[1] = "eufacd", 
 			[2] = "eufbomb",
 			[3] = "eufher",
 			[4] = "euflong",
