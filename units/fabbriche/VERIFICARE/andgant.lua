@@ -57,13 +57,12 @@ return {
 --- INSERT BUILDLIST
 -----------------------------------
                buildoptions = { 
-			[1] = "interceptor",
-			[2] = "cordem",
-			[3] = "conartist",
-			[4] = "bigb",
-			[5] = "ebigb",
-			[6] = "kill2",
-			[7] = "armpraet",
+			[1] = "cordem",
+			[2] = "conartist",
+			[3] = "bigb",
+			[4] = "ebigb",
+			[5] = "kill2",
+			[6] = "armpraet",
 		},
 -----------------------------------------------------------
 --- Units wreckage and heaps
