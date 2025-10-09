@@ -1,9 +1,0 @@
-[NOWEAPON]
-{
-	name=NoWeapon;
-	range=16;
-	[DAMAGE]
-	{
-		default=0;
-	}
-}

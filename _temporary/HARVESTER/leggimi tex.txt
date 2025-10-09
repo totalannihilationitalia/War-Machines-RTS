@@ -1,1 +1,0 @@
-per le textures usare TRUCK_artefatto.xcf
