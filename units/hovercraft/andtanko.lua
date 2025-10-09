@@ -105,7 +105,7 @@ featuredefs = {
 -----------------------------------------------------------
 sfxtypes = {
   explosiongenerators = {
-               [1]="custom:pinkflare",
+				[1]="custom:goliathflare",
                }, -- close effects list
 }, -- close section sfxtypes
 -----------------------------------------------------------
@@ -139,7 +139,7 @@ weapondefs = {
 		bull = {
                      areaofeffect = 140,
                      avoidfeature = true,
-                     cegTag = "andangel_weap",
+--                     cegTag = "andangel_weap", -- rimosso in quanto non è un bell'effetto 09/10/2025
 --                     craterareaofeffect =  ,
                      craterboost = 0,
                      cratermult = 0,
@@ -150,8 +150,8 @@ weapondefs = {
                      noselfdamage = true,
                      range = 750,
                      reloadtime = 3,
-		     colorMap = "0.5 0.0 1.0 1.0 0.5 0.0 1.0 1.0",
-		     size=2,
+					 colorMap = "0.5 0.0 1.0 1.0 0.5 0.0 1.0 1.0",
+					 size=2,
                      soundhit = "xplomed2",
  --                    soundhitdry = "",
 --                    soundhitwet = "",
