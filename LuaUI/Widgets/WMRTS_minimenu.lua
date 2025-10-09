@@ -273,7 +273,7 @@ function widget:MousePress(x, y, button)
 				Spring.SendCommands("close_WMRTS_visuals") 		-- close WMRTS_graphics					
 				Spring.SendCommands("close_WMRTS_exit") 		-- close WMRTS_exit	
 				Spring.SendCommands("close_WMRTS_snd")			-- close wmrts_sndmenu		
-				Spring.SendCommands("close_WMRTS_diary") 		-- chiudo le altre cose		
+				Spring.SendCommands("close_wmrts_diary") 		-- chiudo le altre cose		
 				Spring.SendCommands("close_WMRTS_statistics")	-- chiuso le statistiche				
 				
 				show_mainmenu = true					-- attivo il pulsante "menu" del minimenu
@@ -293,7 +293,7 @@ function widget:MousePress(x, y, button)
 				Spring.SendCommands("close_WMRTS_graphics") 	-- close WMRTS_graphics	
 				Spring.SendCommands("close_WMRTS_visuals") 		-- close WMRTS_graphics					
 				Spring.SendCommands("close_WMRTS_exit") 		-- close WMRTS_exit	
-				Spring.SendCommands("close_WMRTS_diary") 		-- chiudo le altre cose		
+				Spring.SendCommands("close_wmrts_diary") 		-- chiudo le altre cose		
 				Spring.SendCommands("close_WMRTS_statistics")	-- chiuso le statistiche		
 				show_mainmenu = false
 				return true	
@@ -311,7 +311,7 @@ function widget:MousePress(x, y, button)
 				Spring.SendCommands("close_WMRTS_visuals") 		-- close WMRTS_graphics					
 				Spring.SendCommands("close_WMRTS_exit") 		-- close WMRTS_exit	
 				Spring.SendCommands("close_WMRTS_snd")			-- close wmrts_sndmenu		
-				Spring.SendCommands("close_WMRTS_diary") 		-- chiudo le altre cose		
+				Spring.SendCommands("close_wmrts_diary") 		-- chiudo le altre cose		
 				show_mainmenu = false				
 				return true	
 				-- si disattiva				
@@ -327,7 +327,7 @@ function widget:MousePress(x, y, button)
 				Spring.SendCommands("close_WMRTS_visuals") 		-- close WMRTS_graphics					
 				Spring.SendCommands("close_WMRTS_exit") 		-- close WMRTS_exit	
 				Spring.SendCommands("close_WMRTS_snd")			-- close wmrts_sndmenu		
-				Spring.SendCommands("close_WMRTS_diary") 		-- chiudo le altre cose		
+				Spring.SendCommands("close_wmrts_diary") 		-- chiudo le altre cose		
 				Spring.SendCommands("close_WMRTS_statistics")	-- chiuso le statistiche			
 				objbuttosinblinking = 0 -- set blinking to 0 cosi nel caso resetta le notifiche all'apertura degli obiettivi	
 				show_mainmenu = false				
@@ -339,7 +339,7 @@ function widget:MousePress(x, y, button)
 		-- diary
 				-- si attiva			
 				elseif not show_diarymenu and (show_minimenu_diary_button and((x >= Pos_x_diary_button) and (x <= Pos_x_diary_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
-				Spring.SendCommands("open_WMRTS_diary") 
+				Spring.SendCommands("open_wmrts_diary") 
 				Spring.SendCommands("close_WMRTS_obj") 			-- chiudo gli obiettivi	
 				Spring.SendCommands("close_WMRTS_menu") 		-- close_WMRTS_menu
 				Spring.SendCommands("close_WMRTS_graphics") 	-- close WMRTS_graphics	
@@ -352,7 +352,7 @@ function widget:MousePress(x, y, button)
 				return true			
 				-- si disattiva			
 				elseif show_diarymenu and (show_minimenu_diary_button and((x >= Pos_x_diary_button) and (x <= Pos_x_diary_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
-				Spring.SendCommands("close_WMRTS_diary")
+				Spring.SendCommands("close_wmrts_diary")
 				return true				
 		-- LOS
 				-- si attiva		
@@ -432,19 +432,19 @@ function widget:TextCommand(command)
 	objbuttosinblinking = 1
 	end		
 -- apertura e chiusura diary menu
-	if command == 'open_WMRTS_diary' then
+	if command == 'open_wmrts_diary' then
 		show_diarymenu = true
 	end
-	if command == 'close_WMRTS_diary' then
+	if command == 'close_wmrts_diary' then
 		show_diarymenu = false
 	end		
 -- blinking del diary menu
-	if command == 'blink_WMRTS_diary' and show_diarymenu == false then
+	if command == 'blink_wmrts_diary' and show_diarymenu == false then
 	-- lampeggia diary button
 	diarybuttosinblinking = 1
 	end		
 -- Stopblinking del diary menu
-	if command == 'stopblink_WMRTS_diary' and show_diarymenu == false then
+	if command == 'stopblink_wmrts_diary' and show_diarymenu == false then
 	-- smetti di lampeggiare diary button
 	diarybuttosinblinking = 0
 	end				

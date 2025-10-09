@@ -154,45 +154,45 @@ local function diarypagemanagementnext() -- in questa funzione imposto il conten
 		-- imposto la pagina successiva per categoria, funzione richiamata quanto si preme sul pulsante "pagina successiva"
 	if ((diarycategory == 0) and (pagcur_maps < pagtot_maps)) then -- se la categoria è mappe globali e la pagina è minore delle pagine totali, vai alla scheda successiva	
 		pagcur_maps = pagcur_maps+1
-		contentdiarymenu = "LuaUI/Images/menu/diary/contents/diarycontent_map_"..pagcur_maps..".png"  			
+		contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtsmaps"..pagcur_maps..".png"  			
 		-- imposto la pagina successiva per categoria, funzione richiamata quanto si preme sul pulsante "pagina successiva"
 	elseif ((diarycategory == 1) and (pagcur_story < pagtot_story)) then -- se la categoria è storyboard e la pagina è minore delle pagine totali, vai alla scheda successiva	
 		pagcur_story = pagcur_story+1
-		contentdiarymenu = "LuaUI/Images/menu/diary/contents/diarycontent_story_"..pagcur_story..".png"  				
+		contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtsstory"..pagcur_story..".png"  				
 		-- imposto la pagina successiva per categoria, funzione richiamata quanto si preme sul pulsante "pagina successiva"
 	elseif ((diarycategory == 2) and (pagcur_hints < pagtot_hints)) then -- se la categoria è hint e la pagina è minore delle pagine totali, vai alla scheda successiva	
 		pagcur_hints = pagcur_hints+1	
-		contentdiarymenu = "LuaUI/Images/menu/diary/contents/diarycontent_hints_"..pagcur_hints..".png"  				
+		contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtshints"..pagcur_hints..".png"  				
 	-- imposto la pagina successiva per categoria, funzione richiamata quanto si preme sul pulsante "pagina successiva"
 	elseif ((diarycategory == 3) and (pagcur_character < pagtot_character)) then -- se la categoria è personaggi e la pagina è minore delle pagine totali, vai alla scheda successiva	
 		pagcur_character = pagcur_character+1	
-		contentdiarymenu = "LuaUI/Images/menu/diary/contents/diarycontent_character_"..pagcur_character..".png"  			
+		contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtschar"..pagcur_character..".png"  			
 	-- imposto la pagina successiva per categoria, funzione richiamata quanto si preme sul pulsante "pagina successiva"
 	elseif ((diarycategory == 4) and (pagcur_units < pagtot_units)) then -- se la categoria è unità e la pagina è minore delle pagine totali, vai alla scheda successiva	
 		pagcur_units = pagcur_units+1	
-		contentdiarymenu = "LuaUI/Images/menu/diary/contents/diarycontent_units_"..pagcur_units..".png"  					
+		contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtsunits"..pagcur_units..".png"  					
 	end
 end
 	
 local function diarypagemanagementprevious()
 		-- imposto la pagina precedente per categoria, funzione richiamata quanto si preme sul pulsante "pagina precedente"
-	if ((diarycategory == 0) and (pagcur_maps > 1)) then -- se la categoria è mappe globali e la pagina è minore delle pagine totali, vai alla scheda precedente	
+	if ((diarycategory == 0) and (pagcur_maps > 1)) then -- se la categoria è mappe globali e la pagina corrente è maggiore di 1, vai alla scheda precedente	
 		pagcur_maps = pagcur_maps-1
 		contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtsmaps"..pagcur_maps..".png"  					
 		-- imposto la pagina precedente per categoria, funzione richiamata quanto si preme sul pulsante "pagina precedente"
-	elseif ((diarycategory == 1) and (pagcur_story > 1)) then -- se la categoria è storyboard e la pagina è minore delle pagine totali, vai alla scheda precedente	
+	elseif ((diarycategory == 1) and (pagcur_story > 1)) then -- se la categoria è storyboard e la pagina  corrente è maggiore di 1, vai alla scheda precedente	
 		pagcur_story = pagcur_story-1
 		contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtsstory"..pagcur_story..".png"  					
 		-- imposto la pagina precedente per categoria, funzione richiamata quanto si preme sul pulsante "pagina precedente"
-	elseif ((diarycategory == 2) and (pagcur_hints > 1)) then -- se la categoria è hint e la pagina è minore delle pagine totali, vai alla scheda precedente	
+	elseif ((diarycategory == 2) and (pagcur_hints > 1)) then -- se la categoria è hint e la pagina  corrente è maggiore di 1, vai alla scheda precedente	
 		pagcur_hints = pagcur_hints-1	
 		contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtshints"..pagcur_hints..".png"  			
 	-- imposto la pagina precedente per categoria, funzione richiamata quanto si preme sul pulsante "pagina precedente"
-	elseif ((diarycategory == 3) and (pagcur_character > 1)) then -- se la categoria è personaggi e la pagina è minore delle pagine totali, vai alla scheda precedente	
+	elseif ((diarycategory == 3) and (pagcur_character > 1)) then -- se la categoria è personaggi e la pagina  corrente è maggiore di 1, vai alla scheda precedente	
 		pagcur_character = pagcur_character-1	
 		contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtschar"..pagcur_character..".png"  			
 	-- imposto la pagina precedente per categoria, funzione richiamata quanto si preme sul pulsante "pagina precedente"
-	elseif ((diarycategory == 4) and (pagcur_units > 1)) then -- se la categoria è unità e la pagina è minore delle pagine totali, vai alla scheda precedente	
+	elseif ((diarycategory == 4) and (pagcur_units > 1)) then -- se la categoria è unità e la pagina corrente è maggiore di 1, vai alla scheda precedente	
 		pagcur_units = pagcur_units-1	
 		contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtsunits"..pagcur_units..".png"  			
 	end	
