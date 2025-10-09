@@ -440,9 +440,14 @@ function widget:TextCommand(command)
 	end		
 -- blinking del diary menu
 	if command == 'blink_WMRTS_diary' and show_diarymenu == false then
-	-- evidenza diary button
+	-- lampeggia diary button
 	diarybuttosinblinking = 1
-	end			
+	end		
+-- Stopblinking del diary menu
+	if command == 'stopblink_WMRTS_diary' and show_diarymenu == false then
+	-- smetti di lampeggiare diary button
+	diarybuttosinblinking = 0
+	end				
 -- apertura e chiusura statistics menu
 	if command == 'open_WMRTS_statistics' then
 		show_statisticsmenu = true

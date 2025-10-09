@@ -4,7 +4,7 @@
 --  file:    WMRTS_diary.lua
 --  brief:   Diary / Briefing for War Machines RTS missions
 --  author:  Dario Molinaroli ( Molixx81 )
---
+--	WARNING: set "wmrtsmission = 1;" in modoption to activate widget !!!!!!!!!!!!!
 --  Copyright (C) 2025.
 --  Licensed under the terms of the GNU GPL, v2 or later.
 --
@@ -23,23 +23,7 @@ function widget:GetInfo()
   }
 end
 
---------------------------------------------------------------------------------
---[[
-
-to do list 
--- all :D
-1) Global Map info
-2) Story of War
-3) Hints
-4) Character
-5) Units
-
-Pulsante close
-Pulsante avanti e dietro (per leggere le storie della categoria
-tra i due pulsanti la pagina 1/xx
-Al momento ogni scheda sarà un immagine con nomeimmagine_ing.png (cosi da diversificare quando un domani ci sarà il multilingua).
-
-]]--
+-- 09/10/2025: released version 1 - Molix
 
 local vsx, vsy 						  	= widgetHandler:GetViewSizes()
 local Pos_x_mainmenu					= 20  								-- NON EDITARE posizione in basso a sinistra del menu (valore gestito poi autonomamente dallo script)
@@ -54,7 +38,7 @@ local larghezza_avantidietro			= 25								-- larghezza pulsanti avanti / dietro
 local altezza_avantidietro				= 25								-- altezza pulsanti avanti / dietro
 local posy_menuicone             	    = 366								-- altezza del primo pulsante a destra del menu diario rispetto al fondo del content
 local interassey_menuicone		        = 25+10								-- distanza y tra le origini di due pulsanti consecutivi
-local autopopup							= 1									-- attiva l'apertura del diario quando si riceve il comando di nuova news
+local autopopup							= 0									-- attiva l'apertura del diario quando si riceve il comando di nuova news
 local autopause							= 1									-- attiva la pausa quando si riceve il comando di nuova news
 local diarymenu_attivo					= false 							-- Indica se questo menu è aperto o meno
 local margine_sx_icona_diarymenu		= 20  								-- distanza dal margine sinistro del background e l'icona del menu
@@ -213,13 +197,13 @@ local function diarypagemanagementprevious()
 		contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtsunits"..pagcur_units..".png"  			
 	end	
 end
-	
+
 --------------------------------------
 -- FUNZIONE CHECK STATO OPZIONI, viene richiamata in diverse fasi dello script per controllare lo stato delle opzioni 
 --------------------------------------
 local function check_options()
 --[[
-############## inserire le opzioni corrette (tipo autopopup ed eventuali numerazioni) ##################################
+############## inserire solo l'opzione autopopup on/off appena la si realizza!!!! #########################
 -- all'inizio verifico anche il valore delle configurazioni
   valore_mapshading = Spring.GetConfigInt("AdvMapShading", 1)			-- booleano di default è true
   valore_unitshading = Spring.GetConfigInt("AdvModelShading", 1)			-- booleano di default è true
@@ -244,17 +228,6 @@ end
 -- INIZIALIZZO IL MENU 
 --------------------------------------
 function widget:Initialize()
---[[ rimuovo temporaneamente fino a conclusione test ##########################################################################################################################################
-
--- eseguire verifica per capire se è richiesto il widget (ossia si sta giocando una missione, WMRTSmission == 1, altrimenti chiudi widget)
-	if (Spring.GetGameRulesParam('WMRTSmission') == 1 or Spring.GetGameRulesParam('WMRTSmission') == '1') then
-		missione_attiva = 1 -- mostrerà il diario per WMRTS Missions
-	elseif (Spring.GetGameRulesParam('Fleabowl') == 1 or Spring.GetGameRulesParam('Fleabowl') == '1') then
-		missione_attiva = 2 -- mostrerà il diario per FLEA Missions	
-	else		
-		widgetHandler:RemoveWidget() -- rimuovi il widget diario, è una partita skirmish
-	end
-	]]--
 -- all'inizio imposto la posizione del mini menu
 	Pos_x_mainmenu = vsx/2 - larghezza_diarymenu/2
 	Pos_y_mainmenu = vsy/2 - altezza_diarymenu/2
@@ -419,6 +392,7 @@ function widget:MousePress(x, y, button)
 					diarypagemanagementnext() -- esegui funzione per pagina successiva
 					Spring.Echo("test_avanti")
 				return true		
+				------------------------ ################## manca pulsante close
 				end
 			end
 		end
@@ -438,52 +412,88 @@ function widget:GetTooltip(x, y) -- questa condizione è vera quando isAbove è 
 	end
 end
 
+--[[ disattivo la funzione
 --------------------------------------
 -- RICEVO LE INFORMAZIONI DURANTE LA MISSIONE SULLE PAGINE TOTALI DISPONIBILI
 --------------------------------------
 function widget:GameFrame(frame)
 	if frame%30 == 0 then
--- ricevo il numero globale della mappa
-		pagtot_maps = Spring.GetGameRulesParam("wmrts_diary_maps") or 0
--- ricevo il numero globale dello storyboard
-		pagtot_story = Spring.GetGameRulesParam("wmrts_diary_story") or 0
--- ricevo il numero globale dei suggerimenti
-		pagtot_hints = Spring.GetGameRulesParam("wmrts_diary_hints") or 0
--- ricevo il numero globale dei personaggi
-		pagtot_character = Spring.GetGameRulesParam("wmrts_diary_character") or 0
--- ricevo il numero globale delle unità
-		pagtot_units = Spring.GetGameRulesParam("wmrts_diary_units") or 0
+
 	end
 end
+]]--
 
 --------------------------------------
 -- GESTIONE DEI COMANDI SPRING RICEVUTI
 --------------------------------------	
 function widget:TextCommand(command)
--- apertura e chiusura del menu
-	if command == 'diary_WMRTS_maps' then -- se ricevo una news inerente alla mappa globale
-		new_maps = 1
-		if autopopup == 1 then diarymenu_attivo = false end -- se l'opzione autopopup è abilitata e il diario è chiuso, apri automaticamente il diario
---		Inserire invio comando per "blinking" dell'icona diario nel minimenu		####################################
-	elseif command == 'diary_WMRTS_story' then -- se ricevo una news inerente alla storia
-		new_story = 1
-		if autopopup == 1 then diarymenu_attivo = false end 
---		Inserire invio comando per "blinking" dell'icona diario nel minimenu		####################################
-	elseif command == 'diary_WMRTS_hints' then -- se ricevo una news inerente ai suggerimenti
-		new_hints = 1	
-		if autopopup == 1 then diarymenu_attivo = false end
---		Inserire invio comando per "blinking" dell'icona diario nel minimenu		####################################
-	elseif command == 'diary_WMRTS_character' then -- se ricevo una news inerente ai personaggi
-		new_character = 1		
-		if autopopup == 1 then diarymenu_attivo = false end
---		Inserire invio comando per "blinking" dell'icona diario nel minimenu		####################################
-	elseif command == 'diary_WMRTS_units' then -- se ricevo una news inerente alle unità
-		new_units = 1			
-		if autopopup == 1 then diarymenu_attivo = false end		
---		Inserire invio comando per "blinking" dell'icona diario nel minimenu		####################################
-	elseif command == 'open_WMRTS_diary' then -- se ricevo il comando di aprire il diario (dal minimenu)
+-- nuova pagina diary maps
+	if command == 'diary_wmrts_maps' then 			-- se ricevo un comando "news mappe" da mission editor , questo è preceduto da un aggiornamento relativo delle pagine totali delle mappe. vedi tab. tab "gestione del diario" in Mission_editor_hints.ods
+	-- ricevo prima il numero di pagine totali della categoria "mappa" disponibili per la lettura
+		pagtot_maps = Spring.GetGameRulesParam("wmrts_diary_maps") or 0
+		Spring.Echo ("le pagine totali sono "..pagtot_maps)
+		pagcur_maps = pagtot_maps									-- setto la pagina corrente delle mappe = all'ultima pagina delle pagine totali precedentemente impostatate da mission editor
+		if ( autopopup == 1 and diarymenu_attivo == false) then		-- se l'autopopup è abilitato e il diario non è aperto
+		diarycategory = 0 											-- imposto la categoria da visualizzare sul diario a "mappe"  ( = 0)
+		diarycategorymanagement() 									-- chiamo la funzione per settare le immagini del diario		
+		diarymenu_attivo = true 									-- apri il diario (che sarà già sulla pagina nuova da leggere)
+		else 														-- altrimenti se l'autopopup non è attivo o il dirio è già aperto 
+		new_maps = 1												-- evidenzio comunque la categoria maps								
+		Spring.SendCommands("blink_wmrts_diary")					-- evidenzio il pulsante diario del minimenu
+		end -- autopopup
+-- nuova pagina diary story
+	elseif command == 'diary_wmrts_story' then -- se ricevo una news inerente alla storia
+		pagtot_story = Spring.GetGameRulesParam("wmrts_diary_story") or 0
+		pagcur_story = pagtot_story									
+		if ( autopopup == 1 and diarymenu_attivo == false) then		
+		diarycategory = 1 											
+		diarycategorymanagement() 									
+		diarymenu_attivo = true 									
+		else 														
+		new_story = 1																		
+		Spring.SendCommands("blink_wmrts_diary")					
+		end -- autopopup
+-- nuova pagina diary hints
+	elseif command == 'diary_wmrts_hints' then -- se ricevo una news inerente ai suggerimenti
+		pagtot_hints = Spring.GetGameRulesParam("wmrts_diary_hints") or 0
+		pagcur_hints = pagtot_hints
+		if ( autopopup == 1 and diarymenu_attivo == false) then		
+		diarycategory = 2 											
+		diarycategorymanagement() 									
+		diarymenu_attivo = true 									
+		else 														
+		new_hints = 1																		
+		Spring.SendCommands("blink_wmrts_diary")					
+		end -- autopopup
+-- nuova pagina diary character
+	elseif command == 'diary_wmrts_character' then -- se ricevo una news inerente ai personaggi
+		pagtot_character = Spring.GetGameRulesParam("wmrts_diary_character") or 0
+		pagcur_character = pagtot_character
+		if ( autopopup == 1 and diarymenu_attivo == false) then		
+		diarycategory = 3 											
+		diarycategorymanagement() 									
+		diarymenu_attivo = true 									
+		else 														
+		new_character = 1																		
+		Spring.SendCommands("blink_wmrts_diary")					
+		end -- autopopup
+-- nuova pagina diary units
+	elseif command == 'diary_wmrts_units' then -- se ricevo una news inerente alle unità
+		pagtot_units = Spring.GetGameRulesParam("wmrts_diary_units") or 0
+		pagcur_units = pagtot_units
+		if ( autopopup == 1 and diarymenu_attivo == false) then		
+		diarycategory = 4 											
+		diarycategorymanagement() 									
+		diarymenu_attivo = true 									
+		else 														
+		new_units = 1																		
+		Spring.SendCommands("blink_wmrts_diary")					
+		end -- autopopup	
+-- comando apri menu diario
+	elseif command == 'open_wmrts_diary' then -- se ricevo il comando di aprire il diario (dal minimenu)
 		diarymenu_attivo = true
-	elseif command == 'close_WMRTS_diary' then -- se ricevo il comando di chiudere il diario (dal minimenu)
+-- comando chiudi menu diario		
+	elseif command == 'close_wmrts_diary' then -- se ricevo il comando di chiudere il diario (dal minimenu)
 		diarymenu_attivo = false	
 			-- disabilito il guishader
 				if (WG['guishader_api'] ~= nil) then
@@ -499,7 +509,7 @@ function widget:KeyPress(key, mods, isRepeat)
 	if diarymenu_attivo and not Spring.IsGUIHidden() then
 	if key == 0x01B then -- TASTO esc
 			diarymenu_attivo = false 							-- chiudo il diario			
-			Spring.SendCommands("close_WMRTS_diary")			-- spengo il minipulsante menu del minimenu 
+			Spring.SendCommands("close_wmrts_diary")			-- spengo il minipulsante menu del minimenu 
 			-- disabilito il guishader
 				if (WG['guishader_api'] ~= nil) then
 				WG['guishader_api'].RemoveRect('WMRTS_diary_shad')
