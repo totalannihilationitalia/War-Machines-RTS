@@ -87,12 +87,6 @@ if (gadgetHandler:IsSyncedCode()) then
 		local hideVoting						= true -- con questa opzione nascondi o no la finestra iniziale di voto che serve ad uscire dal gioco nel caso tutti i giocatori non si presentano
 		local votingDrawTable					= nil -- indexed table of players that are allowed to vote for draw
 		local votingDrawPlayers					= {}  -- lookup table with playerID = true
-		
-        --- MODIFICA ---
-        -- Aggiungiamo solo la nostra guardia per l'invio del messaggio
-        local winners_announced = false
-        --- FINE MODIFICA ---
-
 		-------------------------------------------------------------------------------
 		--------------------------------------------------------------------------------
 
@@ -200,9 +194,8 @@ if (gadgetHandler:IsSyncedCode()) then
 				if not voteStarted then
 					local frame = Spring.GetGameFrame()
 					gamewinners = winners
-					if not GG then GG = {} end -- Assicurati che GG esista
 					if not GG.gamewinners then
-						GG.gamewinners = winners -- pass information to other gadgets
+						GG.gamewinners = winners -- pass information to game_gameover.lua
 					end
 					gameoverframe = frame + GAMEOVERDELAY
 				end
@@ -339,34 +332,6 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 		
 		function gadget:GameFrame(frame)
-
-            --- MODIFICA ---
-            -- Controlliamo la variabile globale GG.gamewinners
-            -- Questa viene impostata da CheckGameOver prima che il gioco finisca.
-            if (not winners_announced) and GG and GG.gamewinners then
-
-                local winningPlayerNames = {}
-                if #GG.gamewinners == 0 then
-                    table.insert(winningPlayerNames, "Pareggio")
-                else
-                    for _, allyTeamID in ipairs(GG.gamewinners) do
-                        for _, teamID in ipairs(Spring.GetTeamList(allyTeamID)) do
-                            for _, playerID in ipairs(Spring.GetPlayerList(teamID, true)) do
-                                local playerName = select(1, Spring.GetPlayerInfo(playerID))
-                                if playerName then table.insert(winningPlayerNames, playerName) end
-                            end
-                        end
-                    end
-                end
-
-                if #winningPlayerNames > 0 then
-                    local winnersString = table.concat(winningPlayerNames, ",")
-                    Spring.SendLuaRulesMsg("SKMS_WINNERS:" .. winnersString)
-                    Spring.Echo("[GameEnd Gadget] Messaggio vincitori inviato!") 
-                    winners_announced = true
-                end
-            end
-            --- FINE MODIFICA ---
 			
 			-- trigger gameover with a delay to let all explosions calm down
 			if gameoverframe and frame >= gameoverframe and (gamewinners or GG.gamewinners) then
@@ -501,7 +466,6 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 
 		function gadget:Initialize()
-            if not GG then GG = {} end -- Assicurati che la tabella globale esista
 			gadgetHandler:AddChatAction('voteforend', CallEndVote, "Call vote to accept surrender")
 			gadgetHandler:AddChatAction('votefordraw', CallDrawVote, "Call vote to draw the game")
 			if teamDeathMode == "none" then
@@ -660,10 +624,8 @@ if (gadgetHandler:IsSyncedCode()) then
 else
 	
 	-------------------
-	-- UNSYNCED PART -- (Invariata)
+	-- UNSYNCED PART -- Handles voting in case there are abandoned teams
 	-------------------
-	
-	-- ... (Tutta la parte Unsynced del file originale rimane qui, invariata)
 
 	do				
 		local myTeamID				= Spring.GetMyTeamID()
