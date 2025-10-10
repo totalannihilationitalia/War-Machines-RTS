@@ -35,12 +35,12 @@ to do list
 -- Lista delle variabili
 local nomeFile = "WMRST_winninglist.wmr"  		-- definisco il file che voglio scrivere
 
+	
 -- funzione scrittura lista player vincenti
 function listavincenti(winnerString) -- ogni volta che si richiama questa funzione
 --	local listaplayerwin = winnerString -- importa la stringa "winnerString" che ricevo dal gadget e salvala nella variabile listaplayerwin (guarda se puoi usare direttamente winnerstring) ###############
-	local file = io.open(nomeFile, "w")	-- "w" significa "write mode" (modalità di scrittura). -- Usiamo io.open() per aprire il file.-- Se il file non esiste, lo crea. Se esiste già, CANCELLA tutto il suo contenuto.
+	local file = io.open(nomeFile, "a")											-- apro il file, "a" significa "append mode" 
 		if file then -- se il file è aperto correttamente
-			file:write("[winninglist_skirmish]\n") 								-- scrivo l'intestazione del file
 			for nomegiocatore in string.gmatch(winnerString, "([^,]+)") do    	-- Rimuove eventuali spazi bianchi prima o dopo il nome del giocatore. Ricordo che già da registrazione php non accetta spazi bianchi/vuoti. nel ciclo for...do la variabile (in questo caso nomegiocatore) viene dichiarata in automatico
 				local trimmedName = nomegiocatore:match("^%s*(.-)%s*$") 		-- definisco la variabile del giocatore priva di spazi bianchi
 				file:write(trimmedName .. " = won\n") -- scrivi su file il nome del giocatore seguito da " = won". Il simbolo "\n" è FONDAMENTALE: -- significa "newline" (vai a capo). Senza di esso, tutto verrebbe scritto sulla stessa linea.
@@ -56,6 +56,15 @@ function listavincenti(winnerString) -- ogni volta che si richiama questa funzio
 end
 
 -- inizializzo il widget
-function widget:Initialize() -- ogni volta che si verifica l'evento VictoryListEvent nel gadget show_winner.lua (o in altri gadget), esegui la funzione listavincenti in questo widget. è importante che ogni volta che si richiama questo script, la variabile winnerString assuma il valore del parlato che si vuole avere (vedi sopra)
-	widgetHandler:RegisterGlobal('VictoryListEvent',listavincenti) -- test aggiunto di recente
+function widget:Initialize() 
+	widgetHandler:RegisterGlobal('VictoryListEvent',listavincenti) 		-- ogni volta che si verifica l'evento VictoryListEvent nel gadget show_winner.lua (o in altri gadget), esegui la funzione listavincenti in questo widget. è importante che ogni volta che si richiama questo script, la variabile winnerString assuma il valore del parlato che si vuole avere (vedi sopra)
+	local file = io.open(nomeFile, "w")									-- apro il file, "w" significa "write mode" (modalità di scrittura). Usiamo io.open() per aprire il file.-- Se il file non esiste, lo crea. Se esiste già, CANCELLA tutto il suo contenuto.	
+	file:write("[winninglist_skirmish]\n") 								-- scrivo l'intestazione del file
+	file:close()												        -- chiudi il file. Questo salva le modifiche e "libera" il file. Se non lo fai, il file potrebbe rimanere vuoto!		
+end
+
+function widget:Shutdown() -- in caso di chiusura del widget o chiusura forzata del gioco
+	local file = io.open(nomeFile, "a")				-- apro il file, "a" significa "append mode" 
+	file:write("Spring = closed\n")     			-- Scriviamo la riga in cui il widget è stato chiuso
+	file:close()							        -- chiudi il file. Questo salva le modifiche e "libera" il file. Se non lo fai, il file potrebbe rimanere vuoto!		
 end
