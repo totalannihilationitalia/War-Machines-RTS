@@ -1,0 +1,59 @@
+-- file: show_winners.lua
+
+function gadget:GetInfo()
+    return {
+        name      = "Show Winners",
+        desc      = "Mostra i nomi dei giocatori vincenti a fine partita.",
+        author    = "molix",
+        date      = "10/10/2025",
+        license   = "GNU GPL, v2 or later",
+        layer     = 0, -- Un layer basso per essere eseguito prima di altri gadget di gameover
+        enabled   = true
+    }
+end
+-- verificare gadget con client ##########################################################
+-- verificare gadget con client ##########################################################
+-- verificare gadget con client ##########################################################
+
+
+if (gadgetHandler:IsSyncedCode()) then
+
+    -- Funzione per estrarre i nomi come definita sopra
+    local function GetWinningPlayerNames()
+        if (not GG) or (not GG.gamewinners) then return nil end
+        if #GG.gamewinners == 0 then return {"Pareggio"} end
+
+        local winningPlayerNames = {}
+        for _, allyTeamID in ipairs(GG.gamewinners) do
+            for _, teamID in ipairs(Spring.GetTeamList(allyTeamID)) do
+                for _, playerID in ipairs(Spring.GetPlayerList(teamID, true)) do
+                    local playerName = select(1, Spring.GetPlayerInfo(playerID))
+                    if playerName then table.insert(winningPlayerNames, playerName) end
+                end
+            end
+        end
+        return winningPlayerNames
+    end
+
+    -- Questo call-in viene eseguito quando la partita finisce
+    function gadget:GameOver(winningAllyTeams)
+        local winners = GetWinningPlayerNames()
+        
+        if winners then
+            if winners[1] == "Pareggio" then
+                Spring.Echo(">> PARTITA TERMINATA: Pareggio!")
+            else
+                -- Concatena i nomi per una bella visualizzazione
+                local winnerString = table.concat(winners, ", ")
+                Spring.Echo(">> VINCITORI: " .. winnerString)
+                
+                -- Qui potresti anche inviare i dati a un'interfaccia UI (nella parte Unsynced)
+                -- per mostrare una schermata di vittoria personalizzata.
+            end
+        end
+        
+        -- È importante restituire false per non bloccare il call-in GameOver per altri gadget
+        return false 
+    end
+
+end
