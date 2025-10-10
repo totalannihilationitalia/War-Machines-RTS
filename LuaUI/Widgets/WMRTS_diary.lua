@@ -4,7 +4,7 @@
 --  file:    WMRTS_diary.lua
 --  brief:   Diary / Briefing for War Machines RTS missions
 --  author:  Dario Molinaroli ( Molixx81 )
---	WARNING: set "wmrtsmission = 1;" in modoption to activate widget !!!!!!!!!!!!!
+--	WARNING: set "wmrtsmission = 1;" in modoption to activate diary button in minumenu widget !!!!!!!!!!!!!
 --  Copyright (C) 2025.
 --  Licensed under the terms of the GNU GPL, v2 or later.
 --
@@ -24,6 +24,11 @@ function widget:GetInfo()
 end
 
 -- 09/10/2025: released version 1 - Molix
+
+--[[ to do list
+#### -- in inizialize disattivare questo widget se non è presente la condizione : wmrtsmission = 1; o isflea #####
+#### -- inserire suoni bottone
+]]--
 
 local vsx, vsy 						  	= widgetHandler:GetViewSizes()
 local Pos_x_mainmenu					= 20  								-- NON EDITARE posizione in basso a sinistra del menu (valore gestito poi autonomamente dallo script)
@@ -150,6 +155,7 @@ local function diarycategorymanagement()
 	end
 end
 
+-- imposto la pagina successiva
 local function diarypagemanagementnext() -- in questa funzione imposto il contenuto in funzione della categoria selezionata e della pagina che si stà visualizzando
 		-- imposto la pagina successiva per categoria, funzione richiamata quanto si preme sul pulsante "pagina successiva"
 	if ((diarycategory == 0) and (pagcur_maps < pagtot_maps)) then -- se la categoria è mappe globali e la pagina è minore delle pagine totali, vai alla scheda successiva	
@@ -173,7 +179,8 @@ local function diarypagemanagementnext() -- in questa funzione imposto il conten
 		contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtsunits"..pagcur_units..".png"  					
 	end
 end
-	
+
+-- imposto la pagina precedente	
 local function diarypagemanagementprevious()
 		-- imposto la pagina precedente per categoria, funzione richiamata quanto si preme sul pulsante "pagina precedente"
 	if ((diarycategory == 0) and (pagcur_maps > 1)) then -- se la categoria è mappe globali e la pagina corrente è maggiore di 1, vai alla scheda precedente	
@@ -195,6 +202,25 @@ local function diarypagemanagementprevious()
 	elseif ((diarycategory == 4) and (pagcur_units > 1)) then -- se la categoria è unità e la pagina corrente è maggiore di 1, vai alla scheda precedente	
 		pagcur_units = pagcur_units-1	
 		contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtsunits"..pagcur_units..".png"  			
+	end	
+end
+
+-- imposto la pagina 1 se le pagine totali = 1, cosi non mostro la pagina "non hai ricevuto news". Questa funzione viene utilizzata nel caso in cui l'utente disabiliti l'autopop
+local function primanews()
+	if pagtot_maps == 1 then
+		pagcur_maps = 1
+	end
+	if pagtot_story == 1 then
+		pagtot_story = 1
+	end
+	if pagtot_hints == 1 then
+		pagtot_hints = 1
+	end
+	if pagtot_character == 1 then
+		pagtot_character = 1
+	end
+	if pagtot_units == 1 then
+		pagtot_units = 1
 	end	
 end
 
@@ -491,6 +517,9 @@ function widget:TextCommand(command)
 		end -- autopopup	
 -- comando apri menu diario
 	elseif command == 'open_wmrts_diary' then -- se ricevo il comando di aprire il diario (dal minimenu)
+		if autopopup == 0 then -- quando si apre il diario, prima di mostrarlo eseguire una funzione che controlla le pagine totali di ciascuna categoria. Se c'è almeno una pagina, mostra la pagina 1 anzichè la pagina 0 della categoria (che indicherebbe l'assenza di news di categoria)
+			function primanews()
+		end
 		diarymenu_attivo = true
 -- comando chiudi menu diario		
 	elseif command == 'close_wmrts_diary' then -- se ricevo il comando di chiudere il diario (dal minimenu)
