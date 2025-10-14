@@ -12,6 +12,8 @@ end
 
 -- ver 1 05/02/2022 remake better code because low energy and low metal message was sync for all player - now message works unsync only on necessary player team
 -- ver 2 06/02/2022 add "you received unit" warning
+-- TODO implementare il vala4, quando un commander muore, scrivere "Warning: nome player has been destroyed"
+-- todo valutare di rimuovere la scritta warnirn: alla fine appare già in un riquadro di avviso con l'immagine
 ------------------------------------------------------------------
 -- static var
 ------------------------------------------------------------------
@@ -45,18 +47,18 @@ function Parlatoingame(vala) -- ogni volta che si richiama questa funzione
 		end
 	if (vala == 2) then	-- se uguale 2 il comandante ha completato il gate in skirmish mode
 		WG.AddConvo('>>> Commander Gate Successful <<<', nil, "LuaUI/Images/parlato_gate.png", nil, 50)
-		Spring.Echo("testwidget2")
+--		Spring.Echo("testwidget2")
 
 		end	
 	if (vala == 3) then	-- se uguale 3 faccio apparire la terza frase in skirmish mode
 		WG.AddConvo('Ok commander, start to collect resources on the map, build your empire and destroy all the enemy units!', nil, "LuaUI/Images/Radar.jpg", nil, 190)
 	--	WG.AddConvo('Good luck!', nil, "LuaUI/Images/Radar.jpg", nil, 150)
-		 Spring.Echo("testwidget")
+	--	Spring.Echo("testwidget")
 
 		end	
 	if (vala == 4) then	-- (sync warning) -- TEAM DESTROYED
 		WG.AddConvo('Warning: A team has been destroyed', nil, "LuaUI/Images/parlato_defeat.png", nil, 105)
-		  Spring.Echo("testdestroy")
+
 
 		end
 
