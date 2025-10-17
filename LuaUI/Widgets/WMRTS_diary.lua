@@ -529,6 +529,7 @@ function widget:TextCommand(command)
 				WG['guishader_api'].RemoveRect('WMRTS_diary_shad')
 				end			
 	end	
+	end
 end
 
 --------------------------------------
