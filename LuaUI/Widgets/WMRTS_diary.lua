@@ -43,7 +43,7 @@ local larghezza_avantidietro			= 25								-- larghezza pulsanti avanti / dietro
 local altezza_avantidietro				= 25								-- altezza pulsanti avanti / dietro
 local posy_menuicone             	    = 366								-- altezza del primo pulsante a destra del menu diario rispetto al fondo del content
 local interassey_menuicone		        = 25+10								-- distanza y tra le origini di due pulsanti consecutivi
-local autopopup							= 0									-- attiva l'apertura del diario quando si riceve il comando di nuova news
+local autopopup							= 1									-- attiva l'apertura del diario quando si riceve il comando di nuova news
 local autopause							= 1									-- attiva la pausa quando si riceve il comando di nuova news
 local diarymenu_attivo					= false 							-- Indica se questo menu è aperto o meno
 local margine_sx_icona_diarymenu		= 20  								-- distanza dal margine sinistro del background e l'icona del menu
@@ -529,6 +529,7 @@ function widget:TextCommand(command)
 				WG['guishader_api'].RemoveRect('WMRTS_diary_shad')
 				end			
 	end	
+	end
 end
 
 --------------------------------------
