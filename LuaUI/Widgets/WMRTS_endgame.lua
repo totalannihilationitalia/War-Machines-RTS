@@ -36,7 +36,7 @@ to do list
 local nomeFile = "WMRST_winninglist.wmr"  		-- definisco il file che voglio scrivere
 
 	
--- funzione scrittura lista player vincenti
+-- funzione di scrittura lista player vincenti richiamata dal gadget show_winner tramite "widgetHandler"
 function listavincenti(winnerString) -- ogni volta che si richiama questa funzione
 --	local listaplayerwin = winnerString -- importa la stringa "winnerString" che ricevo dal gadget e salvala nella variabile listaplayerwin (guarda se puoi usare direttamente winnerstring) ###############
 	local file = io.open(nomeFile, "a")											-- apro il file, "a" significa "append mode" 
