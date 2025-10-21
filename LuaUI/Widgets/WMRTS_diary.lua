@@ -88,7 +88,7 @@ local new_units				= 0
 
 -- definizioni immagini bottoni e background
 local headerdiarymenu 			= "LuaUI/Images/menu/diary/header_menu_bkgnd.png"
-local contentdiarymenu			= "LuaUI/Images/menu/diary/contents/wmrtschara0.png"  				-- assumerà il valore di una delle news sotto, a seconda della categoria e della pagina che si sta guardando
+local contentdiarymenu			= "LuaUI/Images/menu/diary/contents/wmrtschar0.png"  				-- assumerà il valore di una delle news sotto, a seconda della categoria e della pagina che si sta guardando
 local button_close				= "LuaUI/Images/menu/diary/menu_close.png"
 local icona_diarymenu			= "LuaUI/Images/menu/diary/menu_diary_icon.png"
 
@@ -137,7 +137,7 @@ local function diarycategorymanagement()
 	button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_off.png" 
 	button_unitsmenu		= "LuaUI/Images/menu/diary/buttondiary_units_off.png" 	
 	elseif diarycategory == 3 then		-- sto leggendo categoria personaggi
-	contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtschara"..pagcur_character..".png"
+	contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtschar"..pagcur_character..".png"
 	-- imposto lo stato ON/OFF dei bottoni	
 	button_mapmenu			= "LuaUI/Images/menu/diary/buttondiary_maps_off.png"
 	button_storymenu		= "LuaUI/Images/menu/diary/buttondiary_story_off.png" 
