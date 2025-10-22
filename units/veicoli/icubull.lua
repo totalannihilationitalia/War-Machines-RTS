@@ -4,7 +4,7 @@ return {
 -----------------------------------------------------------
 --- UNITS FEATURES
 -----------------------------------------------------------
-  armbull= {
+  icubull= {
                acceleration = 0.0396,
 --               badTargetCategory = VTOL,
                brakerate  = 0.055,
@@ -22,7 +22,7 @@ return {
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
-               corpse = "armbull_dead",
+               corpse = "icubull_dead",
 --               defaultmissiontype = Standby,
                description = "Heavy Assault Tank",
 --               firestandorders = 1,
@@ -73,8 +73,8 @@ featuredefs = {
                world = "All Worlds",
                description = "Bulldog Wreckage",
                category = "corpses",
-               object = "ARMBULL_DEAD",
-               featuredead = "armbull_heap",
+               object = "icubull_DEAD",
+               featuredead = "icubull_heap",
                featurereclamate = "SMUDGE01",
                footprintx = 3,
                footprintz = 3,

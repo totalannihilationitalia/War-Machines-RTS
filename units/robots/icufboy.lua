@@ -4,7 +4,7 @@ return {
 -----------------------------------------------------------
 --- UNITS FEATURES
 -----------------------------------------------------------
-  armfboy= {
+  icufboy= {
                acceleration = 0.12,
                brakerate  = 0.125,
                buildcostenergy = 11193,
@@ -21,7 +21,7 @@ return {
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
-               corpse = "armfboy_dead",
+               corpse = "icufboy_dead",
 --               defaultmissiontype = Standby,
                description = "Heavy Plasma Kbot",
 --               firestandorders = 1,
@@ -65,8 +65,8 @@ featuredefs = {
                world = "all",
                description = "Fatboy Wreckage",
                category = "corpses",
-               object = "ARMFBOY_DEAD",
-               featuredead = "armfboy_heap",
+               object = "icufboy_DEAD",
+               featuredead = "icufboy_heap",
                featurereclamate = "SMUDGE01",
                footprintx = 2,
                footprintz = 2,
