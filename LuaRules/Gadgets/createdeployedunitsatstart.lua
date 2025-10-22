@@ -17,39 +17,68 @@ end
 ----- ########################################## completare
 
 -- VARIABILI
-local slot_1a = Spring.GetModOptions().udslot_1a or "empty"
-local slot_2a = Spring.GetModOptions().udslot_2a or "empty"
-local slot_3a = Spring.GetModOptions().udslot_3a or "empty"
-local slot_4a = Spring.GetModOptions().udslot_4a or "empty"
-local slot_5a = Spring.GetModOptions().udslot_5a or "empty"
-local slot_6a = Spring.GetModOptions().udslot_6a or "empty"
-local slot_7a = Spring.GetModOptions().udslot_7a or "empty"
-local slot_8a = Spring.GetModOptions().udslot_8a or "empty"
-local slot_1b = Spring.GetModOptions().udslot_1b or "empty"
-local slot_2b = Spring.GetModOptions().udslot_2b or "empty"
-local slot_3b = Spring.GetModOptions().udslot_3b or "empty"
-local slot_4b = Spring.GetModOptions().udslot_4b or "empty"
-local slot_5b = Spring.GetModOptions().udslot_5b or "empty"
-local slot_6b = Spring.GetModOptions().udslot_6b or "empty"
-local slot_7b = Spring.GetModOptions().udslot_7b or "empty"
-local slot_8b = Spring.GetModOptions().udslot_8b or "empty"
-local deploy_radius = 30 	-- deployement radius from commander
+local spawnCoorx = 0								-- coordinata x di spawn del comandante, cambierà valore poi nello script
+local spawnCoorz = 0								-- coordinata z di spawn del comandante, cambierà valore poi nello script
+local isunitsdeployed = Spring.GetModOptions().wmrtsunitdeploy or 0  -- verifico che il client abbia impostato la partita in modo che vi siano le unità dispiegate.
+local slota_playername = Spring.GetModOptions().slota_owner or "empty"	 -- verifico chi è il nome giocatore proprietario degli slot player A
+local slotb_playername = Spring.GetModOptions().slotb_owner or "empty"	 -- verifico chi è il nome giocatore proprietario degli slot player B
+local slot_1a = Spring.GetModOptions().slot_1a or 0
+local slot_2a = Spring.GetModOptions().slot_2a or 0
+local slot_3a = Spring.GetModOptions().slot_3a or 0
+local slot_4a = Spring.GetModOptions().slot_4a or 0
+local slot_5a = Spring.GetModOptions().slot_5a or 0
+local slot_6a = Spring.GetModOptions().slot_6a or 0
+local slot_7a = Spring.GetModOptions().slot_7a or 0
+local slot_8a = Spring.GetModOptions().slot_8a or 0
+local slot_1b = Spring.GetModOptions().slot_1b or 0
+local slot_2b = Spring.GetModOptions().slot_2b or 0
+local slot_3b = Spring.GetModOptions().slot_3b or 0
+local slot_4b = Spring.GetModOptions().slot_4b or 0
+local slot_5b = Spring.GetModOptions().slot_5b or 0
+local slot_6b = Spring.GetModOptions().slot_6b or 0
+local slot_7b = Spring.GetModOptions().slot_7b or 0
+local slot_8b = Spring.GetModOptions().slot_8b or 0
+local deploy_radius = 30 	-- deployement radius from initial starting units
 
 ----
 -- SYNC
 ---- 
 if (gadgetHandler:IsSyncedCode()) then
 
+--------------------------------------------------------------------------------
+-- Funzione per ricercare ID corrispondente allo username e ##### implementare  configurare le variabili coordinate di spawn per le "deployed units" di quel team #############
+--------------------------------------------------------------------------------
+function GetTeamIDFromPlayerName(targetName)
+  local playerIDs = Spring.GetPlayerList()
+  for _, playerID in ipairs(playerIDs) do
+    local playerInfo = Spring.GetPlayerInfo(playerID)
+    if playerInfo and playerInfo.name == targetName then
+	-- ############## implementare qui la rilevazione delle spawn  "spawnCoorx" & "spawnCoorz"
+	spawnCoorx, _ ,spawnCoorz = Spring.GetTeamStartPosition(playerInfo.teamID) -- prelevo le coordinate x e z di partenza del team
+      return playerInfo.teamID
+    end
+  end
+  return nil
+end
+			
+--------------------------------------------------------------------------------
+-- Initialize
+--------------------------------------------------------------------------------			
+function gadget:Initialize()
+end
 
-	function gadget:Initialize()
-	-- inserire qui tutti i caricamenti vari degli slot da dispiegare in gamestart
-
-	end
-
-
-	function gadget:GameStart() then
-	-- dispiegare qui le unità
-	end
+--------------------------------------------------------------------------------
+-- Game start
+--------------------------------------------------------------------------------
+function gadget:GameStart() then
+  -- 1) Inizio a dispiegare le unità dello slot a
+  local teamID_slota = GetTeamIDFromPlayerName(slota_playername) -- avvio la funzione per verificare a quale ID appartiene il giocatore a (settato poi da client)
+  if teamID_slota then 			  -- se ha trovato corrispondenza assegna le unità al giocatore a
+     Spring.Echo( "Trovato! Il giocatore '" .. slota_playername .. "' è nel team con ID: " .. tostring(teamID_slota).." e che parte dalla posizione x:" .. tostring(spawnCoorx).. " e z: ".. tostring(spawnCoorz) ) 	-- debug
+  else																													-- altrimenti se non ha trovato corrispondenza invia messaggio di errore
+    Spring.Echo( "ATTENZIONE: Giocatore '" .. slota_playername .. "' non trovato nella partita." )						-- debug
+  end
+end
 ----
 -- UNSYNC
 ---- 
