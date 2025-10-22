@@ -49,13 +49,14 @@ if (gadgetHandler:IsSyncedCode()) then
 -- Funzione per ricercare ID corrispondente allo username e ##### implementare  configurare le variabili coordinate di spawn per le "deployed units" di quel team #############
 --------------------------------------------------------------------------------
 function GetTeamIDFromPlayerName(targetName)
-  local playerIDs = Spring.GetPlayerList()
-  for _, playerID in ipairs(playerIDs) do
-    local playerInfo = Spring.GetPlayerInfo(playerID)
-    if playerInfo and playerInfo.name == targetName then
+  local playerIDs = Spring.GetPlayerList() 					-- crea una tabella di tutti i player connessi, AI e spettatori
+  for _, playerID in ipairs(playerIDs) do					-- Per tutti gli elementi presenti nella tabella playerIDs, esegui il codice seguente (e per ogni elemento, assegna il valore numerico dell'ID del giocatore alla variabile playerID
+    local playerInfo, isActive, isSpectator, teamID = Spring.GetPlayerInfo(playerID)
+ --   if playerInfo and playerInfo.name == targetName then
+    if playerInfo == targetName then
 	-- ############## implementare qui la rilevazione delle spawn  "spawnCoorx" & "spawnCoorz"
-	spawnCoorx, _ ,spawnCoorz = Spring.GetTeamStartPosition(playerInfo.teamID) -- prelevo le coordinate x e z di partenza del team
-      return playerInfo.teamID
+	  spawnCoorx, _ ,spawnCoorz = Spring.GetTeamStartPosition(teamID) -- prelevo le coordinate x e z di partenza del team
+      return teamID
     end
   end
   return nil
@@ -70,11 +71,12 @@ end
 --------------------------------------------------------------------------------
 -- Game start
 --------------------------------------------------------------------------------
-function gadget:GameStart() then
+function gadget:GameStart() 
   -- 1) Inizio a dispiegare le unità dello slot a
   local teamID_slota = GetTeamIDFromPlayerName(slota_playername) -- avvio la funzione per verificare a quale ID appartiene il giocatore a (settato poi da client)
   if teamID_slota then 			  -- se ha trovato corrispondenza assegna le unità al giocatore a
      Spring.Echo( "Trovato! Il giocatore '" .. slota_playername .. "' è nel team con ID: " .. tostring(teamID_slota).." e che parte dalla posizione x:" .. tostring(spawnCoorx).. " e z: ".. tostring(spawnCoorz) ) 	-- debug
+	 Spring.CreateUnit(slot_1a,spawnCoorx,0,spawnCoorz,0,teamID_slota)
   else																													-- altrimenti se non ha trovato corrispondenza invia messaggio di errore
     Spring.Echo( "ATTENZIONE: Giocatore '" .. slota_playername .. "' non trovato nella partita." )						-- debug
   end
