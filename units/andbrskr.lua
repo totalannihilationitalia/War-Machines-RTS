@@ -47,7 +47,7 @@ return {
                radardistance = 0,
                selfdestructas = "SMALL_UNIT",
                sightdistance = 275,
---               soundcategory= "CORAK",
+--               soundcategory= "nfaak",
 --               standingfireorder = 2,
 --               steeringmode= 2,
 --               standingmoveorder = 1,

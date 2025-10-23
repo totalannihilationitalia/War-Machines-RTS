@@ -63,16 +63,16 @@ return {
     		buildoptions = {
 			[1] = "coracv",
 			[2] = "corseal",
-			[3] = "correap",
+			[3] = "nfareap",
 			[4] = "corparrow",
-			[5] = "corgol",
+			[5] = "nfagol",
 			[6] = "tawf114",
 			[7] = "cormart",
 			[8] = "corvroc",
 			[9] = "corsent",
 			[10] = "cormabm",
 			[11] = "coreter",
-			[12] = "corvrad",
+			[12] = "nfavrad",
 		},
 -----------------------------------------------------------
 --- Units wreckage and heaps

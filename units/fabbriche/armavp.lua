@@ -70,7 +70,7 @@ return {
 			[7] = "armmerl",
 			[8] = "armmanni",
 			[9] = "armyork",
-			[10] = "armseer",
+			[10] = "icuseer",
 			[11] = "armjam",
 			[12] = "armcamp",
 		},

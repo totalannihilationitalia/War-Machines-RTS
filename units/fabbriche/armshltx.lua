@@ -59,7 +59,7 @@ return {
 --- BUILDLIST
 -----------------------------------
     		buildoptions = {
-			[1] = "armraz",
+			[1] = "icuraz",
 			[2] = "warhammer",
 			[3] = "icufurie",
 		},
