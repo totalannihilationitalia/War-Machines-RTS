@@ -12,7 +12,7 @@ return {
                buildcostenergy = 944,
                buildcostmetal = 97,
                builder = false,
-               buildpic = "ARMROCK.DDS",
+               buildpic = "da_fare.png",
                buildtime  = 1887,
                canAttack = true,
                canGuard = true,

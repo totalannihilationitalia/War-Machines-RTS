@@ -196,7 +196,7 @@ weapondefs = {
                      }, -- close damage
              }, --close single weapon definitions
 
-		corcoug_rockets = {
+		nfacoug_rockets = {
                      areaofeffect = 40,
                      avoidfeature = true,
                      burst = 1, -- lua:salvoSize
@@ -205,7 +205,7 @@ weapondefs = {
 --                     craterareaofeffect =  ,
                      firestarter = 70,
                      metalpershot = 17,
-                     model = "corcoug_missile",
+                     model = "nfacoug_missile",
                      name= "Cougar-Rockets",
                      range = 850,
                      reloadtime = 0.9,
@@ -246,7 +246,7 @@ weapons = {
                  },
                  [3] = {
 		 badtargetcategory = "NOTAIR",
-                 def = "corcoug_rockets",
+                 def = "nfacoug_rockets",
                  onlytargetcategory = "SURFACE", -- weapon 3
                  },
 }, -- close weapon usage

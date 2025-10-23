@@ -62,11 +62,11 @@ return {
 -----------------------------------
     		buildoptions = {
 			[1] = "corcv",
-			[2] = "corfav",
-			[3] = "corgator",
-			[4] = "corgarp",
-			[5] = "corraid",
-			[6] = "corlevlr",
+			[2] = "nfafav",
+			[3] = "nfagator",
+			[4] = "nfagarp",
+			[5] = "nfaraid",
+			[6] = "nfalevlr",
 			[7] = "corwolv",
 			[8] = "cormist",
 		},

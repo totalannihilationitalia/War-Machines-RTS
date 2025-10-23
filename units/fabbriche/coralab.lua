@@ -62,7 +62,7 @@ return {
 -----------------------------------
     		buildoptions = {
 			[1] = "corack",
-			[2] = "corpyro",
+			[2] = "nfapyro",
 			[3] = "corcan",
 			[4] = "corsumo",
 			[5] = "cormort",

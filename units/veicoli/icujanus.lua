@@ -4,31 +4,31 @@ return {
 -----------------------------------------------------------
 --- UNITS FEATURES
 -----------------------------------------------------------
-  corraid= {
-               acceleration = 0.0243,
---               badTargetCategory = VTOL OGGETTISTATICI,
-               brakerate  = 0.0254,
-               buildcostenergy = 2219,
-               buildcostmetal = 211,
+  icujanus= {
+               acceleration = 0.0198,
+--               badTargetCategory = VTOL,
+               brakerate  = 0.055,
+               buildcostenergy = 2361,
+               buildcostmetal = 226,
                builder = false,
-               buildpic = "nfaraid.png",
-               buildtime  = 3312,
+               buildpic = "icujanus.png",
+               buildtime  = 3545,
                canAttack = true,
                canGuard = true,
                canmove = true,
                canPatrol = true,
 --               canstop = 1,
-               category = "ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE",
+               category = "ALL TANK WEAPON NOTSUB NOTSHIP NOTAIR SURFACE",
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
-               corpse = "corraid_dead",
+               corpse = "icujanus_dead",
 --               defaultmissiontype = Standby,
-               description = "Medium Assault Tank",
+               description = "Twin Medium Rocket Launcher",
 --               firestandorders = 1,
-               energymake = 0.6,
+               energymake = 0.5,
                energystorage = 0,
-               energyUse = 0.6,
+               energyUse = 0.5,
                explodeas = "BIG_UNITEX",
                footprintx = 2,
                footprintz = 2,
@@ -37,52 +37,52 @@ return {
                idletime = 1800,
 --               maneuverleashlength  = 640,
                mass = 200,
-               maxdamage = 1685,
+               maxdamage = 880,
                maxslope = 10,
-               maxvelocity = 2.783,
+               maxvelocity = 1.958,
                maxwaterdepth = 12,
                metalStorage = 0,
 --               mobilestandorders= 1,
                movementclass = "TANK2",
-               name = "Raider",
+               name = "Janus",
                noAutoFire = false,
                nochasecategory = "VTOL",
-               objectname = "nfaraid.s3o",
+               objectname = "icujanus.s3o",
                seismicsignature = 0,
                selfdestructas = "BIG_UNIT",
                sightdistance = 325,
---               soundcategory= "CORE_TANK",
+--               soundcategory= "ARM_TANK",
 --               standingfireorder = 2,
 --               steeringmode= 1,
 --               standingmoveorder = 1,
                TEDClass = "TANK", -- verificare se necessario
-               turnrate = 459.8,
+               turnrate = 338.8,
                workertime = 0,
-               wpri_badtargetcategory = "VTOL OGGETTISTATICI",
+               wpri_badtargetcategory = "VTOL",
                leaveTracks = true,
-               trackOffset = 6,
-               trackStrength = 5,
+               trackOffset = 3,
+               trackStrength = 6,
                trackStretch = 1,
                trackType = "StdTank",
-               trackWidth = 30,
+               trackWidth = 24,
 -----------------------------------------------------------
 --- Units wreckage and heaps
 -----------------------------------------------------------
 featuredefs = {
   dead = {
                world = "All Worlds",
-               description = "Raider Wreckage",
+               description = "Janus Wreckage",
                category = "corpses",
-               object = "CORRAID_DEAD",
-               featuredead = "corraid_heap",
+               object = "icujanus_DEAD",
+               featuredead = "icujanus_heap",
                featurereclamate = "SMUDGE01",
                footprintx = 2,
                footprintz = 2,
                height = 20,
                blocking= true,
                hitdensity = 100,
-               metal = 167,
-               damage = 975,
+               metal = 147,
+               damage = 528,
                reclaimable = true,
                seqnamereclamate = "TREE1RECLAMATE",
                energy = 0,
@@ -92,16 +92,16 @@ featuredefs = {
                },  -- Close Dead Features
   heap = {
                world = "All Worlds",
-               description = "Raider Heap",
+               description = "Janus Heap",
                category = "heaps",
-               object = "2X2E",
+               object = "2X2C",
                footprintx = 2,
                footprintz = 2,
                height = 4,
                blocking = false,
                hitdensity= 100,
-               metal = 67,
-               damage = 488,
+               metal = 59,
+               damage = 264,
                reclaimable = true,
                featurereclamate = "SMUDGE01",
                seqnamereclamate = "TREE1RECLAMATE",
@@ -116,6 +116,7 @@ featuredefs = {
 sfxtypes = {
   explosiongenerators = {
                [1]="custom:plasmaflare",
+               [2]="custom:rocketflare",
                }, -- close effects list
 }, -- close section sfxtypes
 -----------------------------------------------------------
@@ -135,10 +136,10 @@ sounds = {
                      [1] = "cantdo4",
                       },
                ok = {
-                     [1] = "tcormove",
+                     [1] = "tarmmove",
                     },
                select = {
-                     [1] = "tcorsel",
+                     [1] = "tarmsel",
                         },
                underattack = "warning1",
 }, --close sound section
@@ -146,34 +147,42 @@ sounds = {
 --- WEAPONS DEFINITION
 -----------------------------------------------------------
 weapondefs = {
-		arm_lightcannon = {
-                     areaofeffect = 48,
+		janus_rocket = {
+                     areaofeffect = 128,
                      avoidfeature = true,
 --                     cegTag = "",
 --                     craterareaofeffect =  ,
                      craterboost = 0,
                      cratermult = 0,
-                     explosiongenerator = "custom:LIGHT_PLASMA",
-                     firestarter = 100,
-                     impulseboost = 0.123,
-                     impulsefactor = 0.123,
-                     name= "LightCannon",
+                     explosiongenerator = "custom:VEHROCKET_EXPLOSION",
+                     firestarter = 70,
+                     impulseboost = 0.75,
+                     impulsefactor = 0.75,
+                     model = "megamisl",
+                     name= "HeavyRocket",
                      noselfdamage = true,
-                     range = 350,
-                     reloadtime = 1.19,
-                     soundhit = "xplosml3",
+                     range = 380,
+                     reloadtime = 7.5,
+                     smoketrail = true,
+                     soundhit = "xplosml2",
  --                   soundhitdry = "",
 --                    soundhitwet = "",
 --                    soundhitwetvolume = "",
-                     soundstart = "canlite3",
+                     soundstart = "rocklit1",
+                     startvelocity = 190,
+                     texture2 = "armsmoketrail",
+                     tracks = true, 
+		     trajectoryheight = 0.5,
+                     turnrate = 22000,
                      turret  = true, 
-                     weapontype = "Cannon",
-                     weaponvelocity  = 225,
+                     weaponacceleration = 100,
+                     weapontimer = 3,
+                     weapontype = "MissileLauncher",
+                     weaponvelocity  = 190,
                      damage = {
-                         default = 97,
+                         default = 330,
                      }, -- close damage
              }, --close single weapon definitions
-
 }, -- close weapon definition
 -----------------------------------------------------------
 --- WEAPONS USAGE
@@ -181,8 +190,14 @@ weapondefs = {
 weapons = {
                  [1] = {
                  badtargetcategory = "VTOL",
-                 def = "arm_lightcannon",
+                 def = "janus_rocket",
                  onlytargetcategory = "SURFACE",
+                 },
+                 [2] = {
+                 badtargetcategory = "VTOL",
+                 def = "janus_rocket",
+                 onlytargetcategory = "SURFACE",
+		 slaveto = 1,
                  },
 }, -- close weapon usage
 

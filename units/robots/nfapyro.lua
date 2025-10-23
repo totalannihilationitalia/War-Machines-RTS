@@ -4,115 +4,95 @@ return {
 -----------------------------------------------------------
 --- UNITS FEATURES
 -----------------------------------------------------------
-  corfav= {
-               acceleration = 0.11,
---               badTargetCategory = ANTIGATOR OGGETTISTATICI,
-               brakerate  = 0.145,
-               buildcostenergy = 256,
-               buildcostmetal = 24,
+  nfapyro= {
+               acceleration = 0.45,
+--               badTargetCategory = ANTIFLAME,
+               brakerate  = 0.65,
+               buildcostenergy = 2783,
+               buildcostmetal = 189,
                builder = false,
-               buildpic = "nfafav.png",
-               buildtime  = 1104,
+               buildpic = "nfapyro.png",
+               buildtime  = 5027,
                canAttack = true,
                canGuard = true,
                canmove = true,
                canPatrol = true,
 --               canstop = 1,
-               category = "ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE",
+               category = "KBOT MOBILE WEAPON ALL ANTIFLAME NOTSUB NOTSHIP NOTAIR SURFACE",
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
-               corpse = "corfav_dead",
+               corpse = "nfapyro_heap",
 --               defaultmissiontype = Standby,
-               description = "Light Scout Vehicle",
+               description = "Fast Assault Kbot",
 --               firestandorders = 1,
-               energymake = 0.3,
+               energymake = 1.1,
                energystorage = 0,
-               energyUse = 0.3,
-               explodeas = "SMALL_UNITEX",
+               energyUse = 1.1,
+               explodeas = "BIG_UNITEX",
                footprintx = 2,
                footprintz = 2,
-	       icontype = "veicoli",
+               icontype = "robots",
                idleautoheal = 5,
                idletime = 1800,
 --               maneuverleashlength  = 640,
                mass = 200,
-               maxdamage = 95,
-               maxslope = 26,
-               maxvelocity = 4.89,
-               maxwaterdepth = 12,
+               maxdamage = 1000,
+               maxslope = 17,
+               maxvelocity = 2.75,
+               maxwaterdepth = 25,
                metalStorage = 0,
 --               mobilestandorders= 1,
-               movementclass = "TANK2",
-               name = "Weasel",
+               movementclass = "KBOT2",
+               name = "Pyro",
                noAutoFire = false,
                nochasecategory = "VTOL",
-               objectname = "nfafav.s3o",
+               objectname = "nfapyro.s3o",
                seismicsignature = 0,
-               selfdestructas = "SMALL_UNIT",
-               sightdistance = 535,
---               soundcategory= "CORE_VEHICLE",
+               selfdestructas = "nfapyro_BLAST",
+               selfdestructcountdown = 1,
+               sightdistance = 318,
+--               soundcategory= "COR_KBOT",
 --               standingfireorder = 2,
---               steeringmode= 1,
+--               steeringmode= 2,
 --               standingmoveorder = 1,
-               TEDClass = "TANK", -- verificare se necessario
-               turnrate = 1097,
+               TEDClass = "KBOT", -- verificare se necessario
+               turnrate = 1145,
+               upright = true,
                workertime = 0,
-               wpri_badtargetcategory = "ANTIGATOR OGGETTISTATICI",
-               leaveTracks = true,
-               trackOffset = -3,
-               trackStrength = 3,
-               trackStretch = 1,
-               trackType = "StdTank",
-               trackWidth = 27,
+               wpri_badtargetcategory = "ANTIFLAME",
 -----------------------------------------------------------
 --- Units wreckage and heaps
 -----------------------------------------------------------
 featuredefs = {
-  dead = {
-               world = "All Worlds",
-               description = "Weasel Wreckage",
-               category = "corpses",
-               object = "CORFAV_DEAD",
-               featuredead = "corfav_heap",
-               featurereclamate = "SMUDGE01",
-               footprintx = 2,
-               footprintz = 2,
-               height = 20,
-               blocking= false,
-               hitdensity = 100,
-               metal = 16,
-               damage = 132,
-               reclaimable = true,
-               seqnamereclamate = "TREE1RECLAMATE",
-               energy = 0,
-				collisionvolumeoffsets = "0.0 -1.2425585791 1.2922744751",
-				collisionvolumescales = "30.0 14.3981628418 32.5845489502",
-				collisionvolumetype = "Box",
-               },  -- Close Dead Features
   heap = {
                world = "All Worlds",
-               description = "Weasel Heap",
+               description = "Pyro Heap",
                category = "heaps",
-               object = "2X2B",
+               object = "2X2C",
+               featurereclamate = "SMUDGE01",
                footprintx = 2,
                footprintz = 2,
                height = 4,
-               blocking = false,
-               hitdensity= 100,
-               metal = 6,
-               damage = 66,
+               blocking= false,
+               hitdensity = 100,
+               metal = 124,
+               damage = 560,
                reclaimable = true,
-               featurereclamate = "SMUDGE01",
                seqnamereclamate = "TREE1RECLAMATE",
                energy = 0,
                collisionvolumescales = "35.0 4.0 6.0",
                collisionvolumetype = "cylY",
-               },  -- Close heap
+               },  -- Close Dead Features
 },  --  Wreckage and heaps
 -----------------------------------------------------------
---- NO EFFECTS
+--- EFFECTS
 -----------------------------------------------------------
+sfxtypes = {
+  explosiongenerators = {
+               [1]="custom:PILOT",
+               }, -- close effects list
+}, -- close section sfxtypes
 -----------------------------------------------------------
 --- UNITS SOUND
 -----------------------------------------------------------
@@ -130,10 +110,10 @@ sounds = {
                      [1] = "cantdo4",
                       },
                ok = {
-                     [1] = "vcormove",
+                     [1] = "kbcormov",
                     },
                select = {
-                     [1] = "vcorsel",
+                     [1] = "kbcorsel",
                         },
                underattack = "warning1",
 }, --close sound section
@@ -141,43 +121,37 @@ sounds = {
 --- WEAPONS DEFINITION
 -----------------------------------------------------------
 weapondefs = {
-		core_laser = {
-                     areaofeffect = 8,
+		flamethrower = {
+                     areaofeffect = 48,
                      avoidfeature = true,
-                     beamtime = 0.18,
-                     burstrate = 0.2, -- lua: salvoDelay
+                     burst = 22, -- lua:salvoSize
+                     burstrate = 0.01, -- lua: salvoDelay
 --                     cegTag = "",
-                     corethickness = 0.1,
 --                     craterareaofeffect =  ,
                      craterboost = 0,
                      cratermult = 0,
-                     duration = 0.02,
-                     energypershot = 5,
-                     explosiongenerator = "custom:SMALL_ARANCIO_BURN",
-                     firestarter = 50,
-                     impactonly = true,
+                     firestarter = 100,
                      impulseboost = 0.123,
                      impulsefactor = 0.123,
-                     name= "Laser",
+                     Intensity = 0.6,
+                     name= "FlameThrower",
                      noselfdamage = true,
-                     laserflaresize = 5,
-                     range = 180,
-                     reloadtime = 1,
-                     rgbcolor = "1 1 0",
-                     soundhit = "lasrhit2",
+                     range = 230,
+                     reloadtime = 1.1,
+                     rgbcolor = "1 0.95 0.9",
  --                   soundhitdry = "",
 --                    soundhitwet = "",
 --                    soundhitwetvolume = "",
-                     soundstart = "lasrfir1",
-                     soundtrigger = "1",
-                     targetmoveerror = 0.2,
-                     thickness = 1,
-                     tolerance = 10000,
+                     soundstart = "Flamhvy1",
+                     soundtrigger = "0",
+                     sprayangle = 1500,
+                     tolerance = 2500,
                      turret  = true, 
-                     weapontype = "BeamLaser",
-                     weaponvelocity  = 800,
+                     weapontimer = 1.5,
+                     weapontype = "Flame",
+                     weaponvelocity  = 265,
                      damage = {
-                         default = 35,
+                         default = 12,
                      }, -- close damage
              }, --close single weapon definitions
 
@@ -188,7 +162,7 @@ weapondefs = {
 weapons = {
                  [1] = {
                  badtargetcategory = "VTOL",
-                 def = "core_laser",
+                 def = "flamethrower",
                  onlytargetcategory = "SURFACE",
                  },
 }, -- close weapon usage

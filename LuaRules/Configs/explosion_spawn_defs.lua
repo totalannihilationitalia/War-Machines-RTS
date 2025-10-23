@@ -6,7 +6,7 @@
 local spawn_defs = {
 
 	icupcan_icupatroller_cannon = {name = "icupatroller", cost = 0, expire = 0},
-	nfaacan_ak_cannon = {name = "corak", cost = 0, expire = 0},
+	nfaacan_ak_cannon = {name = "nfaak", cost = 0, expire = 0},
 --	tllpcan_peewee_cannon = {name = "tllprivate", cost = 0, expire = 0},
 
 }

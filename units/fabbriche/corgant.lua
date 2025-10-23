@@ -60,8 +60,8 @@ return {
 --- BUILDLIST
 ----------------------------------- 
               buildoptions = { 
-			[1] = "corkarg",
-			[2] = "corcoug",
+			[1] = "nfakarg",
+			[2] = "nfacoug",
 			[3] = "corkrog",
 			[4] = "armraven",
 			[5] = "gorg",
