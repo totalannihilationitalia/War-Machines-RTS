@@ -63,7 +63,7 @@ return {
     		buildoptions = {
 			[1] = "armcv",
 			[2] = "armfav",
-			[3] = "armflash",
+			[3] = "icuflash",
 			[4] = "armpincer",
 			[5] = "armstump",
 			[6] = "tawf013",

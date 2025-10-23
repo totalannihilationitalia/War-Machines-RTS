@@ -4,7 +4,7 @@ return {
 -----------------------------------------------------------
 --- UNITS FEATURES
 -----------------------------------------------------------
-  armflash= {
+  icuflash= {
                acceleration = 0.06,
 --               badTargetCategory = ANTIEMG,
                brakerate  = 0.065,
@@ -22,7 +22,7 @@ return {
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
-               corpse = "armflash_dead",
+               corpse = "icuflash_dead",
 --               defaultmissiontype = Standby,
                description = "Fast Assault Tank",
 --               firestandorders = 1,
@@ -73,8 +73,8 @@ featuredefs = {
                world = "All Worlds",
                description = "Flash Wreckage",
                category = "corpses",
-               object = "ARMFLASH_DEAD",
-               featuredead = "armflash_heap",
+               object = "icuflash_DEAD",
+               featuredead = "icuflash_heap",
                featurereclamate = "SMUDGE01",
                footprintx = 2,
                footprintz = 2,

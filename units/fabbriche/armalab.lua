@@ -68,7 +68,7 @@ return {
 			[5] = "armsptk",
 			[6] = "armfido",
 			[7] = "armsnipe",
-			[8] = "armfboy",
+			[8] = "icufboy",
 			[9] = "armaak",
 			[10] = "icudecom",
 			[11] = "armmark",
