@@ -47,7 +47,7 @@ local slot_5b = Spring.GetModOptions().slot_5b or 0
 local slot_6b = Spring.GetModOptions().slot_6b or 0
 local slot_7b = Spring.GetModOptions().slot_7b or 0
 local slot_8b = Spring.GetModOptions().slot_8b or 0
-local deploy_radius = 30 								-- deployement radius from initial starting units
+local deploy_radius = 100 								-- deployement radius from initial starting units
 local unitID_slot_1a = nil								-- prenderà il valore dell'unità del rispettivo slot, per gestirne i dati
 local unitID_slot_2a = nil								-- prenderà il valore dell'unità del rispettivo slot, per gestirne i dati
 local unitID_slot_3a = nil								-- prenderà il valore dell'unità del rispettivo slot, per gestirne i dati
@@ -93,35 +93,53 @@ function gadget:GameStart()
   local teamID_slota = GetTeamIDFromPlayerName(slota_playername) -- avvio la funzione per verificare a quale ID appartiene il giocatore a (settato poi da client)
   if teamID_slota then 			 																																									-- se ha trovato corrispondenza assegna le unità al giocatore a
      Spring.Echo( "Trovato! Il giocatore '" .. slota_playername .. "' è nel team con ID: " .. tostring(teamID_slota).." e che parte dalla posizione x:" .. tostring(spawnCoorx).. " e z: ".. tostring(spawnCoorz) ) 	-- debug
-	if (slot_1a ~= 1) and (slot_1a ~= 0) then 																																						-- se nello slot 1 è presente il nome dell'unità (e non è 1 o 0) 				
-	 unitID_slot_1a= Spring.CreateUnit(slot_1a,spawnCoorx+deploy_radius,0,spawnCoorz,0,teamID_slota)							 																	-- imposto lo slot1a -- local risultato = deploy_radius / math.sin(math.rad(45)) teorema dei seni, in lua però devo convertire gli angoli in radianti
+	if (slot_1a ~= 1 and slot_1a ~= "1") and (slot_1a ~= 0 and slot_1a ~= "1") then 																																						-- se nello slot 1 è presente il nome dell'unità (e non è 1 o 0) 				
+	 unitID_slot_1a = Spring.CreateUnit(slot_1a,spawnCoorx+deploy_radius,0,spawnCoorz,0,teamID_slota)							 																	-- imposto lo slot1a -- local risultato = deploy_radius / math.sin(math.rad(45)) teorema dei seni, in lua però devo convertire gli angoli in radianti
 	 --Spring.Echo( "Trovato! Il giocatore '"
 	end
-	if (slot_2a ~= 1) and (slot_2a ~= 0) then 		
+	if (slot_2a ~= 1 and slot_2a ~= "1") and (slot_2a ~= 0 and slot_2a ~= "0") then 																												-- sia che sia numero che sia stringa (in teoria da modoption dovrebbe prelevare il numero come stringa	
 	 unitID_slot_2a= Spring.CreateUnit(slot_2a,spawnCoorx+deploy_radius* math.sin(math.rad(45)),0,spawnCoorz+deploy_radius * math.sin(math.rad(45)),0,teamID_slota)									-- imposto lo slot2a 
 	end
-	if (slot_3a ~= 1) and (slot_3a ~= 0) then 	
+	if (slot_3a ~= 1 and slot_3a ~= "1") and (slot_3a ~= 0 and slot_3a ~= "0") then 	
 	 unitID_slot_3a= Spring.CreateUnit(slot_3a,spawnCoorx,0,spawnCoorz+deploy_radius,0,teamID_slota)																								-- imposto lo slot3a
 	end
-	if (slot_4a ~= 1) and (slot_4a ~= 0) then 	
+	if (slot_4a ~= 1 and slot_4a ~= "1") and (slot_4a ~= 0 and slot_4a ~= "0") then 	
 	 unitID_slot_4a= Spring.CreateUnit(slot_4a,spawnCoorx-deploy_radius* math.sin(math.rad(45)),0,spawnCoorz+deploy_radius * math.sin(math.rad(45)),0,teamID_slota)									-- imposto lo slot4a
 	end
-	if (slot_5a ~= 1) and (slot_5a ~= 0) then 	
+	if (slot_5a ~= 1 and slot_5a ~= "1") and (slot_5a ~= 0 and slot_5a ~= "0") then 	
 	 unitID_slot_5a= Spring.CreateUnit(slot_5a,spawnCoorx-deploy_radius,0,spawnCoorz,0,teamID_slota)																								-- imposto lo slot5a
 	end
-	if (slot_6a ~= 1) and (slot_6a ~= 0) then 	
+	if (slot_6a ~= 1 and slot_6a ~= "1") and (slot_6a ~= 0 and slot_6a ~= "0") then 	
 	 unitID_slot_6a= Spring.CreateUnit(slot_6a,spawnCoorx-deploy_radius* math.sin(math.rad(45)),0,spawnCoorz-deploy_radius * math.sin(math.rad(45)),0,teamID_slota)									-- imposto lo slot6a
 	end
-	if (slot_7a ~= 1) and (slot_7a ~= 0) then 	
+	if (slot_7a ~= 1 and slot_7a ~= "1") and (slot_7a ~= 0 and slot_7a ~= "0") then 	
 	 unitID_slot_7a= Spring.CreateUnit(slot_7a,spawnCoorx,0,spawnCoorz-deploy_radius,0,teamID_slota)																								-- imposto lo slot7a
 	end
-	if (slot_8a ~= 1) and (slot_8a ~= 0) then 		 
+	if (slot_8a ~= 1 and slot_8a ~= "1") and (slot_8a ~= 0 and slot_8a ~= "0") then 		 
 	 unitID_slot_8a= Spring.CreateUnit(slot_8a,spawnCoorx+deploy_radius* math.sin(math.rad(45)),0,spawnCoorz-deploy_radius * math.sin(math.rad(45)),0,teamID_slota)									-- imposto lo slot8a
 	end	 
   else																													-- altrimenti se non ha trovato corrispondenza invia messaggio di errore
     Spring.Echo( "ATTENZIONE: Giocatore '" .. slota_playername .. "' non trovato nella partita." )						-- debug
   end
 end
+
+--------------------------------------------------------------------------------
+-- Unità distrutta
+--------------------------------------------------------------------------------
+function gadget:UnitDestroyed(unitID, unitDefID, unitTeam)
+
+  if unitID_slot_1a and unitID == unitID_slot_5a then
+    Spring.Echo("GADGET: Unità slot_1a distrutta. Invio messaggio al widget.")
+    
+    -- ### QUI LA COMUNICAZIONE ###
+    -- 1. Scegli un nome per il tuo comando. Deve essere univoco!
+    -- 2. Invia i dati che servono al widget. In questo caso, il nome dello slot.
+    Spring.SendToUnsynced("MioGadget_UnitSlotDestroyed", "slot_5a")
+    
+    -- Resetta la variabile
+    unitID_slot_5a = nil
+  end
+
 ----
 -- UNSYNC
 ---- 

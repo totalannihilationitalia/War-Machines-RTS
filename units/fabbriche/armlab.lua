@@ -63,10 +63,10 @@ return {
     		buildoptions = {
 			[1] = "icuck",
 			[2] = "icupatroller",
-			[3] = "armrock",
+			[3] = "icurock",
 			[4] = "icuinv",
 			[5] = "armjeth",
-			[6] = "armwar",
+			[6] = "icuwar",
 		},
 -----------------------------------------------------------
 --- Units wreckage and heaps
