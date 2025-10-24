@@ -72,14 +72,14 @@ end
 --------------------------------------------------------------------------------			
 function gadget:Initialize()
 -- Controllo se l'utente è spettatore
-  local myTeamID = Spring.GetLocalTeamID()
-  local teamInfo = Spring.GetTeamInfo(myTeamID)
-  if teamInfo and teamInfo.spectator then
-    return false -- disattivo il gadget
-  end
+--  local myTeamID = Spring.GetLocalTeamID()
+--  local teamInfo = Spring.GetTeamInfo(myTeamID)
+--  if teamInfo and teamInfo.spectator then
+--    return false -- disattivo il gadget
+--  end
 
 -- controllo se l'opzione attiva unit deploy è abilitata
-  if (isunitsdeployed == 0) and teamInfo.spectator then
+  if (isunitsdeployed == 0) 	then
     return false -- disattivo il gadget
   end
 end
@@ -100,11 +100,12 @@ O O O O O
 	if slota_playername  then																																											-- se giocatore proprietario degli slotA esiste
 	  local teamID_slota = GetTeamIDFromPlayerName(slota_playername) -- richiamo la funzione per verificare a quale ID appartiene il giocatore a (settato poi da client)
 	  if teamID_slota then 			 																																									-- se ha trovato corrispondenza assegna le unità al giocatore a
---		 Spring.Echo( "Trovato! Il giocatore '" .. slota_playername .. "' è nel team con ID: " .. tostring(teamID_slota).." e che parte dalla posizione x:" .. tostring(spawnCoorx).. " e z: ".. tostring(spawnCoorz) ) 	-- debug
+		 Spring.Echo( "Trovato! Il giocatore '" .. slota_playername .. "' è nel team con ID: " .. tostring(teamID_slota).." e che parte dalla posizione x:" .. tostring(spawnCoorx).. " e z: ".. tostring(spawnCoorz) ) 	-- debug
 		if (slot_1a ~= 1 and slot_1a ~= "1") and (slot_1a ~= 0 and slot_1a ~= "1") then 																												-- se nello slot 1 è presente il nome dell'unità (e non è ne 1 o 0 sia numero che stringa "1" o "0") 				
 		 unitID_slot_1a = Spring.CreateUnit(slot_1a,spawnCoorx+deploy_radius,0,spawnCoorz,0,teamID_slota)							 																	-- creo l'unità dello slot1a definendone l'ID dell'unità (memorizzata in unitID_slot_1a). Per la posizione ho usato il teorema dei seni, in lua però devo convertire gli angoli in radianti
 		 Spring.SetGameRulesParam("ud_statusslot1a", slot_1a)																																			-- setto il gamerule per lo slot1a = nome unità assegnata (verrà poi letto dal widget)
 		 Spring.SetGameRulesParam("ud_idslot1a", unitID_slot_1a)																																				-- setto il gamerule per l'ID dell' unità assegnata allo slot1a (verrà poi letto dal widget per catturare le informazioni sulla posizione dell'unita x)
+		 Spring.Echo( "imposto da GADGET slot_1a= "..slot_1a.." e id= "..unitID_slot_1a)
 		else
 		 Spring.SetGameRulesParam("ud_statusslot1a", "vuoto")																																			-- altrimenti setto il gamerule per lo slot1a = vuoto (verrà poi letto dal widget)	
 		end
@@ -160,7 +161,9 @@ O O O O O
 	  else																																																-- altrimenti se non ha trovato corrispondenza invia messaggio di errore
 --		Spring.Echo( "ATTENZIONE: giocatore proprietario dello slot a '" .. slota_playername .. "' non trovato nella partita." )																		-- debug, il proprietario dello slota (definito dalla lobby) non è stato trovato nel game
 	  end
+	
 	end  -- end if slota_playername
+Spring.SendCommands("wmrts_slotstatupdt")			-- aggiorniamo il widget	
 end -- end game start
 
 --------------------------------------------------------------------------------
