@@ -25,6 +25,7 @@ function widget:GetInfo()
 -- rev 0 by molix -- 23/12/2024 -- New WMRTS obj interface, integrated with WMRTS minimenu
 -- rev 1 by molix -- 03/01/2025 -- risolto problema di memoria e relativo crash in Spring 
 -- rev 2 by molix -- 26/09/2025 -- rimosso il gui shader quando si riceve il comando di chiudere obj menu
+-- rev 3 by molix -- 24/10/2025 -- le missioni si aggiornano dopo il comando blink_WMRTS_obj. In questo modo il widget non controlla ogni secondo le stesse informazioni.
 end
 
 --------------------------------------------------------------------------------
@@ -114,7 +115,72 @@ function widget:TextCommand(command)
 					WG['guishader_api'].RemoveRect('WMRTS_obj_option')
 				end				
 	end	
-end
+	if command == 'blink_WMRTS_obj'  then 										-- aggiorna obiettivi
+	    -- ricevo lo stato della missione 1 -- example Spring.SetGameRulesParam("uploadobj1", "Defend the containers around the trains")
+		missionData["Objective 1"] 	= Spring.GetGameRulesParam("uploadobj1")
+		-- ricevo lo stato della missione 2
+		missionData["Objective 2"] 	= Spring.GetGameRulesParam("uploadobj2")
+		-- ricevo lo stato della missione 3
+		missionData["Objective 3"] 	= Spring.GetGameRulesParam("uploadobj3")
+		-- ricevo lo stato della missione 4
+		missionData["Objective 4"] 	= Spring.GetGameRulesParam("uploadobj4")
+	    -- ricevo lo stato della missione 5
+		missionData["Objective 5"] 	= Spring.GetGameRulesParam("uploadobj5")
+		-- ricevo il titolo della missione 1 -- example Spring.SetGameRulesParam("settitolo1", "In progress")
+		missionData["titoloobj1"] 	= Spring.GetGameRulesParam("settitolo1")
+		-- ricevo il titolo della missione 2
+		missionData["titoloobj2"] 	= Spring.GetGameRulesParam("settitolo2")
+		-- ricevo il titolo della missione 3
+		missionData["titoloobj3"] 	= Spring.GetGameRulesParam("settitolo3")
+		-- ricevo il titolo della missione 4
+		missionData["titoloobj4"] 	= Spring.GetGameRulesParam("settitolo4")
+		-- ricevo il titolo della missione 5
+		missionData["titoloobj5"] 	= Spring.GetGameRulesParam("settitolo5")
+		-- ricevo la tipologia di missione 1, serve per stabilire l'icona -- example Spring.SetGameRulesParam("setobjtype", "defend") -- defend, secure, attack, destroy, aggiungere qui altre se si vuole
+		missionData["typeobj1"] 	= Spring.GetGameRulesParam("settype1")
+		missionData["typeobj2"] 	= Spring.GetGameRulesParam("settype2")
+		missionData["typeobj3"] 	= Spring.GetGameRulesParam("settype3")
+		missionData["typeobj4"] 	= Spring.GetGameRulesParam("settype4")
+		missionData["typeobj5"] 	= Spring.GetGameRulesParam("settype5")		
+		-- carico la tipologia di missione per stabilire l'icona
+		local tipoObiettivo1 = missionData["typeobj1"]
+		local tipoObiettivo2 = missionData["typeobj2"]
+		local tipoObiettivo3 = missionData["typeobj3"]
+		local tipoObiettivo4 = missionData["typeobj4"]
+		local tipoObiettivo5 = missionData["typeobj5"]
+		-- setto le rispettive icone
+		-- icona 1
+		if tipoObiettivo1 then -- Controlla se tipoObiettivo1 non è nil
+		iconaobj1 = basePath .. "obj_"..tipoObiettivo1 .. ".png"
+		else		 -- se è di tipo nil	
+		iconaobj1 = basePath .. "obj_none.png"	
+		end
+		-- icona 2
+		if tipoObiettivo2 then 
+		iconaobj2 = basePath .. "obj_"..tipoObiettivo2 .. ".png"
+		else		 -- se è di tipo nil	
+		iconaobj2 = basePath .. "obj_none.png"	
+		end		
+		-- icona 3
+		if tipoObiettivo3 then 
+		iconaobj3 = basePath .. "obj_"..tipoObiettivo3 .. ".png"
+		else		 -- se è di tipo nil	
+		iconaobj3 = basePath .. "obj_none.png"	
+		end			
+		-- icona 4
+		if tipoObiettivo4 then 
+		iconaobj4 = basePath .. "obj_"..tipoObiettivo4 .. ".png"
+		else		 -- se è di tipo nil	
+		iconaobj4 = basePath .. "obj_none.png"	
+		end			
+		-- icona 5		
+		if tipoObiettivo5 then 
+		iconaobj5 = basePath .. "obj_"..tipoObiettivo5 .. ".png"
+		else		 -- se è di tipo nil	
+		iconaobj5 = basePath .. "obj_none.png"	
+		end			
+	end
+end -- textcommand
 
 --------------------------------------
 -- ALLA PRESSIONE DEI PULSANTI
@@ -212,6 +278,7 @@ if mostra_objsetting and not Spring.IsGUIHidden() then
 end
 end
 
+--[[ rimuovo questa funzione e la sposto nella funzione "comandi ricevuti": in questo modo alleggerisco il motore che non è costretto a vedersi ogni secondo le stesse cose.
 --------------------------------------
 -- RICEVO GLI OBIETTIVI DURANTE LA MISSIONE
 --------------------------------------
@@ -292,6 +359,7 @@ function widget:GameFrame(frame)
 	end -- frame%30
 end
 
+]]--
 --------------------------------------
 -- DISEGNO L' OBJ MENU
 --------------------------------------
