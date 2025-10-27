@@ -78,7 +78,7 @@ function gadget:Initialize()
 --    return false -- disattivo il gadget
 --  end
 
--- controllo se l'opzione attiva unit deploy è abilitata
+-- controllo se l'opzione attiva unit deploy è abilitata	
   if (isunitsdeployed == 0) 	then
     return false -- disattivo il gadget
   end

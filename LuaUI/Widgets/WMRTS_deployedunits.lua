@@ -51,6 +51,8 @@ local posy_selettore_slots = 20
 local selettore_slots_visibile = false										-- riquadro selezione slot visibile on/off
 local selettore_buttons_visibile = false									-- riquadro selezione pulsante chiudi visibile on/off
 
+local slota_playername = Spring.GetModOptions().slota_owner or nil	 		-- verifico chi è il nome giocatore proprietario degli slot player A
+local slotb_playername = Spring.GetModOptions().slotb_owner or nil		 	-- verifico chi è il nome giocatore proprietario degli slot player B
 local stato_slot1a				= "1"										-- stato dello slot 1a, verrà definita in seguito tramite game rules. "1" di default (slot vuoto / unità non dispiegata)
 local stato_slot2a				= "1"	
 local stato_slot3a				= "1"	
@@ -101,6 +103,33 @@ local function check_options()
 ]]--
 end
 
+function slota()
+	-- ricevo prima il numero di pagine totali della categoria "mappa" disponibili per la lettura
+		stato_slot1a = Spring.GetGameRulesParam("ud_statusslot1a") 	--ricevo l'immagine impostata nello slot 1a del gamerules
+--		Spring.Echo("WMRTS Debug: dal WIDGET ---- l unità ricevuta è: "..stato_slot1a)
+		slot1a_ID = Spring.GetGameRulesParam("ud_idslot1a")			
+		-- slot2a
+		stato_slot2a = Spring.GetGameRulesParam("ud_statusslot2a") or "vuoto"
+		slot2a_ID = Spring.GetGameRulesParam("ud_idslot2a")				
+		-- slot3a
+		stato_slot3a = Spring.GetGameRulesParam("ud_statusslot3a") or "vuoto" 	
+		slot3a_ID = Spring.GetGameRulesParam("ud_idslot3a")
+		-- slot4a
+		stato_slot4a = Spring.GetGameRulesParam("ud_statusslot4a") or "vuoto"
+		slot4a_ID = Spring.GetGameRulesParam("ud_idslot4a")
+		-- slot5a
+		stato_slot5a = Spring.GetGameRulesParam("ud_statusslot5a") or "vuoto"
+		slot5a_ID = Spring.GetGameRulesParam("ud_idslot5a")
+		-- slot6a
+		stato_slot6a = Spring.GetGameRulesParam("ud_statusslot6a") or "vuoto"
+		slot6a_ID = Spring.GetGameRulesParam("ud_idslot6a")	
+		-- slot7a
+		stato_slot7a = Spring.GetGameRulesParam("ud_statusslot7a") 	or "vuoto"
+		slot7a_ID = Spring.GetGameRulesParam("ud_idslot7a")
+		-- slot8a
+		stato_slot8a = Spring.GetGameRulesParam("ud_statusslot8a") or "vuoto"	
+		slot8a_ID = Spring.GetGameRulesParam("ud_idslot8a")	
+end		
 --------------------------------------
 -- INIZIALIZZO IL MENU 
 --------------------------------------
@@ -110,6 +139,19 @@ function widget:Initialize()
 	if (isunitsdeployed == 0) 	then
 	  widgetHandler:RemoveWidget() -- disattivo il widget
 	end
+-- controllo se giocatore è inserito nella lista proprietario slot a o slot b, altrimenti rimuovi il widget
+	local myplayerID = Spring.GetLocalPlayerID ( ) 						-- rilevo l'id del giocatore locale
+	local playerInfo, isActive, isSpectator, teamID = Spring.GetPlayerInfo(myplayerID)	-- tramite l'id trovo il nome del giocatore locale
+	if playerInfo == slota_playername then
+	Spring.Echo("SlotA owner<<<<<<<<<<<<<<")
+	slota()
+	elseif playerInfo == slotb_playername then
+	slota()
+		Spring.Echo("SlotB owner<<<<<<<<<<<<<<<<<<<<<<<<")
+	else
+	widgetHandler:RemoveWidget() -- disattivo il widget
+	end
+	
 -- all'inizio imposto la posizione del mini menu
 	Pos_x_mainmenu = vsx/2 - larghezza_deploymenu/2
 	Pos_y_mainmenu = vsy/2 - altezza_deploymenu/2
@@ -120,6 +162,7 @@ function widget:Initialize()
 	file:write(" \n") 													-- vado a capo
 	file:write("[destroyedlist]\n") 									-- scrivo l'intestazione del gruppo di informazioni ini
 	file:close()												        -- chiudi il file. Questo salva le modifiche e "libera" il file. Se non lo fai, il file potrebbe rimanere vuoto!		
+	
 
  end
 
