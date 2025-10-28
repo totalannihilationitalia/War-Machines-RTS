@@ -46,35 +46,50 @@ local margine_slots_dx					= 367 								-- margine sinistro della serie di slot
 local interasse_slots					= 12								-- spazio tra uno slot e l'altro dello stesso team
 local altezza_secriga					= 147								-- dal basso, altezza seconda riga degli slots dal margine inferiore definita dall'immagine unitsdeploy_menu_bkgnd.png, vedere dimensioni_tabella_garage_slots.pdf per maggiori dettagli
 local altezza_pririga					= 33								-- dal basso, altezza prima riga degli slots dal margine inferiore definita dall'immagine unitsdeploy_menu_bkgnd.png, vedere dimensioni_tabella_garage_slots.pdf per maggiori dettagli
-local posx_selettore_slots = 20
-local posy_selettore_slots = 20
+local posx_selettore_slots 				= 20
+local posy_selettore_slots 				= 20
 local selettore_slots_visibile = false										-- riquadro selezione slot visibile on/off
 local selettore_buttons_visibile = false									-- riquadro selezione pulsante chiudi visibile on/off
 
 local slota_playername = Spring.GetModOptions().slota_owner or nil	 		-- verifico chi è il nome giocatore proprietario degli slot player A
 local slotb_playername = Spring.GetModOptions().slotb_owner or nil		 	-- verifico chi è il nome giocatore proprietario degli slot player B
-local stato_slot1a				= "1"										-- stato dello slot 1a, verrà definita in seguito tramite game rules. "1" di default (slot vuoto / unità non dispiegata)
-local stato_slot2a				= "1"	
-local stato_slot3a				= "1"	
-local stato_slot4a				= "1"	
-local stato_slot5a				= "1"	
-local stato_slot6a				= "1"	
-local stato_slot7a				= "1"	
-local stato_slot8a				= "1"	
-local slot1a_ID					= nil
-local slot2a_ID					= nil
-local slot3a_ID					= nil
-local slot4a_ID					= nil
-local slot5a_ID					= nil
-local slot6a_ID					= nil
-local slot7a_ID					= nil
-local slot8a_ID					= nil
+local nomeunita_slot1a				= "1"									-- nome unità contenuta nello slot 1a, verrà definita in seguito tramite game rules. "1" di default (slot vuoto / unità non dispiegata)
+local nomeunita_slot2a				= "1"	
+local nomeunita_slot3a				= "1"	
+local nomeunita_slot4a				= "1"	
+local nomeunita_slot5a				= "1"	
+local nomeunita_slot6a				= "1"	
+local nomeunita_slot7a				= "1"	
+local nomeunita_slot8a				= "1"	
+local slot1a_ID						= "0"									-- ID dell'unità contenuta nello slot1a
+local slot2a_ID						= "0"
+local slot3a_ID						= "0"
+local slot4a_ID						= "0"
+local slot5a_ID						= "0"
+local slot6a_ID						= "0"
+local slot7a_ID						= "0"
+local slot8a_ID						= "0"
+local stato_slot1a					= "0"									-- stato dell'unità contenuta nello slot 1a
+local stato_slot2a					= "0"
+local stato_slot3a					= "0"
+local stato_slot4a					= "0"
+local stato_slot5a					= "0"
+local stato_slot6a					= "0"
+local stato_slot7a					= "0"
+local stato_slot8a					= "0"
+
+-- impostazione dei fonts
+local font_generale					= gl.LoadFont("FreeSansBold.otf",12, 1.9, 40)
 
 -- impostazione del file di scrittura
-local nomeFile = "deployedlist.wmr"  										-- definisco il file che voglio scrivere
+local nomeFile = "destroyedlist.wmr"  										-- definisco il file che voglio scrivere
 
 -- definizioni immagini bottoni e background
 local backgroundmainmenu 			= "LuaUI/Images/menu/unitsdeploy/unitsdeploy_menu_bkgnd.png"
+local selettore_slots				= "LuaUI/Images/menu/unitsdeploy/unitsdeploy_selettore.png"
+local pulsante_close				= "LuaUI/Images/menu/mainmenu/menu_close.png"
+local avatar_pla					= "LuaUI/Images/menu/mainmenu/menu_close.png" 				-- ######################################################### aggiungere codice come advplayerlist
+local avatar_plb					= "LuaUI/Images/menu/mainmenu/menu_close.png"				-- ######################################################### aggiungere codice come advplayerlist
 
 
 --------------------------------------
@@ -103,32 +118,48 @@ local function check_options()
 ]]--
 end
 
+-- funzione per aggiornare gli slot del giocatore "a" (host). Setta il nome dell'unità e l'id dell'unità, se presente
 function slota()
-	-- ricevo prima il numero di pagine totali della categoria "mappa" disponibili per la lettura
-		stato_slot1a = Spring.GetGameRulesParam("ud_statusslot1a") 	--ricevo l'immagine impostata nello slot 1a del gamerules
---		Spring.Echo("WMRTS Debug: dal WIDGET ---- l unità ricevuta è: "..stato_slot1a)
-		slot1a_ID = Spring.GetGameRulesParam("ud_idslot1a")			
+		-- slot1a
+		nomeunita_slot1a = Spring.GetGameRulesParam("ud_unitnameslot1a") or "vuoto" 							-- ricevo l'immagine impostata nello slot 1a del gamerules, altrimenti imposta su "vuoto"
+		if nomeunita_slot1a ~= "vuoto" then		-- se lo slot non è vuoto...
+		slot1a_ID = Spring.GetGameRulesParam("ud_idslot1a")														-- ... imposta l'ID dell'unità (necessario poi per identificarla al click sullo slot)
+		end
 		-- slot2a
-		stato_slot2a = Spring.GetGameRulesParam("ud_statusslot2a") or "vuoto"
-		slot2a_ID = Spring.GetGameRulesParam("ud_idslot2a")				
+		nomeunita_slot2a = Spring.GetGameRulesParam("ud_unitnameslot2a") or "vuoto"
+		if nomeunita_slot2a ~= "vuoto" then		
+		slot2a_ID = Spring.GetGameRulesParam("ud_idslot2a")		
+		end		
 		-- slot3a
-		stato_slot3a = Spring.GetGameRulesParam("ud_statusslot3a") or "vuoto" 	
+		nomeunita_slot3a = Spring.GetGameRulesParam("ud_unitnameslot3a") or "vuoto" 	
+		if nomeunita_slot3a ~= "vuoto" then		
 		slot3a_ID = Spring.GetGameRulesParam("ud_idslot3a")
+		end		
 		-- slot4a
-		stato_slot4a = Spring.GetGameRulesParam("ud_statusslot4a") or "vuoto"
+		nomeunita_slot4a = Spring.GetGameRulesParam("ud_unitnameslot4a") or "vuoto"
+		if nomeunita_slot4a ~= "vuoto" then		
 		slot4a_ID = Spring.GetGameRulesParam("ud_idslot4a")
+		end		
 		-- slot5a
-		stato_slot5a = Spring.GetGameRulesParam("ud_statusslot5a") or "vuoto"
+		nomeunita_slot5a = Spring.GetGameRulesParam("ud_unitnameslot5a") or "vuoto"
+		if nomeunita_slot5a ~= "vuoto" then		
 		slot5a_ID = Spring.GetGameRulesParam("ud_idslot5a")
+		end		
 		-- slot6a
-		stato_slot6a = Spring.GetGameRulesParam("ud_statusslot6a") or "vuoto"
+		nomeunita_slot6a = Spring.GetGameRulesParam("ud_unitnameslot6a") or "vuoto"
+		if nomeunita_slot6a ~= "vuoto" then		
 		slot6a_ID = Spring.GetGameRulesParam("ud_idslot6a")	
+		end		
 		-- slot7a
-		stato_slot7a = Spring.GetGameRulesParam("ud_statusslot7a") 	or "vuoto"
+		nomeunita_slot7a = Spring.GetGameRulesParam("ud_unitnameslot7a") 	or "vuoto"
+		if nomeunita_slot7a ~= "vuoto" then		
 		slot7a_ID = Spring.GetGameRulesParam("ud_idslot7a")
+		end		
 		-- slot8a
-		stato_slot8a = Spring.GetGameRulesParam("ud_statusslot8a") or "vuoto"	
+		nomeunita_slot8a = Spring.GetGameRulesParam("ud_unitnameslot8a") or "vuoto"	
+		if nomeunita_slot8a ~= "vuoto" then		
 		slot8a_ID = Spring.GetGameRulesParam("ud_idslot8a")	
+		end		
 end		
 --------------------------------------
 -- INIZIALIZZO IL MENU 
@@ -140,13 +171,14 @@ function widget:Initialize()
 	  widgetHandler:RemoveWidget() -- disattivo il widget
 	end
 -- controllo se giocatore è inserito nella lista proprietario slot a o slot b, altrimenti rimuovi il widget
-	local myplayerID = Spring.GetLocalPlayerID ( ) 						-- rilevo l'id del giocatore locale
+	local myplayerID = Spring.GetLocalPlayerID ( ) 										-- rilevo l'id del giocatore locale
 	local playerInfo, isActive, isSpectator, teamID = Spring.GetPlayerInfo(myplayerID)	-- tramite l'id trovo il nome del giocatore locale
 	if playerInfo == slota_playername then
 	Spring.Echo("SlotA owner<<<<<<<<<<<<<<")
 	slota()
 	elseif playerInfo == slotb_playername then
 	slota()
+	-- inserire funzione slotb() ###############
 		Spring.Echo("SlotB owner<<<<<<<<<<<<<<<<<<<<<<<<")
 	else
 	widgetHandler:RemoveWidget() -- disattivo il widget
@@ -288,7 +320,7 @@ function widget:MousePress(x, y, button)
 				-- clicco su slot1a button	--------------------------------------------------------------------------------------------
 				if ((x >= Pos_x_mainmenu+margine_slots_sx) and (x <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots) and (y >= Pos_y_mainmenu+altezza_secriga) and (y <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)) then
 					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
-					if (ud_statusslot1a ~= 1) and (ud_statusslot1a ~= "destroy") then
+					if (ud_unitnameslot1a ~= 1) and (ud_unitnameslot1a ~= "destroy") then
 					Spring.SendCommands("Deselect") 				-- deseleziono tutto
 					Spring.SelectUnitMap({ [slot1a_ID] = true })	-- seleziono l'unità dello slot
 					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
@@ -297,7 +329,7 @@ function widget:MousePress(x, y, button)
 				-- clicco su slot2a button	--------------------------------------------------------------------------------------------
 				elseif ((x >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1) and (x <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1) and (y >= Pos_y_mainmenu+altezza_secriga) and (y <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)) then
 					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
-					if (ud_statusslot2a ~= 1) and (ud_statusslot2a ~= "destroy") then
+					if (ud_unitnameslot2a ~= 1) and (ud_unitnameslot2a ~= "destroy") then
 					Spring.SendCommands("Deselect") 				-- deseleziono tutto
 					Spring.SelectUnitMap({ [slot2a_ID] = true })	-- seleziono l'unità dello slot
 					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
@@ -306,7 +338,7 @@ function widget:MousePress(x, y, button)
 				-- clicco su slot3a button	--------------------------------------------------------------------------------------------
 				elseif ((x >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2) and (x <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2) and (y >= Pos_y_mainmenu+altezza_secriga) and (y <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)) then
 					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
-					if (ud_statusslot3a ~= 1) and (ud_statusslot3a ~= "destroy") then
+					if (ud_unitnameslot3a ~= 1) and (ud_unitnameslot3a ~= "destroy") then
 					Spring.SendCommands("Deselect") 				-- deseleziono tutto
 					Spring.SelectUnitMap({ [slot3a_ID] = true })	-- seleziono l'unità dello slot
 					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
@@ -315,11 +347,46 @@ function widget:MousePress(x, y, button)
 				-- clicco su slot4a button	--------------------------------------------------------------------------------------------
 				elseif ((x >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3) and (x <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3) and (y >= Pos_y_mainmenu+altezza_secriga) and (y <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)) then
 					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
-					if (ud_statusslot4a ~= 1) and (ud_statusslot4a ~= "destroy") then
+					if (ud_unitnameslot4a ~= 1) and (ud_unitnameslot4a ~= "destroy") then
 					Spring.SendCommands("Deselect") 				-- deseleziono tutto
 					Spring.SelectUnitMap({ [slot4a_ID] = true })	-- seleziono l'unità dello slot
 					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
 					end
+				-- clicco su slot5a button	--------------------------------------------------------------------------------------------
+				if ((x >= Pos_x_mainmenu+margine_slots_sx) and (x <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots) and (y >= Pos_y_mainmenu+altezza_pririga) and (y <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)) then
+					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
+					if (ud_unitnameslot5a ~= 1) and (ud_unitnameslot5a ~= "destroy") then
+					Spring.SendCommands("Deselect") 				-- deseleziono tutto
+					Spring.SelectUnitMap({ [slot5a_ID] = true })	-- seleziono l'unità dello slot
+					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
+					end
+				return true
+				-- clicco su slot6a button	--------------------------------------------------------------------------------------------
+				elseif ((x >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1) and (x <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1) and (y >= Pos_y_mainmenu+altezza_pririga) and (y <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)) then
+					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
+					if (ud_unitnameslot6a ~= 1) and (ud_unitnameslot6a ~= "destroy") then
+					Spring.SendCommands("Deselect") 				-- deseleziono tutto
+					Spring.SelectUnitMap({ [slot6a_ID] = true })	-- seleziono l'unità dello slot
+					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
+					end
+				return true
+				-- clicco su slot7a button	--------------------------------------------------------------------------------------------
+				elseif ((x >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2) and (x <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2) and (y >= Pos_y_mainmenu+altezza_pririga) and (y <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)) then
+					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
+					if (ud_unitnameslot7a ~= 1) and (ud_unitnameslot7a ~= "destroy") then
+					Spring.SendCommands("Deselect") 				-- deseleziono tutto
+					Spring.SelectUnitMap({ [slot7a_ID] = true })	-- seleziono l'unità dello slot
+					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
+					end
+				return true
+				-- clicco su slot8a button	--------------------------------------------------------------------------------------------
+				elseif ((x >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3) and (x <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3) and (y >= Pos_y_mainmenu+altezza_pririga) and (y <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)) then
+					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
+					if (ud_unitnameslot8a ~= 1) and (ud_unitnameslot8a ~= "destroy") then
+					Spring.SendCommands("Deselect") 				-- deseleziono tutto
+					Spring.SelectUnitMap({ [slot8a_ID] = true })	-- seleziono l'unità dello slot
+					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
+					end					
 				return true				
 				end
 			end
@@ -357,32 +424,34 @@ end
 function widget:TextCommand(command)
 -- comando aggiornamento unità
 	if command == 'wmrts_slotstatupdt' then 							-- se ricevo un comando "wmrts_slotstatupdt" aggiorno gli slot guardando i gamerules
-	-- ricevo prima il numero di pagine totali della categoria "mappa" disponibili per la lettura
-		stato_slot1a = Spring.GetGameRulesParam("ud_statusslot1a") 	--ricevo l'immagine impostata nello slot 1a del gamerules
---		Spring.Echo("WMRTS Debug: dal WIDGET ---- l unità ricevuta è: "..stato_slot1a)
+--[[	-- ricevo prima il numero di pagine totali della categoria "mappa" disponibili per la lettura
+		nomeunita_slot1a = Spring.GetGameRulesParam("ud_unitnameslot1a") 	--ricevo l'immagine impostata nello slot 1a del gamerules
+--		Spring.Echo("WMRTS Debug: dal WIDGET ---- l unità ricevuta è: "..nomeunita_slot1a)
 		slot1a_ID = Spring.GetGameRulesParam("ud_idslot1a")			
 		-- slot2a
-		stato_slot2a = Spring.GetGameRulesParam("ud_statusslot2a") 	
+		nomeunita_slot2a = Spring.GetGameRulesParam("ud_unitnameslot2a") 	
 		slot2a_ID = Spring.GetGameRulesParam("ud_idslot2a")				
 		-- slot3a
-		stato_slot3a = Spring.GetGameRulesParam("ud_statusslot3a") 	
+		nomeunita_slot3a = Spring.GetGameRulesParam("ud_unitnameslot3a") 	
 		slot3a_ID = Spring.GetGameRulesParam("ud_idslot3a")		
 		-- slot4a
-		stato_slot4a = Spring.GetGameRulesParam("ud_statusslot4a") 	
+		nomeunita_slot4a = Spring.GetGameRulesParam("ud_unitnameslot4a") 	
 		slot4a_ID = Spring.GetGameRulesParam("ud_idslot4a")		
 		-- slot5a
-		stato_slot5a = Spring.GetGameRulesParam("ud_statusslot5a") 	
+		nomeunita_slot5a = Spring.GetGameRulesParam("ud_unitnameslot5a") 	
 		slot5a_ID = Spring.GetGameRulesParam("ud_idslot5a")		
 		-- slot6a
-		stato_slot6a = Spring.GetGameRulesParam("ud_statusslot6a") 	
+		nomeunita_slot6a = Spring.GetGameRulesParam("ud_unitnameslot6a") 	
 		slot6a_ID = Spring.GetGameRulesParam("ud_idslot6a")		
 		-- slot7a
-		stato_slot7a = Spring.GetGameRulesParam("ud_statusslot7a") 	
+		nomeunita_slot7a = Spring.GetGameRulesParam("ud_unitnameslot7a") 	
 		slot7a_ID = Spring.GetGameRulesParam("ud_idslot7a")		
 		-- slot8a
-		stato_slot8a = Spring.GetGameRulesParam("ud_statusslot8a") 	
+		nomeunita_slot8a = Spring.GetGameRulesParam("ud_unitnameslot8a") 	
 		slot8a_ID = Spring.GetGameRulesParam("ud_idslot8a")				
 	end
+	]]--
+		slota()										-- richiama funzione che aggiorna stato slot player_a
 end
 
 --------------------------------------
@@ -392,14 +461,13 @@ function widget:KeyPress(key, mods, isRepeat)
 	if deployedunitsmenu_attivo and not Spring.IsGUIHidden() then
 	if key == 0x01B then -- TASTO esc
 			deployedunitsmenu_attivo = false 							-- chiudo il diario			
-			Spring.SendCommands("close_wmrts_diary")			-- spengo il minipulsante menu del minimenu 
+--			Spring.SendCommands("close_wmrts_diary")			-- spengo il minipulsante del deploy menu del minimenu  ############################################################### da fare!!!
 			-- disabilito il guishader
 				if (WG['guishader_api'] ~= nil) then
 				WG['guishader_api'].RemoveRect('WMRTS_diary_shad')
 				end	
 			return true
 		end
-
 	end
 return false
 end
@@ -416,49 +484,82 @@ end
 		gl.Texture(false)	-- fine texture	
 	-- inserisco lo slot1a
 		gl.Color(1,1,1,1)
-		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..stato_slot1a..".wmr")	
+		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot1a..".wmr")	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture		
 	-- inserisco lo slot2a
 		gl.Color(1,1,1,1)
-		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..stato_slot2a..".wmr")	
+		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot2a..".wmr")	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture		
 	-- inserisco lo slot3a
 		gl.Color(1,1,1,1)
-		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..stato_slot3a..".wmr")	
+		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot3a..".wmr")	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture		
 	-- inserisco lo slot4a
 		gl.Color(1,1,1,1)
-		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..stato_slot4a..".wmr")	
+		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot4a..".wmr")	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture		
-
-
 	-- inserisco lo slot5a
 		gl.Color(1,1,1,1)
-		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..stato_slot5a..".wmr")	
+		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot5a..".wmr")	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture		
 	-- inserisco lo slot6a
 		gl.Color(1,1,1,1)
-		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..stato_slot6a..".wmr")	
+		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot6a..".wmr")	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture		
 	-- inserisco lo slot7a
 		gl.Color(1,1,1,1)
-		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..stato_slot7a..".wmr")	
+		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot7a..".wmr")	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture		
 	-- inserisco lo slot8a
 		gl.Color(1,1,1,1)
-		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..stato_slot8a..".wmr")	
+		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot8a..".wmr")	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture		
-
-
-		
+	-- se il selettore slot è attivo, disegnalo nella posizione registrata in precedenza
+		if selettore_slots_visibile then 
+		gl.Color(1,1,1,1)
+		gl.Texture(selettore_slots)	
+		gl.TexRect(	posx_selettore_slots, posy_selettore_slots,posx_selettore_slots+lato_quadrato_slots, posy_selettore_slots+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture		
+		end
+	-- disegno il pulsante close
+		if selettore_slots_visibile then 
+		gl.Color(1,1,1,1)
+		gl.Texture(pulsante_close)	
+		gl.TexRect(	Pos_x_mainmenu+500, Pos_y_mainmenu+50,Pos_x_mainmenu+500+76, Pos_y_mainmenu+50+25)	
+		gl.Texture(false)	-- fine texture		
+		end		
+	-- disegno l'avatar giocatore a
+		gl.Color(1,1,1,1)
+		gl.Texture(avatar_pla)	
+		gl.TexRect(	Pos_x_mainmenu+318, Pos_y_mainmenu+231,Pos_x_mainmenu+318+16, Pos_y_mainmenu+231+16)	
+		gl.Texture(false)	-- fine texture		
+	-- disegno l'avatar giocatore b
+		gl.Color(1,1,1,1)
+		gl.Texture(avatar_plb)	
+		gl.TexRect(	Pos_x_mainmenu+366, Pos_y_mainmenu+231,Pos_x_mainmenu+366+16, Pos_y_mainmenu+231+16)	
+		gl.Texture(false)	-- fine texture	
+	--	testi slots player a
+		font_generale:Begin()
+		-- slot 1
+		font_generale:Print(("NAME"), Pos_x_mainmenu +45 , Pos_y_mainmenu+9, 9, "ocn") 
+		font_generale:Print(("STATUS"), Pos_x_mainmenu +45 , Pos_y_mainmenu+15, 9, "ocn") 
+		font_generale:Print(("SLOT 1"), Pos_x_mainmenu +45 , Pos_y_mainmenu+20, 9, "ocn") 		
+--
+--		[...] inserire tutti gli altri slots ##########################################
+--		
+		-- slot 5
+		font_generale:Print(("NAME"), Pos_x_mainmenu +45 , Pos_y_mainmenu+9, 9, "ocn") 
+		font_generale:Print(("STATUS"), Pos_x_mainmenu +45 , Pos_y_mainmenu+15, 9, "ocn") 
+		font_generale:Print(("SLOT 5"), Pos_x_mainmenu +45 , Pos_y_mainmenu+20, 9, "ocn") 			
+		font_generale:End()	
 	-- gui shader	
 		if (WG['guishader_api'] ~= nil) then
 		WG['guishader_api'].InsertRect( Pos_x_mainmenu,Pos_y_mainmenu,Pos_x_mainmenu+larghezza_deploymenu,Pos_y_mainmenu+altezza_deploymenu,'WMRTS_diary_shad')
