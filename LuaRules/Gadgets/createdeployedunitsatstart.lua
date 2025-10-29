@@ -81,7 +81,8 @@ function gadget:Initialize()
 -- controllo se l'opzione unit deploy è abilitata nel file script.txt (impostato dalla lobby), in caso negativo chiudo il gadget
   if (isunitsdeployed == 0) 	then
 	Spring.Echo("Gadged disabled<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<") -- ########################### testare ########################
-    return false -- disattivo il gadget
+    gadgetHandler:RemoveGadget()
+	return false -- disattivo il gadget
   end
   
  -- All'inizio imposto solamente i nomi dell'unità, cosi vengono inviati correttamente i dati al widget in fase di inizializzazione, altrimenti il widget andrebbe in errore e non carica.
@@ -110,7 +111,7 @@ function gadget:Initialize()
 --		 unitID_slot_3a= Spring.CreateUnit(slot_3a,spawnCoorx,0,spawnCoorz+deploy_radius,0,teamID_slota)																								-- imposto lo slot3a
 		 Spring.SetGameRulesParam("ud_unitnameslot3a", slot_3a)	
 		 Spring.SetGameRulesParam("ud_statusslot1a3a", "active")			 
-		 Spring.SetGameRulesParam("ud_idslot2a", unitID_slot_3a)		 		 
+		 Spring.SetGameRulesParam("ud_idslot3a", unitID_slot_3a)		 		 
 		else
 		 Spring.SetGameRulesParam("ud_unitnameslot3a", "vuoto")		
 		end
@@ -118,7 +119,7 @@ function gadget:Initialize()
 --		 unitID_slot_4a= Spring.CreateUnit(slot_4a,spawnCoorx-deploy_radius* math.sin(math.rad(45)),0,spawnCoorz+deploy_radius * math.sin(math.rad(45)),0,teamID_slota)									-- imposto lo slot4a
 		 Spring.SetGameRulesParam("ud_unitnameslot4a", slot_4a)	
 		 Spring.SetGameRulesParam("ud_statusslot1a4a", "active")			 
-		 Spring.SetGameRulesParam("ud_idslot2a", unitID_slot_4a)		 		 
+		 Spring.SetGameRulesParam("ud_idslot4a", unitID_slot_4a)		 		 
 		else
 		 Spring.SetGameRulesParam("ud_unitnameslot4a", "vuoto")		
 		end
@@ -185,7 +186,7 @@ O O O O O
 		if (slot_1a ~= 1 and slot_1a ~= "1") and (slot_1a ~= 0 and slot_1a ~= "1") then 																												-- se nello slot 1 è presente il nome dell'unità (e non è ne 1 o 0 sia numero che stringa "1" o "0") 				
 		 unitID_slot_1a = Spring.CreateUnit(slot_1a,spawnCoorx+deploy_radius,0,spawnCoorz,0,teamID_slota)							 																	-- creo l'unità dello slot1a definendone l'ID dell'unità (memorizzata in unitID_slot_1a). Per la posizione ho usato il teorema dei seni, in lua però devo convertire gli angoli in radianti
 		 Spring.SetGameRulesParam("ud_unitnameslot1a", slot_1a)																																			-- setto il gamerule per lo slot1a = nome unità assegnata (verrà poi letto dal widget)
-		 Spring.SetGameRulesParam("ud_statusslot1a", "active")			 																																-- setto il gamerulo per lo stato dello slotXa (attivo, distrutto)
+		 Spring.SetGameRulesParam("ud_statusslot1a", "ACTIVE")			 																																-- setto il gamerulo per lo stato dello slotXa (attivo, distrutto)
 		 Spring.SetGameRulesParam("ud_idslot1a", unitID_slot_1a)																																		-- setto il gamerule per l'ID dell' unità assegnata allo slot1a (verrà poi letto dal widget per catturare le informazioni sulla posizione dell'unita x)
 		 Spring.Echo( "imposto da GADGET slot_1a= "..slot_1a.." e id= "..unitID_slot_1a)
 		else
@@ -194,7 +195,7 @@ O O O O O
 		if (slot_2a ~= 1 and slot_2a ~= "1") and (slot_2a ~= 0 and slot_2a ~= "0") then 																												
 		 unitID_slot_2a= Spring.CreateUnit(slot_2a,spawnCoorx+deploy_radius* math.sin(math.rad(45)),0,spawnCoorz+deploy_radius * math.sin(math.rad(45)),0,teamID_slota)									-- imposto lo slot2a 
 		 Spring.SetGameRulesParam("ud_unitnameslot2a", slot_2a)	
-		 Spring.SetGameRulesParam("ud_statusslot2a", "active")			 
+		 Spring.SetGameRulesParam("ud_statusslot2a", "ACTIVE")			 
 		 Spring.SetGameRulesParam("ud_idslot2a", unitID_slot_2a)		 
 		else
 		 Spring.SetGameRulesParam("ud_unitnameslot2a", "vuoto")		
@@ -202,23 +203,23 @@ O O O O O
 		if (slot_3a ~= 1 and slot_3a ~= "1") and (slot_3a ~= 0 and slot_3a ~= "0") then 	
 		 unitID_slot_3a= Spring.CreateUnit(slot_3a,spawnCoorx,0,spawnCoorz+deploy_radius,0,teamID_slota)																								-- imposto lo slot3a
 		 Spring.SetGameRulesParam("ud_unitnameslot3a", slot_3a)	
-		 Spring.SetGameRulesParam("ud_statusslot3a", "active")			 
-		 Spring.SetGameRulesParam("ud_idslot2a", unitID_slot_3a)		 		 
+		 Spring.SetGameRulesParam("ud_statusslot3a", "ACTIVE")			 
+		 Spring.SetGameRulesParam("ud_idslot3a", unitID_slot_3a)		 		 
 		else
 		 Spring.SetGameRulesParam("ud_unitnameslot3a", "vuoto")		
 		end
 		if (slot_4a ~= 1 and slot_4a ~= "1") and (slot_4a ~= 0 and slot_4a ~= "0") then 	
 		 unitID_slot_4a= Spring.CreateUnit(slot_4a,spawnCoorx-deploy_radius* math.sin(math.rad(45)),0,spawnCoorz+deploy_radius * math.sin(math.rad(45)),0,teamID_slota)									-- imposto lo slot4a
 		 Spring.SetGameRulesParam("ud_unitnameslot4a", slot_4a)	
-		 Spring.SetGameRulesParam("ud_statusslot4a", "active")			 
-		 Spring.SetGameRulesParam("ud_idslot2a", unitID_slot_4a)		 		 
+		 Spring.SetGameRulesParam("ud_statusslot4a", "ACTIVE")			 
+		 Spring.SetGameRulesParam("ud_idslot4a", unitID_slot_4a)		 		 
 		else
 		 Spring.SetGameRulesParam("ud_unitnameslot4a", "vuoto")		
 		end
 		if (slot_5a ~= 1 and slot_5a ~= "1") and (slot_5a ~= 0 and slot_5a ~= "0") then 	
 		 unitID_slot_5a= Spring.CreateUnit(slot_5a,spawnCoorx-deploy_radius,0,spawnCoorz,0,teamID_slota)																								-- imposto lo slot5a
 		 Spring.SetGameRulesParam("ud_unitnameslot5a", slot_5a)	
-		 Spring.SetGameRulesParam("ud_statusslot5a", "active")			 
+		 Spring.SetGameRulesParam("ud_statusslot5a", "ACTIVE")			 
 		 Spring.SetGameRulesParam("ud_idslot5a", unitID_slot_5a)		 		 
 		else
 		 Spring.SetGameRulesParam("ud_unitnameslot5a", "vuoto")		
@@ -226,7 +227,7 @@ O O O O O
 		if (slot_6a ~= 1 and slot_6a ~= "1") and (slot_6a ~= 0 and slot_6a ~= "0") then 	
 		 unitID_slot_6a= Spring.CreateUnit(slot_6a,spawnCoorx-deploy_radius* math.sin(math.rad(45)),0,spawnCoorz-deploy_radius * math.sin(math.rad(45)),0,teamID_slota)									-- imposto lo slot6a
 		 Spring.SetGameRulesParam("ud_unitnameslot6a", slot_6a)	
-		 Spring.SetGameRulesParam("ud_statusslot6a", "active")			 
+		 Spring.SetGameRulesParam("ud_statusslot6a", "ACTIVE")			 
 		 Spring.SetGameRulesParam("ud_idslot6a", unitID_slot_6a)		 		 
 		else
 		 Spring.SetGameRulesParam("ud_unitnameslot6a", "vuoto")		
@@ -234,7 +235,7 @@ O O O O O
 		if (slot_7a ~= 1 and slot_7a ~= "1") and (slot_7a ~= 0 and slot_7a ~= "0") then 	
 		 unitID_slot_7a= Spring.CreateUnit(slot_7a,spawnCoorx,0,spawnCoorz-deploy_radius,0,teamID_slota)																								-- imposto lo slot7a
 		 Spring.SetGameRulesParam("ud_unitnameslot7a", slot_7a)	
-		 Spring.SetGameRulesParam("ud_statusslot7a", "active")			 
+		 Spring.SetGameRulesParam("ud_statusslot7a", "ACTIVE")			 
 		 Spring.SetGameRulesParam("ud_idslot7a", unitID_slot_7a)		 		 
 		else
 		 Spring.SetGameRulesParam("ud_unitnameslot7a", "vuoto")		
@@ -242,7 +243,7 @@ O O O O O
 		if (slot_8a ~= 1 and slot_8a ~= "1") and (slot_8a ~= 0 and slot_8a ~= "0") then 		 
 		 unitID_slot_8a= Spring.CreateUnit(slot_8a,spawnCoorx+deploy_radius* math.sin(math.rad(45)),0,spawnCoorz-deploy_radius * math.sin(math.rad(45)),0,teamID_slota)									-- imposto lo slot8a
 		 Spring.SetGameRulesParam("ud_unitnameslot8a", slot_8a)	
-		 Spring.SetGameRulesParam("ud_statusslot8a", "active")			 
+		 Spring.SetGameRulesParam("ud_statusslot8a", "ACTIVE")			 
 		 Spring.SetGameRulesParam("ud_idslot8a", unitID_slot_8a)		 		 		 
 		else
 		 Spring.SetGameRulesParam("ud_unitnameslot8a", "vuoto")		
@@ -261,35 +262,35 @@ end -- end game start
 function gadget:UnitDestroyed(unitID, unitDefID, unitTeam)     															-- questa funzione viene chiamata ogni qualvolta viene distrutta una unità
   if unitID_slot_1a and unitID == unitID_slot_1a then  																	-- se l' ID dell'unita distrutta (unitID) corrisponde all' ID dell'unità contenuta nello slot 1a allora...
 --    Spring.Echo("GADGET: Unità slot_1a distrutta. Invio messaggio al widget.")											-- messaggio di debug
-    Spring.SetGameRulesParam("ud_statusslot1a", "destroy")																-- ...imposto lo stato della regola Unit Deploy stato slot 1a (ud_unitnameslot1a)
+    Spring.SetGameRulesParam("ud_statusslot1a", "DESTROYED")																-- ...imposto lo stato della regola Unit Deploy stato slot 1a (ud_unitnameslot1a)
 	Spring.SendCommands("wmrts_slotstatupdt")																			-- invio il comando al widget che servirà a loro per aggiornare lo stato degli slots
   end
   if unitID_slot_2a and unitID == unitID_slot_2a then  																	-- ripeto per slot 2
-    Spring.SetGameRulesParam("ud_statusslot2a", "destroy")
+    Spring.SetGameRulesParam("ud_statusslot2a", "DESTROYED")
 	Spring.SendCommands("wmrts_slotstatupdt")	
   end
   if unitID_slot_3a and unitID == unitID_slot_3a then  																	-- ripeto per slot 3
-    Spring.SetGameRulesParam("ud_statusslot3a", "destroy")
+    Spring.SetGameRulesParam("ud_statusslot3a", "DESTROYED")
 	Spring.SendCommands("wmrts_slotstatupdt")	
   end
   if unitID_slot_4a and unitID == unitID_slot_4a then  																	-- ripeto per slot 4
-    Spring.SetGameRulesParam("ud_statusslot4a", "destroy")
+    Spring.SetGameRulesParam("ud_statusslot4a", "DESTROYED")
 	Spring.SendCommands("wmrts_slotstatupdt")	
   end
   if unitID_slot_5a and unitID == unitID_slot_5a then  																	-- ripeto per slot 5
-    Spring.SetGameRulesParam("ud_statusslot5a", "destroy")
+    Spring.SetGameRulesParam("ud_statusslot5a", "DESTROYED")
 	Spring.SendCommands("wmrts_slotstatupdt")	
   end
   if unitID_slot_6a and unitID == unitID_slot_6a then  																	-- ripeto per slot 6
-    Spring.SetGameRulesParam("ud_statusslot6a", "destroy")
+    Spring.SetGameRulesParam("ud_statusslot6a", "DESTROYED")
 	Spring.SendCommands("wmrts_slotstatupdt")	
   end
   if unitID_slot_7a and unitID == unitID_slot_7a then  																	-- ripeto per slot 7
-    Spring.SetGameRulesParam("ud_statusslot7a", "destroy")
+    Spring.SetGameRulesParam("ud_statusslot7a", "DESTROYED")
 	Spring.SendCommands("wmrts_slotstatupdt")	
   end
   if unitID_slot_8a and unitID == unitID_slot_8a then  																	-- ripeto per slot 8
-    Spring.SetGameRulesParam("ud_statusslot8a", "destroy")
+    Spring.SetGameRulesParam("ud_statusslot8a", "DESTROYED")
 	Spring.SendCommands("wmrts_slotstatupdt")	
   end  
 end

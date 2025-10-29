@@ -338,7 +338,7 @@ function widget:MousePress(x, y, button)
 				-- clicco su slot1a button	--------------------------------------------------------------------------------------------
 				if ((x >= Pos_x_mainmenu+margine_slots_sx) and (x <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots) and (y >= Pos_y_mainmenu+altezza_secriga) and (y <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)) then
 					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
-					if (ud_unitnameslot1a ~= 1) and (ud_unitnameslot1a ~= "destroy") then
+					if (ud_unitnameslot1a ~= 1) and (ud_unitnameslot1a ~= "DESTROYED") then
 					Spring.SendCommands("Deselect") 				-- deseleziono tutto
 					Spring.SelectUnitMap({ [slot1a_ID] = true })	-- seleziono l'unità dello slot
 					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
@@ -347,7 +347,7 @@ function widget:MousePress(x, y, button)
 				-- clicco su slot2a button	--------------------------------------------------------------------------------------------
 				elseif ((x >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1) and (x <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1) and (y >= Pos_y_mainmenu+altezza_secriga) and (y <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)) then
 					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
-					if (ud_unitnameslot2a ~= 1) and (ud_unitnameslot2a ~= "destroy") then
+					if (ud_unitnameslot2a ~= 1) and (ud_unitnameslot2a ~= "DESTROYED") then
 					Spring.SendCommands("Deselect") 				-- deseleziono tutto
 					Spring.SelectUnitMap({ [slot2a_ID] = true })	-- seleziono l'unità dello slot
 					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
@@ -356,7 +356,7 @@ function widget:MousePress(x, y, button)
 				-- clicco su slot3a button	--------------------------------------------------------------------------------------------
 				elseif ((x >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2) and (x <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2) and (y >= Pos_y_mainmenu+altezza_secriga) and (y <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)) then
 					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
-					if (ud_unitnameslot3a ~= 1) and (ud_unitnameslot3a ~= "destroy") then
+					if (ud_unitnameslot3a ~= 1) and (ud_unitnameslot3a ~= "DESTROYED") then
 					Spring.SendCommands("Deselect") 				-- deseleziono tutto
 					Spring.SelectUnitMap({ [slot3a_ID] = true })	-- seleziono l'unità dello slot
 					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
@@ -365,15 +365,16 @@ function widget:MousePress(x, y, button)
 				-- clicco su slot4a button	--------------------------------------------------------------------------------------------
 				elseif ((x >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3) and (x <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3) and (y >= Pos_y_mainmenu+altezza_secriga) and (y <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)) then
 					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
-					if (ud_unitnameslot4a ~= 1) and (ud_unitnameslot4a ~= "destroy") then
+					if (ud_unitnameslot4a ~= 1) and (ud_unitnameslot4a ~= "DESTROYED") then
 					Spring.SendCommands("Deselect") 				-- deseleziono tutto
 					Spring.SelectUnitMap({ [slot4a_ID] = true })	-- seleziono l'unità dello slot
 					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
 					end
+				return true		
 				-- clicco su slot5a button	--------------------------------------------------------------------------------------------
 				elseif ((x >= Pos_x_mainmenu+margine_slots_sx) and (x <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots) and (y >= Pos_y_mainmenu+altezza_pririga) and (y <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)) then
 					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
-					if (ud_unitnameslot5a ~= 1) and (ud_unitnameslot5a ~= "destroy") then
+					if (ud_unitnameslot5a ~= 1) and (ud_unitnameslot5a ~= "DESTROYED") then
 					Spring.SendCommands("Deselect") 				-- deseleziono tutto
 					Spring.SelectUnitMap({ [slot5a_ID] = true })	-- seleziono l'unità dello slot
 					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
@@ -382,7 +383,7 @@ function widget:MousePress(x, y, button)
 				-- clicco su slot6a button	--------------------------------------------------------------------------------------------
 				elseif ((x >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1) and (x <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1) and (y >= Pos_y_mainmenu+altezza_pririga) and (y <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)) then
 					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
-					if (ud_unitnameslot6a ~= 1) and (ud_unitnameslot6a ~= "destroy") then
+					if (ud_unitnameslot6a ~= 1) and (ud_unitnameslot6a ~= "DESTROYED") then
 					Spring.SendCommands("Deselect") 				-- deseleziono tutto
 					Spring.SelectUnitMap({ [slot6a_ID] = true })	-- seleziono l'unità dello slot
 					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
@@ -391,7 +392,7 @@ function widget:MousePress(x, y, button)
 				-- clicco su slot7a button	--------------------------------------------------------------------------------------------
 				elseif ((x >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2) and (x <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2) and (y >= Pos_y_mainmenu+altezza_pririga) and (y <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)) then
 					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
-					if (ud_unitnameslot7a ~= 1) and (ud_unitnameslot7a ~= "destroy") then
+					if (ud_unitnameslot7a ~= 1) and (ud_unitnameslot7a ~= "DESTROYED") then
 					Spring.SendCommands("Deselect") 				-- deseleziono tutto
 					Spring.SelectUnitMap({ [slot7a_ID] = true })	-- seleziono l'unità dello slot
 					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
@@ -400,7 +401,7 @@ function widget:MousePress(x, y, button)
 				-- clicco su slot8a button	--------------------------------------------------------------------------------------------
 				elseif ((x >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3) and (x <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3) and (y >= Pos_y_mainmenu+altezza_pririga) and (y <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)) then
 					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
-					if (ud_unitnameslot8a ~= 1) and (ud_unitnameslot8a ~= "destroy") then
+					if (ud_unitnameslot8a ~= 1) and (ud_unitnameslot8a ~= "DESTROYED") then
 					Spring.SendCommands("Deselect") 				-- deseleziono tutto
 					Spring.SelectUnitMap({ [slot8a_ID] = true })	-- seleziono l'unità dello slot
 					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
@@ -573,44 +574,38 @@ end
 	--	testi slots player a
 		font_generale:Begin()
 		-- slot 1
-		font_generale:Print(("NAME"), Pos_x_mainmenu +47 , Pos_y_mainmenu+157, 9, "ocn") 
-		font_generale:Print(("STATUS"), Pos_x_mainmenu +47 , Pos_y_mainmenu+145, 9, "ocn") 
+		font_generale:Print((nomeunita_slot1a), Pos_x_mainmenu +47 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print((stato_slot1a), Pos_x_mainmenu +47 , Pos_y_mainmenu+145, 9, "ocn") 
 		font_generale:Print(("SLOT 1"), Pos_x_mainmenu +47 , Pos_y_mainmenu+240, 9, "ocn") 				
 
-		font_generale:Print(("NAME"), Pos_x_mainmenu +132 , Pos_y_mainmenu+157, 9, "ocn") 
-		font_generale:Print(("STATUS"), Pos_x_mainmenu +132 , Pos_y_mainmenu+145, 9, "ocn") 
+		font_generale:Print((nomeunita_slot2a), Pos_x_mainmenu +132 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print((stato_slot2a), Pos_x_mainmenu +132 , Pos_y_mainmenu+145, 9, "ocn") 
 		font_generale:Print(("SLOT 2"), Pos_x_mainmenu +132 , Pos_y_mainmenu+240, 9, "ocn") 			
 
-		font_generale:Print(("NAME"), Pos_x_mainmenu +215 , Pos_y_mainmenu+157, 9, "ocn") 
-		font_generale:Print(("STATUS"), Pos_x_mainmenu +215 , Pos_y_mainmenu+145, 9, "ocn") 
+		font_generale:Print((nomeunita_slot3a), Pos_x_mainmenu +215 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print((stato_slot3a), Pos_x_mainmenu +215 , Pos_y_mainmenu+145, 9, "ocn") 
 		font_generale:Print(("SLOT 3"), Pos_x_mainmenu +215 , Pos_y_mainmenu+240, 9, "ocn") 
 		
-		font_generale:Print(("NAME"), Pos_x_mainmenu +298 , Pos_y_mainmenu+157, 9, "ocn") 
-		font_generale:Print(("STATUS"), Pos_x_mainmenu +298 , Pos_y_mainmenu+145, 9, "ocn") 
+		font_generale:Print((nomeunita_slot4a), Pos_x_mainmenu +298 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print((stato_slot4a), Pos_x_mainmenu +298 , Pos_y_mainmenu+145, 9, "ocn") 
 		font_generale:Print(("SLOT 4"), Pos_x_mainmenu +298 , Pos_y_mainmenu+240, 9, "ocn") 		
---
---		[...] inserire tutti gli altri slots ##########################################
---		
 		-- slot 5
-		font_generale:Print(("NAME"), Pos_x_mainmenu +47 , Pos_y_mainmenu+43, 9, "ocn") 
-		font_generale:Print(("STATUS"), Pos_x_mainmenu +47 , Pos_y_mainmenu+31, 9, "ocn") 
-		font_generale:Print(("SLOT 5"), Pos_x_mainmenu +47 , Pos_y_mainmenu+125, 9, "ocn") 			
+		font_generale:Print((nomeunita_slot5a), Pos_x_mainmenu +47 , Pos_y_mainmenu+43, 9, "ocn") 
+		font_generale:Print((stato_slot5a), Pos_x_mainmenu +47 , Pos_y_mainmenu+31, 9, "ocn") 
+		font_generale:Print(("SLOT 5"), Pos_x_mainmenu +47 , Pos_y_mainmenu+126, 9, "ocn") 			
 		
-		font_generale:Print(("NAME"), Pos_x_mainmenu +132 , Pos_y_mainmenu+43, 9, "ocn") 
-		font_generale:Print(("STATUS"), Pos_x_mainmenu +132 , Pos_y_mainmenu+31, 9, "ocn") 
-		font_generale:Print(("SLOT 6"), Pos_x_mainmenu +132 , Pos_y_mainmenu+125, 9, "ocn") 			
+		font_generale:Print((nomeunita_slot6a), Pos_x_mainmenu +132 , Pos_y_mainmenu+43, 9, "ocn") 
+		font_generale:Print((stato_slot6a), Pos_x_mainmenu +132 , Pos_y_mainmenu+31, 9, "ocn") 
+		font_generale:Print(("SLOT 6"), Pos_x_mainmenu +132 , Pos_y_mainmenu+126, 9, "ocn") 			
 
-		font_generale:Print(("NAME"), Pos_x_mainmenu +215 , Pos_y_mainmenu+43, 9, "ocn") 
-		font_generale:Print(("STATUS"), Pos_x_mainmenu +215 , Pos_y_mainmenu+31, 9, "ocn") 
-		font_generale:Print(("SLOT 7"), Pos_x_mainmenu +215 , Pos_y_mainmenu+125, 9, "ocn") 
+		font_generale:Print((nomeunita_slot7a), Pos_x_mainmenu +215 , Pos_y_mainmenu+43, 9, "ocn") 
+		font_generale:Print((stato_slot7a), Pos_x_mainmenu +215 , Pos_y_mainmenu+31, 9, "ocn") 
+		font_generale:Print(("SLOT 7"), Pos_x_mainmenu +215 , Pos_y_mainmenu+126, 9, "ocn") 
 		
-		font_generale:Print(("NAME"), Pos_x_mainmenu +298 , Pos_y_mainmenu+43, 9, "ocn") 
-		font_generale:Print(("STATUS"), Pos_x_mainmenu +298 , Pos_y_mainmenu+31, 9, "ocn") 
-		font_generale:Print(("SLOT 8"), Pos_x_mainmenu +298 , Pos_y_mainmenu+125, 9, "ocn") 	
---		font_generale:End()			
-		
+		font_generale:Print((nomeunita_slot8a), Pos_x_mainmenu +298 , Pos_y_mainmenu+43, 9, "ocn") 
+		font_generale:Print((stato_slot8a), Pos_x_mainmenu +298 , Pos_y_mainmenu+31, 9, "ocn") 
+		font_generale:Print(("SLOT 8"), Pos_x_mainmenu +298 , Pos_y_mainmenu+126, 9, "ocn") 			
 	--	testi slots player b
---		font_generale:Begin()
 		-- slot 1
 		font_generale:Print(("NAME"), Pos_x_mainmenu +47+354 , Pos_y_mainmenu+157, 9, "ocn") 
 		font_generale:Print(("STATUS"), Pos_x_mainmenu +47+354 , Pos_y_mainmenu+145, 9, "ocn") 
@@ -627,26 +622,31 @@ end
 		font_generale:Print(("NAME"), Pos_x_mainmenu +298+354 , Pos_y_mainmenu+157, 9, "ocn") 
 		font_generale:Print(("STATUS"), Pos_x_mainmenu +298+354 , Pos_y_mainmenu+145, 9, "ocn") 
 		font_generale:Print(("SLOT 4"), Pos_x_mainmenu +298+354 , Pos_y_mainmenu+240, 9, "ocn") 		
---
---		[...] inserire tutti gli altri slots ##########################################
---		
 		-- slot 5
 		font_generale:Print(("NAME"), Pos_x_mainmenu +47+354 , Pos_y_mainmenu+43, 9, "ocn") 
 		font_generale:Print(("STATUS"), Pos_x_mainmenu +47+354 , Pos_y_mainmenu+31, 9, "ocn") 
-		font_generale:Print(("SLOT 5"), Pos_x_mainmenu +47+354 , Pos_y_mainmenu+125, 9, "ocn") 			
+		font_generale:Print(("SLOT 5"), Pos_x_mainmenu +47+354 , Pos_y_mainmenu+126, 9, "ocn") 			
 		
 		font_generale:Print(("NAME"), Pos_x_mainmenu +132+354 , Pos_y_mainmenu+43, 9, "ocn") 
 		font_generale:Print(("STATUS"), Pos_x_mainmenu +132+354 , Pos_y_mainmenu+31, 9, "ocn") 
-		font_generale:Print(("SLOT 6"), Pos_x_mainmenu +132+354 , Pos_y_mainmenu+125, 9, "ocn") 			
+		font_generale:Print(("SLOT 6"), Pos_x_mainmenu +132+354 , Pos_y_mainmenu+126, 9, "ocn") 			
 
 		font_generale:Print(("NAME"), Pos_x_mainmenu +215+354 , Pos_y_mainmenu+43, 9, "ocn") 
 		font_generale:Print(("STATUS"), Pos_x_mainmenu +215+354 , Pos_y_mainmenu+31, 9, "ocn") 
-		font_generale:Print(("SLOT 7"), Pos_x_mainmenu +215+354 , Pos_y_mainmenu+125, 9, "ocn") 
+		font_generale:Print(("SLOT 7"), Pos_x_mainmenu +215+354 , Pos_y_mainmenu+126, 9, "ocn") 
 		
 		font_generale:Print(("NAME"), Pos_x_mainmenu +298+354 , Pos_y_mainmenu+43, 9, "ocn") 
 		font_generale:Print(("STATUS"), Pos_x_mainmenu +298+354 , Pos_y_mainmenu+31, 9, "ocn") 
-		font_generale:Print(("SLOT 8"), Pos_x_mainmenu +298+354 , Pos_y_mainmenu+125, 9, "ocn") 	
-		font_generale:End()					
+		font_generale:Print(("SLOT 8"), Pos_x_mainmenu +298+354 , Pos_y_mainmenu+126, 9, "ocn") 		
+		font_generale:End()	
+	-- disegno le croci se le unità risultano "DESTROYED"
+		if ud_statusslot1a == "DESTROYED" then
+		gl.Color(1,1,1,1)
+		gl.Texture("LuaUI/Images/menu/unitsdeploy/destroyed.wmr")	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture			
+		end
+	
 	-- gui shader	
 		if (WG['guishader_api'] ~= nil) then
 		WG['guishader_api'].InsertRect( Pos_x_mainmenu,Pos_y_mainmenu,Pos_x_mainmenu+larghezza_deploymenu,Pos_y_mainmenu+altezza_deploymenu,'WMRTS_diary_shad')
