@@ -37,15 +37,15 @@ local Echo 								= Spring.Echo
 local deployedunitsmenu_attivo			= true		 						-- Indica se questo menu è attivo o meno
 local vsx, vsy 						  	= widgetHandler:GetViewSizes()
 local larghezza_deploymenu				= 700 								-- larghezza
-local altezza_deploymenu				= 250								-- altezza
+local altezza_deploymenu				= 270								-- altezza
 local Pos_x_mainmenu					= 20  								-- NON EDITARE posizione in basso a sinistra del menu (valore gestito poi autonomamente dallo script)
 local Pos_y_mainmenu					= 20  								-- NON EDITARE posizione in basso a sinistra del menu (valore gestito poi autonomamente dallo script)
 local lato_quadrato_slots				= 71								-- è la larghezza fissa dello slot definita dall'immagine unitsdeploy_menu_bkgnd.png, vedere dimensioni_tabella_garage_slots.pdf per maggiori dettagli
 local margine_slots_sx					= 13 								-- margine sinistro della serie di slots a sinistra, definita dall'immagine unitsdeploy_menu_bkgnd.png, vedere dimensioni_tabella_garage_slots.pdf per maggiori dettagli
 local margine_slots_dx					= 367 								-- margine sinistro della serie di slots a destra, definita dall'immagine unitsdeploy_menu_bkgnd.png, vedere dimensioni_tabella_garage_slots.pdf per maggiori dettagli
 local interasse_slots					= 12								-- spazio tra uno slot e l'altro dello stesso team
-local altezza_secriga					= 147								-- dal basso, altezza seconda riga degli slots dal margine inferiore definita dall'immagine unitsdeploy_menu_bkgnd.png, vedere dimensioni_tabella_garage_slots.pdf per maggiori dettagli
-local altezza_pririga					= 33								-- dal basso, altezza prima riga degli slots dal margine inferiore definita dall'immagine unitsdeploy_menu_bkgnd.png, vedere dimensioni_tabella_garage_slots.pdf per maggiori dettagli
+local altezza_secriga					= 147+20								-- dal basso, altezza seconda riga degli slots dal margine inferiore definita dall'immagine unitsdeploy_menu_bkgnd.png, vedere dimensioni_tabella_garage_slots.pdf per maggiori dettagli
+local altezza_pririga					= 33+20								-- dal basso, altezza prima riga degli slots dal margine inferiore definita dall'immagine unitsdeploy_menu_bkgnd.png, vedere dimensioni_tabella_garage_slots.pdf per maggiori dettagli
 local posx_selettore_slots 				= 20
 local posy_selettore_slots 				= 20
 local selettore_slots_visibile = false										-- riquadro selezione slot visibile on/off
@@ -86,6 +86,7 @@ local nomeFile = "destroyedlist.wmr"  										-- definisco il file che voglio 
 
 -- definizioni immagini bottoni e background
 local backgroundmainmenu 			= "LuaUI/Images/menu/unitsdeploy/unitsdeploy_menu_bkgnd.png"
+local button_sel					= "LuaUI/Images/menu/mainmenu/main_menu_buttonselection.png"
 local selettore_slots				= "LuaUI/Images/menu/unitsdeploy/unitsdeploy_selettore.png"
 local pulsante_close				= "LuaUI/Images/menu/mainmenu/menu_close.png"
 local avatar_pla					= "LuaUI/Images/menu/mainmenu/menu_close.png" 				-- ######################################################### aggiungere codice come advplayerlist
@@ -123,44 +124,53 @@ function slota()
 		-- slot1a
 		nomeunita_slot1a = Spring.GetGameRulesParam("ud_unitnameslot1a") or "vuoto" 							-- ricevo l'immagine impostata nello slot 1a del gamerules, altrimenti imposta su "vuoto"
 		if nomeunita_slot1a ~= "vuoto" then		-- se lo slot non è vuoto...
-		slot1a_ID = Spring.GetGameRulesParam("ud_idslot1a")														-- ... imposta l'ID dell'unità (necessario poi per identificarla al click sullo slot)
+		slot1a_ID = Spring.GetGameRulesParam("ud_idslot1a")														-- ... imposta l'ID dell'unità (necessario poi per identificarla al click sullo slot) ...
+		stato_slot1a = Spring.GetGameRulesParam("ud_statusslot1a")												-- ... e imposta lo stato dell'unità (attivo, distrutto, ecc)
 		end
 		-- slot2a
 		nomeunita_slot2a = Spring.GetGameRulesParam("ud_unitnameslot2a") or "vuoto"
 		if nomeunita_slot2a ~= "vuoto" then		
 		slot2a_ID = Spring.GetGameRulesParam("ud_idslot2a")		
+		stato_slot2a = Spring.GetGameRulesParam("ud_statusslot2a")			
 		end		
 		-- slot3a
 		nomeunita_slot3a = Spring.GetGameRulesParam("ud_unitnameslot3a") or "vuoto" 	
 		if nomeunita_slot3a ~= "vuoto" then		
 		slot3a_ID = Spring.GetGameRulesParam("ud_idslot3a")
+		stato_slot3a = Spring.GetGameRulesParam("ud_statusslot3a")	
 		end		
 		-- slot4a
 		nomeunita_slot4a = Spring.GetGameRulesParam("ud_unitnameslot4a") or "vuoto"
 		if nomeunita_slot4a ~= "vuoto" then		
 		slot4a_ID = Spring.GetGameRulesParam("ud_idslot4a")
+		stato_slot4a = Spring.GetGameRulesParam("ud_statusslot4a")	
 		end		
 		-- slot5a
 		nomeunita_slot5a = Spring.GetGameRulesParam("ud_unitnameslot5a") or "vuoto"
 		if nomeunita_slot5a ~= "vuoto" then		
 		slot5a_ID = Spring.GetGameRulesParam("ud_idslot5a")
+		stato_slot5a = Spring.GetGameRulesParam("ud_statusslot5a")	
 		end		
 		-- slot6a
 		nomeunita_slot6a = Spring.GetGameRulesParam("ud_unitnameslot6a") or "vuoto"
 		if nomeunita_slot6a ~= "vuoto" then		
 		slot6a_ID = Spring.GetGameRulesParam("ud_idslot6a")	
+		stato_slot6a = Spring.GetGameRulesParam("ud_statusslot6a")
 		end		
 		-- slot7a
 		nomeunita_slot7a = Spring.GetGameRulesParam("ud_unitnameslot7a") 	or "vuoto"
 		if nomeunita_slot7a ~= "vuoto" then		
 		slot7a_ID = Spring.GetGameRulesParam("ud_idslot7a")
+		stato_slot7a = Spring.GetGameRulesParam("ud_statusslot7a")
 		end		
 		-- slot8a
 		nomeunita_slot8a = Spring.GetGameRulesParam("ud_unitnameslot8a") or "vuoto"	
 		if nomeunita_slot8a ~= "vuoto" then		
 		slot8a_ID = Spring.GetGameRulesParam("ud_idslot8a")	
+		stato_slot8a = Spring.GetGameRulesParam("ud_statusslot8a")
 		end		
 end		
+
 --------------------------------------
 -- INIZIALIZZO IL MENU 
 --------------------------------------
@@ -194,8 +204,6 @@ function widget:Initialize()
 	file:write(" \n") 													-- vado a capo
 	file:write("[destroyedlist]\n") 									-- scrivo l'intestazione del gruppo di informazioni ini
 	file:close()												        -- chiudi il file. Questo salva le modifiche e "libera" il file. Se non lo fai, il file potrebbe rimanere vuoto!		
-	
-
  end
 
 --------------------------------------
@@ -223,52 +231,62 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 	-- slot_1 sx button
 		if ((mousex >= Pos_x_mainmenu+margine_slots_sx) and (mousex <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots) and (mousey >= Pos_y_mainmenu+altezza_secriga) and (mousey <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots))  then
 					posx_selettore_slots = Pos_x_mainmenu+margine_slots_sx
-					posy_selettore_slots = Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots
+					posy_selettore_slots = Pos_y_mainmenu+altezza_secriga
 					selettore_slots_visibile = true
 					selettore_buttons_visibile = false	
 	-- slot_2 sx button					
 		elseif ((mousex >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1) and (mousex <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1) and (mousey >= Pos_y_mainmenu+altezza_secriga) and (mousey <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots))  then
 					posx_selettore_slots = Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1
-					posy_selettore_slots = Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots
+					posy_selettore_slots = Pos_y_mainmenu+altezza_secriga
 					selettore_slots_visibile = true
 					selettore_buttons_visibile = false	
 	-- slot_3 sx button					
 		elseif ((mousex >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2) and (mousex <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2) and (mousey >= Pos_y_mainmenu+altezza_secriga) and (mousey <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots))  then
 					posx_selettore_slots = Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2
-					posy_selettore_slots = Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots
+					posy_selettore_slots = Pos_y_mainmenu+altezza_secriga
 					selettore_slots_visibile = true
 					selettore_buttons_visibile = false	
 	-- slot_4 sx button					
 		elseif ((mousex >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3) and (mousex <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3) and (mousey >= Pos_y_mainmenu+altezza_secriga) and (mousey <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots))  then
 					posx_selettore_slots = Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3
-					posy_selettore_slots = Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots
+					posy_selettore_slots = Pos_y_mainmenu+altezza_secriga
 					selettore_slots_visibile = true
 					selettore_buttons_visibile = false			
 
 	-- slot_5 sx button
 		elseif ((mousex >= Pos_x_mainmenu+margine_slots_sx) and (mousex <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots) and (mousey >= Pos_y_mainmenu+altezza_pririga) and (mousey <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots))  then
 					posx_selettore_slots = Pos_x_mainmenu+margine_slots_sx
-					posy_selettore_slots = Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots
+					posy_selettore_slots = Pos_y_mainmenu+altezza_pririga
 					selettore_slots_visibile = true
 					selettore_buttons_visibile = false	
 	-- slot_6 sx button					
 		elseif ((mousex >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1) and (mousex <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1) and (mousey >= Pos_y_mainmenu+altezza_pririga) and (mousey <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots))  then
 					posx_selettore_slots = Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1
-					posy_selettore_slots = Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots
+					posy_selettore_slots = Pos_y_mainmenu+altezza_pririga
 					selettore_slots_visibile = true
 					selettore_buttons_visibile = false	
 	-- slot_7 sx button					
 		elseif ((mousex >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2) and (mousex <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2) and (mousey >= Pos_y_mainmenu+altezza_pririga) and (mousey <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots))  then
 					posx_selettore_slots = Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2
-					posy_selettore_slots = Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots
+					posy_selettore_slots = Pos_y_mainmenu+altezza_pririga
 					selettore_slots_visibile = true
 					selettore_buttons_visibile = false	
 	-- slot_8 sx button					
 		elseif ((mousex >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3) and (mousex <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3) and (mousey >= Pos_y_mainmenu+altezza_pririga) and (mousey <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots))  then
 					posx_selettore_slots = Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3
-					posy_selettore_slots = Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots
+					posy_selettore_slots = Pos_y_mainmenu+altezza_pririga
 					selettore_slots_visibile = true
-					selettore_buttons_visibile = false		
+					selettore_buttons_visibile = false	
+	-- pulsante close
+		elseif ((mousex >= Pos_x_mainmenu+600) and (mousex <= Pos_x_mainmenu+600+76) and (mousey >= Pos_y_mainmenu-12) and (mousey <= Pos_y_mainmenu+25-12))  then
+					posx_selettore_slots = Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3
+					posy_selettore_slots = Pos_y_mainmenu+altezza_pririga
+					selettore_slots_visibile = false
+					selettore_buttons_visibile = true	
+	-- altrimenti nascondi tutti i selettori
+		else
+					selettore_slots_visibile = false
+					selettore_buttons_visibile = false			
 		end -- condizioni if mouse etc
 	end -- diary menu attivo etc
 end -- function update
@@ -531,36 +549,104 @@ end
 		gl.Texture(false)	-- fine texture		
 		end
 	-- disegno il pulsante close
-		if selettore_slots_visibile then 
 		gl.Color(1,1,1,1)
 		gl.Texture(pulsante_close)	
-		gl.TexRect(	Pos_x_mainmenu+500, Pos_y_mainmenu+50,Pos_x_mainmenu+500+76, Pos_y_mainmenu+50+25)	
+		gl.TexRect(	Pos_x_mainmenu+600, Pos_y_mainmenu-12,Pos_x_mainmenu+676, Pos_y_mainmenu+13)	
 		gl.Texture(false)	-- fine texture		
-		end		
+	-- disegno l'hover pulsante close selezionato
+		if selettore_buttons_visibile then 	
+		gl.Color(1,1,1,1)
+		gl.Texture(button_sel)	
+		gl.TexRect(	Pos_x_mainmenu+600, Pos_y_mainmenu-12,Pos_x_mainmenu+676, Pos_y_mainmenu+13)	
+		gl.Texture(false)	-- fine texture				
+		end
 	-- disegno l'avatar giocatore a
 		gl.Color(1,1,1,1)
 		gl.Texture(avatar_pla)	
-		gl.TexRect(	Pos_x_mainmenu+318, Pos_y_mainmenu+231,Pos_x_mainmenu+318+16, Pos_y_mainmenu+231+16)	
+		gl.TexRect(	Pos_x_mainmenu+318, Pos_y_mainmenu+251,Pos_x_mainmenu+318+16, Pos_y_mainmenu+251+16)	
 		gl.Texture(false)	-- fine texture		
 	-- disegno l'avatar giocatore b
 		gl.Color(1,1,1,1)
 		gl.Texture(avatar_plb)	
-		gl.TexRect(	Pos_x_mainmenu+366, Pos_y_mainmenu+231,Pos_x_mainmenu+366+16, Pos_y_mainmenu+231+16)	
+		gl.TexRect(	Pos_x_mainmenu+366, Pos_y_mainmenu+251,Pos_x_mainmenu+366+16, Pos_y_mainmenu+251+16)	
 		gl.Texture(false)	-- fine texture	
 	--	testi slots player a
 		font_generale:Begin()
 		-- slot 1
-		font_generale:Print(("NAME"), Pos_x_mainmenu +45 , Pos_y_mainmenu+9, 9, "ocn") 
-		font_generale:Print(("STATUS"), Pos_x_mainmenu +45 , Pos_y_mainmenu+15, 9, "ocn") 
-		font_generale:Print(("SLOT 1"), Pos_x_mainmenu +45 , Pos_y_mainmenu+20, 9, "ocn") 		
+		font_generale:Print(("NAME"), Pos_x_mainmenu +47 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("STATUS"), Pos_x_mainmenu +47 , Pos_y_mainmenu+145, 9, "ocn") 
+		font_generale:Print(("SLOT 1"), Pos_x_mainmenu +47 , Pos_y_mainmenu+240, 9, "ocn") 				
+
+		font_generale:Print(("NAME"), Pos_x_mainmenu +132 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("STATUS"), Pos_x_mainmenu +132 , Pos_y_mainmenu+145, 9, "ocn") 
+		font_generale:Print(("SLOT 2"), Pos_x_mainmenu +132 , Pos_y_mainmenu+240, 9, "ocn") 			
+
+		font_generale:Print(("NAME"), Pos_x_mainmenu +215 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("STATUS"), Pos_x_mainmenu +215 , Pos_y_mainmenu+145, 9, "ocn") 
+		font_generale:Print(("SLOT 3"), Pos_x_mainmenu +215 , Pos_y_mainmenu+240, 9, "ocn") 
+		
+		font_generale:Print(("NAME"), Pos_x_mainmenu +298 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("STATUS"), Pos_x_mainmenu +298 , Pos_y_mainmenu+145, 9, "ocn") 
+		font_generale:Print(("SLOT 4"), Pos_x_mainmenu +298 , Pos_y_mainmenu+240, 9, "ocn") 		
 --
 --		[...] inserire tutti gli altri slots ##########################################
 --		
 		-- slot 5
-		font_generale:Print(("NAME"), Pos_x_mainmenu +45 , Pos_y_mainmenu+9, 9, "ocn") 
-		font_generale:Print(("STATUS"), Pos_x_mainmenu +45 , Pos_y_mainmenu+15, 9, "ocn") 
-		font_generale:Print(("SLOT 5"), Pos_x_mainmenu +45 , Pos_y_mainmenu+20, 9, "ocn") 			
-		font_generale:End()	
+		font_generale:Print(("NAME"), Pos_x_mainmenu +47 , Pos_y_mainmenu+43, 9, "ocn") 
+		font_generale:Print(("STATUS"), Pos_x_mainmenu +47 , Pos_y_mainmenu+31, 9, "ocn") 
+		font_generale:Print(("SLOT 5"), Pos_x_mainmenu +47 , Pos_y_mainmenu+125, 9, "ocn") 			
+		
+		font_generale:Print(("NAME"), Pos_x_mainmenu +132 , Pos_y_mainmenu+43, 9, "ocn") 
+		font_generale:Print(("STATUS"), Pos_x_mainmenu +132 , Pos_y_mainmenu+31, 9, "ocn") 
+		font_generale:Print(("SLOT 6"), Pos_x_mainmenu +132 , Pos_y_mainmenu+125, 9, "ocn") 			
+
+		font_generale:Print(("NAME"), Pos_x_mainmenu +215 , Pos_y_mainmenu+43, 9, "ocn") 
+		font_generale:Print(("STATUS"), Pos_x_mainmenu +215 , Pos_y_mainmenu+31, 9, "ocn") 
+		font_generale:Print(("SLOT 7"), Pos_x_mainmenu +215 , Pos_y_mainmenu+125, 9, "ocn") 
+		
+		font_generale:Print(("NAME"), Pos_x_mainmenu +298 , Pos_y_mainmenu+43, 9, "ocn") 
+		font_generale:Print(("STATUS"), Pos_x_mainmenu +298 , Pos_y_mainmenu+31, 9, "ocn") 
+		font_generale:Print(("SLOT 8"), Pos_x_mainmenu +298 , Pos_y_mainmenu+125, 9, "ocn") 	
+--		font_generale:End()			
+		
+	--	testi slots player b
+--		font_generale:Begin()
+		-- slot 1
+		font_generale:Print(("NAME"), Pos_x_mainmenu +47+354 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("STATUS"), Pos_x_mainmenu +47+354 , Pos_y_mainmenu+145, 9, "ocn") 
+		font_generale:Print(("SLOT 1"), Pos_x_mainmenu +47+354 , Pos_y_mainmenu+240, 9, "ocn") 				
+
+		font_generale:Print(("NAME"), Pos_x_mainmenu +132+354 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("STATUS"), Pos_x_mainmenu +132+354 , Pos_y_mainmenu+145, 9, "ocn") 
+		font_generale:Print(("SLOT 2"), Pos_x_mainmenu +132+354 , Pos_y_mainmenu+240, 9, "ocn") 			
+
+		font_generale:Print(("NAME"), Pos_x_mainmenu +215+354 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("STATUS"), Pos_x_mainmenu +215+354 , Pos_y_mainmenu+145, 9, "ocn") 
+		font_generale:Print(("SLOT 3"), Pos_x_mainmenu +215+354 , Pos_y_mainmenu+240, 9, "ocn") 
+		
+		font_generale:Print(("NAME"), Pos_x_mainmenu +298+354 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("STATUS"), Pos_x_mainmenu +298+354 , Pos_y_mainmenu+145, 9, "ocn") 
+		font_generale:Print(("SLOT 4"), Pos_x_mainmenu +298+354 , Pos_y_mainmenu+240, 9, "ocn") 		
+--
+--		[...] inserire tutti gli altri slots ##########################################
+--		
+		-- slot 5
+		font_generale:Print(("NAME"), Pos_x_mainmenu +47+354 , Pos_y_mainmenu+43, 9, "ocn") 
+		font_generale:Print(("STATUS"), Pos_x_mainmenu +47+354 , Pos_y_mainmenu+31, 9, "ocn") 
+		font_generale:Print(("SLOT 5"), Pos_x_mainmenu +47+354 , Pos_y_mainmenu+125, 9, "ocn") 			
+		
+		font_generale:Print(("NAME"), Pos_x_mainmenu +132+354 , Pos_y_mainmenu+43, 9, "ocn") 
+		font_generale:Print(("STATUS"), Pos_x_mainmenu +132+354 , Pos_y_mainmenu+31, 9, "ocn") 
+		font_generale:Print(("SLOT 6"), Pos_x_mainmenu +132+354 , Pos_y_mainmenu+125, 9, "ocn") 			
+
+		font_generale:Print(("NAME"), Pos_x_mainmenu +215+354 , Pos_y_mainmenu+43, 9, "ocn") 
+		font_generale:Print(("STATUS"), Pos_x_mainmenu +215+354 , Pos_y_mainmenu+31, 9, "ocn") 
+		font_generale:Print(("SLOT 7"), Pos_x_mainmenu +215+354 , Pos_y_mainmenu+125, 9, "ocn") 
+		
+		font_generale:Print(("NAME"), Pos_x_mainmenu +298+354 , Pos_y_mainmenu+43, 9, "ocn") 
+		font_generale:Print(("STATUS"), Pos_x_mainmenu +298+354 , Pos_y_mainmenu+31, 9, "ocn") 
+		font_generale:Print(("SLOT 8"), Pos_x_mainmenu +298+354 , Pos_y_mainmenu+125, 9, "ocn") 	
+		font_generale:End()					
 	-- gui shader	
 		if (WG['guishader_api'] ~= nil) then
 		WG['guishader_api'].InsertRect( Pos_x_mainmenu,Pos_y_mainmenu,Pos_x_mainmenu+larghezza_deploymenu,Pos_y_mainmenu+altezza_deploymenu,'WMRTS_diary_shad')
