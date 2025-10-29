@@ -353,7 +353,7 @@ function widget:MousePress(x, y, button)
 					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
 					end
 				-- clicco su slot5a button	--------------------------------------------------------------------------------------------
-				if ((x >= Pos_x_mainmenu+margine_slots_sx) and (x <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots) and (y >= Pos_y_mainmenu+altezza_pririga) and (y <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)) then
+				elseif ((x >= Pos_x_mainmenu+margine_slots_sx) and (x <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots) and (y >= Pos_y_mainmenu+altezza_pririga) and (y <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)) then
 					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
 					if (ud_unitnameslot5a ~= 1) and (ud_unitnameslot5a ~= "destroy") then
 					Spring.SendCommands("Deselect") 				-- deseleziono tutto
@@ -452,6 +452,7 @@ function widget:TextCommand(command)
 	end
 	]]--
 		slota()										-- richiama funzione che aggiorna stato slot player_a
+	end
 end
 
 --------------------------------------
@@ -459,9 +460,9 @@ end
 --------------------------------------
 function widget:KeyPress(key, mods, isRepeat) 
 	if deployedunitsmenu_attivo and not Spring.IsGUIHidden() then
-	if key == 0x01B then -- TASTO esc
+		if key == 0x01B then -- TASTO esc
 			deployedunitsmenu_attivo = false 							-- chiudo il diario			
---			Spring.SendCommands("close_wmrts_diary")			-- spengo il minipulsante del deploy menu del minimenu  ############################################################### da fare!!!
+	--			Spring.SendCommands("close_wmrts_diary")			-- spengo il minipulsante del deploy menu del minimenu  ############################################################### da fare!!!
 			-- disabilito il guishader
 				if (WG['guishader_api'] ~= nil) then
 				WG['guishader_api'].RemoveRect('WMRTS_diary_shad')
