@@ -53,7 +53,7 @@ local selettore_buttons_visibile = false									-- riquadro selezione pulsante 
 
 local slota_playername = Spring.GetModOptions().slota_owner or nil	 		-- verifico chi è il nome giocatore proprietario degli slot player A
 local slotb_playername = Spring.GetModOptions().slotb_owner or nil		 	-- verifico chi è il nome giocatore proprietario degli slot player B
-local nomeunita_slot1a				= "1"									-- nome unità contenuta nello slot 1a, verrà definita in seguito tramite game rules. "1" di default (slot vuoto / unità non dispiegata)
+local nomeunita_slot1a				= "1"									-- nome unità contenuta nello slot 1a, verrà definita in seguito tramite game rules. 
 local nomeunita_slot2a				= "1"	
 local nomeunita_slot3a				= "1"	
 local nomeunita_slot4a				= "1"	
@@ -122,7 +122,7 @@ end
 -- funzione per aggiornare gli slot del giocatore "a" (host). Setta il nome dell'unità e l'id dell'unità, se presente
 function slota()
 		-- slot1a
-		nomeunita_slot1a = Spring.GetGameRulesParam("ud_unitnameslot1a") or "vuoto" 							-- ricevo l'immagine impostata nello slot 1a del gamerules, altrimenti imposta su "vuoto"
+		nomeunita_slot1a = Spring.GetGameRulesParam("ud_unitnameslot1a") or "vuoto" 							-- dal gadget posso ricevere la variabile inerente al nome dell'unità o la variabile "vuoto" che indica slot non impostato o volutamente lasciato vuoto
 		if nomeunita_slot1a ~= "vuoto" then		-- se lo slot non è vuoto...
 		slot1a_ID = Spring.GetGameRulesParam("ud_idslot1a")														-- ... imposta l'ID dell'unità (necessario poi per identificarla al click sullo slot) ...
 		stato_slot1a = Spring.GetGameRulesParam("ud_statusslot1a")												-- ... e imposta lo stato dell'unità (attivo, distrutto, ecc)
@@ -502,46 +502,173 @@ end
 		gl.Texture(backgroundmainmenu)	
 		gl.TexRect(	Pos_x_mainmenu,Pos_y_mainmenu,Pos_x_mainmenu+larghezza_deploymenu,Pos_y_mainmenu+altezza_deploymenu)	
 		gl.Texture(false)	-- fine texture	
+	
 	-- inserisco lo slot1a
+		font_generale:Begin()	
+		font_generale:Print(("SLOT 1"), Pos_x_mainmenu +47 , Pos_y_mainmenu+240, 9, "ocn") 		
+		font_generale:End()				
+	if (ud_unitnameslot1a ~= "vuoto") then
+		font_generale:Begin()	
+		font_generale:Print((nomeunita_slot1a), Pos_x_mainmenu +47 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print((stato_slot1a), Pos_x_mainmenu +47 , Pos_y_mainmenu+145, 9, "ocn") 
+		font_generale:End()		
 		gl.Color(1,1,1,1)
 		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot1a..".wmr")	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture		
+	else
+		font_generale:Begin()	
+		font_generale:Print(("NOT"), Pos_x_mainmenu +47 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("DEPLOYED"), Pos_x_mainmenu +47 , Pos_y_mainmenu+145, 9, "ocn") 
+		font_generale:End()			
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_empty)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture			
+	end
+	if (stato_slot1a = "DESTROYED") then -- se distrutta disegno la croce sopra
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_cross)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture			
+	end
+	if (ud_unitnameslot2a ~= "vuoto") then	
 	-- inserisco lo slot2a
 		gl.Color(1,1,1,1)
 		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot2a..".wmr")	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture		
+	else		
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_empty)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture	
+	end		
+	if (stato_slot2a = "DESTROYED") then -- se distrutta disegno la croce sopra
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_cross)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture			
+	end
+
+	
 	-- inserisco lo slot3a
+	if (ud_unitnameslot3a ~= "vuoto") then	
 		gl.Color(1,1,1,1)
 		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot3a..".wmr")	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture		
+	else		
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_empty)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture	
+	end		
+	if (stato_slot3a = "DESTROYED") then -- se distrutta disegno la croce sopra
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_cross)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture			
+	end
+	
+	
 	-- inserisco lo slot4a
+	if (ud_unitnameslot4a ~= "vuoto") then
 		gl.Color(1,1,1,1)
 		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot4a..".wmr")	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture		
+	else		
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_empty)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture	
+	end		
+	
+	if (stato_slot4a = "DESTROYED") then -- se distrutta disegno la croce sopra
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_cross)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture			
+	end	
 	-- inserisco lo slot5a
+	if (ud_unitnameslot5a ~= "vuoto") then	
 		gl.Color(1,1,1,1)
 		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot5a..".wmr")	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture		
+	else		
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_empty)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture		
+	end		
+	if (stato_slot5a = "DESTROYED") then -- se distrutta disegno la croce sopra
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_cross)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture			
+	end
+
+	
 	-- inserisco lo slot6a
+	if (ud_unitnameslot6a ~= "vuoto") then	
 		gl.Color(1,1,1,1)
 		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot6a..".wmr")	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture		
+	else	
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_empty)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture		
+	end		
+
+	if (stato_slot6a = "DESTROYED") then -- se distrutta disegno la croce sopra
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_cross)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture			
+	end	
 	-- inserisco lo slot7a
+	if (ud_unitnameslot7a ~= "vuoto") then	
 		gl.Color(1,1,1,1)
 		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot7a..".wmr")	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture		
+	else		
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_empty)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture		
+	end		
+	if (stato_slot7a = "DESTROYED") then -- se distrutta disegno la croce sopra
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_cross)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture			
+	end
+	
 	-- inserisco lo slot8a
+	if (ud_unitnameslot8a ~= "vuoto") then	
 		gl.Color(1,1,1,1)
 		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot8a..".wmr")	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
-		gl.Texture(false)	-- fine texture		
+		gl.Texture(false)	-- fine texture	
+	else		
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_empty)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture				
+	end		
+	if (stato_slot8a = "DESTROYED") then -- se distrutta disegno la croce sopra
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_cross)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture			
+	end		
+		
+		
 	-- se il selettore slot è attivo, disegnalo nella posizione registrata in precedenza
 		if selettore_slots_visibile then 
 		gl.Color(1,1,1,1)
@@ -572,11 +699,9 @@ end
 		gl.TexRect(	Pos_x_mainmenu+366, Pos_y_mainmenu+251,Pos_x_mainmenu+366+16, Pos_y_mainmenu+251+16)	
 		gl.Texture(false)	-- fine texture	
 	--	testi slots player a
-		font_generale:Begin()
+
 		-- slot 1
-		font_generale:Print((nomeunita_slot1a), Pos_x_mainmenu +47 , Pos_y_mainmenu+157, 9, "ocn") 
-		font_generale:Print((stato_slot1a), Pos_x_mainmenu +47 , Pos_y_mainmenu+145, 9, "ocn") 
-		font_generale:Print(("SLOT 1"), Pos_x_mainmenu +47 , Pos_y_mainmenu+240, 9, "ocn") 				
+		
 
 		font_generale:Print((nomeunita_slot2a), Pos_x_mainmenu +132 , Pos_y_mainmenu+157, 9, "ocn") 
 		font_generale:Print((stato_slot2a), Pos_x_mainmenu +132 , Pos_y_mainmenu+145, 9, "ocn") 
@@ -638,7 +763,7 @@ end
 		font_generale:Print(("NAME"), Pos_x_mainmenu +298+354 , Pos_y_mainmenu+43, 9, "ocn") 
 		font_generale:Print(("STATUS"), Pos_x_mainmenu +298+354 , Pos_y_mainmenu+31, 9, "ocn") 
 		font_generale:Print(("SLOT 8"), Pos_x_mainmenu +298+354 , Pos_y_mainmenu+126, 9, "ocn") 		
-		font_generale:End()	
+
 	-- disegno le croci se le unità risultano "DESTROYED"
 		if ud_statusslot1a == "DESTROYED" then
 		gl.Color(1,1,1,1)
