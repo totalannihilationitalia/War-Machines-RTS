@@ -53,6 +53,7 @@ local selettore_buttons_visibile = false									-- riquadro selezione pulsante 
 
 local slota_playername = Spring.GetModOptions().slota_owner or nil	 		-- verifico chi è il nome giocatore proprietario degli slot player A
 local slotb_playername = Spring.GetModOptions().slotb_owner or nil		 	-- verifico chi è il nome giocatore proprietario degli slot player B
+-- SLOT A
 local nomeunita_slot1a				= "1"									-- nome unità contenuta nello slot 1a, verrà definita in seguito tramite game rules. 
 local nomeunita_slot2a				= "1"	
 local nomeunita_slot3a				= "1"	
@@ -77,6 +78,31 @@ local stato_slot5a					= "0"
 local stato_slot6a					= "0"
 local stato_slot7a					= "0"
 local stato_slot8a					= "0"
+-- SLOT B
+local nomeunita_slot1b				= "1"									-- nome unità contenuta nello slot 1a, verrà definita in seguito tramite game rules. 
+local nomeunita_slot2b				= "1"	
+local nomeunita_slot3b				= "1"	
+local nomeunita_slot4b				= "1"	
+local nomeunita_slot5b				= "1"	
+local nomeunita_slot6b				= "1"	
+local nomeunita_slot7b				= "1"	
+local nomeunita_slot8b				= "1"	
+local slot1b_ID						= "0"									-- ID dell'unità contenuta nello slot1b
+local slot2b_ID						= "0"
+local slot3b_ID						= "0"
+local slot4b_ID						= "0"
+local slot5b_ID						= "0"
+local slot6b_ID						= "0"
+local slot7b_ID						= "0"
+local slot8b_ID						= "0"
+local stato_slot1b					= "0"									-- stato dell'unità contenuta nello slot 1b
+local stato_slot2b					= "0"
+local stato_slot3b					= "0"
+local stato_slot4b					= "0"
+local stato_slot5b					= "0"
+local stato_slot6b					= "0"
+local stato_slot7b					= "0"
+local stato_slot8b					= "0"
 
 -- impostazione dei fonts
 local font_generale					= gl.LoadFont("FreeSansBold.otf",12, 1.9, 40)
@@ -173,6 +199,58 @@ function slota()
 		end		
 end		
 
+-- funzione per aggiornare gli slot del giocatore "b" (host). Setta il nome dell'unità e l'id dell'unità, se presente
+function slotb()
+		-- slot1b
+		nomeunita_slot1b = Spring.GetGameRulesParam("ud_unitnameslot1b") or "vuoto" 							-- dal gadget posso ricevere la variabile inerente al nome dell'unità o la variabile "vuoto" che indica slot non impostato o volutamente lasciato vuoto
+		if nomeunita_slot1b ~= "vuoto" then		-- se lo slot non è vuoto...
+		slot1b_ID = Spring.GetGameRulesParam("ud_idslot1b")														-- ... imposta l'ID dell'unità (necessario poi per identificarla al click sullo slot) ...
+		stato_slot1b = Spring.GetGameRulesParam("ud_statusslot1b")												-- ... e imposta lo stato dell'unità (attivo, distrutto, ecc)
+		end
+		-- slot2b
+		nomeunita_slot2b = Spring.GetGameRulesParam("ud_unitnameslot2b") or "vuoto"
+		if nomeunita_slot2b ~= "vuoto" then		
+		slot2b_ID = Spring.GetGameRulesParam("ud_idslot2b")		
+		stato_slot2b = Spring.GetGameRulesParam("ud_statusslot2b")			
+		end		
+		-- slot3b
+		nomeunita_slot3b = Spring.GetGameRulesParam("ud_unitnameslot3b") or "vuoto" 	
+		if nomeunita_slot3b ~= "vuoto" then		
+		slot3b_ID = Spring.GetGameRulesParam("ud_idslot3b")
+		stato_slot3b = Spring.GetGameRulesParam("ud_statusslot3b")	
+		end		
+		-- slot4b
+		nomeunita_slot4b = Spring.GetGameRulesParam("ud_unitnameslot4b") or "vuoto"
+		if nomeunita_slot4b ~= "vuoto" then		
+		slot4b_ID = Spring.GetGameRulesParam("ud_idslot4b")
+		stato_slot4b = Spring.GetGameRulesParam("ud_statusslot4b")	
+		end		
+		-- slot5b
+		nomeunita_slot5b = Spring.GetGameRulesParam("ud_unitnameslot5b") or "vuoto"
+		if nomeunita_slot5b ~= "vuoto" then		
+		slot5b_ID = Spring.GetGameRulesParam("ud_idslot5b")
+		stato_slot5b = Spring.GetGameRulesParam("ud_statusslot5b")	
+		end		
+		-- slot6b
+		nomeunita_slot6b = Spring.GetGameRulesParam("ud_unitnameslot6b") or "vuoto"
+		if nomeunita_slot6b ~= "vuoto" then		
+		slot6b_ID = Spring.GetGameRulesParam("ud_idslot6b")	
+		stato_slot6b = Spring.GetGameRulesParam("ud_statusslot6b")
+		end		
+		-- slot7b
+		nomeunita_slot7b = Spring.GetGameRulesParam("ud_unitnameslot7b") 	or "vuoto"
+		if nomeunita_slot7b ~= "vuoto" then		
+		slot7b_ID = Spring.GetGameRulesParam("ud_idslot7b")
+		stato_slot7b = Spring.GetGameRulesParam("ud_statusslot7b")
+		end		
+		-- slot8b
+		nomeunita_slot8b = Spring.GetGameRulesParam("ud_unitnameslot8b") or "vuoto"	
+		if nomeunita_slot8b ~= "vuoto" then		
+		slot8b_ID = Spring.GetGameRulesParam("ud_idslot8b")	
+		stato_slot8b = Spring.GetGameRulesParam("ud_statusslot8b")
+		end		
+end	
+
 --------------------------------------
 -- INIZIALIZZO IL MENU 
 --------------------------------------
@@ -190,6 +268,7 @@ function widget:Initialize()
 	slota()
 	elseif playerInfo == slotb_playername then
 	slota()
+	slotb()	
 	-- inserire funzione slotb() ###############
 		Spring.Echo("SlotB owner<<<<<<<<<<<<<<<<<<<<<<<<")
 	else
@@ -225,12 +304,15 @@ function widget:ViewResize(viewSizeX, viewSizeY) -- quando si modifica la dimens
 end
 
 --------------------------------------
--- SEMPRE ##############################################
+-- SEMPRE 
 --------------------------------------
 function widget:Update(dt)
 mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di aggiornamento
 	if deployedunitsmenu_attivo and not Spring.IsGUIHidden() then
-	-- slot_1 sx button
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---- slot A ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	-- slot_1a sx button
 		if ((mousex >= Pos_x_mainmenu+margine_slots_sx) and (mousex <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots) and (mousey >= Pos_y_mainmenu+altezza_secriga) and (mousey <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots))  then
 			if (nomeunita_slot1a ~= "vuoto") and (stato_slot1a ~= "DESTROYED") then
 					posx_selettore_slots = Pos_x_mainmenu+margine_slots_sx-1
@@ -238,7 +320,7 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 					selettore_slots_visibile = true
 					selettore_buttons_visibile = false	
 			end
-	-- slot_2 sx button					
+	-- slot_2a sx button					
 		elseif ((mousex >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1) and (mousex <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1) and (mousey >= Pos_y_mainmenu+altezza_secriga) and (mousey <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots))  then
 			if (nomeunita_slot2a ~= "vuoto") and (stato_slot2a ~= "DESTROYED") then
 					posx_selettore_slots = Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1-1
@@ -246,7 +328,7 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 					selettore_slots_visibile = true
 					selettore_buttons_visibile = false	
 			end
-	-- slot_3 sx button					
+	-- slot_3a sx button					
 		elseif ((mousex >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2) and (mousex <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2) and (mousey >= Pos_y_mainmenu+altezza_secriga) and (mousey <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots))  then
 			if (nomeunita_slot3a ~= "vuoto") and (stato_slot3a ~= "DESTROYED") then
 					posx_selettore_slots = Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2-1
@@ -254,7 +336,7 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 					selettore_slots_visibile = true
 					selettore_buttons_visibile = false	
 			end
-	-- slot_4 sx button					
+	-- slot_4a sx button					
 		elseif ((mousex >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3) and (mousex <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3) and (mousey >= Pos_y_mainmenu+altezza_secriga) and (mousey <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots))  then
 			if (nomeunita_slot4a ~= "vuoto") and (stato_slot4a ~= "DESTROYED") then
 					posx_selettore_slots = Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3-1
@@ -262,7 +344,7 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 					selettore_slots_visibile = true
 					selettore_buttons_visibile = false			
 			end
-	-- slot_5 sx button
+	-- slot_5a sx button
 		elseif ((mousex >= Pos_x_mainmenu+margine_slots_sx) and (mousex <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots) and (mousey >= Pos_y_mainmenu+altezza_pririga) and (mousey <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots))  then
 			if (nomeunita_slot5a ~= "vuoto") and (stato_slot5a ~= "DESTROYED") then
 					posx_selettore_slots = Pos_x_mainmenu+margine_slots_sx-1
@@ -270,7 +352,7 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 					selettore_slots_visibile = true
 					selettore_buttons_visibile = false	
 			end
-	-- slot_6 sx button					
+	-- slot_6a sx button					
 		elseif ((mousex >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots-1+interasse_slots)*1) and (mousex <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1) and (mousey >= Pos_y_mainmenu+altezza_pririga) and (mousey <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots))  then
 			if (nomeunita_slot6a ~= "vuoto") and (stato_slot6a ~= "DESTROYED") then
 					posx_selettore_slots = Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1-1
@@ -278,7 +360,7 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 					selettore_slots_visibile = true
 					selettore_buttons_visibile = false	
 			end
-	-- slot_7 sx button					
+	-- slot_7a sx button					
 		elseif ((mousex >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2) and (mousex <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2) and (mousey >= Pos_y_mainmenu+altezza_pririga) and (mousey <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots))  then
 			if (nomeunita_slot7a ~= "vuoto") and (stato_slot7a ~= "DESTROYED") then
 					posx_selettore_slots = Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2-1
@@ -286,7 +368,7 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 					selettore_slots_visibile = true
 					selettore_buttons_visibile = false	
 			end
-	-- slot_8 sx button					
+	-- slot_8a sx button					
 		elseif ((mousex >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3) and (mousex <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3) and (mousey >= Pos_y_mainmenu+altezza_pririga) and (mousey <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots))  then
 			if (nomeunita_slot8a ~= "vuoto") and (stato_slot8a ~= "DESTROYED") then
 			posx_selettore_slots = Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3-1
@@ -294,6 +376,73 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 					selettore_slots_visibile = true
 					selettore_buttons_visibile = false	
 			end
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---- slot B ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	-- slot_1b sx button
+		if ((mousex >= Pos_x_mainmenu+margine_slots_dx) and (mousex <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots) and (mousey >= Pos_y_mainmenu+altezza_secriga) and (mousey <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots))  then
+			if (nomeunita_slot1b ~= "vuoto") and (stato_slot1b ~= "DESTROYED") then
+					posx_selettore_slots = Pos_x_mainmenu+margine_slots_dx-1
+					posy_selettore_slots = Pos_y_mainmenu+altezza_secriga-1
+					selettore_slots_visibile = true
+					selettore_buttons_visibile = false	
+			end
+	-- slot_2b sx button					
+		elseif ((mousex >= Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*1) and (mousex <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1) and (mousey >= Pos_y_mainmenu+altezza_secriga) and (mousey <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots))  then
+			if (nomeunita_slot2b ~= "vuoto") and (stato_slot2b ~= "DESTROYED") then
+					posx_selettore_slots = Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*1-1
+					posy_selettore_slots = Pos_y_mainmenu+altezza_secriga-1
+					selettore_slots_visibile = true
+					selettore_buttons_visibile = false	
+			end
+	-- slot_3b sx button					
+		elseif ((mousex >= Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*2) and (mousex <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2) and (mousey >= Pos_y_mainmenu+altezza_secriga) and (mousey <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots))  then
+			if (nomeunita_slot3b ~= "vuoto") and (stato_slot3b ~= "DESTROYED") then
+					posx_selettore_slots = Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*2-1
+					posy_selettore_slots = Pos_y_mainmenu+altezza_secriga-1
+					selettore_slots_visibile = true
+					selettore_buttons_visibile = false	
+			end
+	-- slot_4b sx button					
+		elseif ((mousex >= Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*3) and (mousex <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3) and (mousey >= Pos_y_mainmenu+altezza_secriga) and (mousey <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots))  then
+			if (nomeunita_slot4b ~= "vuoto") and (stato_slot4b ~= "DESTROYED") then
+					posx_selettore_slots = Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*3-1
+					posy_selettore_slots = Pos_y_mainmenu+altezza_secriga-1
+					selettore_slots_visibile = true
+					selettore_buttons_visibile = false			
+			end
+	-- slot_5b sx button
+		elseif ((mousex >= Pos_x_mainmenu+margine_slots_dx) and (mousex <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots) and (mousey >= Pos_y_mainmenu+altezza_pririga) and (mousey <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots))  then
+			if (nomeunita_slot5b ~= "vuoto") and (stato_slot5b ~= "DESTROYED") then
+					posx_selettore_slots = Pos_x_mainmenu+margine_slots_dx-1
+					posy_selettore_slots = Pos_y_mainmenu+altezza_pririga-1
+					selettore_slots_visibile = true
+					selettore_buttons_visibile = false	
+			end
+	-- slot_6b sx button					
+		elseif ((mousex >= Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots-1+interasse_slots)*1) and (mousex <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1) and (mousey >= Pos_y_mainmenu+altezza_pririga) and (mousey <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots))  then
+			if (nomeunita_slot6b ~= "vuoto") and (stato_slot6b ~= "DESTROYED") then
+					posx_selettore_slots = Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*1-1
+					posy_selettore_slots = Pos_y_mainmenu+altezza_pririga-1
+					selettore_slots_visibile = true
+					selettore_buttons_visibile = false	
+			end
+	-- slot_7b sx button					
+		elseif ((mousex >= Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*2) and (mousex <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2) and (mousey >= Pos_y_mainmenu+altezza_pririga) and (mousey <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots))  then
+			if (nomeunita_slot7b ~= "vuoto") and (stato_slot7b ~= "DESTROYED") then
+					posx_selettore_slots = Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*2-1
+					posy_selettore_slots = Pos_y_mainmenu+altezza_pririga-1
+					selettore_slots_visibile = true
+					selettore_buttons_visibile = false	
+			end
+	-- slot_8b sx button					
+		elseif ((mousex >= Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*3) and (mousex <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3) and (mousey >= Pos_y_mainmenu+altezza_pririga) and (mousey <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots))  then
+			if (nomeunita_slot8b ~= "vuoto") and (stato_slot8b ~= "DESTROYED") then
+			posx_selettore_slots = Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*3-1
+					posy_selettore_slots = Pos_y_mainmenu+altezza_pririga-1
+					selettore_slots_visibile = true
+					selettore_buttons_visibile = false	
+			end			
 	-- pulsante close
 		elseif ((mousex >= Pos_x_mainmenu+600) and (mousex <= Pos_x_mainmenu+600+76) and (mousey >= Pos_y_mainmenu-12) and (mousey <= Pos_y_mainmenu+25-12))  then
 --					posx_selettore_slots = Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3
@@ -313,9 +462,11 @@ end -- function update
 --------------------------------------
 function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la variabile graphicsmenu_attivo è true.....
 	if deployedunitsmenu_attivo and not Spring.IsGUIHidden() then
-			-- slot_1 sx
 			return 
-			
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---- slot A ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			-- slot_1 sx			
 			((x >= Pos_x_mainmenu+margine_slots_sx) and (x <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots) and (y >= Pos_y_mainmenu+altezza_secriga) and (y <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots))
 			or
 			-- slot_2 sx
@@ -338,7 +489,35 @@ function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la 
 			or
 			-- slot_8 sx
 			((x >= Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3) and (x <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3) and (y >= Pos_y_mainmenu+altezza_pririga) and (y <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots))			
-			
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---- slot B ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			-- slot_1 dx			
+			((x >= Pos_x_mainmenu+margine_slots_dx) and (x <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots) and (y >= Pos_y_mainmenu+altezza_secriga) and (y <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots))
+			or
+			-- slot_2 dx
+			((x >= Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*1) and (x <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1) and (y >= Pos_y_mainmenu+altezza_secriga) and (y <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots))
+			or
+			-- slot_3 dx	
+			((x >= Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*2) and (x <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2) and (y >= Pos_y_mainmenu+altezza_secriga) and (y <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots))
+			or
+			-- slot_4 dx		
+			((x >= Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*3) and (x <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3) and (y >= Pos_y_mainmenu+altezza_secriga) and (y <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots))
+			or
+			-- slot_5 dx		
+			((x >= Pos_x_mainmenu+margine_slots_dx) and (x <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots) and (y >= Pos_y_mainmenu+altezza_pririga) and (y <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots))
+			or
+			-- slot_6 dx
+			((x >= Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*1) and (x <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1) and (y >= Pos_y_mainmenu+altezza_pririga) and (y <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots))
+			or
+			-- slot_7 dx
+			((x >= Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*2) and (x <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2) and (y >= Pos_y_mainmenu+altezza_pririga) and (y <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots))
+			or
+			-- slot_8 dx
+			((x >= Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*3) and (x <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3) and (y >= Pos_y_mainmenu+altezza_pririga) and (y <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots))						
+			or
+			-- close button
+			((mousex >= Pos_x_mainmenu+600) and (mousex <= Pos_x_mainmenu+600+76) and (mousey >= Pos_y_mainmenu-12) and (mousey <= Pos_y_mainmenu+25-12))
 	end --is gui hidden
 end
 
@@ -352,6 +531,9 @@ function widget:MousePress(x, y, button)
 	  end
 		if button== 1 then 
 			if (widget:IsAbove(x, y)) then
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---- slot A ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
 				-- clicco su slot1a button	--------------------------------------------------------------------------------------------
 				if ((x >= Pos_x_mainmenu+margine_slots_sx) and (x <= Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots) and (y >= Pos_y_mainmenu+altezza_secriga) and (y <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)) then
 					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
@@ -424,6 +606,87 @@ function widget:MousePress(x, y, button)
 					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
 					end					
 				return true				
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---- slot B ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+				-- clicco su slot1b button	--------------------------------------------------------------------------------------------
+				elseif ((x >= Pos_x_mainmenu+margine_slots_dx) and (x <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots) and (y >= Pos_y_mainmenu+altezza_secriga) and (y <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)) then
+					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
+					if (nomeunita_slot1b ~= "vuoto") and (stato_slot1b ~= "DESTROYED") then
+					Spring.SendCommands("Deselect") 				-- deseleziono tutto
+					Spring.SelectUnitMap({ [slot1b_ID] = true })	-- seleziono l'unità dello slot
+					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
+					end
+				return true
+				-- clicco su slot2b button	--------------------------------------------------------------------------------------------
+				elseif ((x >= Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*1) and (x <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1) and (y >= Pos_y_mainmenu+altezza_secriga) and (y <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)) then
+					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
+					if (nomeunita_slot2b ~= "vuoto") and (stato_slot2b ~= "DESTROYED") then
+					Spring.SendCommands("Deselect") 				-- deseleziono tutto
+					Spring.SelectUnitMap({ [slot2b_ID] = true })	-- seleziono l'unità dello slot
+					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
+					end
+				return true
+				-- clicco su slot3b button	--------------------------------------------------------------------------------------------
+				elseif ((x >= Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*2) and (x <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2) and (y >= Pos_y_mainmenu+altezza_secriga) and (y <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)) then
+					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
+					if (nomeunita_slot3b ~= "vuoto") and (stato_slot3b ~= "DESTROYED") then
+					Spring.SendCommands("Deselect") 				-- deseleziono tutto
+					Spring.SelectUnitMap({ [slot3b_ID] = true })	-- seleziono l'unità dello slot
+					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
+					end
+				return true
+				-- clicco su slot4b button	--------------------------------------------------------------------------------------------
+				elseif ((x >= Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*3) and (x <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3) and (y >= Pos_y_mainmenu+altezza_secriga) and (y <= Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)) then
+					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
+					if (nomeunita_slot4b ~= "vuoto") and (stato_slot4b ~= "DESTROYED") then
+					Spring.SendCommands("Deselect") 				-- deseleziono tutto
+					Spring.SelectUnitMap({ [slot4b_ID] = true })	-- seleziono l'unità dello slot
+					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
+					end
+				return true		
+				-- clicco su slot5b button	--------------------------------------------------------------------------------------------
+				elseif ((x >= Pos_x_mainmenu+margine_slots_dx) and (x <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots) and (y >= Pos_y_mainmenu+altezza_pririga) and (y <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)) then
+					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
+					if (nomeunita_slot5b ~= "vuoto") and (stato_slot5b ~= "DESTROYED") then
+					Spring.SendCommands("Deselect") 				-- deseleziono tutto
+					Spring.SelectUnitMap({ [slot5b_ID] = true })	-- seleziono l'unità dello slot
+					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
+					end
+				return true
+				-- clicco su slot6b button	--------------------------------------------------------------------------------------------
+				elseif ((x >= Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*1) and (x <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1) and (y >= Pos_y_mainmenu+altezza_pririga) and (y <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)) then
+					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
+					if (nomeunita_slot6b ~= "vuoto") and (stato_slot6b ~= "DESTROYED") then
+					Spring.SendCommands("Deselect") 				-- deseleziono tutto
+					Spring.SelectUnitMap({ [slot6b_ID] = true })	-- seleziono l'unità dello slot
+					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
+					end
+				return true
+				-- clicco su slot7b button	--------------------------------------------------------------------------------------------
+				elseif ((x >= Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*2) and (x <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2) and (y >= Pos_y_mainmenu+altezza_pririga) and (y <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)) then
+					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
+					if (nomeunita_slot7b ~= "vuoto") and (stato_slot7b ~= "DESTROYED") then
+					Spring.SendCommands("Deselect") 				-- deseleziono tutto
+					Spring.SelectUnitMap({ [slot7b_ID] = true })	-- seleziono l'unità dello slot
+					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
+					end
+				return true
+				-- clicco su slot8b button	--------------------------------------------------------------------------------------------
+				elseif ((x >= Pos_x_mainmenu+margine_slots_dx+(lato_quadrato_slots+interasse_slots)*3) and (x <= Pos_x_mainmenu+margine_slots_dx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3) and (y >= Pos_y_mainmenu+altezza_pririga) and (y <= Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)) then
+					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
+					if (nomeunita_slot8b ~= "vuoto") and (stato_slot8b ~= "DESTROYED") then
+					Spring.SendCommands("Deselect") 				-- deseleziono tutto
+					Spring.SelectUnitMap({ [slot8b_ID] = true })	-- seleziono l'unità dello slot
+					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
+					end		
+				return true
+				-- clicco close button
+				elseif ((mousex >= Pos_x_mainmenu+600) and (mousex <= Pos_x_mainmenu+600+76) and (mousey >= Pos_y_mainmenu-12) and (mousey <= Pos_y_mainmenu+25-12)) then		
+				deployedunitsmenu_attivo = false
+					if (WG['guishader_api'] ~= nil) then
+					WG['guishader_api'].RemoveRect('WMRTS_deploymenu_shad')
+					end	
 				end
 			end
 		end
@@ -460,34 +723,8 @@ end
 function widget:TextCommand(command)
 -- comando aggiornamento unità
 	if command == 'wmrts_slotstatupdt' then 							-- se ricevo un comando "wmrts_slotstatupdt" aggiorno gli slot guardando i gamerules
---[[	-- ricevo prima il numero di pagine totali della categoria "mappa" disponibili per la lettura
-		nomeunita_slot1a = Spring.GetGameRulesParam("ud_unitnameslot1a") 	--ricevo l'immagine impostata nello slot 1a del gamerules
---		Spring.Echo("WMRTS Debug: dal WIDGET ---- l unità ricevuta è: "..nomeunita_slot1a)
-		slot1a_ID = Spring.GetGameRulesParam("ud_idslot1a")			
-		-- slot2a
-		nomeunita_slot2a = Spring.GetGameRulesParam("ud_unitnameslot2a") 	
-		slot2a_ID = Spring.GetGameRulesParam("ud_idslot2a")				
-		-- slot3a
-		nomeunita_slot3a = Spring.GetGameRulesParam("ud_unitnameslot3a") 	
-		slot3a_ID = Spring.GetGameRulesParam("ud_idslot3a")		
-		-- slot4a
-		nomeunita_slot4a = Spring.GetGameRulesParam("ud_unitnameslot4a") 	
-		slot4a_ID = Spring.GetGameRulesParam("ud_idslot4a")		
-		-- slot5a
-		nomeunita_slot5a = Spring.GetGameRulesParam("ud_unitnameslot5a") 	
-		slot5a_ID = Spring.GetGameRulesParam("ud_idslot5a")		
-		-- slot6a
-		nomeunita_slot6a = Spring.GetGameRulesParam("ud_unitnameslot6a") 	
-		slot6a_ID = Spring.GetGameRulesParam("ud_idslot6a")		
-		-- slot7a
-		nomeunita_slot7a = Spring.GetGameRulesParam("ud_unitnameslot7a") 	
-		slot7a_ID = Spring.GetGameRulesParam("ud_idslot7a")		
-		-- slot8a
-		nomeunita_slot8a = Spring.GetGameRulesParam("ud_unitnameslot8a") 	
-		slot8a_ID = Spring.GetGameRulesParam("ud_idslot8a")				
-	end
-	]]--
 		slota()										-- richiama funzione che aggiorna stato slot player_a
+		slotb()										-- richiama funzione che aggiorna stato slot player_a
 	end
 end
 
@@ -501,7 +738,7 @@ function widget:KeyPress(key, mods, isRepeat)
 	--			Spring.SendCommands("close_wmrts_diary")			-- spengo il minipulsante del deploy menu del minimenu  ############################################################### da fare!!!
 			-- disabilito il guishader
 				if (WG['guishader_api'] ~= nil) then
-				WG['guishader_api'].RemoveRect('WMRTS_diary_shad')
+				WG['guishader_api'].RemoveRect('WMRTS_deploymenu_shad')
 				end	
 			return true
 		end
@@ -519,7 +756,9 @@ end
 		gl.Texture(backgroundmainmenu)	
 		gl.TexRect(	Pos_x_mainmenu,Pos_y_mainmenu,Pos_x_mainmenu+larghezza_deploymenu,Pos_y_mainmenu+altezza_deploymenu)	
 		gl.Texture(false)	-- fine texture	
-	
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---- slot A ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
 	-- inserisco prima tutte le scritte statiche
 		font_generale:Begin()	
 		font_generale:Print(("SLOT 1"), Pos_x_mainmenu +47 , Pos_y_mainmenu+240, 9, "ocn") 		
@@ -568,7 +807,10 @@ end
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture		
 	else		
-	--------------- ##################################### continuare con scritta not deployed
+		font_generale:Begin()	
+		font_generale:Print(("NOT"), Pos_x_mainmenu +132 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("DEPLOYED"), Pos_x_mainmenu +132 , Pos_y_mainmenu+145, 9, "ocn") 	
+		font_generale:End()		
 		gl.Color(1,1,1,1)
 		gl.Texture(slot_empty)	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
@@ -591,6 +833,10 @@ end
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture		
 	else		
+		font_generale:Begin()	
+		font_generale:Print(("NOT"), Pos_x_mainmenu +132 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("DEPLOYED"), Pos_x_mainmenu +132 , Pos_y_mainmenu+145, 9, "ocn") 	
+		font_generale:End()		
 		gl.Color(1,1,1,1)
 		gl.Texture(slot_empty)	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
@@ -613,12 +859,15 @@ end
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture		
 	else		
+		font_generale:Begin()	
+		font_generale:Print(("NOT"), Pos_x_mainmenu +132 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("DEPLOYED"), Pos_x_mainmenu +132 , Pos_y_mainmenu+145, 9, "ocn") 	
+		font_generale:End()		
 		gl.Color(1,1,1,1)
 		gl.Texture(slot_empty)	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture	
 	end		
-	
 	if (stato_slot4a == "DESTROYED") then -- se distrutta disegno la croce sopra
 		gl.Color(1,1,1,1)
 		gl.Texture(slot_cross)	
@@ -636,6 +885,10 @@ end
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture		
 	else		
+		font_generale:Begin()	
+		font_generale:Print(("NOT"), Pos_x_mainmenu +132 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("DEPLOYED"), Pos_x_mainmenu +132 , Pos_y_mainmenu+145, 9, "ocn") 	
+		font_generale:End()		
 		gl.Color(1,1,1,1)
 		gl.Texture(slot_empty)	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
@@ -647,8 +900,6 @@ end
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture			
 	end
-
-	
 	-- inserisco lo slot6a
 	if (nomeunita_slot6a ~= "vuoto") then	
 		font_generale:Begin()	
@@ -660,12 +911,15 @@ end
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture		
 	else	
+		font_generale:Begin()	
+		font_generale:Print(("NOT"), Pos_x_mainmenu +132 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("DEPLOYED"), Pos_x_mainmenu +132 , Pos_y_mainmenu+145, 9, "ocn") 	
+		font_generale:End()		
 		gl.Color(1,1,1,1)
 		gl.Texture(slot_empty)	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture		
 	end		
-
 	if (stato_slot6a == "DESTROYED") then -- se distrutta disegno la croce sopra
 		gl.Color(1,1,1,1)
 		gl.Texture(slot_cross)	
@@ -683,6 +937,10 @@ end
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture		
 	else		
+		font_generale:Begin()	
+		font_generale:Print(("NOT"), Pos_x_mainmenu +132 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("DEPLOYED"), Pos_x_mainmenu +132 , Pos_y_mainmenu+145, 9, "ocn") 	
+		font_generale:End()		
 		gl.Color(1,1,1,1)
 		gl.Texture(slot_empty)	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
@@ -694,7 +952,6 @@ end
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture			
 	end
-	
 	-- inserisco lo slot8a
 	if (nomeunita_slot8a ~= "vuoto") then	
 		font_generale:Begin()	
@@ -706,6 +963,10 @@ end
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture	
 	else		
+		font_generale:Begin()	
+		font_generale:Print(("NOT"), Pos_x_mainmenu +132 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("DEPLOYED"), Pos_x_mainmenu +132 , Pos_y_mainmenu+145, 9, "ocn") 	
+		font_generale:End()		
 		gl.Color(1,1,1,1)
 		gl.Texture(slot_empty)	
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
@@ -717,8 +978,229 @@ end
 		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
 		gl.Texture(false)	-- fine texture			
 	end		
-		
-		
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---- slot B ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
+	-- inserisco prima tutte le scritte statiche
+		font_generale:Begin()	
+		--------############################################### sistemare posizioni
+		font_generale:Print(("SLOT 1"), 50+Pos_x_mainmenu +47 , Pos_y_mainmenu+240, 9, "ocn") 		
+		font_generale:Print(("SLOT 2"), 50+Pos_x_mainmenu +132 , Pos_y_mainmenu+240, 9, "ocn") 		
+		font_generale:Print(("SLOT 3"), 50+Pos_x_mainmenu +215 , Pos_y_mainmenu+240, 9, "ocn") 
+		font_generale:Print(("SLOT 4"), 50+Pos_x_mainmenu +298 , Pos_y_mainmenu+240, 9, "ocn") 				
+		font_generale:Print(("SLOT 5"), 50+Pos_x_mainmenu +47 , Pos_y_mainmenu+126, 9, "ocn") 
+		font_generale:Print(("SLOT 6"), 50+Pos_x_mainmenu +132 , Pos_y_mainmenu+126, 9, "ocn") 			
+		font_generale:Print(("SLOT 7"), 50+Pos_x_mainmenu +215 , Pos_y_mainmenu+126, 9, "ocn") 
+		font_generale:Print(("SLOT 8"), 50+Pos_x_mainmenu +298 , Pos_y_mainmenu+126, 9, "ocn") 		
+		font_generale:End()		
+	-- inserisco lo slot1b		
+	if (nomeunita_slot1b ~= "vuoto") then
+		font_generale:Begin()	
+		font_generale:Print((nomeunita_slot1b), Pos_x_mainmenu +47 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print((stato_slot1b), Pos_x_mainmenu +47 , Pos_y_mainmenu+145, 9, "ocn") 
+		font_generale:End()		
+		gl.Color(1,1,1,1)
+		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot1b..".wmr")	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture		
+	else
+		font_generale:Begin()	
+		font_generale:Print(("NOT"), Pos_x_mainmenu +47 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("DEPLOYED"), Pos_x_mainmenu +47 , Pos_y_mainmenu+145, 9, "ocn") 
+		font_generale:End()			
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_empty)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture			
+	end
+	if (stato_slot1b == "DESTROYED") then -- se distrutta disegno la croce sopra
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_cross)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture			
+	end
+	-- inserisco lo slot2b	
+	if (nomeunita_slot2b ~= "vuoto") then	
+		font_generale:Begin()	
+		font_generale:Print((nomeunita_slot2b), Pos_x_mainmenu +132 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print((stato_slot2b), Pos_x_mainmenu +132 , Pos_y_mainmenu+145, 9, "ocn") 	
+		font_generale:End()			
+		gl.Color(1,1,1,1)
+		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot2b..".wmr")	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture		
+	else		
+		font_generale:Begin()	
+		font_generale:Print(("NOT"), Pos_x_mainmenu +132 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("DEPLOYED"), Pos_x_mainmenu +132 , Pos_y_mainmenu+145, 9, "ocn") 	
+		font_generale:End()		
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_empty)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture	
+	end		
+	if (stato_slot2b == "DESTROYED") then -- se distrutta disegno la croce sopra
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_cross)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture			
+	end
+	-- inserisco lo slot3b
+	if (nomeunita_slot3b ~= "vuoto") then	
+		font_generale:Begin()	
+		font_generale:Print((nomeunita_slot3b), Pos_x_mainmenu +215 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print((stato_slot3b), Pos_x_mainmenu +215 , Pos_y_mainmenu+145, 9, "ocn") 
+		font_generale:End()			
+		gl.Color(1,1,1,1)
+		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot3b..".wmr")	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture		
+	else		
+		font_generale:Begin()	
+		font_generale:Print(("NOT"), Pos_x_mainmenu +132 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("DEPLOYED"), Pos_x_mainmenu +132 , Pos_y_mainmenu+145, 9, "ocn") 	
+		font_generale:End()		
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_empty)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture	
+	end		
+	if (stato_slot3b ==	 "DESTROYED") then -- se distrutta disegno la croce sopra
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_cross)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture			
+	end
+	-- inserisco lo slot4b
+	if (nomeunita_slot4b ~= "vuoto") then
+		font_generale:Begin()	
+		font_generale:Print((nomeunita_slot4b), Pos_x_mainmenu +298 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print((stato_slot4b), Pos_x_mainmenu +298 , Pos_y_mainmenu+145, 9, "ocn") 
+		font_generale:End()			
+		gl.Color(1,1,1,1)
+		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot4b..".wmr")	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture		
+	else		
+		font_generale:Begin()	
+		font_generale:Print(("NOT"), Pos_x_mainmenu +132 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("DEPLOYED"), Pos_x_mainmenu +132 , Pos_y_mainmenu+145, 9, "ocn") 	
+		font_generale:End()		
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_empty)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture	
+	end		
+	if (stato_slot4b == "DESTROYED") then -- se distrutta disegno la croce sopra
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_cross)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture			
+	end	
+	-- inserisco lo slot5b
+	if (nomeunita_slot5b ~= "vuoto") then	
+		font_generale:Begin()
+		font_generale:Print((nomeunita_slot5b), Pos_x_mainmenu +47 , Pos_y_mainmenu+43, 9, "ocn") 
+		font_generale:Print((stato_slot5b), Pos_x_mainmenu +47 , Pos_y_mainmenu+31, 9, "ocn") 	
+		font_generale:End()		
+		gl.Color(1,1,1,1)
+		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot5b..".wmr")	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture		
+	else		
+		font_generale:Begin()	
+		font_generale:Print(("NOT"), Pos_x_mainmenu +132 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("DEPLOYED"), Pos_x_mainmenu +132 , Pos_y_mainmenu+145, 9, "ocn") 	
+		font_generale:End()		
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_empty)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture		
+	end		
+	if (stato_slot5b == "DESTROYED") then -- se distrutta disegno la croce sopra
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_cross)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture			
+	end
+	-- inserisco lo slot6b
+	if (nomeunita_slot6b ~= "vuoto") then	
+		font_generale:Begin()	
+		font_generale:Print((nomeunita_slot6b), Pos_x_mainmenu +132 , Pos_y_mainmenu+43, 9, "ocn") 
+		font_generale:Print((stato_slot6b), Pos_x_mainmenu +132 , Pos_y_mainmenu+31, 9, "ocn") 	
+		font_generale:End()			
+		gl.Color(1,1,1,1)
+		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot6b..".wmr")	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture		
+	else	
+		font_generale:Begin()	
+		font_generale:Print(("NOT"), Pos_x_mainmenu +132 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("DEPLOYED"), Pos_x_mainmenu +132 , Pos_y_mainmenu+145, 9, "ocn") 	
+		font_generale:End()		
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_empty)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture		
+	end		
+	if (stato_slot6b == "DESTROYED") then -- se distrutta disegno la croce sopra
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_cross)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*1,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture			
+	end	
+	-- inserisco lo slot7b
+	if (nomeunita_slot7b ~= "vuoto") then	
+		font_generale:Begin()	
+		font_generale:Print((nomeunita_slot7b), Pos_x_mainmenu +215 , Pos_y_mainmenu+43, 9, "ocn") 
+		font_generale:Print((stato_slot7b), Pos_x_mainmenu +215 , Pos_y_mainmenu+31, 9, "ocn") 	
+		font_generale:End()			
+		gl.Color(1,1,1,1)
+		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot7b..".wmr")	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture		
+	else		
+		font_generale:Begin()	
+		font_generale:Print(("NOT"), Pos_x_mainmenu +132 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("DEPLOYED"), Pos_x_mainmenu +132 , Pos_y_mainmenu+145, 9, "ocn") 	
+		font_generale:End()		
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_empty)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture		
+	end		
+	if (stato_slot7b == "DESTROYED") then -- se distrutta disegno la croce sopra
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_cross)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*2,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture			
+	end
+	-- inserisco lo slot8b
+	if (nomeunita_slot8b ~= "vuoto") then	
+		font_generale:Begin()	
+		font_generale:Print((nomeunita_slot8b), Pos_x_mainmenu +298 , Pos_y_mainmenu+43, 9, "ocn") 
+		font_generale:Print((stato_slot8b), Pos_x_mainmenu +298 , Pos_y_mainmenu+31, 9, "ocn") 	
+		font_generale:End()			
+		gl.Color(1,1,1,1)
+		gl.Texture("LuaUI/Images/menu/unitsdeploy/"..nomeunita_slot8b..".wmr")	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture	
+	else		
+		font_generale:Begin()	
+		font_generale:Print(("NOT"), Pos_x_mainmenu +132 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("DEPLOYED"), Pos_x_mainmenu +132 , Pos_y_mainmenu+145, 9, "ocn") 	
+		font_generale:End()		
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_empty)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture				
+	end		
+	if (stato_slot8b == "DESTROYED") then -- se distrutta disegno la croce sopra
+		gl.Color(1,1,1,1)
+		gl.Texture(slot_cross)	
+		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_pririga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots+(lato_quadrato_slots+interasse_slots)*3,Pos_y_mainmenu+altezza_pririga+lato_quadrato_slots)	
+		gl.Texture(false)	-- fine texture			
+	end				
 	-- se il selettore slot è attivo, disegnalo nella posizione registrata in precedenza
 		if selettore_slots_visibile then 
 		gl.Color(1,1,1,1)
@@ -748,59 +1230,9 @@ end
 		gl.Texture(avatar_plb)	
 		gl.TexRect(	Pos_x_mainmenu+366, Pos_y_mainmenu+251,Pos_x_mainmenu+366+16, Pos_y_mainmenu+251+16)	
 		gl.Texture(false)	-- fine texture	
-	--	testi slots player a
-
-		-- slot 1
-		
-		font_generale:Begin()	
-
-
-		
-	--	testi slots player b
-		-- slot 1
-		font_generale:Print(("NAME"), Pos_x_mainmenu +47+354 , Pos_y_mainmenu+157, 9, "ocn") 
-		font_generale:Print(("STATUS"), Pos_x_mainmenu +47+354 , Pos_y_mainmenu+145, 9, "ocn") 
-		font_generale:Print(("SLOT 1"), Pos_x_mainmenu +47+354 , Pos_y_mainmenu+240, 9, "ocn") 				
-
-		font_generale:Print(("NAME"), Pos_x_mainmenu +132+354 , Pos_y_mainmenu+157, 9, "ocn") 
-		font_generale:Print(("STATUS"), Pos_x_mainmenu +132+354 , Pos_y_mainmenu+145, 9, "ocn") 
-		font_generale:Print(("SLOT 2"), Pos_x_mainmenu +132+354 , Pos_y_mainmenu+240, 9, "ocn") 			
-
-		font_generale:Print(("NAME"), Pos_x_mainmenu +215+354 , Pos_y_mainmenu+157, 9, "ocn") 
-		font_generale:Print(("STATUS"), Pos_x_mainmenu +215+354 , Pos_y_mainmenu+145, 9, "ocn") 
-		font_generale:Print(("SLOT 3"), Pos_x_mainmenu +215+354 , Pos_y_mainmenu+240, 9, "ocn") 
-		
-		font_generale:Print(("NAME"), Pos_x_mainmenu +298+354 , Pos_y_mainmenu+157, 9, "ocn") 
-		font_generale:Print(("STATUS"), Pos_x_mainmenu +298+354 , Pos_y_mainmenu+145, 9, "ocn") 
-		font_generale:Print(("SLOT 4"), Pos_x_mainmenu +298+354 , Pos_y_mainmenu+240, 9, "ocn") 		
-		-- slot 5
-		font_generale:Print(("NAME"), Pos_x_mainmenu +47+354 , Pos_y_mainmenu+43, 9, "ocn") 
-		font_generale:Print(("STATUS"), Pos_x_mainmenu +47+354 , Pos_y_mainmenu+31, 9, "ocn") 
-		font_generale:Print(("SLOT 5"), Pos_x_mainmenu +47+354 , Pos_y_mainmenu+126, 9, "ocn") 			
-		
-		font_generale:Print(("NAME"), Pos_x_mainmenu +132+354 , Pos_y_mainmenu+43, 9, "ocn") 
-		font_generale:Print(("STATUS"), Pos_x_mainmenu +132+354 , Pos_y_mainmenu+31, 9, "ocn") 
-		font_generale:Print(("SLOT 6"), Pos_x_mainmenu +132+354 , Pos_y_mainmenu+126, 9, "ocn") 			
-
-		font_generale:Print(("NAME"), Pos_x_mainmenu +215+354 , Pos_y_mainmenu+43, 9, "ocn") 
-		font_generale:Print(("STATUS"), Pos_x_mainmenu +215+354 , Pos_y_mainmenu+31, 9, "ocn") 
-		font_generale:Print(("SLOT 7"), Pos_x_mainmenu +215+354 , Pos_y_mainmenu+126, 9, "ocn") 
-		
-		font_generale:Print(("NAME"), Pos_x_mainmenu +298+354 , Pos_y_mainmenu+43, 9, "ocn") 
-		font_generale:Print(("STATUS"), Pos_x_mainmenu +298+354 , Pos_y_mainmenu+31, 9, "ocn") 
-		font_generale:Print(("SLOT 8"), Pos_x_mainmenu +298+354 , Pos_y_mainmenu+126, 9, "ocn") 		
-		font_generale:End()	
-	-- disegno le croci se le unità risultano "DESTROYED"
-		if ud_statusslot1a == "DESTROYED" then
-		gl.Color(1,1,1,1)
-		gl.Texture("LuaUI/Images/menu/unitsdeploy/destroyed.wmr")	
-		gl.TexRect(	Pos_x_mainmenu+margine_slots_sx,Pos_y_mainmenu+altezza_secriga,Pos_x_mainmenu+margine_slots_sx+lato_quadrato_slots,Pos_y_mainmenu+altezza_secriga+lato_quadrato_slots)	
-		gl.Texture(false)	-- fine texture			
-		end
-	
 	-- gui shader	
 		if (WG['guishader_api'] ~= nil) then
-		WG['guishader_api'].InsertRect( Pos_x_mainmenu,Pos_y_mainmenu,Pos_x_mainmenu+larghezza_deploymenu,Pos_y_mainmenu+altezza_deploymenu,'WMRTS_diary_shad')
+		WG['guishader_api'].InsertRect( Pos_x_mainmenu,Pos_y_mainmenu,Pos_x_mainmenu+larghezza_deploymenu,Pos_y_mainmenu+altezza_deploymenu,'WMRTS_deploymenu_shad')
 		end
 	end -- if deployedunitsmenu_attivo	
 end --drawscreen
