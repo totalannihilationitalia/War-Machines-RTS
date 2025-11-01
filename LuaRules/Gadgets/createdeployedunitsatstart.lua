@@ -30,14 +30,14 @@ local slot_6a = Spring.GetModOptions().slot_6a or 0
 local slot_7a = Spring.GetModOptions().slot_7a or 0
 local slot_8a = Spring.GetModOptions().slot_8a or 0
 -- slotb
-local slot_1b = Spring.GetModOptions().slot_1b or 0
-local slot_2b = Spring.GetModOptions().slot_2b or 0
-local slot_3b = Spring.GetModOptions().slot_3b or 0
-local slot_4b = Spring.GetModOptions().slot_4b or 0
-local slot_5b = Spring.GetModOptions().slot_5b or 0
-local slot_6b = Spring.GetModOptions().slot_6b or 0
-local slot_7b = Spring.GetModOptions().slot_7b or 0
-local slot_8b = Spring.GetModOptions().slot_8b or 0
+local slot_1b = Spring.GetModOptions().slot_1b or "vuoto"
+local slot_2b = Spring.GetModOptions().slot_2b or "vuoto"
+local slot_3b = Spring.GetModOptions().slot_3b or "vuoto"
+local slot_4b = Spring.GetModOptions().slot_4b or "vuoto"
+local slot_5b = Spring.GetModOptions().slot_5b or "vuoto"
+local slot_6b = Spring.GetModOptions().slot_6b or "vuoto"
+local slot_7b = Spring.GetModOptions().slot_7b or "vuoto"
+local slot_8b = Spring.GetModOptions().slot_8b or "vuoto"
 local deploy_radius = 100 								-- deployement radius from initial starting units
 -- slota
 local unitID_slot_1a =  "0"								-- Assegno un ID fittizio, serve a non mandare in errore il widget in fase di "Initialize" (solo la prima volta in caricamento) in quanto cerca subito i valori nome unità e ID.
