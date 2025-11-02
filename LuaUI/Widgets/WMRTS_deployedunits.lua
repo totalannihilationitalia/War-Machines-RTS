@@ -53,61 +53,10 @@ local selettore_buttons_visibile = false									-- riquadro selezione pulsante 
 
 local slota_playername = Spring.GetModOptions().slota_owner or nil	 		-- verifico chi è il nome giocatore proprietario degli slot player A
 local slotb_playername = Spring.GetModOptions().slotb_owner or nil		 	-- verifico chi è il nome giocatore proprietario degli slot player B
--- SLOT A
---[[
-local nomeunita_slot1a				= "1"									-- nome unità contenuta nello slot 1a, verrà definita in seguito tramite game rules. 
-local nomeunita_slot2a				= "1"	
-local nomeunita_slot3a				= "1"	
-local nomeunita_slot4a				= "1"	
-local nomeunita_slot5a				= "1"	
-local nomeunita_slot6a				= "1"	
-local nomeunita_slot7a				= "1"	
-local nomeunita_slot8a				= "1"	
-local slot1a_ID						= "0"									-- ID dell'unità contenuta nello slot1a
-local slot2a_ID						= "0"
-local slot3a_ID						= "0"
-local slot4a_ID						= "0"
-local slot5a_ID						= "0"
-local slot6a_ID						= "0"
-local slot7a_ID						= "0"
-local slot8a_ID						= "0"
-local stato_slot1a					= "0"									-- stato dell'unità contenuta nello slot 1a
-local stato_slot2a					= "0"
-local stato_slot3a					= "0"
-local stato_slot4a					= "0"
-local stato_slot5a					= "0"
-local stato_slot6a					= "0"
-local stato_slot7a					= "0"
-local stato_slot8a					= "0"
-]]--
--- SLOT B
-local nomeunita_slot1b				= "1"									-- nome unità contenuta nello slot 1a, verrà definita in seguito tramite game rules. 
-local nomeunita_slot2b				= "1"	
-local nomeunita_slot3b				= "1"	
-local nomeunita_slot4b				= "1"	
-local nomeunita_slot5b				= "1"	
-local nomeunita_slot6b				= "1"	
-local nomeunita_slot7b				= "1"	
-local nomeunita_slot8b				= "1"	
-local slot1b_ID						= "0"									-- ID dell'unità contenuta nello slot1b
-local slot2b_ID						= "0"
-local slot3b_ID						= "0"
-local slot4b_ID						= "0"
-local slot5b_ID						= "0"
-local slot6b_ID						= "0"
-local slot7b_ID						= "0"
-local slot8b_ID						= "0"
-local stato_slot1b					= "0"									-- stato dell'unità contenuta nello slot 1b
-local stato_slot2b					= "0"
-local stato_slot3b					= "0"
-local stato_slot4b					= "0"
-local stato_slot5b					= "0"
-local stato_slot6b					= "0"
-local stato_slot7b					= "0"
-local stato_slot8b					= "0"
+
 local slotsDataA = {}														-- creo tabella slotsDataA
 local slotsDataB = {}														-- creo tabella slotsDataB
-for i = 1, 8 do																-- riempio le tabelle
+for i = 1, 8 do																-- riempio provvisoriamente le tabelle
   slotsDataA[i] = { id = "0", status = "0", name = "vuoto" }
   slotsDataB[i] = { id = "0", status = "0", name = "vuoto" }
 end
@@ -609,7 +558,7 @@ function widget:MousePress(x, y, button)
 					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
 					if (slotsDataB[1].name ~= "vuoto") and (slotsDataB[1].status ~= "DESTROYED") then
 					Spring.SendCommands("Deselect") 				-- deseleziono tutto
-					Spring.SelectUnitMap({ [slotsDatab[1].id] = true })	-- seleziono l'unità dello slot
+					Spring.SelectUnitMap({ [slotsDataB[1].id] = true })	-- seleziono l'unità dello slot
 					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
 					end
 				return true
@@ -618,7 +567,7 @@ function widget:MousePress(x, y, button)
 					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
 					if (slotsDataB[2].name ~= "vuoto") and (slotsDataB[2].status ~= "DESTROYED") then
 					Spring.SendCommands("Deselect") 				-- deseleziono tutto
-					Spring.SelectUnitMap({ [slotsDatab[2].id] = true })	-- seleziono l'unità dello slot
+					Spring.SelectUnitMap({ [slotsDataB[2].id] = true })	-- seleziono l'unità dello slot
 					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
 					end
 				return true
@@ -627,7 +576,7 @@ function widget:MousePress(x, y, button)
 					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
 					if (slotsDataB[3].name ~= "vuoto") and (slotsDataB[3].status ~= "DESTROYED") then
 					Spring.SendCommands("Deselect") 				-- deseleziono tutto
-					Spring.SelectUnitMap({ [slotsDatab[3].id] = true })	-- seleziono l'unità dello slot
+					Spring.SelectUnitMap({ [slotsDataB[3].id] = true })	-- seleziono l'unità dello slot
 					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
 					end
 				return true
@@ -636,7 +585,7 @@ function widget:MousePress(x, y, button)
 					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
 					if (slotsDataB[4].name ~= "vuoto") and (slotsDataB[4].status ~= "DESTROYED") then
 					Spring.SendCommands("Deselect") 				-- deseleziono tutto
-					Spring.SelectUnitMap({ [slotsDatab[4].id] = true })	-- seleziono l'unità dello slot
+					Spring.SelectUnitMap({ [slotsDataB[4].id] = true })	-- seleziono l'unità dello slot
 					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
 					end
 				return true		
@@ -645,7 +594,7 @@ function widget:MousePress(x, y, button)
 					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
 					if (slotsDataB[5].name ~= "vuoto") and (slotsDataB[5].status ~= "DESTROYED") then
 					Spring.SendCommands("Deselect") 				-- deseleziono tutto
-					Spring.SelectUnitMap({ [slotsDatab[5].id] = true })	-- seleziono l'unità dello slot
+					Spring.SelectUnitMap({ [slotsDataB[5].id] = true })	-- seleziono l'unità dello slot
 					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
 					end
 				return true
@@ -654,7 +603,7 @@ function widget:MousePress(x, y, button)
 					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
 					if (slotsDataB[6].name ~= "vuoto") and (slotsDataB[6].status ~= "DESTROYED") then
 					Spring.SendCommands("Deselect") 				-- deseleziono tutto
-					Spring.SelectUnitMap({ [slotsDatab[6].id] = true })	-- seleziono l'unità dello slot
+					Spring.SelectUnitMap({ [slotsDataB[6].id] = true })	-- seleziono l'unità dello slot
 					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
 					end
 				return true
@@ -663,7 +612,7 @@ function widget:MousePress(x, y, button)
 					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
 					if (slotsDataB[7].name ~= "vuoto") and (slotsDataB[7].status ~= "DESTROYED") then
 					Spring.SendCommands("Deselect") 				-- deseleziono tutto
-					Spring.SelectUnitMap({ [slotsDatab[7].id] = true })	-- seleziono l'unità dello slot
+					Spring.SelectUnitMap({ [slotsDataB[7].id] = true })	-- seleziono l'unità dello slot
 					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
 					end
 				return true
@@ -672,7 +621,7 @@ function widget:MousePress(x, y, button)
 					-- inserire la condizione nel caso in cui l'unità è impostata (altrimenti se fosse morta e/o non dispiegata il widget da errore)
 					if (slotsDataB[8].name ~= "vuoto") and (slotsDataB[8].status ~= "DESTROYED") then
 					Spring.SendCommands("Deselect") 				-- deseleziono tutto
-					Spring.SelectUnitMap({ [slotsDatab[8].id] = true })	-- seleziono l'unità dello slot
+					Spring.SelectUnitMap({ [slotsDataB[8].id] = true })	-- seleziono l'unità dello slot
 					Spring.SendCommands("track")					-- eseguo un track sull'unità dello slot 
 					end		
 				return true
@@ -722,7 +671,7 @@ function widget:TextCommand(command)
 -- comando aggiornamento unità
 	if command == 'wmrts_slotstatupdt' then 							-- se ricevo un comando "wmrts_slotstatupdt" aggiorno gli slot guardando i gamerules
 		slota()										-- richiama funzione che aggiorna stato slot player_a
-		slotb()										-- richiama funzione che aggiorna stato slot player_a
+		slotb()										-- richiama funzione che aggiorna stato slot player_b
 	end
 end
 
