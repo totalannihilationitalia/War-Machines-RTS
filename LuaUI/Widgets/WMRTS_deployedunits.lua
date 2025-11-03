@@ -71,11 +71,10 @@ local backgroundmainmenu 			= "LuaUI/Images/menu/unitsdeploy/unitsdeploy_menu_bk
 local button_sel					= "LuaUI/Images/menu/mainmenu/main_menu_buttonselection.png"
 local selettore_slots				= "LuaUI/Images/menu/unitsdeploy/unitsdeploy_selettore.png"
 local pulsante_close				= "LuaUI/Images/menu/mainmenu/menu_close.png"
-local avatar_pla					= "LuaUI/Images/menu/mainmenu/menu_close.png" 				-- ######################################################### aggiungere codice come advplayerlist
-local avatar_plb					= "LuaUI/Images/menu/mainmenu/menu_close.png"				-- ######################################################### aggiungere codice come advplayerlist
 local slot_cross					= "LuaUI/Images/menu/unitsdeploy/unitsdeploy_destroy.png"
 local slot_empty					= "LuaUI/Images/menu/unitsdeploy/unitsdeploy_empty.png"
-
+local avatar_pla					= "av0"				
+local avatar_plb					= "av0"				
 
 --------------------------------------
 -- FUNZIONE CHECK STATO OPZIONI, viene richiamata in diverse fasi dello script per controllare lo stato delle opzioni 
@@ -193,6 +192,23 @@ function slotb()
 		end
 end	
 
+--------------------------------------------------------------------------------
+-- FUNZIONE PER CODIFICA HEX
+--------------------------------------------------------------------------------
+function avatar_hex(str)
+    if type(str) ~= "string" then
+        return "INVALID_INPUT_TO_HEX" 
+		Spring.Echo("WMRTS_deployedunits error: not string submitted")
+    end
+    if #str == 0 then return "" end -- Stringa vuota rimane vuota
+
+    local hex = ''
+    for i = 1, #str do
+        hex = hex .. string.format('%02x', string.byte(str, i))
+    end
+    return hex
+end
+
 --------------------------------------
 -- INIZIALIZZO IL MENU 
 --------------------------------------
@@ -205,16 +221,22 @@ function widget:Initialize()
 -- controllo se giocatore è inserito nella lista proprietario slot a o slot b, altrimenti rimuovi il widget
 	local myplayerID = Spring.GetLocalPlayerID ( ) 										-- rilevo l'id del giocatore locale
 	local playerInfo, isActive, isSpectator, teamID = Spring.GetPlayerInfo(myplayerID)	-- tramite l'id trovo il nome del giocatore locale
-	if (playerInfo == slota_playername) then
-	Spring.Echo("WMRTS DEBUG: slots A assegnati al giocatore: "..slota_playername.. ", sono controllati da: "..playerInfo) -- DEBUG ########################
+	if slota_playername and (playerInfo == slota_playername) then
 	slota()
 	elseif playerInfo == slotb_playername then
-	Spring.Echo("WMRTS DEBUG: slots B assegnati al giocatore: "..slotb_playername.. ", sono controllati da: "..playerInfo) -- DEBUG ########################
 	slotb()		
 	else
 	widgetHandler:RemoveWidget() -- disattivo il widget
 	end
-	
+-- imposto gli avatar
+	if slota_playername	then
+		local avatar_pla_hex = "avatar_"..avatar_hex(slota_playername) or nil -- eseguo la funzione per impostare l'avatar, se per caso non dovesse essere scritta nel file script, imposta nil
+		avatar_pla = Spring.GetModOptions()[avatar_pla_hex] or "av0"
+	end
+	if slotb_playername	then
+		local avatar_plb_hex = "avatar_"..avatar_hex(slotb_playername) or nil 
+		avatar_plb = Spring.GetModOptions()[avatar_plb_hex] or "av0"		
+	end	
 -- all'inizio imposto la posizione del mini menu
 	Pos_x_mainmenu = vsx/2 - larghezza_deploymenu/2
 	Pos_y_mainmenu = vsy/2 - altezza_deploymenu/2
@@ -225,6 +247,7 @@ function widget:Initialize()
 	file:write(" \n") 													-- vado a capo
 	file:write("[destroyedlist]\n") 									-- scrivo l'intestazione del gruppo di informazioni ini
 	file:close()												        -- chiudi il file. Questo salva le modifiche e "libera" il file. Se non lo fai, il file potrebbe rimanere vuoto!		
+
  end
 
 --------------------------------------
@@ -401,7 +424,7 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 end -- function update
 
 --------------------------------------
--- MOUSE IS OVER BUTTONS ###################################################
+-- MOUSE IS OVER BUTTONS 
 --------------------------------------
 function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la variabile graphicsmenu_attivo è true.....
 	if deployedunitsmenu_attivo and not Spring.IsGUIHidden() then
@@ -1160,6 +1183,10 @@ end
 		gl.Texture(pulsante_close)	
 		gl.TexRect(	Pos_x_mainmenu+600, Pos_y_mainmenu-12,Pos_x_mainmenu+676, Pos_y_mainmenu+13)	
 		gl.Texture(false)	-- fine texture		
+		font_generale:Begin()	
+		font_generale:SetTextColor(1,1,1,1)	
+		font_generale:Print(("CLOSE"), Pos_x_mainmenu +6200, posy_menu+Pos_y_mainmenu+2, 9, "ocn") -- close button
+		font_generale:End()		
 	-- disegno l'hover pulsante close selezionato
 		if selettore_buttons_visibile then 	
 		gl.Color(1,1,1,1)
@@ -1167,14 +1194,15 @@ end
 		gl.TexRect(	Pos_x_mainmenu+600, Pos_y_mainmenu-12,Pos_x_mainmenu+676, Pos_y_mainmenu+13)	
 		gl.Texture(false)	-- fine texture				
 		end
+
 	-- disegno l'avatar giocatore a
 		gl.Color(1,1,1,1)
-		gl.Texture(avatar_pla)	
+		gl.Texture("LuaUI/Images/advplayerslist/avatar/"..avatar_pla..".png")	
 		gl.TexRect(	Pos_x_mainmenu+318, Pos_y_mainmenu+251,Pos_x_mainmenu+318+16, Pos_y_mainmenu+251+16)	
 		gl.Texture(false)	-- fine texture		
 	-- disegno l'avatar giocatore b
 		gl.Color(1,1,1,1)
-		gl.Texture(avatar_plb)	
+		gl.Texture("LuaUI/Images/advplayerslist/avatar/"..avatar_plb..".png")	
 		gl.TexRect(	Pos_x_mainmenu+366, Pos_y_mainmenu+251,Pos_x_mainmenu+366+16, Pos_y_mainmenu+251+16)	
 		gl.Texture(false)	-- fine texture	
 	-- gui shader	
