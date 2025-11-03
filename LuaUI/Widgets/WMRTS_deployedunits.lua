@@ -198,7 +198,7 @@ end
 function avatar_hex(str)
     if type(str) ~= "string" then
         return "INVALID_INPUT_TO_HEX" 
-		Spring.Echo("WMRTS_deployedunits error: not string submitted")
+--		Spring.Echo("WMRTS_deployedunits error: not string submitted")
     end
     if #str == 0 then return "" end -- Stringa vuota rimane vuota
 
@@ -804,8 +804,8 @@ end
 		gl.Texture(false)	-- fine texture		
 	else		
 		font_generale:Begin()	
-		font_generale:Print(("NOT"), Pos_x_mainmenu +132 , Pos_y_mainmenu+157, 9, "ocn") 
-		font_generale:Print(("DEPLOYED"), Pos_x_mainmenu +132 , Pos_y_mainmenu+145, 9, "ocn") 	
+		font_generale:Print(("NOT"), Pos_x_mainmenu +215 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("DEPLOYED"), Pos_x_mainmenu +215 , Pos_y_mainmenu+145, 9, "ocn") 	
 		font_generale:End()		
 		gl.Color(1,1,1,1)
 		gl.Texture(slot_empty)	
@@ -830,8 +830,8 @@ end
 		gl.Texture(false)	-- fine texture		
 	else		
 		font_generale:Begin()	
-		font_generale:Print(("NOT"), Pos_x_mainmenu +132 , Pos_y_mainmenu+157, 9, "ocn") 
-		font_generale:Print(("DEPLOYED"), Pos_x_mainmenu +132 , Pos_y_mainmenu+145, 9, "ocn") 	
+		font_generale:Print(("NOT"), Pos_x_mainmenu +298 , Pos_y_mainmenu+157, 9, "ocn") 
+		font_generale:Print(("DEPLOYED"), Pos_x_mainmenu +298 , Pos_y_mainmenu+145, 9, "ocn") 	
 		font_generale:End()		
 		gl.Color(1,1,1,1)
 		gl.Texture(slot_empty)	
@@ -1185,7 +1185,7 @@ end
 		gl.Texture(false)	-- fine texture		
 		font_generale:Begin()	
 		font_generale:SetTextColor(1,1,1,1)	
-		font_generale:Print(("CLOSE"), Pos_x_mainmenu +6200, posy_menu+Pos_y_mainmenu+2, 9, "ocn") -- close button
+		font_generale:Print(("CLOSE"), Pos_x_mainmenu +645, Pos_y_mainmenu-3, 9, "ocn") -- close button
 		font_generale:End()		
 	-- disegno l'hover pulsante close selezionato
 		if selettore_buttons_visibile then 	
@@ -1194,17 +1194,39 @@ end
 		gl.TexRect(	Pos_x_mainmenu+600, Pos_y_mainmenu-12,Pos_x_mainmenu+676, Pos_y_mainmenu+13)	
 		gl.Texture(false)	-- fine texture				
 		end
-
 	-- disegno l'avatar giocatore a
 		gl.Color(1,1,1,1)
 		gl.Texture("LuaUI/Images/advplayerslist/avatar/"..avatar_pla..".png")	
 		gl.TexRect(	Pos_x_mainmenu+318, Pos_y_mainmenu+251,Pos_x_mainmenu+318+16, Pos_y_mainmenu+251+16)	
 		gl.Texture(false)	-- fine texture		
+		if slota_playername then
+		font_generale:Begin()	
+		font_generale:SetTextColor(1,1,1,1)	
+		font_generale:Print("Owner of Slots A: "..slota_playername, Pos_x_mainmenu +310, Pos_y_mainmenu+256, 9, "orn") -- slot A owner
+		font_generale:End()			
+		else
+		font_generale:Begin()	
+		font_generale:SetTextColor(1,1,1,1)	
+		font_generale:Print("Owner of Slots A: Unassigned player", Pos_x_mainmenu +310, Pos_y_mainmenu+256, 9, "orn") -- slot A owner
+		font_generale:End()					
+		end
 	-- disegno l'avatar giocatore b
 		gl.Color(1,1,1,1)
 		gl.Texture("LuaUI/Images/advplayerslist/avatar/"..avatar_plb..".png")	
-		gl.TexRect(	Pos_x_mainmenu+366, Pos_y_mainmenu+251,Pos_x_mainmenu+366+16, Pos_y_mainmenu+251+16)	
-		gl.Texture(false)	-- fine texture	
+		gl.TexRect(	Pos_x_mainmenu+367, Pos_y_mainmenu+251,Pos_x_mainmenu+367+16, Pos_y_mainmenu+251+16)	
+		gl.Texture(false)	-- fine texture		
+		if slotb_playername then
+		font_generale:Begin()	
+		font_generale:SetTextColor(1,1,1,1)	
+		font_generale:Print("Owner of Slots B: "..slotb_playername, Pos_x_mainmenu +390, Pos_y_mainmenu+256, 9, "oln") -- slot A owner
+		font_generale:End()			
+		else
+		font_generale:Begin()	
+		font_generale:SetTextColor(1,1,1,1)	
+		font_generale:Print("Owner of Slots B: Unassigned player", Pos_x_mainmenu +390, Pos_y_mainmenu+256, 9, "oln") -- slot A owner
+		font_generale:End()					
+		end
+
 	-- gui shader	
 		if (WG['guishader_api'] ~= nil) then
 		WG['guishader_api'].InsertRect( Pos_x_mainmenu,Pos_y_mainmenu,Pos_x_mainmenu+larghezza_deploymenu,Pos_y_mainmenu+altezza_deploymenu,'WMRTS_deploymenu_shad')

@@ -383,7 +383,7 @@ if mainmenu_attivo then -- se il main menu è attivo, allora disegnalo
 	-- testo
 	font_generale:SetTextColor(1, 1, 1, 1)
 	font_generale:Begin()
-	font_generale:Print("Close", Pos_x_mainmenu+posx_menu_button+distance_x_menu_button + 28, Pos_y_mainmenu+posy_menu_button+5 ,12,'ds')
+	font_generale:Print("CLOSE", Pos_x_mainmenu+posx_menu_button+distance_x_menu_button + 28, Pos_y_mainmenu+posy_menu_button+7 ,9,'ds')
 	font_generale:End()		
 
 -- riquadro selettore dei pulsanti back, close ecc----------------------------------------------
