@@ -38,6 +38,8 @@ to do list
 -- rev 3 by molix -- 28/01/2025 -- aggiunto minipulsante "show terrain resources"
 -- rev 4 by molix -- 02/06/2025 -- aggiunta la funzione "blinking" al pulsante objective quando si riceve il comando: Spring.SendCommands("blink_WMRTS_obj")
 -- rev 5 by molix -- 26/09/2025 -- aggiunto check is WMRTSmission ? se si fai apparire i pulsante objectives e diary
+-- rev 6 by molix -- 04/11/2025 -- aggiunto unit's deployment system 
+-- rev 7 by molix -- 04/11/2025 -- change code logic due upvalue, using tables, the variables are  becoming many
 
 -- definizione pulsanti minimenu
 local larghezza_main_minimenu_button 	= 50 	-- larghezza del pulsante "main menu" del minimenu (più largo degli altri)
@@ -49,17 +51,19 @@ local margine_giu_minimenu 				= 5 	-- margine dal sotto il pulsante al bordo de
 local margine_sx_minimenu 				= 5 	-- margine da sinistra dell'ultimo pulsante a sx, serve a creare l'ultimo blocco del background image
 local interspazio_buttons				= 2 	-- spazio tra un pulsante e l altro
 local interspazio_button_separator		= 5 	-- spazio tra una serie di pulsanti (menu) e l'altro (funzionali), ad esempio distanzio i pulsanti menu, sound ecc con i pulsanti builder, wind, ecc
-local objbuttosinblinking				= 0		-- 1 se c'è una notifica
-local diarybuttosinblinking				= 0		-- 1 se c'è una notifica
-local show_minimenu_statistics_button	= true
-local show_minimenu_object_button		= true
-local show_minimenu_diary_button		= true
-local show_minimenu_snd_button			= true
-local show_minimenu_los_button			= true
-local show_minimenu_builder_button		= true
-local show_minimenu_wind_button			= true					-- non è un bottone ma è una finestrella con il valore del vento
-local show_minimenu_tidal_button		= true					-- non è un bottone ma è una finestrella con il valore delle maree
-local show_minimenu_resources_button 	= true
+-- inizializzo le tabelle dei pulsanti
+local Button_ ={
+	{ name = "statistics_button", showMiniButton = true, showMenu = false, isBlinking= false, mouseOver = false, Pos_x_button = 5}, 		-- Button_[1]. = name of button, show relative minibutton, show/open relative menu, is button blinking (due alert), is mouse over, posx of button
+	{ name = "object_button", showMiniButton = true, showMenu = false, isBlinking= false, mouseOver = false, Pos_x_button = 5},				-- Button_[2].
+	{ name = "diary_button", showMiniButton = true, showMenu = false, isBlinking= false, mouseOver = false, Pos_x_button = 5},				-- Button_[3].
+	{ name = "snd_butto", showMiniButton = true, showMenu = false, isBlinking= false, mouseOver = false, Pos_x_button = 5},					-- Button_[4].
+	{ name = "los_button", showMiniButton = true, showMenu = false, isBlinking= false, mouseOver = false, Pos_x_button = 5},				-- Button_[5].
+	{ name = "unitdeploy_button", showMiniButton = true, showMenu = false, isBlinking= false, mouseOver = false, Pos_x_button = 5},			-- Button_[6].
+	{ name = "builder_button", showMiniButton = true, showMenu = false, isBlinking= false, mouseOver = false, Pos_x_button = 5},			-- Button_[7].
+	{ name = "wind_button", showMiniButton = true, showMenu = false, isBlinking= false, mouseOver = false, Pos_x_button = 5},				-- Button_[8].
+	{ name = "tidal_button", showMiniButton = true, showMenu = false, isBlinking= false, mouseOver = false, Pos_x_button = 5},				-- Button_[9].
+	{ name = "resources_button", showMiniButton = true, showMenu = false, isBlinking= false, mouseOver = false, Pos_x_button = 5},			-- Button_[10].
+}  
 local missione_attiva					= 0						-- se 0 partita skirmish, se 1 partita WMRTSmission, se 2 partita FLEAmission. Definira quali pulsanti devono apparire o meno (OBJ e diary)
 
 -- definizione variabili di posizione e lunghezza
@@ -67,31 +71,13 @@ local Pos_x_minimenu_button		        = 200					-- corrisponde alla distanza X tr
 local Pos_y_minimenu_button				= 200 					-- corrisponde alla distanza Y tra il vertice in basso a sx del minimenu_buttons e il margine superiore del monitor
 local vsx, vsy 						  	= widgetHandler:GetViewSizes()
 local Pos_x_next_button_drawing					-- Usato nel drawing, il valore della posizione si sposterà man mano di quanti pulsanti sono attivi, cosi da disegnarli uno di fianco all'altro
-local Pos_x_statistics_button			= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
-local Pos_x_obj_button					= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)	
-local Pos_x_diary_button				= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)	
-local Pos_x_snd_button					= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
-local Pos_x_los_button					= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
-local Pos_x_builder_button				= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
-local Pos_x_wind_button					= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
-local Pos_x_tidal_button				= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
-local Pos_x_resources_button			= 5		-- servirà per capire la posizione del rispettivo bottone (esempio per cliccare sopra)
 local Pos_x_riquadro_button				= 5		-- posizione X del riquadro per evidenziare l' "above" sui pulsanti generici
 local Pos_y_riquadro_button				= 5		-- posizione Y del riquadro per evidenziare l' "above" sui pulsanti generici
 local Pos_x_riquadro_mainbutton			= 5		-- posizione X del riquadro per evidenziare l' "above" sul pulsante main menu
 local Pos_y_riquadro_mainbutton			= 5		-- posizione Y del riquadro per evidenziare l' "above" sul pulsante main menu
 
 -- definizione variabili MENU aperti/chiusi
-local show_mainmenu						= false					-- is mainmenu active?
-local show_sndmenu 						= false 				-- is sound menu options active?
-local show_statisticsmenu				= false					-- is statistics table active?
-local show_objmenu						= false 				-- is obj windows active? 
-local show_diarymenu					= false 				-- is diary windows active?
-local show_losmenu						= false					-- is LOS windows active? -- or function active?? --todo
-local show_buildermenu					= false					-- is builder windows active? -- or function active?? --todo
-local show_wingmenu						= false					-- is wing windows active? -- or function active?? --todo
-local show_tidalmenu					= false					-- is tidal windows active? -- or function active?? --todo
-local show_resourcesmenu				= false					-- is resources widget active? 
+local show_mainmenu						= false	 		 															-- is mainmenu active?
 local valore_resourcesmenu				= 0						-- assumera un valore in funzione delle impostazioni caricate nel springconfig... indica l'ultimo stato del "show map resources"
 
 -- definizioni immagini ON/OFF bottoni e background
@@ -102,6 +88,9 @@ local statisticsbutton_on = "LuaUI/Images/menu/minimenu/statisticsbutton_on.png"
 local objbutton_off = "LuaUI/Images/menu/minimenu/objbutton_off.png"
 local objbutton_on = "LuaUI/Images/menu/minimenu/objbutton_on.png"
 local objbutton_blinking = "LuaUI/Images/menu/minimenu/objbutton_blinking.png"
+local deploy_off = "LuaUI/Images/menu/minimenu/garagebutton_off.png"
+local deploy_on = "LuaUI/Images/menu/minimenu/garagebutton_on.png"
+local deploy_blinking = "LuaUI/Images/menu/minimenu/garagebutton_blink.png"
 local diarybutton_off = "LuaUI/Images/menu/minimenu/diarybutton_off.png"
 local diarybutton_on = "LuaUI/Images/menu/minimenu/diarybutton_on.png"
 local diarybutton_blinking = "LuaUI/Images/menu/minimenu/diarybutton_blinking.png"
@@ -160,9 +149,9 @@ local function check_options()
 -- all'inizio verifico anche il valore delle configurazioni
   valore_resourcesmenu = Spring.GetConfigInt("mostraresources", 0)				-- booleano di default è falso  -> disattivo successivamente anche il Widget			## widget
 	if valore_resourcesmenu == 0 then
-	  show_resourcesmenu = false
+	  Button_[10].showMenu = false
 	else
-		show_resourcesmenu = true
+		Button_[10].showMenu = true
 	end
 end
 
@@ -180,10 +169,10 @@ function widget:Initialize()
 -- carico le impostazioni del LOS (se era visibile, diventa visibile, se era invisibile, non lo vedo)  
 	if (Spring.GetGameFrame() > 0 and UltimaMapDrawMode == "los") then
 		AttivaLOS()
-		show_losmenu = true
+		Button_[5].showMenu = true
 	else
 		DisattivaLOS()
-		show_losmenu = false
+		Button_[5].showMenu = false
 	end  
 end
 
@@ -196,28 +185,34 @@ function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la 
 				return 	((x >= Pos_x_minimenu_button) and (x <= Pos_x_minimenu_button + larghezza_main_minimenu_button) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))   --se è sopra il minibutton main menu
 				or
 				-- sound
-				((x >= Pos_x_snd_button) and (x <= Pos_x_snd_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))  --se è sopra il minibutton sound
+				((x >= Button_[4].Pos_x_button) and (x <= Button_[4].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))  --se è sopra il minibutton sound
 				-- statistics
 				or 
-				((x >= Pos_x_statistics_button) and (x <= Pos_x_statistics_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))   --se è sopra il minibutton 
+				((x >= Button_[1].Pos_x_button) and (x <= Button_[1].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))   --se è sopra il minibutton 
 				-- obj
 				or 
-				((x >= Pos_x_obj_button) and (x <= Pos_x_obj_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))   --se è sopra il minibutton 
+				((x >= Button_[2].Pos_x_button) and (x <= Button_[2].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))   --se è sopra il minibutton 
+				-- deploy units
+				or 
+				((x >= Button_[6].Pos_x_button) and (x <= Button_[6].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))   --se è sopra il minibutton 
 				-- diary
 				or 
-				((x >= Pos_x_diary_button) and (x <= Pos_x_diary_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))   --se è sopra il minibutton 
+				((x >= Button_[3].Pos_x_button) and (x <= Button_[3].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))   --se è sopra il minibutton 
 				-- LOS
 				or 
-				((x >= Pos_x_los_button) and (x <= Pos_x_los_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))   --se è sopra il minibutton 
+				((x >= Button_[5].Pos_x_button) and (x <= Button_[5].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))   --se è sopra il minibutton 
 				-- builder
 				or 
-				((x >= Pos_x_builder_button) and (x <= Pos_x_builder_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))   --se è sopra il minibutton 
+				((x >= Button_[7].Pos_x_button) and (x <= Button_[7].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))   --se è sopra il minibutton 
 				-- wind
 				or 
-				((x >= Pos_x_wind_button) and (x <= Pos_x_wind_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))  --se è sopra il minibutton 
+				((x >= Button_[8].Pos_x_button) and (x <= Button_[8].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))  --se è sopra il minibutton 
 				-- tidal
 				or 
-				((x >= Pos_x_tidal_button) and (x <= Pos_x_tidal_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))   --se è sopra il minibutton 
+				((x >= Button_[9].Pos_x_button) and (x <= Button_[9].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))   --se è sopra il minibutton 
+				-- resources
+				or 
+				((x >= Button_[10].Pos_x_button) and (x <= Button_[10].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))   --se è sopra il minibutton 
 	--	end -- isabove
 	
 	end --is gui hidden
@@ -231,14 +226,14 @@ end
 function AttivaLOS()
     if Spring.GetMapDrawMode()~="los" then
         Spring.SendCommands("togglelos")
-		show_losmenu = true
+		Button_[5].showMenu = true
     end
 end
 
 function DisattivaLOS()
     if Spring.GetMapDrawMode()=="los" then
         Spring.SendCommands("togglelos")
-		show_losmenu = false		
+		Button_[5].showMenu = false		
     end
 end
 
@@ -264,7 +259,7 @@ function widget:MousePress(x, y, button)
 			end
 		if button== 1 then -- pulsante sx
 			if (widget:IsAbove(x, y)) then
-		-- mainmenu
+		-- mainmenu posizioni
 				-- si attiva
 				if not show_mainmenu and((x >= Pos_x_minimenu_button) and (x <= Pos_x_minimenu_button + larghezza_main_minimenu_button) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))  then --se è sopra il minibutton main menu
 				Spring.SendCommands("open_WMRTS_menu") 	-- open_WMRTS_menu
@@ -286,7 +281,7 @@ function widget:MousePress(x, y, button)
 				return true				
 		-- sound 
 				-- si attiva
-				elseif not show_sndmenu and (show_minimenu_snd_button and ((x >= Pos_x_snd_button) and (x <= Pos_x_snd_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton sound
+				elseif not Button_[4].showMenu and (Button_[4].showMiniButton and ((x >= Button_[4].Pos_x_button) and (x <= Button_[4].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton sound
 				Spring.SendCommands("open_WMRTS_snd")		-- open wmrts_sndmenu
 				Spring.SendCommands("close_WMRTS_obj") 			-- chiudo gli obiettivi	
 				Spring.SendCommands("close_WMRTS_menu") 		-- close_WMRTS_menu
@@ -298,12 +293,12 @@ function widget:MousePress(x, y, button)
 				show_mainmenu = false
 				return true	
 				-- si disattiva
-				elseif show_sndmenu and (show_minimenu_snd_button and ((x >= Pos_x_snd_button) and (x <= Pos_x_snd_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton sound
+				elseif Button_[4].showMenu and (Button_[4].showMiniButton and ((x >= Button_[4].Pos_x_button) and (x <= Button_[4].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton sound
 				Spring.SendCommands("close_WMRTS_snd")
 				return true	
 		-- statistics
 				-- si attiva				
-				elseif not show_statisticsmenu and (show_minimenu_statistics_button and((x >= Pos_x_statistics_button) and (x <= Pos_x_statistics_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				elseif not Button_[1].showMenu and (Button_[1].showMiniButton and((x >= Button_[1].Pos_x_button) and (x <= Button_[1].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				Spring.SendCommands("open_WMRTS_statistics")
 				Spring.SendCommands("close_WMRTS_obj") 			-- chiudo gli obiettivi	
 				Spring.SendCommands("close_WMRTS_menu") 		-- close_WMRTS_menu
@@ -315,12 +310,12 @@ function widget:MousePress(x, y, button)
 				show_mainmenu = false				
 				return true	
 				-- si disattiva				
-				elseif show_statisticsmenu and (show_minimenu_statistics_button and((x >= Pos_x_statistics_button) and (x <= Pos_x_statistics_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				elseif Button_[1].showMenu and (Button_[1].showMiniButton and((x >= Button_[1].Pos_x_button) and (x <= Button_[1].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				Spring.SendCommands("close_WMRTS_statistics")
 				return true					
 		-- obj
 				-- si attiva			
-				elseif not show_objmenu and (show_minimenu_object_button and((x >= Pos_x_obj_button) and (x <= Pos_x_obj_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				elseif not Button_[2].showMenu and (Button_[2].showMiniButton and((x >= Button_[2].Pos_x_button) and (x <= Button_[2].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				Spring.SendCommands("open_WMRTS_obj")
 				Spring.SendCommands("close_WMRTS_menu") 		-- close_WMRTS_menu
 				Spring.SendCommands("close_WMRTS_graphics") 	-- close WMRTS_graphics	
@@ -329,16 +324,35 @@ function widget:MousePress(x, y, button)
 				Spring.SendCommands("close_WMRTS_snd")			-- close wmrts_sndmenu		
 				Spring.SendCommands("close_wmrts_diary") 		-- chiudo le altre cose		
 				Spring.SendCommands("close_WMRTS_statistics")	-- chiuso le statistiche			
-				objbuttosinblinking = 0 -- set blinking to 0 cosi nel caso resetta le notifiche all'apertura degli obiettivi	
+				Button_[2].isBlinking = false -- set blinking to 0 cosi nel caso resetta le notifiche all'apertura degli obiettivi	
 				show_mainmenu = false				
 				return true			
 				-- si disattiva			
-				elseif show_objmenu and (show_minimenu_object_button and((x >= Pos_x_obj_button) and (x <= Pos_x_obj_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				elseif Button_[2].showMenu and (Button_[2].showMiniButton and((x >= Button_[2].Pos_x_button) and (x <= Button_[2].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				Spring.SendCommands("close_WMRTS_obj")
 				return true		
+		-- deploymenu
+				-- si attiva			
+				elseif not Button_[6].showMenu and (Button_[6].showMiniButton and((x >= Button_[6].Pos_x_button) and (x <= Button_[6].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				Spring.SendCommands("open_wmrts_unitdepl")		-- apro lo units deploy menu
+				Spring.SendCommands("close_wmrts_diary")		-- chiudo il diario 
+				Spring.SendCommands("close_WMRTS_obj") 			-- chiudo gli obiettivi	
+				Spring.SendCommands("close_WMRTS_menu") 		-- close_WMRTS_menu
+				Spring.SendCommands("close_WMRTS_graphics") 	-- close WMRTS_graphics	
+				Spring.SendCommands("close_WMRTS_visuals") 		-- close WMRTS_graphics					
+				Spring.SendCommands("close_WMRTS_exit") 		-- close WMRTS_exit	
+				Spring.SendCommands("close_WMRTS_snd")			-- close wmrts_sndmenu		
+				Spring.SendCommands("close_WMRTS_statistics")	-- chiuso le statistiche
+				show_mainmenu = false				
+				Button_[6].isBlinking = false -- set blinking to 0 cosi nel caso resetta le notifiche all'apertura del diario	
+				return true			
+				-- si disattiva			
+				elseif Button_[6].showMenu and (Button_[6].showMiniButton and((x >= Button_[6].Pos_x_button) and (x <= Button_[6].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				Spring.SendCommands("close_wmrts_unitdepl")
+				return true				
 		-- diary
 				-- si attiva			
-				elseif not show_diarymenu and (show_minimenu_diary_button and((x >= Pos_x_diary_button) and (x <= Pos_x_diary_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				elseif not Button_[3].showMenu and (Button_[3].showMiniButton and((x >= Button_[3].Pos_x_button) and (x <= Button_[3].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				Spring.SendCommands("open_wmrts_diary") 
 				Spring.SendCommands("close_WMRTS_obj") 			-- chiudo gli obiettivi	
 				Spring.SendCommands("close_WMRTS_menu") 		-- close_WMRTS_menu
@@ -348,61 +362,62 @@ function widget:MousePress(x, y, button)
 				Spring.SendCommands("close_WMRTS_snd")			-- close wmrts_sndmenu		
 				Spring.SendCommands("close_WMRTS_statistics")	-- chiuso le statistiche
 				show_mainmenu = false				
-				diarybuttosinblinking = 0 -- set blinking to 0 cosi nel caso resetta le notifiche all'apertura del diario	
+				Button_[3].isBlinking = false -- set blinking to false cosi nel caso resetta le notifiche all'apertura del diario	
 				return true			
 				-- si disattiva			
-				elseif show_diarymenu and (show_minimenu_diary_button and((x >= Pos_x_diary_button) and (x <= Pos_x_diary_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				elseif Button_[3].showMenu and (Button_[3].showMiniButton and((x >= Button_[3].Pos_x_button) and (x <= Button_[3].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				Spring.SendCommands("close_wmrts_diary")
 				return true				
 		-- LOS
 				-- si attiva		
-				elseif (show_minimenu_los_button and((x >= Pos_x_los_button) and (x <= Pos_x_los_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				elseif (Button_[5].showMiniButton and((x >= Button_[5].Pos_x_button) and (x <= Button_[5].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 					if Spring.GetMapDrawMode()~="los" then
 						Spring.SendCommands("togglelos")
-						show_losmenu = true
+						Button_[5].showMenu = true
 						else
 						Spring.SendCommands("togglelos")
-						show_losmenu = false
+						Button_[5].showMenu = false
 					end
 				-- eseguire codice
 				-- 		AttivaLOS()
 				return true	
 		-- builder
 				-- si attiva			
-				elseif not show_buildermenu and (show_minimenu_builder_button and ((x >= Pos_x_builder_button) and (x <= Pos_x_builder_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				elseif not Button_[7].showMenu and (Button_[7].showMiniButton and ((x >= Button_[7].Pos_x_button) and (x <= Button_[7].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				Spring.SendCommands("open_WMRTS_buildermenu")
-				show_buildermenu = true				
+				Button_[7].showMenu = true				
 				return true	
 				-- si disattiva			
-				elseif show_buildermenu and (show_minimenu_builder_button and ((x >= Pos_x_builder_button) and (x <= Pos_x_builder_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				elseif Button_[7].showMenu and (Button_[7].showMiniButton and ((x >= Button_[7].Pos_x_button) and (x <= Button_[7].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				Spring.SendCommands("close_WMRTS_buildermenu")
-				show_buildermenu = false
+				Button_[7].showMenu = false
 				return true					
 		-- wind
-				elseif (show_minimenu_wind_button and ((x >= Pos_x_wind_button) and (x <= Pos_x_wind_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				elseif (Button_[8].showMiniButton and ((x >= Button_[8].Pos_x_button) and (x <= Button_[8].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				-- eseguire codice
 				return true	
 		-- tidal
-				elseif (show_minimenu_tidal_button and((x >= Pos_x_tidal_button) and (x <= Pos_x_tidal_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
+				elseif (Button_[9].showMiniButton and((x >= Button_[9].Pos_x_button) and (x <= Button_[9].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				-- eseguire codice
 				return true	
-				end-- posizioni
+				
 		-- resources
-				elseif ((mousex >= Pos_x_resources_button) and (mousex <= Pos_x_resources_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then
+				elseif ((x >= Button_[10].Pos_x_button) and (x <= Button_[10].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then
 				valore_resourcesmenu = valore_resourcesmenu + 1
-				if valore_resourcesmenu > 1 then
-				 valore_resourcesmenu = 0
-				end
-				if valore_resourcesmenu == 0 then
-					Spring.SendCommands({"luaui disablewidget Mex Placement Handler"}) 				-- disabilito il widget
-					Spring.SetConfigInt("mostraresources", 0)
-					show_resourcesmenu = false
-				elseif valore_resourcesmenu == 1 then
-					Spring.SendCommands({"luaui enablewidget Mex Placement Handler"}) 				-- disabilito il widget
-					Spring.SetConfigInt("mostraresources", 1)		
-					show_resourcesmenu = true
-				end				
+					if valore_resourcesmenu > 1 then
+					 valore_resourcesmenu = 0
+					end
+					if valore_resourcesmenu == 0 then
+						Spring.SendCommands({"luaui disablewidget Mex Placement Handler"}) 				-- disabilito il widget
+						Spring.SetConfigInt("mostraresources", 0)
+						Button_[10].showMenu = false
+					elseif valore_resourcesmenu == 1 then
+						Spring.SendCommands({"luaui enablewidget Mex Placement Handler"}) 				-- disabilito il widget
+						Spring.SetConfigInt("mostraresources", 1)		
+						Button_[10].showMenu = true
+					end				
 				return true
+				end-- posizioni
 			end -- isabove
 		end -- button 1
 	end -- not gui hidden
@@ -421,60 +436,76 @@ function widget:TextCommand(command)
 	end	
 -- apertura e chiusura obj menu
 	if command == 'open_WMRTS_obj' then
-		show_objmenu = true
+		Button_[2].showMenu = true
 	end
 	if command == 'close_WMRTS_obj' then
-		show_objmenu = false
+		Button_[2].showMenu = false
 	end		
 -- blinking del obj menu
-	if command == 'blink_WMRTS_obj' and show_objmenu == false then
+	if command == 'blink_WMRTS_obj' and Button_[2].showMenu == false then
 	-- evidenza obj button
-	objbuttosinblinking = 1
+	Button_[2].isBlinking = true
 	end		
+	
+	-- apertura e chiusura deploy menu
+	if command == 'open_wmrts_unitdepl' then
+		Button_[6].showMenu = true
+	end
+	if command == 'close_wmrts_unitdepl' then
+		Button_[6].showMenu = false
+	end		
+-- blinking del deploy menu
+	if command == 'blink_wmrts_deploy' and Button_[3].showMenu == false then
+	-- lampeggia diary button
+	Button_[6].isBlinking = true
+	end		
+	
+	
+	
 -- apertura e chiusura diary menu
 	if command == 'open_wmrts_diary' then
-		show_diarymenu = true
+		Button_[3].showMenu = true
 	end
 	if command == 'close_wmrts_diary' then
-		show_diarymenu = false
+		Button_[3].showMenu = false
 	end		
 -- blinking del diary menu
-	if command == 'blink_wmrts_diary' and show_diarymenu == false then
+	if command == 'blink_wmrts_diary' and Button_[3].showMenu == false then
 	-- lampeggia diary button
-	diarybuttosinblinking = 1
+	Button_[3].isBlinking = true
 	end		
 -- Stopblinking del diary menu
-	if command == 'stopblink_wmrts_diary' and show_diarymenu == false then
+	if command == 'stopblink_wmrts_diary' and Button_[3].showMenu == false then
 	-- smetti di lampeggiare diary button
-	diarybuttosinblinking = 0
+	Button_[3].isBlinking = false
 	end				
 -- apertura e chiusura statistics menu
 	if command == 'open_WMRTS_statistics' then
-		show_statisticsmenu = true
+		Button_[1].showMenu = true
 	end
 	if command == 'close_WMRTS_statistics' then
-		show_statisticsmenu = false
+		Button_[1].showMenu = false
 	end	
 -- apertura e chiusura statistics menu
 	if command == 'open_WMRTS_snd' then
-		show_sndmenu = true
+		Button_[4].showMenu = true
 	end
 	if command == 'close_WMRTS_snd' then
-		show_sndmenu = false
+		Button_[4].showMenu = false
 	end		
 -- apertura e chiusura los
 	if command == 'open_WMRTS_los' then
-		show_losmenu = true
+		Button_[5].showMenu = true
 	end
 	if command == 'close_WMRTS_los' then
-		show_losmenu = false
+		Button_[5].showMenu = false
 	end	
 -- apertura e chiusura builder
 	if command == 'open_WMRTS_buildermenu' then
-		show_buildermenu = true
+		Button_[7].showMenu = true
 	end
 	if command == 'close_WMRTS_buildermenu' then
-		show_buildermenu = false
+		Button_[7].showMenu = false
 	end			
 end				
 		
@@ -498,40 +529,44 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 				-- ############################################################################### Inserire anche la condizione in cui il pulsante non è nascosto!! ################################
 				-- ############################################################################### Inserire anche la condizione in cui il pulsante non è nascosto!! ################################				
 				-- sound
-				if 	((mousex >= Pos_x_snd_button) and (mousex <= Pos_x_snd_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su snd minibutton
-				Pos_x_riquadro_button =	Pos_x_snd_button
+				if 	((mousex >= Button_[4].Pos_x_button) and (mousex <= Button_[4].Pos_x_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su snd minibutton
+				Pos_x_riquadro_button =	Button_[4].Pos_x_button
 				show_selettore_minibutton = true
 				-- obj				
-				elseif  ((mousex >= Pos_x_obj_button) and (mousex <= Pos_x_obj_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su obj minibutton
-				Pos_x_riquadro_button =	Pos_x_obj_button
+				elseif  ((mousex >= Button_[2].Pos_x_button) and (mousex <= Button_[2].Pos_x_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su obj minibutton
+				Pos_x_riquadro_button =	Button_[2].Pos_x_button
 				show_selettore_minibutton = true
+				-- deploy units			
+				elseif  ((mousex >= Button_[6].Pos_x_button) and (mousex <= Button_[6].Pos_x_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su obj minibutton
+				Pos_x_riquadro_button =	Button_[6].Pos_x_button
+				show_selettore_minibutton = true						
 				-- diary			
-				elseif  ((mousex >= Pos_x_diary_button) and (mousex <= Pos_x_diary_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su obj minibutton
-				Pos_x_riquadro_button =	Pos_x_diary_button
+				elseif  ((mousex >= Button_[3].Pos_x_button) and (mousex <= Button_[3].Pos_x_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su obj minibutton
+				Pos_x_riquadro_button =	Button_[3].Pos_x_button
 				show_selettore_minibutton = true				
 				-- statistics				
-				elseif  ((mousex >= Pos_x_statistics_button) and (mousex <= Pos_x_statistics_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su statistics minibutton
-				Pos_x_riquadro_button =	Pos_x_statistics_button
+				elseif  ((mousex >= Button_[1].Pos_x_button) and (mousex <= Button_[1].Pos_x_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su statistics minibutton
+				Pos_x_riquadro_button =	Button_[1].Pos_x_button
 				show_selettore_minibutton = true	
 				-- builder					
-				elseif  ((mousex >= Pos_x_builder_button) and (mousex <= Pos_x_builder_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su builder minibutton
-				Pos_x_riquadro_button =	Pos_x_builder_button
+				elseif  ((mousex >= Button_[7].Pos_x_button) and (mousex <= Button_[7].Pos_x_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su builder minibutton
+				Pos_x_riquadro_button =	Button_[7].Pos_x_button
 				show_selettore_minibutton = true	
 				-- LOS					
-				elseif  ((mousex >= Pos_x_los_button) and (mousex <= Pos_x_los_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su los minibutton
-				Pos_x_riquadro_button =	Pos_x_los_button
+				elseif  ((mousex >= Button_[5].Pos_x_button) and (mousex <= Button_[5].Pos_x_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su los minibutton
+				Pos_x_riquadro_button =	Button_[5].Pos_x_button
 				show_selettore_minibutton = true	
 				-- Wind					
-				elseif  ((mousex >= Pos_x_wind_button) and (mousex <= Pos_x_wind_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su wind minibutton
-				Pos_x_riquadro_button =	Pos_x_wind_button
+				elseif  ((mousex >= Button_[8].Pos_x_button) and (mousex <= Button_[8].Pos_x_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su wind minibutton
+				Pos_x_riquadro_button =	Button_[8].Pos_x_button
 				show_selettore_minibutton = true					
 				-- Tidal					
-				elseif  ((mousex >= Pos_x_tidal_button) and (mousex <= Pos_x_tidal_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su tidal minibutton
-				Pos_x_riquadro_button =	Pos_x_tidal_button
+				elseif  ((mousex >= Button_[9].Pos_x_button) and (mousex <= Button_[9].Pos_x_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su tidal minibutton
+				Pos_x_riquadro_button =	Button_[9].Pos_x_button
 				show_selettore_minibutton = true	
 				-- Resources					
-				elseif  ((mousex >= Pos_x_resources_button) and (mousex <= Pos_x_resources_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su resources minibutton
-				Pos_x_riquadro_button =	Pos_x_resources_button
+				elseif  ((mousex >= Button_[10].Pos_x_button) and (mousex <= Button_[10].Pos_x_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su resources minibutton
+				Pos_x_riquadro_button =	Button_[10].Pos_x_button
 				show_selettore_minibutton = true				
 				-- altrimenti se il cursore non è sopra alcuno dei suddetti buttons, nascondilo				
 				else 
@@ -552,18 +587,18 @@ function widget:KeyPress(key, mods, isRepeat)
 	if key == 108 then -- TASTO L
 		if Spring.GetMapDrawMode()=="los" then --mostro o nascondo il LOS
         Spring.SendCommands("togglelos")
-		show_losmenu = false	
+		Button_[5].showMenu = false	
 		return true
 		else 
         Spring.SendCommands("togglelos")
-		show_losmenu = true	
+		Button_[5].showMenu = true	
 		return true		
 		end
 	end
 -- se premo il tasto esc 
 	if key == 27 then -- TASTO esc 0x01B
 		-- se non ci sono selezionate le unità, ed il mainmenu è disattivato e il sndmenu (e altri menu) non è attivo: apro il mainmenu
-		if not show_mainmenu and not show_sndmenu and not show_objmenu and not show_diarymenu and not show_statisticsmenu and not Spring.IsGUIHidden() and Spring.GetSelectedUnitsCount() == 0 then
+		if not show_mainmenu and not Button_[6].showMenu and not Button_[4].showMenu and not Button_[2].showMenu and not Button_[3].showMenu and not Button_[1].showMenu and not Spring.IsGUIHidden() and Spring.GetSelectedUnitsCount() == 0 then
 		Spring.SendCommands("open_WMRTS_menu") 				-- apro il mainmenu (widget main menu)
 		show_mainmenu = true								-- accendo il minipulsante menu del minimenu
 		return true
@@ -600,15 +635,15 @@ local function DrawMainMiniMenu()
 	
 -- inserisco sound minipulsante, se abilitato
 ------------------------------------
-		if show_minimenu_snd_button then 			-- se il minipulsante è attivo per vederlo nel minimenù:
-	Pos_x_snd_button = Pos_x_next_button_drawing	-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)
+		if Button_[4].showMiniButton then 			-- se il minipulsante è attivo per vederlo nel minimenù:
+	Button_[4].Pos_x_button = Pos_x_next_button_drawing	-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)
 	-- sfondo del blocco, se attivo
 	gl.Color(1,1,1,1)
 	gl.Texture(minimenu_bkgnd_btn)	
 	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giu_minimenu,Pos_x_next_button_drawing+larghezza_minimenu_buttons+interspazio_buttons,vsy)	
 	gl.Texture(false)	-- fine texture	
 	-- pulsante
-				if show_sndmenu then 				-- se la finestra (o funzione) degli obiettivi è attiva:
+				if Button_[4].showMenu then 				-- se la finestra (o funzione) degli obiettivi è attiva:
 				gl.Texture(sndbutton_on)			-- mostra il pulsante acceso
 				else
 				gl.Texture(sndbutton_off)			-- altrimenti mostra il pulsante spento	
@@ -620,15 +655,15 @@ local function DrawMainMiniMenu()
 
 -- inserisco show statistics minipulsante, se abilitato
 ------------------------------------
-		if show_minimenu_statistics_button then 	-- se il minipulsante è attivo per vederlo nel minimenù:
-	Pos_x_statistics_button = Pos_x_next_button_drawing		-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
+		if Button_[1].showMiniButton then 	-- se il minipulsante è attivo per vederlo nel minimenù:
+	Button_[1].Pos_x_button = Pos_x_next_button_drawing		-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
 	-- sfondo del blocco, se attivo
 	gl.Color(1,1,1,1)
 	gl.Texture(minimenu_bkgnd_btn)	
 	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giu_minimenu,Pos_x_next_button_drawing+larghezza_minimenu_buttons+interspazio_buttons,vsy)	
 	gl.Texture(false)	-- fine texture	
 	-- pulsante
-				if show_statisticsmenu then 		-- se la finestra (o funzione) delle statistiche è attiva:
+				if Button_[1].showMenu then 		-- se la finestra (o funzione) delle statistiche è attiva:
 				gl.Texture(statisticsbutton_on)		-- mostra il pulsante acceso
 				else
 				gl.Texture(statisticsbutton_off)	-- altrimenti mostra il pulsante spento	
@@ -640,18 +675,18 @@ local function DrawMainMiniMenu()
 		
 -- inserisco obj minipulsante, se abilitato
 ------------------------------------
-		if show_minimenu_object_button then 	-- se il minipulsante è attivo per vederlo nel minimenù:
-	Pos_x_obj_button = Pos_x_next_button_drawing		-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
+		if Button_[2].showMiniButton then 	-- se il minipulsante è attivo per vederlo nel minimenù:
+	Button_[2].Pos_x_button = Pos_x_next_button_drawing		-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
 	-- sfondo del blocco, se attivo
 	gl.Color(1,1,1,1)
 	gl.Texture(minimenu_bkgnd_btn)	
 	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giu_minimenu,Pos_x_next_button_drawing+larghezza_minimenu_buttons+interspazio_buttons,vsy)	
 	gl.Texture(false)	-- fine texture	
 	-- pulsante
-				if show_objmenu then 				-- se la finestra (o funzione) degli obiettivi è attiva:
+				if Button_[2].showMenu then 				-- se la finestra (o funzione) degli obiettivi è attiva:
 				gl.Texture(objbutton_on)			-- mostra il pulsante acceso
 				else
-					if objbuttosinblinking == 1 then
+					if Button_[2].isBlinking then
 						gl.Texture(objbutton_blinking)			-- mostra il pulsante blinking
 					else				
 						gl.Texture(objbutton_off)			-- altrimenti mostra il pulsante spento	
@@ -662,21 +697,45 @@ local function DrawMainMiniMenu()
 			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante LOS (se sarà presente)
 		end
 
-
--- inserisco diary minipulsante, se abilitato
+-- inserisco units deploy minipulsante, se abilitato
 ------------------------------------
-		if (show_minimenu_diary_button and (missione_attiva ~= 0)) then 	-- se il minipulsante è attivo e non si sta giocando una partita skirmish (diverso da 0) per vederlo nel minimenù:
-	Pos_x_diary_button = Pos_x_next_button_drawing		-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
+		if Button_[6].showMiniButton then 	-- se il minipulsante è attivo e non si sta giocando una partita skirmish (diverso da 0) per vederlo nel minimenù:
+	Button_[6].Pos_x_button = Pos_x_next_button_drawing		-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
 	-- sfondo del blocco, se attivo
 	gl.Color(1,1,1,1)
 	gl.Texture(minimenu_bkgnd_btn)	
 	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giu_minimenu,Pos_x_next_button_drawing+larghezza_minimenu_buttons+interspazio_buttons,vsy)	
 	gl.Texture(false)	-- fine texture	
 	-- pulsante
-				if show_diarymenu then 				-- se la finestra (o funzione) del diario è attiva:
+				if Button_[6].showMenu then 				-- se la finestra (o funzione) del diario è attiva:
+				gl.Texture(deploy_on)				-- mostra il pulsante acceso ###############################
+				else
+					if Button_[6].isBlinking == true then
+						gl.Texture(deploy_blinking)			-- mostra il pulsante blinking ###########
+					else				
+						gl.Texture(deploy_off)			-- altrimenti mostra il pulsante spento	 ##############
+					end
+				end
+			gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
+			gl.Texture(false)	-- fine texture	
+			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante SUCCESSIVO (se sarà presente)
+		
+	end
+
+-- inserisco diary minipulsante, se abilitato
+------------------------------------
+		if (Button_[3].showMiniButton and (missione_attiva ~= 0)) then 	-- se il minipulsante è attivo e non si sta giocando una partita skirmish (diverso da 0) per vederlo nel minimenù:
+	Button_[3].Pos_x_button = Pos_x_next_button_drawing		-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
+	-- sfondo del blocco, se attivo
+	gl.Color(1,1,1,1)
+	gl.Texture(minimenu_bkgnd_btn)	
+	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giu_minimenu,Pos_x_next_button_drawing+larghezza_minimenu_buttons+interspazio_buttons,vsy)	
+	gl.Texture(false)	-- fine texture	
+	-- pulsante
+				if Button_[3].showMenu then 				-- se la finestra (o funzione) del diario è attiva:
 				gl.Texture(diarybutton_on)			-- mostra il pulsante acceso
 				else
-					if diarybuttosinblinking == 1 then
+					if Button_[3].isBlinking then
 						gl.Texture(diarybutton_blinking)			-- mostra il pulsante blinking
 					else				
 						gl.Texture(diarybutton_off)			-- altrimenti mostra il pulsante spento	
@@ -684,7 +743,7 @@ local function DrawMainMiniMenu()
 				end
 			gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
 			gl.Texture(false)	-- fine texture	
-			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante LOS (se sarà presente)
+			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante SUCCESSIVO (se sarà presente)
 		end
 end
 
@@ -704,15 +763,15 @@ end
 local function DrawVisualsMiniMenu()
 -- inserisco LOS minipulsante, se abilitato
 ------------------------------------
-		if show_minimenu_los_button then 			-- se il minipulsante è attivo per vederlo nel minimenù:
-	Pos_x_los_button = Pos_x_next_button_drawing		-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
+		if Button_[5].showMiniButton then 			-- se il minipulsante è attivo per vederlo nel minimenù:
+	Button_[5].Pos_x_button = Pos_x_next_button_drawing		-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
 	-- sfondo del blocco, se attivo
 	gl.Color(1,1,1,1)
 	gl.Texture(minimenu_bkgnd_btn)	
 	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giu_minimenu,Pos_x_next_button_drawing+larghezza_minimenu_buttons+interspazio_buttons,vsy)	
 	gl.Texture(false)	-- fine texture	
 	-- pulsante	
-				if show_losmenu then 				-- se la finestra (o funzione) del LOS è attiva:
+				if Button_[5].showMenu then 				-- se la finestra (o funzione) del LOS è attiva:
 				gl.Texture(losbutton_on)			-- mostra il pulsante acceso
 				else
 				gl.Texture(losbutton_off)			-- altrimenti mostra il pulsante spento	
@@ -724,15 +783,15 @@ local function DrawVisualsMiniMenu()
 
 -- inserisco builder minipulsante, se abilitato
 ------------------------------------
-		if show_minimenu_builder_button then 			-- se il minipulsante è attivo per vederlo nel minimenù:
-	Pos_x_builder_button = Pos_x_next_button_drawing		-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
+		if Button_[7].showMiniButton then 			-- se il minipulsante è attivo per vederlo nel minimenù:
+	Button_[7].Pos_x_button = Pos_x_next_button_drawing		-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
 	-- sfondo del blocco, se attivo
 	gl.Color(1,1,1,1)
 	gl.Texture(minimenu_bkgnd_btn)	
 	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giu_minimenu,Pos_x_next_button_drawing+larghezza_minimenu_buttons+interspazio_buttons,vsy)	
 	gl.Texture(false)	-- fine texture	
 	-- pulsante			
-				if show_buildermenu then 					-- se la finestra (o funzione) di builder è attiva:
+				if Button_[7].showMenu then 					-- se la finestra (o funzione) di builder è attiva:
 				gl.Texture(builderbutton_on)			-- mostra il pulsante acceso
 				else
 				gl.Texture(builderbutton_off)			-- altrimenti mostra il pulsante spento	
@@ -746,15 +805,15 @@ end
 local function DrawMapDataMinimenu()
 -- inserisco wind minipulsante, se abilitato
 ------------------------------------
-		if show_minimenu_wind_button then 			-- se il minipulsante è attivo per vederlo nel minimenù:
-	Pos_x_wind_button = Pos_x_next_button_drawing	-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
+		if Button_[8].showMiniButton then 			-- se il minipulsante è attivo per vederlo nel minimenù:
+	Button_[8].Pos_x_button = Pos_x_next_button_drawing	-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
 	-- sfondo del blocco, se attivo
 	gl.Color(1,1,1,1)
 	gl.Texture(minimenu_bkgnd_btn)	
 	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giu_minimenu,Pos_x_next_button_drawing+larghezza_minimenu_buttons+interspazio_buttons,vsy)	
 	gl.Texture(false)	-- fine texture	
 	-- pulsante			
-				if show_wingmenu then 				-- se la finestra (o funzione) di wind è attiva:
+				if Button_[8].showMenu then 				-- se la finestra (o funzione) di wind è attiva:
 				gl.Texture(windbutton_on)			-- mostra il pulsante acceso
 				else
 				gl.Texture(windbutton_off)			-- altrimenti mostra il pulsante spento	
@@ -764,21 +823,21 @@ local function DrawMapDataMinimenu()
 	Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante tidal (se sarà presente)
 	-- Valore del vento	
     font_generale:Begin()
-	font_generale:Print(forzawind, Pos_x_wind_button+17, Pos_y_minimenu_button+12, 15, "ocn") -- valore del vento trasformato in stringa
+	font_generale:Print(forzawind, Button_[8].Pos_x_button+17, Pos_y_minimenu_button+12, 15, "ocn") -- valore del vento trasformato in stringa
 	font_generale:End()	
 		end		
 	
 -- inserisco tidal minipulsante, se abilitato
 ------------------------------------
-		if show_minimenu_tidal_button then 			-- se il minipulsante è attivo per vederlo nel minimenù:
-	Pos_x_tidal_button = Pos_x_next_button_drawing			-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
+		if Button_[9].showMiniButton then 			-- se il minipulsante è attivo per vederlo nel minimenù:
+	Button_[9].Pos_x_button = Pos_x_next_button_drawing			-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
 	-- sfondo del blocco, se attivo
 	gl.Color(1,1,1,1)
 	gl.Texture(minimenu_bkgnd_btn)	
 	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giu_minimenu,Pos_x_next_button_drawing+larghezza_minimenu_buttons+interspazio_buttons,vsy)	
 	gl.Texture(false)	-- fine texture	
 	-- pulsante			
-				if show_tidalmenu then 				-- se la finestra (o funzione) di tidal è attiva:
+				if Button_[9].showMenu then 				-- se la finestra (o funzione) di tidal è attiva:
 				gl.Texture(tidebutton_on)			-- mostra il pulsante acceso
 				else
 				gl.Texture(tidebutton_off)			-- altrimenti mostra il pulsante spento	
@@ -788,21 +847,21 @@ local function DrawMapDataMinimenu()
 	Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante successivo (se sarà presente)
 		-- Valore delle maree
     font_generale:Begin()
-	font_generale:Print(forzatidal, Pos_x_tidal_button+17, Pos_y_minimenu_button+12, 15, "ocn") -- valore del vento
+	font_generale:Print(forzatidal, Button_[9].Pos_x_button+17, Pos_y_minimenu_button+12, 15, "ocn") -- valore del vento
 	font_generale:End()	
 		end		
 
 -- inserisco resources minipulsante, se abilitato
 ------------------------------------
-		if show_minimenu_resources_button then 				-- se il minipulsante è attivo per vederlo nel minimenù:
-	Pos_x_resources_button = Pos_x_next_button_drawing			-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
+		if Button_[10].showMiniButton then 				-- se il minipulsante è attivo per vederlo nel minimenù:
+	Button_[10].Pos_x_button = Pos_x_next_button_drawing			-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
 	-- sfondo del blocco, se attivo
 	gl.Color(1,1,1,1)
 	gl.Texture(minimenu_bkgnd_btn)	
 	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giu_minimenu,Pos_x_next_button_drawing+larghezza_minimenu_buttons+interspazio_buttons,vsy)	
 	gl.Texture(false)	-- fine texture	
 	-- pulsante			
-				if show_resourcesmenu then 				-- se la finestra (o funzione) di tidal è attiva:
+				if Button_[10].showMenu then 				-- se la finestra (o funzione) di resources è attiva:
 				gl.Texture(resourcebutton_on)			-- mostra il pulsante acceso
 				else
 				gl.Texture(resourcebutton_off)			-- altrimenti mostra il pulsante spento	

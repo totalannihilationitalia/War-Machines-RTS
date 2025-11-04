@@ -354,7 +354,7 @@ O O O O O
 		 Spring.SetGameRulesParam("ud_unitnameslot1b", slot_1b)																																			-- setto il gamerule per lo slot1b = nome unità assegnata (verrà poi letto dal widget)
 		 Spring.SetGameRulesParam("ud_statusslot1b", "ACTIVE")			 																																-- setto il gamerulo per lo stato dello slotXa (attivo, distrutto)
 		 Spring.SetGameRulesParam("ud_idslot1b", unitID_slot_1b)																																		-- setto il gamerule per l'ID dell' unità assegnata allo slot1b (verrà poi letto dal widget per catturare le informazioni sulla posizione dell'unita x)
-		 Spring.Echo( "WMRTS_DEBUG_ID1:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> imposto da GADGET slot_1b= "..slot_1b.." e id= "..unitID_slot_1b)
+--		 Spring.Echo( "WMRTS_DEBUG_ID1:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> imposto da GADGET slot_1b= "..slot_1b.." e id= "..unitID_slot_1b)
 		else
 		 Spring.SetGameRulesParam("ud_unitnameslot1b", "vuoto")																																			-- altrimenti setto il gamerule per lo slot1b = vuoto (verrà poi letto dal widget)	
 		end
@@ -365,14 +365,14 @@ O O O O O
 		 Spring.SetGameRulesParam("ud_idslot2b", unitID_slot_2b)		
 		 Spring.Echo( "WMRTS_DEBUG_ID2:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> imposto da GADGET slot_2b= "..slot_2b.." e id= "..unitID_slot_2b)	 
 		else
-		 Spring.SetGameRulesParam("ud_unitnameslot2b", "vuoto")		
+--		 Spring.SetGameRulesParam("ud_unitnameslot2b", "vuoto")		
 		end
 		if (slot_3b ~= 1 and slot_3b ~= "1") and (slot_3b ~= 0 and slot_3b ~= "0") then 	
 		 unitID_slot_3b= Spring.CreateUnit(slot_3b,spawnCoorx,0,spawnCoorz+deploy_radius,0,teamID_slotb)																								-- imposto lo slot3b
 		 Spring.SetGameRulesParam("ud_unitnameslot3b", slot_3b)	
 		 Spring.SetGameRulesParam("ud_statusslot3b", "ACTIVE")			 
 		 Spring.SetGameRulesParam("ud_idslot3b", unitID_slot_3b)	
-		 Spring.Echo( "WMRTS_DEBUG_ID3:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> imposto da GADGET slot_3b= "..slot_3b.." e id= "..unitID_slot_3b)		 
+--		 Spring.Echo( "WMRTS_DEBUG_ID3:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> imposto da GADGET slot_3b= "..slot_3b.." e id= "..unitID_slot_3b)		 
 		else
 		 Spring.SetGameRulesParam("ud_unitnameslot3b", "vuoto")		
 		end
@@ -381,7 +381,7 @@ O O O O O
 		 Spring.SetGameRulesParam("ud_unitnameslot4b", slot_4b)	
 		 Spring.SetGameRulesParam("ud_statusslot4b", "ACTIVE")			 
 		 Spring.SetGameRulesParam("ud_idslot4b", unitID_slot_4b)		
-		 Spring.Echo( "WMRTS_DEBUG_ID4:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> imposto da GADGET slot_4b= "..slot_4b.." e id= "..unitID_slot_4b) 		 
+--		 Spring.Echo( "WMRTS_DEBUG_ID4:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> imposto da GADGET slot_4b= "..slot_4b.." e id= "..unitID_slot_4b) 		 
 		else
 		 Spring.SetGameRulesParam("ud_unitnameslot4b", "vuoto")		
 		end
@@ -390,7 +390,7 @@ O O O O O
 		 Spring.SetGameRulesParam("ud_unitnameslot5b", slot_5b)	
 		 Spring.SetGameRulesParam("ud_statusslot5b", "ACTIVE")			 
 		 Spring.SetGameRulesParam("ud_idslot5b", unitID_slot_5b)	
-		 Spring.Echo( "WMRTS_DEBUG_ID5:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> imposto da GADGET slot_5b= "..slot_5b.." e id= "..unitID_slot_5b)		 
+--		 Spring.Echo( "WMRTS_DEBUG_ID5:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> imposto da GADGET slot_5b= "..slot_5b.." e id= "..unitID_slot_5b)		 
 		else
 		 Spring.SetGameRulesParam("ud_unitnameslot5b", "vuoto")		
 		end
@@ -399,7 +399,7 @@ O O O O O
 		 Spring.SetGameRulesParam("ud_unitnameslot6b", slot_6b)	
 		 Spring.SetGameRulesParam("ud_statusslot6b", "ACTIVE")			 
 		 Spring.SetGameRulesParam("ud_idslot6b", unitID_slot_6b)		 	
-		 Spring.Echo( "WMRTS_DEBUG_ID6:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> imposto da GADGET slot_6b= "..slot_6b.." e id= "..unitID_slot_6b)		 
+--		 Spring.Echo( "WMRTS_DEBUG_ID6:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> imposto da GADGET slot_6b= "..slot_6b.." e id= "..unitID_slot_6b)		 
 		else
 		 Spring.SetGameRulesParam("ud_unitnameslot6b", "vuoto")		
 		end
@@ -408,7 +408,7 @@ O O O O O
 		 Spring.SetGameRulesParam("ud_unitnameslot7b", slot_7b)	
 		 Spring.SetGameRulesParam("ud_statusslot7b", "ACTIVE")			 
 		 Spring.SetGameRulesParam("ud_idslot7b", unitID_slot_7b)	
-		 Spring.Echo( "WMRTS_DEBUG_ID7:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> imposto da GADGET slot_7b= "..slot_7b.." e id= "..unitID_slot_7b)		 
+--		 Spring.Echo( "WMRTS_DEBUG_ID7:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> imposto da GADGET slot_7b= "..slot_7b.." e id= "..unitID_slot_7b)		 
 		else
 		 Spring.SetGameRulesParam("ud_unitnameslot7b", "vuoto")		
 		end
@@ -417,7 +417,7 @@ O O O O O
 		 Spring.SetGameRulesParam("ud_unitnameslot8b", slot_8b)	
 		 Spring.SetGameRulesParam("ud_statusslot8b", "ACTIVE")			 
 		 Spring.SetGameRulesParam("ud_idslot8b", unitID_slot_8b)	
-		 Spring.Echo( "WMRTS_DEBUG_ID8:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> imposto da GADGET slot_8b= "..slot_8b.." e id= "..unitID_slot_8b)		 
+--		 Spring.Echo( "WMRTS_DEBUG_ID8:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> imposto da GADGET slot_8b= "..slot_8b.." e id= "..unitID_slot_8b)		 
 		else
 		 Spring.SetGameRulesParam("ud_unitnameslot8b", "vuoto")		
 		end	 

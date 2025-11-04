@@ -653,6 +653,7 @@ function widget:MousePress(x, y, button)
 				-- clicco close button
 				if ((mousex >= Pos_x_mainmenu+600) and (mousex <= Pos_x_mainmenu+600+76) and (mousey >= Pos_y_mainmenu-12) and (mousey <= Pos_y_mainmenu+25-12)) then		
 				deployedunitsmenu_attivo = false
+				Spring.SendCommands("close_wmrts_unitdepl")				
 					if (WG['guishader_api'] ~= nil) then
 					WG['guishader_api'].RemoveRect('WMRTS_deploymenu_shad')
 					end	
@@ -695,7 +696,11 @@ function widget:TextCommand(command)
 	if command == 'wmrts_slotstatupdt' then 							-- se ricevo un comando "wmrts_slotstatupdt" aggiorno gli slot guardando i gamerules
 		slota()										-- richiama funzione che aggiorna stato slot player_a
 		slotb()										-- richiama funzione che aggiorna stato slot player_b
-	end
+	elseif command == 'open_wmrts_unitdepl' then 							-- se ricevo un comando "open_wmrts_unitdepl" apri la pagina deploy
+		deployedunitsmenu_attivo = true
+	elseif command == 'close_wmrts_unitdepl' then 							-- se ricevo un comando "open_wmrts_unitdepl" apri la pagina deploy
+		deployedunitsmenu_attivo = false
+	end		
 end
 
 --------------------------------------
@@ -704,8 +709,8 @@ end
 function widget:KeyPress(key, mods, isRepeat) 
 	if deployedunitsmenu_attivo and not Spring.IsGUIHidden() then
 		if key == 0x01B then -- TASTO esc
-			deployedunitsmenu_attivo = false 							-- chiudo il diario			
-	--			Spring.SendCommands("close_wmrts_diary")			-- spengo il minipulsante del deploy menu del minimenu  ############################################################### da fare!!!
+			deployedunitsmenu_attivo = false 							-- chiudo il deploymenu			
+			Spring.SendCommands("close_wmrts_unitdepl")
 			-- disabilito il guishader
 				if (WG['guishader_api'] ~= nil) then
 				WG['guishader_api'].RemoveRect('WMRTS_deploymenu_shad')
