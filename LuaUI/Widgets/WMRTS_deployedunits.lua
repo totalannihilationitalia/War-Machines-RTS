@@ -24,17 +24,10 @@ function widget:GetInfo()
 end
 
 -- 20/10/2025: released version 1 - Molix
+-- 05/11/2025: add writing slots status for WMRTS lobby
 
---[[ to do list
-#### -- all  :)
-Questo widget gestisce le unità dispiegate dal garage per le missioni scenario, monitorandone la posizione, se sono state distrutte ecc
-
-]]--
-
--- definizione dei comandi
-local Echo 								= Spring.Echo 
 -- definizione variabili di posizione e lunghezza menu e icone
-local deployedunitsmenu_attivo			= true		 						-- Indica se questo menu è attivo o meno
+local deployedunitsmenu_attivo			= false		 						-- Indica se questo menu è attivo o meno all'inizio della partita
 local vsx, vsy 						  	= widgetHandler:GetViewSizes()
 local larghezza_deploymenu				= 700 								-- larghezza
 local altezza_deploymenu				= 270								-- altezza
@@ -100,6 +93,37 @@ local function check_options()
   valore_vsynk = Spring.GetConfigInt("VSync", 0)   						-- valori 1 o 0 (default) abilita o disabilita standard VSynk
   valore_mapborders = Spring.GetConfigInt("MapBorder", 1)   			-- valori 1 (default) o 0 abilita o disabilita bordi della mappa
 ]]--
+end
+
+-- funzione che scrive lo stato degli slot del giocatore locale
+function writeSlotStatus()							
+-- controllo se giocatore è proprietario dello slot A o slot B, successivamente scrivo lo stato delle sole sue unità ( la lobby di WMRTS analizzerà successivamente quali sono le sue unità distrutte)
+	local myplayerID = Spring.GetLocalPlayerID ( ) 										-- rilevo l'id del giocatore locale
+	local playerInfo, isActive, isSpectator, teamID = Spring.GetPlayerInfo(myplayerID)	-- tramite l'id trovo il nome del giocatore locale
+	if slota_playername and (playerInfo == slota_playername) then
+	-- giocatore locale proprietario slot A -> scrittura del file stato unità dello slot A
+	Spring.Echo("WMRTS DEBUG: >>>>> giocatore locale proprietario slot A -> scrittura del file stato unità dello slot A")
+-- creo il file 
+	local file = io.open(nomeFile, "w")									-- apro il file, se non esiste lo creo la prima volta. "a" significa "append mode" (il file viene creato in precedenza). W crea un file o lo sovrascrive cancellando il contenuto precedente
+--	file:write(" \n") 													-- vado a capo
+	file:write("[destroyedlist]\n") 									-- scrivo l'intestazione del gruppo di informazioni ini
+		for i = 1, 8 do
+		file:write("slot" .. i .. "_name=" .. slotsDataA[i].name .. "\n")
+		file:write("slot" .. i .. "_status=" .. slotsDataA[i].status .. "\n")
+		end	
+	file:close()												        -- chiudi il file. Questo salva le modifiche e "libera" il file. Se non lo fai, il file potrebbe rimanere vuoto!					
+	elseif playerInfo == slotb_playername then
+	-- giocatore locale proprietario slot B -> scrittura del file stato unità dello slot B
+	Spring.Echo("WMRTS DEBUG: >>>>> giocatore locale proprietario slot B -> scrittura del file stato unità dello slot B")	
+	local file = io.open(nomeFile, "w")									
+--	file:write(" \n") 													
+	file:write("[destroyedlist]\n") 									
+		for i = 1, 8 do
+		file:write("slot" .. i .. "_name=" .. slotsDataB[i].name .. "\n")
+		file:write("slot" .. i .. "_status=" .. slotsDataB[i].status .. "\n")
+		end	
+	file:close()		
+	end
 end
 
 -- funzione per aggiornare gli slot del giocatore "a" (host). Setta il nome dell'unità e l'id dell'unità, se presente
@@ -241,13 +265,7 @@ function widget:Initialize()
 	Pos_x_mainmenu = vsx/2 - larghezza_deploymenu/2
 	Pos_y_mainmenu = vsy/2 - altezza_deploymenu/2
 -- avvio la funzione check_options()
-	check_options()	
--- creo il file 
-	local file = io.open(nomeFile, "a")									-- apro il file, "a" significa "append mode" (il file viene creato in precedenza)
-	file:write(" \n") 													-- vado a capo
-	file:write("[destroyedlist]\n") 									-- scrivo l'intestazione del gruppo di informazioni ini
-	file:close()												        -- chiudi il file. Questo salva le modifiche e "libera" il file. Se non lo fai, il file potrebbe rimanere vuoto!		
-
+	check_options()	 -- #################################################################### tenere????? ##################
  end
 
 --------------------------------------
@@ -693,12 +711,14 @@ end
 --------------------------------------	
 function widget:TextCommand(command)
 -- comando aggiornamento unità
-	if command == 'wmrts_slotstatupdt' then 							-- se ricevo un comando "wmrts_slotstatupdt" aggiorno gli slot guardando i gamerules
+	if command == 'wmrts_slotstatupdt' then 		-- se ricevo un comando "wmrts_slotstatupdt" aggiorno gli slot guardando i gamerules
 		slota()										-- richiama funzione che aggiorna stato slot player_a
 		slotb()										-- richiama funzione che aggiorna stato slot player_b
-	elseif command == 'open_wmrts_unitdepl' then 							-- se ricevo un comando "open_wmrts_unitdepl" apri la pagina deploy
+		writeSlotStatus()							-- richiama la funzione che scrive lo stato degli slot del giocatore locale
+		Spring.SendCommands({"blink_wmrts_deploy"}) -- fai lampeggiare il pulsante deploy ## attenzione: il pulsante lampeggia sia se le unità sono del giocatore A che del giocatore B. sia in initialized che quando vengono distrutte le unità. spuntare un opzione per filtrare questo??? ######################
+	elseif command == 'open_wmrts_unitdepl' then 	-- se ricevo un comando "open_wmrts_unitdepl" apri la pagina deploy
 		deployedunitsmenu_attivo = true
-	elseif command == 'close_wmrts_unitdepl' then 							-- se ricevo un comando "open_wmrts_unitdepl" apri la pagina deploy
+	elseif command == 'close_wmrts_unitdepl' then 	-- se ricevo un comando "close_wmrts_unitdepl" chiudi la pagina deploy
 		deployedunitsmenu_attivo = false
 	end		
 end
