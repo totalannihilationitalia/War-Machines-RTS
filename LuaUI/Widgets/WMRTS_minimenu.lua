@@ -263,6 +263,7 @@ function widget:MousePress(x, y, button)
 				-- si attiva
 				if not show_mainmenu and((x >= Pos_x_minimenu_button) and (x <= Pos_x_minimenu_button + larghezza_main_minimenu_button) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons))  then --se è sopra il minibutton main menu
 				Spring.SendCommands("open_WMRTS_menu") 	-- open_WMRTS_menu
+				Spring.SendCommands("close_wmrts_unitdepl")		-- chiudi lo units deploy menu						
 				Spring.SendCommands("close_WMRTS_obj") 			-- chiudo gli obiettivi	
 				Spring.SendCommands("close_WMRTS_graphics") 	-- close WMRTS_graphics	
 				Spring.SendCommands("close_WMRTS_visuals") 		-- close WMRTS_graphics					
@@ -283,6 +284,7 @@ function widget:MousePress(x, y, button)
 				-- si attiva
 				elseif not Button_[4].showMenu and (Button_[4].showMiniButton and ((x >= Button_[4].Pos_x_button) and (x <= Button_[4].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton sound
 				Spring.SendCommands("open_WMRTS_snd")		-- open wmrts_sndmenu
+				Spring.SendCommands("close_wmrts_unitdepl")		-- chiudi lo units deploy menu						
 				Spring.SendCommands("close_WMRTS_obj") 			-- chiudo gli obiettivi	
 				Spring.SendCommands("close_WMRTS_menu") 		-- close_WMRTS_menu
 				Spring.SendCommands("close_WMRTS_graphics") 	-- close WMRTS_graphics	
@@ -300,6 +302,7 @@ function widget:MousePress(x, y, button)
 				-- si attiva				
 				elseif not Button_[1].showMenu and (Button_[1].showMiniButton and((x >= Button_[1].Pos_x_button) and (x <= Button_[1].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				Spring.SendCommands("open_WMRTS_statistics")
+				Spring.SendCommands("close_wmrts_unitdepl")		-- chiudi lo units deploy menu						
 				Spring.SendCommands("close_WMRTS_obj") 			-- chiudo gli obiettivi	
 				Spring.SendCommands("close_WMRTS_menu") 		-- close_WMRTS_menu
 				Spring.SendCommands("close_WMRTS_graphics") 	-- close WMRTS_graphics	
@@ -317,6 +320,7 @@ function widget:MousePress(x, y, button)
 				-- si attiva			
 				elseif not Button_[2].showMenu and (Button_[2].showMiniButton and((x >= Button_[2].Pos_x_button) and (x <= Button_[2].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				Spring.SendCommands("open_WMRTS_obj")
+				Spring.SendCommands("close_wmrts_unitdepl")		-- chiudi lo units deploy menu						
 				Spring.SendCommands("close_WMRTS_menu") 		-- close_WMRTS_menu
 				Spring.SendCommands("close_WMRTS_graphics") 	-- close WMRTS_graphics	
 				Spring.SendCommands("close_WMRTS_visuals") 		-- close WMRTS_graphics					
@@ -354,6 +358,7 @@ function widget:MousePress(x, y, button)
 				-- si attiva			
 				elseif not Button_[3].showMenu and (Button_[3].showMiniButton and((x >= Button_[3].Pos_x_button) and (x <= Button_[3].Pos_x_button + larghezza_minimenu_buttons) and (y >= Pos_y_minimenu_button) and (y <= Pos_y_minimenu_button+altezza_minimenu_buttons)))  then --se è sopra il minibutton 
 				Spring.SendCommands("open_wmrts_diary") 
+				Spring.SendCommands("close_wmrts_unitdepl")		-- chiudi lo units deploy menu				
 				Spring.SendCommands("close_WMRTS_obj") 			-- chiudo gli obiettivi	
 				Spring.SendCommands("close_WMRTS_menu") 		-- close_WMRTS_menu
 				Spring.SendCommands("close_WMRTS_graphics") 	-- close WMRTS_graphics	
@@ -446,22 +451,18 @@ function widget:TextCommand(command)
 	-- evidenza obj button
 	Button_[2].isBlinking = true
 	end		
-	
-	-- apertura e chiusura deploy menu
+-- apertura e chiusura deploy menu
 	if command == 'open_wmrts_unitdepl' then
 		Button_[6].showMenu = true
 	end
 	if command == 'close_wmrts_unitdepl' then
 		Button_[6].showMenu = false
 	end		
--- blinking del deploy menu
+-- blinking del deploy menu 
 	if command == 'blink_wmrts_deploy' and Button_[3].showMenu == false then
 	-- lampeggia diary button
 	Button_[6].isBlinking = true
 	end		
-	
-	
-	
 -- apertura e chiusura diary menu
 	if command == 'open_wmrts_diary' then
 		Button_[3].showMenu = true
