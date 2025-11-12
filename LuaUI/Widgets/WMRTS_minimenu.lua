@@ -65,7 +65,7 @@ local Button_ ={
 	{ name = "resources_button", showMiniButton = true, showMenu = false, isBlinking= false, mouseOver = false, Pos_x_button = 5},			-- Button_[10].
 }  
 local missione_attiva					= 0						-- se 0 partita skirmish, se 1 partita WMRTSmission, se 2 partita FLEAmission. Definira quali pulsanti devono apparire o meno (OBJ e diary)
-
+local deploy_attiva						= 0						-- se 0 la partita non utilizza le deploy units, pertanto nascono il pulsante. Il valore verrà caricato in itinitalize.
 -- definizione variabili di posizione e lunghezza
 local Pos_x_minimenu_button		        = 200					-- corrisponde alla distanza X tra il vertice in basso a sx del minimenu_buttons e il margine destro del monitor
 local Pos_y_minimenu_button				= 200 					-- corrisponde alla distanza Y tra il vertice in basso a sx del minimenu_buttons e il margine superiore del monitor
@@ -159,8 +159,10 @@ end
 -- INIZIALIZZO IL MENU 
 --------------------------------------
 function widget:Initialize()
--- preleva il valore da modoptions
-	missione_attiva = tonumber(Spring.GetModOptions().wmrtsmission) or 0 -- prendi il valore dalle opzioni wmrtsmission o 0
+-- preleva il valore da modoptions per gestire il diary button
+	missione_attiva = tonumber(Spring.GetModOptions().wmrtsmission) or 0 	-- prendi il valore dalle opzioni wmrtsmission o 0
+-- preleva il valore da modoptions per gestire il deploy units button	
+	deploy_attiva = tonumber(Spring.GetModOptions().wmrtsunitdeploy) or 0	-- prendi il valore dalle opzioni wmrtsmission o 0
 -- all'inizio imposto la posizione del mini menu
 	Pos_x_minimenu_button = vsx - margine_dx_minimenu - larghezza_main_minimenu_button
 	Pos_y_minimenu_button = vsy - margine_su_minimenu - altezza_minimenu_buttons
@@ -527,8 +529,7 @@ mousex, mousey = Spring.GetMouseState ()  -- verificare se diradare il time di a
 				show_selettore_mainmini = false
 				end
 				-- tutti i minibutton menu:
-				-- ############################################################################### Inserire anche la condizione in cui il pulsante non è nascosto!! ################################
-				-- ############################################################################### Inserire anche la condizione in cui il pulsante non è nascosto!! ################################				
+			
 				-- sound
 				if 	((mousex >= Button_[4].Pos_x_button) and (mousex <= Button_[4].Pos_x_button + larghezza_minimenu_buttons) and (mousey >= Pos_y_minimenu_button) and (mousey <= Pos_y_minimenu_button+altezza_minimenu_buttons)) then -- su snd minibutton
 				Pos_x_riquadro_button =	Button_[4].Pos_x_button
@@ -700,7 +701,7 @@ local function DrawMainMiniMenu()
 
 -- inserisco units deploy minipulsante, se abilitato
 ------------------------------------
-		if Button_[6].showMiniButton then 	-- se il minipulsante è attivo e non si sta giocando una partita skirmish (diverso da 0) per vederlo nel minimenù:
+		if (Button_[6].showMiniButton and (deploy_attiva ==1)) then 	-- se il minipulsante è attivo e anche il modoption è configurato per il deploy units:
 	Button_[6].Pos_x_button = Pos_x_next_button_drawing		-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
 	-- sfondo del blocco, se attivo
 	gl.Color(1,1,1,1)
@@ -709,18 +710,17 @@ local function DrawMainMiniMenu()
 	gl.Texture(false)	-- fine texture	
 	-- pulsante
 				if Button_[6].showMenu then 				-- se la finestra (o funzione) del diario è attiva:
-				gl.Texture(deploy_on)				-- mostra il pulsante acceso ###############################
+				gl.Texture(deploy_on)				-- mostra il pulsante acceso 
 				else
 					if Button_[6].isBlinking == true then
-						gl.Texture(deploy_blinking)			-- mostra il pulsante blinking ###########
+						gl.Texture(deploy_blinking)			-- mostra il pulsante blinking 
 					else				
-						gl.Texture(deploy_off)			-- altrimenti mostra il pulsante spento	 ##############
+						gl.Texture(deploy_off)			-- altrimenti mostra il pulsante spento	 
 					end
 				end
 			gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
 			gl.Texture(false)	-- fine texture	
 			Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante SUCCESSIVO (se sarà presente)
-		
 	end
 
 -- inserisco diary minipulsante, se abilitato
