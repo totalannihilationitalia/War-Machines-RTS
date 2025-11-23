@@ -39,8 +39,46 @@ return {
 --    collisionvolumescales = "5 50 5",
 --    collisionvolumetype = "Box",
   },
-
-
+  bigrock003_feature =
+  {
+    description = "A rock",
+    blocking = true,
+    damage = 70000,
+    energy = 0,
+    flammable = false,
+    indestructible = true,
+--    featureDead ="",
+    noselect = true,
+    metal = 100,
+    footprintx = 10,
+    footprintz = 10,
+    object = "bigrock003_feature.s3o",
+    reclaimable = false,
+    upright = true,
+--    collisionvolumeoffsets = "0 0 0",
+--    collisionvolumescales = "5 50 5",
+--    collisionvolumetype = "Box",
+  },
+  bigrock004_feature =
+  {
+    description = "A rock",
+    blocking = true,
+    damage = 70000,
+    energy = 0,
+    flammable = false,
+    indestructible = true,
+--    featureDead ="",
+    noselect = true,
+    metal = 100,
+    footprintx = 10,
+    footprintz = 10,
+    object = "bigrock004_feature.s3o",
+    reclaimable = false,
+    upright = true,
+--    collisionvolumeoffsets = "0 0 0",
+--    collisionvolumescales = "5 50 5",
+--    collisionvolumetype = "Box",
+  },
 }
 
 
