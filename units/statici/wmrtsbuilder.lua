@@ -155,6 +155,15 @@ return {
 			[89] = "livrium04",
 			[90] = "andflag",
 			[91] = "andtower",
+			[92] = "bigrock001",			
+			[93] = "bigrock002",
+			[94] = "bigrock003",
+			[95] = "bigrock004",
+			[96] = "bigrock005",
+			[97] = "bigrock006",
+			[98] = "bigrock007",
+			[99] = "bigrock008",		
+			[100] = "bigrock009",			
 
 		},
 		featuredefs = {
