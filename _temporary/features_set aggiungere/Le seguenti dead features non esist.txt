@@ -1,0 +1,9 @@
+Le seguenti dead features non esistono
+andsolar_dead
+andmstor_dead
+andestor_dead
+
+hovercraft 2 livello
+sistemare quelli del 1 livello che sembrano dei cazzini
+advanced constructor spider deve avere le stesse costruzioni dell'hovercraft avanzato!
+incubator abanzato 3 livello viene giu dal cielo, (come incubator), deve essere fabbrica terrena
