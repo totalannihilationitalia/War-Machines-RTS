@@ -1,0 +1,334 @@
+#define TA			// This is a TA script
+
+#include "sfxtype.h"
+#include "exptype.h"
+
+piece  lf1, lf2, rf1, rf2, base, wheels, lshoulder, rshoulder, rhand, lhand, chest, wake1, wake2, wake3,
+       wake4;
+
+static-var  bAiming, Static_Var_2, gun_1, Static_Var_4, Static_Var_5,
+            gun_3, bMoving;
+
+// Signal definitions
+#define SIG_AIM				2
+
+
+EmitSFX()
+{
+	while( TRUE )
+	{
+		if( bMoving )
+		{
+			if( Static_Var_2 == 3 )
+			{
+				emit-sfx 259 from wake2;
+				emit-sfx 259 from wake3;
+				emit-sfx 3 from wake1;
+				emit-sfx 3 from wake4;
+				Static_Var_5 = 1;
+			}
+			if( Static_Var_2 == 2 )
+			{
+				emit-sfx 259 from wake2;
+				emit-sfx 259 from wake3;
+				Static_Var_5 = 1;
+			}
+			if( Static_Var_2 == 1 )
+			{
+				emit-sfx 3 from wake2;
+				emit-sfx 3 from wake3;
+				Static_Var_5 = 0;
+			}
+			sleep 150;
+		}
+		if( ( !bMoving ) AND Static_Var_2 == 3 )
+		{
+			emit-sfx 3 from wake1;
+			sleep 700;
+			emit-sfx 3 from wake4;
+			sleep 500;
+		}
+		sleep 200;
+	}
+}
+
+setSFXoccupy(Func_Var_1)
+{
+	Static_Var_2 = Func_Var_1;
+}
+
+Create()
+{
+	bAiming = FALSE;
+	gun_1 = lf1;
+	Static_Var_4 = 0;
+	Static_Var_2 = 4;
+	Static_Var_5 = 0;
+	gun_3 = lf2;
+	hide lf1;
+	hide lf2;
+	hide rf1;
+	hide rf2;
+	dont-cache lf1;
+	dont-cache lf2;
+	dont-cache rf1;
+	dont-cache rf2;
+	start-script EmitSFX();
+}
+
+StartMoving()
+{
+	bMoving = TRUE;
+	if( !bAiming )
+	{
+		turn lshoulder to x-axis <-30.000000> speed <30.000000>;
+		turn rshoulder to x-axis <-30.000000> speed <30.000000>;
+	}
+}
+
+StopMoving()
+{
+	bMoving = FALSE;
+	if( !bAiming )
+	{
+		turn chest to x-axis <10.000000> speed <30.000000>;
+		sleep 400;
+		turn chest to x-axis <0.000000> speed <20.000000>;
+		turn lshoulder to x-axis <0.000000> speed <20.000000>;
+		turn rshoulder to x-axis <0.000000> speed <20.000000>;
+	}
+}
+
+SweetSpot(piecenum)
+{
+	piecenum = base;
+}
+
+RestoreAfterDelay()
+{
+	sleep 5000;
+	bAiming = FALSE;
+	turn chest to y-axis <0.000000> speed <80.000000>;
+	turn lhand to y-axis <0.000000> speed <90.000000>;
+	turn rhand to y-axis <0.000000> speed <90.000000>;
+	sleep 500;
+	if( gun_1 == 1 )
+	{
+		gun_1 = lf1;
+	}
+	if( gun_1 == 3 )
+	{
+		gun_1 = rf1;
+	}
+	turn lshoulder to x-axis <-30.000000> speed <40.000000>;
+	turn rshoulder to x-axis <-30.000000> speed <40.000000>;
+	sleep 500;
+	if( ( !bMoving ) AND ( !bAiming ) )
+	{
+		turn lshoulder to x-axis <0.000000> speed <60.000000>;
+		turn rshoulder to x-axis <0.000000> speed <60.000000>;
+	}
+}
+
+AimPrimary(heading, pitch)
+{
+	if( !bAiming )
+	{
+		if( gun_1 <= 1 )
+		{
+			turn lshoulder to x-axis <-90.000000> speed <120.000000>;
+			turn rshoulder to x-axis <-60.000000> speed <80.000000>;
+			sleep 750;
+			turn lhand to y-axis <60.000000> speed <150.000000>;
+		}
+		if( gun_1 >= 2 )
+		{
+			turn rshoulder to x-axis <-90.000000> speed <120.000000>;
+			turn lshoulder to x-axis <-60.000000> speed <80.000000>;
+			sleep 750;
+			turn rhand to y-axis <-60.000000> speed <150.000000>;
+		}
+	}
+	bAiming = TRUE;
+	signal SIG_AIM;
+	set-signal-mask 0;
+	set-signal-mask SIG_AIM;
+	turn chest to y-axis heading speed <100.000000>;
+	if( gun_1 <= 1 )
+	{
+		turn lshoulder to x-axis <-90.000000> - pitch speed <120.000000>;
+		wait-for-turn lshoulder around x-axis;
+	}
+	if( gun_1 >= 2 )
+	{
+		turn rshoulder to x-axis <-90.000000> - pitch speed <120.000000>;
+		wait-for-turn rshoulder around x-axis;
+	}
+	if( gun_1 == 1 )
+	{
+		turn rshoulder to x-axis <-90.000000> - pitch speed <120.000000>;
+	}
+	if( gun_1 == 3 )
+	{
+		turn lshoulder to x-axis <-90.000000> - pitch speed <120.000000>;
+	}
+	wait-for-turn chest around y-axis;
+	start-script RestoreAfterDelay();
+	return (1);
+}
+
+FirePrimary()
+{
+	if( gun_1 == 0 )
+	{
+		sleep 100;
+	}
+	if( gun_1 == 1 )
+	{
+		sleep 100;
+		sleep 200;
+		turn lshoulder to x-axis <-60.000000> speed <80.000000>;
+		turn lhand to y-axis <0.000000> speed <80.000000>;
+		turn rhand to y-axis <-60.000000> speed <150.000000>;
+	}
+	if( gun_1 == 2 )
+	{
+		sleep 100;
+	}
+	if( gun_1 == 3 )
+	{
+		sleep 100;
+		sleep 200;
+		turn rshoulder to x-axis <-60.000000> speed <80.000000>;
+		turn rhand to y-axis <0.000000> speed <80.000000>;
+		turn lhand to y-axis <60.000000> speed <150.000000>;
+		gun_1 = lf1;
+		return (0);
+	}
+	++gun_1;
+}
+
+QueryPrimary(piecenum)
+{
+	piecenum = gun_1;
+}
+
+AimFromPrimary(piecenum)
+{
+	if( gun_1 <= 1 )
+	{
+		piecenum = lshoulder;
+	}
+	if( gun_1 >= 2 )
+	{
+		piecenum = rshoulder;
+	}
+}
+
+AimFromTertiary(piecenum)
+{
+	piecenum = chest;
+}
+
+QueryTertiary(piecenum)
+{
+	if( gun_3 )
+	{
+		if( !Static_Var_4 )
+		{
+//			piecenum = ltorp;
+		}
+		if( Static_Var_4 )
+		{
+//			piecenum = rtorp;
+		}
+	}
+}
+
+FireTertiary()
+{
+	gun_3 = lf1;
+	if( !Static_Var_4 )
+	{
+//		emit-sfx 256 | 3 from ltorp;
+	}
+	if( Static_Var_4 )
+	{
+//		emit-sfx 256 | 3 from rtorp;
+	}
+	Static_Var_4 = !Static_Var_4;
+	sleep 9000;
+	gun_3 = lf2;
+}
+
+AimTertiary(heading, pitch)
+{
+	while( ( !Static_Var_5 ) OR ( !gun_3 ) )
+	{
+		sleep 300;
+	}
+	return (1);
+}
+
+Killed(severity, corpsetype)
+{
+	hide lf1;
+	hide lf2;
+	hide rf1;
+	hide rf2;
+	if( Static_Var_2 != 3 )
+	{
+		if( severity <= 25 )
+		{
+			corpsetype = 1;
+			explode base type BITMAPONLY | BITMAP1;
+			explode wheels type BITMAPONLY | BITMAP2;
+			explode lshoulder type BITMAPONLY | BITMAP4;
+//			explode ltorp type BITMAPONLY | BITMAP1;
+			explode lhand type BITMAPONLY | BITMAP2;
+			explode chest type BITMAPONLY | BITMAP4;
+			explode rshoulder type BITMAPONLY | BITMAP5;
+//			explode rtorp type BITMAPONLY | BITMAP2;
+			explode rhand type BITMAPONLY | BITMAP3;
+			return (0);
+		}
+	}
+	if( severity <= 50 )
+	{
+		corpsetype = 2;
+		explode base type BITMAPONLY | BITMAP1;
+		explode wheels type BITMAPONLY | BITMAP2;
+		explode lshoulder type FALL | BITMAP4;
+//		explode ltorp type BITMAPONLY | BITMAP1;
+		explode lhand type BITMAPONLY | BITMAP2;
+		explode chest type BITMAPONLY | BITMAP4;
+		explode rshoulder type FALL | BITMAP5;
+//		explode rtorp type BITMAPONLY | BITMAP2;
+		explode rhand type BITMAPONLY | BITMAP3;
+		return (0);
+	}
+	if( severity <= 99 )
+	{
+		corpsetype = 3;
+		explode base type BITMAPONLY | BITMAP1;
+		explode wheels type BITMAPONLY | BITMAP2;
+		explode lshoulder type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+//		explode ltorp type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		explode lhand type BITMAPONLY | BITMAP2;
+		explode chest type SHATTER | BITMAP4;
+		explode rshoulder type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+//		explode rtorp type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		explode rhand type BITMAPONLY | BITMAP2;
+		return (0);
+	}
+	corpsetype = 4;
+	explode base type BITMAPONLY | BITMAP1;
+	explode wheels type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	explode lshoulder type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+//	explode ltorp type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+	explode lhand type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	explode chest type SHATTER | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+	explode rshoulder type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+//	explode rtorp type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	explode rhand type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+}
