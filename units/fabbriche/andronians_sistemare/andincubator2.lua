@@ -19,7 +19,7 @@ return {
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
-               corpse = "andincubator2_dead",
+--               corpse = "andincubator2_dead",
                description = "Teleport units",
 --               firestandorders = 1,
                energymake = 300,

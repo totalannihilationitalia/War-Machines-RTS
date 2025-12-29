@@ -18,7 +18,7 @@ return {
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
-               corpse = "andestor_dead",
+--               corpse = "andestor_dead", -- ### costruire
                description = "Increases Energy Storage (6000)",
                energystorage = 6000,
                energyUse = 0,

@@ -18,7 +18,7 @@ return {
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
-               corpse = "andfus_dead",
+--               corpse = "andfus_dead",
                description = "Produces Energy / Storage",
                energymake = 1000,
                energystorage = 2500,

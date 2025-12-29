@@ -18,7 +18,7 @@ return {
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
-               corpse = "andsolar_dead",
+--               corpse = "andsolar_dead",  -- ##### ripristinare quando ci sarà il 3d
                damagemodifier = 0.5,
                description = "Produces Energy",
                energymake = 0,

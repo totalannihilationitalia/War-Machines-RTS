@@ -18,7 +18,7 @@ return {
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
-               corpse = "andmstor_dead",
+--               corpse = "andmstor_dead", --######costruire
                description = "Increases Metal Storage (3000)",
                energystorage = 0,
                energyUse = 0,

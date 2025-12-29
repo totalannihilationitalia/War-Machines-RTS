@@ -22,7 +22,7 @@ return {
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
-               corpse = "andaafus_dead",
+--               corpse = "andaafus_dead",
                damagemodifier = 0.95,
                description = "Enhanced Energy Output / Storage",
                energymake = 5000,
