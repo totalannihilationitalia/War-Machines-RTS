@@ -38,7 +38,7 @@ return {
                hoverattack = true,		--add
 --               maneuverleashlength  = 1280,
                mass = 150,
-               maxdamage = 4415,
+               maxdamage = 5000,
                maxslope = 10,
                maxvelocity = 0.99,
                maxwaterdepth = 0,

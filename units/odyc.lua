@@ -38,7 +38,7 @@ return {
                hoverattack = true,		--add
 --               maneuverleashlength  = 1280,
                mass = 150,
-               maxdamage = 4382,
+               maxdamage = 5000,
                maxslope = 10,
                maxvelocity = 0.99,
                maxwaterdepth = 0,
@@ -77,33 +77,32 @@ weapondefs = {
 		lightskycruiser_emg = {
                      areaofeffect = 8,
                      avoidfeature = true,
-                     burst = 2, -- lua:salvoSize
-                     burstrate = 0.1, -- lua: salvoDelay
---                     cegTag = "",
+                     beamtime = 0.1,
+--                     beamweapon = true,
+                     cegTag = "BLUCRAP",
 --                     craterareaofeffect =  ,
-                     explosiongenerator = "custom:EMGFLASH",
-                     name= "E.M.G.",
-                     range = 600,
-                     reloadtime = 0.2,
-                     rgbcolor = "1 0.87 0.3",
-                     size = "1.5",
-                     soundhit = "lasrhit1",
+                     energypershot = 10,
+                     explosiongenerator = "custom:Gatorazzurro",  -- explosiongenerator = "custom:PURPLELASER",
+                     firestarter = 90,
+                     name= "Annihilator Weapon",
+                     range = 655,
+                     reloadtime = 0.1,
+                     rgbcolor = "0 0.5 1",
+                     soundhit = "xplolrg1",
  --                   soundhitdry = "",
 --                    soundhitwet = "",
 --                    soundhitwetvolume = "",
-                     soundstart = "armsml2",
-                     soundtrigger = "0",
-                     sprayangle = 424,
-                     tolerance = 11000,
+                     soundstart = "annigun1",
+                     targetmoveerror = 0.5,
+                     tolerance = 500,
                      turret  = true, 
                      weapontype = "BeamLaser",
-                     weapontimer = 1,
-                     weapontype = " ",
-                     weaponvelocity  = 700,
+                     weaponvelocity  = 900,
                      damage = {
-                         default = 15,
+                         default = 13,
                      }, -- close damage
              }, --close single weapon definitions
+	
 
 		flying_missile = {
                      areaofeffect = 96,
