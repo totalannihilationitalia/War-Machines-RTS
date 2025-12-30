@@ -3,12 +3,60 @@
 #include "sfxtype.h"
 #include "exptype.h"
 
-piece  flare2, turret, base, sleeve1, barrel1;
+piece  flare2, turret, base, sleeve1, barrel1, wake1, wake2, wake3, wake4;
 
-static-var  restore_delay, gun_1, Static_Var_3, bMoving;
+static-var  restore_delay, Static_Var_2, Static_Var_3, Static_Var_4, bMoving;
 
 // Signal definitions
 #define SIG_AIM				2
+
+EmitSFX()
+{
+	while( TRUE )
+	{
+		if( bMoving )
+		{
+			if( Static_Var_4 == 3 )
+			{
+				emit-sfx 3 from wake2; //259
+				emit-sfx 3 from wake3;  //259
+				emit-sfx 3 from wake1;
+				emit-sfx 3 from wake4;
+
+			}
+			if( Static_Var_4 == 2 )
+			{
+				emit-sfx 3 from wake2; //259
+				emit-sfx 3 from wake3;  //259
+				emit-sfx 3 from wake1;
+				emit-sfx 3 from wake4;
+
+			}
+			if( Static_Var_4 == 1 )
+			{
+				emit-sfx 3 from wake2; //259
+				emit-sfx 3 from wake3;  //259
+				emit-sfx 3 from wake1;
+				emit-sfx 3 from wake4;
+
+			}
+			sleep 150;
+		}
+		if( ( !bMoving ) AND Static_Var_4 == 3 )
+		{
+			emit-sfx 259 from wake1;
+			sleep 700;
+			emit-sfx 259 from wake4;
+			sleep 500;
+		}
+		sleep 200;
+	}
+}
+
+setSFXoccupy(Func_Var_5)
+{
+	Static_Var_4 = Func_Var_5;
+}
 
 
 HitByWeapon(Func_Var_1, Func_Var_2)
@@ -37,6 +85,7 @@ Create()
 	Static_Var_3 = 4;
 	bMoving = FALSE;
 	restore_delay = 3000;
+	start-script EmitSFX();	
 }
 
 SetMaxReloadTime(Func_Var_1)
@@ -75,25 +124,19 @@ AimPrimary(heading, pitch)
 
 FirePrimary()
 {
-	if( gun_1 == 0 )
+	if( Static_Var_2 == 0 )
 	{
-		emit-sfx 1024 + 0 from flare2;	
+		emit-sfx 1024 + 0 from flare2;
 		move barrel1 to z-axis [-2.400000] speed [500.000000];
 		sleep 150;
 		wait-for-move barrel1 along z-axis;
 		move barrel1 to z-axis [0.000000] speed [3.000000];
 	}
-//	if( gun_1 == 1 )
-//	{
-//		emit-sfx 1024 + 0 from flare2;
-//		sleep 150;
-//	}
-//	gun_1 = !gun_1; // cambia di stato, se è 1 -> diventa 0.. se è 0 -> diventa 1
 }
 
 QueryPrimary(piecenum)
 {
-	piecenum = gun_1;
+	piecenum = Static_Var_2;
 }
 
 AimFromPrimary(piecenum)
