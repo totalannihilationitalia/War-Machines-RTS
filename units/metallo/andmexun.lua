@@ -10,7 +10,7 @@ return {
                buildcostmetal = 51,
                builder = false,
                buildpic = "",
-               buildtime  = 3460,
+               buildtime  = 1800,
                canAttack = true,
 --               canstop = 1,
                category = "ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE",
