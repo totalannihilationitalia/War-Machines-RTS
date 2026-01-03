@@ -1,0 +1,336 @@
+function widget:GetInfo()
+  return {
+    name      = "RainStorm",
+    desc      = "Rain and thunder",
+    author    = "Molix",
+    date      = "2026",
+    license   = "GNU GPL, v2 or later",
+    layer     = -24,
+    enabled   = true
+  }
+end
+
+--------------------------------------------------------------------------------
+-- CONFIGURAZIONE
+--------------------------------------------------------------------------------
+
+-- 1) PAROLE CHIAVE MAPPE (Il widget si attiva solo se il nome mappa ne contiene una)
+local rainKeywords = {
+    'rain', 'storm', 'swamp', 'tropical', 'crater', 'lake', 'river', 'jungle', 'wet'
+}
+
+-- 2) SUONI RANDOM (Percorso relativo alla cartella principale del gioco)
+local thunderSounds = {
+	LUAUI_DIRNAME.."Sounds/thunder1.wav",
+	LUAUI_DIRNAME.."Sounds/thunder2.wav",
+	LUAUI_DIRNAME.."Sounds/thunder3.wav",
+}
+
+-- Luci (Searchlights - Inclinati/Rotanti)
+local useSearchlights       = true
+local searchlightStrength    = 0.05 					-- potenza della luce proiettata sul terreno
+local searchlightBeamColor   = {1, 1, 1, 0.05}			-- colore e la trasparenza del cono di luce volumetrico (il raggio nell'aria)
+local searchlightHeightOffset = 1.2
+local searchlightVertexCount  = 16
+local searchlightGroundLead   = 1.2
+local RADIANS_PER_COBANGLE    = math.pi / 32768
+
+-- Splash
+local showSplashes          = true
+local splashTex             = LUAUI_DIRNAME.."Images/weather/rain_splash.png"
+local splashSize            = 15.0
+local splashMaxDistance     = 3500.0 
+
+-- Ciclo Meteo
+local darknessAtMinRain = 1.50   
+local darknessAtMaxRain = 0.85  
+local intensityMin     = 0.2    
+local intensityMax     = 1.0
+local cycleSpeed       = 0.0005 
+local stormColor        = {0.4, 0.4, 0.5}
+
+-- 6) FULMINI
+local lightningChance  = 0.0005  
+local lightningFlash   = 0      
+local flashFadeSpeed   = 0.12   
+
+-- 7) ASPETTO PIOGGIA
+local particleMultiplier = 0.045 
+local rainLineLength     = 35.0
+local rainLineWidth      = 1.0
+local rainColor          = {0.7, 0.7, 0.9, 0.3}
+
+--------------------------------------------------------------------------------
+-- VARIABILI INTERNE
+--------------------------------------------------------------------------------
+
+local shader, splashShader
+local particleSteps = 15
+local particleLists = {}; local splashLists = {}
+local particleStep = 1
+local active = false -- Stato interno (attivato/disattivato)
+local currentIntensity = 0.5
+local dynamicDarkness  = 1.0
+local startTimer = Spring.GetTimer()
+
+local uRainTime, uRainCam, uRainScale, uRainWind, uRainLen
+local uSplashTime, uSplashTarget, uSplashScale, uSplashSize, uSplashGroundY
+
+--------------------------------------------------------------------------------
+-- SHADERS E GEOMETRIA FARI
+--------------------------------------------------------------------------------
+
+local searchlightVertexIncrement = (math.pi * 2) / searchlightVertexCount
+
+local function BaseVertices(baseX, baseZ, radius, ecc, heading)
+	local theta = heading
+	while theta < heading + 2 * math.pi do
+		local denom = (1 - ecc * math.cos(theta - heading))
+		local vx = baseX + radius * math.cos(theta) / denom
+		local vz = baseZ + radius * math.sin(theta) / denom
+		local vy = Spring.GetGroundHeight(vx, vz) or 0
+		gl.Vertex(vx, vy + 2.0, vz)
+		theta = theta + searchlightVertexIncrement * denom 
+	end
+	local vx = baseX + radius * math.cos(heading) / (1 - ecc)
+	local vz = baseZ + radius * math.sin(heading) / (1 - ecc)
+	gl.Vertex(vx, (Spring.GetGroundHeight(vx, vz) or 0) + 2.0, vz)
+end
+
+local function BeamVertices(baseX, baseZ, radius, ecc, heading, px, py, pz)
+	gl.Vertex(px, py, pz)
+	BaseVertices(baseX, baseZ, radius, ecc, heading)
+end
+
+local vertexRain = [[
+	uniform float time; uniform float scale; uniform float lineLength; uniform vec3 wind; uniform vec3 camPos;
+	void main(void) {
+		vec3 basePos = gl_Vertex.xyz * scale;
+		basePos.y -= time * 750.0;
+		vec3 wrappedPos = mod(basePos - camPos, scale) - (scale * 0.5) + camPos;
+		vec3 finalPos = wrappedPos;
+		if (gl_Vertex.w > 0.5) { finalPos.y += lineLength; finalPos.xz -= wind.xz * 0.2; }
+		gl_FrontColor = gl_Color;
+		gl_Position = gl_ModelViewProjectionMatrix * vec4(finalPos, 1.0);
+	}
+]]
+
+local vertexSplash = [[
+	uniform float time; uniform float scale; uniform float sSize; uniform float groundY; uniform vec3 targetPos;
+	void main(void) {
+		float phase = mod(time * 2.5 + (gl_Vertex.x * 20.0), 1.0);
+		float currentSize = phase * sSize;
+		vec3 basePos = gl_Vertex.xyz * scale;
+		vec3 wrappedPos = mod(basePos - targetPos, scale) - (scale * 0.5) + targetPos;
+		vec2 offset = (gl_MultiTexCoord0.xy - 0.5) * currentSize;
+		vec3 finalPos = wrappedPos;
+		finalPos.x += offset.x; finalPos.z += offset.y; finalPos.y = groundY + 2.0;
+		gl_TexCoord[0] = gl_MultiTexCoord0;
+		gl_FrontColor = vec4(gl_Color.rgb, gl_Color.a * (1.0 - phase));
+		gl_Position = gl_ModelViewProjectionMatrix * vec4(finalPos, 1.0);
+	}
+]]
+
+--------------------------------------------------------------------------------
+-- FUNZIONI CORE
+--------------------------------------------------------------------------------
+
+function removeRain()
+	if shader then gl.DeleteShader(shader) end
+	if splashShader then gl.DeleteShader(splashShader) end
+	for i=1, #particleLists do gl.DeleteList(particleLists[i]) end
+	for i=1, #splashLists do gl.DeleteList(splashLists[i]) end
+	particleLists = {}; splashLists = {}
+    shader = nil; splashShader = nil
+end
+
+function init()
+    if shader then return end -- Già inizializzato
+	if not gl.CreateShader then return end
+	
+    shader = gl.CreateShader({ vertex = vertexRain })
+	splashShader = gl.CreateShader({ vertex = vertexSplash })
+	
+	uRainTime = gl.GetUniformLocation(shader, 'time')
+	uRainCam = gl.GetUniformLocation(shader, 'camPos')
+	uRainScale = gl.GetUniformLocation(shader, 'scale')
+	uRainWind = gl.GetUniformLocation(shader, 'wind')
+	uRainLen = gl.GetUniformLocation(shader, 'lineLength')
+	
+	uSplashTime = gl.GetUniformLocation(splashShader, 'time')
+	uSplashTarget = gl.GetUniformLocation(splashShader, 'targetPos')
+	uSplashScale = gl.GetUniformLocation(splashShader, 'scale')
+	uSplashSize = gl.GetUniformLocation(splashShader, 'sSize')
+	uSplashGroundY = gl.GetUniformLocation(splashShader, 'groundY')
+
+	local vsx, vsy = gl.GetViewSizes()
+	local countMax = math.floor((vsx * vsy) * particleMultiplier)
+	
+	for step=1, particleSteps do
+		local count = math.floor((countMax / particleSteps) * step)
+		particleLists[step] = gl.CreateList(function()
+			gl.BeginEnd(GL.LINES, function()
+				for i = 1, count do
+					local x, y, z = math.random(), math.random(), math.random()
+					gl.Vertex(x, y, z, 0); gl.Vertex(x, y, z, 1)
+				end
+			end)
+		end)
+		splashLists[step] = gl.CreateList(function()
+			gl.BeginEnd(GL.QUADS, function()
+				for i = 1, math.floor(count * 0.3) do
+					local x, z, s = math.random(), math.random(), math.random()
+					gl.TexCoord(0,0); gl.Vertex(s, 0, z, 0)
+					gl.TexCoord(1,0); gl.Vertex(s, 0, z, 0)
+					gl.TexCoord(1,1); gl.Vertex(s, 0, z, 0)
+					gl.TexCoord(0,1); gl.Vertex(s, 0, z, 0)
+				end
+			end)
+		end)
+	end
+end
+
+--------------------------------------------------------------------------------
+-- LOGICA DISEGNO (Darkness & Searchlights)
+--------------------------------------------------------------------------------
+
+local function DrawSearchlights()
+	local currColorInverse = {
+		(1 / (0.4 * dynamicDarkness) - 1) * searchlightStrength, 
+		(1 / (0.4 * dynamicDarkness) - 1) * searchlightStrength, 
+		(1 / (0.5 * dynamicDarkness) - 1) * searchlightStrength, 
+		1
+	}
+	local visibleUnits = Spring.GetVisibleUnits(-1, 30, false)
+	for _, unitID in pairs(visibleUnits) do
+		local px, py, pz = Spring.GetUnitPosition(unitID)
+		if py then
+			local ud = UnitDefs[Spring.GetUnitDefID(unitID)]
+			if ud and ud.speed > 0 then
+				local radius = Spring.GetUnitRadius(unitID)
+				local heading = -1 * (Spring.GetUnitHeading(unitID) or 0) * RADIANS_PER_COBANGLE + math.pi / 2
+				local leadDistance = searchlightGroundLead * ud.speed * 0.4 + (radius * 1.5)
+				local absHeight = py - (Spring.GetGroundHeight(px, pz) or 0)
+				local baseX = px + leadDistance * math.cos(heading)
+				local baseZ = pz + leadDistance * math.sin(heading)
+				local ecc = math.min(1 - 2 / (leadDistance / (absHeight + 1) + 2), 0.75)
+				
+				gl.DepthTest(true); gl.Blending(GL.SRC_ALPHA, GL.ONE); gl.Color(searchlightBeamColor)
+				gl.BeginEnd(GL.TRIANGLE_FAN, BeamVertices, baseX, baseZ, radius * 1.2, ecc, heading, px, py + (radius * searchlightHeightOffset), pz)
+				gl.Blending(GL.DST_COLOR, GL.ONE); gl.Color(currColorInverse)
+				gl.BeginEnd(GL.TRIANGLE_FAN, BaseVertices, baseX, baseZ, radius * 1.6, ecc, heading)
+			end
+		end
+	end
+end
+
+local function DrawDarkness()
+	local r = math.min(1.0, 0.4 * dynamicDarkness + lightningFlash)
+	local g = math.min(1.0, 0.4 * dynamicDarkness + lightningFlash)
+	local b = math.min(1.0, 0.5 * dynamicDarkness + lightningFlash)
+	gl.Blending(GL.ZERO, GL.SRC_COLOR)
+	gl.MatrixMode(GL.PROJECTION); gl.PushMatrix(); gl.LoadIdentity()
+	gl.MatrixMode(GL.MODELVIEW); gl.PushMatrix(); gl.LoadIdentity()
+	gl.Color(r, g, b, 1); gl.Rect(-1, 1, 1, -1)
+	gl.MatrixMode(GL.PROJECTION); gl.PopMatrix(); gl.MatrixMode(GL.MODELVIEW); gl.PopMatrix()
+	gl.Color(1, 1, 1, 1); gl.Blending(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA)
+end
+
+--------------------------------------------------------------------------------
+-- CALLBACKS SPRING
+--------------------------------------------------------------------------------
+
+function widget:Initialize()
+    local currentMap = Game.mapName:lower()
+    local found = false
+    for _, keyword in pairs(rainKeywords) do
+        if currentMap:find(keyword) then
+            found = true
+            break
+        end
+    end
+    
+    if found then
+        active = true
+        init()
+--        Spring.Echo("Rainstorm Pro: Attivato automaticamente (Mappa riconosciuta).") -- debug
+    end
+end
+
+function widget:Update()
+	if not active then return end
+    
+	local frame = Spring.GetGameFrame()
+	local timeFactor = (math.sin(frame * cycleSpeed) + 1) / 2
+	currentIntensity = intensityMin + (intensityMax - intensityMin) * timeFactor
+	particleStep = math.max(1, math.min(particleSteps, math.floor(particleSteps * currentIntensity)))
+	dynamicDarkness = darknessAtMinRain + (darknessAtMaxRain - darknessAtMinRain) * ((currentIntensity - intensityMin) / (intensityMax - intensityMin))
+
+	if lightningFlash > 0 then lightningFlash = lightningFlash - flashFadeSpeed
+	else
+		if math.random() < (lightningChance * currentIntensity) then
+			lightningFlash = 1.3 
+			if #thunderSounds > 0 then
+				local sound = thunderSounds[math.random(#thunderSounds)]
+				Spring.PlaySoundFile(sound, 1.0)
+			end
+		end
+	end
+end
+
+function widget:DrawWorld()
+	if not active or not shader or not particleLists[particleStep] then return end
+	
+    local vsx, vsy = gl.GetViewSizes()
+	local camX, camY, camZ = Spring.GetCameraPosition()
+	local _, pos = Spring.TraceScreenRay(vsx / 2, vsy / 2, true)
+	local tx, ty, tz = (pos and pos[1]) or camX, (pos and pos[2]) or 0, (pos and pos[3]) or camZ
+	
+	local dx, dy, dz = camX - tx, camY - ty, camZ - tz
+	local distance = math.sqrt(dx*dx + dy*dy + dz*dz)
+	local splashAlpha = math.max(0, 1.0 - (distance / splashMaxDistance))
+
+	local windX, windY, windZ = Spring.GetWind()
+
+	gl.DepthTest(true); gl.Blending(GL.SRC_ALPHA, GL.ONE)
+	gl.UseShader(shader); gl.LineWidth(rainLineWidth)
+	gl.Uniform(uRainTime, Spring.DiffTimers(Spring.GetTimer(), startTimer))
+	gl.Uniform(uRainCam, camX, camY, camZ)
+	gl.Uniform(uRainScale, 4500.0); gl.Uniform(uRainWind, windX, windY, windZ)
+	gl.Uniform(uRainLen, rainLineLength)
+	gl.Color(rainColor); gl.CallList(particleLists[particleStep]); gl.UseShader(0)
+
+	if showSplashes and splashAlpha > 0.1 then
+		gl.Texture(splashTex); gl.UseShader(splashShader)
+		gl.Uniform(uSplashTime, Spring.DiffTimers(Spring.GetTimer(), startTimer))
+		gl.Uniform(uSplashTarget, tx, ty, tz)
+		gl.Uniform(uSplashScale, 2800.0); gl.Uniform(uSplashSize, splashSize)
+		gl.Uniform(uSplashGroundY, Spring.GetGroundHeight(tx, tz) or 0)
+		gl.Color(rainColor[1], rainColor[2], rainColor[3], 0.4 * splashAlpha)
+		gl.CallList(splashLists[particleStep])
+		gl.Texture(false); gl.UseShader(0)
+	end
+    
+	gl.ResetState()
+	DrawDarkness()
+	if useSearchlights and dynamicDarkness < 0.99 then DrawSearchlights() end
+end
+
+function widget:Shutdown()
+	removeRain()
+end
+
+function widget:TextCommand(command)
+    if (command:find("rainstorm") == 1) then 
+		active = not active
+		if active then 
+            init() 
+--            Spring.Echo("Rainstorm Pro: ON") -- debug
+        else 
+            removeRain() 
+--            Spring.Echo("Rainstorm Pro: OFF") -- debug
+        end
+        return true
+	end
+    return false
+end

@@ -36,11 +36,11 @@ local textStartOpacity = 0 -- era 0.55
 
 local fpsDifference 			= (maxFps-minFps)/particleSteps		-- fps difference need before changing the dlist to one with fewer particles
 
-local snowTexFolder = LUAUI_DIRNAME.."Images/snow/"
+local snowTexFolder = LUAUI_DIRNAME.."Images/weather/"
 
 local snowKeywords = {'snow','frozen','cold','winter','ice','icy','arctic','frost','melt','glacier','mosh_pit','blindside','northernmountains','amarante', 'akilon'}
 
-local snowMaps = {'crater'}
+local snowMaps = {'crater'} -- inserire i nomi delle mappe ### local snowMaps = {'crater','Delta Siege dry'}
 
 -- disable for maps that have a keyword but are not snowmaps
 snowMaps['sacrifice_v1'] = false

@@ -1,0 +1,172 @@
+function widget:GetInfo()
+  return {
+    name      = "Rain",
+    desc      = "Rain widget",
+    author    = "Molix",
+    date      = "2026",
+    license   = "GNU GPL, v2 or later",
+    layer     = -24,
+    enabled   = true
+  }
+end
+-- 02/01/2026 = created this widget 
+
+--------------------------------------------------------------------------------
+-- Configurazione
+--------------------------------------------------------------------------------
+
+local minFps             = 35
+local maxFps             = 60
+local particleSteps      = 10	  -- riduce in "steps" la quantità delle gocce (particelle) in funzione degli FPS 
+local particleMultiplier = 0.015  -- quantità di gocce
+local rainLineLength     = 35.0   -- Lunghezza verticale delle goccia
+local rainLineWidth      = 1.0    -- Spessore della goccia
+local rainColor          = {0.7, 0.7, 0.9, 0.3} -- Colore goccia
+
+local rainKeywords = {'rain', 'tropical', 'swamp', 'wet', 'jungle', 'water', 'river', 'delta', 'marsh', 'island'}
+local rainMaps = {}
+
+--------------------------------------------------------------------------------
+-- Variabili
+--------------------------------------------------------------------------------
+
+local shader
+local shaderTimeLoc, shaderCamPosLoc, shaderScaleLoc, shaderWindLoc, shaderLengthLoc
+local startTimer = Spring.GetTimer()
+local vsx, vsy = gl.GetViewSizes()
+local currentMapname = Game.mapName:lower()
+local particleLists = {}
+local particleStep = 5
+local enabled = false
+local gameFrameCountdown = 120
+local averageFps = Spring.GetFPS()
+
+--------------------------------------------------------------------------------
+-- Shader 
+--------------------------------------------------------------------------------
+
+function init()
+	if not enabled or not gl.CreateShader then return end
+	
+	shader = gl.CreateShader({
+		vertex = [[
+			uniform float time;
+			uniform float scale;
+			uniform float lineLength;
+			uniform vec3 wind;
+			uniform vec3 camPos;
+			
+			void main(void)
+			{
+				// 1. Calcoliamo la posizione base come un punto singolo
+				vec3 basePos = gl_Vertex.xyz * scale;
+				
+				// 2. Applichiamo la caduta (velocità fissa 500.0)
+				basePos.y -= time * 500.0;
+				
+				// 3. IL FIX: Calcoliamo il modulo (wrapping) sulla posizione BASE
+				// Questo sposta l'intera goccia come un blocco unico
+				vec3 wrappedPos = mod(basePos - camPos, scale) - (scale * 0.5) + camPos;
+
+				// 4. Ora definiamo i due vertici della linea partendo dalla base wrappata
+				vec3 finalPos = wrappedPos;
+				
+				if (gl_Vertex.w > 0.5) {
+					// Se è la "coda", la spostiamo verso l'alto e aggiungiamo l'effetto vento
+					finalPos.y += lineLength;
+					finalPos.xz -= wind.xz * 0.3; // Inclinazione vento
+				}
+
+				gl_FrontColor = gl_Color;
+				gl_Position = gl_ModelViewProjectionMatrix * vec4(finalPos, 1.0);
+			}
+		]],
+	})
+
+	if not shader then return end
+
+	shaderTimeLoc   = gl.GetUniformLocation(shader, 'time')
+	shaderCamPosLoc = gl.GetUniformLocation(shader, 'camPos')
+	shaderScaleLoc  = gl.GetUniformLocation(shader, 'scale')
+	shaderWindLoc   = gl.GetUniformLocation(shader, 'wind')
+	shaderLengthLoc = gl.GetUniformLocation(shader, 'lineLength')
+	
+	-- Creazione liste
+	particleDensityMax = math.floor((vsx * vsy) * particleMultiplier)
+	for step=1, particleSteps do
+		local particles = math.floor((particleDensityMax / particleSteps) * step)
+		particleLists[step] = gl.CreateList(function()
+			gl.BeginEnd(GL.LINES, function()
+				for i = 1, particles do
+					local x, y, z = math.random(), math.random(), math.random()
+					-- Vertice 0 (Testa) e Vertice 1 (Coda) condividono la stessa coordinata XYZ di base
+					gl.Vertex(x, y, z, 0) 
+					gl.Vertex(x, y, z, 1)
+				end
+			end)
+		end)
+	end
+end
+
+--------------------------------------------------------------------------------
+-- Update e Disegno
+--------------------------------------------------------------------------------
+
+function widget:Update()
+	if gameFrameCountdown > 0 then
+		gameFrameCountdown = gameFrameCountdown - 1
+	else
+		averageFps = (averageFps * 0.9) + (Spring.GetFPS() * 0.1)
+		local particleAmount = (averageFps - minFps) / (maxFps - minFps)
+		particleStep = math.max(1, math.min(particleSteps, math.floor(particleSteps * particleAmount)))
+		enabled = (particleStep > 1) and (rainMaps[currentMapname] ~= false)
+	end
+end
+
+function widget:DrawWorld()
+	if not enabled or not shader or not particleLists[particleStep] then return end
+	
+	local camX, camY, camZ = Spring.GetCameraPosition()
+	local diffTime = Spring.DiffTimers(Spring.GetTimer(), startTimer)
+	local windX, _, windZ = Spring.GetWind()
+
+	gl.DepthTest(true)
+	gl.Blending(GL.SRC_ALPHA, GL.ONE)
+	gl.LineWidth(rainLineWidth)
+	
+	gl.UseShader(shader)
+	gl.Uniform(shaderTimeLoc, diffTime)
+	gl.Uniform(shaderCamPosLoc, camX, camY, camZ)
+	gl.Uniform(shaderScaleLoc, 3500.0) -- Dimensione area pioggia
+	gl.Uniform(shaderWindLoc, windX, 0, windZ)
+	gl.Uniform(shaderLengthLoc, rainLineLength)
+	
+	gl.Color(rainColor)
+	gl.CallList(particleLists[particleStep])
+	
+	gl.UseShader(0)
+	gl.LineWidth(1.0)
+	gl.ResetState()
+end
+
+function widget:Initialize()
+	for _,keyword in pairs(rainKeywords) do
+		if string.find(currentMapname, keyword) then enabled = true; break end
+	end
+	if rainMaps[currentMapname] ~= nil then enabled = rainMaps[currentMapname] end
+	init()
+end
+
+function widget:Shutdown()
+	if shader then gl.DeleteShader(shader) end
+	for i=1, particleSteps do if particleLists[i] then gl.DeleteList(particleLists[i]) end end
+end
+
+function widget:TextCommand(command)
+    if (string.find(command, "rain") == 1) then 
+		enabled = not enabled
+		rainMaps[currentMapname] = enabled
+		if enabled then init() end
+		Spring.Echo("Rain: " .. (enabled and "ON" or "OFF"))
+	end
+end

@@ -1,0 +1,181 @@
+function widget:GetInfo()
+  return {
+    name      = "Rain (Dynamic Lines)",
+    desc      = "Pioggia dinamica che cambia intensità nel tempo.",
+    author    = "Floris (Modificato)",
+    date      = "2024",
+    license   = "GNU GPL, v2 or later",
+    layer     = -24,
+    enabled   = true
+  }
+end
+
+--------------------------------------------------------------------------------
+-- Parametri di Intensità Dinamica
+--------------------------------------------------------------------------------
+
+local intensityMin     = 0.3    	-- Intensità minima (es. 0.1 = pioggerellina)
+local intensityMax     = 1.0    	-- Intensità massima (es. 1.0 = acquazzone)
+local cycleSpeed       = 0.0003 		-- Velocità del cambiamento (più basso = più lento)
+
+local particleMultiplier = 0.04 -- Moltiplicatore globale (densità massima assoluta)
+local rainLineLength     = 35.0
+local rainLineWidth      = 1.0
+local rainColor          = {0.7, 0.7, 0.9, 0.2}
+
+--------------------------------------------------------------------------------
+-- Variabili Interne
+--------------------------------------------------------------------------------
+
+local minFps             = 35
+local maxFps             = 60
+local particleSteps      = 15 -- Aumentato un po' per transizioni più fluide
+local particleLists      = {}
+local particleStep       = 1
+local enabled            = false
+local currentIntensity   = intensityMin
+local currentMapname     = Game.mapName:lower()
+local rainKeywords       = {'rain', 'tropical', 'swamp', 'wet', 'jungle', 'water', 'river', 'delta', 'marsh', 'island'}
+local rainMaps           = {}
+
+local shader
+local shaderTimeLoc, shaderCamPosLoc, shaderScaleLoc, shaderWindLoc, shaderLengthLoc
+local startTimer = Spring.GetTimer()
+
+--------------------------------------------------------------------------------
+-- Shader e Inizializzazione
+--------------------------------------------------------------------------------
+
+function init()
+	if not enabled or not gl.CreateShader then return end
+	
+	shader = gl.CreateShader({
+		vertex = [[
+			uniform float time;
+			uniform float scale;
+			uniform float lineLength;
+			uniform vec3 wind;
+			uniform vec3 camPos;
+			
+			void main(void)
+			{
+				vec3 basePos = gl_Vertex.xyz * scale;
+				basePos.y -= time * 550.0; // Velocità caduta
+				
+				vec3 wrappedPos = mod(basePos - camPos, scale) - (scale * 0.5) + camPos;
+				vec3 finalPos = wrappedPos;
+				
+				if (gl_Vertex.w > 0.5) {
+					finalPos.y += lineLength;
+					finalPos.xz -= wind.xz * 0.0; // inclinazione della goccia (parte finale dellea linea) in funzione del vento
+				}
+
+				gl_FrontColor = gl_Color;
+				gl_Position = gl_ModelViewProjectionMatrix * vec4(finalPos, 1.0);
+			}
+		]],
+	})
+
+	if not shader then return end
+
+	shaderTimeLoc   = gl.GetUniformLocation(shader, 'time')
+	shaderCamPosLoc = gl.GetUniformLocation(shader, 'camPos')
+	shaderScaleLoc  = gl.GetUniformLocation(shader, 'scale')
+	shaderWindLoc   = gl.GetUniformLocation(shader, 'wind')
+	shaderLengthLoc = gl.GetUniformLocation(shader, 'lineLength')
+	
+	-- Creazione delle liste (Display Lists)
+	local vsx, vsy = gl.GetViewSizes()
+	local particleDensityMax = math.floor((vsx * vsy) * particleMultiplier)
+	
+	for step=1, particleSteps do
+		local particles = math.floor((particleDensityMax / particleSteps) * step)
+		particleLists[step] = gl.CreateList(function()
+			gl.BeginEnd(GL.LINES, function()
+				for i = 1, particles do
+					local x, y, z = math.random(), math.random(), math.random()
+					gl.Vertex(x, y, z, 0) 
+					gl.Vertex(x, y, z, 1)
+				end
+			end)
+		end)
+	end
+end
+
+--------------------------------------------------------------------------------
+-- Logica di Variazione Dinamica
+--------------------------------------------------------------------------------
+
+function widget:Update()
+	-- 1. Calcoliamo l'intensità desiderata basata sul tempo (Onda sinusoidale)
+	-- math.sin oscilla tra -1 e 1, noi lo portiamo tra intensityMin e intensityMax
+	local timeFactor = (math.sin(Spring.GetGameFrame() * cycleSpeed) + 1) / 2
+	currentIntensity = intensityMin + (intensityMax - intensityMin) * timeFactor
+
+	-- 2. Controllo degli FPS (Sicurezza per non laggare)
+	local fps = Spring.GetFPS()
+	local fpsFactor = (fps - minFps) / (maxFps - minFps)
+	if fpsFactor < 0 then fpsFactor = 0 end
+	if fpsFactor > 1 then fpsFactor = 1 end
+
+	-- 3. L'intensità finale è data dal meteo moltiplicato per la salute degli FPS
+	local finalFactor = currentIntensity * fpsFactor
+	
+	-- 4. Scegliamo quale lista di particelle disegnare
+	particleStep = math.max(1, math.min(particleSteps, math.floor(particleSteps * finalFactor)))
+	
+	-- Se l'intensità è quasi zero o gli FPS sono troppo bassi, disattiviamo il disegno
+	enabled = (particleStep > 1) and (rainMaps[currentMapname] ~= false)
+end
+
+--------------------------------------------------------------------------------
+-- Disegno e Callbacks
+--------------------------------------------------------------------------------
+
+function widget:DrawWorld()
+	if not enabled or not shader or not particleLists[particleStep] then return end
+	
+	local camX, camY, camZ = Spring.GetCameraPosition()
+	local diffTime = Spring.DiffTimers(Spring.GetTimer(), startTimer)
+	local windX, _, windZ = Spring.GetWind()
+
+	gl.DepthTest(true)
+	gl.Blending(GL.SRC_ALPHA, GL.ONE)
+	gl.LineWidth(rainLineWidth)
+	
+	gl.UseShader(shader)
+	gl.Uniform(shaderTimeLoc, diffTime)
+	gl.Uniform(shaderCamPosLoc, camX, camY, camZ)
+	gl.Uniform(shaderScaleLoc, 3800.0) 
+	gl.Uniform(shaderWindLoc, windX, 0, windZ)
+	gl.Uniform(shaderLengthLoc, rainLineLength)
+	
+	gl.Color(rainColor)
+	gl.CallList(particleLists[particleStep])
+	
+	gl.UseShader(0)
+	gl.LineWidth(1.0)
+	gl.ResetState()
+end
+
+function widget:Initialize()
+	for _,keyword in pairs(rainKeywords) do
+		if string.find(currentMapname, keyword) then enabled = true; break end
+	end
+	if rainMaps[currentMapname] ~= nil then enabled = rainMaps[currentMapname] end
+	init()
+end
+
+function widget:Shutdown()
+	if shader then gl.DeleteShader(shader) end
+	for i=1, #particleLists do gl.DeleteList(particleLists[i]) end
+end
+
+function widget:TextCommand(command)
+    if (string.find(command, "rain") == 1) then 
+		enabled = not enabled
+		rainMaps[currentMapname] = enabled
+		if enabled then init() end
+		Spring.Echo("Rain widget: " .. (enabled and "DYNAMIC ON" or "OFF"))
+	end
+end

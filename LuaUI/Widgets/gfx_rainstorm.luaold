@@ -1,0 +1,183 @@
+function widget:GetInfo()
+  return {
+    name      = "Rainstorm (Dynamic + Lightning)",
+    desc      = "Temporale completo: Pioggia, oscuramento e fulmini. (v100 fix)",
+    author    = "Floris (Modificato)",
+    date      = "2024",
+    license   = "GNU LGPL, v2 or later",
+    layer     = 10, 
+    enabled   = true
+  }
+end
+
+--------------------------------------------------------------------------------
+-- CONFIGURAZIONE
+--------------------------------------------------------------------------------
+
+local thunderSound     = "sounds/thunder.wav" 
+
+local stormDarkness    = 0.35   -- Più basso = più buio (es. 0.2)
+local stormColor       = {0.4, 0.4, 0.5} 
+
+local intensityMin     = 0.3    -- Intensità pioggia minima
+local intensityMax     = 1.0
+local cycleSpeed       = 0.05 --0.0005 
+
+local lightningChance  = 0.0005  
+local lightningFlash   = 0      
+local flashFadeSpeed   = 0.1    -- Velocità con cui sparisce il lampo
+
+local particleMultiplier = 0.045 
+local rainLineLength     = 85.0
+local rainLineWidth      = 1.5
+local rainColor          = {0.7, 0.7, 0.9, 0.3}
+
+--------------------------------------------------------------------------------
+-- VARIABILI
+--------------------------------------------------------------------------------
+
+local shader
+local particleSteps = 15
+local particleLists = {}
+local particleStep = 1
+local enabled = true
+local currentIntensity = 0.5
+local startTimer = Spring.GetTimer()
+
+-- Uniform locations
+local uRainTime, uRainCam, uRainScale, uRainWind, uRainLen
+
+--------------------------------------------------------------------------------
+-- SHADER
+--------------------------------------------------------------------------------
+
+local vertexRain = [[
+	uniform float time;
+	uniform float scale;
+	uniform float lineLength;
+	uniform vec3 wind;
+	uniform vec3 camPos;
+	void main(void) {
+		vec3 basePos = gl_Vertex.xyz * scale;
+		basePos.y -= time * 750.0;
+		vec3 wrappedPos = mod(basePos - camPos, scale) - (scale * 0.5) + camPos;
+		vec3 finalPos = wrappedPos;
+		if (gl_Vertex.w > 0.5) {
+			finalPos.y += lineLength;
+			finalPos.xz -= wind.xz * 0.25;
+		}
+		gl_FrontColor = gl_Color;
+		gl_Position = gl_ModelViewProjectionMatrix * vec4(finalPos, 1.0);
+	}
+]]
+
+--------------------------------------------------------------------------------
+-- FUNZIONI CORE
+--------------------------------------------------------------------------------
+
+function init()
+	if not gl.CreateShader then return end
+	shader = gl.CreateShader({ vertex = vertexRain })
+	if not shader then return end
+
+	uRainTime  = gl.GetUniformLocation(shader, 'time')
+	uRainCam   = gl.GetUniformLocation(shader, 'camPos')
+	uRainScale = gl.GetUniformLocation(shader, 'scale')
+	uRainWind  = gl.GetUniformLocation(shader, 'wind')
+	uRainLen   = gl.GetUniformLocation(shader, 'lineLength')
+
+	local vsx, vsy = gl.GetViewSizes()
+	local countMax = math.floor((vsx * vsy) * particleMultiplier)
+	
+	for step=1, particleSteps do
+		local count = math.floor((countMax / particleSteps) * step)
+		particleLists[step] = gl.CreateList(function()
+			gl.BeginEnd(GL.LINES, function()
+				for i = 1, count do
+					local x, y, z = math.random(), math.random(), math.random()
+					gl.Vertex(x, y, z, 0); gl.Vertex(x, y, z, 1)
+				end
+			end)
+		end)
+	end
+end
+
+function widget:Update()
+	local frame = Spring.GetGameFrame()
+	
+	local timeFactor = (math.sin(frame * cycleSpeed) + 1) / 2
+	currentIntensity = intensityMin + (intensityMax - intensityMin) * timeFactor
+	particleStep = math.max(1, math.min(particleSteps, math.floor(particleSteps * currentIntensity)))
+
+	if lightningFlash > 0 then
+		lightningFlash = lightningFlash - flashFadeSpeed
+	else
+		if math.random() < (lightningChance * currentIntensity) then
+			lightningFlash = 1.2 -- Sovraesposizione bianca
+			Spring.PlaySoundFile(thunderSound, 1.0, 'ui')
+		end
+	end
+end
+
+local function DrawDarkness()
+	local r = math.min(1.0, stormColor[1] * stormDarkness + lightningFlash)
+	local g = math.min(1.0, stormColor[2] * stormDarkness + lightningFlash)
+	local b = math.min(1.0, stormColor[3] * stormDarkness + lightningFlash)
+
+	gl.Blending(GL.ZERO, GL.SRC_COLOR)
+	
+	gl.MatrixMode(GL.PROJECTION)
+	gl.PushMatrix()
+	gl.LoadIdentity()
+	
+	gl.MatrixMode(GL.MODELVIEW)
+	gl.PushMatrix()
+	gl.LoadIdentity()
+
+	gl.Color(r, g, b, 1)
+	gl.Rect(-1, 1, 1, -1)
+
+	gl.MatrixMode(GL.PROJECTION)
+	gl.PopMatrix()
+	
+	gl.MatrixMode(GL.MODELVIEW) -- TORNA IN MODALITA' MODELVIEW
+	gl.PopMatrix()
+	
+	gl.Color(1, 1, 1, 1)
+	gl.Blending(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA)
+end
+
+function widget:DrawWorld()
+	if not shader or not particleLists[particleStep] then return end
+	
+	local camX, camY, camZ = Spring.GetCameraPosition()
+	local diffTime = Spring.DiffTimers(Spring.GetTimer(), startTimer)
+	local wX, _, wZ = Spring.GetWind()
+
+	-- 1. Pioggia
+	gl.DepthTest(true)
+	gl.Blending(GL.SRC_ALPHA, GL.ONE)
+	gl.UseShader(shader)
+	gl.LineWidth(rainLineWidth)
+	gl.Uniform(uRainTime, diffTime)
+	gl.Uniform(uRainCam, camX, camY, camZ)
+	gl.Uniform(uRainScale, 4500.0)
+	gl.Uniform(uRainWind, wX, 0, wZ)
+	gl.Uniform(uRainLen, rainLineLength)
+	gl.Color(rainColor)
+	gl.CallList(particleLists[particleStep])
+	gl.UseShader(0)
+	gl.ResetState()
+
+	-- 2. Oscuramento e Lampi
+	DrawDarkness()
+end
+
+function widget:Initialize()
+	init()
+end
+
+function widget:Shutdown()
+	if shader then gl.DeleteShader(shader) end
+	for i=1, #particleLists do gl.DeleteList(particleLists[i]) end
+end
