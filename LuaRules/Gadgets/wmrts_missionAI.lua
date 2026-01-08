@@ -14,6 +14,37 @@ if (not gadgetHandler:IsSyncedCode()) then
 	return false
 end
 
+--  Il tuo codice attuale è fabbrica-centrico. L'unità appena spawnata cercherà la fabbrica più vicina (entro 3000 pixel) che ha una squadra in fase di formazione (fData.squadID).
+-- quella variabile della distanza dei 3000 pixel è definita da questa: 	local nearestDist = 3000
+-- L'unità creata dalla fabbrica misurerà la distanza dalle fabbriche. Anche se la differenza è di un solo pixel, si unirà alla squadra della fabbrica fisicamente più vicina al suo punto di spawn 
+-- (solitamente il punto di uscita della fabbrica).
+-- Non c'è rischio di "confusione": un'unità può appartenere a una sola squadra alla volta.
+-- Se la Fabbrica A è a 150 pixel e la Fabbrica B è a 160 pixel, l'unità sceglierà la A e ignorerà totalmente la B, anche se la B sta producendo lo stesso tipo di squadra.
+-- tenere presente inoltre che la fabbrica da cui nasce l'unita è in genere distanze 0 pixel per cui il problema non si pone con la logica corrente
+
+-- come si comporta l'AI con le navi? c'è il rischio che ad esse venga associato un bersaglio di terra irraggiungibile per loro?
+-- Sì, il rischio è molto alto con il codice attuale. Se introduci unità navali, l'AI si comporterà in modo "cieco" rispetto alla conformazione della mappa.
+
+-- Un piccolo dettaglio positivo: Poiché hai diviso i template (es. air_raid, heavy_assault), se crei un template specifico naval_fleet
+-- e lo assegni solo ai cantieri navali nel FACTORY_CONFIG, eviterai almeno il problema delle squadre miste (robot + navi), ma rimarrà il problema del bersaglio irraggiungibile.
+
+--[[
+se dovessi ad esempio introdurre una nuova tabella, in cui specifico la tipologia delle unità?. ad esempio:
+icucom = ground
+icupatrollet = ground
+armfig = air
+armsy = naval
+ecc
+è possibile, quando si cercano i target da assegnare alle unità dire:
+le tipologie di gruppi "ground" attaccano target "ground"
+le tipologie di gruppi "air_bombardier" attaccano "ground"
+le tipologie di gruppi "air_fighter" attaccano "air" e "ground" e "naval"
+le tipologie di gruppi "naval" attaccano "naval"
+e cosi via...
+è fattibile?? quali possono essere i pro e i contro?
+]]--
+
+
 --------------------------------------------------------------------------------
 -- CONFIGURAZIONE
 --------------------------------------------------------------------------------
