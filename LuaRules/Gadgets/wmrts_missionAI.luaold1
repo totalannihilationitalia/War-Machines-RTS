@@ -1,0 +1,294 @@
+function gadget:GetInfo()
+	return {
+		name      = "WM Squad Commander AI (Late Join Fix)",
+		desc      = "AI con gestione dei ritardatari e Watchdog",
+		author    = "molix",
+		date      = "2025",
+		license   = "GPL",
+		layer     = 100,
+		enabled   = true
+	}
+end
+
+
+-- In sintesi, ecco il comportamento attuale:
+-- Formazione: La squadra si riunisce.
+-- Partenza: Viene scelto un punto sulla mappa dove c'è un nemico ora.
+-- Combattimento: Le unità vanno lì. Se incontrano nemici per strada, sparano (grazie a CMD.FIGHT).
+-- Arrivo: Se arrivano sul punto e il nemico è morto, restano lì a "pattugliare" quel punto vuoto.
+-- Loop: Se provi a spostarle manualmente, il Watchdog le rimanderà forzatamente verso quel punto vuoto (finché non passano i 90 secondi).
+-- Abbandono: Dopo 90 secondi l'AI "si dimentica" di loro e non riceveranno mai più ordini da questo gadget.
+
+-- invece di usare il watchdog come una "data di scadenza" (dopo 90 secondi ti cancello), dovresti usarlo come un ciclo di aggiornamento.
+-- La logica ideale sarebbe:
+-- La squadra si forma.
+-- La squadra riceve un bersaglio nemico (Punto A).
+-- Ogni 5-10 secondi, il gadget controlla: "Le unità sono ferme?"
+-- SE sono ferme (hanno finito l'ordine o il nemico è morto), ALLORA chiama di nuovo GetRealEnemyTarget e dai un nuovo ordine (Punto B).
+-- ELIMINA la squadra dalla memoria SOLO quando tutte le unità che ne facevano parte sono morte (anyAlive == false).
+
+
+if (not gadgetHandler:IsSyncedCode()) then
+	return false
+end
+
+--------------------------------------------------------------------------------
+-- CONFIGURAZIONE
+--------------------------------------------------------------------------------
+
+local SQUAD_TEMPLATES = {
+	["light_patrol"] = {
+		units = { "icupatroller", "icupatroller", "icurock", "icurock" },
+		type = "ground"
+	},
+	["heavy_assault"] = {
+		units = { "mediumtank", "mediumtank", "artillerybot" }, 
+		type = "ground"
+	},
+	["air_raid"] = {
+		units = { "icuinterceptor", "icuinterceptor", "bomber" },
+		type = "air"
+	}
+}
+
+local FACTORY_CONFIG = {
+	["armlab"] = { "light_patrol" },
+	["icuap"] = { "air_raid", "heavy_assault" },
+}
+
+local TARGET_AI_NAME = "WarMachinesRTSmissionAI" 
+local SQUAD_TIMEOUT_SECONDS = 30 
+local WATCHDOG_DURATION = 90 -- Aumentato per seguire le unità più a lungo
+
+--------------------------------------------------------------------------------
+-- VARIABILI
+--------------------------------------------------------------------------------
+
+local aiTeamIDs = {}      
+local factories = {}      
+local squads = {}         
+
+--------------------------------------------------------------------------------
+-- UTILITY
+--------------------------------------------------------------------------------
+
+local function IsNoAI(unitDefID)
+	local name = UnitDefs[unitDefID].name
+	if string.find(name, "_noai") then return true end
+	return false
+end
+
+local function GetRealEnemyTarget(myTeamID)
+	local allUnits = Spring.GetAllUnits()
+	for _, uID in ipairs(allUnits) do
+		local uTeam = Spring.GetUnitTeam(uID)
+		if uTeam ~= Spring.GetGaiaTeamID() and not Spring.AreTeamsAllied(myTeamID, uTeam) then
+			local x, y, z = Spring.GetUnitPosition(uID)
+			if x then return {x=x, y=y, z=z} end
+		end
+	end
+	return { x = Game.mapSizeX/2, y = 0, z = Game.mapSizeZ/2 }
+end
+
+local function GiveAttackOrder(unitID, targetPos)
+	if not targetPos then return end
+	
+	-- Stop forzato per pulire la coda
+	Spring.GiveOrderToUnit(unitID, CMD.STOP, {}, {})
+	
+	-- Scatter per evitare che si sovrappongano tutti nello stesso punto
+	local tx = targetPos.x + math.random(-250, 250)
+	local tz = targetPos.z + math.random(-250, 250)
+	local ty = Spring.GetGroundHeight(tx, tz)
+	
+	Spring.GiveOrderToUnit(unitID, CMD.FIGHT, {tx, ty, tz}, {})
+end
+
+--------------------------------------------------------------------------------
+-- INITIALIZE
+--------------------------------------------------------------------------------
+
+function gadget:Initialize()
+	Spring.Echo("WM AI: Inizializzazione...")
+	local teamList = Spring.GetTeamList()
+	local gaiaTeamID = Spring.GetGaiaTeamID()
+	for _, teamID in ipairs(teamList) do
+		if teamID ~= gaiaTeamID then
+			local assignedAI = Spring.GetTeamLuaAI(teamID)
+			if assignedAI and string.find(string.lower(assignedAI), string.lower(TARGET_AI_NAME)) then
+				aiTeamIDs[teamID] = true
+				Spring.Echo("WM AI: ATTIVATA per Team " .. teamID)
+			end
+		end
+	end
+end
+
+--------------------------------------------------------------------------------
+-- UNIT FINISHED (FIX RITARDATARI)
+--------------------------------------------------------------------------------
+
+function gadget:UnitFinished(unitID, unitDefID, unitTeam)
+	if not aiTeamIDs[unitTeam] then return end
+	if IsNoAI(unitDefID) then return end
+
+	local unitName = UnitDefs[unitDefID].name
+
+	-- Registrazione Fabbrica
+	if FACTORY_CONFIG[unitName] then
+		factories[unitID] = { defName = unitName, squadID = nil, teamID = unitTeam }
+		return
+	end
+
+	-- Ricerca Squadra
+	local bestFactoryID = nil
+	local nearestDist = 3000
+	
+	for fID, fData in pairs(factories) do
+		if fData.teamID == unitTeam then
+			local dist = Spring.GetUnitSeparation(unitID, fID)
+			if dist and dist < nearestDist then
+				-- FIX: Accettiamo la squadra sia se è in "gathering" SIA se è in "attacking_monitor"
+				if fData.squadID and squads[fData.squadID] then
+					nearestDist = dist
+					bestFactoryID = fID
+				end
+			end
+		end
+	end
+
+	if bestFactoryID then
+		local fData = factories[bestFactoryID]
+		local sID = fData.squadID
+		local squad = squads[sID]
+		
+		-- Aggiungiamo l'unità alla lista della squadra
+		table.insert(squad.units, unitID)
+		
+		if squad.state == "gathering" then
+			-- CASO 1: La squadra si sta ancora formando -> Vai al punto di raduno
+			local fX, _, fZ = Spring.GetUnitPosition(bestFactoryID)
+			Spring.GiveOrderToUnit(unitID, CMD.MOVE, {fX + math.random(-300,300), 0, fZ + math.random(300,500)}, {"shift"})
+			-- Spring.Echo("Unita aggiunta (Gathering)")
+			
+		elseif squad.state == "attacking_monitor" then
+			-- CASO 2: La squadra è già partita (RITARDATARIO) -> Attacca subito!
+			Spring.Echo("WM AI: Unita ritardataria raggiunge Squadra " .. sID .. " -> Force Attack!")
+			GiveAttackOrder(unitID, squad.attackTarget)
+		end
+	else
+		-- Se finisce qui, è davvero orfana (es. fabbrica distrutta o bug grave)
+		Spring.Echo("WM AI WARNING: Unita orfana " .. unitName)
+	end
+end
+
+function gadget:UnitDestroyed(unitID, unitDefID, unitTeam)
+	if factories[unitID] then factories[unitID] = nil end
+end
+
+--------------------------------------------------------------------------------
+-- GAME FRAME
+--------------------------------------------------------------------------------
+
+function gadget:GameFrame(n)
+	if (n % 30 ~= 0) then return end 
+
+	-- 1. GESTIONE FABBRICHE
+	for fID, fData in pairs(factories) do
+		local isLocked = false
+		
+		-- La fabbrica è bloccata finché non ha finito fisicamente di costruire (coda vuota)
+		local qSize = Spring.GetCommandQueue(fID, 0)
+		local isBuilding = Spring.GetUnitIsBuilding(fID)
+		
+		-- Se c'è una squadra attiva, controlliamo lo stato
+		if fData.squadID and squads[fData.squadID] then
+			-- Se sta ancora costruendo o la squadra sta radunando, teniamo il lock
+			if (qSize > 0) or isBuilding or (squads[fData.squadID].state == "gathering") then
+				isLocked = true
+			else
+				-- Se la squadra è partita E la fabbrica ha finito di lavorare -> Sblocca
+				fData.squadID = nil
+			end
+		end
+
+		if not isLocked then
+			-- Doppio controllo per sicurezza
+			if qSize == 0 and not isBuilding then
+				local options = FACTORY_CONFIG[fData.defName]
+				if options then
+					local templateName = options[math.random(1, #options)]
+					local template = SQUAD_TEMPLATES[templateName]
+					if template then
+						local newSquadID = n .. "_" .. fID
+						squads[newSquadID] = {
+							units = {},
+							targetSize = #template.units,
+							state = "gathering",
+							startTime = Spring.GetGameSeconds(),
+							myTeam = fData.teamID,
+							attackTarget = nil,
+							attackStartTime = 0
+						}
+						fData.squadID = newSquadID
+						
+						-- Spring.Echo("Nuova Squadra: " .. newSquadID)
+						
+						for _, uName in ipairs(template.units) do
+							local uDef = UnitDefNames[uName]
+							if uDef then Spring.GiveOrderToUnit(fID, -uDef.id, {}, {"shift"}) end
+						end
+					end
+				end
+			end
+		end
+	end
+
+	-- 2. GESTIONE SQUADRE & WATCHDOG
+	local currentTime = Spring.GetGameSeconds()
+	
+	for sID, sData in pairs(squads) do
+		
+		-- FASE A: GATHERING -> ATTACK
+		if sData.state == "gathering" then
+			local isFull = #sData.units >= sData.targetSize
+			local isTimedOut = (currentTime - sData.startTime) > SQUAD_TIMEOUT_SECONDS
+			
+			if isFull or isTimedOut then
+				sData.state = "attacking_monitor"
+				sData.attackStartTime = currentTime
+				sData.attackTarget = GetRealEnemyTarget(sData.myTeam)
+				
+				local reason = isFull and "FULL" or "TIMEOUT"
+				Spring.Echo("WM AI: Squadra " .. sID .. " LANCIA ATTACCO (" .. reason .. ") - Units: " .. #sData.units)
+				
+				for _, uID in ipairs(sData.units) do
+					if Spring.ValidUnitID(uID) and not Spring.GetUnitIsDead(uID) then
+						GiveAttackOrder(uID, sData.attackTarget)
+					end
+				end
+			end
+			
+		-- FASE B: MONITORAGGIO COSTANTE
+		elseif sData.state == "attacking_monitor" then
+			-- Controllo periodico (ogni 3 sec circa)
+			if n % 90 == 0 then
+				local anyAlive = false
+				for _, uID in ipairs(sData.units) do
+					if Spring.ValidUnitID(uID) and not Spring.GetUnitIsDead(uID) then
+						anyAlive = true
+						-- Se l'unità è ferma (coda comandi vuota), rimandala all'attacco
+						local cmds = Spring.GetCommandQueue(uID, 0)
+						if cmds == 0 then
+							GiveAttackOrder(uID, sData.attackTarget)
+						end
+					end
+				end
+				
+				-- Pulizia memoria dopo tot tempo o se tutti morti
+				if (currentTime - sData.attackStartTime > WATCHDOG_DURATION) or not anyAlive then
+					squads[sID] = nil 
+				end
+			end
+		end
+	end
+end
