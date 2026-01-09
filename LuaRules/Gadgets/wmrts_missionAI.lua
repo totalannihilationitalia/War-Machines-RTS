@@ -9,77 +9,98 @@ function gadget:GetInfo()
 		enabled   = true
 	}
 end
+-- 08/01/2025 = creata l'AI WMRTS_AI per missioni
+-- 09/01/2025 = implementato il comando attack al gruppo di bombardieri. Prima l'AI gestiva solamente il comando FIGHT ma i bombardieri non bombardano automaticamente, bisogna indicargli il punto da bombardare con il comando Attack.
+
+-- to do LIST ################################
+-- implementare SUB
+
 
 if (not gadgetHandler:IsSyncedCode()) then
 	return false
 end
 
 --------------------------------------------------------------------------------
--- DATABASE UNITÀ (Modificabile manualmente o tramite script di importazione)
+-- 1) DATABASE UNITÀ -- caricato dal file WMRTS_AI_mission_db.lua
 --------------------------------------------------------------------------------
 -- Qui puoi aggiungere campi extra in futuro (es. priority, armor_type, ecc.)
-local UNIT_DB = {
-	-- GROUND
-	["icupatroller"]    = { type = "ground" }, -- enemyCat
-	["icurock"]         = { type = "ground" },
-	["mediumtank"]      = { type = "ground" },
-	["artillerybot"]    = { type = "ground" },
-	["icucom"]          = { type = "ground" },
-	["icuraz"]          = { type = "ground" },	
-	
-	-- AIR
-	["icuinterceptor"]  = { type = "air" },
-	["euftransp"]       = { type = "air" },
-	["armfig"]          = { type = "air" },
-	
-	-- NAVAL 
-	["armbats"]         = { type = "naval" },
-	["destroyer"]       = { type = "naval" },
-	["armsy"]           = { type = "naval" },
-	
-	-- HOVER
-	["andniko"]			= { type = "hover" },
-}
+-- La tipologia di ogni singola unità è necessaria affinchè la AI gestisca le squadre/gruppi (punto 2) contro le singole unità.
+-- Ad esempio le tipologie di unità "ground" definite nel database verranno bersagliate dai gruppi tipo "ground" e "air_toground" definiti nel punto 2. 
+-- Questa logica di "chi attacca cosa" è definita poi nel punto "4) LOGICA DI TARGETING BASATA SU DATABASE"
+-- definizione delle tipologie:
+--			type = ground 				-> unità mobile di terra (veicoli e Kbot)
+--			type = air 					-> unità mobile aerea
+--			type = hovercraft 			-> unità mobile di terra che può andare sul mare
+--			type = naval 				-> unità mobile navale (di superficie, no SUB)
+--			type = building 			-> unità fissa di superficie su terra (di difesa/produzione/energia)
+--			type = navalbuilding 		-> unità fissa di superficie su mare (di difesa/produzione/energia)
+--			type = strategicbuilding 	-> unità fissa di superficie strategica ( Es factory 3 livello, silos, antipalline )
+
+local dbPath = "LuaRules/Configs/WMRTS_AI_mission_db.lua"
+local UNIT_DB = VFS.Include(dbPath)
+
+-- Debug in caso di mancanza del database
+if not UNIT_DB then
+    Spring.Echo("WARNING: WM AI units database not found in: " .. dbPath)
+    UNIT_DB = {}
+end
 
 --------------------------------------------------------------------------------
--- CONFIGURAZIONE SQUADRE (LISTE DI COSTRUZIONE)
+-- 2a) CONFIGURAZIONE SQUADRE / GRUPPI (LISTE DI COSTRUZIONE) e tipologia
 --------------------------------------------------------------------------------
+
+-- Il nome dello "squad_template" identifica solamente il nome del gruppo da creare. Es. ["light_patrol_1"], verrà poi impiegato nel punto 2b per dire alla fabbrica: costruisci le unità di questo gruppo e forma il gruppo
+-- units = l'elenco delle unità che comporranno il gruppo (ad esempio il gruppo "light_patrol_1"
+-- type = tipologia di squadra, la tipologia verrà impiegata nella logica di targeting (punto 4) per dire quali unità devono attaccare. In generale descrizioni a seguito:
+-- 					type = "ground" -> attacca unità tipo "ground", "unknown" e "hover" se y di quest'ultima > -1 (vedere punto 4)
+--					type = "air_toair" -> tutti gli aerei destinati ad attaccare solo aerei
+--					type = "air_toground" -> tutti gli aerei destinati ad attaccare tutto (ground, hovercraft e naval). Attenzione: non mettere bombardieri in quanto sorvolerebbero solamente la zona. Per loro ci vuole una logica di attacco diretto sull'unità, per questo usare i gruppi specifici per bombardieri
+--					type = "air_bomber" -> tutti gli aerei da bombardamento. Hanno una logica per un bombardamento diretto sull'unità
 
 local SQUAD_TEMPLATES = {
-	["light_patrol"] = {
+	["light_patrol_1"] = {
 		units = { "icupatroller", "icupatroller", "icurock", "icurock" },
 		type = "ground" -- squadtype 
 	},
-	["heavy_assault"] = {
+	["heavy_assault_1"] = {
 		units = { "mediumtank", "mediumtank", "artillerybot" }, 
 		type = "ground"
 	},
-	["air_raid"] = { -- tutti gli aerei destinati ad attaccare tutto (ground, air, hovercraft e naval)
-		units = { "armkam", "armthund", "armthund", "armkam", "armkam" },
+	["air_raid_1"] = { 			
+		units = { "armkam", "armfig", "armfig", "armkam", "armkam" },
 		type = "air_toground"
 	},
-	["antiair_raid"] = { -- tutti gli aerei destinati ad attaccare solo aerei
+	["antiair_raid_1"] = { 
 		units = { "armfig", "armfig", "armfig" },
 		type = "air_toair"
+	},
+	["air_bomber_1"] = { 
+		units = { "armthund", "armthund", "armthund", "armthund", "armthund" }, 	-- gruppo da 5 bombardieri
+		type = "air_bomber"
 	},	
-	["naval_fleet"] = {
-		units = { "corbats", "corbats", "corbats" },
-		type = "naval"
-	}
+--	["naval_fleet"] = {
+--		units = { "corbats", "corbats", "corbats" },
+--		type = "naval"
+--	}
 }
+
+
+--------------------------------------------------------------------------------
+-- 2b) CONFIGURAZIONE FABBRICHE E BUILDLIST
+--------------------------------------------------------------------------------
 
 -- CONFIGURAZIONE FABBRICHE, selezionare gli squad_templates (le liste di costruzione)
 local FACTORY_CONFIG = {
-	["armlab"] = { "light_patrol" },
-	["armap"]  = { "antiair_raid", "air_raid" },
-	["armsy"]  = { "naval_fleet" },
+	["armlab"] = { "light_patrol_1" },
+	["armap"]  = { "antiair_raid_1", "air_raid_1" },
+--	["armsy"]  = { "naval_fleet" },
 }
 
 local TARGET_AI_NAME = "WarMachinesRTSmissionAI" 
 local SQUAD_TIMEOUT_SECONDS = 600 -- questo timeout definisce il tempo di attesa per la formazione del gruppo delle unità uscite dalla fabbrica. Oltre questo timeout il gruppo di completa e parte all'attacco o difesa 
 
 --------------------------------------------------------------------------------
--- VARIABILI
+-- 3) VARIABILI
 --------------------------------------------------------------------------------
 
 local aiTeamIDs = {}      
@@ -87,7 +108,7 @@ local factories = {}
 local squads = {}         
 
 --------------------------------------------------------------------------------
--- LOGICA DI TARGETING BASATA SU DATABASE
+-- 4) LOGICA DI TARGETING BASATA SU DATABASE
 --------------------------------------------------------------------------------
 
 -- Ottiene la categoria dal NOSTRO database
@@ -103,7 +124,7 @@ local function GetUnitCategoryFromDB(unitID)
 	return "unknown" 
 end
 
--- Funzione per trovare il bersaglio secondo le tue regole specifiche
+-- Funzione per trovare il bersaglio 
 local function GetSmartEnemyTarget(myTeamID, squadType)
 	local allUnits = Spring.GetAllUnits()
 	
@@ -116,14 +137,16 @@ local function GetSmartEnemyTarget(myTeamID, squadType)
 			local x, y, z = Spring.GetUnitPosition(uID)
 			
 			if x then
-				
+				local directAttack = false 	-- definire directAttack = true solo per gruppi di bombardieri
+				-------------
 				-- AEREI: 
-				-- La tipologia air_toall Attacca tutto, inclusi gli hovercraft sempre #### IMPLEMENTARE
+				-------------				
+				-- La tipologia air_toall Attacca tutto, inclusi gli hovercraft sempre. Relativi a tutti gli aerei NON BOMBARDIERI, che attaccano con comandi come "patrol" e "fight"
 				if squadType == "air_toall" then
 					if enemyCat == "air" or enemyCat == "ground" or enemyCat == "naval" or enemyCat == "hover" then
 						return {x=x, y=y, z=z}
 					end				
-				-- La tipologia air_toground Attacca soltanto le unità in superficie		
+				-- La tipologia air_toground Attacca soltanto le unità in superficie con aerei NON BOMBARDIERI (es. tipo "armfig" o "armkam")
 				elseif squadType == "air_toground" then
 					if enemyCat == "ground" or enemyCat == "naval" or enemyCat == "hover" then
 						return {x=x, y=y, z=z}
@@ -133,15 +156,24 @@ local function GetSmartEnemyTarget(myTeamID, squadType)
 					if enemyCat == "air" then
 						return {x=x, y=y, z=z}
 					end
+				-- La tipologia air_bomber manda il gruppo di unità all'attacco direttamente su una singola unità (UTILE PER I BOMBARDIERI)
+				elseif squadType == "air_bomber" then
+					directAttack = true -- imposto attacco diretto su true cosi le unità attaccheranno direttamente l'unità
+					if enemyCat == "ground" then -- ####################################################################################### valutare se bersagliare unità di tipo building o solo building importanti
+						return {x=x, y=y, z=z, id=uID} -- restituisco anche l'ID dell'unità che si intende bersagliare
+					end					
+				-------------
 				-- TERRA: Attaccano ground, unknown e hover (solo se su terra)
+				-------------				
 				elseif squadType == "ground" then
 					if enemyCat == "ground" or enemyCat == "unknown" then
 						return {x=x, y=y, z=z}
-					elseif enemyCat == "hover" and y >= 1 then -- 1 sopra il livello dell'acqua
+					elseif enemyCat == "hover" and y >= -1 then -- da -1 (spiaggia) a sopra il livello dell'acqua (montagna)
 						return {x=x, y=y, z=z}
 					end
-
+				-------------					
 				-- NAVALI: Attaccano naval e hover (solo se in acqua)
+				-------------				
 				elseif squadType == "naval" then
 					if enemyCat == "naval" then
 						return {x=x, y=y, z=z}
@@ -158,16 +190,21 @@ local function GetSmartEnemyTarget(myTeamID, squadType)
 end
 
 --------------------------------------------------------------------------------
--- GESTIONE ORDINI E GADGET CORE (Invariati nella struttura)
+-- 5) GESTIONE ORDINI E GADGET CORE 
 --------------------------------------------------------------------------------
 
 local function GiveAttackOrder(unitID, targetPos)
 	if not targetPos then return end
-	Spring.GiveOrderToUnit(unitID, CMD.STOP, {}, {})
-	local tx = targetPos.x + math.random(-250, 250)
-	local tz = targetPos.z + math.random(-250, 250)
-	local ty = Spring.GetGroundHeight(tx, tz)
-	Spring.GiveOrderToUnit(unitID, CMD.FIGHT, {tx, ty, tz}, {})
+-- ################		if targetData.id and Spring.ValidUnitID(targetData.id) then -- ## valutare se introdurre Spring.ValidUnitID(targetData.id) ########
+		if targetData.id then 	-- ORDINE DI ATTACCO DIRETTO ALL'UNITÀ (Cruciale per i bombardieri). Se la logica 4) smuove lo squadtype dedicato ai bombardieri, questi devono attaccare direttamente l'unità bersaglio altrimenti col comando fight o patrol non lo farebbero, "siedendosi" a destinazione
+			Spring.GiveOrderToUnit(unitID, CMD.ATTACK, {targetData.id}, {})
+		else				  	-- ALTRIMENTI ORDINE DI ATTACCO FIGHT. Per tutte le unità che rispondono a questo comando, attaccando naturalmente le unità lungo il percorso.
+			Spring.GiveOrderToUnit(unitID, CMD.STOP, {}, {})
+			local tx = targetPos.x + math.random(-250, 250)
+			local tz = targetPos.z + math.random(-250, 250)
+			local ty = Spring.GetGroundHeight(tx, tz)
+			Spring.GiveOrderToUnit(unitID, CMD.FIGHT, {tx, ty, tz}, {})
+		end
 end
 
 function gadget:Initialize()

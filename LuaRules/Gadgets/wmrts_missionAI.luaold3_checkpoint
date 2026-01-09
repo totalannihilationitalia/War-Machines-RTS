@@ -15,16 +15,17 @@ if (not gadgetHandler:IsSyncedCode()) then
 end
 
 --------------------------------------------------------------------------------
--- DATABASE UNITÀ (Modificabile manualmente o tramite script di importazione)
+-- DATABASE UNITÀ 
 --------------------------------------------------------------------------------
 -- Qui puoi aggiungere campi extra in futuro (es. priority, armor_type, ecc.)
 local UNIT_DB = {
 	-- GROUND
-	["icupatroller"]    = { type = "ground" },
+	["icupatroller"]    = { type = "ground" }, -- enemyCat
 	["icurock"]         = { type = "ground" },
 	["mediumtank"]      = { type = "ground" },
 	["artillerybot"]    = { type = "ground" },
 	["icucom"]          = { type = "ground" },
+	["icuraz"]          = { type = "ground" },	
 	
 	-- AIR
 	["icuinterceptor"]  = { type = "air" },
@@ -41,7 +42,7 @@ local UNIT_DB = {
 }
 
 --------------------------------------------------------------------------------
--- CONFIGURAZIONE SQUADRE
+-- CONFIGURAZIONE SQUADRE (LISTE DI COSTRUZIONE)
 --------------------------------------------------------------------------------
 
 local SQUAD_TEMPLATES = {
@@ -53,19 +54,24 @@ local SQUAD_TEMPLATES = {
 		units = { "mediumtank", "mediumtank", "artillerybot" }, 
 		type = "ground"
 	},
-	["air_raid"] = {
-		units = { "icuinterceptor", "icuinterceptor", "euftr" },
-		type = "air"
+	["air_raid"] = { -- tutti gli aerei destinati ad attaccare tutto (ground, air, hovercraft e naval)
+		units = { "armkam", "armthund", "armthund", "armkam", "armkam" },
+		type = "air_toground"
 	},
+	["antiair_raid"] = { -- tutti gli aerei destinati ad attaccare solo aerei
+		units = { "armfig", "armfig", "armfig" },
+		type = "air_toair"
+	},	
 	["naval_fleet"] = {
 		units = { "corbats", "corbats", "corbats" },
 		type = "naval"
 	}
 }
 
+-- CONFIGURAZIONE FABBRICHE, selezionare gli squad_templates (le liste di costruzione)
 local FACTORY_CONFIG = {
 	["armlab"] = { "light_patrol" },
-	["icuap"]  = { "air_raid", "heavy_assault" },
+	["armap"]  = { "antiair_raid", "air_raid" },
 	["armsy"]  = { "naval_fleet" },
 }
 
@@ -111,12 +117,22 @@ local function GetSmartEnemyTarget(myTeamID, squadType)
 			
 			if x then
 				
-				-- AEREI: Attaccano tutto, inclusi gli hovercraft sempre
-				if squadType == "air" then
+				-- AEREI: 
+				-- La tipologia air_toall Attacca tutto, inclusi gli hovercraft sempre #### IMPLEMENTARE
+				if squadType == "air_toall" then
 					if enemyCat == "air" or enemyCat == "ground" or enemyCat == "naval" or enemyCat == "hover" then
 						return {x=x, y=y, z=z}
+					end				
+				-- La tipologia air_toground Attacca soltanto le unità in superficie		
+				elseif squadType == "air_toground" then
+					if enemyCat == "ground" or enemyCat == "naval" or enemyCat == "hover" then
+						return {x=x, y=y, z=z}
 					end
-
+				-- La tipologia air_toair Attacca soltanto gli aerei
+				elseif squadType == "air_toair" then
+					if enemyCat == "air" then
+						return {x=x, y=y, z=z}
+					end
 				-- TERRA: Attaccano ground, unknown e hover (solo se su terra)
 				elseif squadType == "ground" then
 					if enemyCat == "ground" or enemyCat == "unknown" then
@@ -142,7 +158,7 @@ local function GetSmartEnemyTarget(myTeamID, squadType)
 end
 
 --------------------------------------------------------------------------------
--- GESTIONE ORDINI E GADGET CORE (Invariati nella struttura)
+-- GESTIONE ORDINI E GADGET CORE 
 --------------------------------------------------------------------------------
 
 local function GiveAttackOrder(unitID, targetPos)
