@@ -504,4 +504,7 @@ local UNIT_DB = {
 ["eufkaat"] = { type = "ground" },
 ["eufpilonax"] = { type = "ground" },
 
+
 }
+
+return UNIT_DB
