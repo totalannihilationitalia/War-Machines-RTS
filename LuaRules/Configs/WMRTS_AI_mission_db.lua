@@ -16,14 +16,16 @@
 --			type = building 			-> unità fissa di superficie su terra (di difesa/produzione/energia)
 --			type = navalbuilding 		-> unità fissa di superficie su mare (di difesa/produzione/energia)
 --			type = strategicbuilding 	-> unità fissa di superficie strategica ( Es factory 3 livello, silos, antipalline )
-
+--			tutte le unità che non sono identificate in questo database, prenderanno valore type = unknown , vedere poi la logica di targetin come gestirle
 
 
 local UNIT_DB = {
-	--------------------
+	--------------------------------------------------------------------------------
 	-- ICU
-	--------------------	
+	--------------------------------------------------------------------------------	
+-- Commander
 ["icucom"]          = { type = "ground" },
+
 -- Costruzioni Tier 1
 ["armsolar"] = { type = "building" },
 ["icuwind"] = { type = "building" },
@@ -31,10 +33,6 @@ local UNIT_DB = {
 ["icuestor"] = { type = "building" },
 ["icumetex"] = { type = "building" },
 ["armmakr"] = { type = "building" },
-["armlab"] = { type = "building" },
-["armvp"] = { type = "building" },
-["armap"] = { type = "building" },
-["armsy"] = { type = "navalbuilding" },
 ["armeyes"] = { type = "building" },
 ["armrad"] = { type = "building" },
 ["armsonar"] = { type = "navalbuilding" },
@@ -46,7 +44,7 @@ local UNIT_DB = {
 ["armfrl"] = { type = "navalbuilding" },
 ["armfllt"] = { type = "navalbuilding" },
 
--- Costruzioni Tier 2
+-- Costruzioni Tier 2 e +
 ["aafus"] = { type = "building" },
 ["armfus"] = { type = "building" },
 ["amgeo"] = { type = "building" },
@@ -77,6 +75,21 @@ local UNIT_DB = {
 ["armfanni"] = { type = "navalbuilding" },
 ["armfflak"] = { type = "navalbuilding" },
 ["armfmercury"] = { type = "navalbuilding" },
+
+-- fabbriche Tier 1
+["armlab"] = { type = "building" },
+["armvp"] = { type = "building" },
+["armap"] = { type = "building" },
+["armsy"] = { type = "navalbuilding" },
+
+-- fabbriche Tier 2 e +
+["armavp"] = { type = "ground" }, 
+["armalab"] = { type = "ground" },
+["armaap"] = { type = "ground" },
+["armasy"] = { type = "navalbuilding" },
+["armshltx"] = { type = "ground" },
+["icugant"] = { type = "ground" },
+["icufff"] = { type = "ground" },
 
 -- Unità prodotte da armlab (Kbot)
 ["icuck"] = { type = "ground" },
@@ -111,23 +124,7 @@ local UNIT_DB = {
 ["decade"] = { type = "naval" },
 ["armroy"] = { type = "naval" },
 
--- Unità prodotte da armavp
-["armavp"] = { type = "ground" }, 
-["armacv"] = { type = "ground" },
-["armcroc"] = { type = "ground" },
-["armlatnk"] = { type = "ground" },
-["icubull"] = { type = "ground" },
-["armst"] = { type = "ground" },
-["armmart"] = { type = "ground" },
-["armmerl"] = { type = "ground" },
-["armmanni"] = { type = "ground" },
-["armyork"] = { type = "ground" },
-["icuseer"] = { type = "ground" },
-["armjam"] = { type = "ground" },
-["armcamp"] = { type = "ground" },
-
 -- Unità prodotte da armalab
-["armalab"] = { type = "ground" },
 ["armack"] = { type = "ground" },
 ["armfast"] = { type = "ground" },
 ["armzeus"] = { type = "ground" },
@@ -141,36 +138,21 @@ local UNIT_DB = {
 ["armmark"] = { type = "ground" },
 ["armscab"] = { type = "ground" },
 
--- Unità prodotte da armshltx
-["armshltx"] = { type = "ground" },
-["icuraz"] = { type = "ground" },
-["warhammer"] = { type = "ground" },
-["icufurie"] = { type = "ground" },
-
--- Unità prodotte da icugant
-["icugant"] = { type = "ground" },
-["armtigre"] = { type = "ground" },
-["armshock"] = { type = "ground" },
-
--- Unità prodotte da armasy
-["armasy"] = { type = "navalbuilding" },
-["armacsub"] = { type = "naval" }, 	-- ############################ sistemare categorizzazione e gestire sub
-["armsubk"] = { type = "naval" },	-- ############################ sistemare categorizzazione e gestire sub
-["armaas"] = { type = "naval" },
-["armcrus"] = { type = "naval" },
-["armbats"] = { type = "naval" },
-["armmship"] = { type = "naval" },
-["aseadragon"] = { type = "naval" },
-["armcarry"] = { type = "naval" },
-
--- Unità prodotte da icufff
-["icufff"] = { type = "ground" },
-["cirr"] = { type = "air" },
-["orcl"] = { type = "air" },
-["demr"] = { type = "air" },
+-- Unità prodotte da armavp
+["armacv"] = { type = "ground" },
+["armcroc"] = { type = "ground" },
+["armlatnk"] = { type = "ground" },
+["icubull"] = { type = "ground" },
+["armst"] = { type = "ground" },
+["armmart"] = { type = "ground" },
+["armmerl"] = { type = "ground" },
+["armmanni"] = { type = "ground" },
+["armyork"] = { type = "ground" },
+["icuseer"] = { type = "ground" },
+["armjam"] = { type = "ground" },
+["armcamp"] = { type = "ground" },
 
 -- Unità prodotte da armaap
-["armaap"] = { type = "ground" },
 ["armaca"] = { type = "air" },
 ["armbrawl"] = { type = "air" },
 ["armpnix"] = { type = "air" },
@@ -181,33 +163,102 @@ local UNIT_DB = {
 ["blade"] = { type = "air" },
 ["armcybr"] = { type = "air" },
 
+-- Unità prodotte da armasy
+["armacsub"] = { type = "naval" }, 	-- ############################ sistemare categorizzazione e gestire sub
+["armsubk"] = { type = "naval" },	-- ############################ sistemare categorizzazione e gestire sub
+["armaas"] = { type = "naval" },
+["armcrus"] = { type = "naval" },
+["armbats"] = { type = "naval" },
+["armmship"] = { type = "naval" },
+["aseadragon"] = { type = "naval" },
+["armcarry"] = { type = "naval" },
 
-	--------------------
+-- Unità prodotte da armshltx
+["icuraz"] = { type = "ground" },
+["warhammer"] = { type = "ground" },
+["icufurie"] = { type = "ground" },
+
+-- Unità prodotte da icugant
+["armtigre"] = { type = "ground" },
+["armshock"] = { type = "ground" },
+
+-- Unità prodotte da icufff
+["cirr"] = { type = "air" },
+["orcl"] = { type = "air" },
+["demr"] = { type = "air" },
+
+	--------------------------------------------------------------------------------
 	-- NFA
-	--------------------	
-["nfacom"]          = { type = "ground" },	
+	--------------------------------------------------------------------------------
+-- Commander
+["nfacom"] = { type = "ground" },	
 
--- Costruzioni dirette del Comandante e Tier 1
-["corsolar"] = { type = "ground" },
-["corwin"] = { type = "ground" },
-["cormstor"] = { type = "ground" },
-["corestor"] = { type = "ground" },
-["cormex"] = { type = "ground" },
-["cormakr"] = { type = "ground" },
-["corlab"] = { type = "ground" },
-["corvp"] = { type = "ground" },
-["corap"] = { type = "ground" },
-["corsy"] = { type = "ground" },
-["coreyes"] = { type = "ground" },
-["corrad"] = { type = "ground" },
-["corsonar"] = { type = "ground" },
-["cordrag"] = { type = "ground" },
-["corllt"] = { type = "ground" },
-["cortl"] = { type = "ground" },
-["corrl"] = { type = "ground" },
-["corfrad"] = { type = "ground" },
-["corfrl"] = { type = "ground" },
-["corfllt"] = { type = "ground" },
+-- Costruzioni Tier 1
+["corsolar"] = { type = "building" },
+["corwin"] = { type = "building" },
+["cormstor"] = { type = "building" },
+["corestor"] = { type = "building" },
+["cormex"] = { type = "building" },
+["cormakr"] = { type = "building" },
+["coreyes"] = { type = "building" },
+["corrad"] = { type = "building" },
+["corsonar"] = { type = "navalbuilding" },
+["cordrag"] = { type = "building" },
+["corllt"] = { type = "building" },
+["cortl"] = { type = "building" },
+["corrl"] = { type = "building" },
+["corfrad"] = { type = "navalbuilding" },
+["corfrl"] = { type = "navalbuilding" },
+["corfllt"] = { type = "navalbuilding" },
+
+-- Costruzioni Tier 2 e +
+["corfus"] = { type = "building" },
+["cafus"] = { type = "building" },
+["cmgeo"] = { type = "building" },
+["corbhmth"] = { type = "building" },
+["cormoho"] = { type = "building" },
+["cormexp"] = { type = "building" },
+["cormmkr"] = { type = "building" },
+["coruwadves"] = { type = "building" },
+["coruwadvms"] = { type = "building" },
+["corarad"] = { type = "building" },
+["corshroud"] = { type = "building" },
+["corfort"] = { type = "building" },
+["corasp"] = { type = "building" },
+["cortarg"] = { type = "building" },
+["corsd"] = { type = "building" },
+["corgate"] = { type = "building" },
+["cortoast"] = { type = "building" },
+["corvipe"] = { type = "building" },
+["cordoom"] = { type = "building" },
+["corflak"] = { type = "building" },
+["screamer"] = { type = "building" },
+["corfmd"] = { type = "building" },
+["corsilo"] = { type = "building" },
+["corint"] = { type = "building" },
+["corbuzz"] = { type = "building" },
+["corvp"] = { type = "building" },
+["coravp"] = { type = "building" },
+["corfarad"] = { type = "navalbuilding" },
+["corftoast"] = { type = "navalbuilding" },
+["corfvipe"] = { type = "navalbuilding" },
+["corfdoom"] = { type = "navalbuilding" },
+["corfflak"] = { type = "navalbuilding" },
+["corfscreamer"] = { type = "navalbuilding" },
+
+-- Fabbriche Tier 1
+["corlab"] = { type = "building" },
+["corvp"] = { type = "building" },
+["corap"] = { type = "building" },
+["corsy"] = { type = "navalbuilding" },
+
+-- Fabbriche Tier 2
+["coralab"] = { type = "building" },
+["coravp"] = { type = "building" },
+["coraap"] = { type = "building" },
+["corasy"] = { type = "navalbuilding" },
+["corgant"] = { type = "building" },
+["nfafff"] = { type = "building" },
 
 -- Unità prodotte da corlab
 ["corck"] = { type = "ground" },
@@ -227,101 +278,221 @@ local UNIT_DB = {
 ["cormist"] = { type = "ground" },
 
 -- Unità prodotte da corap
-["corca"] = { type = "ground" },
-["corfink"] = { type = "ground" },
-["corveng"] = { type = "ground" },
-["corshad"] = { type = "ground" },
-["corvalk"] = { type = "ground" },
-["bladew"] = { type = "ground" },
+["corca"] = { type = "air" },
+["corfink"] = { type = "air" },
+["corveng"] = { type = "air" },
+["corshad"] = { type = "air" },
+["corvalk"] = { type = "air" },
+["bladew"] = { type = "air" },
 
--- Tier 2, Tier 3 e Navi Avanzate
-["coralab"] = { type = "ground" },
-["coravp"] = { type = "ground" },
-["corgant"] = { type = "ground" },
-["nfafff"] = { type = "ground" },
+-- Unità prodotte da corsy
+["corcs"] = { type = "naval" },
+["corsub"] = { type = "naval" },	  -- ############################ sistemare categorizzazione e gestire sub
+["corpt"] = { type = "naval" },
+["coresupp"] = { type = "naval" },
+["corroy"] = { type = "naval" },
+
+-- Unità prodotte da coralab
 ["corack"] = { type = "ground" },
+["nfapyro"] = { type = "ground" },
+["corcan"] = { type = "ground" },
+["corsumo"] = { type = "ground" },
+["cormort"] = { type = "ground" },
+["corhrk"] = { type = "ground" },
+["coraak"] = { type = "ground" },
+["corvoyr"] = { type = "ground" },
+["corspy"] = { type = "ground" },
+["corspec"] = { type = "ground" },
+
+-- Unità prodotte da coravp
 ["coracv"] = { type = "ground" },
-["coraca"] = { type = "ground" },
-["coracsub"] = { type = "ground" },
+["corseal"] = { type = "ground" },
+["nfareap"] = { type = "ground" },
+["corparrow"] = { type = "ground" },
+["nfagol"] = { type = "ground" },
+["tawf114"] = { type = "ground" },
+["cormart"] = { type = "ground" },
+["corvroc"] = { type = "ground" },
+["corsent"] = { type = "ground" },
+["cormabm"] = { type = "ground" },
+["coreter"] = { type = "ground" },
+["nfavrad"] = { type = "ground" },
+
+-- Unità prodotte da coraap
+["coraca"] = { type = "air" },
+["corape"] = { type = "air" },
+["corhurc"] = { type = "air" },
+["cortitan"] = { type = "air" },
+["corvamp"] = { type = "air" },
+["corawac"] = { type = "air" },
+["corcrw"] = { type = "air" },
+
+-- Unità prodotte da corasy
+["coracsub"] = { type = "naval" },		-- ############################ sistemare categorizzazione e gestire sub 
+["corshark"] = { type = "naval" },		-- ############################ sistemare categorizzazione e gestire sub 
+["corssub"] = { type = "naval" },		-- ############################ sistemare categorizzazione e gestire sub 
+["corarch"] = { type = "naval" },
+["corcrus"] = { type = "naval" },
+["corbats"] = { type = "naval" },
+["corblackhy"] = { type = "naval" },
+["corcarry"] = { type = "naval" },
+["corsjam"] = { type = "naval" },
+
+-- Unità prodotte da corgant
 ["nfakarg"] = { type = "ground" },
 ["nfacoug"] = { type = "ground" },
 ["corkrog"] = { type = "ground" },
 ["armraven"] = { type = "ground" },
 ["gorg"] = { type = "ground" },
-["taln"] = { type = "ground" },
-["odyc"] = { type = "ground" },
-["ostr"] = { type = "ground" },	
-	
-	--------------------
+
+-- Unità prodotte da nfafff
+["taln"] = { type = "air" },
+["odyc"] = { type = "air" },
+["ostr"] = { type = "air" },	
+
+	--------------------------------------------------------------------------------
 	-- AND
-	--------------------		
+	--------------------------------------------------------------------------------
+-- Commander
 ["andcom"] = { type = "ground" },	
 	
--- Costruzioni dirette del Comandante
-["andsolar"] = { type = "ground" },
-["andwind"] = { type = "ground" },
-["andmstor"] = { type = "ground" },
-["andestor"] = { type = "ground" },
-["andmexun"] = { type = "ground" },
-["andlab"] = { type = "ground" },
-["andhp"] = { type = "ground" },
-["andplat"] = { type = "ground" },
-["andrad"] = { type = "ground" },
-["andlartic"] = { type = "ground" },
+-- Costruzioni Tier 1
+["andsolar"] = { type = "building" },
+["andwind"] = { type = "building" },
+["andmstor"] = { type = "building" },
+["andestor"] = { type = "building" },
+["andmexun"] = { type = "building" },
+["andmex"] = { type = "building" },
+["andrad"] = { type = "building" }, 
+["andlartic"] = { type = "building" },
+["andartic"] = { type = "building" },
+["andhartic"] = { type = "building" },
+["andpopaa"] = { type = "building" },
 
--- Unità prodotte da andlab (Livello 1)
+-- Costruzioni Tier 2
+["andfus"] = { type = "building" },
+["andaafus"] = { type = "building" },
+["andametex"] = { type = "building" },
+["andaestor"] = { type = "building" },
+["andarad"] = { type = "building" },
+["andshield"] = { type = "building" },
+["anddfens"] = { type = "building" },
+["andill"] = { type = "building" },
+["andchaos"] = { type = "building" },
+["andernie"] = { type = "building" },
+["chemist"] = { type = "building" },
+["andlaunch"] = { type = "building" },
+["andangel"] = { type = "building" },
+["medusa"] = { type = "building" },
+
+-- Fabbriche Tier 1
+["andlab"] = { type = "building" },
+["andhp"] = { type = "building" },
+["andplat"] = { type = "building" },
+["andinc"] = { type = "building" }, 
+
+-- Fabbriche Tier 2 e +
+["andalab"] = { type = "building" },
+["andahp"] = { type = "building" },
+["andaplat"] = { type = "building" },
+["andainc"] = { type = "building" },
+["andgant"] = { type = "building" },
+
+-- Unità prodotte da andlab 
 ["andcsp"] = { type = "ground" },
 ["andscouter"] = { type = "ground" },
 ["anddauber"] = { type = "ground" },
 ["andbrskr"] = { type = "ground" },
 
--- Unità prodotte da andhp (Hovercraft Livello 1)
-["andch"] = { type = "ground" },
-["andgaso"] = { type = "ground" },
-["andlipo"] = { type = "ground" },
-["andmisa"] = { type = "ground" },
+-- Unità prodotte da andhp
+["andch"] = { type = "hovercraft" },
+["andgaso"] = { type = "hovercraft" },
+["andlipo"] = { type = "hovercraft" },
+["andmisa"] = { type = "hovercraft" },
 
--- Tier 2 e Fabbriche Avanzate (Incubator/Adv Hover)
-["andainc"] = { type = "ground" },
-["andahp"] = { type = "ground" },
+-- Unità prodotte da andplat
+["andca"] = { type = "air" },
+["andfig"] = { type = "air" },
+["andbomb"] = { type = "air" },
+["andstr"] = { type = "air" },
+
+-- Unità prodotte da andinc
+-- sono le stesse di andlab + andhp
+
+-- Unità prodotte da andalab 
 ["andacsp"] = { type = "ground" },
-["andach"] = { type = "ground" },
 ["walker"] = { type = "ground" },
 ["andogre"] = { type = "ground" },
 ["exxec"] = { type = "ground" },
-["andtanko"] = { type = "ground" },
-["andtesla"] = { type = "ground" },
-["androck"] = { type = "ground" },
-["andnikola"] = { type = "ground" },	
+["interceptor"] = { type = "ground" },
 
-	--------------------
+-- Unità prodotte da andahp
+["andach"] = { type = "hovercraft" },
+["androck"] = { type = "hovercraft" },
+["andtanko"] = { type = "hovercraft" },
+["andtesla"] = { type = "hovercraft" },
+["andnikola"] = { type = "hovercraft" },
+
+-- Unità prodotte da andaplat
+["andstr"] = { type = "air" },
+["anddragon"] = { type = "air" },
+["corhors"] = { type = "air" },
+
+-- Unità prodotte da andgant
+["cordem"] = { type = "ground" },
+["conartist"] = { type = "ground" },
+["bigb"] = { type = "ground" },
+["ebigb"] = { type = "ground" },
+["kill2"] = { type = "ground" },
+["armpraet"] = { type = "ground" },
+
+-- Unità prodotte da andainc
+-- sono le stesse prodotte da andalab + andahp
+
+	--------------------------------------------------------------------------------
 	-- EUF
-	--------------------
-["eufcd"] = { type = "ground" },		
+	--------------------------------------------------------------------------------
+-- Commander
+-- da definire ###################################################################################
 
--- Costruzioni dirette del Construction Drone (Tier 1)
-["eufsolar"] = { type = "ground" },
-["eufmstor"] = { type = "ground" },
-["eufestor"] = { type = "ground" },
-["eufmetex"] = { type = "ground" },
-["eufametex"] = { type = "ground" },
-["eufvp"] = { type = "ground" },
-["eufap"] = { type = "ground" },
-["euf_radar"] = { type = "ground" },
-["eufpathsmall"] = { type = "ground" },
-["eufsnpr"] = { type = "ground" },
-["eufpath"] = { type = "ground" },
-["armarch"] = { type = "ground" },
-["eufloony"] = { type = "ground" },
-["eufblab"] = { type = "ground" },
-["euf_fence_gate"] = { type = "ground" },
-["euf_fence_wall"] = { type = "ground" },
+-- Costruzioni Tier 1
+["eufsolar"] = { type = "building" },
+["eufmstor"] = { type = "building" },
+["eufestor"] = { type = "building" },
+["eufmetex"] = { type = "building" },
+["eufametex"] = { type = "building" },
+["euf_radar"] = { type = "building" },
+["eufpathsmall"] = { type = "building" },
+["eufsnpr"] = { type = "building" },
+["eufpath"] = { type = "building" },
+["armarch"] = { type = "building" },
+["eufloony"] = { type = "building" },
+["euf_fence_gate"] = { type = "building" },
+["euf_fence_wall"] = { type = "building" },
 
--- Unità prodotte da eufvp (Tank Plant T1)
+-- Costruzioni Tier 2
+["eufadvmetex"] = { type = "building" },
+
+-- Fabbriche Tier 1
+["eufvp"] = { type = "building" },
+["eufap"] = { type = "building" },
+["eufblab"] = { type = "building" },
+
+-- Fabbriche Tier 2
+["eufavp"] = { type = "building" },
+
+-- Unità prodotte da eufvp
+["eufcd"] = { type = "ground" },
 ["eufthorn"] = { type = "ground" },
 ["eufsab"] = { type = "ground" },
 
--- Unità prodotte da eufavp (Advanced Vehicle Plant T2)
+-- Unità prodotte da eufap
+["euffig"] = { type = "air" },
+
+-- Unità prodotte da eufblab -- ########################## implementare
+["armmedic"] = { type = "ground" },
+
+-- Unità prodotte da eufavp
 ["eufacd"] = { type = "ground" },
 ["eufbomb"] = { type = "ground" },
 ["eufher"] = { type = "ground" },
@@ -332,9 +503,5 @@ local UNIT_DB = {
 ["eufbigfoot"] = { type = "ground" },
 ["eufkaat"] = { type = "ground" },
 ["eufpilonax"] = { type = "ground" },
-
--- Unità prodotte da eufap e eufblab
-["euffig"] = { type = "ground" },
-["armmedic"] = { type = "ground" },
 
 }
