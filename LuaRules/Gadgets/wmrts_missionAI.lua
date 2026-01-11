@@ -1,6 +1,6 @@
 function gadget:GetInfo()
 	return {
-		name      = "WM Squad Commander AI (Custom DB Edition)",
+		name      = "WMRTS Squad Commander AI (Custom DB Edition)",
 		desc      = "AI con database unità personalizzato e targeting selettivo",
 		author    = "molix",
 		date      = "2025",
@@ -12,6 +12,7 @@ end
 -- 08/01/2025 = creata l'AI WMRTS_AI per missioni
 -- 09/01/2025 = implementato il comando attack al gruppo di bombardieri. Prima l'AI gestiva solamente il comando FIGHT ma i bombardieri non bombardano automaticamente, bisogna indicargli il punto da bombardare con il comando Attack.
 -- 09/01/2025 = esternizzata la tabella/db delle unità in WMRTS_AI_mission_db.lua
+-- 11/01/2025 = sistemato bug tabelle NIL quando una fabbrica viene distrutta/rimossa
 
 -- to do LIST ################################
 -- implementare i SUB
@@ -336,10 +337,16 @@ function gadget:GameFrame(n)
 	-- GESTIONE FABBRICHE
 	for fID, fData in pairs(factories) do
 		local qSize = Spring.GetCommandQueue(fID, 0)
+		
+		-- SE qSize è nil, perchè una fabbrica non esiste più (è stata distrutta, rimossa con mission editor, ecc), la rimuoviamo dalla lista, altrimenti l' AI va in errore per valori NIL
+		if qSize == nil then
+			factories[fID] = nil -- La rimuoviamo dalla lista così non ci darà più noia
+		else		
+		
 		local isBuilding = Spring.GetUnitIsBuilding(fID)
 		local isLocked = false
 		
-		if fData.squadID and squads[fData.squadID] then
+		if fData.squadID and squads[fData.squadID] then -- Ora qSize è sicuramente un numero (grazie all'else sopra)
 			if (qSize > 0) or isBuilding or (squads[fData.squadID].state == "gathering") then
 				isLocked = true
 			else
@@ -370,7 +377,8 @@ function gadget:GameFrame(n)
 				end
 			end
 		end
-	end
+		end -- Fine else (qSize ~= nil)
+	end 	-- Fine loop fabbriche
 
 	-- GESTIONE SQUADRE
 	for sID, sData in pairs(squads) do
