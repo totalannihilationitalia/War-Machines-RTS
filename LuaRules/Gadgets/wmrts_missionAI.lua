@@ -50,33 +50,46 @@ end
 -- 2a) CONFIGURAZIONE SQUADRE / GRUPPI (LISTE DI COSTRUZIONE) e tipologia
 --------------------------------------------------------------------------------
 
--- Il nome dello "squad_template" identifica solamente il nome del gruppo da creare. Es. ["light_patrol_1"], verrà poi impiegato nel punto 2b per dire alla fabbrica: costruisci le unità di questo gruppo e forma il gruppo
--- units = l'elenco delle unità che comporranno il gruppo (ad esempio il gruppo "light_patrol_1"
+-- Il nome dello "squad_template" identifica solamente il nome del gruppo da creare. Es. ["ICU_armlab_light_patrol_1"], verrà poi impiegato nel punto 2b per dire alla fabbrica: costruisci le unità di questo gruppo e forma il gruppo
+-- units = l'elenco delle unità che comporranno il gruppo (ad esempio il gruppo "ICU_armlab_light_patrol_1"
 -- type = tipologia di squadra, la tipologia verrà impiegata nella logica di targeting (punto 4) per dire quali unità devono attaccare. In generale descrizioni a seguito:
 -- 					type = "ground" 				-> manda all'attacco verso unità tipo "ground", "building", "strategicbuilding", "unknown" e "hover" se y di quest'ultima > -1 (vedere punto 4)
+-- 					type = "ground_hovercraft" 		-> manda all'attacco verso unità tipo "ground", "building", "strategicbuilding", "unknown" e "hover" a prescindere dalla y di quest'ultima. Ideale per gli hovecraft
 --					type = "air_toair" 				-> tutti gli aerei destinati ad attaccare solo aerei
 --					type = "air_toground" 			-> tutti gli aerei destinati ad attaccare tutto (ground, hovercraft e naval). Attenzione: non mettere bombardieri in quanto sorvolerebbero solamente la zona. Per loro ci vuole una logica di attacco diretto sull'unità, per questo usare i gruppi specifici per bombardieri
 --					type = "air_bomber" 			-> tutti gli aerei da bombardamento. Hanno una logica per un bombardamento diretto sull'unità di tipo "building, strategicbuilding, ground)
 --					type = "air_bomber_strategic" 	-> tutti gli aerei da bombardamento. Hanno una logica per un bombardamento diretto sull'unità di tipo "strategicbuilding"
 
 local SQUAD_TEMPLATES = {
-	["light_patrol_1"] = {
+
+---------------
+-- ICU --------
+---------------
+	["ICU_armlab_light_patrol_1"] = {
 		units = { "icupatroller", "icupatroller", "icurock", "icurock" },
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
-	["heavy_assault_1"] = {
-		units = { "mediumtank", "mediumtank", "artillerybot" }, 
+	["ICU_armlab_light_patrol_2"] = {
+		units = { "icuwar", "icuwar", "icurock", "icurock" },
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+	["ICU_armvp_light_patrol_1"] = {
+		units = { "armfav", "icuflash", "icuflash", "icuflash" }, 
 		type = "ground"
 	},
-	["air_raid_1"] = { 			
+	["ICU_armvp_light_patrol_2"] = {
+		units = { "armsam", "armsam", "armstump", "armpincer", "armpincer","tawf013" }, 
+		type = "ground"
+	},	
+	["ICU_armap_air_raid_1"] = { 			
 		units = { "armkam", "armfig", "armfig", "armkam", "armkam" },
 		type = "air_toground"
 	},
-	["antiair_raid_1"] = { 
+	["ICU_armap_antiair_raid_1"] = { 
 		units = { "armfig", "armfig", "armfig" },
 		type = "air_toair"
 	},
-	["air_bomber_1"] = { 
+	["ICU_armap_air_bomber_1"] = { 
 		units = { "armthund", "armthund", "armthund", "armthund", "armthund" }, 	-- gruppo da 5 bombardieri
 		type = "air_bomber"
 	},	
@@ -84,18 +97,56 @@ local SQUAD_TEMPLATES = {
 --		units = { "corbats", "corbats", "corbats" },
 --		type = "naval"
 --	}
+
+---------------
+-- AND --------
+---------------
+	["AND_andlab_light_patrol_1"] = {
+		units = { "andscouter", "andscouter", "andscouter", "andscouter" },
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},
+	["AND_andlab_light_patrol_2"] = {
+		units = { "andscouter", "anddauber", "anddauber", "andbrskr" },
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+	["AND_andhp_light_patrol_1"] = {
+		units = { "andgaso", "andlipo", "andlipo", "andgaso" }, 
+		type = "ground_hovercraft"
+	},
+	["AND_andhp_light_patrol_2"] = {
+		units = { "andgaso", "andlipo", "andlipo", "andgaso","andmisa","andmisa" }, 
+		type = "ground_hovercraft"
+	},	
+	["AND_andplatplat_air_raid_1"] = { 			
+		units = { "andstr", "andfig", "andfig", "andstr", "andstr" },
+		type = "air_toground"
+	},
+	["AND_andplat_antiair_raid_1"] = { 
+		units = { "andfig", "andfig", "andfig" },
+		type = "air_toair"
+	},
+	["AND_andplat_air_bomber_1"] = { 
+		units = { "andbomb", "andbomb", "andbomb", "andbomb", "andbomb" }, 	-- gruppo da 5 bombardieri
+		type = "air_bomber"
+	},		
 }
 
 --------------------------------------------------------------------------------
 -- 2b) CONFIGURAZIONE FABBRICHE E BUILDLIST
 --------------------------------------------------------------------------------
 
--- CONFIGURAZIONE FABBRICHE, selezionare gli squad_templates (le liste di costruzione)
+-- CONFIGURAZIONE FABBRICHE, selezionare gli squad_tem2lates (le liste di costruzione)
 local FACTORY_CONFIG = {
-	["armlab"] = { "light_patrol_1" },
---	["armap"]  = { "antiair_raid_1", "air_raid_1" },
-	["armap"]  = { "air_bomber_1" }, -- ## test bombing
+-- ICU --
+	["armlab"] = { "ICU_armlab_light_patrol_1", "ICU_armlab_light_patrol_2" },
+	["armap"]  = { "ICU_armap_antiair_raid_1", "ICU_armap_air_raid_1","ICU_armap_air_bomber_1" },
+	["armvp"] = { "ICU_armvp_light_patrol_1", "ICU_armvp_light_patrol_2" },
 --	["armsy"]  = { "naval_fleet" },
+
+-- AND --
+	["andlab"] = { "AND_andlab_light_patrol_1", "AND_andlab_light_patrol_2" },
+	["andhp"] = { "AND_andhp_light_patrol_1", "AND_andhp_light_patrol_2" },
+	["andplat"]  = { "AND_andplatplat_air_raid_1", "AND_andplat_antiair_raid_1","AND_andplat_air_bomber_1" },
 }
 
 local TARGET_AI_NAME = "WarMachinesRTSmissionAI" 
@@ -168,7 +219,7 @@ local function GetSmartEnemyTarget(myTeamID, squadType)
 						return {x=x, y=y, z=z, id=uID} -- restituisco anche l'ID dell'unità che si intende bersagliare, utilizzato poi nella logica degli ordini, vedi punto 5)
 					end								
 				-------------
-				-- TERRA: Attaccano ground, unknown e hover (solo se su terra)
+				-- TERRA: 
 				-------------				
 				elseif squadType == "ground" then
 					if enemyCat == "ground" or enemyCat == "unknown" or enemyCat == "building" or enemyCat == "strategicbuilding" then 
@@ -176,6 +227,10 @@ local function GetSmartEnemyTarget(myTeamID, squadType)
 					elseif enemyCat == "hover" and y >= -1 then -- da -1 (spiaggia) a sopra il livello dell'acqua (montagna)
 						return {x=x, y=y, z=z}
 					end
+				elseif squadType == "ground_hovercraft" then
+					if enemyCat == "ground" or enemyCat == "unknown" or enemyCat == "building" or enemyCat == "strategicbuilding" or enemyCat == "hover" then 
+						return {x=x, y=y, z=z}
+					end				
 				-------------					
 				-- NAVALI: Attaccano naval e hover (solo se in acqua) ---- ################################### implementare
 				-------------				
