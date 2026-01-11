@@ -64,14 +64,16 @@ end
 local SQUAD_TEMPLATES = {
 
 ---------------
--- ICU --------
+-- ICU lvl 0 --------
 ---------------
 	["ICU_armlab_light_patrol_1"] = {
-		units = { "icupatroller", "icupatroller", "icurock", "icurock" },
+--		units = { "icupatroller", "icupatroller", "icurock", "icurock" }, -- ##################################
+		units = { "icupatroller", "icupatroller", "icupatroller", "icupatroller" },
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["ICU_armlab_light_patrol_2"] = {
-		units = { "icuwar", "icuwar", "icurock", "icurock" },
+--		units = { "icuwar", "icuwar", "icurock", "icurock" },				-- #################################
+		units = { "icupatroller", "icupatroller", "icupatroller", "icupatroller" },
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
 	["ICU_armvp_light_patrol_1"] = {
@@ -98,6 +100,14 @@ local SQUAD_TEMPLATES = {
 --		units = { "corbats", "corbats", "corbats" },
 --		type = "naval"
 --	}
+
+---------------
+-- ICU lvl 1 --------
+---------------
+	["ICU_armlab_medium_patrol_1"] = {
+		units = { "icuwar", "icuwar", "icuwar", "icuwar" , "icuwar" , "icuwar" , "icuwar" },
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},
 
 ---------------
 -- AND --------
@@ -135,21 +145,44 @@ local SQUAD_TEMPLATES = {
 --------------------------------------------------------------------------------
 -- 2b) CONFIGURAZIONE FABBRICHE E BUILDLIST
 --------------------------------------------------------------------------------
+-- Funzione CONFIGURAZIONE FABBRICHE in base al livello_AI, selezionare gli squad_templates (le liste di costruzione)
+-- ad ogni livello il numero di unità x squadra aumenta come aumenta la qualità delle unità prodotte
+local FACTORY_CONFIG = {} 		-- all'inizio imposto la tabella vuota
+local livello_AI = 0 			-- all'inizio imposto il livello della AI = 0 (livello iniziale
+local lastLevel = -1 -- Usiamo -1 così al primo frame carica il livello 0
 
--- CONFIGURAZIONE FABBRICHE, selezionare gli squad_tem2lates (le liste di costruzione)
-local FACTORY_CONFIG = {
--- ICU --
-	["armlab"] = { "ICU_armlab_light_patrol_1", "ICU_armlab_light_patrol_2" },
-	["armap"]  = { "ICU_armap_antiair_raid_1", "ICU_armap_air_raid_1","ICU_armap_air_bomber_1" },
-	["armvp"] = { "ICU_armvp_light_patrol_1", "ICU_armvp_light_patrol_2" },
---	["armsy"]  = { "naval_fleet" },
+local function configurazioneUnitaLivello()
+Spring.Echo(">>> AI MISSION: Caricamento configurazione per Livello " .. livello_AI) -- debug
+	if livello_AI == 0 then
+		FACTORY_CONFIG = {
+		-- ICU --
+			["armlab"] = { "ICU_armlab_light_patrol_1", "ICU_armlab_light_patrol_2" },
+			["armap"]  = { "ICU_armap_antiair_raid_1", "ICU_armap_air_raid_1","ICU_armap_air_bomber_1" },
+			["armvp"] = { "ICU_armvp_light_patrol_1", "ICU_armvp_light_patrol_2" },
+		--	["armsy"]  = { "naval_fleet" },
 
--- AND --
-	["andlab"] = { "AND_andlab_light_patrol_1", "AND_andlab_light_patrol_2" },
-	["andhp"] = { "AND_andhp_light_patrol_1", "AND_andhp_light_patrol_2" },
-	["andplat"]  = { "AND_andplatplat_air_raid_1", "AND_andplat_antiair_raid_1","AND_andplat_air_bomber_1" },
-}
+		-- AND --
+			["andlab"] = { "AND_andlab_light_patrol_1", "AND_andlab_light_patrol_2" },
+			["andhp"] = { "AND_andhp_light_patrol_1", "AND_andhp_light_patrol_2" },
+			["andplat"]  = { "AND_andplatplat_air_raid_1", "AND_andplat_antiair_raid_1","AND_andplat_air_bomber_1" },
+		}
+	elseif livello_AI == 1 then
+		FACTORY_CONFIG = {
+		-- ICU --
+			["armlab"] = { "ICU_armlab_medium_patrol_1", "ICU_armlab_medium_patrol_1" },
+			["armap"]  = { "ICU_armap_antiair_raid_1", "ICU_armap_air_raid_1","ICU_armap_air_bomber_1" },
+			["armvp"] = { "ICU_armvp_light_patrol_1", "ICU_armvp_light_patrol_2" },
+		--	["armsy"]  = { "naval_fleet" },
 
+		-- AND --
+			["andlab"] = { "AND_andlab_light_patrol_1", "AND_andlab_light_patrol_2" },
+			["andhp"] = { "AND_andhp_light_patrol_1", "AND_andhp_light_patrol_2" },
+			["andplat"]  = { "AND_andplatplat_air_raid_1", "AND_andplat_antiair_raid_1","AND_andplat_air_bomber_1" },
+		}
+	end
+end
+
+configurazioneUnitaLivello()	-- avvio all'inizio la funzione per caricare le fabbriche del livello 0
 local TARGET_AI_NAME = "WarMachinesRTSmissionAI" 
 local SQUAD_TIMEOUT_SECONDS = 600 -- questo timeout definisce i secondi di attesa per la formazione del gruppo delle unità uscite dalla fabbrica. Oltre questo timeout il gruppo si completa cosi com'è e parte all'attacco o difesa 
 
@@ -333,7 +366,23 @@ end
 
 function gadget:GameFrame(n)
 	if (n % 30 ~= 0) then return end 
-
+-- GESTIONE AVANZAMENTO DI LIVELLO
+livello_AI = math.floor(Spring.GetGameSeconds() / 60)	    -- Avanzamento automatico del livello ogni 60 secondi (per test)
+--	math.floor(Spring.GetGameSeconds() / 60) è un calcolo matematico "assoluto":
+--  A 0 secondi: 0 / 60 = 0.0 -> floor = 0
+--  A 59 secondi: 59 / 60 = 0.98 -> floor = 0
+--  A 60 secondi: 60 / 60 = 1.0 -> floor = 1
+--  A 120 secondi: 120 / 60 = 2.0 -> floor = 2
+--  Se volessi fare ogni 18 minuti?
+--	Basta cambiare il divisore. Siccome 1 minuto = 60 secondi, 18 minuti sono 18×60=1080  secondi.La riga diventerebbe: 18×60=1080
+if livello_AI > 1 then livello_AI = 1 end 					-- Evitiamo di sforare i livelli che abbiamo definito, riportando a "x" il livello della AI
+-- SE IL LIVELLO È CAMBIATO, AGGIORNA LA TABELLA
+    if livello_AI ~= lastLevel then
+		Spring.Echo("cambio livello")
+        configurazioneUnitaLivello()
+        lastLevel = livello_AI
+    end								-- Aggiorno le tabelle delle costruzioni
+Spring.Echo(livello_AI)
 	-- GESTIONE FABBRICHE
 	for fID, fData in pairs(factories) do
 		local qSize = Spring.GetCommandQueue(fID, 0)
