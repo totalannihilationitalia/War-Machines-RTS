@@ -1,7 +1,7 @@
 function gadget:GetInfo()
 	return {
-		name      = "WMRTS Squad Commander AI (Custom DB Edition)",
-		desc      = "AI con database unità personalizzato e targeting selettivo",
+		name      = "WMRTS Squad Commander AI",
+		desc      = "AI V0.3 for War Machnines RTS",
 		author    = "molix",
 		date      = "2025",
 		license   = "GPL",
@@ -13,6 +13,7 @@ end
 -- 09/01/2025 = implementato il comando attack al gruppo di bombardieri. Prima l'AI gestiva solamente il comando FIGHT ma i bombardieri non bombardano automaticamente, bisogna indicargli il punto da bombardare con il comando Attack.
 -- 09/01/2025 = esternizzata la tabella/db delle unità in WMRTS_AI_mission_db.lua
 -- 11/01/2025 = sistemato bug tabelle NIL quando una fabbrica viene distrutta/rimossa
+-- 12/01/2025 = agguiunti i livelli di difficoltà della AI. Per ora scattano dopo x minuti di tempo. Prepisposto per una logica migliore di avanzamento
 
 -- to do LIST ################################
 -- implementare i SUB
@@ -63,8 +64,14 @@ end
 
 local SQUAD_TEMPLATES = {
 
+-- divido qui sotto i template di costruzione in funzione del livello, solo per maggior chiarezza. Quando il livello sale, vado a cambiare i templates di costruzione in 2b)
+
+-------------------------------------------------------------------------------
+-- Elenco di produzioni per l'AI al livello 0
+-------------------------------------------------------------------------------
+
 ---------------
--- ICU lvl 0 --------
+-- ICU lvl 0 -------- 
 ---------------
 	["ICU_armlab_light_patrol_1"] = {
 --		units = { "icupatroller", "icupatroller", "icurock", "icurock" }, -- ##################################
@@ -102,15 +109,7 @@ local SQUAD_TEMPLATES = {
 --	}
 
 ---------------
--- ICU lvl 1 --------
----------------
-	["ICU_armlab_medium_patrol_1"] = {
-		units = { "icuwar", "icuwar", "icuwar", "icuwar" , "icuwar" , "icuwar" , "icuwar" },
-		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
-	},
-
----------------
--- AND --------
+-- AND lvl 0 -------- 
 ---------------
 	["AND_andlab_light_patrol_1"] = {
 		units = { "andscouter", "andscouter", "andscouter", "andscouter" },
@@ -140,6 +139,25 @@ local SQUAD_TEMPLATES = {
 		units = { "andbomb", "andbomb", "andbomb", "andbomb", "andbomb" }, 	-- gruppo da 5 bombardieri
 		type = "air_bomber"
 	},		
+
+-------------------------------------------------------------------------------
+-- Elenco di produzioni per l'AI al livello 1
+-------------------------------------------------------------------------------
+	
+---------------
+-- ICU lvl 1 -------- Elenco di produzioni per l'AI al livello 1
+---------------
+	["ICU_armlab_medium_patrol_1"] = {
+		units = { "icuwar", "icuwar", "icuwar", "icuwar" , "icuwar" , "icuwar" , "icuwar" },
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},
+	["ICU_armlab_medium_patrol_2"] = {
+		units = { "icuwar", "icuwar", "icuwar", "icuwar" , "icurock" , "icuwar" , "icuwar", "armjeth"},
+		type = "ground" 
+	},
+		
+	
+	
 }
 
 --------------------------------------------------------------------------------
@@ -149,11 +167,11 @@ local SQUAD_TEMPLATES = {
 -- ad ogni livello il numero di unità x squadra aumenta come aumenta la qualità delle unità prodotte
 local FACTORY_CONFIG = {} 		-- all'inizio imposto la tabella vuota
 local livello_AI = 0 			-- all'inizio imposto il livello della AI = 0 (livello iniziale
-local lastLevel = -1 -- Usiamo -1 così al primo frame carica il livello 0
+local lastLevel = -1 			-- Usiamo -1 così al primo frame carica il livello 0. Questa variabile serve come "antiripetizione" e verrà utilizzata per aumentare di livello l' AI una volta sola
 
 local function configurazioneUnitaLivello()
 Spring.Echo(">>> AI MISSION: Caricamento configurazione per Livello " .. livello_AI) -- debug
-	if livello_AI == 0 then
+	if livello_AI == 0 then				-- al livello iniziale = 0 produci le unità di seguito
 		FACTORY_CONFIG = {
 		-- ICU --
 			["armlab"] = { "ICU_armlab_light_patrol_1", "ICU_armlab_light_patrol_2" },
@@ -166,10 +184,10 @@ Spring.Echo(">>> AI MISSION: Caricamento configurazione per Livello " .. livello
 			["andhp"] = { "AND_andhp_light_patrol_1", "AND_andhp_light_patrol_2" },
 			["andplat"]  = { "AND_andplatplat_air_raid_1", "AND_andplat_antiair_raid_1","AND_andplat_air_bomber_1" },
 		}
-	elseif livello_AI == 1 then
+	elseif livello_AI == 1 then				-- al livello 1 produci le unità di seguito
 		FACTORY_CONFIG = {
 		-- ICU --
-			["armlab"] = { "ICU_armlab_medium_patrol_1", "ICU_armlab_medium_patrol_1" },
+			["armlab"] = { "ICU_armlab_medium_patrol_1", "ICU_armlab_medium_patrol_2" },
 			["armap"]  = { "ICU_armap_antiair_raid_1", "ICU_armap_air_raid_1","ICU_armap_air_bomber_1" },
 			["armvp"] = { "ICU_armvp_light_patrol_1", "ICU_armvp_light_patrol_2" },
 		--	["armsy"]  = { "naval_fleet" },
