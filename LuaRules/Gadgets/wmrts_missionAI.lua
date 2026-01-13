@@ -16,7 +16,8 @@ end
 -- 12/01/2025 = agguiunti i livelli di difficoltà della AI. Per ora scattano dopo x minuti di tempo. Prepisposto per una logica migliore di avanzamento
 
 -- to do LIST ################################
--- implementare i SUB
+-- 1) implementare i SUB
+-- 2) REIMPOSTARE L'avanzamento di livello!!!!! vedi 
 
 
 if (not gadgetHandler:IsSyncedCode()) then
@@ -55,32 +56,30 @@ end
 -- Il nome dello "squad_template" identifica solamente il nome del gruppo da creare. Es. ["ICU_armlab_light_patrol_1"], verrà poi impiegato nel punto 2b per dire alla fabbrica: costruisci le unità di questo gruppo e forma il gruppo
 -- units = l'elenco delle unità che comporranno il gruppo (ad esempio il gruppo "ICU_armlab_light_patrol_1"
 -- type = tipologia di squadra, la tipologia verrà impiegata nella logica di targeting (punto 4) per dire quali unità devono attaccare. In generale descrizioni a seguito:
--- 					type = "ground" 				-> manda all'attacco verso unità tipo "ground", "building", "strategicbuilding", "unknown" e "hover" se y di quest'ultima > -1 (vedere punto 4)
--- 					type = "ground_hovercraft" 		-> manda all'attacco verso unità tipo "ground", "building", "strategicbuilding", "unknown" e "hover" a prescindere dalla y di quest'ultima. Ideale per gli hovecraft
+-- 					type = "ground" 				-> manda all'attacco verso unità tipo "ground", "building", "strategicbuilding", "unknown" e "hover" se y di quest'ultima > -1 (vedere punto 4). Ideale per le truppe di terra o gli aerei.
+-- 					type = "ground_hovercraft" 		-> manda all'attacco verso unità tipo "ground", "building", "strategicbuilding", "unknown" e "hover" a prescindere dalla y di quest'ultima (rispetto al gruppo "ground". Ideale per gli hovecraft e per gli aerei
 --					type = "air_toair" 				-> tutti gli aerei destinati ad attaccare solo aerei
---					type = "air_toground" 			-> tutti gli aerei destinati ad attaccare tutto (ground, hovercraft e naval). Attenzione: non mettere bombardieri in quanto sorvolerebbero solamente la zona. Per loro ci vuole una logica di attacco diretto sull'unità, per questo usare i gruppi specifici per bombardieri
---					type = "air_bomber" 			-> tutti gli aerei da bombardamento. Hanno una logica per un bombardamento diretto sull'unità di tipo "building, strategicbuilding, ground)
---					type = "air_bomber_strategic" 	-> tutti gli aerei da bombardamento. Hanno una logica per un bombardamento diretto sull'unità di tipo "strategicbuilding"
+--					type = "air_toground" 			-> tutti gli aerei destinati ad attaccare tutto (ground, hovercraft e naval). Attenzione: non sono presenti "building" e "strategicbuilding". In questa categoria non mettere bombardieri in quanto sorvolerebbero solamente la zona per poi "sedersi". Per loro ci vuole una logica di attacco diretto sull'unità, per questo usare i gruppi specifici per bombardieri
+--					type = "air_bomber" 			-> specifico per tutti gli aerei da bombardamento. Hanno una logica per un bombardamento diretto sull'unità di tipo "building", "strategicbuilding", "ground")
+--					type = "air_bomber_strategic" 	-> specifico tutti gli aerei da bombardamento. Hanno una logica per un bombardamento diretto sull'unità di tipo "strategicbuilding" e "building"
 
 local SQUAD_TEMPLATES = {
 
 -- divido qui sotto i template di costruzione in funzione del livello, solo per maggior chiarezza. Quando il livello sale, vado a cambiare i templates di costruzione in 2b)
 
 -------------------------------------------------------------------------------
--- Elenco di produzioni per l'AI al livello 0
+-- Elenco di produzioni per l'AI - le ho divise per livello per una maggiore visibilità, ma sono soltanto nomi di gruppi e nessuno vieta che al livello 3 si posssa usare il gruppo "ICU_armlab_light_patrol_1" del livello 0. Basta elencare i gruppi che si voglio creare, in base al livello, nel paragrafo 2b
 -------------------------------------------------------------------------------
 
 ---------------
--- ICU lvl 0 -------- 
+-- ICU gruppi creati per il lvl 0 -------- 
 ---------------
 	["ICU_armlab_light_patrol_1"] = {
---		units = { "icupatroller", "icupatroller", "icurock", "icurock" }, -- ##################################
-		units = { "icupatroller", "icupatroller", "icupatroller", "icupatroller" },
+		units = { "icupatroller", "icupatroller", "icurock", "icurock" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["ICU_armlab_light_patrol_2"] = {
---		units = { "icuwar", "icuwar", "icurock", "icurock" },				-- #################################
-		units = { "icupatroller", "icupatroller", "icupatroller", "icupatroller" },
+		units = { "icuwar", "icuwar", "icurock", "icurock" },				
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
 	["ICU_armvp_light_patrol_1"] = {
@@ -119,6 +118,14 @@ local SQUAD_TEMPLATES = {
 		units = { "andscouter", "anddauber", "anddauber", "andbrskr" },
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
+	["AND_andalab_light_patrol_1"] = { 
+		units = { "walker", "walker", "exxec", "andogre" },
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+	["AND_andalab_light_patrol_2"] = { 
+		units = { "andogre", "interceptor", "walker", "exxec" },
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},		
 	["AND_andhp_light_patrol_1"] = {
 		units = { "andgaso", "andlipo", "andlipo", "andgaso" }, 
 		type = "ground_hovercraft"
@@ -127,6 +134,14 @@ local SQUAD_TEMPLATES = {
 		units = { "andgaso", "andlipo", "andlipo", "andgaso","andmisa","andmisa" }, 
 		type = "ground_hovercraft"
 	},	
+	["AND_andahp_light_patrol_1"] = {
+		units = { "androck", "andtanko", "andtesla", "andnikola" }, 
+		type = "ground_hovercraft"
+	},	
+	["AND_andahp_light_patrol_2"] = {
+		units = { "andnikola", "andnikola", "androck", "androck", "andtanko" }, 
+		type = "ground_hovercraft"
+	},		
 	["AND_andplatplat_air_raid_1"] = { 			
 		units = { "andstr", "andfig", "andfig", "andstr", "andstr" },
 		type = "air_toground"
@@ -140,8 +155,10 @@ local SQUAD_TEMPLATES = {
 		type = "air_bomber"
 	},		
 
+
+
 -------------------------------------------------------------------------------
--- Elenco di produzioni per l'AI al livello 1
+-- Elenco di produzioni per l'AI al livello 1 - le fabbriche avranno gruppi più numerosi e composti da unità più forti 
 -------------------------------------------------------------------------------
 	
 ---------------
@@ -181,7 +198,9 @@ Spring.Echo(">>> AI MISSION: Caricamento configurazione per Livello " .. livello
 
 		-- AND --
 			["andlab"] = { "AND_andlab_light_patrol_1", "AND_andlab_light_patrol_2" },
+			["andalab"] = { "AND_andalab_light_patrol_1", "AND_andalab_light_patrol_2" }, 
 			["andhp"] = { "AND_andhp_light_patrol_1", "AND_andhp_light_patrol_2" },
+			["andahp"] = { "AND_andahp_light_patrol_1", "AND_andahp_light_patrol_2" },		
 			["andplat"]  = { "AND_andplatplat_air_raid_1", "AND_andplat_antiair_raid_1","AND_andplat_air_bomber_1" },
 		}
 	elseif livello_AI == 1 then				-- al livello 1 produci le unità di seguito
@@ -267,7 +286,7 @@ local function GetSmartEnemyTarget(myTeamID, squadType)
 					end		
 				-- La tipologia "air_bomber_strategic" manda il gruppo di unità all'attacco direttamente su una singola unità di tipo "strategicbuilding"
 				elseif squadType == "air_bomber_strategic" then 
-					if enemyCat == "strategicbuilding" then 
+					if enemyCat == "strategicbuilding" or enemyCat == "building" then 
 						return {x=x, y=y, z=z, id=uID} -- restituisco anche l'ID dell'unità che si intende bersagliare, utilizzato poi nella logica degli ordini, vedi punto 5)
 					end								
 				-------------
@@ -385,7 +404,7 @@ end
 function gadget:GameFrame(n)
 	if (n % 30 ~= 0) then return end 
 -- GESTIONE AVANZAMENTO DI LIVELLO
-livello_AI = math.floor(Spring.GetGameSeconds() / 60)	    -- Avanzamento automatico del livello ogni 60 secondi (per test)
+-- livello_AI = math.floor(Spring.GetGameSeconds() / 60)	-- ############################################ RIATTIVARE QUESTA RIGA PER L'AVANZAMENTO DEL LIVELLO DELLA AI    -- Avanzamento automatico del livello ogni 60 secondi (per test)  ############################
 --	math.floor(Spring.GetGameSeconds() / 60) è un calcolo matematico "assoluto":
 --  A 0 secondi: 0 / 60 = 0.0 -> floor = 0
 --  A 59 secondi: 59 / 60 = 0.98 -> floor = 0
@@ -396,11 +415,11 @@ livello_AI = math.floor(Spring.GetGameSeconds() / 60)	    -- Avanzamento automat
 if livello_AI > 1 then livello_AI = 1 end 					-- Evitiamo di sforare i livelli che abbiamo definito, riportando a "x" il livello della AI
 -- SE IL LIVELLO È CAMBIATO, AGGIORNA LA TABELLA
     if livello_AI ~= lastLevel then
-		Spring.Echo("cambio livello")
+		Spring.Echo("WMRTS AI:cambio livello") 	-- DEBUG ############################################### CANCELLARE
         configurazioneUnitaLivello()
         lastLevel = livello_AI
-    end								-- Aggiorno le tabelle delle costruzioni
-Spring.Echo(livello_AI)
+    end									-- Aggiorno le tabelle delle costruzioni
+Spring.Echo(livello_AI)					-- DEBUG ############################################### CANCELLARE
 	-- GESTIONE FABBRICHE
 	for fID, fData in pairs(factories) do
 		local qSize = Spring.GetCommandQueue(fID, 0)
