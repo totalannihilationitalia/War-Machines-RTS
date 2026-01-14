@@ -1,6 +1,6 @@
 -- units database for WMRTS mission AI, by molix
 -- 09/01/2025
-
+-- ##################################### "obsoleto, compatibile con la versione wmrts_missionAI.lua versione "wmrts_missionAI.luaold4_checkpoint"  ###############
 --------------------------------------------------------------------------------
 -- 1) DATABASE UNITÀ caricato da wmrts_missionAI.lua
 --------------------------------------------------------------------------------
@@ -24,7 +24,7 @@ local UNIT_DB = {
 	-- ICU
 	--------------------------------------------------------------------------------	
 -- Commander
-["icucom"] = { type = "ground", ignore = true },
+["icucom"]          = { type = "ground" },
 
 -- Costruzioni Tier 1
 ["armsolar"] = { type = "building" },
@@ -92,7 +92,7 @@ local UNIT_DB = {
 ["icufff"] = { type = "ground" },
 
 -- Unità prodotte da armlab (Kbot)
-["icuck"] = { type = "ground", ignore = true },
+["icuck"] = { type = "ground" },
 ["icupatroller"] = { type = "ground" },
 ["icurock"] = { type = "ground" },
 ["icuinv"] = { type = "ground" },
@@ -100,7 +100,7 @@ local UNIT_DB = {
 ["icuwar"] = { type = "ground" },
 
 -- Unità prodotte da armvp (Veicoli)
-["armcv"] = { type = "ground", ignore = true },
+["armcv"] = { type = "ground" },
 ["armfav"] = { type = "ground" },
 ["icuflash"] = { type = "ground" },
 ["armpincer"] = { type = "ground" },

@@ -14,6 +14,8 @@ end
 -- 09/01/2025 = esternizzata la tabella/db delle unità in WMRTS_AI_mission_db.lua
 -- 11/01/2025 = sistemato bug tabelle NIL quando una fabbrica viene distrutta/rimossa
 -- 12/01/2025 = agguiunti i livelli di difficoltà della AI. Per ora scattano dopo x minuti di tempo. Predisposto per una logica migliore di avanzamento (ad esempio quando ci sarà il controllo dei costruttori e l'avanzamento è dato da quanti estrattori e/o centrali solari l'AI ha costruito)
+-- 14/01/2025 = le AI sono ora indipendenti (mentre prima il livello delle AI era unico per tutti i teams
+-- 14/01/2025 = Aggiungo la categoria "constructor", i costruttori, gestiti da altri gadget, devono essere ignorati in questo gadget (lato formazione gruppi), devono essere considerati invece solo come bersagli
 
 -- to do LIST ################################
 -- 1) implementare i SUB
@@ -192,12 +194,47 @@ local SQUAD_TEMPLATES = {
 --------------------------------------------------------------------------------
 -- 2b) CONFIGURAZIONE FABBRICHE E BUILDLIST
 --------------------------------------------------------------------------------
--- Funzione CONFIGURAZIONE FABBRICHE in base al livello_AI, selezionare gli squad_templates (le liste di costruzione)
+-- Funzione CONFIGURAZIONE FABBRICHE in base al teamLevels, selezionare gli squad_templates (le liste di costruzione)
 -- ad ogni livello il numero di unità x squadra aumenta come aumenta la qualità delle unità prodotte
-local FACTORY_CONFIG = {} 		-- all'inizio imposto la tabella vuota
-local livello_AI = 0 			-- all'inizio imposto il livello della AI = 0 (livello iniziale
-local lastLevel = -1 			-- Usiamo -1 così al primo frame carica il livello 0. Questa variabile serve come "antiripetizione" e verrà utilizzata per aumentare di livello l' AI una volta sola
+-- ogni livello è indipendente per ogni team
+local teamLevels = {}       -- Tabella: [teamID] = livello attuale dell'AI per ogni singolo team (0, 1, 2...)
+local teamConfigs = {}      -- Tabella: [teamID] = la FACTORY_CONFIG specifica per livello di ogni team
 
+local FACTORY_CONFIG = {} 		-- all'inizio imposto la tabella vuota ################################  SOSTITUIRE???
+-- local livello_AI = 0 			-- ##################### all'inizio imposto il livello della AI = 0 (livello iniziale #################
+-- local lastLevel = -1 			-- ##################### Usiamo -1 così al primo frame carica il livello 0. Questa variabile serve come "antiripetizione" e verrà utilizzata per aumentare di livello l' AI una volta sola #####################
+
+local function GetConfigPerLivello(livello) -- Questa funzione restituisce la tabella delle fabbriche in base al livello corrente del team
+    if livello == 0 then
+        return {
+            -- ICU --
+            ["armlab"] = { "ICU_armlab_light_patrol_1", "ICU_armlab_light_patrol_2" },
+            ["armap"]  = { "ICU_armap_antiair_raid_1", "ICU_armap_air_raid_1","ICU_armap_air_bomber_1" },
+            ["armvp"] = { "ICU_armvp_light_patrol_1", "ICU_armvp_light_patrol_2" },
+            -- AND --
+            ["andlab"] = { "AND_andlab_light_patrol_1", "AND_andlab_light_patrol_2" },
+            ["andalab"] = { "AND_andalab_light_patrol_1", "AND_andalab_light_patrol_2" }, 
+            ["andhp"] = { "AND_andhp_light_patrol_1", "AND_andhp_light_patrol_2" },
+            ["andahp"] = { "AND_andahp_light_patrol_1", "AND_andahp_light_patrol_2" },        
+            ["andplat"]  = { "AND_andplatplat_air_raid_1", "AND_andplat_antiair_raid_1","AND_andplat_air_bomber_1" },
+            ["andaplat"]  = { "AND_andaplatplat_air_raid_1", "AND_andaplat_air_bomber_1","AND_andaplat_air_bomber_2" },
+        }
+    elseif livello == 1 then
+        return {
+			-- #################### concludere lvl 1
+            ["armlab"] = { "ICU_armlab_medium_patrol_1", "ICU_armlab_medium_patrol_2" },
+            ["armap"]  = { "ICU_armap_antiair_raid_1", "ICU_armap_air_raid_1","ICU_armap_air_bomber_1" },
+            ["armvp"] = { "ICU_armvp_light_patrol_1", "ICU_armvp_light_patrol_2" },
+            ["andlab"] = { "AND_andlab_light_patrol_1", "AND_andlab_light_patrol_2" },
+            ["andhp"] = { "AND_andhp_light_patrol_1", "AND_andhp_light_patrol_2" },
+            ["andplat"]  = { "AND_andplatplat_air_raid_1", "AND_andplat_antiair_raid_1","AND_andplat_air_bomber_1" },
+        }
+    end
+    return {} -- default vuoto
+end
+
+--[[
+-- cancellare questa funzione configurazioneUnitaLivello ############################################################################
 local function configurazioneUnitaLivello()
 Spring.Echo(">>> AI MISSION: Caricamento configurazione per Livello " .. livello_AI) -- debug
 	if livello_AI == 0 then				-- al livello iniziale = 0 produci le unità di seguito
@@ -231,8 +268,9 @@ Spring.Echo(">>> AI MISSION: Caricamento configurazione per Livello " .. livello
 		}
 	end
 end
+]]--
 
-configurazioneUnitaLivello()	-- avvio all'inizio la funzione per caricare le fabbriche del livello 0
+-- configurazioneUnitaLivello()	-- avvio all'inizio la funzione per caricare le fabbriche del livello 0
 local TARGET_AI_NAME = "WarMachinesRTSmissionAI" 
 local SQUAD_TIMEOUT_SECONDS = 600 -- questo timeout definisce i secondi di attesa per la formazione del gruppo delle unità uscite dalla fabbrica. Oltre questo timeout il gruppo si completa cosi com'è e parte all'attacco o difesa 
 
@@ -248,17 +286,16 @@ local squads = {}
 -- 4) LOGICA DI TARGETING BASATA SU DATABASE
 --------------------------------------------------------------------------------
 
--- Ottiene la categoria dal NOSTRO database
+-- Funzione per ottenere la categoria dal NOSTRO database
 local function GetUnitCategoryFromDB(unitID)
-	local uDefID = Spring.GetUnitDefID(unitID)
-	if not uDefID then return "unknown" end
-	local unitName = UnitDefs[uDefID].name
+	local uDefID = Spring.GetUnitDefID(unitID)	-- definizione di Spring.GetUnitDefID(unitID)
+	if not uDefID then return "unknown" end		-- se non esiste ID assegnato all'unità la funzione restituisce il valore "unknown"
+	local unitName = UnitDefs[uDefID].name		-- altrimenti prosegui e assegna a unitrname il nome dell'unità
 	
-	if UNIT_DB[unitName] then
-		return UNIT_DB[unitName].type
-	end
-	
-	return "unknown" 
+	if UNIT_DB[unitName] then					-- se nel database è presente la voce col il nome dell'unità (unitName)
+		return UNIT_DB[unitName].type			-- restituisci type inerente al nome di quella unità
+	end											
+	return "unknown" 							-- altrimenti se niente di cui sopra è avvenuto, restituisci "unknown"
 end
 
 -- Funzione per trovare il bersaglio 
@@ -351,6 +388,7 @@ local function GiveAttackOrder(unitID, targetData)
 	end
 end
 
+--[[
 function gadget:Initialize()
 	local teamList = Spring.GetTeamList()
 	for _, teamID in ipairs(teamList) do
@@ -360,7 +398,34 @@ function gadget:Initialize()
 		end
 	end
 end
+]]--
 
+function gadget:Initialize()
+	local teamList = Spring.GetTeamList()
+	for _, teamID in ipairs(teamList) do
+		local assignedAI = Spring.GetTeamLuaAI(teamID)
+		if assignedAI and string.find(string.lower(assignedAI), string.lower(TARGET_AI_NAME)) then
+			aiTeamIDs[teamID] = true
+            teamLevels[teamID] = 0 							-- INIZIALIZZAZIONE LIVELLO 0 PER QUESTO TEAM
+            teamConfigs[teamID] = GetConfigPerLivello(0)	-- INIZIALIZZAZIONE LIVELLO 0 PER QUESTO TEAM
+		end
+	end
+end
+
+-- Funzione per restituisce true se l'unità è segnata come ignore nel DB (ignore = true)
+local function IsUnitIgnored(unitID)
+	local uDefID = Spring.GetUnitDefID(unitID)
+	if not uDefID then return false end
+	local unitName = UnitDefs[uDefID].name
+	
+	if UNIT_DB[unitName] and UNIT_DB[unitName].ignore then
+		return true
+	end
+	return false
+end
+
+
+--[[
 function gadget:UnitFinished(unitID, unitDefID, unitTeam)
 	if not aiTeamIDs[unitTeam] then return end
 	local unitName = UnitDefs[unitDefID].name
@@ -369,9 +434,26 @@ function gadget:UnitFinished(unitID, unitDefID, unitTeam)
 		factories[unitID] = { defName = unitName, squadID = nil, teamID = unitTeam }
 		return
 	end
+]]--
 
+function gadget:UnitFinished(unitID, unitDefID, unitTeam)
+    if not aiTeamIDs[unitTeam] then return end 				-- se il team non è ID esci
+	------------------------ #######verificare
+	    -- CONTROLLO IGNORE: Se l'unità deve essere ignorata, definita nel database (ignore = true) esci subito e non gestire l'unità
+    if IsUnitIgnored(unitID) then
+        -- Spring.Echo("AI Mission: Unità ignorata per design: " .. unitID)
+        return 
+    end
+-------------------------------------	
+---- Altrimenti associala a una squad esistente
+    local unitName = UnitDefs[unitDefID].name
+    local config = teamConfigs[unitTeam]     	-- Recupero la configurazione attuale di QUESTO team
+    if config and config[unitName] then 		-- 2) Controllo se il nome dell'unità appena finita è presente nella lista fabbriche e se config è NIL (per sicurezza), non facciamo nulla
+        factories[unitID] = { defName = unitName, squadID = nil, teamID = unitTeam }
+        return
+    end
 	local bestFactoryID = nil
-	local nearestDist = 3000
+	local nearestDist = 3000					-- distanza per associare l'unità creata alla fabbrica più vicino entro il valore "nearest", se non è presente alcuna fabbrica, l'unità rimane orfana
 	for fID, fData in pairs(factories) do
 		if fData.teamID == unitTeam then
 			local dist = Spring.GetUnitSeparation(unitID, fID)
@@ -400,69 +482,78 @@ function gadget:UnitFinished(unitID, unitDefID, unitTeam)
 end
 
 function gadget:GameFrame(n)
-	if (n % 30 ~= 0) then return end 
--- GESTIONE AVANZAMENTO DI LIVELLO
--- livello_AI = math.floor(Spring.GetGameSeconds() / 60)	-- ############################################ RIATTIVARE QUESTA RIGA PER L'AVANZAMENTO DEL LIVELLO DELLA AI    -- Avanzamento automatico del livello ogni 60 secondi (per test)  ############################
---	math.floor(Spring.GetGameSeconds() / 60) è un calcolo matematico "assoluto":
---  A 0 secondi: 0 / 60 = 0.0 -> floor = 0
---  A 59 secondi: 59 / 60 = 0.98 -> floor = 0
---  A 60 secondi: 60 / 60 = 1.0 -> floor = 1
---  A 120 secondi: 120 / 60 = 2.0 -> floor = 2
---  Se volessi fare ogni 18 minuti?
---	Basta cambiare il divisore. Siccome 1 minuto = 60 secondi, 18 minuti sono 18×60=1080  secondi.La riga diventerebbe: 18×60=1080
-if livello_AI > 1 then livello_AI = 1 end 					-- Evitiamo di sforare i livelli che abbiamo definito, riportando a "x" il livello della AI
--- SE IL LIVELLO È CAMBIATO, AGGIORNA LA TABELLA
-    if livello_AI ~= lastLevel then
-		Spring.Echo("WMRTS AI:cambio livello") 	-- DEBUG ############################################### CANCELLARE
-        configurazioneUnitaLivello()
-        lastLevel = livello_AI
-    end									-- Aggiorno le tabelle delle costruzioni
-Spring.Echo(livello_AI)					-- DEBUG ############################################### CANCELLARE
-	-- GESTIONE FABBRICHE
-	for fID, fData in pairs(factories) do
-		local qSize = Spring.GetCommandQueue(fID, 0)
-		
-		-- SE qSize è nil, perchè una fabbrica non esiste più (è stata distrutta, rimossa con mission editor, ecc), la rimuoviamo dalla lista, altrimenti l' AI va in errore per valori NIL
-		if qSize == nil then
-			factories[fID] = nil -- La rimuoviamo dalla lista così non ci darà più noia
-		else		
-		
-		local isBuilding = Spring.GetUnitIsBuilding(fID)
-		local isLocked = false
-		
-		if fData.squadID and squads[fData.squadID] then -- Ora qSize è sicuramente un numero (grazie all'else sopra)
-			if (qSize > 0) or isBuilding or (squads[fData.squadID].state == "gathering") then
-				isLocked = true
-			else
-				fData.squadID = nil
-			end
-		end
+    if (n % 30 ~= 0) then return end 
+    -- GESTIONE SEMPLICE E TEMPORANEA DEL LIVELLO AI		-- un domani la gestione del livello sarà data esternizzata in un gadget esterno della AI (esempio in quello che gestirà i costruttori)	
+    for teamID, _ in pairs(aiTeamIDs) do					-- gestione livelli per ogni team
+        local tempoPartita = Spring.GetGameSeconds()    	-- Calcolo del livello (basato sul tempo per test!! cambiare poi con logica di avanzamento quando saranno presenti ulteriori costruzioni)
+        local nuovoLivello = 0
+        if tempoPartita > 1080 then -- se sono passati x secondi, imposta il livello AI del team a 1
+            nuovoLivello = 1
+        end
+        ------------------------------
+		-- Aggiungere qui altri scaglioni di tempo 
+		------------------------------
+		  
+        if teamLevels[teamID] ~= nuovoLivello then 		-- Se il livello del team è cambiato (o non è ancora inizializzato)
+            teamLevels[teamID] = nuovoLivello
+            teamConfigs[teamID] = GetConfigPerLivello(nuovoLivello)
+            Spring.Echo("WMRTS AI: Team " .. teamID .. " passato al livello " .. nuovoLivello)
+            
+            -- rendo la variabile globale per passarla ad altri gadget della AI
+            if not GG.WMRTS_Levels then GG.WMRTS_Levels = {} end
+            GG.WMRTS_Levels[teamID] = nuovoLivello
+        end
+    end
 
-		if not isLocked and qSize == 0 and not isBuilding then
-			local options = FACTORY_CONFIG[fData.defName]
-			if options then
-				local template = SQUAD_TEMPLATES[options[math.random(1, #options)]]
-				if template then
-					local newSquadID = n .. "_" .. fID
-					squads[newSquadID] = {
-						units = {},
-						targetSize = #template.units,
-						state = "gathering",
-						startTime = Spring.GetGameSeconds(),
-						myTeam = fData.teamID,
-						attackTarget = nil,
-						type = template.type 
-					}
-					fData.squadID = newSquadID
-					for _, uName in ipairs(template.units) do
-						local uDef = UnitDefNames[uName]
-						if uDef then Spring.GiveOrderToUnit(fID, -uDef.id, {}, {}) end
-					end
-				end
-			end
-		end
-		end -- Fine else (qSize ~= nil)
-	end 	-- Fine loop fabbriche
+    -- GESTIONE FABBRICHE
+    for fID, fData in pairs(factories) do
+        local qSize = Spring.GetCommandQueue(fID, 0)
+        
+        if qSize == nil then
+            factories[fID] = nil 
+        else		
+            local isBuilding = Spring.GetUnitIsBuilding(fID)
+            local isLocked = false
+            
+            if fData.squadID and squads[fData.squadID] then
+                if (qSize > 0) or isBuilding or (squads[fData.squadID].state == "gathering") then
+                    isLocked = true
+                else
+                    fData.squadID = nil
+                end
+            end
+
+            if not isLocked and qSize == 0 and not isBuilding then
+                -- RECUPERO LA CONFIGURAZIONE SPECIFICA DI QUEL TEAM
+                local configDelTeam = teamConfigs[fData.teamID]
+                if configDelTeam then
+                    local options = configDelTeam[fData.defName]
+                    if options then
+                        local templateName = options[math.random(1, #options)]
+                        local template = SQUAD_TEMPLATES[templateName]
+                        if template then
+                            -- ... (il resto della tua logica di creazione squadID rimane uguale)
+                            local newSquadID = n .. "_" .. fID
+                            squads[newSquadID] = {
+                                units = {},
+                                targetSize = #template.units,
+                                state = "gathering",
+                                startTime = Spring.GetGameSeconds(),
+                                myTeam = fData.teamID,
+                                attackTarget = nil,
+                                type = template.type 
+                            }
+                            fData.squadID = newSquadID
+                            for _, uName in ipairs(template.units) do
+                                local uDef = UnitDefNames[uName]
+                                if uDef then Spring.GiveOrderToUnit(fID, -uDef.id, {}, {}) end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
 
 	-- GESTIONE SQUADRE
 	for sID, sData in pairs(squads) do
