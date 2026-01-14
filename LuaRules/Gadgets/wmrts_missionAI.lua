@@ -15,11 +15,11 @@ end
 -- 11/01/2025 = sistemato bug tabelle NIL quando una fabbrica viene distrutta/rimossa
 -- 12/01/2025 = agguiunti i livelli di difficoltà della AI. Per ora scattano dopo x minuti di tempo. Predisposto per una logica migliore di avanzamento (ad esempio quando ci sarà il controllo dei costruttori e l'avanzamento è dato da quanti estrattori e/o centrali solari l'AI ha costruito)
 -- 14/01/2025 = le AI sono ora indipendenti (mentre prima il livello delle AI era unico per tutti i teams
--- 14/01/2025 = Aggiungo la categoria "constructor", i costruttori, gestiti da altri gadget, devono essere ignorati in questo gadget (lato formazione gruppi), devono essere considerati invece solo come bersagli
+-- 14/01/2025 = Aggiungo la gestione " ignore = true" nel database, da applicare ai costruttori, gestiti da altri gadget. In questo gadget i costruttori devono essere ignorati (cioè non devono essere inseriti in gruppi e mandati all'attacco), devono essere considerati invece solo come bersagli da attaccare ("ground" o relativi)
 
 -- to do LIST ################################
 -- 1) implementare i SUB
--- 2) REIMPOSTARE L'avanzamento di livello!!!!! vedi 
+-- 2) REIMPOSTARE L'avanzamento di livello!!!!! sarà gestito dal gadget costruttori ( to do) 
 
 
 if (not gadgetHandler:IsSyncedCode()) then
@@ -56,7 +56,7 @@ end
 --------------------------------------------------------------------------------
 
 -- Il nome dello "squad_template" identifica solamente il nome del gruppo da creare. Es. ["ICU_armlab_light_patrol_1"], verrà poi impiegato nel punto 2b per dire alla fabbrica: costruisci le unità di questo gruppo e forma il gruppo
--- units = l'elenco delle unità che comporranno il gruppo (ad esempio il gruppo "ICU_armlab_light_patrol_1"
+-- units = l'elenco delle unità (solo militari) che comporranno il gruppo (ad esempio il gruppo "ICU_armlab_light_patrol_1". Le unità di costruzione (dichiarate nel database) non verranno gestite nel gruppo ma verranno ignorate per essere gestite da altri gadget
 -- type = tipologia di squadra, la tipologia verrà impiegata nella logica di targeting (punto 4) per dire quali unità devono attaccare. In generale descrizioni a seguito:
 -- 					type = "ground" 				-> manda all'attacco verso unità tipo "ground", "building", "strategicbuilding", "unknown" e "hover" se y di quest'ultima > -1 (vedere punto 4). Ideale per le truppe di terra o gli aerei.
 -- 					type = "ground_hovercraft" 		-> manda all'attacco verso unità tipo "ground", "building", "strategicbuilding", "unknown" e "hover" a prescindere dalla y di quest'ultima (rispetto al gruppo "ground". Ideale per gli hovecraft e per gli aerei
@@ -204,7 +204,7 @@ local FACTORY_CONFIG = {} 		-- all'inizio imposto la tabella vuota #############
 -- local livello_AI = 0 			-- ##################### all'inizio imposto il livello della AI = 0 (livello iniziale #################
 -- local lastLevel = -1 			-- ##################### Usiamo -1 così al primo frame carica il livello 0. Questa variabile serve come "antiripetizione" e verrà utilizzata per aumentare di livello l' AI una volta sola #####################
 
-local function GetConfigPerLivello(livello) -- Questa funzione restituisce la tabella delle fabbriche in base al livello corrente del team
+local function GetConfigPerLivello(livello) -- Questa funzione restituisce, per ciascun team, la tabella delle fabbriche in funzione del livello corrente del team
     if livello == 0 then
         return {
             -- ICU --
@@ -233,44 +233,6 @@ local function GetConfigPerLivello(livello) -- Questa funzione restituisce la ta
     return {} -- default vuoto
 end
 
---[[
--- cancellare questa funzione configurazioneUnitaLivello ############################################################################
-local function configurazioneUnitaLivello()
-Spring.Echo(">>> AI MISSION: Caricamento configurazione per Livello " .. livello_AI) -- debug
-	if livello_AI == 0 then				-- al livello iniziale = 0 produci le unità di seguito
-		FACTORY_CONFIG = {
-		-- ICU --
-			["armlab"] = { "ICU_armlab_light_patrol_1", "ICU_armlab_light_patrol_2" },
-			["armap"]  = { "ICU_armap_antiair_raid_1", "ICU_armap_air_raid_1","ICU_armap_air_bomber_1" },
-			["armvp"] = { "ICU_armvp_light_patrol_1", "ICU_armvp_light_patrol_2" },
-		--	["armsy"]  = { "naval_fleet" },
-
-		-- AND --
-			["andlab"] = { "AND_andlab_light_patrol_1", "AND_andlab_light_patrol_2" },
-			["andalab"] = { "AND_andalab_light_patrol_1", "AND_andalab_light_patrol_2" }, 
-			["andhp"] = { "AND_andhp_light_patrol_1", "AND_andhp_light_patrol_2" },
-			["andahp"] = { "AND_andahp_light_patrol_1", "AND_andahp_light_patrol_2" },		
-			["andplat"]  = { "AND_andplatplat_air_raid_1", "AND_andplat_antiair_raid_1","AND_andplat_air_bomber_1" },
-			["andaplat"]  = { "AND_andaplatplat_air_raid_1", "AND_andaplat_air_bomber_1","AND_andaplat_air_bomber_2" },			--#####################################
-		}
-	elseif livello_AI == 1 then				-- al livello 1 produci le unità di seguito
-		FACTORY_CONFIG = {
-		-- ICU --
-			["armlab"] = { "ICU_armlab_medium_patrol_1", "ICU_armlab_medium_patrol_2" },
-			["armap"]  = { "ICU_armap_antiair_raid_1", "ICU_armap_air_raid_1","ICU_armap_air_bomber_1" },
-			["armvp"] = { "ICU_armvp_light_patrol_1", "ICU_armvp_light_patrol_2" },
-		--	["armsy"]  = { "naval_fleet" },
-
-		-- AND --
-			["andlab"] = { "AND_andlab_light_patrol_1", "AND_andlab_light_patrol_2" },
-			["andhp"] = { "AND_andhp_light_patrol_1", "AND_andhp_light_patrol_2" },
-			["andplat"]  = { "AND_andplatplat_air_raid_1", "AND_andplat_antiair_raid_1","AND_andplat_air_bomber_1" },
-		}
-	end
-end
-]]--
-
--- configurazioneUnitaLivello()	-- avvio all'inizio la funzione per caricare le fabbriche del livello 0
 local TARGET_AI_NAME = "WarMachinesRTSmissionAI" 
 local SQUAD_TIMEOUT_SECONDS = 600 -- questo timeout definisce i secondi di attesa per la formazione del gruppo delle unità uscite dalla fabbrica. Oltre questo timeout il gruppo si completa cosi com'è e parte all'attacco o difesa 
 
@@ -388,31 +350,19 @@ local function GiveAttackOrder(unitID, targetData)
 	end
 end
 
---[[
 function gadget:Initialize()
 	local teamList = Spring.GetTeamList()
 	for _, teamID in ipairs(teamList) do
 		local assignedAI = Spring.GetTeamLuaAI(teamID)
 		if assignedAI and string.find(string.lower(assignedAI), string.lower(TARGET_AI_NAME)) then
 			aiTeamIDs[teamID] = true
-		end
-	end
-end
-]]--
-
-function gadget:Initialize()
-	local teamList = Spring.GetTeamList()
-	for _, teamID in ipairs(teamList) do
-		local assignedAI = Spring.GetTeamLuaAI(teamID)
-		if assignedAI and string.find(string.lower(assignedAI), string.lower(TARGET_AI_NAME)) then
-			aiTeamIDs[teamID] = true
-            teamLevels[teamID] = 0 							-- INIZIALIZZAZIONE LIVELLO 0 PER QUESTO TEAM
-            teamConfigs[teamID] = GetConfigPerLivello(0)	-- INIZIALIZZAZIONE LIVELLO 0 PER QUESTO TEAM
+            teamLevels[teamID] = 0 							-- impostazione livello 0 per il team corrente (for... do...) 
+            teamConfigs[teamID] = GetConfigPerLivello(0)	-- impostazione livello 0 per il team corrente (for... do...) 
 		end
 	end
 end
 
--- Funzione per restituisce true se l'unità è segnata come ignore nel DB (ignore = true)
+-- Funzione per restituire true se l'unità è segnata come ignore nel DB WMRTS_AI_mission_db.lua (ignore = true). sono ignore = true tutte le unità che non devono essere gestite in questo gadget (come gruppi da mandare all'attacco)
 local function IsUnitIgnored(unitID)
 	local uDefID = Spring.GetUnitDefID(unitID)
 	if not uDefID then return false end
@@ -437,15 +387,14 @@ function gadget:UnitFinished(unitID, unitDefID, unitTeam)
 ]]--
 
 function gadget:UnitFinished(unitID, unitDefID, unitTeam)
-    if not aiTeamIDs[unitTeam] then return end 				-- se il team non è ID esci
-	------------------------ #######verificare
+		-- CONTROLLO SE IL TEAM NON è L'AI
+    if not aiTeamIDs[unitTeam] then return end 				-- se il team non è AI non fare niente, esci
 	    -- CONTROLLO IGNORE: Se l'unità deve essere ignorata, definita nel database (ignore = true) esci subito e non gestire l'unità
-    if IsUnitIgnored(unitID) then
-        -- Spring.Echo("AI Mission: Unità ignorata per design: " .. unitID)
+    if IsUnitIgnored(unitID) then							-- utilizza la funzione IsUnitIgnored per capire se l'unità in questione è impostata con " ignore = true" nel file "WMRTS_AI_mission_db.lua", e restituisci true o false. se true non fare niente
+         Spring.Echo("AI Mission: Unità ignorata per design: " .. unitID)
         return 
     end
--------------------------------------	
----- Altrimenti associala a una squad esistente
+		-- Altrimenti (se ignore = false o non impostate) associa l'unità ad una squadra
     local unitName = UnitDefs[unitDefID].name
     local config = teamConfigs[unitTeam]     	-- Recupero la configurazione attuale di QUESTO team
     if config and config[unitName] then 		-- 2) Controllo se il nome dell'unità appena finita è presente nella lista fabbriche e se config è NIL (per sicurezza), non facciamo nulla

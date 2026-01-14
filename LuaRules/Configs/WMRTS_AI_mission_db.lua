@@ -8,7 +8,7 @@
 -- La tipologia di ogni singola unità è necessaria affinchè la AI gestisca le squadre/gruppi (punto 2) contro le singole unità.
 -- Ad esempio le tipologie "ground" definite qui verranno bersagliate dai gruppi tipo "ground" e "air_toground" definiti nel punto 2. 
 -- Questa logica di "chi attacca cosa" è definita poi nel punto "4) LOGICA DI TARGETING BASATA SU DATABASE"
--- definizione delle tipologie:
+-- definizione delle tipologie "type":
 --			type = ground 				-> unità mobile di terra (veicoli e Kbot)
 --			type = air 					-> unità mobile aerea
 --			type = hovercraft 			-> unità mobile di terra che può andare sul mare
@@ -17,7 +17,7 @@
 --			type = navalbuilding 		-> unità fissa di superficie su mare (di difesa/produzione/energia)
 --			type = strategicbuilding 	-> unità fissa di superficie strategica ( Es factory 3 livello, silos, antipalline )
 --			tutte le unità che non sono identificate in questo database, prenderanno valore type = unknown , vedere poi la logica di targetin come gestirle
-
+-- definizione della caratteristica "ignore": può essere true o false (se non dichiarata). Se True, l'unità ad esso associata non verrà gestita dal gadget "military_factory": se viene creata dalla fabbrica, non viene inclusa nel gruppo e non viene mandata all'attacco. Sara quindi un altro Gadget a gestire i costruttori e pertanto il  gadget "military_factory" ignorerà queste unità grazie all'opzione ignore = true. Tuttavia queste unità saranno comunque categorizzate dal gadget (type = "ground" o altro) come categoria di attacco (vedi sopra)
 
 local UNIT_DB = {
 	--------------------------------------------------------------------------------
@@ -110,7 +110,7 @@ local UNIT_DB = {
 ["armsam"] = { type = "ground" },
 
 -- Unità prodotte da armap (Aerei)
-["armca"] = { type = "air" },
+["armca"] = { type = "air", ignore = true },
 ["armpeep"] = { type = "air" },
 ["armfig"] = { type = "air" },
 ["armthund"] = { type = "air" },
@@ -118,14 +118,14 @@ local UNIT_DB = {
 ["armkam"] = { type = "air" },
 
 -- Unità prodotte da armsy (Navi)
-["armcs"] = { type = "naval" },
+["armcs"] = { type = "naval", ignore = true },
 ["armsub"] = { type = "naval" }, -- ############################ sistemare categorizzazione e gestire sub
 ["armpt"] = { type = "naval" }, 
 ["decade"] = { type = "naval" },
 ["armroy"] = { type = "naval" },
 
 -- Unità prodotte da armalab
-["armack"] = { type = "ground" },
+["armack"] = { type = "ground", ignore = true  },
 ["armfast"] = { type = "ground" },
 ["armzeus"] = { type = "ground" },
 ["armmav"] = { type = "ground" },
@@ -139,7 +139,7 @@ local UNIT_DB = {
 ["armscab"] = { type = "ground" },
 
 -- Unità prodotte da armavp
-["armacv"] = { type = "ground" },
+["armacv"] = { type = "ground", ignore = true  },
 ["armcroc"] = { type = "ground" },
 ["armlatnk"] = { type = "ground" },
 ["icubull"] = { type = "ground" },
@@ -153,7 +153,7 @@ local UNIT_DB = {
 ["armcamp"] = { type = "ground" },
 
 -- Unità prodotte da armaap
-["armaca"] = { type = "air" },
+["armaca"] = { type = "air", ignore = true  },
 ["armbrawl"] = { type = "air" },
 ["armpnix"] = { type = "air" },
 ["armlance"] = { type = "air" },
@@ -164,7 +164,7 @@ local UNIT_DB = {
 ["armcybr"] = { type = "air" },
 
 -- Unità prodotte da armasy
-["armacsub"] = { type = "naval" }, 	-- ############################ sistemare categorizzazione e gestire sub
+["armacsub"] = { type = "naval", ignore = true  }, 	-- ############################ sistemare categorizzazione e gestire sub
 ["armsubk"] = { type = "naval" },	-- ############################ sistemare categorizzazione e gestire sub
 ["armaas"] = { type = "naval" },
 ["armcrus"] = { type = "naval" },
@@ -191,7 +191,7 @@ local UNIT_DB = {
 	-- NFA
 	--------------------------------------------------------------------------------
 -- Commander
-["nfacom"] = { type = "ground" },	
+["nfacom"] = { type = "ground", ignore = true  },	
 
 -- Costruzioni Tier 1
 ["corsolar"] = { type = "building" },
@@ -261,14 +261,14 @@ local UNIT_DB = {
 ["nfafff"] = { type = "building" },
 
 -- Unità prodotte da corlab
-["corck"] = { type = "ground" },
+["corck"] = { type = "ground", ignore = true  },
 ["nfaak"] = { type = "ground" },
 ["nfastorm"] = { type = "ground" },
 ["nfathud"] = { type = "ground" },
 ["corcrash"] = { type = "ground" },
 
 -- Unità prodotte da corvp
-["corcv"] = { type = "ground" },
+["corcv"] = { type = "ground", ignore = true  },
 ["nfafav"] = { type = "ground" },
 ["nfagator"] = { type = "ground" },
 ["nfagarp"] = { type = "ground" },
@@ -278,7 +278,7 @@ local UNIT_DB = {
 ["cormist"] = { type = "ground" },
 
 -- Unità prodotte da corap
-["corca"] = { type = "air" },
+["corca"] = { type = "air", ignore = true  },
 ["corfink"] = { type = "air" },
 ["corveng"] = { type = "air" },
 ["corshad"] = { type = "air" },
@@ -286,14 +286,14 @@ local UNIT_DB = {
 ["bladew"] = { type = "air" },
 
 -- Unità prodotte da corsy
-["corcs"] = { type = "naval" },
+["corcs"] = { type = "naval", ignore = true  },
 ["corsub"] = { type = "naval" },	  -- ############################ sistemare categorizzazione e gestire sub
 ["corpt"] = { type = "naval" },
 ["coresupp"] = { type = "naval" },
 ["corroy"] = { type = "naval" },
 
 -- Unità prodotte da coralab
-["corack"] = { type = "ground" },
+["corack"] = { type = "ground", ignore = true  },
 ["nfapyro"] = { type = "ground" },
 ["corcan"] = { type = "ground" },
 ["corsumo"] = { type = "ground" },
@@ -305,7 +305,7 @@ local UNIT_DB = {
 ["corspec"] = { type = "ground" },
 
 -- Unità prodotte da coravp
-["coracv"] = { type = "ground" },
+["coracv"] = { type = "ground", ignore = true  },
 ["corseal"] = { type = "ground" },
 ["nfareap"] = { type = "ground" },
 ["corparrow"] = { type = "ground" },
@@ -319,7 +319,7 @@ local UNIT_DB = {
 ["nfavrad"] = { type = "ground" },
 
 -- Unità prodotte da coraap
-["coraca"] = { type = "air" },
+["coraca"] = { type = "air", ignore = true  },
 ["corape"] = { type = "air" },
 ["corhurc"] = { type = "air" },
 ["cortitan"] = { type = "air" },
@@ -328,7 +328,7 @@ local UNIT_DB = {
 ["corcrw"] = { type = "air" },
 
 -- Unità prodotte da corasy
-["coracsub"] = { type = "naval" },		-- ############################ sistemare categorizzazione e gestire sub 
+["coracsub"] = { type = "naval", ignore = true  },		-- ############################ sistemare categorizzazione e gestire sub 
 ["corshark"] = { type = "naval" },		-- ############################ sistemare categorizzazione e gestire sub 
 ["corssub"] = { type = "naval" },		-- ############################ sistemare categorizzazione e gestire sub 
 ["corarch"] = { type = "naval" },
@@ -354,7 +354,7 @@ local UNIT_DB = {
 	-- AND
 	--------------------------------------------------------------------------------
 -- Commander
-["andcom"] = { type = "ground" },	
+["andcom"] = { type = "ground", ignore = true  },	
 	
 -- Costruzioni Tier 1
 ["andsolar"] = { type = "building" },
@@ -399,19 +399,19 @@ local UNIT_DB = {
 ["andgant"] = { type = "building" },
 
 -- Unità prodotte da andlab 
-["andcsp"] = { type = "ground" },
+["andcsp"] = { type = "ground", ignore = true  },
 ["andscouter"] = { type = "ground" },
 ["anddauber"] = { type = "ground" },
 ["andbrskr"] = { type = "ground" },
 
 -- Unità prodotte da andhp
-["andch"] = { type = "hovercraft" },
+["andch"] = { type = "hovercraft", ignore = true  },
 ["andgaso"] = { type = "hovercraft" },
 ["andlipo"] = { type = "hovercraft" },
 ["andmisa"] = { type = "hovercraft" },
 
 -- Unità prodotte da andplat
-["andca"] = { type = "air" },
+["andca"] = { type = "air", ignore = true  },
 ["andfig"] = { type = "air" },
 ["andbomb"] = { type = "air" },
 ["andstr"] = { type = "air" },
@@ -420,14 +420,14 @@ local UNIT_DB = {
 -- sono le stesse di andlab + andhp
 
 -- Unità prodotte da andalab 
-["andacsp"] = { type = "ground" },
+["andacsp"] = { type = "ground", ignore = true  },
 ["walker"] = { type = "ground" },
 ["andogre"] = { type = "ground" },
 ["exxec"] = { type = "ground" },
 ["interceptor"] = { type = "ground" },
 
 -- Unità prodotte da andahp
-["andach"] = { type = "hovercraft" },
+["andach"] = { type = "hovercraft", ignore = true  },
 ["androck"] = { type = "hovercraft" },
 ["andtanko"] = { type = "hovercraft" },
 ["andtesla"] = { type = "hovercraft" },
@@ -482,7 +482,7 @@ local UNIT_DB = {
 ["eufavp"] = { type = "building" },
 
 -- Unità prodotte da eufvp
-["eufcd"] = { type = "ground" },
+["eufcd"] = { type = "ground", ignore = true  },
 ["eufthorn"] = { type = "ground" },
 ["eufsab"] = { type = "ground" },
 
@@ -490,10 +490,10 @@ local UNIT_DB = {
 ["euffig"] = { type = "air" },
 
 -- Unità prodotte da eufblab -- ########################## implementare
-["armmedic"] = { type = "ground" },
+["armmedic"] = { type = "ground", ignore = true  },
 
 -- Unità prodotte da eufavp
-["eufacd"] = { type = "ground" },
+["eufacd"] = { type = "ground", ignore = true  },
 ["eufbomb"] = { type = "ground" },
 ["eufher"] = { type = "ground" },
 ["euflong"] = { type = "ground" },
