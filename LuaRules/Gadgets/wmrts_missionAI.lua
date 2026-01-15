@@ -9,7 +9,7 @@ function gadget:GetInfo()
 		enabled   = true
 	}
 end
--- 08/01/2025 = creata l'AI WMRTS_AI per missioni
+-- 08/01/2025 = creata l'AI WMRTS_AI per missioni (base per l'AI skirmish)
 -- 09/01/2025 = implementato il comando attack al gruppo di bombardieri. Prima l'AI gestiva solamente il comando FIGHT ma i bombardieri non bombardano automaticamente, bisogna indicargli il punto da bombardare con il comando Attack.
 -- 09/01/2025 = esternizzata la tabella/db delle unità in WMRTS_AI_mission_db.lua
 -- 11/01/2025 = sistemato bug tabelle NIL quando una fabbrica viene distrutta/rimossa
@@ -19,7 +19,7 @@ end
 
 -- to do LIST ################################
 -- 1) implementare i SUB
--- 2) REIMPOSTARE L'avanzamento di livello!!!!! sarà gestito dal gadget costruttori ( to do) 
+-- 2) REIMPOSTARE L'avanzamento di livello!!!!! sarà gestito dal gadget costruttori ( to do) -- in questo gadget ogni x secondi guardo le variabili globali del livello della AI (inerente al team) e lo aggiorno.
 
 
 if (not gadgetHandler:IsSyncedCode()) then
@@ -315,12 +315,12 @@ local function GetSmartEnemyTarget(myTeamID, squadType)
 						return {x=x, y=y, z=z}
 					end				
 				-------------					
-				-- NAVALI: Attaccano naval e hover (solo se in acqua) ---- ################################### implementare
+				-- NAVALI: Attaccano naval e hover (solo se sopra la superficie dell' acqua) ---- ################################### implementare
 				-------------				
 				elseif squadType == "naval" then
 					if enemyCat == "naval" then
 						return {x=x, y=y, z=z}
-					elseif enemyCat == "hover" and y < -1 then -- sotto il livello del mare
+					elseif enemyCat == "hover" and y < -1 then -- minore di -1 (da -x a -1) rispetto al livello dell'acqua, si presume tutti gli hovercraft che sono in acqua  ###################### verificare se il parametro altezza è corretto per definire che l'hovercraft è in acqua
 						return {x=x, y=y, z=z}
 					end
 				end
@@ -364,27 +364,15 @@ end
 
 -- Funzione per restituire true se l'unità è segnata come ignore nel DB WMRTS_AI_mission_db.lua (ignore = true). sono ignore = true tutte le unità che non devono essere gestite in questo gadget (come gruppi da mandare all'attacco)
 local function IsUnitIgnored(unitID)
-	local uDefID = Spring.GetUnitDefID(unitID)
-	if not uDefID then return false end
-	local unitName = UnitDefs[uDefID].name
+	local uDefID = Spring.GetUnitDefID(unitID)				-- definisci localmente uDefID
+	if not uDefID then return false end						-- se uDefID non è presente restituisci false (usato per altre logiche)
+	local unitName = UnitDefs[uDefID].name					-- altrimenti prosegui e definisci localmente unitName
 	
-	if UNIT_DB[unitName] and UNIT_DB[unitName].ignore then
-		return true
+	if UNIT_DB[unitName] and UNIT_DB[unitName].ignore then	-- se nel database è presente l'unità unitName, e la voce "ignore" di quella unità = true allora...
+		return true											-- ...restituisci true (usato poi per altre logiche)
 	end
-	return false
+	return false											-- ...altrimenti restituisci false (usato poi per altre logiche)
 end
-
-
---[[
-function gadget:UnitFinished(unitID, unitDefID, unitTeam)
-	if not aiTeamIDs[unitTeam] then return end
-	local unitName = UnitDefs[unitDefID].name
-
-	if FACTORY_CONFIG[unitName] then
-		factories[unitID] = { defName = unitName, squadID = nil, teamID = unitTeam }
-		return
-	end
-]]--
 
 function gadget:UnitFinished(unitID, unitDefID, unitTeam)
 		-- CONTROLLO SE IL TEAM NON è L'AI
