@@ -1,235 +1,220 @@
 function gadget:GetInfo()
 	return {
 		name      = "WMRTS Construction Manager",
-		desc      = "Gestore costruzioni e livelli per War Machines RTS",
-		author    = "molix",
+		desc      = "Gestore costruzioni V1.2 - War Machines RTS",
+		author    = "molix & AI",
 		date      = "2025",
 		license   = "GPL",
-		layer     = 90, -- Carica prima dell'AI di combattimento così i livelli sono pronti
+		layer     = 90,
 		enabled   = true
 	}
 end
 
--- to do LIST ################################
--- 1) ***implementare le funzioni nella "CATEGORY_TO_UNIT" per far scegliere alla AI le unità in funzione del tipo di mappa (ad esempio se una certa mappa è ventosa -> icuwing invece di icusolar. cose cosi
-
 if (not gadgetHandler:IsSyncedCode()) then return end
 
 --------------------------------------------------------------------------------
--- CONFIGURAZIONE CATEGORIE 
+-- DATABASE CATEGORIE
 --------------------------------------------------------------------------------
 
 local CATEGORY_TO_UNIT = {
     ["ICU"] = {
-		["CAT_ENERGY_T1"]	   = "armsolar",
-        ["CAT_CONSTRUCTOR_T1"] = "icucon",
-        ["CAT_FACTORY_T1"]     = "armlab", -- *** Qui potremmo mettere una funzione per variare
-        ["CAT_LASER_T1"]       = "armrl",
-        ["CAT_AA_T1"]          = "armlightad",
-        ["CAT_MEX"]            = "armmex",
-        ["CAT_FACTORY_T2"]     = "armalab",
-        ["CAT_CONSTRUCTOR_T2"] = "icucon2",
-        ["CAT_AA_T2"]          = "armflak",
+        ["CAT_ENERGY_T1"]      = { "armsolar" },
+        ["CAT_CONSTRUCTOR_T1"] = { "icucom", "icuck", "icucv" }, 
+        ["CAT_FACTORY_T1"]     = { "armlab", "armvp" },
+        ["CAT_LASER_T1"]       = { "iculighlturr" },
+        ["CAT_AA_T1"]          = { "armrl" },
+        ["CAT_MEX"]            = { "icumetex" },
     },
     ["AND"] = {
-		["CAT_ENERGY_T1"]	   = "andsolar",	
-        ["CAT_CONSTRUCTOR_T1"] = "andcon",
-        ["CAT_FACTORY_T1"]     = "andlab",
-        ["CAT_LASER_T1"]       = "andlaser",
-        ["CAT_AA_T1"]          = nil, -- Esempio: AND non ha AA dedicata a lvl 1, si potrebbe anche non specificare la categoria in AND, in questo caso varrebbe sempre NIL
-        ["CAT_MEX"]            = "andmex",
-        ["CAT_FACTORY_T2"]     = "andalab",
-        ["CAT_CONSTRUCTOR_T2"] = "andcon2",
-        ["CAT_AA_T2"]          = "andaa2",
+        ["CAT_ENERGY_T1"]      = { "andsolar" },
+        ["CAT_CONSTRUCTOR_T1"] = { "andcom", "andcon" },
+        ["CAT_FACTORY_T1"]     = { "andlab" },
+        ["CAT_LASER_T1"]       = { "andlaser" },
+        ["CAT_AA_T1"]          = { "andaa" },
+        ["CAT_MEX"]            = { "andmex" }, -- mettere nil se la fazione non ha questa categoria di unità
     }
 }
 
---------------------------------------------------------------------------------
--- CONFIGURAZIONE LIVELLI 
---------------------------------------------------------------------------------
--- Per ogni livello si stabiliscono i requisiti per mantenerlo.
 local AI_BUILD_LEVELS = {
     [0] = {
         simultanea = 1,
         requisiti = {
-            {cat = "CAT_CONSTRUCTOR_T1", count = 1},
-            {cat = "CAT_MEX",            count = 2},
+            {cat = "CAT_CONSTRUCTOR_T1", count = 1}, 
+            {cat = "CAT_MEX",            count = 1}, -- Priorità assoluta
+            {cat = "CAT_ENERGY_T1",      count = 1},
             {cat = "CAT_FACTORY_T1",     count = 1},
+            {cat = "CAT_MEX",            count = 2}, 
+            {cat = "CAT_ENERGY_T1",      count = 2},
             {cat = "CAT_LASER_T1",       count = 2},
-            {cat = "CAT_AA_T1",          count = 1},
         }
-    },
-    [1] = {
-        simultanea = 1,
-        requisiti = {
-            {cat = "CAT_CONSTRUCTOR_T1", count = 2},
-            {cat = "CAT_MEX",            count = 4},
-            {cat = "CAT_FACTORY_T1",     count = 2},
-            {cat = "CAT_LASER_T1",       count = 4},
-            {cat = "CAT_AA_T1",          count = 2},
-            {cat = "CAT_FACTORY_T2",     count = 1},
-        }
-    },
-    -- ... aggiungi altri livelli qui ...
+    }
 }
-
---------------------------------------------------------------------------------
--- VARIABILI DI STATO
---------------------------------------------------------------------------------
-
-local aiTeamIDs = {}
-local teamLevels = {}       -- [teamID] = livello attuale
-local teamFactions = {}     -- [teamID] = "ICU" o "AND"
-local teamBasePos = {}      -- [teamID] = {x, y, z} (centro base)
-local teamConstructionSlots = {} -- [teamID] = numero di progetti attivi
-
-local BUILD_RADIUS = 1000
-local CHECK_INTERVAL = 150 -- Ogni 5 secondi (30fps * 5)
 
 --------------------------------------------------------------------------------
 -- FUNZIONI DI SUPPORTO
 --------------------------------------------------------------------------------
 
--- Determina la fazione del team (molto semplificato)
-local function GetTeamFaction(teamID)
-    local side = select(5, Spring.GetTeamInfo(teamID))
-    if side and string.find(string.lower(side), "and") then return "AND" end
-    return "ICU"
+local function IsTerrainFlat(x, z)
+    local nx, ny, nz = Spring.GetGroundNormal(x, z)
+    return ny > 0.9 
 end
 
--- Conta quante unità di una certa categoria possiede il team
-local function CountUnitsInCategory(teamID, category)
-    local faction = teamFactions[teamID]
-    local unitName = CATEGORY_TO_UNIT[faction][category]
-    if not unitName then return 999 end -- Se non esiste, requisito "saltato"
-    
-    local uDefID = UnitDefNames[unitName].id
-    return Spring.GetTeamUnitDefCount(teamID, uDefID)
-end
+-- RICERCA METALLO OTTIMIZZATA PER SPRING 100
+local function GetClosestMetalSpot(cx, cz, mexDefID)
+    local bestX, bestZ
+    local maxM = 0
+    local radius = 2000 -- Raggio aumentato
+    local step = 16    -- Risoluzione nativa della metal map
 
---------------------------------------------------------------------------------
--- LOGICA CORE
---------------------------------------------------------------------------------
-
-function gadget:Initialize()
-    local teamList = Spring.GetTeamList()
-    for _, teamID in ipairs(teamList) do
-        local assignedAI = Spring.GetTeamLuaAI(teamID)
-        if assignedAI and string.find(string.lower(assignedAI), "wmrts") then
-            aiTeamIDs[teamID] = true
-            teamLevels[teamID] = 0
-            teamFactions[teamID] = GetTeamFaction(teamID)
+    for i = -radius, radius, step do
+        for j = -radius, radius, step do
+            local tx, tz = cx + i, cz + j
+            local m = Spring.GetMetalAmount(tx, tz)
             
-            -- Inizializziamo il livello globale per gli altri gadget
-            if not GG.WMRTS_Levels then GG.WMRTS_Levels = {} end
-            GG.WMRTS_Levels[teamID] = 0
+            if m > maxM then
+                -- Se troviamo un punto con più metallo, testiamo se è costruibile
+                local ty = Spring.GetGroundHeight(tx, tz)
+                local test = Spring.TestBuildOrder(mexDefID, tx, ty, tz, 0)
+                
+                if test == 2 then
+                    -- Verifichiamo che non ci sia già un mex
+                    local units = Spring.GetUnitsInSphere(tx, ty, tz, 64)
+                    local occupied = false
+                    for _, uID in ipairs(units) do
+                        local name = UnitDefs[Spring.GetUnitDefID(uID)].name
+                        if string.find(name, "mex") or string.find(name, "moho") then
+                            occupied = true; break
+                        end
+                    end
+                    
+                    if not occupied then
+                        maxM = m
+                        bestX, bestZ = tx, tz
+                    end
+                end
+            end
         end
     end
+    
+    if bestX then 
+        Spring.Echo("WMRTS AI DEBUG: Metallo trovato a " .. bestX .. "," .. bestZ .. " (Valore: " .. maxM .. ")")
+        return bestX, Spring.GetGroundHeight(bestX, bestZ), bestZ 
+    end
+    
+    Spring.Echo("WMRTS AI DEBUG: Nessun giacimento di metallo libero trovato nel raggio di " .. radius)
+    return nil
 end
+
+local function CountUnitsInCategory(teamID, category, faction)
+    local unitList = CATEGORY_TO_UNIT[faction][category]
+    if not unitList then return 999 end
+    local total = 0
+    for _, unitName in ipairs(unitList) do
+        local uDef = UnitDefNames[unitName]
+        if uDef then
+            total = total + Spring.GetTeamUnitDefCount(teamID, uDef.id)
+        end
+    end
+    return total
+end
+
+local function FindGoodBuildSite(unitDefID, cx, cz, currentLevel)
+    local baseRadius = 300 + (currentLevel * 100)
+    for _ = 1, 40 do 
+        local angle = math.random() * math.pi * 2
+        local dist = math.random(60, baseRadius)
+        local tx = cx + math.cos(angle) * dist
+        local tz = cz + math.sin(angle) * dist
+        local ty = Spring.GetGroundHeight(tx, tz)
+        if IsTerrainFlat(tx, tz) then
+            if Spring.TestBuildOrder(unitDefID, tx, ty, tz, 0) == 2 then 
+                return tx, ty, tz 
+            end
+        end
+    end
+    return nil
+end
+
+--------------------------------------------------------------------------------
+-- GADGET CORE
+--------------------------------------------------------------------------------
+
+local aiTeamIDs = {}
+local teamLevels = {}       
+local teamFactions = {}     
+local teamBasePos = {}      
+local CHECK_INTERVAL = 120 
 
 function gadget:GameFrame(n)
     if (n % CHECK_INTERVAL ~= 0) then return end
+
+    local teamList = Spring.GetTeamList()
+    for _, teamID in ipairs(teamList) do
+        if not aiTeamIDs[teamID] then
+            local assignedAI = Spring.GetTeamLuaAI(teamID)
+            if assignedAI and (string.find(string.lower(assignedAI), "wmrts") or string.find(string.lower(assignedAI), "ai")) then
+                aiTeamIDs[teamID] = true
+                teamLevels[teamID] = 0
+                local side = select(5, Spring.GetTeamInfo(teamID))
+                teamFactions[teamID] = (side and string.find(string.lower(side), "and")) and "AND" or "ICU"
+                Spring.Echo("WMRTS AI: Team " .. teamID .. " (" .. teamFactions[teamID] .. ") Online.")
+            end
+        end
+    end
 
     for teamID, _ in pairs(aiTeamIDs) do
         local currentLevel = teamLevels[teamID]
         local faction = teamFactions[teamID]
         local config = AI_BUILD_LEVELS[currentLevel]
-        
-        if not config then return end -- Livello massimo raggiunto o non definito
+        if not config then return end
 
-        -- 1) DEFINIZIONE CENTRO BASE (Se non esiste)
         if not teamBasePos[teamID] then
             local units = Spring.GetTeamUnits(teamID)
-            if units[1] then
+            if units and units[1] then
                 local x, y, z = Spring.GetUnitPosition(units[1])
                 teamBasePos[teamID] = {x=x, y=y, z=z}
-            end
+            else return end
         end
 
-        -- 2) CHECK INVENTARIO E LIVELLI (Level-Up / Level-Down)
-        local allCurrentSatisfied = true
-        
-        -- Controllo se mancano requisiti dei livelli precedenti (Level-Down)
-        for i = 0, currentLevel do
-            local reqs = AI_BUILD_LEVELS[i].requisiti
-            for _, req in ipairs(reqs) do
-                local posseduti = CountUnitsInCategory(teamID, req.cat)
-                if posseduti < req.count then
-                    if i < currentLevel then
-                        teamLevels[teamID] = i -- Retrocedi
-                        Spring.Echo("WMRTS Construction: Team " .. teamID .. " declassato al livello " .. i)
-                        GG.WMRTS_Levels[teamID] = i
-                        return -- Riesegui al prossimo ciclo
-                    end
-                    allCurrentSatisfied = false
+        -- Trova costruttori liberi
+        local builders = {}
+        local allUnits = Spring.GetTeamUnits(teamID)
+        for _, uID in ipairs(allUnits) do
+            local uDefID = Spring.GetUnitDefID(uID)
+            if uDefID and UnitDefs[uDefID].isBuilder then
+                if Spring.GetCommandQueue(uID, 0) == 0 and not Spring.GetUnitIsBuilding(uID) then
+                    table.insert(builders, uID)
                 end
             end
         end
 
-        -- Se tutti i requisiti correnti sono ok, sali di livello
-        if allCurrentSatisfied and AI_BUILD_LEVELS[currentLevel + 1] then
-            teamLevels[teamID] = currentLevel + 1
-            GG.WMRTS_Levels[teamID] = currentLevel + 1
-            Spring.Echo("WMRTS Construction: Team " .. teamID .. " avanzato al livello " .. (currentLevel + 1))
-            return
-        end
-
-        -- 3) LOGICA DI COSTRUZIONE (Slot simultanei)
-        local slotsDisponibili = config.simultanea
-        local projectsStarted = 0
-        
-        -- Trova costruttori liberi
-        local allUnits = Spring.GetTeamUnits(teamID)
-        local builders = {}
-        for _, uID in ipairs(allUnits) do
-            local uDefID = Spring.GetUnitDefID(uID)
-            if UnitDefs[uDefID].isBuilder then
-                local qSize = Spring.GetCommandQueue(uID, 0)
-                if qSize == 0 then table.insert(builders, uID) end
-            end
-        end
-
-        -- Assegna ordini per i requisiti mancanti
+        local started = 0
         for _, req in ipairs(config.requisiti) do
-            if projectsStarted >= slotsDisponibili then break end
+            if started >= config.simultanea then break end
             
-            local posseduti = CountUnitsInCategory(teamID, req.cat)
+            local posseduti = CountUnitsInCategory(teamID, req.cat, faction)
             if posseduti < req.count then
-                local unitName = CATEGORY_TO_UNIT[faction][req.cat]
-                if unitName and #builders > 0 then
-                    local bID = builders[1] -- Prendi il primo costruttore libero
-                    local uDefID = UnitDefNames[unitName].id
-                    
-                    -- Trova posizione
+                local unitName = CATEGORY_TO_UNIT[faction][req.cat][1]
+                local uDef = UnitDefNames[unitName]
+                
+                if uDef and #builders > 0 then
+                    local bID = builders[1]
                     local bx, by, bz
+                    
                     if req.cat == "CAT_MEX" then
-                        -- Logica speciale per estrattori
-                        local spot = Spring.GetClosestMetalSpot(teamBasePos[teamID].x, teamBasePos[teamID].z)
-                        if spot then bx, by, bz = spot.x, spot.y, spot.z end
+                        -- Passiamo l'ID del MEX per testare la costruzione durante la scansione
+                        bx, by, bz = GetClosestMetalSpot(teamBasePos[teamID].x, teamBasePos[teamID].z, uDef.id)
                     else
-                        -- Logica casuale per il resto
-                        local tx = teamBasePos[teamID].x + math.random(-BUILD_RADIUS, BUILD_RADIUS)
-                        local tz = teamBasePos[teamID].z + math.random(-BUILD_RADIUS, BUILD_RADIUS)
-                        bx, by, bz = Spring.FindStartBuildSite(uDefID, tx, 0, tz, 500)
+                        bx, by, bz = FindGoodBuildSite(uDef.id, teamBasePos[teamID].x, teamBasePos[teamID].z, currentLevel)
                     end
 
                     if bx then
-                        Spring.GiveOrderToUnit(bID, -uDefID, {bx, by, bz, 0}, {})
+                        Spring.Echo("WMRTS AI: Team " .. teamID .. " ordina " .. unitName)
+                        Spring.GiveOrderToUnit(bID, -uDef.id, {bx, by, bz, 0}, {})
                         table.remove(builders, 1)
-                        projectsStarted = projectsStarted + 1
+                        started = started + 1
+                        break 
                     end
-                end
-            end
-        end
-
-        -- 4) ASSISTENZA (Nano-boost)
-        -- I costruttori rimasti liberi aiutano i cantieri aperti
-        for _, bID in ipairs(builders) do
-            local targetUnit = Spring.GetClosestUnitMap(teamBasePos[teamID].x, teamBasePos[teamID].z, 500, teamID)
-            if targetUnit then
-                local _, _, _, _, buildProgress = Spring.GetUnitHealth(targetUnit)
-                if buildProgress and buildProgress < 1 then
-                    Spring.GiveOrderToUnit(bID, CMD.REPAIR, {targetUnit}, {})
                 end
             end
         end
