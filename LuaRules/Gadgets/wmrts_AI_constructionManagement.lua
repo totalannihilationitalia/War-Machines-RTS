@@ -1,7 +1,7 @@
 function gadget:GetInfo()
 	return {
 		name      = "WMRTS Construction Manager",
-		desc      = "Gestore costruzioni V1.7 - War Machines RTS",
+		desc      = "Gestore costruzioni V2.6 - War Machines RTS",
 		author    = "molix & AI",
 		date      = "2025",
 		license   = "GPL",
@@ -13,41 +13,38 @@ end
 if (not gadgetHandler:IsSyncedCode()) then return end
 
 --------------------------------------------------------------------------------
--- 1) TABELLA MANUALE (COORDINATE FISSE PER MAPPA)
+-- 1) DATABASE E CONFIGURAZIONE
 --------------------------------------------------------------------------------
--- Qui puoi inserire i giacimenti per le mappe che non collaborano.
--- Il nome deve essere ESATTAMENTE quello che vedi nel log di Spring.
-local MANUAL_MAP_DATA = {
-    ["Zoty Outpost"] = {
-        {x = 1024, z = 2048},
-        {x = 1500, z = 1200},
-    },
-    ["Comet Catcher Redux"] = {
-        {x = 512, z = 512},
-        {x = 1024, z = 1024},
-    },
-}
 
---------------------------------------------------------------------------------
--- DATABASE UNITA' E CATEGORIE
---------------------------------------------------------------------------------
+local MAP_PROFILES = {
+    ["Zoty Outpost"] = { land = true, air = true, sea = false },
+    ["Default"]      = { land = true, air = true, sea = false },
+}
 
 local CATEGORY_TO_UNIT = {
     ["ICU"] = {
+        ["CAT_MEX"]            = { "icumetex" },
         ["CAT_ENERGY_T1"]      = { "armsolar" },
-        ["CAT_CONSTRUCTOR_T1"] = { "icucom", "icuck", "icucv" }, 
-        ["CAT_FACTORY_T1"]     = { "armlab", "armvp" },
         ["CAT_LASER_T1"]       = { "armrl" },
         ["CAT_AA_T1"]          = { "armlightad" },
-        ["CAT_MEX"]            = { "icumetex" },
+        ["CAT_FACTORY_T1"] = {
+            land = { "armlab", "armvp" },
+            air  = { "armap" },
+            sea  = { "armsy" },
+        },
+        ["CAT_ALL_CONSTRUCTORS"] = { "icucom", "icuck", "icucv", "armca", "armcs" },
     },
     ["AND"] = {
+        ["CAT_MEX"]            = { "andmex" },
         ["CAT_ENERGY_T1"]      = { "andsolar" },
-        ["CAT_CONSTRUCTOR_T1"] = { "andcom", "andcon" },
-        ["CAT_FACTORY_T1"]     = { "andlab" },
         ["CAT_LASER_T1"]       = { "andlaser" },
         ["CAT_AA_T1"]          = { "andaa" },
-        ["CAT_MEX"]            = { "andmex" },
+        ["CAT_FACTORY_T1"] = {
+            land = { "andlab", "andhp" },
+            air  = { "andplat" },
+            sea  = { "andsy" },
+        },
+        ["CAT_ALL_CONSTRUCTORS"] = { "andcom", "andcon", "andcv", "andca", "andcs" },
     }
 }
 
@@ -55,70 +52,64 @@ local AI_BUILD_LEVELS = {
     [0] = {
         simultanea = 1,
         requisiti = {
-            {cat = "CAT_CONSTRUCTOR_T1", count = 1}, 
-            {cat = "CAT_MEX",            count = 1}, 
-            {cat = "CAT_ENERGY_T1",      count = 1},
-            {cat = "CAT_FACTORY_T1",     count = 1},
-            {cat = "CAT_MEX",            count = 2}, 
-            {cat = "CAT_ENERGY_T1",      count = 2},
+            {cat = "CAT_ALL_CONSTRUCTORS", count = 1}, 
+            {cat = "CAT_MEX",               count = 1}, 
+            {cat = "CAT_ENERGY_T1",         count = 1},
+            {cat = "CAT_FACTORY_T1",        count = 1}, 
+            {cat = "CAT_MEX",               count = 3}, 
+            {cat = "CAT_ENERGY_T1",         count = 3},
+        }
+    },
+    [1] = {
+        simultanea = 2,
+        requisiti = {
+            {cat = "CAT_ALL_CONSTRUCTORS", count = 2},
+            {cat = "CAT_MEX",               count = 5},
+            {cat = "CAT_ENERGY_T1",         count = 6},
         }
     }
 }
 
---------------------------------------------------------------------------------
--- LOGICA METAL SPOTS (IBRIDA)
---------------------------------------------------------------------------------
+local MANUAL_MAP_DATA = {
+    ["Zoty Outpost"] = { {x = 664, z = 2360}, {x = 2101, z = 2412}, {x = 1320, z = 2312} },
+}
 
+--------------------------------------------------------------------------------
+-- 2) VARIABILI DI STATO
+--------------------------------------------------------------------------------
+local aiTeamIDs = {}
+local teamLevels = {}       
+local teamFactions = {}     
+local teamBasePos = {}      
 local metalSpots = {}
 local scanDone = false
+
+--------------------------------------------------------------------------------
+-- 3) FUNZIONI DI SUPPORTO
+--------------------------------------------------------------------------------
 
 local function AnalyzeMetalMap()
     metalSpots = {}
     local mapName = Game.mapName
-    Spring.Echo("WMRTS AI: Analisi risorse per mappa: " .. mapName)
-
-    -- A) TENTATIVO 1: Tabella Manuale
     if MANUAL_MAP_DATA[mapName] then
-        Spring.Echo("WMRTS AI: Caricamento coordinate manuali per " .. mapName)
-        for _, spot in ipairs(MANUAL_MAP_DATA[mapName]) do
-            table.insert(metalSpots, {x = spot.x, z = spot.z})
-        end
-    end
-
-    -- B) TENTATIVO 2: Tabella Globale (GG.metalSpots)
-    -- Molte mod moderne salvano i punti qui.
-    if #metalSpots == 0 and GG.metalSpots then
-        Spring.Echo("WMRTS AI: Tabella GG.metalSpots trovata. Importazione...")
-        for _, spot in ipairs(GG.metalSpots) do
-            table.insert(metalSpots, {x = spot.x, z = spot.z})
-        end
-    end
-
-    -- C) TENTATIVO 3: Scansione Bruta (Mappa del metallo tradizionale)
-    if #metalSpots == 0 then
-        Spring.Echo("WMRTS AI: Nessuna tabella trovata. Scansione pixel per pixel...")
-        local step = 16
-        for z = 8, Game.mapSizeZ, step do
-            for x = 8, Game.mapSizeX, step do
-                if Spring.GetMetalAmount(x, z) > 0 then
-                    local foundNear = false
-                    for i=1, #metalSpots do
-                        local dx, dz = x - metalSpots[i].x, z - metalSpots[i].z
-                        if (dx*dx + dz*dz) < 150*150 then foundNear = true; break end
-                    end
-                    if not foundNear then table.insert(metalSpots, {x = x, z = z}) end
+        for _, spot in ipairs(MANUAL_MAP_DATA[mapName]) do table.insert(metalSpots, {x = spot.x, z = spot.z}) end
+    else
+        local step = 32
+        for z = 16, Game.mapSizeZ, step do
+            for x = 16, Game.mapSizeX, step do
+                if Spring.GetMetalAmount(x, z) > 0.1 then
+                    table.insert(metalSpots, {x = x, z = z})
                 end
             end
         end
     end
-
-    Spring.Echo("WMRTS AI: Analisi conclusa. Punti metallo utilizzabili: " .. #metalSpots)
     scanDone = true
+    Spring.Echo("WMRTS AI: Metal scan complete (" .. #metalSpots .. " spots)")
 end
 
 local function GetClosestMetalSpot(cx, cz)
     local bestSpot = nil
-    local minDist = 4000 * 4000 
+    local minDist = 5000 * 5000 
     for i = 1, #metalSpots do
         local spot = metalSpots[i]
         local dx, dz = cx - spot.x, cz - spot.z
@@ -137,48 +128,44 @@ local function GetClosestMetalSpot(cx, cz)
     return nil
 end
 
---------------------------------------------------------------------------------
--- SUPPORTO (Fazione, Conteggio, Sito)
---------------------------------------------------------------------------------
-
-local function GetTeamFaction(teamID)
-    local side = select(5, Spring.GetTeamInfo(teamID))
-    if side and string.find(string.lower(side), "and") then return "AND" end
-    return "ICU"
-end
-
 local function CountUnitsInCategory(teamID, category, faction)
-    local unitList = CATEGORY_TO_UNIT[faction][category]
-    if not unitList then return 999 end
+    local entry = CATEGORY_TO_UNIT[faction][category]
+    if not entry then return 0 end
     local total = 0
-    for _, unitName in ipairs(unitList) do
-        local uDef = UnitDefNames[unitName]
-        if uDef then total = total + Spring.GetTeamUnitDefCount(teamID, uDef.id) end
+    local function c(list)
+        for _, name in ipairs(list) do
+            local ud = UnitDefNames[name]
+            if ud then total = total + Spring.GetTeamUnitDefCount(teamID, ud.id) end
+        end
     end
+    if entry.land or entry.air or entry.sea then
+        if entry.land then c(entry.land) end
+        if entry.air then c(entry.air) end
+        if entry.sea then c(entry.sea) end
+    else c(entry) end
     return total
 end
 
-local function FindGoodBuildSite(unitDefID, cx, cz)
-    for _ = 1, 40 do 
-        local angle = math.random() * math.pi * 2
-        local dist = math.random(80, 450)
-        local tx, tz = cx + math.cos(angle) * dist, cz + math.sin(angle) * dist
-        if Spring.TestBuildOrder(unitDefID, tx, 0, tz, 0) == 2 then
-            local _, ny, _ = Spring.GetGroundNormal(tx, tz)
-            if ny > 0.85 then return tx, Spring.GetGroundHeight(tx, tz), tz end
-        end
+local function GetRandomUnitFromCat(faction, category)
+    local entry = CATEGORY_TO_UNIT[faction][category]
+    if not entry then return nil end
+    local profile = MAP_PROFILES[Game.mapName] or MAP_PROFILES["Default"]
+    local valid = {}
+    
+    if entry.land or entry.air or entry.sea then
+        if profile.land and entry.land then for _,u in ipairs(entry.land) do table.insert(valid,u) end end
+        if profile.air and entry.air then for _,u in ipairs(entry.air) do table.insert(valid,u) end end
+        if profile.sea and entry.sea then for _,u in ipairs(entry.sea) do table.insert(valid,u) end end
+        if #valid > 0 then return valid[math.random(#valid)] end
+    else
+        return entry[math.random(#entry)]
     end
     return nil
 end
 
 --------------------------------------------------------------------------------
--- GADGET CORE
+-- 4) GADGET CORE
 --------------------------------------------------------------------------------
-
-local aiTeamIDs = {}
-local teamLevels = {}       
-local teamFactions = {}     
-local teamBasePos = {}      
 
 function gadget:GameFrame(n)
     if n < 35 then return end 
@@ -189,53 +176,114 @@ function gadget:GameFrame(n)
     for _, teamID in ipairs(teamList) do
         if not aiTeamIDs[teamID] then
             local aiName = Spring.GetTeamLuaAI(teamID)
-            if aiName and (string.find(string.lower(aiName), "wmrts") or string.find(string.lower(aiName), "ai")) then
+            if aiName and aiName ~= "" then
                 aiTeamIDs[teamID] = true
                 teamLevels[teamID] = 0
-                teamFactions[teamID] = GetTeamFaction(teamID)
+                local side = select(5, Spring.GetTeamInfo(teamID))
+                teamFactions[teamID] = (side and string.find(string.lower(side), "and")) and "AND" or "ICU"
+                Spring.Echo("WMRTS AI: Team " .. teamID .. " detected (" .. teamFactions[teamID] .. ")")
             end
         end
     end
 
     for teamID, _ in pairs(aiTeamIDs) do
         local faction = teamFactions[teamID]
-        local config = AI_BUILD_LEVELS[teamLevels[teamID]]
-        if not config then return end
 
         if not teamBasePos[teamID] then
             local units = Spring.GetTeamUnits(teamID)
-            if units and units[1] then
-                local x,_,z = Spring.GetUnitPosition(units[1])
-                teamBasePos[teamID] = {x=x, z=z}
+            if units and #units > 0 then
+                local x,y,z = Spring.GetUnitPosition(units[1])
+                teamBasePos[teamID] = {x=x, y=y, z=z}
             else return end
         end
 
+        local currentLvl = teamLevels[teamID]
+        local config = AI_BUILD_LEVELS[currentLvl]
+        if not config then return end
+
+        -- Logica Avanzamento Livello
+        local levelBroken = false
+        for _, req in ipairs(config.requisiti) do
+            if CountUnitsInCategory(teamID, req.cat, faction) < req.count then
+                levelBroken = true; break
+            end
+        end
+        if not levelBroken and AI_BUILD_LEVELS[currentLvl + 1] then
+            teamLevels[teamID] = currentLvl + 1
+            if not GG.WMRTS_Levels then GG.WMRTS_Levels = {} end
+            GG.WMRTS_Levels[teamID] = teamLevels[teamID]
+            Spring.Echo("WMRTS AI: Team " .. teamID .. " Level Up -> " .. teamLevels[teamID])
+            return
+        end
+
+        -- Identificazione Costruttori e Fabbriche
         local builders = {}
+        local factories = {}
         local teamUnits = Spring.GetTeamUnits(teamID)
         for _, uID in ipairs(teamUnits) do
             local ud = UnitDefs[Spring.GetUnitDefID(uID)]
-            if ud and ud.isBuilder then
-                if Spring.GetCommandQueue(uID, 0) == 0 and not Spring.GetUnitIsBuilding(uID) then
-                    table.insert(builders, uID)
+            if ud then
+                if ud.canBuild or ud.isBuilder then
+                    if Spring.GetCommandQueue(uID, 0) == 0 and not Spring.GetUnitIsBuilding(uID) then
+                        table.insert(builders, uID)
+                    end
                 end
+                if ud.isFactory then table.insert(factories, uID) end
             end
         end
 
+        -- Esecuzione Requisiti
+        local started = 0
         for _, req in ipairs(config.requisiti) do
+            if started >= config.simultanea then break end
+            
             if CountUnitsInCategory(teamID, req.cat, faction) < req.count then
-                local unitName = CATEGORY_TO_UNIT[faction][req.cat][1]
+                local unitName = GetRandomUnitFromCat(faction, req.cat)
                 local uDef = UnitDefNames[unitName]
-                if uDef and #builders > 0 then
-                    local bx, by, bz
-                    if req.cat == "CAT_MEX" then
-                        bx, by, bz = GetClosestMetalSpot(teamBasePos[teamID].x, teamBasePos[teamID].z)
+                
+                if uDef then
+                    -- Se è una STRUTTURA
+                    if uDef.isBuilding or uDef.isStructure then
+                        if #builders > 0 then
+                            local bx, by, bz
+                            if req.cat == "CAT_MEX" then
+                                bx, by, bz = GetClosestMetalSpot(teamBasePos[teamID].x, teamBasePos[teamID].z)
+                            else
+                                for _ = 1, 30 do
+                                    local angle = math.random() * math.pi * 2
+                                    local dist = math.random(100, 500)
+                                    local tx = teamBasePos[teamID].x + math.cos(angle) * dist
+                                    local tz = teamBasePos[teamID].z + math.sin(angle) * dist
+                                    if Spring.TestBuildOrder(uDef.id, tx, 0, tz, 0) == 2 then
+                                        bx, by, bz = tx, Spring.GetGroundHeight(tx,tz), tz
+                                        break
+                                    end
+                                end
+                            end
+                            
+                            if bx then
+                                Spring.Echo("WMRTS AI: Team " .. teamID .. " builds " .. unitName)
+                                Spring.GiveOrderToUnit(builders[1], -uDef.id, {bx, by, bz, 0}, {})
+                                table.remove(builders, 1)
+                                started = started + 1
+                            end
+                        end
+                    -- Se è un ROBOT (Unità mobile)
                     else
-                        bx, by, bz = FindGoodBuildSite(uDef.id, teamBasePos[teamID].x, teamBasePos[teamID].z)
-                    end
-                    if bx then
-                        Spring.Echo("WMRTS AI: Team " .. teamID .. " ordina " .. unitName)
-                        Spring.GiveOrderToUnit(builders[1], -uDef.id, {bx, by, bz, 0}, {})
-                        break 
+                        for _, fID in ipairs(factories) do
+                            local fud = UnitDefs[Spring.GetUnitDefID(fID)]
+                            local canProduce = false
+                            for _, optID in ipairs(fud.buildOptions) do
+                                if optID == uDef.id then canProduce = true; break end
+                            end
+                            
+                            if canProduce then
+                                Spring.Echo("WMRTS AI: Factory " .. fID .. " produces " .. unitName)
+                                Spring.GiveOrderToUnit(fID, -uDef.id, {}, {})
+                                started = started + 1
+                                break
+                            end
+                        end
                     end
                 end
             end
