@@ -89,10 +89,6 @@ local scanDone = false
 -- 3) FUNZIONI DI SUPPORTO
 --------------------------------------------------------------------------------
 
--- Questa funzione serve a capire dove si trovano le risorse.
---	•	Controlla se esistono coordinate predefinite per la mappa corrente in MANUAL_MAP_DATA.
---	•	Se non ci sono, scansiona l'intera mappa con un salto di 32 pixel cercando punti dove il valore del metallo è superiore a 0.1.
---	•	Salva le coordinate in una tabella metalSpots per usi futuri.
 local function AnalyzeMetalMap()
     metalSpots = {}
     local mapName = Game.mapName
@@ -112,10 +108,6 @@ local function AnalyzeMetalMap()
     Spring.Echo("WMRTS AI: Metal scan complete (" .. #metalSpots .. " spots)")
 end
 
--- Trova il punto di metallo più vicino alla posizione (cx, cz) (solitamente la base dell'AI).
---	•	Scorre la lista dei punti trovati da AnalyzeMetalMap.
---	•	Per ogni punto, verifica se è già occupato da un altro estrattore usando Spring.GetUnitsInSphere.
---	•	Restituisce le coordinate del punto libero più vicino.
 local function GetClosestMetalSpot(cx, cz)
     local bestSpot = nil
     local minDist = 5000 * 5000 
@@ -137,10 +129,6 @@ local function GetClosestMetalSpot(cx, cz)
     return nil
 end
 
--- È il "contabile" dell'AI.
---	•	Riceve la categoria (es. "CAT_MEX") e la fazione.
---	•	Usa Spring.GetTeamUnitDefCount per contare quante unità di quel tipo il team possiede già sulla mappa.
---	•	Gestisce anche le categorie multi-tipo (es. le fabbriche che possono essere Land, Air o Sea).
 local function CountUnitsInCategory(teamID, category, faction)
     local entry = CATEGORY_TO_UNIT[faction][category]
     if not entry then return 0 end
@@ -159,9 +147,6 @@ local function CountUnitsInCategory(teamID, category, faction)
     return total
 end
 
--- Sceglie quale unità specifica costruire all'interno di una categoria.
---	•	Utilizza i MAP_PROFILES per decidere se la mappa permette unità di terra, aria o mare.
---	•	Restituisce un nome di unità casuale tra quelle valide per quel profilo (es. se la mappa è solo terra, non sceglierà una fabbrica navale).
 local function GetRandomUnitFromCat(faction, category)
     local entry = CATEGORY_TO_UNIT[faction][category]
     if not entry then return nil end
@@ -177,47 +162,6 @@ local function GetRandomUnitFromCat(faction, category)
         return entry[math.random(#entry)]
     end
     return nil
-end
-
--- Funzione per contare quante unità di quella categoria sono "in arrivo" nelle code delle fabbriche 
-local function CountUnitsInQueues(teamID, category, faction)
-    local entry = CATEGORY_TO_UNIT[faction][category]
-    if not entry then return 0 end
-    
-    -- Trasformiamo i nomi in ID per un confronto veloce
-    local validIDs = {}
-    local function fillIDs(list)
-        for _, name in ipairs(list) do
-            local ud = UnitDefNames[name]
-            if ud then validIDs[ud.id] = true end
-        end
-    end
-
-    if entry.land or entry.air or entry.sea then
-        if entry.land then fillIDs(entry.land) end
-        if entry.air then fillIDs(entry.air) end
-        if entry.sea then fillIDs(entry.sea) end
-    else fillIDs(entry) end
-
-    local totalInQueue = 0
-    local teamUnits = Spring.GetTeamUnits(teamID)
-    for _, uID in ipairs(teamUnits) do
-        local ud = UnitDefs[Spring.GetUnitDefID(uID)]
-        if ud and ud.isFactory then
-            local queue = Spring.GetFullBuildQueue(uID)
-            if queue then
-                for _, buildItem in ipairs(queue) do
-                    -- buildItem è { [unitDefID] = count }
-                    for uDefID, count in pairs(buildItem) do
-                        if validIDs[uDefID] then
-                            totalInQueue = totalInQueue + count
-                        end
-                    end
-                end
-            end
-        end
-    end
-    return totalInQueue
 end
 
 --------------------------------------------------------------------------------
@@ -294,15 +238,12 @@ function gadget:GameFrame(n)
         for _, req in ipairs(config.requisiti) do
             if started >= config.simultanea then break end
             
-            local totalPresent = CountUnitsInCategory(teamID, req.cat, faction)
-            local totalPending = CountUnitsInQueues(teamID, req.cat, faction)
-
-            if (totalPresent + totalPending) < req.count then
+            if CountUnitsInCategory(teamID, req.cat, faction) < req.count then
                 local unitName = GetRandomUnitFromCat(faction, req.cat)
                 local uDef = UnitDefNames[unitName]
                 
                 if uDef then
-                    -- CASO A: È una STRUTTURA (Richiede un Builder)
+                    -- Se è una STRUTTURA
                     if uDef.isBuilding or uDef.isStructure then
                         if #builders > 0 then
                             local bx, by, bz
@@ -322,14 +263,13 @@ function gadget:GameFrame(n)
                             end
                             
                             if bx then
-                                Spring.Echo("WMRTS AI: Team " .. teamID .. " builder " .. builders[1] .. " builds " .. unitName)
+                                Spring.Echo("WMRTS AI: Team " .. teamID .. " builds " .. unitName)
                                 Spring.GiveOrderToUnit(builders[1], -uDef.id, {bx, by, bz, 0}, {})
                                 table.remove(builders, 1)
                                 started = started + 1
                             end
                         end
-                    
-                    -- CASO B: È un ROBOT/UNITA' MOBILE (Richiede una Fabbrica)
+                    -- Se è un ROBOT (Unità mobile)
                     else
                         for _, fID in ipairs(factories) do
                             local fud = UnitDefs[Spring.GetUnitDefID(fID)]
@@ -339,26 +279,15 @@ function gadget:GameFrame(n)
                             end
                             
                             if canProduce then
-                                -- Evita di spammare se la fabbrica ha già l'unità in coda
-                                local alreadyBuilding = false
-                                local q = Spring.GetFullBuildQueue(fID)
-                                if q then
-                                    for _, item in ipairs(q) do
-                                        if item[uDef.id] then alreadyBuilding = true; break end
-                                    end
-                                end
-
-                                if not alreadyBuilding then
-                                    Spring.Echo("WMRTS AI: Factory " .. fID .. " priority production: " .. unitName)
-                                    Spring.GiveOrderToUnit(fID, -uDef.id, {}, {"alt"})
-                                    started = started + 1
-                                    break 
-                                end
+                                Spring.Echo("WMRTS AI: Factory " .. fID .. " produces " .. unitName)
+                                Spring.GiveOrderToUnit(fID, -uDef.id, {}, {})
+                                started = started + 1
+                                break
                             end
                         end
-                    end -- Fine distinzione edificio/mobile
+                    end
                 end
             end
-        end -- Fine ciclo requisiti
-    end -- Fine ciclo team
+        end
+    end
 end
