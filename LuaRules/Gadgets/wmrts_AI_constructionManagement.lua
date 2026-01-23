@@ -17,23 +17,38 @@ if (not gadgetHandler:IsSyncedCode()) then return end
 --------------------------------------------------------------------------------
 
 local MAP_PROFILES = {
+    ["Default"]      = { land = true, air = true, sea = false },		-- configurazione di default per le mappe senza profili mappa
     ["Zoty Outpost"] = { land = true, air = true, sea = false },
-    ["Default"]      = { land = true, air = true, sea = false },
 }
 
+-- categorizzazione delle unità
 local CATEGORY_TO_UNIT = {
+--	Puoi randomizzare le costruzioni scrivendo più unità per categoria es.: ["CAT_LASER_T1"] = { "armrl", "armllt", "armteeth" },
+--  Se vuoi che un'unità sia costruita più spesso di un'altra, puoi ripetere il nome nella lista es.: ["CAT_MEX"] = { "mex_normale", "mex_normale", "mex_corazzato" } Qui l'AI avrà il 66% di probabilità di fare quello normale e il 33% di fare quello corazzato.
+--	Aggiungi la categoria che vuoi ["CAT_esempio_robotT3"] = = { "icuraz" }, -- Meglio se la categoria "CAT_esempio_robotT3" sia presente in tutte le fazioni. Usa poi la categoria nella "AI_BUILD_LEVELS"
+----------------------------
+-- ICU
+----------------------------
     ["ICU"] = {
-        ["CAT_MEX"]            = { "icumetex" },
+        ["CAT_MEX"]            = { "icumetex" },			
         ["CAT_ENERGY_T1"]      = { "armsolar" },
-        ["CAT_LASER_T1"]       = { "armrl" },
-        ["CAT_AA_T1"]          = { "armlightad" },
+        ["CAT_LASER_T1"]       = { "iculighlturr" },
+        ["CAT_AA_T1"]          = { "armrl" },
         ["CAT_FACTORY_T1"] = {
             land = { "armlab", "armvp" },
             air  = { "armap" },
             sea  = { "armsy" },
         },
-        ["CAT_ALL_CONSTRUCTORS"] = { "icucom", "icuck", "icucv", "armca", "armcs" },
+        ["CAT_FACTORY_T2"] = {
+            land = { "armalab", "armavp" },
+            air  = { "armaap" },
+            sea  = { "armasy" },
+        },		
+        ["CAT_ALL_CONSTRUCTORS"] = { "icucom", "icuck", "icucv", "armca", "armcs" }, -- inserire tutti i costruttori della fazione gestiti dalla AI
     },
+----------------------------
+-- AND
+----------------------------
     ["AND"] = {
         ["CAT_MEX"]            = { "andmex" },
         ["CAT_ENERGY_T1"]      = { "andsolar" },
@@ -52,12 +67,11 @@ local AI_BUILD_LEVELS = {
     [0] = {
         simultanea = 1,
         requisiti = {
-            {cat = "CAT_ALL_CONSTRUCTORS", count = 1}, 
-            {cat = "CAT_MEX",               count = 1}, 
-            {cat = "CAT_ENERGY_T1",         count = 1},
+            {cat = "CAT_ALL_CONSTRUCTORS", 	count = 1}, 
+            {cat = "CAT_MEX",               count = 2}, 
+            {cat = "CAT_ENERGY_T1",         count = 2},
             {cat = "CAT_FACTORY_T1",        count = 1}, 
             {cat = "CAT_MEX",               count = 3}, 
-            {cat = "CAT_ENERGY_T1",         count = 3},
         }
     },
     [1] = {
