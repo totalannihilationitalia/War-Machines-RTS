@@ -420,7 +420,7 @@ end
 
 function gadget:GameFrame(n)
     if (n % 30 ~= 0) then return end 
-    -- GESTIONE SEMPLICE E TEMPORANEA DEL LIVELLO AI		-- un domani la gestione del livello sarà data esternizzata in un gadget esterno della AI (esempio in quello che gestirà i costruttori)	
+    -- GESTIONE SEMPLICE E TEMPORANEA DEL LIVELLO AI		-- un domani la gestione del livello sarà data esternizzata in un gadget esterno della AI (esempio in quello che gestirà le costruzioni)	
     for teamID, _ in pairs(aiTeamIDs) do					-- gestione livelli per ogni team
         local tempoPartita = Spring.GetGameSeconds()    	-- Calcolo del livello (basato sul tempo per test!! cambiare poi con logica di avanzamento quando saranno presenti ulteriori costruzioni)
         local nuovoLivello = 0

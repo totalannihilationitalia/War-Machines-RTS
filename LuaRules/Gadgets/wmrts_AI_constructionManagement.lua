@@ -34,7 +34,7 @@ local CATEGORY_TO_UNIT = {
         ["CAT_ENERGY_T1"]      = { "armsolar" },
         ["CAT_LASER_T1"]       = { "iculighlturr" },
         ["CAT_AA_T1"]          = { "armrl" },
-        ["CAT_FACTORY_T1"] = {
+        ["CAT_FACTORY_T1"] = {					-- fabbrica T1 si categorizza per tipologia ( terra, aria o mare), in funzione dei MAP_PROFILES l'AI effettuerà una scelta
             land = { "armlab", "armvp" },
             air  = { "armap" },
             sea  = { "armsy" },
@@ -44,7 +44,9 @@ local CATEGORY_TO_UNIT = {
             air  = { "armaap" },
             sea  = { "armasy" },
         },		
-        ["CAT_ALL_CONSTRUCTORS"] = { "icucom", "icuck", "icucv", "armca", "armcs" }, -- inserire tutti i costruttori della fazione gestiti dalla AI
+        ["CAT_ALL_CONSTRUCTORS"] = { "icucom", "icuck", "armcv", "armca", "armcs" }, -- categoria con tutti i costruttori (incluso il comandante), la uso al livello 0 per due motivi: 1) in caso di distruzione totale, quando l'AI torna a 0, se uno dei costruttori elencati è sopravvissuto, riparte a costruire dal livello 0. 2) col game start, si parte col comandante, che è incluso nella lista. Soddisfa quindi il requisito.
+        ["CAT_CONSTRUCTORS_T1"] = { "icuck", "armcv", "armca", "armcs" }, 		
+        ["CAT_CONSTRUCTORS_T2"] = { "icuack", "armacv", "armaca", "armacs" }, 				
     },
 ----------------------------
 -- AND
@@ -64,11 +66,14 @@ local CATEGORY_TO_UNIT = {
 }
 
 local AI_BUILD_LEVELS = {
-    [0] = {
+-- il numero [0] o [1] rappresenta il livello della AI. L'AI parte sempre dal livello 0. Per ogni livello vengono specificate quante unità devono essere costruite. l'AI sale di livello una volta che ha completato tutte le unità di quel livello. Se vengono distrutte le unità, e i requisiti di un livello non vengono rispettati, l'AI scende di livello per "recuperare" i requisiti che lo soddisfano.
+-- "cat=" rappresenta quali unità  di categoria l'AI deve costruire in quel determinato livello. Le categorie sono definite sopra e si possono aggiungere a piacimento (a patto che sia presente in tutte le fazioni)
+-- "count=" rappresenta la variabile assoluta di quante unità della categoria corrispondente devono essere attive in quel dato livello
+    [0] = { -- livello di partenza. può diventare anche livello di restart AI quando subisce pesanti attacchi ####################################### implementare
         simultanea = 1,
         requisiti = {
-            {cat = "CAT_ALL_CONSTRUCTORS", 	count = 1}, 
-            {cat = "CAT_MEX",               count = 2}, 
+            {cat = "CAT_ALL_CONSTRUCTORS", 	count = 1}, 	-- al livello 0 ne deve avere almeno 1. In fase di start è il comandante. In caso di restart AI, può essere qualunque costruttore, se presente. Ecco il motivo per cui metto la categoria "CAT_ALL_CONSTRUCTORS"
+            {cat = "CAT_MEX",               count = 2},
             {cat = "CAT_ENERGY_T1",         count = 2},
             {cat = "CAT_FACTORY_T1",        count = 1}, 
             {cat = "CAT_MEX",               count = 3}, 
@@ -84,9 +89,10 @@ local AI_BUILD_LEVELS = {
     }
 }
 
--- inserimento degli spot di metallo per ogni mappa
+-- inserimento manuale degli spot di metallo per ogni mappa
 local MANUAL_MAP_DATA = {
-    ["Zoty Outpost"] = { {x = 664, z = 2360}, {x = 2101, z = 2412}, {x = 1320, z = 2312} },
+	["Zoty Outpost"] = { {x = 2241, z = 675}, {x = 492, z = 1206}, {x = 1918, z = 1285}, {x = 844, z = 1942}, {x = 1328, z = 2341}, {x = 661, z = 2387}, {x = 2108, z = 2422} },
+--    ["Zoty Outpost"] = { {x = 664, z = 2360}, {x = 2101, z = 2412}, {x = 1320, z = 2312} },
 }
 
 --------------------------------------------------------------------------------
