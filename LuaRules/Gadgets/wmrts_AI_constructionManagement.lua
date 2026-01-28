@@ -9,6 +9,14 @@ function gadget:GetInfo()
 		enabled   = true
 	}
 end
+-- 19/01/2026 = realizzato questo gadget, molix
+-- 28/01/2026 = implementata la logica introducendo il RESET LIVELLO. In questo modo quando certe strutture scendono sotto il limite, l'AI resetta il livello e parte da capo con le costruzioni, per prevenire lo stallo economico/tecnologico
+
+-- TO DO
+-- implementare naval e sub
+-- creare la categorizzazione land/air/sea per gli estrattori di metallo (logicamente land e air avranno lo stesso icumetex mentre sea avrà ad esempio undewatermetex). Vedere se fare lo stesso per le floating torrette T1 e T2 ed eventualmente le centrali energia.
+-- creare funzione upgrade estrattori da T1 a T2
+-- creare funzione comando ai costruttori (comandante, costruttori non comandante): Patrol/costruisci. La prima gira attorno alla base aiutando le costruizoni, la seconda per impegnare i costruttori a costruire
 
 if (not gadgetHandler:IsSyncedCode()) then return end
 
@@ -24,18 +32,18 @@ local MAP_PROFILES = {
 -- categorizzazione delle unità
 local CATEGORY_TO_UNIT = {
 --	Puoi randomizzare le costruzioni scrivendo più unità per categoria es.: ["CAT_LASER_T1"] = { "armrl", "armllt", "armteeth" },
---  Se vuoi che un'unità sia costruita più spesso di un'altra, puoi ripetere il nome nella lista es.: ["CAT_MEX"] = { "mex_normale", "mex_normale", "mex_corazzato" } Qui l'AI avrà il 66% di probabilità di fare quello normale e il 33% di fare quello corazzato.
+--  Se vuoi che un'unità sia costruita più spesso di un'altra, puoi ripetere il nome nella lista es.: ["CAT_MEX_T1"] = { "mex_normale", "mex_normale", "mex_corazzato" } Qui l'AI avrà il 66% di probabilità di fare quello normale e il 33% di fare quello corazzato.
 --	Aggiungi la categoria che vuoi ["CAT_esempio_robotT3"] = = { "icuraz" }, -- Meglio se la categoria "CAT_esempio_robotT3" sia presente in tutte le fazioni. Usa poi la categoria nella "AI_BUILD_LEVELS"
 ----------------------------
 -- ICU
 ----------------------------
     ["ICU"] = {
-        ["CAT_MEX"]            = { "icumetex" },			
+        ["CAT_MEX_T1"]            = { "icumetex" },			
         ["CAT_ENERGY_T1"]      = { "armsolar" },
         ["CAT_LASER_T1"]       = { "iculighlturr" },
         ["CAT_AA_T1"]          = { "armrl" },
         ["CAT_FACTORY_T1"] = {					-- fabbrica T1 si categorizza per tipologia ( terra, aria o mare), in funzione dei MAP_PROFILES l'AI effettuerà una scelta
-            land = { "armlab", "armvp" },
+            land = { "armlab", "armvp" },		-- randomizza la fabbrica
             air  = { "armap" },
             sea  = { "armsy" },
         },
@@ -44,7 +52,7 @@ local CATEGORY_TO_UNIT = {
             air  = { "armaap" },
             sea  = { "armasy" },
         },		
-        ["CAT_ALL_CONSTRUCTORS"] = { "icucom", "icuck", "armcv", "armca", "armcs" }, -- categoria con tutti i costruttori (incluso il comandante), la uso al livello 0 per due motivi: 1) in caso di distruzione totale, quando l'AI torna a 0, se uno dei costruttori elencati è sopravvissuto, riparte a costruire dal livello 0. 2) col game start, si parte col comandante, che è incluso nella lista. Soddisfa quindi il requisito.
+        ["CAT_ALL_CONSTRUCTORS"] = { "icucom", "icuck", "armcv", "armca", "armcs" }, -- categoria con tutti i costruttori (incluso il comandante), la uso al livello 0 per due motivi: 1) in caso di distruzione totale, quando l'AI torna a 0, se uno dei costruttori elencati è sopravvissuto, lo usa per ripartire con le costruzioni dal livello 0. 2) col game start, si parte col comandante, che è incluso nella lista. Soddisfa quindi il requisito del lvl 0.
         ["CAT_CONSTRUCTORS_T1"] = { "icuck", "armcv", "armca", "armcs" }, 		
         ["CAT_CONSTRUCTORS_T2"] = { "icuack", "armacv", "armaca", "armacs" }, 				
     },
@@ -52,14 +60,14 @@ local CATEGORY_TO_UNIT = {
 -- AND
 ----------------------------
     ["AND"] = {
-        ["CAT_MEX"]            = { "andmex" },
+        ["CAT_MEX_T1"]            = { "andmex" },
         ["CAT_ENERGY_T1"]      = { "andsolar" },
         ["CAT_LASER_T1"]       = { "andlaser" },
         ["CAT_AA_T1"]          = { "andaa" },
         ["CAT_FACTORY_T1"] = {
             land = { "andlab", "andhp" },
             air  = { "andplat" },
-            sea  = { "andsy" },
+            sea  = { "andplat" },
         },
         ["CAT_ALL_CONSTRUCTORS"] = { "andcom", "andcon", "andcv", "andca", "andcs" },
     }
@@ -68,31 +76,38 @@ local CATEGORY_TO_UNIT = {
 local AI_BUILD_LEVELS = {
 -- il numero [0] o [1] rappresenta il livello della AI. L'AI parte sempre dal livello 0. Per ogni livello vengono specificate quante unità devono essere costruite. l'AI sale di livello una volta che ha completato tutte le unità di quel livello. Se vengono distrutte le unità, e i requisiti di un livello non vengono rispettati, l'AI scende di livello per "recuperare" i requisiti che lo soddisfano.
 -- "cat=" rappresenta quali unità  di categoria l'AI deve costruire in quel determinato livello. Le categorie sono definite sopra e si possono aggiungere a piacimento (a patto che sia presente in tutte le fazioni)
--- "count=" rappresenta la variabile assoluta di quante unità della categoria corrispondente devono essere attive in quel dato livello
-    [0] = { -- livello di partenza. può diventare anche livello di restart AI quando subisce pesanti attacchi ####################################### implementare
+-- "count=" rappresenta la variabile ASSOLUTA di quante unità della categoria corrispondente devono essere attive in quel dato livello
+    [0] = { 												-- livello di partenza. può diventare anche livello di RESET LIVELLO AI quando subisce pesanti attacchi (vedere sotto logica di RESET LIVELLO). E' importante che vi siano, in questo livello, le costruzioni che, in loro assenza/mancato numero (definito dalla logica di "RESET LIVELLO") resettino l'AI, altrimenti si entra in un LOOP infinito di salto livello (0 -> 1 e torna subito a 0)
         simultanea = 1,
         requisiti = {
-            {cat = "CAT_ALL_CONSTRUCTORS", 	count = 1}, 	-- al livello 0 ne deve avere almeno 1. In fase di start è il comandante. In caso di restart AI, può essere qualunque costruttore, se presente. Ecco il motivo per cui metto la categoria "CAT_ALL_CONSTRUCTORS"
-            {cat = "CAT_MEX",               count = 2},
-            {cat = "CAT_ENERGY_T1",         count = 2},
-            {cat = "CAT_FACTORY_T1",        count = 1}, 
-            {cat = "CAT_MEX",               count = 3}, 
-        }
-    },
+            {cat = "CAT_ALL_CONSTRUCTORS", 	count = 1}, 	-- al livello 0 ne deve avere almeno 1 in totale. In fase di start skirmish è il comandante. In caso di restart AI, può essere qualunque costruttore, se presente. Ecco il motivo per cui metto la categoria "CAT_ALL_CONSTRUCTORS"
+            {cat = "CAT_MEX_T1",               count = 2},		-- importanti per la logica RESET LIVELLO !!
+            {cat = "CAT_ENERGY_T1",         count = 2},		-- importanti per la logica RESET LIVELLO !!
+            {cat = "CAT_FACTORY_T1",        count = 1}, 	-- importanti per la logica RESET LIVELLO !!
+            {cat = "CAT_MEX_T1",               count = 3}, 
+        } 	-- end requisiti di livello
+    },		-- end livello  [n]
     [1] = {
         simultanea = 2,
         requisiti = {
-            {cat = "CAT_ALL_CONSTRUCTORS", count = 2},
-            {cat = "CAT_MEX",               count = 5},
+            {cat = "CAT_CONSTRUCTORS_T1", count = 2},
+            {cat = "CAT_MEX_T1",               count = 3},
+            {cat = "CAT_ENERGY_T1",         count = 5},
+        } 	-- end requisiti di livello
+    }		-- end livello  [n]
+    [2] = {
+        simultanea = 2,
+        requisiti = {
+            {cat = "CAT_CONSTRUCTORS_T1", count = 2},
+            {cat = "CAT_MEX_T1",               count = 6},
             {cat = "CAT_ENERGY_T1",         count = 6},
-        }
-    }
+        } 	-- end requisiti di livello
+    }		-- end livello  [n]	
 }
 
 -- inserimento manuale degli spot di metallo per ogni mappa
 local MANUAL_MAP_DATA = {
 	["Zoty Outpost"] = { {x = 2241, z = 675}, {x = 492, z = 1206}, {x = 1918, z = 1285}, {x = 844, z = 1942}, {x = 1328, z = 2341}, {x = 661, z = 2387}, {x = 2108, z = 2422} },
---    ["Zoty Outpost"] = { {x = 664, z = 2360}, {x = 2101, z = 2412}, {x = 1320, z = 2312} },
 }
 
 --------------------------------------------------------------------------------
@@ -158,7 +173,7 @@ local function GetClosestMetalSpot(cx, cz)
 end
 
 -- È il "contabile" dell'AI.
---	•	Riceve la categoria (es. "CAT_MEX") e la fazione.
+--	•	Riceve la categoria (es. "CAT_MEX_T1") e la fazione.
 --	•	Usa Spring.GetTeamUnitDefCount per contare quante unità di quel tipo il team possiede già sulla mappa.
 --	•	Gestisce anche le categorie multi-tipo (es. le fabbriche che possono essere Land, Air o Sea).
 local function CountUnitsInCategory(teamID, category, faction)
@@ -266,6 +281,7 @@ function gadget:GameFrame(n)
     for teamID, _ in pairs(aiTeamIDs) do
         local faction = teamFactions[teamID]
 
+
         if not teamBasePos[teamID] then
             local units = Spring.GetTeamUnits(teamID)
             if units and #units > 0 then
@@ -275,6 +291,57 @@ function gadget:GameFrame(n)
         end
 
         local currentLvl = teamLevels[teamID]
+--[[		-- funzionante, logica solo fabbriche
+		------------------------------------------------------------------------
+        -- LOGICA DI RESET LIVELLO di tipo A: Ritorno al Livello 0 se le fabbriche sono distrutte
+        ------------------------------------------------------------------------
+        if currentLvl > 0 then
+            -- Contiamo quante fabbriche totali ha l'AI (T1 + T2 se esiste)
+            local nFabbriche = CountUnitsInCategory(teamID, "CAT_FACTORY_T1", faction)
+            
+            -- Se hai aggiunto anche le T2 nel database, contiamo anche quelle
+            if CATEGORY_TO_UNIT[faction]["CAT_FACTORY_T2"] then
+                nFabbriche = nFabbriche + CountUnitsInCategory(teamID, "CAT_FACTORY_T2", faction)
+            end
+
+            -- Se non ci sono più fabbriche, resettiamo il livello a 0
+            if nFabbriche == 0 then
+                teamLevels[teamID] = 0
+                if GG.WMRTS_Levels then GG.WMRTS_Levels[teamID] = 0 end
+                Spring.Echo("WMRTS AI: Team " .. teamID .. " has no factories! Reverting to Level 0.")
+                -- Aggiorniamo la variabile currentLvl per il resto del frame
+                currentLvl = 0 
+            end
+        end
+        ------------------------------------------------------------------------
+]]--		
+		------------------------------------------------------------------------
+        -- LOGICA DI RESET LIVELLO di tipo B: Ritorno al Livello 0 se:  le fabbriche sono distrutte oppure abbiamo meno di x estrattori oppure abbiamo meno di y fabbriche di energia
+        ------------------------------------------------------------------------
+        if currentLvl > 0 then
+            -- Contiamo tutti i tipi di fabbriche, Mex e Energia 
+            local nFabbriche = CountUnitsInCategory(teamID, "CAT_FACTORY_T1", faction) 															-- per ora ho messo solo le fabbriche T1
+            local nMex = CountUnitsInCategory(teamID, "CAT_MEX_T1", faction)+CountUnitsInCategory(teamID, "CAT_MEX_T2", faction) 				-- sommo gli estrattori delle categorie T1 e T2
+            local nEnergia = CountUnitsInCategory(teamID, "CAT_ENERGY_T1", faction) + CountUnitsInCategory(teamID, "CAT_ENERGY_T2", faction) 	-- sommo le fabbriche di energia delle categorie T1 e T2
+            
+            -- Condizioni di fallimento critico:
+            local fallimentoFabbriche = (nFabbriche == 0)		-- Se le fabbriche T0 sono totalmente distrutte
+            local fallimentoMetallo   = (nMex < 2)       		-- Se scende sotto i 2 estrattori di metallo
+            local fallimentoEnergia   = (nEnergia < 2)   		-- Se scende sotto i 2 powerplant
+
+            if fallimentoFabbriche or fallimentoMetallo or fallimentoEnergia then
+                teamLevels[teamID] = 0
+                if GG.WMRTS_Levels then GG.WMRTS_Levels[teamID] = 0 end
+                
+                local motivo = fallimentoFabbriche and "No Factories" or (fallimentoMetallo and "Low Metal" or "Low Energy")
+                Spring.Echo("WMRTS AI: Team " .. teamID .. " Critical Failure (" .. motivo .. ")! Reverting to Level 0.")
+                
+                currentLvl = 0 
+            end
+        end
+        ------------------------------------------------------------------------		
+		
+		
         local config = AI_BUILD_LEVELS[currentLvl]
         if not config then return end
 
@@ -326,7 +393,8 @@ function gadget:GameFrame(n)
                     if uDef.isBuilding or uDef.isStructure then
                         if #builders > 0 then
                             local bx, by, bz
-                            if req.cat == "CAT_MEX" then
+-- to do, aggiungere qui l'upgrade in T2 degli estrattori!!							
+                            if req.cat == "CAT_MEX_T1" then																		-- aggiungere qui le categorie che riguardano gli estrattori
                                 bx, by, bz = GetClosestMetalSpot(teamBasePos[teamID].x, teamBasePos[teamID].z)
                             else
                                 for _ = 1, 30 do
