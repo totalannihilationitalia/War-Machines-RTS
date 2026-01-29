@@ -16,6 +16,7 @@ end
 -- 12/01/2025 = agguiunti i livelli di difficoltà della AI. Per ora scattano dopo x minuti di tempo. Predisposto per una logica migliore di avanzamento (ad esempio quando ci sarà il controllo dei costruttori e l'avanzamento è dato da quanti estrattori e/o centrali solari l'AI ha costruito)
 -- 14/01/2025 = le AI sono ora indipendenti (mentre prima il livello delle AI era unico per tutti i teams
 -- 14/01/2025 = Aggiungo la gestione " ignore = true" nel database, da applicare ai costruttori, gestiti da altri gadget. In questo gadget i costruttori devono essere ignorati (cioè non devono essere inseriti in gruppi e mandati all'attacco), devono essere considerati invece solo come bersagli da attaccare ("ground" o relativi)
+-- 29/01/2025 = Ora l'avanzamento di livello viene gestito dal gadget construcionManagement
 
 -- to do LIST ################################
 -- 1) implementare i SUB
@@ -70,7 +71,7 @@ local SQUAD_TEMPLATES = {
 -- divido qui sotto i template di costruzione in funzione del livello, solo per maggior chiarezza. Quando il livello sale, vado a cambiare i templates di costruzione in 2b)
 
 -------------------------------------------------------------------------------
--- Elenco di produzioni per l'AI - le ho divise per livello per una maggiore visibilità, ma sono soltanto nomi di gruppi e nessuno vieta che al livello 3 si posssa usare il gruppo "ICU_armlab_light_patrol_1" del livello 0. Basta elencare i gruppi che si voglio creare, in base al livello, nel paragrafo 2b
+--  Set di gruppi per l'AI - le ho divise per livello per una maggiore visibilità, ma sono soltanto nomi di gruppi e nessuno vieta che al livello 3 si posssa produrre il gruppo "ICU_armlab_light_patrol_1" del livello 0. Basta elencare i gruppi che si voglio creare, in base al livello, nel paragrafo 2b
 -------------------------------------------------------------------------------
 
 ---------------
@@ -176,7 +177,7 @@ local SQUAD_TEMPLATES = {
 -------------------------------------------------------------------------------
 	
 ---------------
--- ICU lvl 1 -------- Elenco di produzioni per l'AI al livello 1
+-- ICU lvl 1 -------- Set di gruppi per l'AI al livello 1
 ---------------
 	["ICU_armlab_medium_patrol_1"] = {
 		units = { "icuwar", "icuwar", "icuwar", "icuwar" , "icuwar" , "icuwar" , "icuwar" },
@@ -356,7 +357,7 @@ function gadget:Initialize()
 		local assignedAI = Spring.GetTeamLuaAI(teamID)
 		if assignedAI and string.find(string.lower(assignedAI), string.lower(TARGET_AI_NAME)) then
 			aiTeamIDs[teamID] = true
-            teamLevels[teamID] = 0 							-- impostazione livello 0 per il team corrente (for... do...) 
+            teamLevels[teamID] = -1 						-- era 0, impostazione livello 0 per il team corrente (for... do...) 
             teamConfigs[teamID] = GetConfigPerLivello(0)	-- impostazione livello 0 per il team corrente (for... do...) 
 		end
 	end
@@ -420,11 +421,14 @@ end
 
 function gadget:GameFrame(n)
     if (n % 30 ~= 0) then return end 
-    -- GESTIONE SEMPLICE E TEMPORANEA DEL LIVELLO AI		-- un domani la gestione del livello sarà data esternizzata in un gadget esterno della AI (esempio in quello che gestirà le costruzioni)	
-    for teamID, _ in pairs(aiTeamIDs) do					-- gestione livelli per ogni team
-        local tempoPartita = Spring.GetGameSeconds()    	-- Calcolo del livello (basato sul tempo per test!! cambiare poi con logica di avanzamento quando saranno presenti ulteriori costruzioni)
+
+--[[
+    -- VECCHIA GESTIONE "A TEMPO" SEMPLICE E TEMPORANEA DEL LIVELLO AI		-- un domani la gestione del livello sarà data esternizzata in un gadget esterno della AI (esempio in quello che gestirà le costruzioni)	
+    for teamID, _ in pairs(aiTeamIDs) do									-- gestione livelli per ogni team
+
+        local tempoPartita = Spring.GetGameSeconds()    					-- Calcolo del livello (basato sul tempo per test!! cambiare poi con logica di avanzamento quando saranno presenti ulteriori costruzioni)
         local nuovoLivello = 0
-        if tempoPartita > 1080 then -- se sono passati x secondi, imposta il livello AI del team a 1
+        if tempoPartita > 1080 then 										-- se sono passati x secondi, imposta il livello AI del team a 1
             nuovoLivello = 1
         end
         ------------------------------
@@ -439,6 +443,21 @@ function gadget:GameFrame(n)
             -- rendo la variabile globale per passarla ad altri gadget della AI
             if not GG.WMRTS_Levels then GG.WMRTS_Levels = {} end
             GG.WMRTS_Levels[teamID] = nuovoLivello
+        end
+    end
+]]--
+
+	-- GESTIONE DEI LIVELLI (CARICO I LIVELLI DALLA VARIABILE GLOBALE GESTITA DA constructionManagement GADGET 
+	for teamID, _ in pairs(aiTeamIDs) do
+    local nuovoLivello = (GG.WMRTS_Levels and GG.WMRTS_Levels[teamID]) or 0		-- Leggo il valore globale (se non esiste ancora, considero livello 0)
+        if teamLevels[teamID] ~= nuovoLivello then 								-- Se il livello del team è cambiato (o non è ancora inizializzato)
+            teamLevels[teamID] = nuovoLivello
+            teamConfigs[teamID] = GetConfigPerLivello(nuovoLivello)
+            Spring.Echo("WMRTS Military AI: Team " .. teamID .. " si è allineato al livello " .. nuovoLivello)
+            
+            -- non è piu necessario rendere la variabile globale per passarla ad altri gadget della AI in quanto ora la ricevo
+--            if not GG.WMRTS_Levels then GG.WMRTS_Levels = {} end
+--            GG.WMRTS_Levels[teamID] = nuovoLivello
         end
     end
 

@@ -157,8 +157,6 @@ local function AnalyzeMetalMap()
     Spring.Echo("WMRTS AI: Metal scan complete (" .. #metalSpots .. " spots)")
 end
 
--- funzione senza log per rilevare il metalspot più vicino via pathfinding (se l'unità è di terra) o diretta, se l'unità è un aereo DICHIARATO NELLA CATEGORIA "CAT_ALL_AIR_CONSTRUCTORS" di ogni fazione
---[[
 local function GetClosestMetalSpot(cx, cz, builderID, faction)
     local bestSpot = nil
     local minDist = 1000000 * 1000000 
@@ -217,95 +215,6 @@ local function GetClosestMetalSpot(cx, cz, builderID, faction)
             end
         end
     end
-
-    if bestSpot then 
-        return bestSpot.x, Spring.GetGroundHeight(bestSpot.x, bestSpot.z), bestSpot.z 
-    end
-    return nil
-end
-]]--
-
--- funzione con log per rilevare il metalspot più vicino via pathfinding (se l'unità è di terra) o diretta, se l'unità è un aereo DICHIARATO NELLA CATEGORIA "CAT_ALL_AIR_CONSTRUCTORS" di ogni fazione
-local function GetClosestMetalSpot(cx, cz, builderID, faction)
-    local bestSpot = nil
-    local minDist = 1000000 * 1000000 
-    
-    local udID = Spring.GetUnitDefID(builderID)
-    if not udID then return nil end
-    local udName = UnitDefs[udID].name
-
-    -- Variabili per il Log
-    local occupiedCount = 0
-    local unreachableCount = 0
-    local reachableCount = 0
-
-    -- Controllo se l'unità appartiene alla categoria AIR della sua fazione
-    local isAirConstructor = false
-    local airList = CATEGORY_TO_UNIT[faction]["CAT_ALL_AIR_CONSTRUCTORS"]
-    if airList then
-        for _, name in ipairs(airList) do
-            if name == udName then 
-                isAirConstructor = true 
-                break 
-            end
-        end
-    end
-
-    for i = 1, #metalSpots do
-        local spot = metalSpots[i]
-        local sx, sz = spot.x, spot.z
-        local sy = Spring.GetGroundHeight(sx, sz)
-
-        -- 1. Verifica occupazione
-        local units = Spring.GetUnitsInSphere(sx, sy, sz, 64)
-        local occupied = false
-        for _, uID in ipairs(units) do
-            local sud = UnitDefs[Spring.GetUnitDefID(uID)]
-            if sud and sud.isExtractor then occupied = true; break end
-        end
-
-        if occupied then
-            occupiedCount = occupiedCount + 1
-        else
-            local isReachable = false
-            
-            if isAirConstructor then
-                -- Se è nella tua lista AIR, salta il pathfinding
-                isReachable = true 
-            else
-                -- Altrimenti usa il pathfinding standard
-                isReachable = Spring.TestMoveOrder(
-                    udID, 
-                    cx, Spring.GetGroundHeight(cx, cz), cz, 
-                    sx, sy, sz
-                )
-            end
-
-            if isReachable then
-                reachableCount = reachableCount + 1
-                local dx, dz = cx - sx, cz - sz
-                local distSq = dx*dx + dz*dz
-                if distSq < minDist then
-                    minDist = distSq
-                    bestSpot = spot
-                end
-            else
-                unreachableCount = unreachableCount + 1
-            end
-        end
-    end
-
-    -- --- LOG DI ISPEZIONE ---
-    local logType = isAirConstructor and "ARIA (Ignora Path)" or "TERRA/MARE (Pathfinding)"
-    if bestSpot then
-        local d = math.sqrt(minDist)
-        Spring.Echo(string.format("AI [%s] - %s: Spot TROVATO! x:%.0f z:%.0f | Distanza: %.0f | Raggiungibili: %d | Irraggiungibili: %d | Occupati: %d", 
-            udName, logType, bestSpot.x, bestSpot.z, d, reachableCount, unreachableCount, occupiedCount))
-    else
-        Spring.Echo(string.format("AI [%s] - %s: NESSUN SPOT DISPONIBILE! | Irraggiungibili: %d | Occupati: %d", 
-            udName, logType, unreachableCount, occupiedCount))
-    end
-    -- ------------------------
 
     if bestSpot then 
         return bestSpot.x, Spring.GetGroundHeight(bestSpot.x, bestSpot.z), bestSpot.z 
