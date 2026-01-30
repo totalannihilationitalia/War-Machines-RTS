@@ -11,8 +11,6 @@ function gadget:GetInfo()
 end
 -- 19/01/2026 = realizzato questo gadget, molix
 -- 28/01/2026 = implementata la logica introducendo il RESET LIVELLO. In questo modo quando certe strutture scendono sotto il limite, l'AI resetta il livello e parte da capo con le costruzioni, per prevenire lo stallo economico/tecnologico
--- 29/01/2026 = le costruzioni vengono costruite ad una certa distanza dai giacimenti di metallo e dalle strutture già costruite per evitare sovrapposizioni
--- 30/01/2026 = implementando logica del pathfinding ( prima la distanza con cui sceglieva il giacimento di metallo più vicino era "in linea d'aria", ora stiamo cercando di implementare la lunghezza effettiva del pathfinding, se il giacimento più vicino è quello dall'altra parte del fiume, un mezzo a terra avrà comunque una distanza maggiore reale da percorrere per raggiungerlo.
 
 -- TO DO
 -- implementare naval e sub
@@ -40,14 +38,12 @@ local CATEGORY_TO_UNIT = {
 -- ICU
 ----------------------------
     ["ICU"] = {
--- categoria per le FUNZIONI - utilizzate nelle funzioni helper o nella logica CORE del gadget. ATTENZIONE, QUANDO SI MODIFICA UNA DI QUESTE CATEGORIE, VERIFICARE SEMPRE DOVE VIENE USATA NELLA LOGICA!!!!
+-- categoria per le FUNZIONI
         ["CAT_ALL_CONSTRUCTORS"] 		= { "icucom", "icuck", "armcv", "armca", "armcs" }, 	-- categoria con tutti i costruttori (incluso il comandante), la uso al livello 0 per due motivi: 1) in caso di distruzione totale, quando l'AI torna a 0, se uno dei costruttori elencati è sopravvissuto, lo usa per ripartire con le costruzioni dal livello 0. 2) col game start, si parte col comandante, che è incluso nella lista. Soddisfa quindi il requisito del lvl 0.	
-        ["CAT_ALL_AIR_CONSTRUCTORS"] 	= { "armca", "armaca" }, 								-- categoria con tutti gli aerei costruttori, necessaria ad ignorare il pathfinding di spring, per le unità indicate, per andare a costruire un estrattore. Vanno direttamente a costruire in quel punto (linea d'aria)
--- categorie per le costruzioni
+        ["CAT_ALL_AIR_CONSTRUCTORS"] 	= { "armca", "armaca" }, 	-- categoria con tutti gli aerei costruttori, necessari ad ignorare il pathfinding di spring di spring per andare a costruire un estrattore. Vanno direttamente il quel punto (linea d'aria)
         ["CAT_MEX_T1"]          = { "icumetex" },		-- estrattori T1			
         ["CAT_MEX_T2"]          = { "armmoho" },		-- estrattori T2	
         ["CAT_ENERGY_T1"]      	= { "armsolar" },		-- energyplant T1
-        ["CAT_ENERGY_T1_2"]    	= { "icuadvsol" },		-- energyplant T1/2		
         ["CAT_ENERGY_T2"]      	= { "aafus" },			-- energyplant T2
 		["CAT_ESTORAGE_T1"]		= { "icuestor" },		-- storage Energy T1
 		["CAT_MSTORAGE_T1"]		= { "armmstor" },		-- storage Metal T1		
@@ -86,7 +82,6 @@ local CATEGORY_TO_UNIT = {
 
 local AI_BUILD_LEVELS = {
 -- il numero [0] o [1] rappresenta il livello della AI. L'AI parte sempre dal livello 0. Per ogni livello vengono specificate quante unità devono essere costruite. l'AI sale di livello una volta che ha completato tutte le unità di quel livello. Se vengono distrutte le unità, e i requisiti di un livello non vengono rispettati, l'AI scende di livello per "recuperare" i requisiti che lo soddisfano.
--- REMINDER: ogni volta che si aggiunge o toglie il livello a questo gadget, aggiornare anche i livelli in wmrts_AI_militaryMenagement.lua !!!!!!!
 -- "cat=" rappresenta quali unità  di categoria l'AI deve costruire in quel determinato livello. Le categorie sono definite sopra e si possono aggiungere a piacimento (a patto che sia presente in tutte le fazioni)
 -- "count=" rappresenta la variabile ASSOLUTA di quante unità della categoria corrispondente devono essere attive in quel dato livello
     [0] = { 												-- livello di partenza. può diventare anche livello di RESET LIVELLO AI quando subisce pesanti attacchi (vedere sotto logica di RESET LIVELLO). E' importante che vi siano, in questo livello, le costruzioni che, in loro assenza/mancato numero (definito dalla logica di "RESET LIVELLO") resettino l'AI, altrimenti si entra in un LOOP infinito di salto livello (0 -> 1 e torna subito a 0)
@@ -105,40 +100,19 @@ local AI_BUILD_LEVELS = {
         simultanea = 2,
         requisiti = {
             {cat = "CAT_CONSTRUCTORS_T1", 	count = 1},
-            {cat = "CAT_MEX_T1",            count = 4},
-            {cat = "CAT_ENERGY_T1",         count = 5},		
+            {cat = "CAT_MEX_T1",            count = 3},
+            {cat = "CAT_ENERGY_T1",         count = 3},
+            {cat = "CAT_ENERGY_T1",         count = 3},			
         } 	-- end requisiti di livello
     },		-- end livello  [n]
     [2] = {
         simultanea = 2,
         requisiti = {
-            {cat = "CAT_ENERGY_T1",         count = 5},			
-            {cat = "CAT_ENERGY_T1_2",       count = 1},
-            {cat = "CAT_FACTORY_T1", 		count = 2},
-            {cat = "CAT_MEX_T1",            count = 6},
+            {cat = "CAT_CONSTRUCTORS_T1", count = 2},
+            {cat = "CAT_MEX_T1",               count = 6},
+            {cat = "CAT_ENERGY_T1",         count = 6},
         } 	-- end requisiti di livello
-    },		-- end livello  [n]	
-    [3] = {
-        simultanea = 3,
-        requisiti = {
-            {cat = "CAT_ENERGY_T1",         count = 5},		
-            {cat = "CAT_MEX_T1",            count = 6},		
-            {cat = "CAT_FACTORY_T1", 		count = 2},			
-            {cat = "CAT_CONSTRUCTORS_T1", 	count = 2},
-            {cat = "CAT_ENERGY_T1_2",       count = 4},
-        } 	-- end requisiti di livello
-    },		-- end livello  [n]	
-    [4] = {
-        simultanea = 3,
-        requisiti = {
-            {cat = "CAT_ENERGY_T1",         count = 5},		
-            {cat = "CAT_MEX_T1",            count = 6},		
-            {cat = "CAT_FACTORY_T1", 		count = 2},			
-            {cat = "CAT_CONSTRUCTORS_T1", 	count = 2},
-            {cat = "CAT_ENERGY_T1_2",       count = 4},
-            {cat = "CAT_FACTORY_T2", 		count = 1},		
-        } 	-- end requisiti di livello
-    }		-- end livello  [n]		
+    }		-- end livello  [n]	
 }
 
 -- inserimento manuale degli spot di metallo per ogni mappa, utilizzare widget: WMRTS_Maker_exportMetal.lua (comando /exportmetal in chat)
@@ -160,69 +134,6 @@ local scanDone = false
 --------------------------------------------------------------------------------
 -- 3) FUNZIONI DI SUPPORTO
 --------------------------------------------------------------------------------
--- Misura la distanza reale sommando i segmenti del sentiero calcolato dal motore, dopo aver ricevuto l'ordine di costruzione
-local function GetRealDistAfterOrder(unitID)
-    -- Spring.GetUnitEstimatedPath restituisce 2 tabelle, a noi serve la prima (waypoints)
-    local waypoints = Spring.GetUnitEstimatedPath(unitID)
-    
-    if not waypoints or #waypoints == 0 then return -1 end
-    
-    local totalDist = 0
-    local curX, curY, curZ = Spring.GetUnitPosition(unitID)
-    
-    for i = 1, #waypoints do
-        local wp = waypoints[i]
-        
-        -- Il motore Spring usa indici numerici: [1]=x, [2]=y, [3]=z
-        local wx = wp[1] or wp.x
-        local wz = wp[3] or wp.z
-        
-        if wx and wz then
-            local dx = wx - curX
-            local dz = wz - curZ
-            totalDist = totalDist + math.sqrt(dx*dx + dz*dz)
-            
-            -- Aggiorniamo la posizione corrente per il prossimo segmento
-            curX = wx
-            curZ = wz
-        end
-    end
-    
-    return totalDist
-end
-
--- Questa funzione serve a non costruire gli edifici sopra un giacimento di metallo entro un raggio di 150, onde evitare di mandare in stallo l'AI
-local function GetSafeBuildPos(uDefID, basePos, metalSpots)
-    for _ = 1, 40 do -- Proviamo 40 posizioni casuali
-        local angle = math.random() * math.pi * 2
-        local dist = math.random(150, 600)				-- Raggio di costruzione dalla base (min, max)
-        local tx = basePos.x + math.cos(angle) * dist
-        local tz = basePos.z + math.sin(angle) * dist
-        local ty = Spring.GetGroundHeight(tx, tz)
-
-        -- 1. Controllo: Non sopra un giacimento di metallo (Raggio 150)
-        local tooCloseToMetal = false
-        for _, spot in ipairs(metalSpots) do
-            local dx, dz = tx - spot.x, tz - spot.z
-            if (dx*dx + dz*dz) < (150*150) then tooCloseToMetal = true; break end
-        end
-
-        if not tooCloseToMetal then
-            -- 2. Controllo: Spazio libero intorno (evita fabbriche ammassate)
-            -- Cerchiamo unità in un raggio di 180 unità
-            local blockingUnits = Spring.GetUnitsInSphere(tx, ty, tz, 180)	-- Raggio di costruzione interbuildings
-            
-            if #blockingUnits == 0 then
-                -- 3. Controllo finale: Il terreno è edificabile?
-                if Spring.TestBuildOrder(uDefID, tx, ty, tz, 0) == 2 then
-                    return tx, ty, tz
-                end
-            end
-        end
-    end
-    return nil -- Nessuna posizione sicura trovata
-end
-
 -- Questa funzione serve a capire dove si trovano le risorse.
 --	•	Controlla se esistono coordinate predefinite per la mappa corrente in MANUAL_MAP_DATA.
 --	•	Se non ci sono, scansiona l'intera mappa con un salto di 32 pixel cercando punti dove il valore del metallo è superiore a 0.1.
@@ -246,15 +157,82 @@ local function AnalyzeMetalMap()
     Spring.Echo("WMRTS AI: Metal scan complete (" .. #metalSpots .. " spots)")
 end
 
--- funzione con log per rilevare il metalspot più vicino via pathfinding (se l'unità è di terra) o diretta, se l'unità è un aereo DICHIARATO NELLA CATEGORIA "CAT_ALL_AIR_CONSTRUCTORS" di ogni fazione
-local function GetClosestMetalSpot(cx, cz, builderID, faction, teamID)
+-- funzione senza log per rilevare il metalspot più vicino via pathfinding (se l'unità è di terra) o diretta, se l'unità è un aereo DICHIARATO NELLA CATEGORIA "CAT_ALL_AIR_CONSTRUCTORS" di ogni fazione
+--[[
+local function GetClosestMetalSpot(cx, cz, builderID, faction)
     local bestSpot = nil
     local minDist = 1000000 * 1000000 
     
     local udID = Spring.GetUnitDefID(builderID)
     if not udID then return nil end
-	local ud = UnitDefs[udID]
-    local udName = ud.name 
+    local udName = UnitDefs[udID].name
+
+    -- Controllo se l'unità appartiene alla categoria AIR della sua fazione
+    local isAirConstructor = false
+    local airList = CATEGORY_TO_UNIT[faction]["CAT_ALL_AIR_CONSTRUCTORS"]
+    if airList then
+        for _, name in ipairs(airList) do
+            if name == udName then 
+                isAirConstructor = true 
+                break 
+            end
+        end
+    end
+
+    for i = 1, #metalSpots do
+        local spot = metalSpots[i]
+        local sx, sz = spot.x, spot.z
+        local sy = Spring.GetGroundHeight(sx, sz)
+
+        -- 1. Verifica occupazione
+        local units = Spring.GetUnitsInSphere(sx, sy, sz, 64)
+        local occupied = false
+        for _, uID in ipairs(units) do
+            local sud = UnitDefs[Spring.GetUnitDefID(uID)]
+            if sud and sud.isExtractor then occupied = true; break end
+        end
+
+        if not occupied then
+            local isReachable = false
+            
+            if isAirConstructor then
+                -- Se è nella tua lista CAT_ALL_AIR_CONSTRUCTORS, salta il pathfinding
+                isReachable = true 
+            else
+                -- Altrimenti usa il pathfinding di terra/mare standard
+                isReachable = Spring.TestMoveOrder(
+                    udID, 
+                    cx, Spring.GetGroundHeight(cx, cz), cz, 
+                    sx, sy, sz
+                )
+            end
+
+            if isReachable then
+                local dx, dz = cx - sx, cz - sz
+                local distSq = dx*dx + dz*dz
+                if distSq < minDist then
+                    minDist = distSq
+                    bestSpot = spot
+                end
+            end
+        end
+    end
+
+    if bestSpot then 
+        return bestSpot.x, Spring.GetGroundHeight(bestSpot.x, bestSpot.z), bestSpot.z 
+    end
+    return nil
+end
+]]--
+
+-- funzione con log per rilevare il metalspot più vicino via pathfinding (se l'unità è di terra) o diretta, se l'unità è un aereo DICHIARATO NELLA CATEGORIA "CAT_ALL_AIR_CONSTRUCTORS" di ogni fazione
+local function GetClosestMetalSpot(cx, cz, builderID, faction)
+    local bestSpot = nil
+    local minDist = 1000000 * 1000000 
+    
+    local udID = Spring.GetUnitDefID(builderID)
+    if not udID then return nil end
+    local udName = UnitDefs[udID].name
 
     -- Variabili per il Log
     local occupiedCount = 0
@@ -296,7 +274,11 @@ local function GetClosestMetalSpot(cx, cz, builderID, faction, teamID)
                 isReachable = true 
             else
                 -- Altrimenti usa il pathfinding standard
-                isReachable = Spring.TestMoveOrder(udID, cx, Spring.GetGroundHeight(cx, cz), cz, sx, sy, sz )
+                isReachable = Spring.TestMoveOrder(
+                    udID, 
+                    cx, Spring.GetGroundHeight(cx, cz), cz, 
+                    sx, sy, sz
+                )
             end
 
             if isReachable then
@@ -312,14 +294,16 @@ local function GetClosestMetalSpot(cx, cz, builderID, faction, teamID)
             end
         end
     end
-	
+
     -- --- LOG DI ISPEZIONE ---
     local logType = isAirConstructor and "ARIA (Ignora Path)" or "TERRA/MARE (Pathfinding)"
     if bestSpot then
-        local dLin = math.sqrt(minDist)
-        Spring.Echo(string.format("AI [%s] Team %d - %s: Spot TROVATO! x:%.0f z:%.0f | Dist. Linea Aria: %.0f", udName, teamID, logType, bestSpot.x, bestSpot.z, dLin))
+        local d = math.sqrt(minDist)
+        Spring.Echo(string.format("AI [%s] - %s: Spot TROVATO! x:%.0f z:%.0f | Distanza: %.0f | Raggiungibili: %d | Irraggiungibili: %d | Occupati: %d", 
+            udName, logType, bestSpot.x, bestSpot.z, d, reachableCount, unreachableCount, occupiedCount))
     else
-        Spring.Echo(string.format("AI [%s] Team %d - %s: NESSUN SPOT DISPONIBILE!", udName, teamID, logType))
+        Spring.Echo(string.format("AI [%s] - %s: NESSUN SPOT DISPONIBILE! | Irraggiungibili: %d | Occupati: %d", 
+            udName, logType, unreachableCount, occupiedCount))
     end
     -- ------------------------
 
@@ -448,7 +432,30 @@ function gadget:GameFrame(n)
         end
 
         local currentLvl = teamLevels[teamID]
-	
+--[[		-- funzionante, logica solo fabbriche
+		------------------------------------------------------------------------
+        -- LOGICA DI RESET LIVELLO di tipo A: Ritorno al Livello 0 se le fabbriche sono distrutte
+        ------------------------------------------------------------------------
+        if currentLvl > 0 then
+            -- Contiamo quante fabbriche totali ha l'AI (T1 + T2 se esiste)
+            local nFabbriche = CountUnitsInCategory(teamID, "CAT_FACTORY_T1", faction)
+            
+            -- Se hai aggiunto anche le T2 nel database, contiamo anche quelle
+            if CATEGORY_TO_UNIT[faction]["CAT_FACTORY_T2"] then
+                nFabbriche = nFabbriche + CountUnitsInCategory(teamID, "CAT_FACTORY_T2", faction)
+            end
+
+            -- Se non ci sono più fabbriche, resettiamo il livello a 0
+            if nFabbriche == 0 then
+                teamLevels[teamID] = 0
+                if GG.WMRTS_Levels then GG.WMRTS_Levels[teamID] = 0 end
+                Spring.Echo("WMRTS AI: Team " .. teamID .. " has no factories! Reverting to Level 0.")
+                -- Aggiorniamo la variabile currentLvl per il resto del frame
+                currentLvl = 0 
+            end
+        end
+        ------------------------------------------------------------------------
+]]--		
 		------------------------------------------------------------------------
         -- LOGICA DI RESET LIVELLO di tipo B: Ritorno al Livello 0 se:  le fabbriche sono distrutte oppure abbiamo meno di x estrattori oppure abbiamo meno di y fabbriche di energia
         ------------------------------------------------------------------------
@@ -502,8 +509,8 @@ function gadget:GameFrame(n)
             local ud = UnitDefs[Spring.GetUnitDefID(uID)]
             if ud then
                 if ud.canBuild or ud.isBuilder then
-                    if Spring.GetCommandQueue(uID, 0) == 0 and not Spring.GetUnitIsBuilding(uID) then -- Se il costruttore non ha ordini in coda (GetCommandQueue == 0) ...
-                        table.insert(builders, uID) --...allora consideralo libero e dagli un ordine
+                    if Spring.GetCommandQueue(uID, 0) == 0 and not Spring.GetUnitIsBuilding(uID) then
+                        table.insert(builders, uID)
                     end
                 end
                 if ud.isFactory then table.insert(factories, uID) end
@@ -531,29 +538,28 @@ function gadget:GameFrame(n)
                             if req.cat == "CAT_MEX_T1" then																		-- aggiungere qui le categorie che riguardano gli estrattori
 								local bx_curr, by_curr, bz_curr = Spring.GetUnitPosition(builders[1])
 								-- Chiama la funzione corretta passandogli l'ID del costruttore
-								bx, by, bz = GetClosestMetalSpot(bx_curr, bz_curr, builders[1], faction, teamID)
-									if bx == nil then -- Opzionale: stampa un messaggio per debug
+--								bx, by, bz = GetClosestMetalSpot(bx_curr, bz_curr, builders[1])
+								bx, by, bz = GetClosestMetalSpot(bx_curr, bz_curr, builders[1], faction)
+									if bx == nil then
+											-- Opzionale: stampa un messaggio per debug
 										Spring.Echo("WMRTS AI: Nessun metallo raggiungibile per " .. UnitDefs[Spring.GetUnitDefID(builders[1])].name)
 										end								
                             else
-					
-							-- Usa la funzione sicura per centrali e fabbriche
-								bx, by, bz = GetSafeBuildPos(uDef.id, teamBasePos[teamID], metalSpots)
-							end                            
+                                for _ = 1, 30 do
+                                    local angle = math.random() * math.pi * 2
+                                    local dist = math.random(100, 500)
+                                    local tx = teamBasePos[teamID].x + math.cos(angle) * dist
+                                    local tz = teamBasePos[teamID].z + math.sin(angle) * dist
+                                    if Spring.TestBuildOrder(uDef.id, tx, 0, tz, 0) == 2 then
+                                        bx, by, bz = tx, Spring.GetGroundHeight(tx,tz), tz
+                                        break
+                                    end
+                                end
+                            end
+                            
                             if bx then
                                 Spring.Echo("WMRTS AI: Team " .. teamID .. " builder " .. builders[1] .. " builds " .. unitName)
                                 Spring.GiveOrderToUnit(builders[1], -uDef.id, {bx, by, bz, 0}, {})
-					-- --- LOG DISTANZA REALE PATHFINDER ---
-					local bName = UnitDefs[Spring.GetUnitDefID(builders[1])].name
-					local pDist = GetRealDistAfterOrder(builders[1])
-					if pDist > 0 then
-						--Spring.Echo(string.format("   -> DEBUG PATH Team %d: L'unità '%s', ID= %d percorrerà %.0f unità reali per arrivare.", teamID,bName, builders[1], pDist))
-						  Spring.Echo(string.format("   -> DEBUG PATH Team %d: L'unita '%s' ID=%d percorrera %.0f unita reali per arrivare.", teamID, bName, builders[1], pDist))
-					else
-						--Spring.Echo(string.format("   -> DEBUG PATH Team %d: L'unità '%s', ID= %d ha un percorso istantaneo o non ancora calcolato.", teamID, bName, builders[1],))
-						  Spring.Echo(string.format("   -> DEBUG PATH Team %d: L'unita '%s' ID=%d ha un percorso istantaneo o non ancora calcolato.", teamID, bName, builders[1]))
-					end
-					--------
                                 table.remove(builders, 1)
                                 started = started + 1
                             end

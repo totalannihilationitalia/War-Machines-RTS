@@ -9,6 +9,7 @@ function gadget:GetInfo()
 		enabled   = true
 	}
 end
+
 -- 08/01/2025 = creata l'AI WMRTS_AI per missioni (base per l'AI skirmish)
 -- 09/01/2025 = implementato il comando attack al gruppo di bombardieri. Prima l'AI gestiva solamente il comando FIGHT ma i bombardieri non bombardano automaticamente, bisogna indicargli il punto da bombardare con il comando Attack.
 -- 09/01/2025 = esternizzata la tabella/db delle unità in WMRTS_AI_mission_db.lua
@@ -206,7 +207,7 @@ local FACTORY_CONFIG = {} 		-- all'inizio imposto la tabella vuota #############
 -- local lastLevel = -1 			-- ##################### Usiamo -1 così al primo frame carica il livello 0. Questa variabile serve come "antiripetizione" e verrà utilizzata per aumentare di livello l' AI una volta sola #####################
 
 local function GetConfigPerLivello(livello) -- Questa funzione restituisce, per ciascun team, la tabella delle fabbriche in funzione del livello corrente del team
-    if livello == 0 then
+    if livello <= 4 then
         return {
             -- ICU --
             ["armlab"] = { "ICU_armlab_light_patrol_1", "ICU_armlab_light_patrol_2" },
@@ -220,7 +221,7 @@ local function GetConfigPerLivello(livello) -- Questa funzione restituisce, per 
             ["andplat"]  = { "AND_andplatplat_air_raid_1", "AND_andplat_antiair_raid_1","AND_andplat_air_bomber_1" },
             ["andaplat"]  = { "AND_andaplatplat_air_raid_1", "AND_andaplat_air_bomber_1","AND_andaplat_air_bomber_2" },
         }
-    elseif livello == 1 then
+    elseif livello == 5 then
         return {
 			-- #################### concludere lvl 1
             ["armlab"] = { "ICU_armlab_medium_patrol_1", "ICU_armlab_medium_patrol_2" },
