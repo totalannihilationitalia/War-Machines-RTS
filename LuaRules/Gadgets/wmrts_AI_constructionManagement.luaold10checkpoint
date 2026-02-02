@@ -224,12 +224,12 @@ local function CheckStuckBuilders(teamID, frame)
                     if not data then
                         builderTracker[uID] = {x = curX, z = curZ, frame = frame} -- Inizia il monitoraggio
                     else
-                        if (frame - data.frame) > 450 then -- Per fare ad esempio 30 secondi -> (30 * 30 frames = 900)  	-- ########################### portato da 30 secondi a 15 secondi 02/02/2026
+                        if (frame - data.frame) > 900 then -- Se sono passati ad esempio 30 secondi (30 * 30 frames = 900)
                             local movedDist = math.sqrt((data.x - curX)^2 + (data.z - curZ)^2)
                             
                             -- Se non si è mosso (meno di 30 pixel) E non sta costruendo (già verificato sopra)
                             if movedDist < 30 then
-                                Spring.Echo("WMRTS_contrMngm_AI: Team "..teamID.." - builder " .. udName .. " bloccato e NON sta costruendo! Blacklisto spot.") -- L'UNITA' E' BLOCCATA!
+                                Spring.Echo("WMRTS AI: Builder " .. udName .. " bloccato e NON sta costruendo! Blacklisto spot.") -- L'UNITA' E' BLOCCATA!
                                 
                                 for i, spot in ipairs(metalSpots) do -- Trova quale spot era (confrontando le coordinate tx, tz)
                                     if math.abs(spot.x - tx) < 10 and math.abs(spot.z - tz) < 10 then
@@ -342,10 +342,10 @@ local function AnalyzeMetalMap()
         end
     end
     scanDone = true
-    Spring.Echo("WMRTS_contrMngm_AI: Metal scan complete (" .. #metalSpots .. " spots)")
+    Spring.Echo("WMRTS AI: Metal scan complete (" .. #metalSpots .. " spots)")
 end
 
--- funzione per rilevare il metalspot più vicino via pathfinding (se l'unità è di terra) o diretta, se l'unità è un aereo DICHIARATO NELLA CATEGORIA "CAT_ALL_AIR_CONSTRUCTORS" di ogni fazione
+-- funzione con log per rilevare il metalspot più vicino via pathfinding (se l'unità è di terra) o diretta, se l'unità è un aereo DICHIARATO NELLA CATEGORIA "CAT_ALL_AIR_CONSTRUCTORS" di ogni fazione
 local function GetClosestMetalSpot(cx, cz, builderID, faction, teamID)
     local bestSpot = nil
     local minDist = 1000000 * 1000000 
@@ -420,15 +420,16 @@ local function GetClosestMetalSpot(cx, cz, builderID, faction, teamID)
     end
 	end
 	
-    ------ LOG DI ISPEZIONE ---
+    -- --- LOG DI ISPEZIONE ---
     local logType = isAirConstructor and "ARIA (Ignora Path)" or "TERRA/MARE (Pathfinding)"
     if bestSpot then
         local dLin = math.sqrt(minDist)
-        Spring.Echo(string.format("WMRTS_contrMngm_AI: [%s] Team %d - %s: Spot TROVATO! x:%.0f z:%.0f | Dist. Linea Aria: %.0f", udName, teamID, logType, bestSpot.x, bestSpot.z, dLin))
+        Spring.Echo(string.format("AI [%s] Team %d - %s: Spot TROVATO! x:%.0f z:%.0f | Dist. Linea Aria: %.0f", udName, teamID, logType, bestSpot.x, bestSpot.z, dLin))
     else
-        Spring.Echo(string.format("WMRTS_contrMngm_AI: [%s] Team %d - %s: NESSUN SPOT DISPONIBILE!", udName, teamID, logType))
+        Spring.Echo(string.format("AI [%s] Team %d - %s: NESSUN SPOT DISPONIBILE!", udName, teamID, logType))
     end
-    ---------------------------
+    -- ------------------------
+
     if bestSpot then 
         return bestSpot.x, Spring.GetGroundHeight(bestSpot.x, bestSpot.z), bestSpot.z 
     end
@@ -536,7 +537,7 @@ function gadget:GameFrame(n)
                 teamLevels[teamID] = 0
                 local side = select(5, Spring.GetTeamInfo(teamID))
                 teamFactions[teamID] = (side and string.find(string.lower(side), "and")) and "AND" or "ICU"
-                Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " detected (" .. teamFactions[teamID] .. ")")
+                Spring.Echo("WMRTS AI: Team " .. teamID .. " detected (" .. teamFactions[teamID] .. ")")
             end
         end
     end
@@ -575,7 +576,7 @@ function gadget:GameFrame(n)
                 if GG.WMRTS_Levels then GG.WMRTS_Levels[teamID] = 0 end
                 
                 local motivo = fallimentoFabbriche and "No Factories" or (fallimentoMetallo and "Low Metal" or "Low Energy")
-                Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Critical Failure (" .. motivo .. ")! Reverting to Level 0.")
+                Spring.Echo("WMRTS AI: Team " .. teamID .. " Critical Failure (" .. motivo .. ")! Reverting to Level 0.")
                 
                 currentLvl = 0 
             end
@@ -597,7 +598,7 @@ function gadget:GameFrame(n)
             teamLevels[teamID] = currentLvl + 1
             if not GG.WMRTS_Levels then GG.WMRTS_Levels = {} end
             GG.WMRTS_Levels[teamID] = teamLevels[teamID]
-            Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Level Up -> " .. teamLevels[teamID])
+            Spring.Echo("WMRTS AI: Team " .. teamID .. " Level Up -> " .. teamLevels[teamID])
             return
         end
 
@@ -630,64 +631,51 @@ function gadget:GameFrame(n)
                 local uDef = UnitDefNames[unitName]
                 
                 if uDef then
-                    -- CASO A: È una STRUTTURA (Richiede un Builder)		
-					if uDef.isBuilding or uDef.isStructure then
-                        local assigned = false
-                        local totalFree = #builders
-                        local capableFound = false
-
-                        if totalFree > 0 then
+                    -- CASO A: È una STRUTTURA (Richiede un Builder)
+                    if uDef.isBuilding or uDef.isStructure then
+					   local assigned = false
 						-- cerchiamo tra tutti i builders disponibili
-                            for i = #builders, 1, -1 do -- Ciclo inverso per poter rimuovere l'elemento
-                                local bID = builders[i]
-                                if CanBuilderBuildThis(bID, uDef.id) then
-                                    capableFound = true
-                                    local bx, by, bz
+						for i = #builders, 1, -1 do -- Ciclo inverso per poter rimuovere l'elemento
+							local bID = builders[i]
+							if CanBuilderBuildThis(bID, uDef.id) then
+                            local bx, by, bz
 																	-- #################to do, aggiungere qui l'upgrade in T2 degli estrattori!!							
-                                    if req.cat == "CAT_MEX_T1" then
-                                        local bx_curr, by_curr, bz_curr = Spring.GetUnitPosition(bID)
-											-- Chiama la funzione corretta passandogli l'ID del costruttore
-                                        bx, by, bz = GetClosestMetalSpot(bx_curr, bz_curr, bID, faction, teamID)
-											if bx == nil then -- Opzionale: stampa un messaggio per debug
-											Spring.Echo("WMRTS_contrMngm_AI: Nessun metallo raggiungibile per " .. UnitDefs[Spring.GetUnitDefID(bID)].name)
-											end		
-                                    else
-										-- Usa la funzione sicura per centrali e fabbriche                                    
-										bx, by, bz = GetSafeBuildPos(uDef.id, teamBasePos[teamID], metalSpots)
-                                    end
-									
-                                    if bx then
-                                        Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " builder " .. bID .. " (" .. UnitDefs[Spring.GetUnitDefID(bID)].name .. ") builds " .. unitName)
-                                        Spring.GiveOrderToUnit(bID, -uDef.id, {bx, by, bz, 0}, {})
-										-- --- LOG DISTANZA REALE PATHFINDER ---
-										local bName = UnitDefs[Spring.GetUnitDefID(bID)].name
-										local pDist = GetRealDistAfterOrder(bID)
-										if pDist > 0 then
-											  Spring.Echo(string.format("   -> DEBUG PATH Team %d: L'unita '%s' ID=%d percorrera %.0f unita reali per arrivare.", teamID, bName, bID, pDist))
-										else
-											  Spring.Echo(string.format("   -> DEBUG PATH Team %d: L'unita '%s' ID=%d ha un percorso istantaneo o non ancora calcolato.", teamID, bName, bID))
-										end
-										--------
-													-- Rimuovi il builder dalla lista perché ora è occupato										
-                                        table.remove(builders, i)
-                                        started = started + 1
-                                        assigned = true
-                                        break -- Esci dal ciclo dei builder, abbiamo trovato chi lo fa
-                                    end
-                                end
-                            end
-                        end
-                        
-                        -- LOG DI DEBUG AVANZATO
-                        if not assigned and (n % 450 == 0) then -- Notifica ogni 15 secondi per non intasare
-                            if totalFree == 0 then
-                                Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - STALLO: Nessun costruttore LIBERO per costruire " .. unitName)
-                            elseif not capableFound then
-                                Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - ERRORE COSTRUTTORE: " .. totalFree .. " costruttori liberi, ma NESSUNO sa costruire " .. unitName)
+                            if req.cat == "CAT_MEX_T1" then																		-- aggiungere qui le categorie che riguardano gli estrattori
+								  local bx_curr, by_curr, bz_curr = Spring.GetUnitPosition(bID)
+								-- Chiama la funzione corretta passandogli l'ID del costruttore
+								 bx, by, bz = GetClosestMetalSpot(bx_curr, bz_curr, bID, faction, teamID)
+									if bx == nil then -- Opzionale: stampa un messaggio per debug
+										Spring.Echo("WMRTS AI: Nessun metallo raggiungibile per " .. UnitDefs[Spring.GetUnitDefID(bID)].name)
+										end								
                             else
-                                Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - SPAZIO PIENO: Costruttori pronti, ma non trovo una posizione valida (SafePos) per " .. unitName)
-                            end
-                        end
+					
+							-- Usa la funzione sicura per centrali e fabbriche
+								bx, by, bz = GetSafeBuildPos(uDef.id, teamBasePos[teamID], metalSpots)
+							end                            
+                            if bx then
+								Spring.Echo("WMRTS AI: Team " .. teamID .. " builder " .. bID .. " (" .. UnitDefs[Spring.GetUnitDefID(bID)].name .. ") builds " .. unitName)
+								Spring.GiveOrderToUnit(bID, -uDef.id, {bx, by, bz, 0}, {})
+					-- --- LOG DISTANZA REALE PATHFINDER ---
+					local bName = UnitDefs[Spring.GetUnitDefID(bID)].name
+					local pDist = GetRealDistAfterOrder(bID)
+					if pDist > 0 then
+						  Spring.Echo(string.format("   -> DEBUG PATH Team %d: L'unita '%s' ID=%d percorrera %.0f unita reali per arrivare.", teamID, bName, bID, pDist))
+					else
+						  Spring.Echo(string.format("   -> DEBUG PATH Team %d: L'unita '%s' ID=%d ha un percorso istantaneo o non ancora calcolato.", teamID, bName, bID))
+					end
+					--------
+								-- Rimuovi il builder dalla lista perché ora è occupato
+								table.remove(builders, i)
+								started = started + 1
+								assigned = true
+								break -- Esci dal ciclo dei builder, abbiamo trovato chi lo fa
+								end
+							end
+						end
+						    if not assigned then
+							-- Se arriviamo qui, nessun costruttore LIBERO sa fare questo edificio.
+							Spring.Echo("WMRTS AI: Team" ..teamID.. " Nessun costruttore disponibile per " .. unitName)
+							end
                     -- CASO B: È un ROBOT/UNITA' MOBILE (Richiede una Fabbrica)
                     else
                         for _, fID in ipairs(factories) do
@@ -708,7 +696,7 @@ function gadget:GameFrame(n)
                                 end
 
                                 if not alreadyBuilding then
-                                    Spring.Echo("WMRTS_contrMngm_AI: Factory " .. fID .. " priority production: " .. unitName)
+                                    Spring.Echo("WMRTS AI: Factory " .. fID .. " priority production: " .. unitName)
                                     Spring.GiveOrderToUnit(fID, -uDef.id, {}, {"alt"})
                                     started = started + 1
                                     break 

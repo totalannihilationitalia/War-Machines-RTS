@@ -207,7 +207,7 @@ local FACTORY_CONFIG = {} 		-- all'inizio imposto la tabella vuota #############
 -- local lastLevel = -1 			-- ##################### Usiamo -1 così al primo frame carica il livello 0. Questa variabile serve come "antiripetizione" e verrà utilizzata per aumentare di livello l' AI una volta sola #####################
 
 local function GetConfigPerLivello(livello) -- Questa funzione restituisce, per ciascun team, la tabella delle fabbriche in funzione del livello corrente del team
-    if livello <= 4 then
+    if livello <= 4 then					
         return {
             -- ICU --
             ["armlab"] = { "ICU_armlab_light_patrol_1", "ICU_armlab_light_patrol_2" },
