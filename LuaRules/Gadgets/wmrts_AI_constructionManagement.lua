@@ -96,7 +96,7 @@
 			},		
 
 			["CAT_CONSTRUCTORS_T1"]		= { "icuck", "armcv", "armca", "armcs" }, 				-- solo costruttori T1
-			["CAT_CONSTRUCTORS_T2"] 	= { "icuack", "armacv", "armaca", "armacs" }, 			-- solo costruttori T2	
+			["CAT_CONSTRUCTORS_T2"] 	= { "armack", "armacv", "armaca", "armacs" }, 			-- solo costruttori T2	
 		},
 	----------------------------
 	-- AND ########################################################################################### configurare
@@ -155,14 +155,14 @@
 				{cat = "CAT_ENERGY_T1",         count = 5},			
 				{cat = "CAT_ENERGY_T1_2",       count = 1},
 				{cat = "CAT_FACTORY_T1", 		count = 2},
-	            {cat = "CAT_MEX_T1",            count = 4},
+	            {cat = "CAT_MEX_T1",            count = 5},
 				{cat = "CAT_LASER_T1", 			count = 1},		
 				{cat = "CAT_AA_T1", 			count = 1},			
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]	
 		[3] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
-			simultanea = 2,
-			combehaviour = "patrolbase",		
+			simultanea = 3,
+			combehaviour = "constructor",		
 			requisiti = {
 				{cat = "CAT_ENERGY_T1",         count = 5},		
 				{cat = "CAT_MEX_T1",            count = 5},		
@@ -178,7 +178,7 @@
 			combehaviour = "patrolbase",			
 			requisiti = {
 				{cat = "CAT_ENERGY_T1",         count = 5},		
-				{cat = "CAT_MEX_T1",            count = 6},		
+				{cat = "CAT_MEX_T1",            count = 5},		
 				{cat = "CAT_FACTORY_T1", 		count = 2},			
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 2},
 				{cat = "CAT_ENERGY_T1_2",       count = 1},
@@ -186,44 +186,42 @@
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]		
 		[5] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
-			simultanea = 4,
+			simultanea = 2,
 			combehaviour = "patrolbase",			
 			requisiti = {
 				{cat = "CAT_FACTORY_T2", 		count = 1},		
 				{cat = "CAT_FACTORY_T1", 		count = 1},	
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 2},
-				{cat = "CAT_CONSTRUCTORS_T2", 	count = 2},			
+				{cat = "CAT_CONSTRUCTORS_T2", 	count = 1},			
 				{cat = "CAT_ENERGY_T1_2",       count = 2},
-				{cat = "CAT_MEX_T1",            count = 6},		
-				{cat = "CAT_AA_T1_2", 			count = 2},					
-				{cat = "CAT_LASER_T1_2", 		count = 2},							
+				{cat = "CAT_MEX_T1",            count = 5},		
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]		
 		[6] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
-			simultanea = 4,
+			simultanea = 2,
 			combehaviour = "patrolbase",			
 			requisiti = {
-				{cat = "CAT_FACTORY_T2", 		count = 2},		
+				{cat = "CAT_FACTORY_T2", 		count = 1},		
 				{cat = "CAT_FACTORY_T1", 		count = 1},	
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 2},
-				{cat = "CAT_CONSTRUCTORS_T2", 	count = 2},			
+				{cat = "CAT_CONSTRUCTORS_T2", 	count = 1},			
 				{cat = "CAT_ENERGY_T1_2",       count = 2},
 				{cat = "CAT_MEX_T2",            count = 1},					
 				{cat = "CAT_MEX_T1",            count = 3},		
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]			
 		[7] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
-			simultanea = 4,
+			simultanea = 3,
 			combehaviour = "patrolbase",			
 			requisiti = {
-				{cat = "CAT_FACTORY_T2", 		count = 2},		
+				{cat = "CAT_FACTORY_T2", 		count = 1},		
 				{cat = "CAT_FACTORY_T1", 		count = 1},	
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 2},
-				{cat = "CAT_CONSTRUCTORS_T2", 	count = 2},			
+				{cat = "CAT_CONSTRUCTORS_T2", 	count = 1},			
 				{cat = "CAT_ENERGY_T1_2",       count = 2},
 				{cat = "CAT_MEX_T2",            count = 2},					
 				{cat = "CAT_MEX_T1",            count = 2},		
-				{cat = "CAT_ENERGY_T2",         count = 1},		
+				{cat = "CAT_ENERGY_T1_2",       count = 3},	
 				{cat = "CAT_AA_T2", 			count = 1},					
 				{cat = "CAT_LASER_T2", 			count = 1},							
 			} 	-- end requisiti di livello
@@ -232,11 +230,11 @@
 			simultanea = 4,
 			combehaviour = "patrolbase",			
 			requisiti = {
-				{cat = "CAT_FACTORY_T2", 		count = 3},		
-				{cat = "CAT_FACTORY_T1", 		count = 1},	
+				{cat = "CAT_FACTORY_T2", 		count = 2},		
+				{cat = "CAT_FACTORY_T1", 		count = 2},	
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 2},
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 2},			
-				{cat = "CAT_MEX_T2",            count = 3},					
+				{cat = "CAT_MEX_T2",            count = 2},					
 				{cat = "CAT_ENERGY_T2",         count = 2},				
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]			
@@ -244,11 +242,11 @@
 			simultanea = 4,
 			combehaviour = "patrolbase",			
 			requisiti = {
-				{cat = "CAT_FACTORY_T2", 		count = 3},		
+				{cat = "CAT_FACTORY_T2", 		count = 2},		
 				{cat = "CAT_FACTORY_T1", 		count = 1},	
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 2},
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 2},			
-				{cat = "CAT_MEX_T2",            count = 3},					
+				{cat = "CAT_MEX_T2",            count = 2},					
 				{cat = "CAT_ENERGY_T2",         count = 2},				
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]			
@@ -260,7 +258,7 @@
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 4},	
 				{cat = "CAT_FACTORY_T2", 		count = 4},		
 				{cat = "CAT_FACTORY_T1", 		count = 3},	
-				{cat = "CAT_MEX_T2",            count = 4},					
+				{cat = "CAT_MEX_T2",            count = 3},					
 				{cat = "CAT_ENERGY_T2",         count = 2},		
 				{cat = "CAT_AA_T2", 			count = 3},					
 				{cat = "CAT_LASER_T2", 			count = 3},				
@@ -757,7 +755,7 @@
 					if GG.WMRTS_Levels then GG.WMRTS_Levels[teamID] = 0 end
 					
 					local motivo = fallimentoFabbriche and "No Factories" or (fallimentoMetallo and "Low Metal" or "Low Energy")
-					Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Critical Failure (" .. motivo .. ")! Reverting to Level 0.")
+					Spring.Echo(string.char(255, 255, 0, 0) .."WMRTS_contrMngm_AI: Team " .. teamID .. " Critical Failure (" .. motivo .. ")! Reverting to Level 0.")
 					
 					currentLvl = 0 
 				end
@@ -806,7 +804,7 @@
 				teamLevels[teamID] = currentLvl + 1
 				if not GG.WMRTS_Levels then GG.WMRTS_Levels = {} end
 				GG.WMRTS_Levels[teamID] = teamLevels[teamID]
-				Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Level Up -> " .. teamLevels[teamID])
+				Spring.Echo(string.char(255, 0, 255, 0) .."WMRTS_contrMngm_AI: Team " .. teamID .. " Level Up -> " .. teamLevels[teamID])
 				return
 			end
 
