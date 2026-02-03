@@ -223,7 +223,7 @@
 				{cat = "CAT_MEX_T1",            count = 2},		
 				{cat = "CAT_ENERGY_T1_2",       count = 3},	
 				{cat = "CAT_AA_T2", 			count = 1},					
-				{cat = "CAT_LASER_T2", 			count = 1},							
+--				{cat = "CAT_LASER_T2", 			count = 1},							
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]			
 		[8] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
