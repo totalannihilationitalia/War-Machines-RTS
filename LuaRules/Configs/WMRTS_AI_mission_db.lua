@@ -17,7 +17,7 @@
 --			type = navalbuilding 		-> unità fissa di superficie su mare (di difesa/produzione/energia)
 --			type = strategicbuilding 	-> unità fissa di superficie strategica ( Es factory 3 livello, silos, antipalline )
 --			tutte le unità che non sono identificate in questo database, prenderanno valore type = unknown , vedere poi la logica di targetin come gestirle
--- definizione della caratteristica "ignore": può essere true o false (se non dichiarata). Se True, l'unità ad esso associata non verrà gestita dal gadget "military_factory": se viene creata dalla fabbrica, non viene inclusa nel gruppo e non viene mandata all'attacco. Sara quindi un altro Gadget a gestire i costruttori e pertanto il  gadget "military_factory" ignorerà queste unità grazie all'opzione ignore = true. Tuttavia queste unità saranno comunque categorizzate dal gadget (type = "ground" o altro) come categoria di attacco (vedi sopra)
+-- definizione della caratteristica "ignore": può essere true o false (se non dichiarata). Se True, l'unità ad esso associata verrà completamente ignorata dal gadget "military_factory": se viene creata dalla fabbrica, non viene inclusa in alcun gruppo e non viene mandata all'attacco. Sarà altro Gadget a gestire l'unità (come ad esempio i costruttori) oppure le unità saranno gestite dal misison editor
 
 local UNIT_DB = {
 	--------------------------------------------------------------------------------
@@ -45,8 +45,8 @@ local UNIT_DB = {
 ["armfllt"] = { type = "navalbuilding" },
 
 -- Costruzioni Tier 2 e +
-["aafus"] = { type = "building" },
-["armfus"] = { type = "building" },
+["aafus"] = { type = "strategicbuilding" },
+["armfus"] = { type = "strategicbuilding" },
 ["amgeo"] = { type = "building" },
 ["armgmm"] = { type = "building" },
 ["armmoho"] = { type = "building" },
@@ -59,14 +59,14 @@ local UNIT_DB = {
 ["armasp"] = { type = "building" },
 ["armtarg"] = { type = "building" },
 ["armsd"] = { type = "building" },
-["armgate"] = { type = "building" },
-["armamb"] = { type = "building" },
+["armgate"] = { type = "strategicbuilding" },
+["armamb"] = { type = "strategicbuilding" },
 ["armpb"] = { type = "building" },
-["armanni"] = { type = "building" },
+["armanni"] = { type = "strategicbuilding" },
 ["armflak"] = { type = "building" },
 ["mercury"] = { type = "building" },
 ["armamd"] = { type = "building" },
-["armsilo"] = { type = "building" },
+["armsilo"] = { type = "strategicbuilding" },
 ["armbrtha"] = { type = "building" },
 ["armvulc"] = { type = "building" },
 ["advmoho"] = { type = "building" },
@@ -212,8 +212,8 @@ local UNIT_DB = {
 ["corfllt"] = { type = "navalbuilding" },
 
 -- Costruzioni Tier 2 e +
-["corfus"] = { type = "building" },
-["cafus"] = { type = "building" },
+["corfus"] = { type = "strategicbuilding" },
+["cafus"] = { type = "strategicbuilding" },
 ["cmgeo"] = { type = "building" },
 ["corbhmth"] = { type = "building" },
 ["cormoho"] = { type = "building" },
@@ -230,11 +230,11 @@ local UNIT_DB = {
 ["corgate"] = { type = "building" },
 ["cortoast"] = { type = "building" },
 ["corvipe"] = { type = "building" },
-["cordoom"] = { type = "building" },
+["cordoom"] = { type = "strategicbuilding" },
 ["corflak"] = { type = "building" },
 ["screamer"] = { type = "building" },
-["corfmd"] = { type = "building" },
-["corsilo"] = { type = "building" },
+["corfmd"] = { type = "strategicbuilding" },
+["corsilo"] = { type = "strategicbuilding" },
 ["corint"] = { type = "building" },
 ["corbuzz"] = { type = "building" },
 ["corvp"] = { type = "building" },
@@ -370,18 +370,18 @@ local UNIT_DB = {
 ["andpopaa"] = { type = "building" },
 
 -- Costruzioni Tier 2
-["andfus"] = { type = "building" },
-["andaafus"] = { type = "building" },
+["andfus"] = { type = "strategicbuilding" },
+["andaafus"] = { type = "strategicbuilding" },
 ["andametex"] = { type = "building" },
 ["andaestor"] = { type = "building" },
 ["andarad"] = { type = "building" },
 ["andshield"] = { type = "building" },
 ["anddfens"] = { type = "building" },
 ["andill"] = { type = "building" },
-["andchaos"] = { type = "building" },
+["andchaos"] = { type = "strategicbuilding" },
 ["andernie"] = { type = "building" },
 ["chemist"] = { type = "building" },
-["andlaunch"] = { type = "building" },
+["andlaunch"] = { type = "strategicbuilding" },
 ["andangel"] = { type = "building" },
 ["medusa"] = { type = "building" },
 

@@ -17,15 +17,13 @@
 	--				viene quindi implementato il timeout: se una unità appartenente al gruppo "LIMITED_CONSTRUCTORS" (solitamente costruttori di terra) rimane ferma per x tempo e non sta costruendo niente (come un comandante bloccato sulla sponda nel tentativo di raggiungere l'altra),
 	--				a quel team ID viene messo nella blacklist lo spot di metallo irraggiungibile per le unità di terra. In questo modo l'unità riceve il comando STOP e rimane IDLE, cosi il sistema la impiega per altri lavori (o la ricerca di un nuovo spot di metallo)
 	-- 02/02/2026 = inserita la funzione antistallo costruttivo: il builder x può costruire l'unità y?  se no -> interroga il builder successivo, se si -> impiegalo per costruirla. Se tutti i builder successivi non hanno la possibilità di costruirla, allora andrà in stallo. Ma basta tenere, per ogni livello, i builder T1 e T2 tra i requisiti.
-	-- 03/02/2026 = inserito il controllo del comandante per livello, ora può essere impiegato per eseguire patrol (come aiutante) o costruttore
 
 	-- TO DO
 	-- implementare naval e sub
 	-- creare la categorizzazione land/air/sea per gli estrattori di metallo (logicamente land e air avranno lo stesso icumetex mentre sea avrà ad esempio undewatermetex). Vedere se fare lo stesso per le floating torrette T1 e T2 ed eventualmente le centrali energia.
 	-- creare funzione upgrade estrattori da T1 a T2
 	-- creare funzione comando ai costruttori (comandante, costruttori non comandante): Patrol/costruisci. La prima gira attorno alla base aiutando le costruizoni, la seconda per impegnare i costruttori a costruire
-	-- ridurre il timeout nel caso i costruttori rimangano fermi per costruire giacimenti di metallo. ## -> 02/02/2025 fatto per ora lo teniamo cosi molix
-	-- verificare se aumentare il raggio di costruzione della base con il passare dei livelli
+	-- ridurre il timeout nel caso i costruttori rimangano fermi per costruire giacimenti di metallo
 
 	if (not gadgetHandler:IsSyncedCode()) then return end
 
@@ -43,7 +41,7 @@
 		-- ICU
 		["icucom"] = true, ["icuck"] = true, ["armcv"] = true, ["armcs"] = true, ["kicucom"] = true,
 		-- AND
-		["andcom"] = true, ["andcon"] = true, ["andcv"] = true, ["andcs"] = true, -- ######################### sistemare la tabella AND #######################
+		["andcom"] = true, ["andcon"] = true, ["andcv"] = true, ["andcs"] = true, -- ######################### sistemare la tabella AND
 	}
 
 	-- tabella dei comandanti, serve alla logica per capire quali sono i comandanti e controllarne il comportamento in funzione della variabile "combehaviour" in "local AI_BUILD_LEVELS"
@@ -99,7 +97,7 @@
 			["CAT_CONSTRUCTORS_T2"] 	= { "icuack", "armacv", "armaca", "armacs" }, 			-- solo costruttori T2	
 		},
 	----------------------------
-	-- AND ########################################################################################### configurare
+	-- AND
 	----------------------------
 		["AND"] = {
 			["CAT_MEX_T1"]      	= { "andmex" },
@@ -358,7 +356,6 @@
 		end
 		return nil 
 	end
-	
 	-- Questa funzione controlla se un'unità "x" può effettivamente costruire un'altra unità "y". Ad esempio verifica se "icucom" può costruire "icuadvsol", cosi che il core vada a chiamare il successivo builder per eseguire di nuovo questa verifica. Restituisce true se può costruire l'unità codi da ingaggiarla, oppure false cosi il core interroga il builder successivo
 	local function CanBuilderBuildThis(builderID, unitDefID)
 		local ud = UnitDefs[Spring.GetUnitDefID(builderID)]
@@ -745,13 +742,13 @@
 				local fallimentoMetallo   = (nMex < 2)       		-- Se scende sotto i 2 estrattori di metallo
 				local fallimentoEnergia   = (nEnergia < 2)   		-- Se scende sotto i 2 powerplant
 
-				if fallimentoFabbriche or fallimentoMetallo or fallimentoEnergia then 	-- Se è presente una di queste condizioni...
-					teamLevels[teamID] = 0												-- ... livello AI torna a 0
-					if commanderCurrentBehaviour[teamID] ~= "constructor" then							-- ... il comandante viene forzato a diventare costruttore ######## verificare se serve perchè a lvl è impostato come costruttore per cui non dovrebbe servire questa logica
-						local comID = GetCommanderID(teamID, faction)									-- ... il comandante viene forzato a diventare costruttore ######## verificare se serve perchè a lvl è impostato come costruttore per cui non dovrebbe servire questa logica
-						if comID then Spring.GiveOrderToUnit(comID, CMD.STOP, {}, {}) end				-- ... il comandante viene forzato a diventare costruttore ######## verificare se serve perchè a lvl è impostato come costruttore per cui non dovrebbe servire questa logica
-					end																					-- ... il comandante viene forzato a diventare costruttore ######## verificare se serve perchè a lvl è impostato come costruttore per cui non dovrebbe servire questa logica
-				commanderCurrentBehaviour[teamID] = "constructor" -- Forza il ritorno a costruttore		-- ... il comandante viene forzato a diventare costruttore ######## verificare se serve perchè a lvl è impostato come costruttore per cui non dovrebbe servire questa logica
+				if fallimentoFabbriche or fallimentoMetallo or fallimentoEnergia then
+					teamLevels[teamID] = 0
+					if commanderCurrentBehaviour[teamID] ~= "constructor" then
+						local comID = GetCommanderID(teamID, faction)	
+						if comID then Spring.GiveOrderToUnit(comID, CMD.STOP, {}, {}) end
+					end
+				commanderCurrentBehaviour[teamID] = "constructor" -- Forza il ritorno a costruttore
 					
 					if GG.WMRTS_Levels then GG.WMRTS_Levels[teamID] = 0 end
 					

@@ -265,7 +265,58 @@ local scanDone = false
 --------------------------------------------------------------------------------
 -- 3) FUNZIONI DI SUPPORTO
 --------------------------------------------------------------------------------
+-- Questa funzione serve per costruire le fabbriche. Quando richiamata verifica dove posizionare la fabbrica in un punto lontano da giacimenti di metallo (per non imperdire la costruzione di estrattori) e lontano da "dirupi" per evitare che l'AI costruisca la fabbrica in un punto (come un dirupo, una montagna) da cui poi le unità non escono
+local function GetSafeBuildPosFactory(uDefID, basePos, metalSpots)
+    for _ = 1, 50 do -- Più tentativi perché i criteri sono più stringenti
+        local angle = math.random() * math.pi * 2
+        local dist = math.random(200, 700) 
+        local tx = basePos.x + math.cos(angle) * dist
+        local tz = basePos.z + math.sin(angle) * dist
+        local ty = Spring.GetGroundHeight(tx, tz)
 
+        -- 1. Controllo Pendenza (Dirupi)
+        -- Prendiamo la "normale" del terreno. 1.0 = perfettamente piatto.
+        local nx, ny, nz = Spring.GetGroundNormal(tx, tz)
+        
+        -- Se ny < 0.92 il terreno è troppo inclinato per una fabbrica
+        if ny > 0.92 then 
+            
+            -- 2. Controllo Metallo (Raggio generoso 200 per lasciare spazio di manovra)
+            local tooCloseToMetal = false
+            for _, spot in ipairs(metalSpots) do
+                if (math.abs(tx - spot.x) < 200 and math.abs(tz - spot.z) < 200) then 
+                    tooCloseToMetal = true; break 
+                end
+            end
+
+            if not tooCloseToMetal then
+                -- 3. Controllo Spazio per Unità (Testiamo 4 punti cardinali attorno alla fabbrica)
+                -- Serve a capire se le unità prodotte possono uscire o se sono circondate da montagne
+                local testDist = 120 
+                local points = {
+                    {tx + testDist, tz}, {tx - testDist, tz},
+                    {tx, tz + testDist}, {tx, tz - testDist}
+                }
+                
+                local exitClear = true
+                for _, p in ipairs(points) do
+                    -- Testiamo se un'unità generica (es. un tank) può stare in quei punti
+                    if Spring.TestBuildOrder(UnitDefNames["icuck"].id, p[1], Spring.GetGroundHeight(p[1], p[2]), p[2], 0) <= 0 then
+                        exitClear = false; break
+                    end
+                end
+
+                if exitClear then
+                    -- 4. Controllo finale: L'edificio ci sta fisicamente?
+                    if Spring.TestBuildOrder(uDefID, tx, ty, tz, 0) == 2 then
+                        return tx, ty, tz
+                    end
+                end
+            end
+        end
+    end
+    return nil 
+end
 -- Questa funzione controlla se un'unità "x" può effettivamente costruire un'altra unità "y". Ad esempio verifica se "icucom" può costruire "icuadvsol", cosi che il core vada a chiamare il successivo builder per eseguire di nuovo questa verifica. Restituisce true se può costruire l'unità codi da ingaggiarla, oppure false cosi il core interroga il builder successivo
 local function CanBuilderBuildThis(builderID, unitDefID)
     local ud = UnitDefs[Spring.GetUnitDefID(builderID)]
@@ -276,7 +327,7 @@ local function CanBuilderBuildThis(builderID, unitDefID)
     return false
 end
 
--- Questa è la parte "attiva" che controlla se i costruttori sono bloccati.
+-- Questa funzione controlla se i costruttori sono bloccati.
 local function CheckStuckBuilders(teamID, frame)
     local units = Spring.GetTeamUnits(teamID)
     for _, uID in ipairs(units) do
@@ -730,11 +781,12 @@ function gadget:GameFrame(n)
 											-- Chiama la funzione corretta passandogli l'ID del costruttore per trovare lo spot più vicino
                                         bx, by, bz = GetClosestMetalSpot(bx_curr, bz_curr, bID, faction, teamID)
 											if bx == nil then -- se non trova alcun giacimento di metallo...
-											Spring.Echo("WMRTS_contrMngm_AI: Nessun metallo raggiungibile per " .. UnitDefs[Spring.GetUnitDefID(bID)].name) -- ...indicalo nel log
+											Spring.Echo("WMRTS_contrMngm_AI: Nessun metallo raggiungibile per " .. UnitDefs[Spring.GetUnitDefID(bID)].name) 	-- ...indicalo nel log
 											end		
-                                    else
-										-- Usa la funzione sicura per centrali e fabbriche                                    
-										bx, by, bz = GetSafeBuildPos(uDef.id, teamBasePos[teamID], metalSpots)
+									elseif req.cat == "CAT_FACTORY_T1" or req.cat == "CAT_FACTORY_T2" then														-- se l'AI deve costruire una fabbrica...
+											bx, by, bz = GetSafeBuildPosFactory(uDef.id, teamBasePos[teamID], metalSpots)                                		-- Chiama la funzione specifica per le fabbriche
+									else			-- altrimenti per tutto il resto...
+										bx, by, bz = GetSafeBuildPos(uDef.id, teamBasePos[teamID], metalSpots) 													-- ...Usa la funzione sicura per centrali e fabbriche       
                                     end
 									
                                     if bx then

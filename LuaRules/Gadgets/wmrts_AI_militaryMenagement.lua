@@ -49,7 +49,7 @@ local UNIT_DB = VFS.Include(dbPath)
 
 -- Debug in caso di mancanza del database
 if not UNIT_DB then
-    Spring.Echo("WARNING: WM AI units database not found in: " .. dbPath)
+    Spring.Echo("WMRTS_militMngm_AI: WARNING -> WM AI units database not found in: " .. dbPath)
     UNIT_DB = {}
 end
 
@@ -76,16 +76,18 @@ local SQUAD_TEMPLATES = {
 -------------------------------------------------------------------------------
 
 ---------------
--- ICU gruppi creati per il lvl 0 -------- 
+-- ICU gruppi creati per il lvl 0÷4 -------- 
 ---------------
+-- armlab
 	["ICU_armlab_light_patrol_1"] = {
 		units = { "icupatroller", "icupatroller", "icurock", "icurock" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["ICU_armlab_light_patrol_2"] = {
-		units = { "icuwar", "icuwar", "icurock", "icurock" },				
+		units = { "icuwar", "icupatroller", "icurock", "icurock" },				
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
+-- armvp	
 	["ICU_armvp_light_patrol_1"] = {
 		units = { "armfav", "icuflash", "icuflash", "icuflash" }, 
 		type = "ground"
@@ -94,6 +96,7 @@ local SQUAD_TEMPLATES = {
 		units = { "armsam", "armsam", "armstump", "armpincer", "armpincer","tawf013" }, 
 		type = "ground"
 	},	
+-- armap	
 	["ICU_armap_air_raid_1"] = { 			
 		units = { "armkam", "armfig", "armfig", "armkam", "armkam" },
 		type = "air_toground"
@@ -110,9 +113,35 @@ local SQUAD_TEMPLATES = {
 --		units = { "corbats", "corbats", "corbats" },
 --		type = "naval"
 --	}
-
+-- armalab
+	["ICU_armalab_light_patrol_1"] = {
+		units = { "armfast", "armfast", "armfast" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},
+	["ICU_armalab_light_patrol_2"] = {
+		units = { "armfast", "armfast", "armzeus" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+-- armavp
+	["ICU_armavp_light_patrol_1"] = {
+		units = { "armmart", "armmart", "armlatnk" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},
+	["ICU_armavp_light_patrol_2"] = {
+		units = { "armlatnk", "armlatnk"}, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+-- armaap
+	["ICU_armaap_light_patrol_1"] = {
+		units = { "armhawk", "armhawk", "armhawk" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},
+	["ICU_armaap_light_patrol_2"] = {
+		units = { "armhawk", "armhawk"}, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},		
 ---------------
--- AND lvl 0 -------- 
+-- AND gruppi creati per il lvl 0÷4 -------- 
 ---------------
 	["AND_andlab_light_patrol_1"] = {
 		units = { "andscouter", "andscouter", "andscouter", "andscouter" },
@@ -171,27 +200,96 @@ local SQUAD_TEMPLATES = {
 		type = "air_bomber_strategic"
 	},				
 
-
-
 -------------------------------------------------------------------------------
--- Elenco di produzioni per l'AI al livello 1 - le fabbriche avranno gruppi più numerosi e composti da unità più forti 
+-- Elenco di produzioni per l'AI al livello 5+ - le fabbriche avranno gruppi più numerosi e composti da unità più forti 
 -------------------------------------------------------------------------------
 	
 ---------------
--- ICU lvl 1 -------- Set di gruppi per l'AI al livello 1
+-- ICU gruppi creati per il lvl 5+ -------- 
 ---------------
+-- armlab
 	["ICU_armlab_medium_patrol_1"] = {
-		units = { "icuwar", "icuwar", "icuwar", "icuwar" , "icuwar" , "icuwar" , "icuwar" },
+		units = { "icuwar", "icuwar", "icuwar", "icurock", "icurock" , "icurock", "icuinv"  }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["ICU_armlab_medium_patrol_2"] = {
-		units = { "icuwar", "icuwar", "icuwar", "icuwar" , "icurock" , "icuwar" , "icuwar", "armjeth"},
-		type = "ground" 
+		units = { "icuwar", "icuwar", "icurock", "icurock", "icurock", "icurock", "armjeth", "icuinv", "icuinv" },				
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+-- armvp	
+	["ICU_armvp_medium_patrol_1"] = {
+		units = { "armsam", "armsam", "armsam", "tawf013", "armsam", "armstump", "armpincer", "armsam" }, 
+		type = "ground"
 	},
-		
-	
-	
-}
+	["ICU_armvp_medium_patrol_2"] = {
+		units = { "armsam", "armsam", "armsam", "tawf013", "armstump", "tawf013", "armstump", "armpincer", "armpincer", "armpincer" }, 
+		type = "ground"
+	},	
+-- armap	
+	["ICU_armap_air_mediumraid_1"] = { 			
+		units = { "armkam", "armfig", "armfig", "armkam", "armkam", "armkam", "armkam", "armkam", "armkam", "armkam" },
+		type = "air_toground"
+	},
+	["ICU_armap_antiair_mediumraid_1"] = { 
+		units = { "armfig", "armfig", "armfig", "armfig", "armfig", "armfig", "armfig", "armfig", "armfig", "armfig" },
+		type = "air_toair"
+	},
+	["ICU_armap_air_mediumbomber_1"] = { 
+		units = { "armthund", "armthund", "armthund", "armthund", "armthund", "armthund", "armthund", "armthund", "armthund", "armthund" }, 	-- gruppo da 10 bombardieri
+		type = "air_bomber"
+	},	
+	["ICU_armap_air_mediumstrategicbomber_1"] = { 
+		units = { "armthund", "armthund", "armthund", "armthund", "armthund", "armthund", "armthund", "armthund", "armthund", "armthund", "armthund", "armthund" }, 	-- gruppo da 12 bombardieri
+		type = "air_bomber_strategic"
+	},				
+--	["naval_fleet"] = {
+--		units = { "corbats", "corbats", "corbats" },
+--		type = "naval"
+--	}
+-- armalab
+	["ICU_armalab_medium_patrol_1"] = {
+		units = { "icufboy", "icufboy", "icufboy", "armaak", "icufboy", "icufboy", "armfido" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},
+	["ICU_armalab_medium_patrol_2"] = {
+		units = { "armsptk", "armsptk", "armsptk", "armsptk", "armsptk", "armaak", "armsptk", "armsptk" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+-- armavp
+	["ICU_armavp_medium_patrol_1"] = {
+		units = { "armmart", "armmart", "armyork", "armmart", "armmart", "armmart", "armmart", "armmart", "armmart", "icubull", "icubull" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},
+	["ICU_armavp_medium_patrol_2"] = {
+		units = { "armlatnk", "armlatnk", "icubull", "icubull", "armmart", "armyork"}, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+	["ICU_armavp_medium_patrol_3"] = {
+		units = { "armlatnk", "armlatnk", "icubull", "icubull", "armmart", "armyork", "armmanni", "armcroc", "armcroc"}, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},		
+-- armaap
+	["ICU_armaap_medium_patrol_1"] = {
+		units = { "armhawk", "armhawk", "armhawk", "armhawk", "armhawk", "armhawk", "armhawk", "armhawk", "armhawk" }, 
+		type = "air_toair" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},
+	["ICU_armaap_medium_patrol_2"] = {
+		units = { "blade", "blade", "armbrawl", "armbrawl", "blade", "blade", "armbrawl", "armbrawl", "armbrawl", "armbrawl"}, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},		
+	["ICU_armaap_air_bomber_1"] = { 
+		units = { "armbrawl", "armbrawl", "armbrawl", "armbrawl", "armpnix", "armpnix", "armbrawl", "armbrawl", "armbrawl" }, 	
+		type = "air_bomber"
+	},		
+	["ICU_armaap_air_bomber_2"] = { 
+		units = { "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix" }, 	
+		type = "air_bomber_strategic"
+	},		
+---------------
+-- AND gruppi creati per il lvl 5+ -------- 
+---------------
+-- ################################## da completare	
+} -- end tabella squadre
 
 --------------------------------------------------------------------------------
 -- 2b) CONFIGURAZIONE FABBRICHE E BUILDLIST
@@ -211,9 +309,12 @@ local function GetConfigPerLivello(livello) -- Questa funzione restituisce, per 
         return {
             -- ICU --
             ["armlab"] = { "ICU_armlab_light_patrol_1", "ICU_armlab_light_patrol_2" },
-            ["armap"]  = { "ICU_armap_antiair_raid_1", "ICU_armap_air_raid_1","ICU_armap_air_bomber_1" },
             ["armvp"] = { "ICU_armvp_light_patrol_1", "ICU_armvp_light_patrol_2" },
-            -- AND --
+            ["armap"]  = { "ICU_armap_antiair_raid_1", "ICU_armap_air_raid_1","ICU_armap_air_bomber_1" },			
+            ["armalab"] = { "ICU_armalab_light_patrol_1", "ICU_armalab_light_patrol_2" },							-- inseriti in caso di recessione della AI dal livello 4+ a 0
+            ["armavp"] = { "ICU_armavp_light_patrol_1", "ICU_armavp_light_patrol_2" },			
+            ["armaap"]  = { "ICU_armaap_light_patrol_1", "ICU_armaap_light_patrol_2"},			
+            -- AND -- ################### CONCLUDERE
             ["andlab"] = { "AND_andlab_light_patrol_1", "AND_andlab_light_patrol_2" },
             ["andalab"] = { "AND_andalab_light_patrol_1", "AND_andalab_light_patrol_2" }, 
             ["andhp"] = { "AND_andhp_light_patrol_1", "AND_andhp_light_patrol_2" },
@@ -221,12 +322,16 @@ local function GetConfigPerLivello(livello) -- Questa funzione restituisce, per 
             ["andplat"]  = { "AND_andplatplat_air_raid_1", "AND_andplat_antiair_raid_1","AND_andplat_air_bomber_1" },
             ["andaplat"]  = { "AND_andaplatplat_air_raid_1", "AND_andaplat_air_bomber_1","AND_andaplat_air_bomber_2" },
         }
-    elseif livello == 5 then
+    elseif livello >= 5 then
         return {
-			-- #################### concludere lvl 1
+            -- ICU --
             ["armlab"] = { "ICU_armlab_medium_patrol_1", "ICU_armlab_medium_patrol_2" },
-            ["armap"]  = { "ICU_armap_antiair_raid_1", "ICU_armap_air_raid_1","ICU_armap_air_bomber_1" },
-            ["armvp"] = { "ICU_armvp_light_patrol_1", "ICU_armvp_light_patrol_2" },
+            ["armvp"] = { "ICU_armvp_medium_patrol_1", "ICU_armvp_medium_patrol_2" },
+            ["armap"]  = { "ICU_armap_air_mediumraid_1", "ICU_armap_antiair_mediumraid_1","ICU_armap_air_mediumbomber_1","ICU_armap_air_mediumstrategicbomber_1" },
+            ["armlab"] = { "ICU_armalab_medium_patrol_1", "ICU_armalab_medium_patrol_2" },			
+            ["armavp"] = { "ICU_armavp_medium_patrol_1", "ICU_armavp_medium_patrol_2", "ICU_armavp_medium_patrol_3" },
+            ["armaap"]  = { "ICU_armaap_medium_patrol_1", "ICU_armaap_medium_patrol_2","ICU_armaap_air_bomber_1","ICU_armaap_air_bomber_2" },			
+            -- AND -- ################### CONCLUDERE
             ["andlab"] = { "AND_andlab_light_patrol_1", "AND_andlab_light_patrol_2" },
             ["andhp"] = { "AND_andhp_light_patrol_1", "AND_andhp_light_patrol_2" },
             ["andplat"]  = { "AND_andplatplat_air_raid_1", "AND_andplat_antiair_raid_1","AND_andplat_air_bomber_1" },
@@ -381,7 +486,7 @@ function gadget:UnitFinished(unitID, unitDefID, unitTeam)
     if not aiTeamIDs[unitTeam] then return end 				-- se il team non è AI non fare niente, esci
 	    -- CONTROLLO IGNORE: Se l'unità deve essere ignorata, definita nel database (ignore = true) esci subito e non gestire l'unità
     if IsUnitIgnored(unitID) then							-- utilizza la funzione IsUnitIgnored per capire se l'unità in questione è impostata con " ignore = true" nel file "WMRTS_AI_mission_db.lua", e restituisci true o false. se true non fare niente
-         Spring.Echo("AI Mission: Unità ignorata per design: " .. unitID)
+         Spring.Echo("WMRTS_militMngm_AI: Unità ignorata per design: " .. unitID)
         return 
     end
 		-- Altrimenti (se ignore = false o non impostate) associa l'unità ad una squadra
@@ -454,7 +559,7 @@ function gadget:GameFrame(n)
         if teamLevels[teamID] ~= nuovoLivello then 								-- Se il livello del team è cambiato (o non è ancora inizializzato)
             teamLevels[teamID] = nuovoLivello
             teamConfigs[teamID] = GetConfigPerLivello(nuovoLivello)
-            Spring.Echo("WMRTS Military AI: Team " .. teamID .. " si è allineato al livello " .. nuovoLivello)
+            Spring.Echo("WMRTS_militMngm_AI:: Team " .. teamID .. " si è allineato al livello " .. nuovoLivello)
             
             -- non è piu necessario rendere la variabile globale per passarla ad altri gadget della AI in quanto ora la ricevo
 --            if not GG.WMRTS_Levels then GG.WMRTS_Levels = {} end
