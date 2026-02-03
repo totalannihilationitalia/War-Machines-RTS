@@ -322,13 +322,13 @@ local function GetConfigPerLivello(livello) -- Questa funzione restituisce, per 
             ["andplat"]  = { "AND_andplatplat_air_raid_1", "AND_andplat_antiair_raid_1","AND_andplat_air_bomber_1" },
             ["andaplat"]  = { "AND_andaplatplat_air_raid_1", "AND_andaplat_air_bomber_1","AND_andaplat_air_bomber_2" },
         }
-    elseif livello >= 5 then
+    elseif livello > 4 then
         return {
             -- ICU --
             ["armlab"] = { "ICU_armlab_medium_patrol_1", "ICU_armlab_medium_patrol_2" },
             ["armvp"] = { "ICU_armvp_medium_patrol_1", "ICU_armvp_medium_patrol_2" },
             ["armap"]  = { "ICU_armap_air_mediumraid_1", "ICU_armap_antiair_mediumraid_1","ICU_armap_air_mediumbomber_1","ICU_armap_air_mediumstrategicbomber_1" },
-            ["armlab"] = { "ICU_armalab_medium_patrol_1", "ICU_armalab_medium_patrol_2" },			
+            ["armalab"] = { "ICU_armalab_medium_patrol_1", "ICU_armalab_medium_patrol_2" },			
             ["armavp"] = { "ICU_armavp_medium_patrol_1", "ICU_armavp_medium_patrol_2", "ICU_armavp_medium_patrol_3" },
             ["armaap"]  = { "ICU_armaap_medium_patrol_1", "ICU_armaap_medium_patrol_2","ICU_armaap_air_bomber_1","ICU_armaap_air_bomber_2" },			
             -- AND -- ################### CONCLUDERE
