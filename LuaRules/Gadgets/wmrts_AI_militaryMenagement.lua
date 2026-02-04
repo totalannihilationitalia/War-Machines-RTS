@@ -209,7 +209,7 @@ local SQUAD_TEMPLATES = {
 ---------------
 -- armlab
 	["ICU_armlab_medium_patrol_1"] = {
-		units = { "icuwar", "icuwar", "icuwar", "icurock", "icurock" , "icurock", "icuinv"  }, 
+		units = { "icuwar", "icuwar", "icuwar", "icurock", "icurock" , "icurock", "icuinv", "armjeth"  }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["ICU_armlab_medium_patrol_2"] = {
