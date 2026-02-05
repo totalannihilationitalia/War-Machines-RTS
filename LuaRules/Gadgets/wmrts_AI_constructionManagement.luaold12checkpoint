@@ -17,13 +17,15 @@
 	--				viene quindi implementato il timeout: se una unità appartenente al gruppo "LIMITED_CONSTRUCTORS" (solitamente costruttori di terra) rimane ferma per x tempo e non sta costruendo niente (come un comandante bloccato sulla sponda nel tentativo di raggiungere l'altra),
 	--				a quel team ID viene messo nella blacklist lo spot di metallo irraggiungibile per le unità di terra. In questo modo l'unità riceve il comando STOP e rimane IDLE, cosi il sistema la impiega per altri lavori (o la ricerca di un nuovo spot di metallo)
 	-- 02/02/2026 = inserita la funzione antistallo costruttivo: il builder x può costruire l'unità y?  se no -> interroga il builder successivo, se si -> impiegalo per costruirla. Se tutti i builder successivi non hanno la possibilità di costruirla, allora andrà in stallo. Ma basta tenere, per ogni livello, i builder T1 e T2 tra i requisiti.
+	-- 03/02/2026 = inserito il controllo del comandante per livello, ora può essere impiegato per eseguire patrol (come aiutante) o costruttore
 
 	-- TO DO
 	-- implementare naval e sub
 	-- creare la categorizzazione land/air/sea per gli estrattori di metallo (logicamente land e air avranno lo stesso icumetex mentre sea avrà ad esempio undewatermetex). Vedere se fare lo stesso per le floating torrette T1 e T2 ed eventualmente le centrali energia.
 	-- creare funzione upgrade estrattori da T1 a T2
 	-- creare funzione comando ai costruttori (comandante, costruttori non comandante): Patrol/costruisci. La prima gira attorno alla base aiutando le costruizoni, la seconda per impegnare i costruttori a costruire
-	-- ridurre il timeout nel caso i costruttori rimangano fermi per costruire giacimenti di metallo
+	-- ridurre il timeout nel caso i costruttori rimangano fermi per costruire giacimenti di metallo. ## -> 02/02/2025 fatto per ora lo teniamo cosi molix
+	-- verificare se aumentare il raggio di costruzione della base con il passare dei livelli
 
 	if (not gadgetHandler:IsSyncedCode()) then return end
 
@@ -41,7 +43,7 @@
 		-- ICU
 		["icucom"] = true, ["icuck"] = true, ["armcv"] = true, ["armcs"] = true, ["kicucom"] = true,
 		-- AND
-		["andcom"] = true, ["andcon"] = true, ["andcv"] = true, ["andcs"] = true, -- ######################### sistemare la tabella AND
+		["andcom"] = true, ["andcon"] = true, ["andcv"] = true, ["andcs"] = true, -- ######################### sistemare la tabella AND #######################
 	}
 
 	-- tabella dei comandanti, serve alla logica per capire quali sono i comandanti e controllarne il comportamento in funzione della variabile "combehaviour" in "local AI_BUILD_LEVELS"
@@ -94,10 +96,10 @@
 			},		
 
 			["CAT_CONSTRUCTORS_T1"]		= { "icuck", "armcv", "armca", "armcs" }, 				-- solo costruttori T1
-			["CAT_CONSTRUCTORS_T2"] 	= { "icuack", "armacv", "armaca", "armacs" }, 			-- solo costruttori T2	
+			["CAT_CONSTRUCTORS_T2"] 	= { "armack", "armacv", "armaca", "armacs" }, 			-- solo costruttori T2	
 		},
 	----------------------------
-	-- AND
+	-- AND ########################################################################################### configurare
 	----------------------------
 		["AND"] = {
 			["CAT_MEX_T1"]      	= { "andmex" },
@@ -124,6 +126,7 @@
 		[0] = { 												-- livello di partenza. può diventare anche livello di RESET LIVELLO AI quando subisce pesanti attacchi (vedere sotto logica di RESET LIVELLO). E' importante che vi siano, in questo livello, le costruzioni che, in loro assenza/mancato numero (definito dalla logica di "RESET LIVELLO") resettino l'AI, altrimenti si entra in un LOOP infinito di salto livello (0 -> 1 e torna subito a 0)
 			simultanea = 1,
 			combehaviour = "constructor",
+			T1toT2metalUpdate = false,
 			requisiti = {
 				{cat = "CAT_ALL_CONSTRUCTORS", 	count = 1}, 	-- al livello 0 ne deve avere almeno 1 in totale. In fase di start skirmish è il comandante. In caso di restart AI, può essere qualunque costruttore, se presente. Ecco il motivo per cui metto la categoria "CAT_ALL_CONSTRUCTORS"
 				{cat = "CAT_ENERGY_T1",         count = 1},		-- importanti per la logica RESET LIVELLO !! estrattori T1, energia T1 e fabbrica T1 devono essere inclusi in questo livello per andare al successivo, altrimenti la logica del core entra in loop
@@ -136,117 +139,112 @@
 		},		-- end livello  [n]
 		[1] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 2,
-			combehaviour = "constructor",		
+			combehaviour = "patrolbase",		
 			requisiti = {
-				{cat = "CAT_CONSTRUCTORS_T1", 	count = 1},
+				{cat = "CAT_CONSTRUCTORS_T1", 	count = 2},
 				{cat = "CAT_LASER_T1", 			count = 1},		
-				{cat = "CAT_AA_T1", 			count = 1},					
-				{cat = "CAT_MEX_T1",            count = 4},
-				{cat = "CAT_ENERGY_T1",         count = 5},		
+				{cat = "CAT_AA_T1", 			count = 1},		
+				{cat = "CAT_ENERGY_T1",         count = 6},						
+				{cat = "CAT_MEX_T1",            count = 6},
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]
 		[2] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
-			simultanea = 2,
-			combehaviour = "constructor",		
+			simultanea = 3,
+			combehaviour = "patrolbase",		
 			requisiti = {		
-				{cat = "CAT_CONSTRUCTORS_T1", 	count = 1},		
-				{cat = "CAT_ENERGY_T1",         count = 5},			
+				{cat = "CAT_CONSTRUCTORS_T1", 	count = 3},		
 				{cat = "CAT_ENERGY_T1_2",       count = 1},
 				{cat = "CAT_FACTORY_T1", 		count = 2},
-	--            {cat = "CAT_MEX_T1",            count = 4},
-				{cat = "CAT_LASER_T1", 			count = 1},		
-				{cat = "CAT_AA_T1", 			count = 1},			
+	            {cat = "CAT_MEX_T1",            count = 6},
+				{cat = "CAT_LASER_T1", 			count = 2},		
+				{cat = "CAT_AA_T1", 			count = 2},			
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]	
 		[3] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
-			simultanea = 2,
+			simultanea = 3,
 			combehaviour = "patrolbase",		
 			requisiti = {
-				{cat = "CAT_ENERGY_T1",         count = 5},		
-				{cat = "CAT_MEX_T1",            count = 4},		
-				{cat = "CAT_FACTORY_T1", 		count = 2},			
-				{cat = "CAT_CONSTRUCTORS_T1", 	count = 2},
-				{cat = "CAT_ENERGY_T1_2",       count = 2},
+				{cat = "CAT_CONSTRUCTORS_T1", 	count = 3},
+				{cat = "CAT_MEX_T1",            count = 9},		
+				{cat = "CAT_FACTORY_T1", 		count = 3},			
+				{cat = "CAT_ENERGY_T1_2",       count = 1},
 				{cat = "CAT_AA_T1_2", 			count = 1},					
 				{cat = "CAT_LASER_T1_2", 		count = 1},				
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]	
 		[4] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
-			simultanea = 2,
+			simultanea = 3,
 			combehaviour = "patrolbase",			
 			requisiti = {
-				{cat = "CAT_ENERGY_T1",         count = 5},		
-				{cat = "CAT_MEX_T1",            count = 5},		
-				{cat = "CAT_FACTORY_T1", 		count = 2},			
-				{cat = "CAT_CONSTRUCTORS_T1", 	count = 2},
-				{cat = "CAT_ENERGY_T1_2",       count = 4},
-				{cat = "CAT_FACTORY_T2", 		count = 1},		
+				{cat = "CAT_MEX_T1",            count = 9},		
+				{cat = "CAT_FACTORY_T1", 		count = 4},			
+				{cat = "CAT_CONSTRUCTORS_T1", 	count = 3},
+				{cat = "CAT_ENERGY_T1_2",       count = 2},
+				{cat = "CAT_FACTORY_T2", 		count = 1},		--  ###testare qui
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]		
 		[5] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
-			simultanea = 4,
+			simultanea = 5,
 			combehaviour = "patrolbase",			
 			requisiti = {
 				{cat = "CAT_FACTORY_T2", 		count = 1},		
-				{cat = "CAT_FACTORY_T1", 		count = 1},	
-				{cat = "CAT_CONSTRUCTORS_T1", 	count = 2},
+				{cat = "CAT_FACTORY_T1", 		count = 5},	
+				{cat = "CAT_CONSTRUCTORS_T1", 	count = 3},
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 2},			
-				{cat = "CAT_ENERGY_T1_2",       count = 4},
+				{cat = "CAT_ENERGY_T1_2",       count = 2},
 				{cat = "CAT_MEX_T1",            count = 5},		
-				{cat = "CAT_AA_T1_2", 			count = 2},					
-				{cat = "CAT_LASER_T1_2", 		count = 2},							
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]		
 		[6] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
-			simultanea = 4,
+			simultanea = 5,
 			combehaviour = "patrolbase",			
 			requisiti = {
-				{cat = "CAT_FACTORY_T2", 		count = 2},		
-				{cat = "CAT_FACTORY_T1", 		count = 1},	
-				{cat = "CAT_CONSTRUCTORS_T1", 	count = 2},
+				{cat = "CAT_FACTORY_T2", 		count = 1},		
+				{cat = "CAT_FACTORY_T1", 		count = 4},	
+				{cat = "CAT_CONSTRUCTORS_T1", 	count = 3},
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 2},			
-				{cat = "CAT_ENERGY_T1_2",       count = 4},
+				{cat = "CAT_ENERGY_T1_2",       count = 3},
 				{cat = "CAT_MEX_T2",            count = 1},					
 				{cat = "CAT_MEX_T1",            count = 3},		
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]			
 		[7] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
-			simultanea = 4,
+			simultanea = 5,
 			combehaviour = "patrolbase",			
 			requisiti = {
 				{cat = "CAT_FACTORY_T2", 		count = 2},		
-				{cat = "CAT_FACTORY_T1", 		count = 1},	
-				{cat = "CAT_CONSTRUCTORS_T1", 	count = 2},
+				{cat = "CAT_FACTORY_T1", 		count = 6},	
+				{cat = "CAT_CONSTRUCTORS_T1", 	count = 3},
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 2},			
-				{cat = "CAT_ENERGY_T1_2",       count = 4},
+				{cat = "CAT_ENERGY_T1_2",       count = 3},
 				{cat = "CAT_MEX_T2",            count = 2},					
 				{cat = "CAT_MEX_T1",            count = 2},		
-				{cat = "CAT_ENERGY_T2",         count = 1},		
+				{cat = "CAT_ENERGY_T1_2",       count = 3},	
 				{cat = "CAT_AA_T2", 			count = 1},					
-				{cat = "CAT_LASER_T2", 			count = 1},							
+--				{cat = "CAT_LASER_T2", 			count = 1},							
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]			
 		[8] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
-			simultanea = 4,
+			simultanea = 5,
 			combehaviour = "patrolbase",			
 			requisiti = {
-				{cat = "CAT_FACTORY_T2", 		count = 3},		
-				{cat = "CAT_FACTORY_T1", 		count = 1},	
-				{cat = "CAT_CONSTRUCTORS_T1", 	count = 2},
+				{cat = "CAT_FACTORY_T2", 		count = 2},		
+				{cat = "CAT_FACTORY_T1", 		count = 2},	
+				{cat = "CAT_CONSTRUCTORS_T1", 	count = 3},
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 2},			
-				{cat = "CAT_MEX_T2",            count = 3},					
-				{cat = "CAT_ENERGY_T2",         count = 2},				
+				{cat = "CAT_MEX_T2",            count = 2},					
+				{cat = "CAT_ENERGY_T2",         count = 1},				
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]			
 		[9] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 4,
 			combehaviour = "patrolbase",			
 			requisiti = {
-				{cat = "CAT_FACTORY_T2", 		count = 3},		
+				{cat = "CAT_FACTORY_T2", 		count = 2},		
 				{cat = "CAT_FACTORY_T1", 		count = 1},	
-				{cat = "CAT_CONSTRUCTORS_T1", 	count = 2},
+				{cat = "CAT_CONSTRUCTORS_T1", 	count = 3},
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 2},			
-				{cat = "CAT_MEX_T2",            count = 3},					
+				{cat = "CAT_MEX_T2",            count = 2},					
 				{cat = "CAT_ENERGY_T2",         count = 2},				
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]			
@@ -254,11 +252,11 @@
 			simultanea = 6,
 			combehaviour = "patrolbase",			
 			requisiti = {
-				{cat = "CAT_CONSTRUCTORS_T1", 	count = 2},
-				{cat = "CAT_CONSTRUCTORS_T2", 	count = 4},	
+				{cat = "CAT_CONSTRUCTORS_T1", 	count = 3},
+				{cat = "CAT_CONSTRUCTORS_T2", 	count = 3},	
 				{cat = "CAT_FACTORY_T2", 		count = 4},		
 				{cat = "CAT_FACTORY_T1", 		count = 3},	
-				{cat = "CAT_MEX_T2",            count = 4},					
+				{cat = "CAT_MEX_T2",            count = 3},					
 				{cat = "CAT_ENERGY_T2",         count = 2},		
 				{cat = "CAT_AA_T2", 			count = 3},					
 				{cat = "CAT_LASER_T2", 			count = 3},				
@@ -270,6 +268,7 @@
 	local MANUAL_MAP_DATA = {
 		["Zoty Outpost"] = { {x = 2241, z = 675}, {x = 492, z = 1206}, {x = 1918, z = 1285}, {x = 844, z = 1942}, {x = 1328, z = 2341}, {x = 661, z = 2387}, {x = 2108, z = 2422} },
 		["Eridlon Island"] = { {x = 10566, z = 1226}, {x = 10783, z = 1364}, {x = 5864, z = 1408}, {x = 10578, z = 1468}, {x = 5652, z = 1512}, {x = 5873, z = 1645}, {x = 9751, z = 1707}, {x = 7219, z = 1904}, {x = 6722, z = 2059}, {x = 7144, z = 2117}, {x = 6504, z = 2142}, {x = 3796, z = 2192}, {x = 4015, z = 2328}, {x = 10613, z = 2338}, {x = 3807, z = 2435}, {x = 10818, z = 2442}, {x = 10600, z = 2579}, {x = 6240, z = 2725}, {x = 6250, z = 2962}, {x = 5562, z = 3221}, {x = 5773, z = 3326}, {x = 5554, z = 3462}, {x = 9139, z = 3521}, {x = 9356, z = 3608}, {x = 11109, z = 3666}, {x = 8721, z = 3678}, {x = 9132, z = 3760}, {x = 8495, z = 3825}, {x = 11221, z = 3874}, {x = 8713, z = 3912}, {x = 10988, z = 3911}, {x = 4722, z = 3958}, {x = 3304, z = 3994}, {x = 4505, z = 4043}, {x = 3090, z = 4101}, {x = 8080, z = 4099}, {x = 4733, z = 4192}, {x = 3316, z = 4233}, {x = 7609, z = 4250}, {x = 7840, z = 4264}, {x = 8091, z = 4338}, {x = 4842, z = 4364}, {x = 11111, z = 4396}, {x = 11364, z = 4450}, {x = 5063, z = 4498}, {x = 4856, z = 4602}, {x = 11205, z = 4619}, {x = 10083, z = 4904}, {x = 7923, z = 4952}, {x = 9874, z = 5007}, {x = 7714, z = 5055}, {x = 7936, z = 5192}, {x = 3958, z = 6161}, {x = 3832, z = 6348}, {x = 4051, z = 6453}, {x = 9624, z = 6378}, {x = 4275, z = 6542}, {x = 9493, z = 6568}, {x = 9721, z = 6598}, {x = 4146, z = 6728}, {x = 6680, z = 7228}, {x = 6450, z = 7266}, {x = 10906, z = 7328}, {x = 6614, z = 7446}, {x = 11130, z = 7480}, {x = 10915, z = 7566}, {x = 5872, z = 7726}, {x = 6104, z = 7760}, {x = 9217, z = 8626}, {x = 9120, z = 8720}, {x = 9764, z = 8731}, {x = 9983, z = 8870}, {x = 9775, z = 8979}, {x = 3211, z = 9657}, {x = 3561, z = 9740}, {x = 3535, z = 9950}, {x = 4929, z = 10096}, {x = 5158, z = 10246}, {x = 4941, z = 10333}, {x = 8094, z = 10425}, {x = 9632, z = 10486}, {x = 8301, z = 10521}, {x = 2606, z = 10592}, {x = 9409, z = 10619}, {x = 9622, z = 10724} },
+		["Delta Siege dry duo"] = { {x = 7070, z = 116}, {x = 3095, z = 142}, {x = 7286, z = 201}, {x = 2878, z = 231}, {x = 7057, z = 351}, {x = 3105, z = 379}, {x = 598, z = 482}, {x = 9641, z = 482}, {x = 373, z = 632}, {x = 5044, z = 635}, {x = 9866, z = 632}, {x = 588, z = 718}, {x = 9651, z = 718}, {x = 5817, z = 1177}, {x = 3383, z = 1620}, {x = 8133, z = 1609}, {x = 4904, z = 1637}, {x = 7907, z = 1641}, {x = 6554, z = 1757}, {x = 5122, z = 1769}, {x = 8037, z = 1832}, {x = 4912, z = 1876}, {x = 2381, z = 1885}, {x = 2608, z = 1918}, {x = 2480, z = 2105}, {x = 458, z = 2307}, {x = 8518, z = 2297}, {x = 9878, z = 2406}, {x = 588, z = 2494}, {x = 362, z = 2529}, {x = 9752, z = 2592}, {x = 5177, z = 2628}, {x = 9977, z = 2628}, {x = 4601, z = 2681}, {x = 1676, z = 2691}, {x = 2811, z = 2843}, {x = 7428, z = 2843}, {x = 2592, z = 2980}, {x = 7647, z = 2980}, {x = 2799, z = 3085}, {x = 7440, z = 3085}, {x = 5664, z = 3656}, {x = 10035, z = 3896}, {x = 4576, z = 3928}, {x = 9812, z = 4032}, {x = 3888, z = 4133}, {x = 10024, z = 4138}, {x = 2697, z = 4153}, {x = 7542, z = 4153}, {x = 204, z = 4248}, {x = 2566, z = 4340}, {x = 7673, z = 4340}, {x = 429, z = 4382}, {x = 2793, z = 4374}, {x = 7446, z = 4374}, {x = 6073, z = 4406}, {x = 216, z = 4488}, {x = 8737, z = 4583}, {x = 1757, z = 4662}, {x = 8947, z = 4689}, {x = 1552, z = 4763}, {x = 4263, z = 4763}, {x = 6808, z = 4763}, {x = 8728, z = 4824}, {x = 1768, z = 4901}, {x = 1768, z = 5338}, {x = 8728, z = 5416}, {x = 1552, z = 5476}, {x = 3431, z = 5476}, {x = 5704, z = 5476}, {x = 8947, z = 5550}, {x = 1757, z = 5578}, {x = 8737, z = 5656}, {x = 216, z = 5752}, {x = 4166, z = 5833}, {x = 429, z = 5857}, {x = 2793, z = 5865}, {x = 7446, z = 5865}, {x = 2566, z = 5899}, {x = 7673, z = 5899}, {x = 204, z = 5992}, {x = 2697, z = 6086}, {x = 7542, z = 6086}, {x = 6352, z = 6106}, {x = 10024, z = 6101}, {x = 9812, z = 6207}, {x = 5664, z = 6312}, {x = 10035, z = 6344}, {x = 4576, z = 6584}, {x = 2799, z = 7154}, {x = 7440, z = 7154}, {x = 2592, z = 7259}, {x = 7647, z = 7259}, {x = 2811, z = 7396}, {x = 7428, z = 7396}, {x = 1676, z = 7548}, {x = 4601, z = 7558}, {x = 5177, z = 7611}, {x = 9977, z = 7611}, {x = 9752, z = 7648}, {x = 362, z = 7710}, {x = 588, z = 7745}, {x = 9878, z = 7833}, {x = 458, z = 7932}, {x = 8518, z = 7942}, {x = 2480, z = 8134}, {x = 2608, z = 8321}, {x = 2381, z = 8354}, {x = 4912, z = 8363}, {x = 8037, z = 8408}, {x = 5122, z = 8470}, {x = 6554, z = 8482}, {x = 7907, z = 8598}, {x = 4904, z = 8602}, {x = 3383, z = 8619}, {x = 8133, z = 8630}, {x = 5817, z = 9062}, {x = 588, z = 9521}, {x = 9651, z = 9521}, {x = 373, z = 9608}, {x = 5044, z = 9604}, {x = 9866, z = 9608}, {x = 598, z = 9757}, {x = 9641, z = 9757}, {x = 3105, z = 9860}, {x = 7057, z = 9888}, {x = 2878, z = 10008}, {x = 7286, z = 10038}, {x = 3095, z = 10097}, {x = 7070, z = 10123} },
 	}
 
 	--------------------------------------------------------------------------------
@@ -356,6 +355,7 @@
 		end
 		return nil 
 	end
+	
 	-- Questa funzione controlla se un'unità "x" può effettivamente costruire un'altra unità "y". Ad esempio verifica se "icucom" può costruire "icuadvsol", cosi che il core vada a chiamare il successivo builder per eseguire di nuovo questa verifica. Restituisce true se può costruire l'unità codi da ingaggiarla, oppure false cosi il core interroga il builder successivo
 	local function CanBuilderBuildThis(builderID, unitDefID)
 		local ud = UnitDefs[Spring.GetUnitDefID(builderID)]
@@ -742,18 +742,18 @@
 				local fallimentoMetallo   = (nMex < 2)       		-- Se scende sotto i 2 estrattori di metallo
 				local fallimentoEnergia   = (nEnergia < 2)   		-- Se scende sotto i 2 powerplant
 
-				if fallimentoFabbriche or fallimentoMetallo or fallimentoEnergia then
-					teamLevels[teamID] = 0
-					if commanderCurrentBehaviour[teamID] ~= "constructor" then
-						local comID = GetCommanderID(teamID, faction)	
-						if comID then Spring.GiveOrderToUnit(comID, CMD.STOP, {}, {}) end
-					end
-				commanderCurrentBehaviour[teamID] = "constructor" -- Forza il ritorno a costruttore
+				if fallimentoFabbriche or fallimentoMetallo or fallimentoEnergia then 	-- Se è presente una di queste condizioni...
+					teamLevels[teamID] = 0												-- ... livello AI torna a 0
+					if commanderCurrentBehaviour[teamID] ~= "constructor" then							-- ... il comandante viene forzato a diventare costruttore ######## verificare se serve perchè a lvl è impostato come costruttore per cui non dovrebbe servire questa logica
+						local comID = GetCommanderID(teamID, faction)									-- ... il comandante viene forzato a diventare costruttore ######## verificare se serve perchè a lvl è impostato come costruttore per cui non dovrebbe servire questa logica
+						if comID then Spring.GiveOrderToUnit(comID, CMD.STOP, {}, {}) end				-- ... il comandante viene forzato a diventare costruttore ######## verificare se serve perchè a lvl è impostato come costruttore per cui non dovrebbe servire questa logica
+					end																					-- ... il comandante viene forzato a diventare costruttore ######## verificare se serve perchè a lvl è impostato come costruttore per cui non dovrebbe servire questa logica
+				commanderCurrentBehaviour[teamID] = "constructor" -- Forza il ritorno a costruttore		-- ... il comandante viene forzato a diventare costruttore ######## verificare se serve perchè a lvl è impostato come costruttore per cui non dovrebbe servire questa logica
 					
 					if GG.WMRTS_Levels then GG.WMRTS_Levels[teamID] = 0 end
 					
 					local motivo = fallimentoFabbriche and "No Factories" or (fallimentoMetallo and "Low Metal" or "Low Energy")
-					Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Critical Failure (" .. motivo .. ")! Reverting to Level 0.")
+					Spring.Echo(string.char(255, 255, 0, 0) .."WMRTS_contrMngm_AI: Team " .. teamID .. " Critical Failure (" .. motivo .. ")! Reverting to Level 0.")
 					
 					currentLvl = 0 
 				end
@@ -802,7 +802,7 @@
 				teamLevels[teamID] = currentLvl + 1
 				if not GG.WMRTS_Levels then GG.WMRTS_Levels = {} end
 				GG.WMRTS_Levels[teamID] = teamLevels[teamID]
-				Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Level Up -> " .. teamLevels[teamID])
+				Spring.Echo(string.char(255, 0, 255, 0) .."WMRTS_contrMngm_AI: Team " .. teamID .. " Level Up -> " .. teamLevels[teamID])
 				return
 			end
 

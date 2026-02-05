@@ -18,6 +18,7 @@
 	--				a quel team ID viene messo nella blacklist lo spot di metallo irraggiungibile per le unità di terra. In questo modo l'unità riceve il comando STOP e rimane IDLE, cosi il sistema la impiega per altri lavori (o la ricerca di un nuovo spot di metallo)
 	-- 02/02/2026 = inserita la funzione antistallo costruttivo: il builder x può costruire l'unità y?  se no -> interroga il builder successivo, se si -> impiegalo per costruirla. Se tutti i builder successivi non hanno la possibilità di costruirla, allora andrà in stallo. Ma basta tenere, per ogni livello, i builder T1 e T2 tra i requisiti.
 	-- 03/02/2026 = inserito il controllo del comandante per livello, ora può essere impiegato per eseguire patrol (come aiutante) o costruttore
+	-- 05/02/2026 = V13 inserita funzione upgrade di metallo T1 to T2 o T3 (in futuro).
 
 	-- TO DO
 	-- implementare naval e sub
@@ -123,9 +124,13 @@
 	-- "combehaviour=" è il comportamento del comandante in quello specifico livello. può essere
 	--			= constructor, 		ossia si comporta come un costruttore che costruisce delle building, importante ad esempio nei primi livelli
 	--			= patrolbase,		ossia esegue un patrol intorno al centro della base, cosi da aiutare le costruzioni.
+	-- "T2metalBuildType" gestisce come vengono costruiti gli estrattori T2:
+	--			= new,				default - l'estrattore T2 viene costruito su uno spot di metallo libero
+	--			= upgrade,			l'AI preferirà potenziare i mex esistenti a partire da quelli più vicino alla base
 		[0] = { 												-- livello di partenza. può diventare anche livello di RESET LIVELLO AI quando subisce pesanti attacchi (vedere sotto logica di RESET LIVELLO). E' importante che vi siano, in questo livello, le costruzioni che, in loro assenza/mancato numero (definito dalla logica di "RESET LIVELLO") resettino l'AI, altrimenti si entra in un LOOP infinito di salto livello (0 -> 1 e torna subito a 0)
 			simultanea = 1,
 			combehaviour = "constructor",
+			T2metalBuildType = "new",
 			requisiti = {
 				{cat = "CAT_ALL_CONSTRUCTORS", 	count = 1}, 	-- al livello 0 ne deve avere almeno 1 in totale. In fase di start skirmish è il comandante. In caso di restart AI, può essere qualunque costruttore, se presente. Ecco il motivo per cui metto la categoria "CAT_ALL_CONSTRUCTORS"
 				{cat = "CAT_ENERGY_T1",         count = 1},		-- importanti per la logica RESET LIVELLO !! estrattori T1, energia T1 e fabbrica T1 devono essere inclusi in questo livello per andare al successivo, altrimenti la logica del core entra in loop
@@ -138,7 +143,8 @@
 		},		-- end livello  [n]
 		[1] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 2,
-			combehaviour = "patrolbase",		
+			combehaviour = "patrolbase",	
+			T2metalBuildType = "new",			
 			requisiti = {
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 2},
 				{cat = "CAT_LASER_T1", 			count = 1},		
@@ -149,7 +155,8 @@
 		},		-- end livello  [n]
 		[2] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 3,
-			combehaviour = "patrolbase",		
+			combehaviour = "patrolbase",	
+			T2metalBuildType = "new",			
 			requisiti = {		
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 3},		
 				{cat = "CAT_ENERGY_T1_2",       count = 1},
@@ -161,7 +168,8 @@
 		},		-- end livello  [n]	
 		[3] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 3,
-			combehaviour = "patrolbase",		
+			combehaviour = "patrolbase",	
+			T2metalBuildType = "new",			
 			requisiti = {
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 3},
 				{cat = "CAT_MEX_T1",            count = 9},		
@@ -173,7 +181,8 @@
 		},		-- end livello  [n]	
 		[4] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 3,
-			combehaviour = "patrolbase",			
+			combehaviour = "patrolbase",	
+			T2metalBuildType = "new",			
 			requisiti = {
 				{cat = "CAT_MEX_T1",            count = 9},		
 				{cat = "CAT_FACTORY_T1", 		count = 4},			
@@ -184,7 +193,8 @@
 		},		-- end livello  [n]		
 		[5] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 5,
-			combehaviour = "patrolbase",			
+			combehaviour = "patrolbase",		
+			T2metalBuildType = "new",			
 			requisiti = {
 				{cat = "CAT_FACTORY_T2", 		count = 1},		
 				{cat = "CAT_FACTORY_T1", 		count = 5},	
@@ -196,7 +206,8 @@
 		},		-- end livello  [n]		
 		[6] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 5,
-			combehaviour = "patrolbase",			
+			combehaviour = "patrolbase",
+			T2metalBuildType = "upgrade",				
 			requisiti = {
 				{cat = "CAT_FACTORY_T2", 		count = 1},		
 				{cat = "CAT_FACTORY_T1", 		count = 4},	
@@ -209,7 +220,8 @@
 		},		-- end livello  [n]			
 		[7] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 5,
-			combehaviour = "patrolbase",			
+			combehaviour = "patrolbase",	
+			T2metalBuildType = "upgrade",				
 			requisiti = {
 				{cat = "CAT_FACTORY_T2", 		count = 2},		
 				{cat = "CAT_FACTORY_T1", 		count = 6},	
@@ -225,7 +237,8 @@
 		},		-- end livello  [n]			
 		[8] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 5,
-			combehaviour = "patrolbase",			
+			combehaviour = "patrolbase",	
+			T2metalBuildType = "upgrade",			
 			requisiti = {
 				{cat = "CAT_FACTORY_T2", 		count = 2},		
 				{cat = "CAT_FACTORY_T1", 		count = 2},	
@@ -237,7 +250,8 @@
 		},		-- end livello  [n]			
 		[9] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 4,
-			combehaviour = "patrolbase",			
+			combehaviour = "patrolbase",	
+			T2metalBuildType = "upgrade",				
 			requisiti = {
 				{cat = "CAT_FACTORY_T2", 		count = 2},		
 				{cat = "CAT_FACTORY_T1", 		count = 1},	
@@ -249,7 +263,8 @@
 		},		-- end livello  [n]			
 		[10] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 6,
-			combehaviour = "patrolbase",			
+			combehaviour = "patrolbase",	
+			T2metalBuildType = "upgrade",				
 			requisiti = {
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 3},
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 3},	
@@ -284,6 +299,60 @@
 	--------------------------------------------------------------------------------
 	-- 3) FUNZIONI DI SUPPORTO
 	--------------------------------------------------------------------------------
+
+-- Questa funzione serve per effettuare l'upgrade degli estrattori di metallo T1
+local function GetMexT1ToUpgrade(teamID, faction, basePos)
+	local t1MexNames = CATEGORY_TO_UNIT[faction]["CAT_MEX_T1"]
+	if not t1MexNames then return nil end
+
+	local bestMex = nil
+	local minDist = math.huge
+
+	-- Trasformiamo i nomi in un set di ID per un controllo veloce
+	local t1IDs = {}
+	for _, name in ipairs(t1MexNames) do
+		local ud = UnitDefNames[name]
+		if ud then t1IDs[ud.id] = true end
+	end
+
+	local units = Spring.GetTeamUnits(teamID)
+	for _, uID in ipairs(units) do
+		local udID = Spring.GetUnitDefID(uID)
+		if t1IDs[udID] then
+			local ux, uy, uz = Spring.GetUnitPosition(uID)
+			
+			-- Controllo fondamentale: c'è già un estrattore T2 (o un ordine di costruzione) in quel punto?
+			-- Verifichiamo se ci sono unità T2 o costruzioni in un raggio molto stretto
+			local nearbyUnits = Spring.GetUnitsInSphere(ux, uy, uz, 64)
+			local alreadyUpgrading = false
+			for _, nID in ipairs(nearbyUnits) do
+				if nID ~= uID then
+					local nudID = Spring.GetUnitDefID(nID)
+					local nud = UnitDefs[nudID]
+					-- Se l'unità vicina è un estrattore ed è "più avanzato" (isExtractor e non è nella lista T1)
+					if nud.isExtractor and not t1IDs[nudID] then
+						alreadyUpgrading = true
+						break
+					end
+				end
+			end
+
+			if not alreadyUpgrading then
+				local dist = (ux - basePos.x)^2 + (uz - basePos.z)^2
+				if dist < minDist then
+					minDist = dist
+					bestMex = {x = ux, y = uy, z = uz}
+				end
+			end
+		end
+	end
+
+	if bestMex then
+		return bestMex.x, bestMex.y, bestMex.z
+	end
+	return nil
+end
+
 	-- Questa funzione restituisce l'ID del Comandante se è vivo
 	local function GetCommanderID(teamID, faction)
 		local allowedComs = COMMANDER_TABLE[faction]
@@ -847,16 +916,33 @@
 									if CanBuilderBuildThis(bID, uDef.id) then
 										capableFound = true
 										local bx, by, bz
-										if req.cat == "CAT_MEX_T1" or req.cat == "CAT_MEX_T2" then -- #################to do, aggiungere qui l'upgrade in T2 degli estrattori T1!!
-											local bx_curr, by_curr, bz_curr = Spring.GetUnitPosition(bID)
-												-- Chiama la funzione corretta passandogli l'ID del costruttore per trovare lo spot più vicino
-											bx, by, bz = GetClosestMetalSpot(bx_curr, bz_curr, bID, faction, teamID)
-												if bx == nil then -- se non trova alcun giacimento di metallo...
-												Spring.Echo("WMRTS_contrMngm_AI: Nessun metallo raggiungibile per " .. UnitDefs[Spring.GetUnitDefID(bID)].name) 	-- ...indicalo nel log
-												end		
+										local T2metalBuildType = config.T2metalBuildType or "new" -- chiamo la variabile T2metalBuildType dalla tabella dei livelli
+										 -- LOGICA ESTRATTORI T1 e T2
+										if req.cat == "CAT_MEX_T1" or req.cat == "CAT_MEX_T2" then 
+											-- se è richiesto un T2 in modalità "upgrade"...
+											if req.cat == "CAT_MEX_T2" and T2metalBuildType == "upgrade" then
+												-- ...esegui la funzione per eseguire l'upgrade
+												bx, by, bz = GetMexT1ToUpgrade(teamID, faction, teamBasePos[teamID])						
+												if not bx then 
+													-- Se non trova Mex T1 da potenziare (magari sono già tutti T2), 
+													-- ripiega sulla ricerca di uno spot libero per non bloccare l'AI
+													local bx_curr, by_curr, bz_curr = Spring.GetUnitPosition(bID)
+													bx, by, bz = GetClosestMetalSpot(bx_curr, bz_curr, bID, faction, teamID)
+												end
+											else
+												-- Caso NEW (default): Cerchiamo uno spot libero
+												local bx_curr, by_curr, bz_curr = Spring.GetUnitPosition(bID)
+												bx, by, bz = GetClosestMetalSpot(bx_curr, bz_curr, bID, faction, teamID)
+											end
+
+											if bx == nil then
+												Spring.Echo("WMRTS_contrMngm_AI: Nessun metallo (nuovo o upgrade) raggiungibile per " .. UnitDefs[Spring.GetUnitDefID(bID)].name)
+											end
+										 -- LOGICA FABBRICHE
 										elseif req.cat == "CAT_FACTORY_T1" or req.cat == "CAT_FACTORY_T2" then														-- se l'AI deve costruire una fabbrica...
 												bx, by, bz = GetSafeBuildPosFactory(uDef.id, teamBasePos[teamID], metalSpots)                                		-- Chiama la funzione specifica per le fabbriche
-										else			-- altrimenti per tutto il resto...
+										 -- LOGICA RESTO DELLE COSTRUZIONI
+										else			
 											bx, by, bz = GetSafeBuildPos(uDef.id, teamBasePos[teamID], metalSpots) 													-- ...Usa la funzione sicura per centrali e fabbriche       
 										end
 										
@@ -892,7 +978,7 @@
 									Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - SPAZIO PIENO: Costruttori pronti, ma non trovo una posizione valida (SafePos) per " .. unitName)
 								end
 							end
-						-- CASO B: È un ROBOT/UNITA' MOBILE (Richiede una Fabbrica)
+						-- CASO B: È un UNITA' MOBILE COSTRUTTRICE CHE RICHIEDE UNA FABBRICA
 						else
 							for _, fID in ipairs(factories) do
 								local fud = UnitDefs[Spring.GetUnitDefID(fID)]
