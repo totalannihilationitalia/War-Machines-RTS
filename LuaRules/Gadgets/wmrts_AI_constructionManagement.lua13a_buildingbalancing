@@ -24,20 +24,10 @@
 	-- TO DO
 	-- implementare naval e sub
 	-- creare la categorizzazione land/air/sea per gli estrattori di metallo (logicamente land e air avranno lo stesso icumetex mentre sea avrà ad esempio undewatermetex). Vedere se fare lo stesso per le floating torrette T1 e T2 ed eventualmente le centrali energia.
+	-- creare funzione upgrade estrattori da T1 a T2
 	-- creare funzione comando ai costruttori (comandante, costruttori non comandante): Patrol/costruisci. La prima gira attorno alla base aiutando le costruizoni, la seconda per impegnare i costruttori a costruire
 	-- ridurre il timeout nel caso i costruttori rimangano fermi per costruire giacimenti di metallo. ## -> 02/02/2025 fatto per ora lo teniamo cosi molix
 	-- verificare se aumentare il raggio di costruzione della base con il passare dei livelli
-	--[[
-	costruire missili e antimissili
-costruire air repair
-costruire logica espansiva della base (al livello 10 arrivi ad aver già occupato lo spazio massimo ammissibile)
-costruire cannoni a lungo raggio
-aerei bombardieri: bersagliare unità più specifiche??
-antipallina ??
-nanotower o costruttori aiutanti???
-unità T3 !!!!
-
-	--]]
 
 	if (not gadgetHandler:IsSyncedCode()) then return end
 
@@ -183,39 +173,36 @@ unità T3 !!!!
 			T2metalBuildType = "new",			
 			requisiti = {
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 3},
-				{cat = "CAT_MEX_T1",            count = 6},		
+				{cat = "CAT_MEX_T1",            count = 9},		
 				{cat = "CAT_FACTORY_T1", 		count = 3},			
-				{cat = "CAT_ENERGY_T1_2",       count = 2},
+				{cat = "CAT_ENERGY_T1_2",       count = 1},
 				{cat = "CAT_AA_T1_2", 			count = 1},					
-				{cat = "CAT_FACTORY_T2", 		count = 1},						
+				{cat = "CAT_LASER_T1_2", 		count = 1},				
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]	
 		[4] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 3,
 			combehaviour = "patrolbase",	
-			T2metalBuildType = "upgrade",			
+			T2metalBuildType = "new",			
 			requisiti = {
-				{cat = "CAT_CONSTRUCTORS_T2", 	count = 2},	
-				{cat = "CAT_MEX_T1",            count = 3},		
-				{cat = "CAT_ENERGY_T1_2",       count = 3},				
-				{cat = "CAT_MEX_T2",            count = 1},	
-				{cat = "CAT_ENERGY_T2",      	count = 1},					
+				{cat = "CAT_MEX_T1",            count = 9},		
 				{cat = "CAT_FACTORY_T1", 		count = 4},			
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 3},
-				{cat = "CAT_LASER_T1_2", 		count = 1},						
+				{cat = "CAT_ENERGY_T1_2",       count = 2},
+				{cat = "CAT_FACTORY_T2", 		count = 1},		--  ###testare qui
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]		
 		[5] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 5,
 			combehaviour = "patrolbase",		
-			T2metalBuildType = "upgrade",			
+			T2metalBuildType = "new",			
 			requisiti = {
 				{cat = "CAT_FACTORY_T2", 		count = 1},		
 				{cat = "CAT_FACTORY_T1", 		count = 5},	
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 3},
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 2},			
 				{cat = "CAT_ENERGY_T1_2",       count = 2},
-				{cat = "CAT_MEX_T1",            count = 7},		
+				{cat = "CAT_MEX_T1",            count = 5},		
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]		
 		[6] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
@@ -228,7 +215,7 @@ unità T3 !!!!
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 3},
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 2},			
 				{cat = "CAT_ENERGY_T1_2",       count = 3},
-				{cat = "CAT_MEX_T2",            count = 2},					
+				{cat = "CAT_MEX_T2",            count = 1},					
 				{cat = "CAT_MEX_T1",            count = 3},		
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]			
@@ -237,12 +224,12 @@ unità T3 !!!!
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "upgrade",				
 			requisiti = {
-				{cat = "CAT_ENERGY_T2",      	count = 2},	
+				{cat = "CAT_ENERGY_T2",      	count = 1},	
 				{cat = "CAT_FACTORY_T2", 		count = 2},		
 				{cat = "CAT_FACTORY_T1", 		count = 6},	
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 3},
-				{cat = "CAT_CONSTRUCTORS_T2", 	count = 3},			
---				{cat = "CAT_ENERGY_T1_2",       count = 3},
+				{cat = "CAT_CONSTRUCTORS_T2", 	count = 2},			
+				{cat = "CAT_ENERGY_T1_2",       count = 3},
 				{cat = "CAT_MEX_T2",            count = 2},					
 				{cat = "CAT_MEX_T1",            count = 2},		
 				{cat = "CAT_AA_T2", 			count = 1},					
@@ -250,42 +237,42 @@ unità T3 !!!!
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]			
 		[8] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
-			simultanea = 5,										-- #################sto livello è una ripetizione del precedente!!! sistemare ############################################
+			simultanea = 5,
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "upgrade",			
 			requisiti = {
-				{cat = "CAT_FACTORY_T2", 		count = 4},		
-				{cat = "CAT_FACTORY_T1", 		count = 8},	
+				{cat = "CAT_FACTORY_T2", 		count = 2},		
+				{cat = "CAT_FACTORY_T1", 		count = 2},	
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 3},
-				{cat = "CAT_CONSTRUCTORS_T2", 	count = 3},			
-				{cat = "CAT_MEX_T2",            count = 3},					
-				{cat = "CAT_ENERGY_T2",         count = 3},				
+				{cat = "CAT_CONSTRUCTORS_T2", 	count = 2},			
+				{cat = "CAT_MEX_T2",            count = 2},					
+				{cat = "CAT_ENERGY_T2",         count = 1},				
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]			
 		[9] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
-			simultanea = 4,										-- #################sto livello è una ripetizione del precedente!!! sistemare ############################################
+			simultanea = 4,
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "upgrade",				
 			requisiti = {
-				{cat = "CAT_FACTORY_T2", 		count = 5},		
-				{cat = "CAT_FACTORY_T1", 		count = 9},	
-				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
-				{cat = "CAT_CONSTRUCTORS_T2", 	count = 4},			
-				{cat = "CAT_MEX_T2",            count = 4},					
-				{cat = "CAT_ENERGY_T2",         count = 3},				
+				{cat = "CAT_FACTORY_T2", 		count = 2},		
+				{cat = "CAT_FACTORY_T1", 		count = 1},	
+				{cat = "CAT_CONSTRUCTORS_T1", 	count = 3},
+				{cat = "CAT_CONSTRUCTORS_T2", 	count = 2},			
+				{cat = "CAT_MEX_T2",            count = 2},					
+				{cat = "CAT_ENERGY_T2",         count = 2},				
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]			
 		[10] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
-			simultanea = 6,											-- #################sto livello è una ripetizione del precedente!!! sistemare ############################################
+			simultanea = 6,
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "upgrade",				
 			requisiti = {
-				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
-				{cat = "CAT_CONSTRUCTORS_T2", 	count = 4},	
-				{cat = "CAT_FACTORY_T2", 		count = 6},		
-				{cat = "CAT_FACTORY_T1", 		count = 10},	
-				{cat = "CAT_MEX_T2",            count = 5},					
-				{cat = "CAT_ENERGY_T2",         count = 4},		
+				{cat = "CAT_CONSTRUCTORS_T1", 	count = 3},
+				{cat = "CAT_CONSTRUCTORS_T2", 	count = 3},	
+				{cat = "CAT_FACTORY_T2", 		count = 4},		
+				{cat = "CAT_FACTORY_T1", 		count = 3},	
+				{cat = "CAT_MEX_T2",            count = 3},					
+				{cat = "CAT_ENERGY_T2",         count = 2},		
 				{cat = "CAT_AA_T2", 			count = 3},					
 				{cat = "CAT_LASER_T2", 			count = 3},				
 			} 	-- end requisiti di livello

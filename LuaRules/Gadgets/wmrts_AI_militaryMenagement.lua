@@ -405,6 +405,7 @@ local function GetSmartEnemyTarget(myTeamID, squadType)
 					end		
 				-- La tipologia "air_bomber_strategic" manda il gruppo di unità all'attacco direttamente su una singola unità di tipo "strategicbuilding"
 				elseif squadType == "air_bomber_strategic" then 
+					-- ############## to do -> inserire un check in maniera da controllare se esiste  una categoria nemica "strategicbuilding". se true ok, altrimenti colpisci enemyCat == "building  #############
 					if enemyCat == "strategicbuilding" or enemyCat == "building" then 
 						return {x=x, y=y, z=z, id=uID} -- restituisco anche l'ID dell'unità che si intende bersagliare, utilizzato poi nella logica degli ordini, vedi punto 5)
 					end								
