@@ -20,23 +20,23 @@
 	-- 03/02/2026 = inserito il controllo del comandante per livello, ora può essere impiegato per eseguire patrol (come aiutante) o costruttore
 	-- 05/02/2026 = V13 inserita funzione upgrade di metallo T1 to T2 o T3 (in futuro).
 	-- 06/02/2026 = Corretti comandi per Reclaim e build
+	-- 09/02/2026 = V14 Implementato raggio dinamico sviluppo base, in funzione del livello. I raggi sono settati livello per livello
 
 	-- TO DO
 	-- implementare naval e sub
 	-- creare la categorizzazione land/air/sea per gli estrattori di metallo (logicamente land e air avranno lo stesso icumetex mentre sea avrà ad esempio undewatermetex). Vedere se fare lo stesso per le floating torrette T1 e T2 ed eventualmente le centrali energia.
 	-- creare funzione comando ai costruttori (comandante, costruttori non comandante): Patrol/costruisci. La prima gira attorno alla base aiutando le costruizoni, la seconda per impegnare i costruttori a costruire
 	-- ridurre il timeout nel caso i costruttori rimangano fermi per costruire giacimenti di metallo. ## -> 02/02/2025 fatto per ora lo teniamo cosi molix
-	-- verificare se aumentare il raggio di costruzione della base con il passare dei livelli
-	--[[
+	--[[ ########################## to do
 	costruire missili e antimissili
 costruire air repair
-costruire logica espansiva della base (al livello 10 arrivi ad aver già occupato lo spazio massimo ammissibile)
+costruire logica espansiva della base (al livello 10 e anche prima arrivi ad aver già occupato lo spazio massimo ammissibile)
 costruire cannoni a lungo raggio
 aerei bombardieri: bersagliare unità più specifiche??
 antipallina ??
 nanotower o costruttori aiutanti???
 unità T3 !!!!
-
+########################################
 	--]]
 
 	if (not gadgetHandler:IsSyncedCode()) then return end
@@ -92,7 +92,8 @@ unità T3 !!!!
 			["CAT_MSTORAGE_T1"]		= { "armmstor" },				-- storage Metal T1		
 			["CAT_LASER_T1"]       	= { "iculighlturr" },
 			["CAT_LASER_T1_2"]      = { "armhlt" },		
-			["CAT_LASER_T2"]      	= { "armanni" },			
+			["CAT_LASER_T2"]      	= { "armanni" },		
+			["CAT_CANNON_T2"]      	= { "armamb" },			
 			["CAT_AA_T1"]          	= { "armrl" },
 			["CAT_AA_T1_2"]         = { "packo" },			
 			["CAT_AA_T2"]          	= { "armflak" },		
@@ -140,6 +141,7 @@ unità T3 !!!!
 	--			= upgrade,			l'AI preferirà potenziare i mex esistenti a partire da quelli più vicino alla base
 		[0] = { 												-- livello di partenza. può diventare anche livello di RESET LIVELLO AI quando subisce pesanti attacchi (vedere sotto logica di RESET LIVELLO). E' importante che vi siano, in questo livello, le costruzioni che, in loro assenza/mancato numero (definito dalla logica di "RESET LIVELLO") resettino l'AI, altrimenti si entra in un LOOP infinito di salto livello (0 -> 1 e torna subito a 0)
 			simultanea = 1,
+			fattoreVariazioneRaggio = 0,			
 			combehaviour = "constructor",
 			T2metalBuildType = "new",
 			requisiti = {
@@ -154,6 +156,7 @@ unità T3 !!!!
 		},		-- end livello  [n]
 		[1] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 2,
+			fattoreVariazioneRaggio = 0,						
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "new",			
 			requisiti = {
@@ -166,6 +169,7 @@ unità T3 !!!!
 		},		-- end livello  [n]
 		[2] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 3,
+			fattoreVariazioneRaggio = 0,						
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "new",			
 			requisiti = {		
@@ -179,6 +183,7 @@ unità T3 !!!!
 		},		-- end livello  [n]	
 		[3] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 3,
+			fattoreVariazioneRaggio = 0,						
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "new",			
 			requisiti = {
@@ -192,6 +197,7 @@ unità T3 !!!!
 		},		-- end livello  [n]	
 		[4] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 3,
+			fattoreVariazioneRaggio = 0,						
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "upgrade",			
 			requisiti = {
@@ -207,6 +213,7 @@ unità T3 !!!!
 		},		-- end livello  [n]		
 		[5] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 5,
+			fattoreVariazioneRaggio = 0,						
 			combehaviour = "patrolbase",		
 			T2metalBuildType = "upgrade",			
 			requisiti = {
@@ -220,6 +227,7 @@ unità T3 !!!!
 		},		-- end livello  [n]		
 		[6] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 5,
+			fattoreVariazioneRaggio = 0,						
 			combehaviour = "patrolbase",
 			T2metalBuildType = "upgrade",				
 			requisiti = {
@@ -234,6 +242,7 @@ unità T3 !!!!
 		},		-- end livello  [n]			
 		[7] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 5,
+			fattoreVariazioneRaggio = 0,						
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "upgrade",				
 			requisiti = {
@@ -250,7 +259,8 @@ unità T3 !!!!
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]			
 		[8] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
-			simultanea = 5,										-- #################sto livello è una ripetizione del precedente!!! sistemare ############################################
+			simultanea = 5,							
+			fattoreVariazioneRaggio = 1,						
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "upgrade",			
 			requisiti = {
@@ -263,31 +273,37 @@ unità T3 !!!!
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]			
 		[9] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
-			simultanea = 4,										-- #################sto livello è una ripetizione del precedente!!! sistemare ############################################
+			simultanea = 4,								
+			fattoreVariazioneRaggio = 1,						
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "upgrade",				
 			requisiti = {
 				{cat = "CAT_FACTORY_T2", 		count = 5},		
 				{cat = "CAT_FACTORY_T1", 		count = 9},	
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
-				{cat = "CAT_CONSTRUCTORS_T2", 	count = 4},			
+				{cat = "CAT_CONSTRUCTORS_T2", 	count = 5},			
 				{cat = "CAT_MEX_T2",            count = 4},					
-				{cat = "CAT_ENERGY_T2",         count = 3},				
+				{cat = "CAT_ENERGY_T2",         count = 3},	
+				{cat = "CAT_CANNON_T2",         count = 3},		
+				{cat = "CAT_AA_T2", 			count = 2},						
+				
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]			
 		[10] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
-			simultanea = 6,											-- #################sto livello è una ripetizione del precedente!!! sistemare ############################################
+			simultanea = 6,								
+			fattoreVariazioneRaggio = 1,						
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "upgrade",				
 			requisiti = {
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
-				{cat = "CAT_CONSTRUCTORS_T2", 	count = 4},	
+				{cat = "CAT_CONSTRUCTORS_T2", 	count = 5},	
 				{cat = "CAT_FACTORY_T2", 		count = 6},		
 				{cat = "CAT_FACTORY_T1", 		count = 10},	
 				{cat = "CAT_MEX_T2",            count = 5},					
 				{cat = "CAT_ENERGY_T2",         count = 4},		
 				{cat = "CAT_AA_T2", 			count = 3},					
-				{cat = "CAT_LASER_T2", 			count = 3},				
+				{cat = "CAT_LASER_T2", 			count = 3},	
+				{cat = "CAT_AA_T2", 			count = 3},					
 			} 	-- end requisiti di livello
 		}		-- end livello  [n]			
 	}
@@ -384,10 +400,10 @@ end
 	end
 
 	-- Questa funzione serve per costruire le fabbriche. Quando richiamata verifica dove posizionare la fabbrica in un punto lontano da giacimenti di metallo (per non imperdire la costruzione di estrattori) e lontano da "dirupi" per evitare che l'AI costruisca la fabbrica in un punto (come un dirupo, una montagna) da cui poi le unità non escono
-	local function GetSafeBuildPosFactory(uDefID, basePos, metalSpots)
+	local function GetSafeBuildPosFactory(uDefID, basePos, metalSpots, maxRadius)
 		for _ = 1, 50 do -- Più tentativi perché i criteri sono più stringenti
 			local angle = math.random() * math.pi * 2
-			local dist = math.random(200, 700) 
+			 local dist = math.random(200, maxRadius) 		-- per le fabbriche, raggio min e raggio max dipendente dalla tabella dei livelli
 			local tx = basePos.x + math.cos(angle) * dist
 			local tz = basePos.z + math.sin(angle) * dist
 			local ty = Spring.GetGroundHeight(tx, tz)
@@ -543,10 +559,10 @@ end
 	end
 
 	-- Questa funzione serve a non costruire gli edifici sopra un giacimento di metallo entro un raggio di 150, onde evitare di mandare in stallo l'AI
-	local function GetSafeBuildPos(uDefID, basePos, metalSpots)
+	local function GetSafeBuildPos(uDefID, basePos, metalSpots, maxRadius)
 		for _ = 1, 40 do -- Proviamo 40 posizioni casuali
 			local angle = math.random() * math.pi * 2
-			local dist = math.random(150, 600)				-- Raggio di costruzione dalla base (min, max)
+			local dist = math.random(150, maxRadius)				-- Raggio di costruzione dalla base (min, max definito dalla tabella dei livelli)
 			local tx = basePos.x + math.cos(angle) * dist
 			local tz = basePos.z + math.sin(angle) * dist
 			local ty = Spring.GetGroundHeight(tx, tz)
@@ -561,7 +577,7 @@ end
 			if not tooCloseToMetal then
 				-- 2. Controllo: Spazio libero intorno (evita fabbriche ammassate)
 				-- Cerchiamo unità in un raggio di 180 unità
-				local blockingUnits = Spring.GetUnitsInSphere(tx, ty, tz, 180)	-- Raggio di costruzione interbuildings
+				local blockingUnits = Spring.GetUnitsInSphere(tx, ty, tz, 190)	-- Spazio minimo tra le costruzioni (era 180)
 				
 				if #blockingUnits == 0 then
 					-- 3. Controllo finale: Il terreno è edificabile?
@@ -914,6 +930,11 @@ end
 			local config = AI_BUILD_LEVELS[currentLvl]
 			if not config then return end
 
+			-- Calcolo dinamico dei raggi della base (entro cui l'AI può costruire), basato sul "fattoreVariazioneRaggio " impostato per ogni livello
+			local fvr = config.fattoreVariazioneRaggio or 0 -- Se dimentichi di scriverlo nel livello, usa 0
+			local raggioDinamicoStrutture = 600 + (fvr * 150) -- Ogni punto fattore aggiunge 150 elmos
+			local raggioDinamicoFactory   = 700 + (fvr * 200) -- Le fabbriche si allargano di più
+
 	------------------------------------------------------------------------
 			-- LOGICA COMPORTAMENTO COMANDANTE (combehaviour)
 			------------------------------------------------------------------------
@@ -1024,10 +1045,10 @@ end
 											end
 										 -- LOGICA deve costruire FABBRICHE (definite dalla tabella AI_BUILD_LEVELS)
 										elseif req.cat == "CAT_FACTORY_T1" or req.cat == "CAT_FACTORY_T2" then														-- se l'AI deve costruire una fabbrica...
-												bx, by, bz = GetSafeBuildPosFactory(uDef.id, teamBasePos[teamID], metalSpots)                                		-- Chiama la funzione specifica per le fabbriche
+												bx, by, bz = GetSafeBuildPosFactory(uDef.id, teamBasePos[teamID], metalSpots, raggioDinamicoFactory)                                		-- Chiama la funzione specifica per le fabbriche
 										 -- LOGICA deve costruire il RESTO DELLE COSTRUZIONI non sopra specificate (definite dalla tabella AI_BUILD_LEVELS)
 										else			
-											bx, by, bz = GetSafeBuildPos(uDef.id, teamBasePos[teamID], metalSpots) 													-- ...Usa la funzione sicura per centrali e fabbriche       
+											bx, by, bz = GetSafeBuildPos(uDef.id, teamBasePos[teamID], metalSpots, raggioDinamicoStrutture) 													-- ...Usa la funzione sicura per centrali e fabbriche       
 										end
 ----------------------------- END LOGICA "LOGICA COSA DEVE COSTRUIRE?"										
 										if targetUpgradeMexID then -- Se siamo in fase di upgrade metallo....
@@ -1037,9 +1058,7 @@ end
     -- I parametri sono: {0, ID_COMANDO, OPZIONI, ID_TARGET}
     Spring.GiveOrderToUnit(bID, CMD.INSERT, {0, CMD.RECLAIM, 0, targetUpgradeMexID}, {"alt"})
     
-    -- 2. Inseriamo la COSTRUZIONE in posizione 1 (subito dopo il reclaim)
-    -- I parametri sono: {1, -uDef.id, 0, mx, 0, mz, 1}
-    -- mx, 0, mz, 1 sono le coordinate e il facing che abbiamo visto funzionare nella missione
+    -- 2. Inseriamo la COSTRUZIONE nella lista degli ordini, in posizione 1 (subito dopo il reclaim). Se dessi un ordine diretto con "shift" non funzionerebbe perchè essendoci ancora l'estrattore, fisicamente SPRING non può costruirci sopra niente.
     Spring.GiveOrderToUnit(bID, CMD.INSERT, {1, -uDef.id, 0, mx, 0, mz, 1}, {"alt"})
     
     Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Upgrade via CMD_INSERT (Reclaim + Build)")

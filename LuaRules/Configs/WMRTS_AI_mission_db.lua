@@ -1,13 +1,13 @@
 -- units database for WMRTS mission AI, by molix
--- 09/01/2025
+-- 09/01/2026
 
 --------------------------------------------------------------------------------
--- 1) DATABASE UNITÀ caricato da wmrts_missionAI.lua
+-- 1) DATABASE UNITÀ -- caricato dal file wmrts_missionAI.lua
 --------------------------------------------------------------------------------
 -- Qui puoi aggiungere campi extra in futuro (es. priority, armor_type, ecc.)
 -- La tipologia di ogni singola unità è necessaria affinchè la AI gestisca le squadre/gruppi (punto 2) contro le singole unità.
--- Ad esempio le tipologie "ground" definite qui verranno bersagliate dai gruppi tipo "ground" e "air_toground" definiti nel punto 2. 
--- Questa logica di "chi attacca cosa" è definita poi nel punto "4) LOGICA DI TARGETING BASATA SU DATABASE"
+-- Ad esempio le tipologie di unità "ground" definite qui verranno bersagliate dai gruppi tipo "ground" e "air_toground" definiti nel punto 2 del gadget. 
+-- Questa logica di "chi attacca cosa" è definita poi nel punto 4) "LOGICA DI TARGETING BASATA SU DATABASE" del gadget
 -- definizione delle tipologie "type":
 --			type = ground 				-> unità mobile di terra (veicoli e Kbot)
 --			type = air 					-> unità mobile aerea
@@ -15,9 +15,13 @@
 --			type = naval 				-> unità mobile navale (di superficie, no SUB)
 --			type = building 			-> unità fissa di superficie su terra (di difesa/produzione/energia)
 --			type = navalbuilding 		-> unità fissa di superficie su mare (di difesa/produzione/energia)
---			type = strategicbuilding 	-> unità fissa di superficie strategica ( Es factory 3 livello, silos, antipalline )
+--			type = defence 				-> unità fissa di difesa T1-2 + ( Es torrette di difesa importanti, antiaerea ecc )
+--			type = strategicbuilding 	-> unità fissa di superficie strategica ( Es factory 3 livello, silos, antipalline, ecc )
+--			type = strategicdefence 	->  unità fissa di difesa strategica ( Es bertha, corbuzz, toaster, ecc )
 --			tutte le unità che non sono identificate in questo database, prenderanno valore type = unknown , vedere poi la logica di targetin come gestirle
--- definizione della caratteristica "ignore": può essere true o false (se non dichiarata). Se True, l'unità ad esso associata verrà completamente ignorata dal gadget "military_factory": se viene creata dalla fabbrica, non viene inclusa in alcun gruppo e non viene mandata all'attacco. Sarà altro Gadget a gestire l'unità (come ad esempio i costruttori) oppure le unità saranno gestite dal misison editor
+-- definizione della caratteristica "ignore": può essere true o false (se non dichiarata). Se True, l'unità ad esso associata verrà completamente ignorata dal gadget "military_factory": quando creata dalla fabbrica, quell'unità non viene inclusa in alcun gruppo e non viene mandata all'attacco. Sarà un altro Gadget a gestire l'unità (come ad esempio i costruttori) oppure le unità saranno gestite dal mission editor
+
+-- 09/02/2026 = Aggiunte categorie defence e strategicdefence. Molix
 
 local UNIT_DB = {
 	--------------------------------------------------------------------------------
@@ -28,29 +32,41 @@ local UNIT_DB = {
 
 -- Costruzioni Tier 1
 ["armsolar"] = { type = "building" },
+["icuadvsol"] = { type = "building" },
 ["icuwind"] = { type = "building" },
 ["armmstor"] = { type = "building" },
+["armgeo"] = { type = "building" },
 ["icuestor"] = { type = "building" },
 ["icumetex"] = { type = "building" },
+["armamex"] = { type = "building" },
 ["armmakr"] = { type = "building" },
 ["armeyes"] = { type = "building" },
 ["armrad"] = { type = "building" },
 ["armsonar"] = { type = "navalbuilding" },
 ["armdrag"] = { type = "building" },
 ["iculighlturr"] = { type = "building" },
-["armtl"] = { type = "navalbuilding" },
+["armhlt"] = { type = "defence" },
+["tawf001"] = { type = "defence" },
+["armguard"] = { type = "defence" },
 ["armrl"] = { type = "building" },
+["packo"] = { type = "building" },
+["armjamt"] = { type = "building" },
+["armtl"] = { type = "navalbuilding" },
 ["armfrad"] = { type = "navalbuilding" },
-["armfrl"] = { type = "navalbuilding" },
-["armfllt"] = { type = "navalbuilding" },
+["armfrl"] = { type = "navalbuilding" }, 		-- ### creare floating defence????
+["armfllt"] = { type = "navalbuilding" },		-- ### creare floating defence????
+["armfhlt"] = { type = "navalbuilding" },		-- ### creare floating defence????
+["armfhllt"] = { type = "navalbuilding" },		-- ### creare floating defence????
+["armfguard"] = { type = "navalbuilding" },		-- ### creare floating defence????
+["fpacko"] = { type = "navalbuilding" },		-- ### creare floating defence????
 
 -- Costruzioni Tier 2 e +
 ["aafus"] = { type = "strategicbuilding" },
 ["armfus"] = { type = "strategicbuilding" },
-["amgeo"] = { type = "building" },
-["armgmm"] = { type = "building" },
-["armmoho"] = { type = "building" },
-["armmmkr"] = { type = "building" },
+["amgeo"] = { type = "strategicbuilding" },
+["armgmm"] = { type = "strategicbuilding" },
+["armmoho"] = { type = "strategicbuilding" },
+["armmmkr"] = { type = "strategicbuilding" },
 ["armuwadves"] = { type = "building" },
 ["armuwadvms"] = { type = "building" },
 ["armarad"] = { type = "building" },
@@ -60,21 +76,21 @@ local UNIT_DB = {
 ["armtarg"] = { type = "building" },
 ["armsd"] = { type = "building" },
 ["armgate"] = { type = "strategicbuilding" },
-["armamb"] = { type = "strategicbuilding" },
-["armpb"] = { type = "building" },
-["armanni"] = { type = "strategicbuilding" },
+["armamb"] = { type = "strategicdefence" },
+["armpb"] = { type = "defence" },
+["armanni"] = { type = "strategicdefence" },
 ["armflak"] = { type = "building" },
 ["mercury"] = { type = "building" },
-["armamd"] = { type = "building" },
+["armamd"] = { type = "strategicbuilding" },
 ["armsilo"] = { type = "strategicbuilding" },
-["armbrtha"] = { type = "building" },
-["armvulc"] = { type = "building" },
-["advmoho"] = { type = "building" },
+["armbrtha"] = { type = "strategicdefence" },
+["armvulc"] = { type = "strategicdefence" },
+["advmoho"] = { type = "strategicbuilding" },
 ["armfarad"] = { type = "navalbuilding" },
-["armfamb"] = { type = "navalbuilding" },
-["armfanni"] = { type = "navalbuilding" },
-["armfflak"] = { type = "navalbuilding" },
-["armfmercury"] = { type = "navalbuilding" },
+["armfamb"] = { type = "navalbuilding" },		-- ### creare floating defence????
+["armfanni"] = { type = "navalbuilding" },		-- ### creare floating defence????
+["armfflak"] = { type = "navalbuilding" },		-- ### creare floating defence????
+["armfmercury"] = { type = "navalbuilding" },	-- ### creare floating defence????
 
 -- fabbriche Tier 1
 ["armlab"] = { type = "building" },
@@ -83,13 +99,13 @@ local UNIT_DB = {
 ["armsy"] = { type = "navalbuilding" },
 
 -- fabbriche Tier 2 e +
-["armavp"] = { type = "ground" }, 
-["armalab"] = { type = "ground" },
-["armaap"] = { type = "ground" },
+["armavp"] = { type = "building" }, 
+["armalab"] = { type = "building" },
+["armaap"] = { type = "building" },
 ["armasy"] = { type = "navalbuilding" },
-["armshltx"] = { type = "ground" },
-["icugant"] = { type = "ground" },
-["icufff"] = { type = "ground" },
+["armshltx"] = { type = "strategicbuilding" },
+["icugant"] = { type = "strategicbuilding" },
+["icufff"] = { type = "strategicbuilding" },
 
 -- Unità prodotte da armlab (Kbot)
 ["icuck"] = { type = "ground", ignore = true },
@@ -165,7 +181,7 @@ local UNIT_DB = {
 
 -- Unità prodotte da armasy
 ["armacsub"] = { type = "naval", ignore = true  }, 	-- ############################ sistemare categorizzazione e gestire sub
-["armsubk"] = { type = "naval" },	-- ############################ sistemare categorizzazione e gestire sub
+["armsubk"] = { type = "naval" },					-- ############################ sistemare categorizzazione e gestire sub
 ["armaas"] = { type = "naval" },
 ["armcrus"] = { type = "naval" },
 ["armbats"] = { type = "naval" },
@@ -195,29 +211,43 @@ local UNIT_DB = {
 
 -- Costruzioni Tier 1
 ["corsolar"] = { type = "building" },
+["coradvsol"] = { type = "building" },
+["cornanotc"] = { type = "building" },
 ["corwin"] = { type = "building" },
+["corgeo"] = { type = "building" },
+["corjamt"] = { type = "building" }, 
 ["cormstor"] = { type = "building" },
 ["corestor"] = { type = "building" },
 ["cormex"] = { type = "building" },
+["corexp"] = { type = "building" },
 ["cormakr"] = { type = "building" },
 ["coreyes"] = { type = "building" },
 ["corrad"] = { type = "building" },
 ["corsonar"] = { type = "navalbuilding" },
 ["cordrag"] = { type = "building" },
 ["corllt"] = { type = "building" },
+["hllt"] = { type = "building" },
+["corhlt"] = { type = "defence" },
+["cormaw"] = { type = "defence" },
+["corpun"] = { type = "defence" },
 ["cortl"] = { type = "building" },
+["madsam"] = { type = "building" },
 ["corrl"] = { type = "building" },
-["corfrad"] = { type = "navalbuilding" },
-["corfrl"] = { type = "navalbuilding" },
-["corfllt"] = { type = "navalbuilding" },
+["corfrad"] = { type = "navalbuilding" },	
+["corfhlt"] = { type = "navalbuilding" },		-- ### creare floating defence????
+["corfpun"] = { type = "navalbuilding" },		-- ### creare floating defence????
+["fmadsam"] = { type = "navalbuilding" },		-- ### creare floating defence????
+["corfrad"] = { type = "navalbuilding" },		-- ### creare floating defence????
+["corfrl"] = { type = "navalbuilding" },		-- ### creare floating defence????
+["corfllt"] = { type = "navalbuilding" },		-- ### creare floating defence????
 
 -- Costruzioni Tier 2 e +
 ["corfus"] = { type = "strategicbuilding" },
 ["cafus"] = { type = "strategicbuilding" },
-["cmgeo"] = { type = "building" },
-["corbhmth"] = { type = "building" },
-["cormoho"] = { type = "building" },
-["cormexp"] = { type = "building" },
+["cmgeo"] = { type = "strategicbuilding" },
+["corbhmth"] = { type = "strategicdefence" },
+["cormoho"] = { type = "strategicdefence" },
+["cormexp"] = { type = "strategicdefence" },
 ["cormmkr"] = { type = "building" },
 ["coruwadves"] = { type = "building" },
 ["coruwadvms"] = { type = "building" },
@@ -227,24 +257,24 @@ local UNIT_DB = {
 ["corasp"] = { type = "building" },
 ["cortarg"] = { type = "building" },
 ["corsd"] = { type = "building" },
-["corgate"] = { type = "building" },
-["cortoast"] = { type = "building" },
+["corgate"] = { type = "strategicbuilding" },			
+["cortoast"] = { type = "strategicdefence" },
 ["corvipe"] = { type = "building" },
-["cordoom"] = { type = "strategicbuilding" },
+["cordoom"] = { type = "strategicdefence" },
 ["corflak"] = { type = "building" },
 ["screamer"] = { type = "building" },
 ["corfmd"] = { type = "strategicbuilding" },
 ["corsilo"] = { type = "strategicbuilding" },
-["corint"] = { type = "building" },
-["corbuzz"] = { type = "building" },
+["corint"] = { type = "strategicdefence" },
+["corbuzz"] = { type = "strategicdefence" },
 ["corvp"] = { type = "building" },
 ["coravp"] = { type = "building" },
 ["corfarad"] = { type = "navalbuilding" },
-["corftoast"] = { type = "navalbuilding" },
-["corfvipe"] = { type = "navalbuilding" },
-["corfdoom"] = { type = "navalbuilding" },
-["corfflak"] = { type = "navalbuilding" },
-["corfscreamer"] = { type = "navalbuilding" },
+["corftoast"] = { type = "navalbuilding" },		-- ### creare floating defence????
+["corfvipe"] = { type = "navalbuilding" },		-- ### creare floating defence????
+["corfdoom"] = { type = "navalbuilding" },		-- ### creare floating defence????
+["corfflak"] = { type = "navalbuilding" },		-- ### creare floating defence????
+["corfscreamer"] = { type = "navalbuilding" },	-- ### creare floating defence????
 
 -- Fabbriche Tier 1
 ["corlab"] = { type = "building" },
@@ -257,8 +287,8 @@ local UNIT_DB = {
 ["coravp"] = { type = "building" },
 ["coraap"] = { type = "building" },
 ["corasy"] = { type = "navalbuilding" },
-["corgant"] = { type = "building" },
-["nfafff"] = { type = "building" },
+["corgant"] = { type = "strategicbuilding" },
+["nfafff"] = { type = "strategicbuilding" },
 
 -- Unità prodotte da corlab
 ["corck"] = { type = "ground", ignore = true  },
@@ -314,7 +344,7 @@ local UNIT_DB = {
 ["cormart"] = { type = "ground" },
 ["corvroc"] = { type = "ground" },
 ["corsent"] = { type = "ground" },
-["cormabm"] = { type = "ground" },
+["cormabm"] = { type = "strategicbuilding" },
 ["coreter"] = { type = "ground" },
 ["nfavrad"] = { type = "ground" },
 
@@ -366,7 +396,7 @@ local UNIT_DB = {
 ["andrad"] = { type = "building" }, 
 ["andlartic"] = { type = "building" },
 ["andartic"] = { type = "building" },
-["andhartic"] = { type = "building" },
+["andhartic"] = { type = "defence" },
 ["andpopaa"] = { type = "building" },
 
 -- Costruzioni Tier 2
@@ -375,14 +405,14 @@ local UNIT_DB = {
 ["andametex"] = { type = "building" },
 ["andaestor"] = { type = "building" },
 ["andarad"] = { type = "building" },
-["andshield"] = { type = "building" },
-["anddfens"] = { type = "building" },
-["andill"] = { type = "building" },
-["andchaos"] = { type = "strategicbuilding" },
+["andshield"] = { type = "strategicdefence" },
+["anddfens"] = { type = "strategicdefence" },
+["andill"] = { type = "strategicdefence" },
+["andchaos"] = { type = "strategicdefence" },
 ["andernie"] = { type = "building" },
 ["chemist"] = { type = "building" },
 ["andlaunch"] = { type = "strategicbuilding" },
-["andangel"] = { type = "building" },
+["andangel"] = { type = "strategicdefence" },
 ["medusa"] = { type = "building" },
 
 -- Fabbriche Tier 1
@@ -396,7 +426,7 @@ local UNIT_DB = {
 ["andahp"] = { type = "building" },
 ["andaplat"] = { type = "building" },
 ["andainc"] = { type = "building" },
-["andgant"] = { type = "building" },
+["andgant"] = { type = "strategicbuilding" },
 
 -- Unità prodotte da andlab 
 ["andcsp"] = { type = "ground", ignore = true  },
