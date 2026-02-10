@@ -39,7 +39,8 @@ to do list
 -- rev 4 by molix -- 02/06/2025 -- aggiunta la funzione "blinking" al pulsante objective quando si riceve il comando: Spring.SendCommands("blink_WMRTS_obj")
 -- rev 5 by molix -- 26/09/2025 -- aggiunto check is WMRTSmission ? se si fai apparire i pulsante objectives e diary
 -- rev 6 by molix -- 04/11/2025 -- aggiunto unit's deployment system 
--- rev 7 by molix -- 04/11/2025 -- change code logic due upvalue, using tables, the variables are  becoming many
+-- rev 7 by molix -- 04/11/2025 -- change code logic due upvalue, using tables, the variables are becoming many
+-- rev 8 by molix -- 10/02/2026 -- update objective code
 
 -- definizione pulsanti minimenu
 local larghezza_main_minimenu_button 	= 50 	-- larghezza del pulsante "main menu" del minimenu (più largo degli altri)
@@ -159,8 +160,8 @@ end
 -- INIZIALIZZO IL MENU 
 --------------------------------------
 function widget:Initialize()
--- preleva il valore da modoptions per gestire il diary button
-	missione_attiva = tonumber(Spring.GetModOptions().wmrtsmission) or 0 	-- prendi il valore dalle opzioni wmrtsmission o 0
+-- preleva il valore da modoptions per gestire il diary button e obj button
+	missione_attiva = tonumber(Spring.GetModOptions().wmrtsmission) or 0 	-- prendi il valore dalle opzioni wmrtsmission (1 o 2) altrimenti metti 0 come default
 -- preleva il valore da modoptions per gestire il deploy units button	
 	deploy_attiva = tonumber(Spring.GetModOptions().wmrtsunitdeploy) or 0	-- prendi il valore dalle opzioni wmrtsmission o 0
 -- all'inizio imposto la posizione del mini menu
@@ -677,7 +678,7 @@ local function DrawMainMiniMenu()
 		
 -- inserisco obj minipulsante, se abilitato
 ------------------------------------
-		if Button_[2].showMiniButton then 	-- se il minipulsante è attivo per vederlo nel minimenù:
+		if (Button_[2].showMiniButton and (missione_attiva ~= 0)) then 	-- se il minipulsante è attivo per vederlo nel minimenù:
 	Button_[2].Pos_x_button = Pos_x_next_button_drawing		-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
 	-- sfondo del blocco, se attivo
 	gl.Color(1,1,1,1)

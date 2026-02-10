@@ -24,6 +24,7 @@ function widget:GetInfo()
 end
 
 -- 09/10/2025: released version 1 - Molix
+-- 10/02/2026: closing widget if unnecessary - Molix
 
 --[[ to do list
 #### -- in inizialize disattivare questo widget se non è presente la condizione : wmrtsmission = 1; o isflea #####
@@ -254,6 +255,11 @@ end
 -- INIZIALIZZO IL MENU 
 --------------------------------------
 function widget:Initialize()
+-- verifico che sia necessario il widget (se la partita NON è mission, allora rimuovi il widget) -- #### valutare anche per flea (diario per FLEA)
+--	if not(Spring.GetGameRulesParam('Fleabowl') == 1 or Spring.GetGameRulesParam('Fleabowl') == '1' or Spring.GetGameRulesParam('wmrtsmission') == '1') then
+	if not Spring.GetGameRulesParam('wmrtsmission') == '1' then
+		widgetHandler:RemoveWidget()
+	end
 -- all'inizio imposto la posizione del mini menu
 	Pos_x_mainmenu = vsx/2 - larghezza_diarymenu/2
 	Pos_y_mainmenu = vsy/2 - altezza_diarymenu/2
