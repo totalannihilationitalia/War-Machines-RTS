@@ -427,7 +427,7 @@ local function GetSmartEnemyTarget(myTeamID, squadType)
 					local currentPriority = 0
 					if enemyCat == "defence" then
 						currentPriority = 5
-					if enemyCat == "building" then
+					elseif enemyCat == "building" then
 						currentPriority = 4
 					elseif enemyCat == "strategicbuilding" then
 						currentPriority = 3
