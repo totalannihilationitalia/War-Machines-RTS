@@ -288,6 +288,40 @@ local SQUAD_TEMPLATES = {
 		units = { "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix" }, 	
 		type = "air_bomber_strategic"
 	},		
+-- icugant
+	["ICU_icugant_medium_patrol_1"] = {
+		units = { "armshock", "armshock", "armtigre" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},		
+	["ICU_icugant_medium_patrol_2"] = {
+		units = { "armshock", "armshock" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},			
+	["ICU_icugant_medium_patrol_3"] = {
+		units = { "armtigre", "armtigre" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},			
+-- armshltx
+	["ICU_armshltx_medium_patrol_1"] = {
+		units = { "icuraz", "icuraz", "icuraz" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+	["ICU_armshltx_medium_patrol_2"] = {
+		units = { "icuraz", "icuraz", "icuraz", "icuraz", "warhammer" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+	["ICU_armshltx_medium_patrol_3"] = {
+		units = { "icufurie" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+	["ICU_armshltx_medium_patrol_4"] = {
+		units = { "icufurie", "icuraz","icuraz" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},			
+	["ICU_armshltx_medium_patrol_5"] = {
+		units = { "warhammer", "warhammer", "icuraz","icuraz" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},				
 ---------------
 -- AND gruppi creati per il lvl 5+ -------- 
 ---------------
@@ -333,7 +367,9 @@ local function GetConfigPerLivello(livello) -- Questa funzione restituisce, per 
             ["armap"]  = { "ICU_armap_air_mediumraid_1", "ICU_armap_antiair_mediumraid_1","ICU_armap_air_mediumbomber_1","ICU_armap_air_mediumstrategicbomber_1" },
             ["armalab"] = { "ICU_armalab_medium_patrol_1", "ICU_armalab_medium_patrol_2" },			
             ["armavp"] = { "ICU_armavp_medium_patrol_1", "ICU_armavp_medium_patrol_2", "ICU_armavp_medium_patrol_3" },
-            ["armaap"]  = { "ICU_armaap_medium_patrol_1", "ICU_armaap_medium_patrol_2","ICU_armaap_air_bomber_1","ICU_armaap_air_bomber_2" },			
+            ["armaap"]  = { "ICU_armaap_medium_patrol_1", "ICU_armaap_medium_patrol_2","ICU_armaap_air_bomber_1","ICU_armaap_air_bomber_2" },		
+            ["icugant"] = { "ICU_icugant_medium_patrol_1", "ICU_icugant_medium_patrol_2", "ICU_icugant_medium_patrol_3" },		
+            ["armshltx"] = { "ICU_armshltx_medium_patrol_1", "ICU_armshltx_medium_patrol_2", "ICU_armshltx_medium_patrol_3", "ICU_armshltx_medium_patrol_4", "ICU_armshltx_medium_patrol_5" },		
             -- AND -- ################### CONCLUDERE
             ["andlab"] = { "AND_andlab_light_patrol_1", "AND_andlab_light_patrol_2" },
             ["andhp"] = { "AND_andhp_light_patrol_1", "AND_andhp_light_patrol_2" },

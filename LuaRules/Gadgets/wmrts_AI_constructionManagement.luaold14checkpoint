@@ -21,22 +21,21 @@
 	-- 05/02/2026 = V13 inserita funzione upgrade di metallo T1 to T2 o T3 (in futuro).
 	-- 06/02/2026 = Corretti comandi per Reclaim e build
 	-- 09/02/2026 = V14 Implementato raggio dinamico sviluppo base, in funzione del livello. I raggi sono settati livello per livello
-	-- 12/02/2026 = V15 Aggiunto T3 - per ora tutto ICU
 
 	-- TO DO
 	-- implementare naval e sub
 	-- creare la categorizzazione land/air/sea per gli estrattori di metallo (logicamente land e air avranno lo stesso icumetex mentre sea avrà ad esempio undewatermetex). Vedere se fare lo stesso per le floating torrette T1 e T2 ed eventualmente le centrali energia.
-	-- creare funzione behaviour ai costruttori fermi, come con il comandante: Patrol/costruisci. La prima gira attorno alla base se non ci sono più ordini da eseguire.
+	-- creare funzione comando ai costruttori (comandante, costruttori non comandante): Patrol/costruisci. La prima gira attorno alla base aiutando le costruizoni, la seconda per impegnare i costruttori a costruire
 	-- ridurre il timeout nel caso i costruttori rimangano fermi per costruire giacimenti di metallo. ## -> 02/02/2025 fatto per ora lo teniamo cosi molix
 	--[[ ########################## to do
 	costruire missili e antimissili
 costruire air repair
 costruire logica espansiva della base (al livello 10 e anche prima arrivi ad aver già occupato lo spazio massimo ammissibile)
-costruire cannoni a lungo raggio								--- fatto testare
-aerei bombardieri: bersagliare unità più specifiche?? 			--- fatto testare
-antipallina ??													--- fatto testare
+costruire cannoni a lungo raggio
+aerei bombardieri: bersagliare unità più specifiche??
+antipallina ??
 nanotower o costruttori aiutanti???
-unità T3 !!!!													--- fatto testare
+unità T3 !!!!
 ########################################
 	--]]
 
@@ -97,12 +96,7 @@ unità T3 !!!!													--- fatto testare
 			["CAT_CANNON_T2"]      	= { "armamb" },			
 			["CAT_AA_T1"]          	= { "armrl" },
 			["CAT_AA_T1_2"]         = { "packo" },			
-			["CAT_SHIELD"]         	= { "armgate" },						
-			["CAT_LONG_CANNON"]     = { "armbrtha" },									
-			["CAT_AA_T2"]          	= { "armflak", "armflak", "armflak", "mercury" },		
-			["CAT_ATOMICDEFENCE"]   = { "armamd" },						
-			["CAT_ATOMICATTACK"]    = { "armsilo" },							
-			
+			["CAT_AA_T2"]          	= { "armflak" },		
 			["CAT_FACTORY_T1"] = {									-- fabbrica T1 si categorizza per tipologia ( terra, aria o mare), in funzione dei MAP_PROFILES l'AI effettuerà una scelta
 				land = { "armlab", "armvp" },						-- randomizza la fabbrica
 				air  = { "armap" },
@@ -113,11 +107,7 @@ unità T3 !!!!													--- fatto testare
 				air  = { "armaap" },
 				sea  = { "armasy" },
 			},		
-			["CAT_FACTORY_T3"] = {
-				land = { "icugant", "armshltx" },
-				air  = { "icufff" },
-				sea  = { "armasy" }, -- pagliativo per non bloccare l'AI
-			},		
+
 			["CAT_CONSTRUCTORS_T1"]		= { "icuck", "armcv", "armca", "armcs" }, 				-- solo costruttori T1
 			["CAT_CONSTRUCTORS_T2"] 	= { "armack", "armacv", "armaca", "armacs" }, 			-- solo costruttori T2	
 		},
@@ -141,7 +131,6 @@ unità T3 !!!!													--- fatto testare
 	local AI_BUILD_LEVELS = {
 	-- il numero [0] o [1] rappresenta il livello della AI. L'AI parte sempre dal livello 0. Per ogni livello vengono specificate quante unità devono essere costruite. l'AI sale di livello una volta che ha completato tutte le unità di quel livello. Se vengono distrutte le unità, e i requisiti di un livello non vengono rispettati, l'AI scende di livello per "recuperare" i requisiti che lo soddisfano.
 	-- REMINDER: ogni volta che si aggiunge o toglie il livello a questo gadget, aggiornare anche i livelli in wmrts_AI_militaryMenagement.lua !!!!!!!
-	-- "simultanea ="  ad ogni ciclo di controllo (150 frame / 5 secondi), questa variabile definisce il numero massimo di ordini simultanei da impartire ai costruttori fermi( es simultanea = 6 -> in quel livello l'AI cercherà di "mettere al lavoro" fino a 6 costruttori diversi contemporaneamente in quel singolo ciclo.)
 	-- "cat=" rappresenta quali unità  di categoria l'AI deve costruire in quel determinato livello. Le categorie sono definite sopra e si possono aggiungere a piacimento (a patto che sia presente in tutte le fazioni)
 	-- "count=" rappresenta la variabile ASSOLUTA di quante unità della categoria corrispondente devono essere attive in quel dato livello
 	-- "combehaviour=" è il comportamento del comandante in quello specifico livello. può essere
@@ -308,65 +297,16 @@ unità T3 !!!!													--- fatto testare
 			T2metalBuildType = "upgrade",				
 			requisiti = {
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
-				{cat = "CAT_CONSTRUCTORS_T2", 	count = 5},			
+				{cat = "CAT_CONSTRUCTORS_T2", 	count = 5},	
 				{cat = "CAT_FACTORY_T2", 		count = 6},		
-				{cat = "CAT_LASER_T2", 			count = 1},					
 				{cat = "CAT_FACTORY_T1", 		count = 10},	
-				{cat = "CAT_MEX_T2",            count = 5},	
-				{cat = "CAT_SHIELD", 			count = 1},						
+				{cat = "CAT_MEX_T2",            count = 5},					
 				{cat = "CAT_ENERGY_T2",         count = 4},		
-				{cat = "CAT_AA_T2", 			count = 4},		
-				{cat = "CAT_SHIELD", 			count = 2},						
+				{cat = "CAT_AA_T2", 			count = 3},					
 				{cat = "CAT_LASER_T2", 			count = 3},	
-				{cat = "CAT_CANNON_T2", 		count = 3},		
-				{cat = "CAT_SHIELD", 			count = 3},														
+				{cat = "CAT_AA_T2", 			count = 3},					
 			} 	-- end requisiti di livello
-		},		-- end livello  [n]	
-		[11] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
-			simultanea = 9,								
-			fattoreVariazioneRaggio = 4,						
-			combehaviour = "patrolbase",	
-			T2metalBuildType = "upgrade",				
-			requisiti = {
-				{cat = "CAT_SHIELD", 			count = 3},				
-				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
-				{cat = "CAT_CONSTRUCTORS_T2", 	count = 5},	
-				{cat = "CAT_LONG_CANNON", 		count = 1},					
-				{cat = "CAT_FACTORY_T3", 		count = 2},						
-				{cat = "CAT_FACTORY_T2", 		count = 6},		
-				{cat = "CAT_FACTORY_T1", 		count = 10},	
-				{cat = "CAT_MEX_T2",            count = 5},					
-				{cat = "CAT_ENERGY_T2",         count = 5},	
-				{cat = "CAT_LONG_CANNON", 		count = 2},								
-				{cat = "CAT_LASER_T2", 			count = 4},	
-				{cat = "CAT_AA_T2", 			count = 6},	
-				{cat = "CAT_CANNON_T2", 		count = 6},		
-				{cat = "CAT_LONG_CANNON", 		count = 3},		
-				{cat = "CAT_SHIELD", 			count = 4},								
-			} 	-- end requisiti di livello
-		},		-- end livello  [n]		
-		[12] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
-			simultanea = 9,								
-			fattoreVariazioneRaggio = 6,						
-			combehaviour = "patrolbase",	
-			T2metalBuildType = "upgrade",				
-			requisiti = {			
-				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
-				{cat = "CAT_CONSTRUCTORS_T2", 	count = 5},	
-				{cat = "CAT_FACTORY_T3", 		count = 3},						
-				{cat = "CAT_FACTORY_T2", 		count = 6},		
-				{cat = "CAT_FACTORY_T1", 		count = 10},	
-				{cat = "CAT_MEX_T2",            count = 5},					
-				{cat = "CAT_ENERGY_T2",         count = 5},	
-				{cat = "CAT_LASER_T2", 			count = 4},	
-				{cat = "CAT_AA_T2", 			count = 6},	
-				{cat = "CAT_CANNON_T2", 		count = 6},		
-				{cat = "CAT_LONG_CANNON", 		count = 3},		
-				{cat = "CAT_SHIELD", 			count = 4},								
-				{cat = "CAT_ATOMICDEFENCE",		count = 2},						
-				{cat = "CAT_ATOMICATTACK",		count = 2},										
-			} 	-- end requisiti di livello
-		}		-- end livello  [n]				
+		}		-- end livello  [n]			
 	}
 
 	-- inserimento manuale degli spot di metallo per ogni mappa, utilizzare widget: WMRTS_Maker_exportMetal.lua (comando /exportmetal in chat)
