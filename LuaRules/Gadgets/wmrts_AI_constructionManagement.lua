@@ -558,7 +558,7 @@ end
 								
 								-- Se non si è mosso (meno di 30 pixel) E non sta costruendo (già verificato sopra)
 								if movedDist < 30 then
-									Spring.Echo("WMRTS_contrMngm_AI: Team "..teamID.." - builder " .. udName .. " bloccato e NON sta costruendo! Blacklisto spot.") -- L'UNITA' E' BLOCCATA!
+--									Spring.Echo("WMRTS_contrMngm_AI: Team "..teamID.." - builder " .. udName .. " bloccato e NON sta costruendo! Blacklisto spot.") -- L'UNITA' E' BLOCCATA!
 									
 									for i, spot in ipairs(metalSpots) do -- Trova quale spot era (confrontando le coordinate tx, tz)
 										if math.abs(spot.x - tx) < 10 and math.abs(spot.z - tz) < 10 then
@@ -671,7 +671,7 @@ end
 			end
 		end
 		scanDone = true
-		Spring.Echo("WMRTS_contrMngm_AI: Metal scan complete (" .. #metalSpots .. " spots)")
+--		Spring.Echo("WMRTS_contrMngm_AI: Metal scan complete (" .. #metalSpots .. " spots)")
 	end
 
 	-- funzione per rilevare il metalspot più vicino via pathfinding (se l'unità è di terra) o diretta, se l'unità è un aereo DICHIARATO NELLA CATEGORIA "CAT_ALL_AIR_CONSTRUCTORS" di ogni fazione
@@ -753,9 +753,9 @@ end
 		local logType = isAirConstructor and "ARIA (Ignora Path)" or "TERRA/MARE (Pathfinding)"
 		if bestSpot then
 			local dLin = math.sqrt(minDist)
-			Spring.Echo(string.format("WMRTS_contrMngm_AI: [%s] Team %d - %s: Spot TROVATO! x:%.0f z:%.0f | Dist. Linea Aria: %.0f", udName, teamID, logType, bestSpot.x, bestSpot.z, dLin))
+--			Spring.Echo(string.format("WMRTS_contrMngm_AI: [%s] Team %d - %s: Spot TROVATO! x:%.0f z:%.0f | Dist. Linea Aria: %.0f", udName, teamID, logType, bestSpot.x, bestSpot.z, dLin))
 		else
-			Spring.Echo(string.format("WMRTS_contrMngm_AI: [%s] Team %d - %s: NESSUN SPOT DISPONIBILE!", udName, teamID, logType))
+--			Spring.Echo(string.format("WMRTS_contrMngm_AI: [%s] Team %d - %s: NESSUN SPOT DISPONIBILE!", udName, teamID, logType))
 		end
 		---------------------------
 		if bestSpot then 
@@ -935,7 +935,7 @@ end
 					teamLevels[teamID] = 0
 					local side = select(5, Spring.GetTeamInfo(teamID))
 					teamFactions[teamID] = (side and string.find(string.lower(side), "and")) and "AND" or "ICU"
-					Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " detected (" .. teamFactions[teamID] .. ")")
+--					Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " detected (" .. teamFactions[teamID] .. ")")
 				end
 			end
 		end
@@ -980,7 +980,7 @@ end
 					if GG.WMRTS_Levels then GG.WMRTS_Levels[teamID] = 0 end
 					
 					local motivo = fallimentoFabbriche and "No Factories" or (fallimentoMetallo and "Low Metal" or "Low Energy")
-					Spring.Echo(string.char(255, 255, 0, 0) .."WMRTS_contrMngm_AI: Team " .. teamID .. " Critical Failure (" .. motivo .. ")! Reverting to Level 0.")
+--					Spring.Echo(string.char(255, 255, 0, 0) .."WMRTS_contrMngm_AI: Team " .. teamID .. " Critical Failure (" .. motivo .. ")! Reverting to Level 0.")
 					
 					currentLvl = 0 
 				end
@@ -1012,11 +1012,11 @@ end
 						-- Creiamo un triangolo di pattuglia attorno alla base
 						Spring.GiveOrderToUnit(comID, CMD.PATROL, {bp.x + 150, bp.y, bp.z + 150}, {"shift"})
 						Spring.GiveOrderToUnit(comID, CMD.PATROL, {bp.x - 150, bp.y, bp.z - 150}, {"shift"})
-						Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Comandante (" .. UnitDefs[Spring.GetUnitDefID(comID)].name .. ") in PATROL MODE")
+--						Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Comandante (" .. UnitDefs[Spring.GetUnitDefID(comID)].name .. ") in PATROL MODE")
 					
 					elseif targetBehaviour == "constructor" then						-- se il livello richiede constructor...
 						Spring.GiveOrderToUnit(comID, CMD.STOP, {}, {})					-- ... dai al comandante un ordine di stop, lui rimarrà idle, il resto della logica lo vedrà fermo e lo impiegherà come costruttore.
-						Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Comandante in BUILDER MODE")
+--						Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Comandante in BUILDER MODE")
 					end
 					
 					commanderCurrentBehaviour[teamID] = targetBehaviour
@@ -1102,7 +1102,7 @@ end
 											end
 
 											if bx == nil then
-												Spring.Echo("WMRTS_contrMngm_AI: Nessun metallo (nuovo o upgrade) raggiungibile per " .. UnitDefs[Spring.GetUnitDefID(bID)].name)
+--												Spring.Echo("WMRTS_contrMngm_AI: Nessun metallo (nuovo o upgrade) raggiungibile per " .. UnitDefs[Spring.GetUnitDefID(bID)].name)
 											end
 										 -- LOGICA deve costruire FABBRICHE (definite dalla tabella AI_BUILD_LEVELS)
 										elseif req.cat == "CAT_FACTORY_T1" or req.cat == "CAT_FACTORY_T2" then														-- se l'AI deve costruire una fabbrica...
@@ -1122,7 +1122,7 @@ end
     -- 2. Inseriamo la COSTRUZIONE nella lista degli ordini, in posizione 1 (subito dopo il reclaim). Se dessi un ordine diretto con "shift" non funzionerebbe perchè essendoci ancora l'estrattore, fisicamente SPRING non può costruirci sopra niente.
     Spring.GiveOrderToUnit(bID, CMD.INSERT, {1, -uDef.id, 0, mx, 0, mz, 1}, {"alt"})
     
-    Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Upgrade via CMD_INSERT (Reclaim + Build)")
+--    Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Upgrade via CMD_INSERT (Reclaim + Build)")
 												
 											table.remove(builders, i)		-- Rimuovi il builder dalla lista perché ora è occupato	
 											started = started + 1
@@ -1130,15 +1130,15 @@ end
 											break -- Esci dal ciclo dei builder, abbiamo trovato chi lo fa												
 												
 										elseif bx and (not targetUpgradeMexID) then										-- Se invece non si tratta di upgrade metallo T1 to T2 (not targetUpgradeMexID) allora procedi con il resto delle costruzioni
-											Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " builder " .. bID .. " (" .. UnitDefs[Spring.GetUnitDefID(bID)].name .. ") builds " .. unitName)
+--											Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " builder " .. bID .. " (" .. UnitDefs[Spring.GetUnitDefID(bID)].name .. ") builds " .. unitName)
 											Spring.GiveOrderToUnit(bID, -uDef.id, {bx, by, bz, 0}, {})
 											-- --- LOG DISTANZA REALE PATHFINDER ---
 											local bName = UnitDefs[Spring.GetUnitDefID(bID)].name
 											local pDist = GetRealDistAfterOrder(bID)
 											if pDist > 0 then
-												  Spring.Echo(string.format("   -> DEBUG PATH Team %d: L'unita '%s' ID=%d percorrera %.0f unita reali per arrivare.", teamID, bName, bID, pDist))
+--												  Spring.Echo(string.format("   -> DEBUG PATH Team %d: L'unita '%s' ID=%d percorrera %.0f unita reali per arrivare.", teamID, bName, bID, pDist))
 											else
-												  Spring.Echo(string.format("   -> DEBUG PATH Team %d: L'unita '%s' ID=%d ha un percorso istantaneo o non ancora calcolato.", teamID, bName, bID))
+--												  Spring.Echo(string.format("   -> DEBUG PATH Team %d: L'unita '%s' ID=%d ha un percorso istantaneo o non ancora calcolato.", teamID, bName, bID))
 											end
 											--------
 											table.remove(builders, i)		-- Rimuovi il builder dalla lista perché ora è occupato	
@@ -1180,7 +1180,7 @@ end
 									end
 
 									if not alreadyBuilding then
-										Spring.Echo("WMRTS_contrMngm_AI: Factory " .. fID .. " priority production: " .. unitName)
+--										Spring.Echo("WMRTS_contrMngm_AI: Factory " .. fID .. " priority production: " .. unitName)
 										Spring.GiveOrderToUnit(fID, -uDef.id, {}, {"alt"})
 										started = started + 1
 										break 
