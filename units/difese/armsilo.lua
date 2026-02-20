@@ -162,7 +162,7 @@ weapondefs = {
                      soundstart = "misicbm1",
                      stockpile = true,
                      stockpiletime = 120,
-		     targetable = 1,
+		             targetable = 1, 						-- il numero rappresenta l'ID dell'arma che può essere intercettata. Gli intercettatori dovranno avere la variabile "interceptor = 1" dove "1" è l'ID in comune.
                      tolerance = 4000,
                      turnrate = 32768,
                      weaponacceleration = 100,

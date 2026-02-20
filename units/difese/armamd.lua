@@ -135,8 +135,8 @@ weapondefs = {
                      avoidfeature = true,
 --                     cegTag = ""
                      collidefriendly = false,
-                     coverage = 2000,
-                     interceptor = 1, --specificare ID missili che verranno intercettati. I lanciamissili dovranno avere il targetable = 0 con il numero corrispondente all'interceptor. Entrambi i valori di default sono 0                     craterareaofeffect =  ,
+                     coverage = 2000, -- range di copertura
+                     interceptor = 1, --specificare ID missili che verranno intercettati. I lanciamissili "armsilo" dovranno avere il targetable = 1 (ossia con il numero corrispondente all'interceptor). Entrambi i valori di default sono 0                     craterareaofeffect =  ,
                      craterboost = 0,
                      cratermult = 0,
                      energypershot = 7500,
