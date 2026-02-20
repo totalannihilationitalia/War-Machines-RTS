@@ -17,11 +17,18 @@
 --			type = navalbuilding 		-> unità fissa di superficie su mare (di difesa/produzione/energia)
 --			type = defence 				-> unità fissa di difesa T1-2 + ( Es torrette di difesa importanti, antiaerea ecc )
 --			type = strategicbuilding 	-> unità fissa di superficie strategica ( Es factory 3 livello, silos, antipalline, ecc )
---			type = strategicdefence 	->  unità fissa di difesa strategica ( Es bertha, corbuzz, toaster, ecc )
+--			type = strategicdefence 	-> unità fissa di difesa strategica ( Es bertha, corbuzz, toaster, ecc )
+--			type = strategicshield		-> unità fissa shield (es. plasma repulsor)
 --			tutte le unità che non sono identificate in questo database, prenderanno valore type = unknown , vedere poi la logica di targetin come gestirle
 -- definizione della caratteristica "ignore": può essere true o false (se non dichiarata). Se True, l'unità ad esso associata verrà completamente ignorata dal gadget "military_factory": quando creata dalla fabbrica, quell'unità non viene inclusa in alcun gruppo e non viene mandata all'attacco. Sarà un altro Gadget a gestire l'unità (come ad esempio i costruttori) oppure le unità saranno gestite dal mission editor
+-- definizione della caratteristica "isLRA = true": se true, il gadget "wmrts_AI_longWeaponManagement.lua" vede l'unità come cannone Long Range Artillery
+-- definizione della caratteristica "isSILO = true": se true, il gadget "wmrts_AI_longWeaponManagement.lua" vede l'unità come silos di missili nucleari
+-- definizione della caratteristica "isAMD = true": se true, il gadget "wmrts_AI_longWeaponManagement.lua" vede l'unità come silos di difesa da missili nucleari
+-- definizione della caratteristica "range = xxxx": la gettata delle armi (definita nello weaponDef - range). Ho difficoltà a reperire direttamente questa informazione, pertanto per ora la scrivo manualmente
 
 -- 09/02/2026 = Aggiunte categorie defence e strategicdefence. Molix
+-- 20/02/2026 = Aggiunte definizioni isLRA, isSILO, isAMD per il gadget "wmrts_AI_longWeaponManagement.lua". Molix
+-- 20/02/2026 = Aggiunto type "strategicshield"
 
 local UNIT_DB = {
 	--------------------------------------------------------------------------------
@@ -75,16 +82,16 @@ local UNIT_DB = {
 ["armasp"] = { type = "building" },
 ["armtarg"] = { type = "building" },
 ["armsd"] = { type = "building" },
-["armgate"] = { type = "strategicbuilding" },
+["armgate"] = { type = "strategicshield" },
 ["armamb"] = { type = "strategicdefence" },
 ["armpb"] = { type = "defence" },
 ["armanni"] = { type = "strategicdefence" },
 ["armflak"] = { type = "building" },
 ["mercury"] = { type = "building" },
-["armamd"] = { type = "strategicbuilding" },
-["armsilo"] = { type = "strategicbuilding" },
-["armbrtha"] = { type = "strategicdefence" },
-["armvulc"] = { type = "strategicdefence" },
+["armamd"] = { type = "strategicbuilding", isAMD = true },
+["armsilo"] = { type = "strategicbuilding", isSILO = true, range = 72000 },
+["armbrtha"] = { type = "strategicdefence", isLRA = true, range = 6100 },
+["armvulc"] = { type = "strategicdefence", isLRA = true, range = 5600 },
 ["advmoho"] = { type = "strategicbuilding" },
 ["armfarad"] = { type = "navalbuilding" },
 ["armfamb"] = { type = "navalbuilding" },		-- ### creare floating defence????
@@ -257,16 +264,16 @@ local UNIT_DB = {
 ["corasp"] = { type = "building" },
 ["cortarg"] = { type = "building" },
 ["corsd"] = { type = "building" },
-["corgate"] = { type = "strategicbuilding" },			
+["corgate"] = { type = "strategicshield" },			
 ["cortoast"] = { type = "strategicdefence" },
 ["corvipe"] = { type = "building" },
 ["cordoom"] = { type = "strategicdefence" },
 ["corflak"] = { type = "building" },
 ["screamer"] = { type = "building" },
-["corfmd"] = { type = "strategicbuilding" },
-["corsilo"] = { type = "strategicbuilding" },
-["corint"] = { type = "strategicdefence" },
-["corbuzz"] = { type = "strategicdefence" },
+["corfmd"] = { type = "strategicbuilding", isAMD = true },
+["corsilo"] = { type = "strategicbuilding", isSILO = true, range = 72000 },
+["corint"] = { type = "strategicdefence", isLRA = true, range = 6500 },
+["corbuzz"] = { type = "strategicdefence",isLRA = true, range = 6000 },
 ["corvp"] = { type = "building" },
 ["coravp"] = { type = "building" },
 ["corfarad"] = { type = "navalbuilding" },
@@ -405,14 +412,14 @@ local UNIT_DB = {
 ["andametex"] = { type = "building" },
 ["andaestor"] = { type = "building" },
 ["andarad"] = { type = "building" },
-["andshield"] = { type = "strategicdefence" },
+["andshield"] = { type = "strategicshield" },
 ["anddfens"] = { type = "strategicdefence" },
 ["andill"] = { type = "strategicdefence" },
 ["andchaos"] = { type = "strategicdefence" },
 ["andernie"] = { type = "building" },
 ["chemist"] = { type = "building" },
-["andlaunch"] = { type = "strategicbuilding" },
-["andangel"] = { type = "strategicdefence" },
+["andlaunch"] = { type = "strategicbuilding",  isLRA = true, range = 65000 }, -- non è un cannone ma è un arma energetica a lungo raggio
+["andangel"] = { type = "strategicdefence", isLRA = true },
 ["medusa"] = { type = "building" },
 
 -- Fabbriche Tier 1

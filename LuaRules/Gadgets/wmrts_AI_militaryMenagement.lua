@@ -19,6 +19,7 @@ end
 -- 14/01/2025 = Aggiungo la gestione " ignore = true" nel database, da applicare ai costruttori, gestiti da altri gadget. In questo gadget i costruttori devono essere ignorati (cioè non devono essere inseriti in gruppi e mandati all'attacco), devono essere considerati invece solo come bersagli da attaccare ("ground" o relativi)
 -- 29/01/2025 = Ora l'avanzamento di livello viene gestito dal gadget construcionManagement
 -- 09/02/2025 = Aggiunta priorità nella categoria di attacco (per bombardieri & Co) e aggiunta categoria defence e strategicdefence
+-- 20/02/2026 = Ho aggiunto la categoria (type) strategicshield in quanto prima gli shield erano inclusi in "strategicbuilding". In questo modo i cannoni a lungo raggio gestiti dalla AI del gadget "wmrts_AI_longWeaponManagement.lua" non prendono di mira gli shield (antiplasma) che prima erano categorizzati come "strategicbuilding". Il codice in questo gadget viene modificato in modo che, se prima, la categoria "X" attaccava solo "strategicbuilding", ora deve attaccare anche la type scorporata "strategicbuilding"
 
 -- to do LIST ################################
 -- 1) implementare i SUB
@@ -44,7 +45,8 @@ end
 --			type = navalbuilding 		-> unità fissa di superficie su mare (di difesa/produzione/energia)
 --			type = defence 				-> unità fissa di difesa T1-2 + ( Es torrette di difesa importanti, antiaerea ecc )
 --			type = strategicbuilding 	-> unità fissa di superficie strategica ( Es factory 3 livello, silos, antipalline, ecc )
---			type = strategicdefence 	->  unità fissa di difesa strategica ( Es bertha, corbuzz, toaster, ecc )
+--			type = strategicdefence 	-> unità fissa di difesa strategica ( Es bertha, corbuzz, toaster, ecc )
+--			type = strategicshield		-> unità fissa shield (es. plasma repulsor) 
 --			tutte le unità che non sono identificate in questo database, prenderanno valore type = unknown , vedere poi la logica di targetin come gestirle
 
 local dbPath = "LuaRules/Configs/WMRTS_AI_mission_db.lua"
@@ -429,14 +431,14 @@ local function GetSmartEnemyTarget(myTeamID, squadType)
 				-------------	
 				if squadType == "ground" then -- solo truppe di terra vs terra
 				-- "ground", "building", "strategicbuilding", "unknown" e "defence"
-					if enemyCat == "ground" or enemyCat == "unknown" or enemyCat == "building" or enemyCat == "strategicbuilding" or enemyCat == "strategicdefence" or enemyCat == "defence" then 
+					if enemyCat == "ground" or enemyCat == "unknown" or enemyCat == "building" or enemyCat == "strategicbuilding" or enemyCat == "strategicdefence" or enemyCat == "defence" or enemyCat == "strategicshield" then 
 						return {x=x, y=y, z=z}
 					elseif enemyCat == "hover" and y >= -1 then	-- se gli hovercraft sono o sulla riva o sulla terraferma
 						return {x=x, y=y, z=z}
 					end
 
 				elseif squadType == "ground_hovercraft" then -- solo truppe di mare e terra vs hovercraft 
-					if enemyCat == "ground" or enemyCat == "unknown" or enemyCat == "building" or enemyCat == "strategicbuilding" or enemyCat == "strategicdefence"or enemyCat == "hover"  or enemyCat == "defence" then 
+					if enemyCat == "ground" or enemyCat == "unknown" or enemyCat == "building" or enemyCat == "strategicbuilding" or enemyCat == "strategicdefence"or enemyCat == "hover" or enemyCat == "defence" or enemyCat == "strategicshield" then  
 						return {x=x, y=y, z=z}
 					end
 				-------------					
@@ -459,29 +461,33 @@ local function GetSmartEnemyTarget(myTeamID, squadType)
 					if enemyCat == "ground" or enemyCat == "naval" or enemyCat == "hover" then
 						return {x=x, y=y, z=z} 
 					end				
-				elseif squadType == "air_bomber" then 					--(su "airbomber" non usiamo "return" subito perché vogliamo scansionare tutto e dare ai bombardieri una priorità sulle categorie da attaccare e, se non esiste la prima, vai sulla seconda e cosi via...
+				elseif squadType == "air_bomber" then 					--(su "airbomber" non usiamo "return" subito perché vogliamo scansionare tutto e dare ai bombardieri una priorità sulle categorie da attaccare e, se non esiste la prima (priorità più alta), vai sulla seconda e cosi via...
 					local currentPriority = 0
 					if enemyCat == "defence" then
-						currentPriority = 5
+						currentPriority = 6
 					elseif enemyCat == "building" then
-						currentPriority = 4
+						currentPriority = 5
 					elseif enemyCat == "strategicbuilding" then
-						currentPriority = 3
+						currentPriority = 4
 					elseif enemyCat == "strategicdefence" then
-						currentPriority = 2
+						currentPriority = 3
+					elseif enemyCat == "strategicshield" then
+						currentPriority = 2						
 					elseif enemyCat == "ground" then
 						currentPriority = 1						
 					end
 						if currentPriority > highestPriority then
 							highestPriority = currentPriority
 							bestTarget = {x=x, y=y, z=z, id=uID}
-							if highestPriority == 5 then break end -- Se trovo il top, mi fermo
+							if highestPriority == 6 then break end -- Se trovo il top, interrompo il ciclo for
 						end					
 				elseif squadType == "air_bomber_strategic" then			--(su "air_bomber_strategic", non usiamo "return" subito perché vogliamo scansionare tutto e dare ai bombardieri una priorità sulle categorie da attaccare e, se non esiste la prima, vai sulla seconda e cosi via...
 					local currentPriority = 0
 					if enemyCat == "strategicbuilding" then
+						currentPriority = 6
+					elseif enemyCat == "strategicshield" then
 						currentPriority = 5
-					elseif enemyCat == "strategicdefence" then
+					elseif enemyCat == "strategicdefence" then					
 						currentPriority = 4						
 					elseif enemyCat == "building" then
 						currentPriority = 3
@@ -493,7 +499,7 @@ local function GetSmartEnemyTarget(myTeamID, squadType)
 						if currentPriority > highestPriority then
 							highestPriority = currentPriority
 							bestTarget = {x=x, y=y, z=z, id=uID}
-							if highestPriority == 5 then break end -- Se trovo il top, mi fermo
+							if highestPriority == 6 then break end -- Se trovo il top, interrompo il ciclo for
 						end
 				end
 			end
