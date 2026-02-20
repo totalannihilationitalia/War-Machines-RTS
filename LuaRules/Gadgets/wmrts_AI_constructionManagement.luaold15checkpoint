@@ -21,11 +21,9 @@
 	-- 05/02/2026 = V13 inserita funzione upgrade di metallo T1 to T2 o T3 (in futuro).
 	-- 06/02/2026 = Corretti comandi per Reclaim e build
 	-- 09/02/2026 = V14 Implementato raggio dinamico sviluppo base, in funzione del livello. I raggi sono settati livello per livello
-	-- 12/02/2026 = V15 Aggiunto T3, shield, longrange cannon - per ora tutto ICU
-	-- 20/02/2026 = V16 Aggiungo tre variabili globali. a) le variabili "AI_RaggioDifesa" e "AI_BasePos" che sono il valore dell'espansione attuale della base che ogni team controllato dalla WMRTSAI, dettato dalla variabile "raggioDinamicoFactory" e la posizione centrale della base. b) la variabile di "AI_StatoGuerra" di ogni team controllato dalla WMRTSAI, e questa variabile può assumere due valori: "attacco", "difesa_leggera", "difesa_pesante". Questa variabile globale servirà a variare il comportamento delle unità in possesso dal team gestite dal gadget "wmrts_AI_militaryMenagement.lua" e che manderà all'attacco o in difesa le unità.	
-	-- 20/02/2026 = bugfix: l'AI carica se è impostata come "WarMachinesRTSmissionAI", prima partiva a prescindere dal nome.
-	-- TO DO
+	-- 12/02/2026 = V15 Aggiunto T3 - per ora tutto ICU
 
+	-- TO DO
 	-- implementare naval e sub
 	-- creare la categorizzazione land/air/sea per gli estrattori di metallo (logicamente land e air avranno lo stesso icumetex mentre sea avrà ad esempio undewatermetex). Vedere se fare lo stesso per le floating torrette T1 e T2 ed eventualmente le centrali energia.
 	-- creare funzione behaviour ai costruttori fermi, come con il comandante: Patrol/costruisci. La prima gira attorno alla base se non ci sono più ordini da eseguire.
@@ -34,7 +32,11 @@
 	costruire missili e antimissili
 costruire air repair
 costruire logica espansiva della base (al livello 10 e anche prima arrivi ad aver già occupato lo spazio massimo ammissibile)
+costruire cannoni a lungo raggio								--- fatto testare
+aerei bombardieri: bersagliare unità più specifiche?? 			--- fatto testare
+antipallina ??													--- fatto testare
 nanotower o costruttori aiutanti???
+unità T3 !!!!													--- fatto testare
 ########################################
 	--]]
 
@@ -384,48 +386,11 @@ nanotower o costruttori aiutanti???
 	local teamBasePos = {}      
 	local metalSpots = {}
 	local scanDone = false
-	local commanderCurrentBehaviour = {} 							-- comportamento del comandante
-	local TARGET_AI_NAME = "WarMachinesRTSmissionAI"				-- nome della AI
-	-- Inizializzo le tabelle/variabili globali 
-	if (not GG.AI_RaggioDifesa) then GG.AI_RaggioDifesa = {} end 	-- raggio di difesa della base del team
-	if (not GG.AI_StatoGuerra) then GG.AI_StatoGuerra = {} end		-- stato di guerra del team
-	if (not GG.AI_BasePos) then GG.AI_BasePos = {} end				-- posizione della base del team
+	local commanderCurrentBehaviour = {} -- comportamento del comandante
 
 	--------------------------------------------------------------------------------
 	-- 3) FUNZIONI DI SUPPORTO
 	--------------------------------------------------------------------------------
-
--- Questa funzione serve per aggiornare la variabile globale "stato di guerra" e il raggio di difesa (che varia in funzione del livello) per il team specificato. Cosi da comunicarlo ad altri gadget (ad esempio al "wmrts_AI_militaryMenagement.lua")
-local function UpdateTeamWarStatus(teamID, basePos, currentFactoryRadius)
-    if not basePos then return end
-    local scanRadius = currentFactoryRadius + 300     											-- 1. Definiamo il raggio di scansione (currentFactoryRadius, definito dalla tabella dei livelli + 300 unità, dentro questo cerchio, di raggio "scanRadius" l'AI conterà quante unità nemiche sono presenti
-    local unitsInArea = Spring.GetUnitsInSphere(basePos.x, basePos.y, basePos.z, scanRadius) 	-- 2. Troviamo tutte le unità nell'area
-    local enemyCount = 0
-    for i=1, #unitsInArea do																	-- 3. Contiamo solo i nemici (escludendo alleati e se stessi)
-        local uID = unitsInArea[i]
-        if not Spring.AreTeamsAllied(teamID, Spring.GetUnitTeam(uID)) then
-            -- Opzionale: è possibile filtrare per contare solo unità mobili o pericolose ############## valutare questo
-            -- local udID = Spring.GetUnitDefID(uID)
-            -- if not UnitDefs[udID].isFeature then ...
-            enemyCount = enemyCount + 1
-        end
-    end
-    local statoGuerra = "attacco" 			-- 4. Determiniamo lo stato in base al numero di nemici, imposto "attacco" di default. Il gadget "wmrts_AI_militaryMenagement" manderà le truppe all'attacco
-    if enemyCount > 10 then
-        statoGuerra = "difesa_pesante"		-- Il gadget "wmrts_AI_militaryMenagement" ripiegherà tutte le truppe di terra in difesa per contrastare tutte le truppe all'interno di "scanRadius"
-    elseif enemyCount > 0 then
-        statoGuerra = "difesa_leggera"		-- Il gadget "wmrts_AI_militaryMenagement" utilizzerà solo le truppe all'interno di "scanRadius" per contrastare i nemici all'interno di "scanRadius"
-    end
-
-    -- 5. Esportiamo i valori nelle variabili globali (GG) per gli altri gadget
-    GG.AI_StatoGuerra[teamID] = statoGuerra										-- stato di guerra
-    GG.AI_RaggioDifesa[teamID] = currentFactoryRadius							-- raggio di difesa della basa
-	GG.AI_BasePos[teamID] = { x = basePos.x, y = basePos.y, z = basePos.z }		-- punto centrale della base
-
-    -- Log di debug 
-	--Spring.Echo(string.format("AI Team %d: Stato=%s, Nemici=%d, Raggio=%d", teamID, statoGuerra, enemyCount, currentFactoryRadius))
-	Spring.Echo(string.format("AI Team %d: Stato=%s, Nemici=%d, Raggio=%d, BasePos=[X:%.0f Y:%.0f Z:%.0f]", teamID, statoGuerra, enemyCount, currentFactoryRadius, basePos.x, basePos.y, basePos.z))
-end
 
 -- Questa funzione serve per effettuare l'upgrade degli estrattori di metallo T1. Restituisce l'ID dell'estrattore T1 da upgradare, e le sue posizioni x y e z
 local function GetMexT1ToUpgrade(teamID, faction, basePos)
@@ -962,19 +927,16 @@ end
 		if not scanDone then AnalyzeMetalMap() end
 		if (n % 150 ~= 0) then return end 
 
-		-- IDENTIFICAZIONE TEAM (Solo quelli con la tua IA specifica)
 		local teamList = Spring.GetTeamList()
 		for _, teamID in ipairs(teamList) do
 			if not aiTeamIDs[teamID] then
 				local aiName = Spring.GetTeamLuaAI(teamID)
-				-- Filtro stringente sul nome dell'AI
-				if aiName and string.find(string.lower(aiName), string.lower(TARGET_AI_NAME)) then
---				if aiName and aiName ~= "" then
+				if aiName and aiName ~= "" then
 					aiTeamIDs[teamID] = true
 					teamLevels[teamID] = 0
 					local side = select(5, Spring.GetTeamInfo(teamID))
 					teamFactions[teamID] = (side and string.find(string.lower(side), "and")) and "AND" or "ICU"
-					Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " detected (" .. teamFactions[teamID] .. ")")
+--					Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " detected (" .. teamFactions[teamID] .. ")")
 				end
 			end
 		end
@@ -1019,7 +981,7 @@ end
 					if GG.WMRTS_Levels then GG.WMRTS_Levels[teamID] = 0 end
 					
 					local motivo = fallimentoFabbriche and "No Factories" or (fallimentoMetallo and "Low Metal" or "Low Energy")
-					Spring.Echo(string.char(255, 255, 0, 0) .."WMRTS_contrMngm_AI: Team " .. teamID .. " Critical Failure (" .. motivo .. ")! Reverting to Level 0.")
+--					Spring.Echo(string.char(255, 255, 0, 0) .."WMRTS_contrMngm_AI: Team " .. teamID .. " Critical Failure (" .. motivo .. ")! Reverting to Level 0.")
 					
 					currentLvl = 0 
 				end
@@ -1031,11 +993,9 @@ end
 			if not config then return end
 
 			-- Calcolo dinamico dei raggi della base (entro cui l'AI può costruire), basato sul "fattoreVariazioneRaggio " impostato per ogni livello
-			local fvr = config.fattoreVariazioneRaggio or 0 						-- Se dimentichi di scriverlo nel livello, usa 0
-			local raggioDinamicoStrutture = 600 + (fvr * 150) 						-- Ogni punto fattore aggiunge 150 elmos
-			local raggioDinamicoFactory   = 700 + (fvr * 200) 						-- Le fabbriche si allargano di più
-			UpdateTeamWarStatus(teamID, teamBasePos[teamID], raggioDinamicoFactory) -- Richiamo la funzione helper per aggiornare lo stato di guerra e i raggi della base e la posizione
-    ------------------------------------------------------------------------			
+			local fvr = config.fattoreVariazioneRaggio or 0 -- Se dimentichi di scriverlo nel livello, usa 0
+			local raggioDinamicoStrutture = 600 + (fvr * 150) -- Ogni punto fattore aggiunge 150 elmos
+			local raggioDinamicoFactory   = 700 + (fvr * 200) -- Le fabbriche si allargano di più
 
 	------------------------------------------------------------------------
 			-- LOGICA COMPORTAMENTO COMANDANTE (combehaviour)
@@ -1124,7 +1084,8 @@ end
 										local bx, by, bz
 										local targetUpgradeMexID, mx, my, mz
 										local T2metalBuildType = config.T2metalBuildType or "new" -- chiamo la variabile T2metalBuildType dalla tabella dei livelli
-										-- LOGICA di costruzione ESTRATTORI T1 e T2 (definite dalla tabella AI_BUILD_LEVELS)
+--- LOGICA "COSA DEVE COSTRUIRE?" ---------------------------------
+										 -- LOGICA deve costruire ESTRATTORI T1 e T2 (definite dalla tabella AI_BUILD_LEVELS)
 										if req.cat == "CAT_MEX_T1" or req.cat == "CAT_MEX_T2" then 				-- se la logica richiede un "CAT_MEX_T1" o "CAT_MEX_T2"...
 											if req.cat == "CAT_MEX_T2" and T2metalBuildType == "upgrade" then 	-- se la logica richiede un "CAT_MEX_T2" in modalità "upgrade"...
 												-- ...esegui la funzione per eseguire l'upgrade
@@ -1144,27 +1105,31 @@ end
 											if bx == nil then
 --												Spring.Echo("WMRTS_contrMngm_AI: Nessun metallo (nuovo o upgrade) raggiungibile per " .. UnitDefs[Spring.GetUnitDefID(bID)].name)
 											end
-										-- LOGICA di costruzione FABBRICHE (definite dalla tabella AI_BUILD_LEVELS)
+										 -- LOGICA deve costruire FABBRICHE (definite dalla tabella AI_BUILD_LEVELS)
 										elseif req.cat == "CAT_FACTORY_T1" or req.cat == "CAT_FACTORY_T2" then														-- se l'AI deve costruire una fabbrica...
-												bx, by, bz = GetSafeBuildPosFactory(uDef.id, teamBasePos[teamID], metalSpots, raggioDinamicoFactory)       			-- Chiama la funzione specifica per le fabbriche
-										-- LOGICA di costruzione del RESTO DELLE COSTRUZIONI non sopra specificate (definite dalla tabella AI_BUILD_LEVELS)
+												bx, by, bz = GetSafeBuildPosFactory(uDef.id, teamBasePos[teamID], metalSpots, raggioDinamicoFactory)                                		-- Chiama la funzione specifica per le fabbriche
+										 -- LOGICA deve costruire il RESTO DELLE COSTRUZIONI non sopra specificate (definite dalla tabella AI_BUILD_LEVELS)
 										else			
-											bx, by, bz = GetSafeBuildPos(uDef.id, teamBasePos[teamID], metalSpots, raggioDinamicoStrutture) 						-- ...Usa la funzione sicura per centrali e fabbriche       
-										end 										----------------------------- end LOGICA di costruzione									
+											bx, by, bz = GetSafeBuildPos(uDef.id, teamBasePos[teamID], metalSpots, raggioDinamicoStrutture) 													-- ...Usa la funzione sicura per centrali e fabbriche       
+										end
+----------------------------- END LOGICA "LOGICA COSA DEVE COSTRUIRE?"										
 										if targetUpgradeMexID then -- Se siamo in fase di upgrade metallo....
-										-- Definiamo i parametri per CMD.INSERT: {posizione, cmdID, opzioni, parametri...}
+    -- Definiamo i parametri per CMD.INSERT: {posizione, cmdID, opzioni, parametri...}
     
-											-- 1. Inseriamo il RECLAIM in posizione 0 (sovrascrive o sposta tutto il resto)
-											-- I parametri sono: {0, ID_COMANDO, OPZIONI, ID_TARGET}
-											Spring.GiveOrderToUnit(bID, CMD.INSERT, {0, CMD.RECLAIM, 0, targetUpgradeMexID}, {"alt"})
-											
-											-- 2. Inseriamo la COSTRUZIONE nella lista degli ordini, in posizione 1 (subito dopo il reclaim). Se dessi un ordine diretto con "shift" non funzionerebbe perchè essendoci ancora l'estrattore, fisicamente SPRING non può costruirci sopra niente.
-											Spring.GiveOrderToUnit(bID, CMD.INSERT, {1, -uDef.id, 0, mx, 0, mz, 1}, {"alt"})
-    										--    Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Upgrade via CMD_INSERT (Reclaim + Build)")
+    -- 1. Inseriamo il RECLAIM in posizione 0 (sovrascrive o sposta tutto il resto)
+    -- I parametri sono: {0, ID_COMANDO, OPZIONI, ID_TARGET}
+    Spring.GiveOrderToUnit(bID, CMD.INSERT, {0, CMD.RECLAIM, 0, targetUpgradeMexID}, {"alt"})
+    
+    -- 2. Inseriamo la COSTRUZIONE nella lista degli ordini, in posizione 1 (subito dopo il reclaim). Se dessi un ordine diretto con "shift" non funzionerebbe perchè essendoci ancora l'estrattore, fisicamente SPRING non può costruirci sopra niente.
+    Spring.GiveOrderToUnit(bID, CMD.INSERT, {1, -uDef.id, 0, mx, 0, mz, 1}, {"alt"})
+    
+--    Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Upgrade via CMD_INSERT (Reclaim + Build)")
+												
 											table.remove(builders, i)		-- Rimuovi il builder dalla lista perché ora è occupato	
 											started = started + 1
 											assigned = true
 											break -- Esci dal ciclo dei builder, abbiamo trovato chi lo fa												
+												
 										elseif bx and (not targetUpgradeMexID) then										-- Se invece non si tratta di upgrade metallo T1 to T2 (not targetUpgradeMexID) allora procedi con il resto delle costruzioni
 --											Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " builder " .. bID .. " (" .. UnitDefs[Spring.GetUnitDefID(bID)].name .. ") builds " .. unitName)
 											Spring.GiveOrderToUnit(bID, -uDef.id, {bx, by, bz, 0}, {})
@@ -1189,11 +1154,11 @@ end
 							-- LOG DI DEBUG AVANZATO
 							if not assigned and (n % 450 == 0) then -- Notifica ogni 15 secondi per non intasare
 								if totalFree == 0 then
---									Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - STALLO: Nessun costruttore LIBERO per costruire " .. unitName)
+									Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - STALLO: Nessun costruttore LIBERO per costruire " .. unitName)
 								elseif not capableFound then
---									Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - ERRORE COSTRUTTORE: " .. totalFree .. " costruttori liberi, ma NESSUNO sa costruire " .. unitName)
+									Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - ERRORE COSTRUTTORE: " .. totalFree .. " costruttori liberi, ma NESSUNO sa costruire " .. unitName)
 								else
---									Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - SPAZIO PIENO: Costruttori pronti, ma non trovo una posizione valida (SafePos) per " .. unitName)
+									Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - SPAZIO PIENO: Costruttori pronti, ma non trovo una posizione valida (SafePos) per " .. unitName)
 								end
 							end
 						-- CASO B: È un UNITA' MOBILE COSTRUTTRICE CHE RICHIEDE UNA FABBRICA
