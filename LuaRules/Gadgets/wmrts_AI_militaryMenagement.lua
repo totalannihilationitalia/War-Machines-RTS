@@ -533,6 +533,28 @@ local function GiveAttackOrder(unitID, targetData)
 	end
 end
 
+-- Questa funzione serve ad evitare che l'AI "rubi" o interferisca con unità non sue (ad esempio di altre AI), ci si assicura che le tabelle siano sempre pulite. In questo modo se spring dovesse riassegnare l'ID di una unità distrutta ad un altra squadra, il codice non lo utilizza come se fosse sua
+function gadget:UnitDestroyed(unitID, unitDefID, unitTeam)
+    -- 1. Se muore una fabbrica, cancellala subito dalle nostre liste
+    if factories[unitID] then
+        factories[unitID] = nil
+    end
+
+    -- 2. Se muore un'unità, rimuovila da qualsiasi squadra (squads) la stia usando
+    for sID, sData in pairs(squads) do
+        for i = #sData.units, 1, -1 do
+            if sData.units[i] == unitID then
+                table.remove(sData.units, i)
+            end
+        end
+    end
+end
+
+-- Come UnitDestroyed ma in caso di "cambio di proprietà" (es. se un'unità viene catturata)
+function gadget:UnitTaken(unitID, unitDefID, unitOldTeam, unitNewTeam)
+    gadget:UnitDestroyed(unitID, unitDefID, unitOldTeam)
+end
+
 function gadget:Initialize()
 	local teamList = Spring.GetTeamList()
 	for _, teamID in ipairs(teamList) do

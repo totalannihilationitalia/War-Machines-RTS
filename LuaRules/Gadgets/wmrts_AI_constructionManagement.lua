@@ -398,7 +398,7 @@ nanotower o costruttori aiutanti???
 -- Questa funzione serve per aggiornare la variabile globale "stato di guerra" e il raggio di difesa (che varia in funzione del livello) per il team specificato. Cosi da comunicarlo ad altri gadget (ad esempio al "wmrts_AI_militaryMenagement.lua")
 local function UpdateTeamWarStatus(teamID, basePos, currentFactoryRadius)
     if not basePos then return end
-    local scanRadius = currentFactoryRadius + 300     											-- 1. Definiamo il raggio di scansione (currentFactoryRadius, definito dalla tabella dei livelli + 300 unità, dentro questo cerchio, di raggio "scanRadius" l'AI conterà quante unità nemiche sono presenti
+    local scanRadius = currentFactoryRadius + 3000     											-- 1. Definiamo il raggio di scansione (currentFactoryRadius, definito dalla tabella dei livelli + 3000 unità, dentro questo cerchio, di raggio "scanRadius" l'AI conterà quante unità nemiche sono presenti
     local unitsInArea = Spring.GetUnitsInSphere(basePos.x, basePos.y, basePos.z, scanRadius) 	-- 2. Troviamo tutte le unità nell'area
     local enemyCount = 0
     for i=1, #unitsInArea do																	-- 3. Contiamo solo i nemici (escludendo alleati e se stessi)
@@ -419,12 +419,12 @@ local function UpdateTeamWarStatus(teamID, basePos, currentFactoryRadius)
 
     -- 5. Esportiamo i valori nelle variabili globali (GG) per gli altri gadget
     GG.AI_StatoGuerra[teamID] = statoGuerra										-- stato di guerra
-    GG.AI_RaggioDifesa[teamID] = currentFactoryRadius							-- raggio di difesa della basa
+    GG.AI_RaggioDifesa[teamID] = scanRadius							-- raggio di difesa della basa
 	GG.AI_BasePos[teamID] = { x = basePos.x, y = basePos.y, z = basePos.z }		-- punto centrale della base
 
     -- Log di debug 
 	--Spring.Echo(string.format("AI Team %d: Stato=%s, Nemici=%d, Raggio=%d", teamID, statoGuerra, enemyCount, currentFactoryRadius))
-	Spring.Echo(string.format("AI Team %d: Stato=%s, Nemici=%d, Raggio=%d, BasePos=[X:%.0f Y:%.0f Z:%.0f]", teamID, statoGuerra, enemyCount, currentFactoryRadius, basePos.x, basePos.y, basePos.z))
+	Spring.Echo(string.format("AI Team %d: Stato=%s, Nemici=%d, Raggio=%d, BasePos=[X:%.0f Y:%.0f Z:%.0f]", teamID, statoGuerra, enemyCount, scanRadius, basePos.x, basePos.y, basePos.z))
 end
 
 -- Questa funzione serve per effettuare l'upgrade degli estrattori di metallo T1. Restituisce l'ID dell'estrattore T1 da upgradare, e le sue posizioni x y e z
