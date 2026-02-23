@@ -44,6 +44,9 @@ nanotower o costruttori aiutanti???
 	-- 1) DATABASE E CONFIGURAZIONE
 	--------------------------------------------------------------------------------
 
+	-- Carico il database delle unità. 	
+	local unitDB = VFS.Include("LuaRules/Configs/WMRTS_AI_mission_db.lua")
+
 	local MAP_PROFILES = {
 		["Default"]      = { land = true, air = true, sea = false },		-- configurazione di default per le mappe senza profili mappa
 	--    ["Zoty Outpost"] = { land = true, air = true, sea = false },		-- cancello perchè è come default
@@ -398,33 +401,61 @@ nanotower o costruttori aiutanti???
 -- Questa funzione serve per aggiornare la variabile globale "stato di guerra" e il raggio di difesa (che varia in funzione del livello) per il team specificato. Cosi da comunicarlo ad altri gadget (ad esempio al "wmrts_AI_militaryMenagement.lua")
 local function UpdateTeamWarStatus(teamID, basePos, currentFactoryRadius)
     if not basePos then return end
-    local scanRadius = currentFactoryRadius + 3000     											-- 1. Definiamo il raggio di scansione (currentFactoryRadius, definito dalla tabella dei livelli + 3000 unità, dentro questo cerchio, di raggio "scanRadius" l'AI conterà quante unità nemiche sono presenti
-    local unitsInArea = Spring.GetUnitsInSphere(basePos.x, basePos.y, basePos.z, scanRadius) 	-- 2. Troviamo tutte le unità nell'area
+    
+    local scanRadius = currentFactoryRadius + 2000
+    local unitsInArea = Spring.GetUnitsInSphere(basePos.x, basePos.y, basePos.z, scanRadius)
     local enemyCount = 0
-    for i=1, #unitsInArea do																	-- 3. Contiamo solo i nemici (escludendo alleati e se stessi)
+
+    -- Definiamo quali tipi vogliamo contare come minaccia per la base
+    local targetTypes = { 
+        ["ground"] = true, 
+        ["naval"] = true,
+        -- ["air"] = true, -- Aggiungilo qui se vuoi contare anche gli aerei
+    }
+
+    for i=1, #unitsInArea do
         local uID = unitsInArea[i]
+        
+        -- 1. Controlliamo se è un nemico
         if not Spring.AreTeamsAllied(teamID, Spring.GetUnitTeam(uID)) then
-            -- Opzionale: è possibile filtrare per contare solo unità mobili o pericolose ############## valutare questo
-            -- local udID = Spring.GetUnitDefID(uID)
-            -- if not UnitDefs[udID].isFeature then ...
-            enemyCount = enemyCount + 1
+            local udID = Spring.GetUnitDefID(uID)
+            local unitName = UnitDefs[udID].name
+            
+            -- 2. Cerchiamo l'unità nel database caricato
+            local unitInfo = unitDB[unitName]
+            
+            if unitInfo then
+                -- 3. Verifichiamo se il tipo è tra quelli che ci interessano 
+                -- e che non abbia il flag 'ignore'
+                if targetTypes[unitInfo.type] and not unitInfo.ignore then
+                    enemyCount = enemyCount + 1
+                end
+            else
+                -- Opzionale: Se un'unità nemica NON è nel DB, cosa facciamo?
+                -- Per sicurezza, se è un'unità mobile (non una struttura), potremmo volerla contare comunque
+                local ud = UnitDefs[udID]
+                if not ud.isImmobile then
+                    -- enemyCount = enemyCount + 1 -- Scommenta se vuoi contare unità sconosciute mobili
+                end
+            end
         end
     end
-    local statoGuerra = "attacco" 			-- 4. Determiniamo lo stato in base al numero di nemici, imposto "attacco" di default. Il gadget "wmrts_AI_militaryMenagement" manderà le truppe all'attacco
-    if enemyCount > 10 then
-        statoGuerra = "difesa_pesante"		-- Il gadget "wmrts_AI_militaryMenagement" ripiegherà tutte le truppe di terra in difesa per contrastare tutte le truppe all'interno di "scanRadius"
+
+    -- Logica degli stati basata sul conteggio filtrato
+    local statoGuerra = "attacco"
+    if enemyCount > 35 then
+        statoGuerra = "difesa_pesante"
     elseif enemyCount > 0 then
-        statoGuerra = "difesa_leggera"		-- Il gadget "wmrts_AI_militaryMenagement" utilizzerà solo le truppe all'interno di "scanRadius" per contrastare i nemici all'interno di "scanRadius"
+        statoGuerra = "difesa_leggera"
     end
 
-    -- 5. Esportiamo i valori nelle variabili globali (GG) per gli altri gadget
-    GG.AI_StatoGuerra[teamID] = statoGuerra										-- stato di guerra
-    GG.AI_RaggioDifesa[teamID] = scanRadius							-- raggio di difesa della basa
-	GG.AI_BasePos[teamID] = { x = basePos.x, y = basePos.y, z = basePos.z }		-- punto centrale della base
-
-    -- Log di debug 
-	--Spring.Echo(string.format("AI Team %d: Stato=%s, Nemici=%d, Raggio=%d", teamID, statoGuerra, enemyCount, currentFactoryRadius))
-	--Spring.Echo(string.format("AI Team %d: Stato=%s, Nemici=%d, Raggio=%d, BasePos=[X:%.0f Y:%.0f Z:%.0f]", teamID, statoGuerra, enemyCount, scanRadius, basePos.x, basePos.y, basePos.z))
+    -- Esportazione variabili globali
+    GG.AI_StatoGuerra[teamID] = statoGuerra
+    GG.AI_RaggioDifesa[teamID] = scanRadius
+    GG.AI_BasePos[teamID] = { x = basePos.x, y = basePos.y, z = basePos.z }
+    
+    -- Debug per vedere cosa sta contando
+    -- Spring.Echo(string.format("AI Team %d: Nemici Pericolosi (Ground/Naval) = %d -> Stato: %s", teamID, enemyCount, statoGuerra))
 end
 
 -- Questa funzione serve per effettuare l'upgrade degli estrattori di metallo T1. Restituisce l'ID dell'estrattore T1 da upgradare, e le sue posizioni x y e z
