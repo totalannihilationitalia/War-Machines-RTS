@@ -130,7 +130,7 @@ nanotower o costruttori aiutanti???
 			["CAT_FACTORY_T1"] = {
 				land = { "andlab", "andhp" },
 				air  = { "andplat" },
-				sea  = { "andplat" },
+				sea  = { "andplat", "andhp" },
 			},
 			["CAT_ALL_CONSTRUCTORS"] = { "andcom", "andcon", "andcv", "andca", "andcs" },
 		}
