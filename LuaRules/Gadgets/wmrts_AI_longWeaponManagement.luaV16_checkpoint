@@ -1,3 +1,13 @@
+--[[
+Questa versione di military (16) non legge ancora le variabili globali
+	if (not GG.AI_RaggioDifesa) then GG.AI_RaggioDifesa = {} end 	-- raggio di difesa della base del team
+	if (not GG.AI_StatoGuerra) then GG.AI_StatoGuerra = {} end		-- stato di guerra del team
+	if (not GG.AI_BasePos) then GG.AI_BasePos = {} end				-- posizione della base del team
+inviate dal gadget “wmrts_AI_constructionManagement”
+e pertanto il sistema invia continuamente le unità alll’attacco a prescindere dallo stato della guerra.
+Il sistema V16 è funzionante ed è stato siglato “checkpoint”. Molix
+]]--
+
 function gadget:GetInfo()
 	return {
 		name      = "WMRTS Long Range Weapon Management",

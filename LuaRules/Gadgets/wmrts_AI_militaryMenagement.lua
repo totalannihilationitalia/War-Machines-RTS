@@ -534,9 +534,11 @@ end
 -- 5) GESTIONE ORDINI E GADGET CORE 
 --------------------------------------------------------------------------------
 local function GiveAttackOrder(unitID, targetData)
-    if not targetData then 
+    if not targetData then
+		Spring.Echo("WMRTS Debug: Nessun target trovato per unità " .. unitID)
 		return 
-	end    
+	end 
+	Spring.Echo("WMRTS Debug: Ordine inviato a " .. unitID .. " verso X:" .. targetData.x)
     local udID = Spring.GetUnitDefID(unitID)
     local ud = UnitDefs[udID]
     local unitName = ud.name
@@ -747,6 +749,7 @@ function gadget:GameFrame(n)
 			local forceStart = false
 			if currentWarStatus == "difesa_pesante" then
 				forceStart = true -- Tutti fuori subito!	
+				Spring.Echo("WMRTS_militMngm_AI:: Team " .. teamID .. " SCRAMBLE PESANTE!")
 			elseif currentWarStatus == "difesa_leggera" then
 				-- Verifica se la squadra (almeno la prima unità) è in base
 				if #sData.units > 0 and bPos then
@@ -754,6 +757,7 @@ function gadget:GameFrame(n)
 					local dx, dz = ux - bPos.x, uz - bPos.z
 					if (dx*dx + dz*dz) < (bRad * bRad) then
 						forceStart = true -- La squadra è in base, falla reagire
+						Spring.Echo("WMRTS_militMngm_AI:: Team " .. teamID .. " SCRAMBLE LEGGERO (Unità in base)") -- log squadra in base che esce
 					end
 				end
 			end				
@@ -833,9 +837,9 @@ function gadget:GameFrame(n)
 							GiveAttackOrder(uID, sData.attackTarget)
 						end
 					end
-				end
+				end -- fine if anyAlive and anyIdle
 				if not anyAlive then squads[sID] = nil end
-			end
-		end
-	end	
-end
+			end -- fine if n % 90
+		end -- fine elseif attacking_monitor
+	end	-- fine for sID, sData in pairs(squads)
+end -- fine function gadget:GameFrame(n)

@@ -424,7 +424,7 @@ local function UpdateTeamWarStatus(teamID, basePos, currentFactoryRadius)
 
     -- Log di debug 
 	--Spring.Echo(string.format("AI Team %d: Stato=%s, Nemici=%d, Raggio=%d", teamID, statoGuerra, enemyCount, currentFactoryRadius))
-	Spring.Echo(string.format("AI Team %d: Stato=%s, Nemici=%d, Raggio=%d, BasePos=[X:%.0f Y:%.0f Z:%.0f]", teamID, statoGuerra, enemyCount, scanRadius, basePos.x, basePos.y, basePos.z))
+	--Spring.Echo(string.format("AI Team %d: Stato=%s, Nemici=%d, Raggio=%d, BasePos=[X:%.0f Y:%.0f Z:%.0f]", teamID, statoGuerra, enemyCount, scanRadius, basePos.x, basePos.y, basePos.z))
 end
 
 -- Questa funzione serve per effettuare l'upgrade degli estrattori di metallo T1. Restituisce l'ID dell'estrattore T1 da upgradare, e le sue posizioni x y e z
