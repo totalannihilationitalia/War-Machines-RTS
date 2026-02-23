@@ -544,7 +544,7 @@ local function GiveAttackOrder(unitID, targetData)
     local unitName = ud.name
     local dbEntry = UNIT_DB[unitName]
     -- Se l'unità è un bombardiere o un cecchino (isLRA), usa l'ID per la massima precisione
-    if targetData.id and (dbEntry and (dbEntry.type == "air_bomber" or dbEntry.isLRA)) then
+    if targetData.id and (dbEntry and (dbEntry.type == "air_bomber" or "air_bomber_strategic")) then
         Spring.GiveOrderToUnit(unitID, CMD.ATTACK, {targetData.id}, {})
     else
         -- Per tutte le altre unità (Ground, Hover, ecc.), usa le coordinate.

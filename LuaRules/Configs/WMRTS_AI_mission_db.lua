@@ -18,13 +18,14 @@
 --			type = defence 				-> unità fissa di difesa T1-2 + ( Es torrette di difesa importanti, antiaerea ecc )
 --			type = strategicbuilding 	-> unità fissa di superficie strategica ( Es factory 3 livello, silos, antipalline, ecc )
 --			type = strategicdefence 	-> unità fissa di difesa strategica ( Es bertha, corbuzz, toaster, ecc )
---			type = strategicshield		-> unità fissa shield (es. plasma repulsor)
+--			type = strategicshield		-> unità fissa shield (plasma repulsor) -- viene utilizzata: a) nel gadget "longWeaponManagement" per identificare i plasma repulsor ed evitare di colpire bersagli all'interno dello scudo con l'artiglieria a lungo raggio; b) nel gadget "wmrts_AI_militaryMenagement.lua" come target obiettivo delle unità attaccanti
 --			tutte le unità che non sono identificate in questo database, prenderanno valore type = unknown , vedere poi la logica di targetin come gestirle
 -- definizione della caratteristica "ignore": può essere true o false (se non dichiarata). Se True, l'unità ad esso associata verrà completamente ignorata dal gadget "military_factory": quando creata dalla fabbrica, quell'unità non viene inclusa in alcun gruppo e non viene mandata all'attacco. Sarà un altro Gadget a gestire l'unità (come ad esempio i costruttori) oppure le unità saranno gestite dal mission editor
 -- definizione della caratteristica "isLRA = true": se true, il gadget "wmrts_AI_longWeaponManagement.lua" vede l'unità come cannone Long Range Artillery
 -- definizione della caratteristica "isSILO = true": se true, il gadget "wmrts_AI_longWeaponManagement.lua" vede l'unità come silos di missili nucleari
 -- definizione della caratteristica "isAMD = true": se true, il gadget "wmrts_AI_longWeaponManagement.lua" vede l'unità come silos di difesa da missili nucleari
--- definizione della caratteristica "range = xxxx": la gettata delle armi (definita nello weaponDef - range). Ho difficoltà a reperire direttamente questa informazione, pertanto per ora la scrivo manualmente
+-- definizione della caratteristica "range = xxx": la gettata delle armi (definita nello weaponDef - range). Ho difficoltà a reperire direttamente questa informazione, pertanto per ora la scrivo manualmente
+-- definizione della caratteristica "shieldRange = xxx": rappresenta il diametro dello scudo di un "strategicshield"(scudo al plasma, es: armgate). Questa variabile viene usata nel "wmrts_AI_longWeaponManagement.lua" per capire se un target di un (LRA, es un bertha) è dentro/protetto da uno scudo, nel caso scarterà il target dalla lista.
 
 -- 09/02/2026 = Aggiunte categorie defence e strategicdefence. Molix
 -- 20/02/2026 = Aggiunte definizioni isLRA, isSILO, isAMD per il gadget "wmrts_AI_longWeaponManagement.lua". Molix
@@ -82,7 +83,7 @@ local UNIT_DB = {
 ["armasp"] = { type = "building" },
 ["armtarg"] = { type = "building" },
 ["armsd"] = { type = "building" },
-["armgate"] = { type = "strategicshield" },
+["armgate"] = { type = "strategicshield", shieldRange = 300 },
 ["armamb"] = { type = "strategicdefence" },
 ["armpb"] = { type = "defence" },
 ["armanni"] = { type = "strategicdefence" },
@@ -264,7 +265,7 @@ local UNIT_DB = {
 ["corasp"] = { type = "building" },
 ["cortarg"] = { type = "building" },
 ["corsd"] = { type = "building" },
-["corgate"] = { type = "strategicshield" },			
+["corgate"] = { type = "strategicshield",shieldRange = 300 },			
 ["cortoast"] = { type = "strategicdefence" },
 ["corvipe"] = { type = "building" },
 ["cordoom"] = { type = "strategicdefence" },
@@ -412,7 +413,7 @@ local UNIT_DB = {
 ["andametex"] = { type = "building" },
 ["andaestor"] = { type = "building" },
 ["andarad"] = { type = "building" },
-["andshield"] = { type = "strategicshield" },
+["andshield"] = { type = "strategicshield", shieldRange = 300 },
 ["anddfens"] = { type = "strategicdefence" },
 ["andill"] = { type = "strategicdefence" },
 ["andchaos"] = { type = "strategicdefence" },
