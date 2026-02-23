@@ -18,10 +18,11 @@ end
 -- 14/01/2025 = le AI sono ora indipendenti (mentre prima il livello delle AI era unico per tutti i teams
 -- 14/01/2025 = Aggiungo la gestione " ignore = true" nel database, da applicare ai costruttori, gestiti da altri gadget. In questo gadget i costruttori devono essere ignorati (cioè non devono essere inseriti in gruppi e mandati all'attacco), devono essere considerati invece solo come bersagli da attaccare ("ground" o relativi)
 -- 29/01/2025 = Ora l'avanzamento di livello viene gestito dal gadget construcionManagement
+-- 09/02/2025 = Aggiunta priorità nella categoria di attacco (per bombardieri & Co) e aggiunta categoria defence e strategicdefence
+-- 20/02/2026 = Ho aggiunto la categoria (type) strategicshield in quanto prima gli shield erano inclusi in "strategicbuilding". In questo modo i cannoni a lungo raggio gestiti dalla AI del gadget "wmrts_AI_longWeaponManagement.lua" non prendono di mira gli shield (antiplasma) che prima erano categorizzati come "strategicbuilding". Il codice in questo gadget viene modificato in modo che, se prima, la categoria "X" attaccava solo "strategicbuilding", ora deve attaccare anche la type scorporata "strategicbuilding"
 
 -- to do LIST ################################
 -- 1) implementare i SUB
--- 2) REIMPOSTARE L'avanzamento di livello!!!!! sarà gestito dal gadget costruttori ( to do) -- in questo gadget ogni x secondi guardo le variabili globali del livello della AI (inerente al team) e lo aggiorno.
 
 
 if (not gadgetHandler:IsSyncedCode()) then
@@ -35,14 +36,18 @@ end
 -- La tipologia di ogni singola unità è necessaria affinchè la AI gestisca le squadre/gruppi (punto 2) contro le singole unità.
 -- Ad esempio le tipologie di unità "ground" definite nel database verranno bersagliate dai gruppi tipo "ground" e "air_toground" definiti nel punto 2. 
 -- Questa logica di "chi attacca cosa" è definita poi nel punto "4) LOGICA DI TARGETING BASATA SU DATABASE"
--- definizione delle tipologie:
+-- definizione delle tipologie "type":
 --			type = ground 				-> unità mobile di terra (veicoli e Kbot)
 --			type = air 					-> unità mobile aerea
 --			type = hovercraft 			-> unità mobile di terra che può andare sul mare
 --			type = naval 				-> unità mobile navale (di superficie, no SUB)
 --			type = building 			-> unità fissa di superficie su terra (di difesa/produzione/energia)
 --			type = navalbuilding 		-> unità fissa di superficie su mare (di difesa/produzione/energia)
---			type = strategicbuilding 	-> unità fissa di superficie strategica ( Es factory 3 livello, silos, antipalline )
+--			type = defence 				-> unità fissa di difesa T1-2 + ( Es torrette di difesa importanti, antiaerea ecc )
+--			type = strategicbuilding 	-> unità fissa di superficie strategica ( Es factory 3 livello, silos, antipalline, ecc )
+--			type = strategicdefence 	-> unità fissa di difesa strategica ( Es bertha, corbuzz, toaster, ecc )
+--			type = strategicshield		-> unità fissa shield (es. plasma repulsor) 
+--			tutte le unità che non sono identificate in questo database, prenderanno valore type = unknown , vedere poi la logica di targetin come gestirle
 
 local dbPath = "LuaRules/Configs/WMRTS_AI_mission_db.lua"
 local UNIT_DB = VFS.Include(dbPath)
@@ -60,12 +65,12 @@ end
 -- Il nome dello "squad_template" identifica solamente il nome del gruppo da creare. Es. ["ICU_armlab_light_patrol_1"], verrà poi impiegato nel punto 2b per dire alla fabbrica: costruisci le unità di questo gruppo e forma il gruppo
 -- units = l'elenco delle unità (solo militari) che comporranno il gruppo (ad esempio il gruppo "ICU_armlab_light_patrol_1". Le unità di costruzione (dichiarate nel database) non verranno gestite nel gruppo ma verranno ignorate per essere gestite da altri gadget
 -- type = tipologia di squadra, la tipologia verrà impiegata nella logica di targeting (punto 4) per dire quali unità devono attaccare. In generale descrizioni a seguito:
--- 					type = "ground" 				-> manda all'attacco verso unità tipo "ground", "building", "strategicbuilding", "unknown" e "hover" se y di quest'ultima > -1 (vedere punto 4). Ideale per le truppe di terra o gli aerei.
--- 					type = "ground_hovercraft" 		-> manda all'attacco verso unità tipo "ground", "building", "strategicbuilding", "unknown" e "hover" a prescindere dalla y di quest'ultima (rispetto al gruppo "ground". Ideale per gli hovecraft e per gli aerei
+-- 					type = "ground" 				-> manda all'attacco verso la prima unità, trovata in base all'ID, che corrisponda a "ground", "building", "strategicbuilding", "strategicdefence", "unknown" e "defence" se y di quest'ultima > -1 (vedere punto 4). Ideale per le truppe di terra o gli aerei.
+-- 					type = "ground_hovercraft" 		-> manda all'attacco verso la prima unità, trovata in base all'ID, che corrisponda a "ground", "building", "strategicbuilding", "strategicdefence", "unknown", "defence" e "hover" a prescindere dalla y di quest'ultima (rispetto al gruppo "ground". Ideale per gli hovecraft e per gli aerei
 --					type = "air_toair" 				-> tutti gli aerei destinati ad attaccare solo aerei
---					type = "air_toground" 			-> tutti gli aerei destinati ad attaccare tutto (ground, hovercraft e naval). Attenzione: non sono presenti "building" e "strategicbuilding". In questa categoria non mettere bombardieri in quanto sorvolerebbero solamente la zona per poi "sedersi". Per loro ci vuole una logica di attacco diretto sull'unità, per questo usare i gruppi specifici per bombardieri
---					type = "air_bomber" 			-> specifico per tutti gli aerei da bombardamento. Possono essere inclusi anche gli aerei di attacco a terra. Hanno una logica per un bombardamento diretto sull'unità di tipo "building", "strategicbuilding", "ground")
---					type = "air_bomber_strategic" 	-> specifico tutti gli aerei da bombardamento. Possono essere inclusi anche gli aerei di attacco a terra. Hanno una logica per un bombardamento diretto sull'unità di tipo "strategicbuilding" e "building"
+--					type = "air_toground" 			-> tutti gli aerei destinati ad attaccare tutte le unità mobili di terra (ground, hovercraft e naval). Attenzione: non sono presenti "building", "strategicbuilding", "strategicdefence", "defence". In questa categoria non mettere bombardieri in quanto sorvolerebbero solamente la zona per poi "sedersi". Per loro ci vuole una logica di attacco diretto sull'unità, per questo usare i gruppi specifici per bombardieri
+--					type = "air_bomber" 			-> specifico per tutti gli aerei da bombardamento. In questo gruppo possono essere inclusi anche gli aerei di attacco a terra (tipo armfig e bombardieri). Hanno una logica con priorità sui target e manda le unità all'attacco direttamente sull'unità di tipo (in ordine di priorità): "building", "defence", "strategicbuilding", "strategicdefence", "ground")
+--					type = "air_bomber_strategic" 	-> specifico per tutti gli aerei da bombardamento. In questo gruppo possono essere inclusi anche gli aerei di attacco a terra (tipo armfig e bombardieri). Hanno una logica con priorità sui target e manda le unità all'attacco direttamente sull'unità di tipo (in ordine di priorità):"strategicbuilding", "strategicdefence", "building", "defence" e "ground"
 
 local SQUAD_TEMPLATES = {
 
@@ -285,6 +290,40 @@ local SQUAD_TEMPLATES = {
 		units = { "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix" }, 	
 		type = "air_bomber_strategic"
 	},		
+-- icugant
+	["ICU_icugant_medium_patrol_1"] = {
+		units = { "armshock", "armshock", "armtigre" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},		
+	["ICU_icugant_medium_patrol_2"] = {
+		units = { "armshock", "armshock" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},			
+	["ICU_icugant_medium_patrol_3"] = {
+		units = { "armtigre", "armtigre" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},			
+-- armshltx
+	["ICU_armshltx_medium_patrol_1"] = {
+		units = { "icuraz", "icuraz", "icuraz" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+	["ICU_armshltx_medium_patrol_2"] = {
+		units = { "icuraz", "icuraz", "icuraz", "icuraz", "warhammer" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+	["ICU_armshltx_medium_patrol_3"] = {
+		units = { "icufurie" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+	["ICU_armshltx_medium_patrol_4"] = {
+		units = { "icufurie", "icuraz","icuraz" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},			
+	["ICU_armshltx_medium_patrol_5"] = {
+		units = { "warhammer", "warhammer", "icuraz","icuraz" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},				
 ---------------
 -- AND gruppi creati per il lvl 5+ -------- 
 ---------------
@@ -330,7 +369,9 @@ local function GetConfigPerLivello(livello) -- Questa funzione restituisce, per 
             ["armap"]  = { "ICU_armap_air_mediumraid_1", "ICU_armap_antiair_mediumraid_1","ICU_armap_air_mediumbomber_1","ICU_armap_air_mediumstrategicbomber_1" },
             ["armalab"] = { "ICU_armalab_medium_patrol_1", "ICU_armalab_medium_patrol_2" },			
             ["armavp"] = { "ICU_armavp_medium_patrol_1", "ICU_armavp_medium_patrol_2", "ICU_armavp_medium_patrol_3" },
-            ["armaap"]  = { "ICU_armaap_medium_patrol_1", "ICU_armaap_medium_patrol_2","ICU_armaap_air_bomber_1","ICU_armaap_air_bomber_2" },			
+            ["armaap"]  = { "ICU_armaap_medium_patrol_1", "ICU_armaap_medium_patrol_2","ICU_armaap_air_bomber_1","ICU_armaap_air_bomber_2" },		
+            ["icugant"] = { "ICU_icugant_medium_patrol_1", "ICU_icugant_medium_patrol_2", "ICU_icugant_medium_patrol_3" },		
+            ["armshltx"] = { "ICU_armshltx_medium_patrol_1", "ICU_armshltx_medium_patrol_2", "ICU_armshltx_medium_patrol_3", "ICU_armshltx_medium_patrol_4", "ICU_armshltx_medium_patrol_5" },		
             -- AND -- ################### CONCLUDERE
             ["andlab"] = { "AND_andlab_light_patrol_1", "AND_andlab_light_patrol_2" },
             ["andhp"] = { "AND_andhp_light_patrol_1", "AND_andhp_light_patrol_2" },
@@ -370,58 +411,36 @@ end
 -- Funzione per trovare il bersaglio 
 local function GetSmartEnemyTarget(myTeamID, squadType)
 	local allUnits = Spring.GetAllUnits()
+	local gaiaTeamID = Spring.GetGaiaTeamID()
 	
+	-- Variabili per la logica di priorità dei bombardieri 
+	local bestTarget = nil
+	local highestPriority = -1
+
 	for i = 1, #allUnits do
 		local uID = allUnits[i]
 		local uTeam = Spring.GetUnitTeam(uID)
 		
-		if uTeam ~= Spring.GetGaiaTeamID() and not Spring.AreTeamsAllied(myTeamID, uTeam) then
+		if uTeam ~= gaiaTeamID and not Spring.AreTeamsAllied(myTeamID, uTeam) then
 			local enemyCat = GetUnitCategoryFromDB(uID)
 			local x, y, z = Spring.GetUnitPosition(uID)
 			
 			if x then
 				-------------
-				-- AEREI: 
-				-------------				
-				-- La tipologia air_toall Attacca tutto, inclusi gli hovercraft sempre. Relativi a tutti gli aerei NON BOMBARDIERI, che attaccano con comandi come "patrol" e "fight"
-				if squadType == "air_toall" then
-					if enemyCat == "air" or enemyCat == "ground" or enemyCat == "naval" or enemyCat == "hover" then
+				-- TERRA: -- il ciclo for scansiona per ID di unità. l'AI quindi sceglie la prima unità che trova e che corrisponde ad una delle seguenti categorie "enemyCat". Quindi senza priorità.
+				-------------	
+				if squadType == "ground" then -- solo truppe di terra vs terra
+				-- "ground", "building", "strategicbuilding", "unknown" e "defence"
+					if enemyCat == "ground" or enemyCat == "unknown" or enemyCat == "building" or enemyCat == "strategicbuilding" or enemyCat == "strategicdefence" or enemyCat == "defence" or enemyCat == "strategicshield" then 
 						return {x=x, y=y, z=z}
-					end				
-				-- La tipologia air_toground Attacca soltanto le unità in superficie con aerei NON BOMBARDIERI (es. tipo "armfig" o "armkam")
-				elseif squadType == "air_toground" then
-					if enemyCat == "ground" or enemyCat == "naval" or enemyCat == "hover" then
+					elseif enemyCat == "hover" and y >= -1 then	-- se gli hovercraft sono o sulla riva o sulla terraferma
 						return {x=x, y=y, z=z}
 					end
-				-- La tipologia air_toair Attacca soltanto gli aerei
-				elseif squadType == "air_toair" then
-					if enemyCat == "air" then
+
+				elseif squadType == "ground_hovercraft" then -- solo truppe di mare e terra vs hovercraft 
+					if enemyCat == "ground" or enemyCat == "unknown" or enemyCat == "building" or enemyCat == "strategicbuilding" or enemyCat == "strategicdefence"or enemyCat == "hover" or enemyCat == "defence" or enemyCat == "strategicshield" then  
 						return {x=x, y=y, z=z}
 					end
-				-- La tipologia "air_bomber" manda il gruppo di unità all'attacco direttamente su una singola unità (UTILE PER I BOMBARDIERI) di tipo "ground", "building", "strategicbuilding"
-				elseif squadType == "air_bomber" then 
-					if enemyCat == "ground" or enemyCat == "building" or enemyCat == "strategicbuilding" then 
-						return {x=x, y=y, z=z, id=uID} -- restituisco anche l'ID dell'unità che si intende bersagliare, utilizzato poi nella logica degli ordini, vedi punto 5)
-					end		
-				-- La tipologia "air_bomber_strategic" manda il gruppo di unità all'attacco direttamente su una singola unità di tipo "strategicbuilding"
-				elseif squadType == "air_bomber_strategic" then 
-					-- ############## to do -> inserire un check in maniera da controllare se esiste  una categoria nemica "strategicbuilding". se true ok, altrimenti colpisci enemyCat == "building  #############
-					if enemyCat == "strategicbuilding" or enemyCat == "building" then 
-						return {x=x, y=y, z=z, id=uID} -- restituisco anche l'ID dell'unità che si intende bersagliare, utilizzato poi nella logica degli ordini, vedi punto 5)
-					end								
-				-------------
-				-- TERRA: 
-				-------------				
-				elseif squadType == "ground" then
-					if enemyCat == "ground" or enemyCat == "unknown" or enemyCat == "building" or enemyCat == "strategicbuilding" then 
-						return {x=x, y=y, z=z}
-					elseif enemyCat == "hover" and y >= -1 then -- da -1 (spiaggia) a sopra il livello dell'acqua (montagna)
-						return {x=x, y=y, z=z}
-					end
-				elseif squadType == "ground_hovercraft" then
-					if enemyCat == "ground" or enemyCat == "unknown" or enemyCat == "building" or enemyCat == "strategicbuilding" or enemyCat == "hover" then 
-						return {x=x, y=y, z=z}
-					end				
 				-------------					
 				-- NAVALI: Attaccano naval e hover (solo se sopra la superficie dell' acqua) ---- ################################### implementare
 				-------------				
@@ -431,12 +450,68 @@ local function GetSmartEnemyTarget(myTeamID, squadType)
 					elseif enemyCat == "hover" and y < -1 then -- minore di -1 (da -x a -1) rispetto al livello dell'acqua, si presume tutti gli hovercraft che sono in acqua  ###################### verificare se il parametro altezza è corretto per definire che l'hovercraft è in acqua
 						return {x=x, y=y, z=z}
 					end
+				-------------
+				-- AEREI: 
+				-------------	
+				elseif squadType == "air_toair" then
+					if enemyCat == "air" then 
+						return {x=x, y=y, z=z} 
+					end
+				elseif squadType == "air_toground" then
+					if enemyCat == "ground" or enemyCat == "naval" or enemyCat == "hover" then
+						return {x=x, y=y, z=z} 
+					end				
+				elseif squadType == "air_bomber" then 					--(su "airbomber" non usiamo "return" subito perché vogliamo scansionare tutto e dare ai bombardieri una priorità sulle categorie da attaccare e, se non esiste la prima (priorità più alta), vai sulla seconda e cosi via...
+					local currentPriority = 0
+					if enemyCat == "defence" then
+						currentPriority = 6
+					elseif enemyCat == "building" then
+						currentPriority = 5
+					elseif enemyCat == "strategicbuilding" then
+						currentPriority = 4
+					elseif enemyCat == "strategicdefence" then
+						currentPriority = 3
+					elseif enemyCat == "strategicshield" then
+						currentPriority = 2						
+					elseif enemyCat == "ground" then
+						currentPriority = 1						
+					end
+						if currentPriority > highestPriority then
+							highestPriority = currentPriority
+							bestTarget = {x=x, y=y, z=z, id=uID}
+							if highestPriority == 6 then break end -- Se trovo il top, interrompo il ciclo for
+						end					
+				elseif squadType == "air_bomber_strategic" then			--(su "air_bomber_strategic", non usiamo "return" subito perché vogliamo scansionare tutto e dare ai bombardieri una priorità sulle categorie da attaccare e, se non esiste la prima, vai sulla seconda e cosi via...
+					local currentPriority = 0
+					if enemyCat == "strategicbuilding" then
+						currentPriority = 6
+					elseif enemyCat == "strategicshield" then
+						currentPriority = 5
+					elseif enemyCat == "strategicdefence" then					
+						currentPriority = 4						
+					elseif enemyCat == "building" then
+						currentPriority = 3
+					elseif enemyCat == "defence" then
+						currentPriority = 2
+					elseif enemyCat == "ground" then
+						currentPriority = 1		
+					end
+						if currentPriority > highestPriority then
+							highestPriority = currentPriority
+							bestTarget = {x=x, y=y, z=z, id=uID}
+							if highestPriority == 6 then break end -- Se trovo il top, interrompo il ciclo for
+						end
 				end
-				----------------------------------------------------------------
 			end
 		end
 	end
 	
+	-- Punto di uscita per chi usa la logica a priorità (Bombardieri)
+	if bestTarget then
+		return bestTarget
+	end
+
+	-- Fallback finale se non è stato trovato nulla
 	return { x = Game.mapSizeX/2, y = 0, z = Game.mapSizeZ/2 }
 end
 
@@ -456,6 +531,28 @@ local function GiveAttackOrder(unitID, targetData)
 		local ty = Spring.GetGroundHeight(tx, tz)		
 		Spring.GiveOrderToUnit(unitID, CMD.FIGHT, {tx, ty, tz}, {})
 	end
+end
+
+-- Questa funzione serve ad evitare che l'AI "rubi" o interferisca con unità non sue (ad esempio di altre AI), ci si assicura che le tabelle siano sempre pulite. In questo modo se spring dovesse riassegnare l'ID di una unità distrutta ad un altra squadra, il codice non lo utilizza come se fosse sua
+function gadget:UnitDestroyed(unitID, unitDefID, unitTeam)
+    -- 1. Se muore una fabbrica, cancellala subito dalle nostre liste
+    if factories[unitID] then
+        factories[unitID] = nil
+    end
+
+    -- 2. Se muore un'unità, rimuovila da qualsiasi squadra (squads) la stia usando
+    for sID, sData in pairs(squads) do
+        for i = #sData.units, 1, -1 do
+            if sData.units[i] == unitID then
+                table.remove(sData.units, i)
+            end
+        end
+    end
+end
+
+-- Come UnitDestroyed ma in caso di "cambio di proprietà" (es. se un'unità viene catturata)
+function gadget:UnitTaken(unitID, unitDefID, unitOldTeam, unitNewTeam)
+    gadget:UnitDestroyed(unitID, unitDefID, unitOldTeam)
 end
 
 function gadget:Initialize()

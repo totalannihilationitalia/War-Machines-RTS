@@ -1,7 +1,7 @@
 	function gadget:GetInfo()
 		return {
 			name      = "WMRTS Construction Manager AI",
-			desc      = "Gestore costruzioni V9 - War Machines RTS",
+			desc      = "Gestore costruzioni V17 - War Machines RTS",
 			author    = "molix & AI",
 			date      = "2026",
 			license   = "GPL",

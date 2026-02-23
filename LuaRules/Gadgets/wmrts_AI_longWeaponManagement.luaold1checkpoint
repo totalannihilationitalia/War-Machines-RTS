@@ -1,7 +1,7 @@
 function gadget:GetInfo()
 	return {
 		name      = "WMRTS Long Range Weapon Management",
-		desc      = "Gestore Artiglierie e Silos Nucleari V17 - War Machines RTS",
+		desc      = "Gestore Artiglierie e Silos Nucleari AI - War Machines RTS",
 		author    = "molix & AI",
 		date      = "2026",
 		license   = "GPL",
