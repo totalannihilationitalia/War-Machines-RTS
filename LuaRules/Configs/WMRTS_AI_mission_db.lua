@@ -441,18 +441,22 @@ local UNIT_DB = {
 ["andscouter"] = { type = "ground" },
 ["anddauber"] = { type = "ground" },
 ["andbrskr"] = { type = "ground" },
+["andspmis"] = { type = "ground" },
+["andspaa"] = { type = "ground" },
 
 -- Unità prodotte da andhp
 ["andch"] = { type = "hovercraft", ignore = true  },
 ["andgaso"] = { type = "hovercraft" },
 ["andlipo"] = { type = "hovercraft" },
 ["andmisa"] = { type = "hovercraft" },
+["andhart"] = { type = "hovercraft" },
 
 -- Unità prodotte da andplat
 ["andca"] = { type = "air", ignore = true  },
 ["andfig"] = { type = "air" },
 ["andbomb"] = { type = "air" },
 ["andstr"] = { type = "air" },
+["andmer"] = { type = "air" },
 
 -- Unità prodotte da andinc
 -- sono le stesse di andlab + andhp
@@ -470,11 +474,13 @@ local UNIT_DB = {
 ["andtanko"] = { type = "hovercraft" },
 ["andtesla"] = { type = "hovercraft" },
 ["andnikola"] = { type = "hovercraft" },
-
+["andahaa"] = { type = "hovercraft" },
+ 
 -- Unità prodotte da andaplat
 ["andstr"] = { type = "air" },
 ["anddragon"] = { type = "air" },
 ["corhors"] = { type = "air" },
+["andhawk"] = { type = "air" },
 
 -- Unità prodotte da andgant
 ["cordem"] = { type = "ground" },

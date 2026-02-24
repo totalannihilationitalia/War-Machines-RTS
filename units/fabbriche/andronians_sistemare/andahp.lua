@@ -55,6 +55,7 @@ return {
 			[3] = "andtanko",
 			[4] = "andtesla",
 			[5] = "andnikola",
+			[6] = "andahaa",			
 		},
 
 

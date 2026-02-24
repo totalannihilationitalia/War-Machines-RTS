@@ -11,7 +11,7 @@ return {
                buildcostenergy = 897,
                buildcostmetal = 45,
                builder = false,
-               buildpic = "andspmis.png",
+               buildpic = "dafare.png",
                buildtime  = 1420,
                canAttack = true,
                canGuard = true,
@@ -24,7 +24,7 @@ return {
                --collisionvolumetype = "",
                corpse = "andscouter_dead",
 --               defaultmissiontype = Standby,
-               description = "All-Terrain scouter",
+               description = "All-Terrain Missile Launcher",
 --               firestandorders = 1,
                energymake = 0.7,
                energystorage = 0,
@@ -32,7 +32,7 @@ return {
                explodeas = "BIG_UNITEX",
                footprintx = 3,
                footprintz = 3,
-		icontype = "robots",
+			   icontype = "robots",
                idleautoheal = 5,
                idletime = 1800,
 --               maneuverleashlength  = 640,
@@ -134,41 +134,44 @@ sounds = {
 --- WEAPONS DEFINITION
 -----------------------------------------------------------
 weapondefs = {
-		gator_laserx = {
-                     areaofeffect = 8,
+		andspmis_missile = {
+                     areaofeffect = 48,
                      avoidfeature = true,
-                     beamtime = 0.1,
+                     burst = 2, -- lua:salvoSize
+                     burstrate = 0.25, -- lua: salvoDelay
 --                     cegTag = "",
-                     corethickness = 0.175,
 --                     craterareaofeffect =  ,
                      craterboost = 0,
                      cratermult = 0,
-                     energypershot = 0,
-                     explosiongenerator = "custom:SMALL_ARANCIO_BURN",
-                     firestarter = 50,
-                     impactonly = true,
+                     explosiongenerator = "custom:FLASH2",
+                     firestarter = 70,
                      impulseboost = 0.123,
                      impulsefactor = 0.123,
-                     name= "Laser",
+                     metalpershot = 0,
+                     model = "missile",
+                     name= "Missiles",
                      noselfdamage = true,
-                     laserflaresize = 6,
-                     range = 230,
-                     reloadtime = 0.35,
-                     rgbcolor = "1 0.2 0",
-                     soundhit = "lasrhit2",
+                     range = 600,
+                     reloadtime = 3.34,
+                     smoketrail = true,
+                     soundhit = "xplomed2",
  --                   soundhitdry = "",
 --                    soundhitwet = "",
 --                    soundhitwetvolume = "",
-                     soundstart = "lasrlit3",
+                     soundstart = "rockhvy2",
                      soundtrigger = "1",
-                     targetmoveerror = 0.15,
-                     thickness = 2.5,
-                     tolerance = 10000,
+                     startvelocity = 450,
+                     texture2 = "armsmoketrail",
+                     tolerance = 8000,
+                     tracks = true, 
+                     turnrate = 63000,
                      turret  = true, 
-                     weapontype = "BeamLaser",
-                     weaponvelocity  = 1000,
+                     weaponacceleration = 108,
+                     weapontimer = 5,
+                     weapontype = "MissileLauncher",
+                     weaponvelocity  = 540,
                      damage = {
-                         default = 75,
+                         default = 38,
                      }, -- close damage
              }, --close single weapon definitions
 
@@ -178,8 +181,8 @@ weapondefs = {
 -----------------------------------------------------------
 weapons = {
                  [1] = {
-                 badtargetcategory = "VTOL",
-                 def = "gator_laserx",
+                 badtargetcategory = "NOTAIR",
+                 def = "andspmis_missile",
                  onlytargetcategory = "SURFACE",
                  },
 }, -- close weapon usage
