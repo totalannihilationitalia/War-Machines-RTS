@@ -1,18 +1,7 @@
---[[
-Questa versione di military (16) non legge ancora le variabili globali
-	if (not GG.AI_RaggioDifesa) then GG.AI_RaggioDifesa = {} end 	-- raggio di difesa della base del team
-	if (not GG.AI_StatoGuerra) then GG.AI_StatoGuerra = {} end		-- stato di guerra del team
-	if (not GG.AI_BasePos) then GG.AI_BasePos = {} end				-- posizione della base del team
-inviate dal gadget “wmrts_AI_constructionManagement”
-e pertanto il sistema invia continuamente le unità alll’attacco a prescindere dallo stato della guerra.
-Il sistema V16 è funzionante ed è stato siglato “checkpoint”. Molix
-]]--
-
-
 function gadget:GetInfo()
 	return {
 		name      = "WMRTS Squad Commander AI",
-		desc      = "AI V0.3 for War Machnines RTS",
+		desc      = "AI V16-17 for War Machnines RTS",
 		author    = "molix",
 		date      = "2025",
 		license   = "GPL",
@@ -31,7 +20,7 @@ end
 -- 29/01/2025 = Ora l'avanzamento di livello viene gestito dal gadget construcionManagement
 -- 09/02/2025 = Aggiunta priorità nella categoria di attacco (per bombardieri & Co) e aggiunta categoria defence e strategicdefence
 -- 20/02/2026 = Ho aggiunto la categoria (type) strategicshield in quanto prima gli shield erano inclusi in "strategicbuilding". In questo modo i cannoni a lungo raggio gestiti dalla AI del gadget "wmrts_AI_longWeaponManagement.lua" non prendono di mira gli shield (antiplasma) che prima erano categorizzati come "strategicbuilding". Il codice in questo gadget viene modificato in modo che, se prima, la categoria "X" attaccava solo "strategicbuilding", ora deve attaccare anche la type scorporata "strategicbuilding"
-
+-- 24/02/2026 = road to V17 - ora il gadget riceve lo stato di guerra, il punto base e il raggio della base. a seconda dello stato di guerra, manda le unità all'attacco o in difesa
 -- to do LIST ################################
 -- 1) implementare i SUB
 
@@ -401,7 +390,10 @@ local SQUAD_TIMEOUT_SECONDS = 600 -- questo timeout definisce i secondi di attes
 
 local aiTeamIDs = {}      
 local factories = {}      
-local squads = {}         
+local squads = {}     
+local basePoint = {}		-- Tabella: [teamID] = coordinate del punto base per ogni singolo team (0, 1, 2...)
+local baseRadius = {}		-- Tabella: [teamID] = raggio di difesa della base per ogni singolo team (0, 1, 2...)
+local warStatus = {}		-- Tabella: [teamID] = stato di guerra  per ogni singolo team (0, 1, 2...), può essere "attacco", "difesa_leggera", "difesa_pesante". Si veda "wmrts_AI_constructionManagement.lua" per maggiori dettagli        
 
 --------------------------------------------------------------------------------
 -- 4) LOGICA DI TARGETING BASATA SU DATABASE
@@ -419,7 +411,11 @@ local function GetUnitCategoryFromDB(unitID)
 	return "unknown" 							-- altrimenti se niente di cui sopra è avvenuto, restituisci "unknown"
 end
 
--- Funzione per trovare il bersaglio 
+--------------------------------------------------------------------------------
+-- 4b) LOGICA DI TARGETING LIMITATA AL RAGGIO DELLA BASE
+--------------------------------------------------------------------------------
+
+-- Funzione per trovare il bersaglio in tutta la mappa (verrà utilizzata nella modalità attacco)
 local function GetSmartEnemyTarget(myTeamID, squadType)
 	local allUnits = Spring.GetAllUnits()
 	local gaiaTeamID = Spring.GetGaiaTeamID()
@@ -526,6 +522,110 @@ local function GetSmartEnemyTarget(myTeamID, squadType)
 	return { x = Game.mapSizeX/2, y = 0, z = Game.mapSizeZ/2 }	-- decidere come impegnare le unità senza target
 end
 
+-- Funzione per trovare il bersaglio nel raggio della base (verrà utilizzata nella modalità difesa)
+local function GetSmartEnemyTargetInBaseRadious(myTeamID, squadType)
+	local bPos = basePoint[myTeamID]
+	local bRad = baseRadius[myTeamID]
+	
+	-- Se non abbiamo informazioni sulla base o sul raggio, non possiamo filtrare
+	if not bPos or not bRad then return nil end
+
+	local allUnits = Spring.GetAllUnits()
+	local gaiaTeamID = Spring.GetGaiaTeamID()
+	local radSq = bRad * bRad -- Usiamo il quadrato del raggio per evitare math.sqrt (ottimizzazione)
+	
+	local bestTarget = nil
+	local highestPriority = -1
+
+	for i = 1, #allUnits do
+		local uID = allUnits[i]
+		local uTeam = Spring.GetUnitTeam(uID)
+		
+		-- Solo nemici (non alleati, non Gaia)
+		if uTeam ~= gaiaTeamID and not Spring.AreTeamsAllied(myTeamID, uTeam) then
+			local x, y, z = Spring.GetUnitPosition(uID)
+			
+			if x then
+				-- CONTROLLO DISTANZA: L'unità nemica è dentro il raggio della base?
+				local dx = x - bPos.x
+				local dz = z - bPos.z
+				local distSq = (dx * dx) + (dz * dz)
+
+				if distSq <= radSq then
+					local enemyCat = GetUnitCategoryFromDB(uID)
+					
+					-------------
+					-- LOGICA CATEGORIE (Identica a GetSmartEnemyTarget)
+					-------------
+					if squadType == "ground" then
+						if enemyCat == "ground" or enemyCat == "unknown" or enemyCat == "building" or enemyCat == "strategicbuilding" or enemyCat == "strategicdefence" or enemyCat == "defence" or enemyCat == "strategicshield" then 
+							return {x=x, y=y, z=z, id=uID}
+						elseif enemyCat == "hover" and y >= -1 then
+							return {x=x, y=y, z=z, id=uID}
+						end
+
+					elseif squadType == "ground_hovercraft" then
+						if enemyCat == "ground" or enemyCat == "unknown" or enemyCat == "building" or enemyCat == "strategicbuilding" or enemyCat == "strategicdefence" or enemyCat == "hover" or enemyCat == "defence" or enemyCat == "strategicshield" then  
+							return {x=x, y=y, z=z, id=uID}
+						end
+
+					elseif squadType == "naval" then
+						if enemyCat == "naval" then
+							return {x=x, y=y, z=z, id=uID}
+						elseif enemyCat == "hover" and y < -1 then
+							return {x=x, y=y, z=z, id=uID}
+						end
+
+					elseif squadType == "air_toair" then
+						if enemyCat == "air" then 
+							return {x=x, y=y, z=z, id=uID} 
+						end
+
+					elseif squadType == "air_toground" then
+						if enemyCat == "ground" or enemyCat == "naval" or enemyCat == "hover" then
+							return {x=x, y=y, z=z, id=uID} 
+						end				
+
+					elseif squadType == "air_bomber" then 
+						local currentPriority = 0
+						if enemyCat == "defence" then currentPriority = 6
+						elseif enemyCat == "building" then currentPriority = 5
+						elseif enemyCat == "strategicbuilding" then currentPriority = 4
+						elseif enemyCat == "strategicdefence" then currentPriority = 3
+						elseif enemyCat == "strategicshield" then currentPriority = 2						
+						elseif enemyCat == "ground" then currentPriority = 1						
+						end
+						
+						if currentPriority > highestPriority then
+							highestPriority = currentPriority
+							bestTarget = {x=x, y=y, z=z, id=uID}
+							if highestPriority == 6 then break end
+						end					
+
+					elseif squadType == "air_bomber_strategic" then
+						local currentPriority = 0
+						if enemyCat == "strategicbuilding" then currentPriority = 6
+						elseif enemyCat == "strategicshield" then currentPriority = 5
+						elseif enemyCat == "strategicdefence" then currentPriority = 4						
+						elseif enemyCat == "building" then currentPriority = 3
+						elseif enemyCat == "defence" then currentPriority = 2
+						elseif enemyCat == "ground" then currentPriority = 1		
+						end
+						
+						if currentPriority > highestPriority then
+							highestPriority = currentPriority
+							bestTarget = {x=x, y=y, z=z, id=uID}
+							if highestPriority == 6 then break end
+						end
+					end
+				end -- fine controllo raggio
+			end
+		end
+	end
+	
+	return bestTarget -- Restituisce nil se non trova nessuno nel raggio
+end
+
 --------------------------------------------------------------------------------
 -- 5) GESTIONE ORDINI E GADGET CORE 
 --------------------------------------------------------------------------------
@@ -595,7 +695,7 @@ function gadget:UnitFinished(unitID, unitDefID, unitTeam)
     if not aiTeamIDs[unitTeam] then return end 				-- se il team non è AI non fare niente, esci
 	    -- CONTROLLO IGNORE: Se l'unità deve essere ignorata, definita nel database (ignore = true) esci subito e non gestire l'unità
     if IsUnitIgnored(unitID) then							-- utilizza la funzione IsUnitIgnored per capire se l'unità in questione è impostata con " ignore = true" nel file "WMRTS_AI_mission_db.lua", e restituisci true o false. se true non fare niente
-         Spring.Echo("WMRTS_militMngm_AI: Unità ignorata per design: " .. unitID)
+ --        Spring.Echo("WMRTS_militMngm_AI: Unità ignorata per design: " .. unitID)
         return 
     end
 		-- Altrimenti (se ignore = false o non impostate) associa l'unità ad una squadra
@@ -636,45 +736,38 @@ end
 
 function gadget:GameFrame(n)
     if (n % 30 ~= 0) then return end 
-
---[[
-    -- VECCHIA GESTIONE "A TEMPO" SEMPLICE E TEMPORANEA DEL LIVELLO AI		-- un domani la gestione del livello sarà data esternizzata in un gadget esterno della AI (esempio in quello che gestirà le costruzioni)	
-    for teamID, _ in pairs(aiTeamIDs) do									-- gestione livelli per ogni team
-
-        local tempoPartita = Spring.GetGameSeconds()    					-- Calcolo del livello (basato sul tempo per test!! cambiare poi con logica di avanzamento quando saranno presenti ulteriori costruzioni)
-        local nuovoLivello = 0
-        if tempoPartita > 1080 then 										-- se sono passati x secondi, imposta il livello AI del team a 1
-            nuovoLivello = 1
-        end
-        ------------------------------
-		-- Aggiungere qui altri scaglioni di tempo 
-		------------------------------
-		  
-        if teamLevels[teamID] ~= nuovoLivello then 		-- Se il livello del team è cambiato (o non è ancora inizializzato)
-            teamLevels[teamID] = nuovoLivello
-            teamConfigs[teamID] = GetConfigPerLivello(nuovoLivello)
-            Spring.Echo("WMRTS AI: Team " .. teamID .. " passato al livello " .. nuovoLivello)
-            
-            -- rendo la variabile globale per passarla ad altri gadget della AI
-            if not GG.WMRTS_Levels then GG.WMRTS_Levels = {} end
-            GG.WMRTS_Levels[teamID] = nuovoLivello
-        end
-    end
-]]--
-
 	-- GESTIONE DEI LIVELLI (CARICO I LIVELLI DALLA VARIABILE GLOBALE GESTITA DA constructionManagement GADGET 
 	for teamID, _ in pairs(aiTeamIDs) do
-    local nuovoLivello = (GG.WMRTS_Levels and GG.WMRTS_Levels[teamID]) or 0		-- Leggo il valore globale (se non esiste ancora, considero livello 0)
+		local nuovoLivello = (GG.WMRTS_Levels and GG.WMRTS_Levels[teamID]) or 0		-- Leggo il valore globale (se non esiste ancora, considero livello 0)
         if teamLevels[teamID] ~= nuovoLivello then 								-- Se il livello del team è cambiato (o non è ancora inizializzato)
             teamLevels[teamID] = nuovoLivello
             teamConfigs[teamID] = GetConfigPerLivello(nuovoLivello)
-            Spring.Echo("WMRTS_militMngm_AI:: Team " .. teamID .. " si è allineato al livello " .. nuovoLivello)
-            
-            -- non è piu necessario rendere la variabile globale per passarla ad altri gadget della AI in quanto ora la ricevo
---            if not GG.WMRTS_Levels then GG.WMRTS_Levels = {} end
---            GG.WMRTS_Levels[teamID] = nuovoLivello
+            Spring.Echo("WMRTS_militMngm_AI:: Team " .. teamID .. " si è allineato al livello " .. nuovoLivello)      
         end
-    end
+	-- GESTIONE DEL PUNTO DELLA BASE, indica dove è il centro della base
+        local newBP = GG.AI_BasePos and GG.AI_BasePos[teamID]
+        if newBP then
+            -- Se non esiste ancora una posizione locale, o se le coordinate sono cambiate
+            if not basePoint[teamID] or 
+               basePoint[teamID].x ~= newBP.x or 
+               basePoint[teamID].z ~= newBP.z then              
+               basePoint[teamID] = {x = newBP.x, y = newBP.y, z = newBP.z}
+               Spring.Echo(string.format("WMRTS_militMngm_AI:: Team %d BasePos: X=%.0f Z=%.0f", teamID, newBP.x, newBP.z))
+            end
+        end
+	-- GESTIONE DEL RAGGIO DI DIFESA DAL PUNTO DELLA BASE, servirà, in funzione dello stato di guerra, a mandare all'attacco le truppe o a difendere la base entro questo raggio
+		local newRadius = (GG.AI_RaggioDifesa and GG.AI_RaggioDifesa[teamID]) or 100 				-- imposto un raggio di default poi tanto si aggiorna automaticamente	
+        if baseRadius[teamID] ~= newRadius then 													-- Se il raggio di difesa del team è cambiato...
+            baseRadius[teamID] = newRadius
+            Spring.Echo("WMRTS_militMngm_AI:: Team " .. teamID .. " ha impostato il raggio della base a: " .. newRadius)
+        end		
+	-- GESTIONE DELLO STATO DI GUERRA, servirà per mandare in attacco le truppe, difendere lievemente la base o difenderla pesantemente
+		local newWS = (GG.AI_StatoGuerra and GG.AI_StatoGuerra[teamID]) or "attacco" 		-- imposto l'attacco di default, poi tanto si aggiorna automaticamente
+        if warStatus[teamID] ~= newWS then 													-- se lo stato di guerra è cambiato...
+            warStatus[teamID] = newWS
+            Spring.Echo("WMRTS_militMngm_AI:: Team " .. teamID .. " ha impostato lo stato di guerra a: " .. newWS)
+        end			
+    end -- end ciclo for
 
     -- GESTIONE FABBRICHE
     for fID, fData in pairs(factories) do
@@ -703,7 +796,6 @@ function gadget:GameFrame(n)
                         local templateName = options[math.random(1, #options)]
                         local template = SQUAD_TEMPLATES[templateName]
                         if template then
-                            -- ... (il resto della tua logica di creazione squadID rimane uguale)
                             local newSquadID = n .. "_" .. fID
                             squads[newSquadID] = {
                                 units = {},
@@ -726,40 +818,67 @@ function gadget:GameFrame(n)
         end
     end
 
-	-- GESTIONE SQUADRE
+	-- GESTIONE SQUADRE, Questa sezione è il "cervello operativo" che decide cosa devono fare i gruppi di unità una volta usciti dalle fabbriche. Gestisce il ciclo di vita di una squadra, dalla sua nascita fino alla sua distruzione.
+	-- Il codice divide le squadre in due stati principali: gathering (raduno) e attacking_monitor (attacco e monitoraggio).
+	
+	-- gathering
+	-- Cosa fa: Controlla se il numero di unità attuali (#sData.units) ha raggiunto la dimensione prevista (targetSize).
+	-- Il Timeout: Se la fabbrica viene distrutta o rallenta, il SQUAD_TIMEOUT_SECONDS (10 minuti nel tuo codice) forza la squadra a partire anche se incompleta, per evitare che le unità restino ferme in base per sempre.
+	-- Azione: Appena la squadra è pronta, cerca un bersaglio globale e impartisce il primo ordine di attacco.
 	for sID, sData in pairs(squads) do
+		local teamID = sData.myTeam -- Definiamo teamID 
 		if sData.state == "gathering" then
-			if #sData.units >= sData.targetSize or (Spring.GetGameSeconds() - sData.startTime) > SQUAD_TIMEOUT_SECONDS then
-				sData.state = "attacking_monitor"
-				sData.attackTarget = GetSmartEnemyTarget(sData.myTeam, sData.type)
-				for _, uID in ipairs(sData.units) do
-					if Spring.ValidUnitID(uID) then GiveAttackOrder(uID, sData.attackTarget) end
+			if warStatus[teamID] == "attacco" then
+				if #sData.units >= sData.targetSize or (Spring.GetGameSeconds() - sData.startTime) > SQUAD_TIMEOUT_SECONDS then -- CONTROLLO: La squadra è pronta o è passato troppo tempo?
+					sData.state = "attacking_monitor" 									-- Cambia stato: si va all'attacco!
+					sData.attackTarget = GetSmartEnemyTarget(sData.myTeam, sData.type)	-- Trova il primo bersaglio
+					for _, uID in ipairs(sData.units) do								-- ORDINE INIZIALE: Invia tutte le unità della squadra al bersaglio
+						if Spring.ValidUnitID(uID) then GiveAttackOrder(uID, sData.attackTarget) end
+					end
 				end
+			elseif warStatus[teamID] == "difesa_leggera" or warStatus[teamID] == "difesa_pesante"  then -- se siamo in modalità difesa leggera o pesante, le unità in gathering passano in modalità attacco all'interno del raggio della base (ingaggiano in difesa)
+				if #sData.units >= sData.targetSize or (Spring.GetGameSeconds() - sData.startTime) > SQUAD_TIMEOUT_SECONDS then -- CONTROLLO: La squadra è pronta o è passato troppo tempo?
+					sData.state = "attacking_monitor" 									-- Cambia stato: si va all'attacco!
+					sData.attackTarget = GetSmartEnemyTargetInBaseRadious(sData.myTeam, sData.type)	-- Trova il primo bersaglio all'interno del raggio della base, per difendere
+					for _, uID in ipairs(sData.units) do								-- ORDINE INIZIALE: Invia tutte le unità della squadra al bersaglio
+						if Spring.ValidUnitID(uID) then GiveAttackOrder(uID, sData.attackTarget) end
+					end
+				end			
 			end
-			
+	-- attacking_monitor
+	-- Ottimizzazione (n % 90): Non controlla ogni istante (sarebbe pesante per la CPU), ma ogni 3 secondi.
+	-- Pulizia Lista: Cicla la lista delle unità all'indietro (da #sData.units a 1). Questo è fondamentale in programmazione: se rimuovi un elemento da una lista mentre la scorri in avanti, salteresti l'elemento successivo.
+	-- Controllo Idle: Verifica se l'unità è "disoccupata" (CommandQueue == 0). Se ha finito di distruggere il suo bersaglio, diventerà Idle.	
 		elseif sData.state == "attacking_monitor" then
-			if n % 90 == 0 then
+			if n % 90 == 0 then			-- Esegue il controllo ogni 90 frame (circa ogni 3 secondi)
 				local anyAlive = false
 				local anyIdle = false
-				for i = #sData.units, 1, -1 do
+				for i = #sData.units, 1, -1 do	-- CICLO DI PULIZIA: Rimuove i morti dalla tabella della squadra
 					local uID = sData.units[i]
 					if Spring.ValidUnitID(uID) and not Spring.GetUnitIsDead(uID) then
 						anyAlive = true
-						if Spring.GetCommandQueue(uID, 0) == 0 then anyIdle = true end
+						if Spring.GetCommandQueue(uID, 0) == 0 then anyIdle = true end	-- Controlla se l'unità ha finito gli ordini (è ferma/idle)
 					else
-						table.remove(sData.units, i)
+						table.remove(sData.units, i)		-- Rimuove l'unità morta dalla lista
 					end
 				end
-				
+	-- Logica di ri-puntamento (Re-targeting)
+	-- Nuovo Ordine: Se almeno un'unità della squadra è viva (anyAlive) e almeno una è ferma (anyIdle), l'AI ricalcola il bersaglio.
+	-- Efficienza: L'ordine di attacco viene ridato solo alle unità ferme. Quelle che stanno ancora combattendo o sparando non vengono disturbate, permettendo loro di finire il lavoro locale.
+	-- Cancellazione Squadra: Se anyAlive è falso, significa che l'intera squadra è stata annientata. Il codice rimuove l'intera squadra (squads[sID] = nil) per liberare memoria.	
 				if anyAlive and anyIdle then
-					sData.attackTarget = GetSmartEnemyTarget(sData.myTeam, sData.type)
+					if warStatus[teamID] == "attacco" then
+						sData.attackTarget = GetSmartEnemyTarget(sData.myTeam, sData.type)	-- Trova un nuovo bersaglio nella mappa (modalità attacco)
+					else
+						sData.attackTarget = GetSmartEnemyTargetInBaseRadious(sData.myTeam, sData.type)
+					end
 					for _, uID in ipairs(sData.units) do
-						if Spring.GetCommandQueue(uID, 0) == 0 then
+						if Spring.GetCommandQueue(uID, 0) == 0 then		-- Ordina di attaccare solo a chi è effettivamente fermo
 							GiveAttackOrder(uID, sData.attackTarget)
 						end
 					end
 				end
-				if not anyAlive then squads[sID] = nil end
+				if not anyAlive then squads[sID] = nil end				-- Se sono tutti morti, elimina la squadra dal database globale
 			end
 		end
 	end
