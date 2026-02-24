@@ -30,7 +30,7 @@ return {
                footprintx = 12,
                footprintz = 12,
 --               mass = 0 --definire massa,
-               maxdamage = 5642,
+               maxdamage = 5200,
                maxslope = 10,
                maxwaterdepth = 0,
                metalStorage = 100,
