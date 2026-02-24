@@ -20,7 +20,7 @@ end
 -- 29/01/2025 = Ora l'avanzamento di livello viene gestito dal gadget construcionManagement
 -- 09/02/2025 = Aggiunta priorità nella categoria di attacco (per bombardieri & Co) e aggiunta categoria defence e strategicdefence
 -- 20/02/2026 = Ho aggiunto la categoria (type) strategicshield in quanto prima gli shield erano inclusi in "strategicbuilding". In questo modo i cannoni a lungo raggio gestiti dalla AI del gadget "wmrts_AI_longWeaponManagement.lua" non prendono di mira gli shield (antiplasma) che prima erano categorizzati come "strategicbuilding". Il codice in questo gadget viene modificato in modo che, se prima, la categoria "X" attaccava solo "strategicbuilding", ora deve attaccare anche la type scorporata "strategicbuilding"
--- 24/02/2026 = road to V17 - ora il gadget riceve lo stato di guerra, il punto base e il raggio della base. a seconda dello stato di guerra, manda le unità all'attacco o in difesa
+-- 24/02/2026 = road to V17 - ora il gadget riceve lo stato di guerra, il punto base e il raggio della base. a seconda dello stato di guerra, gestisce le unità dentro/fuori raggio base mandandole all'attacco o in difesa
 -- to do LIST ################################
 -- 1) implementare i SUB
 
@@ -148,40 +148,27 @@ local SQUAD_TEMPLATES = {
 ---------------
 -- AND gruppi creati per il lvl 0÷4 -------- 
 ---------------
+-- andlab
 	["AND_andlab_light_patrol_1"] = {
-		units = { "andscouter", "andscouter", "andscouter", "andscouter" },
+		units = { "andscouter", "andscouter", "andspmis", "andspmis" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["AND_andlab_light_patrol_2"] = {
-		units = { "andscouter", "anddauber", "anddauber", "andbrskr" },
+		units = { "anddauber", "andscouter", "andspmis", "andspmis" },				
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
-	["AND_andalab_light_patrol_1"] = { 
-		units = { "walker", "walker", "exxec", "andogre" },
-		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
-	},	
-	["AND_andalab_light_patrol_2"] = { 
-		units = { "andogre", "interceptor", "walker", "exxec" },
-		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
-	},		
+-- andhp	
 	["AND_andhp_light_patrol_1"] = {
-		units = { "andgaso", "andlipo", "andlipo", "andgaso" }, 
-		type = "ground_hovercraft"
+		units = { "andgaso", "andgaso", "andgaso", "andlipo" }, 
+		type = "ground"
 	},
 	["AND_andhp_light_patrol_2"] = {
-		units = { "andgaso", "andlipo", "andlipo", "andgaso","andmisa","andmisa" }, 
-		type = "ground_hovercraft"
+		units = { "andmisa", "andmisa", "andlipo", "andlipo", "andlipo","andhart" }, 
+		type = "ground"
 	},	
-	["AND_andahp_light_patrol_1"] = {
-		units = { "androck", "andtanko", "andtesla", "andnikola" }, 
-		type = "ground_hovercraft"
-	},	
-	["AND_andahp_light_patrol_2"] = {
-		units = { "andnikola", "andnikola", "androck", "androck", "andtanko" }, 
-		type = "ground_hovercraft"
-	},		
-	["AND_andplatplat_air_raid_1"] = { 			
-		units = { "andstr", "andfig", "andfig", "andstr", "andstr" },
+-- andplat	
+	["AND_andplat_air_raid_1"] = { 			
+		units = { "andmer", "andfig", "andfig", "andmer", "andmer" },
 		type = "air_toground"
 	},
 	["AND_andplat_antiair_raid_1"] = { 
@@ -191,19 +178,38 @@ local SQUAD_TEMPLATES = {
 	["AND_andplat_air_bomber_1"] = { 
 		units = { "andbomb", "andbomb", "andbomb", "andbomb", "andbomb" }, 	-- gruppo da 5 bombardieri
 		type = "air_bomber"
-	},		
-	["AND_andaplatplat_air_raid_1"] = { 			
-		units = { "anddragon", "corhors", "corhors" },
-		type = "air_toground"
+	},	
+--	["naval_fleet"] = {
+--		units = { "corbats", "corbats", "corbats" },
+--		type = "naval"
+--	}
+-- andalab
+	["AND_andalab_light_patrol_1"] = {
+		units = { "walker", "walker", "walker" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
-	["AND_andaplat_air_bomber_1"] = { 
-		units = { "anddragon", "anddragon", "corhors", "corhors", "corhors" }, 	
-		type = "air_bomber"
+	["AND_andalab_light_patrol_2"] = {
+		units = { "walker", "walker", "exxec" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+-- andahp
+	["AND_andahp_light_patrol_1"] = {
+		units = { "armmart", "armmart", "armlatnk" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},
+	["AND_andahp_light_patrol_2"] = {
+		units = { "armlatnk", "armlatnk"}, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+-- andaplat
+	["AND_andaplat_light_patrol_1"] = {
+		units = { "anddragon", "corhors", "corhors" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},
+	["AND_andaplat_light_patrol_2"] = {
+		units = { "anddragon", "corhors"}, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},		
-	["AND_andaplat_air_bomber_2"] = { 
-		units = { "anddragon", "anddragon", "corhors", "corhors", "corhors" }, 	
-		type = "air_bomber_strategic"
-	},				
 
 -------------------------------------------------------------------------------
 -- Elenco di produzioni per l'AI al livello 5+ - le fabbriche avranno gruppi più numerosi e composti da unità più forti 
@@ -287,9 +293,13 @@ local SQUAD_TEMPLATES = {
 		type = "air_bomber"
 	},		
 	["ICU_armaap_air_bomber_2"] = { 
-		units = { "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix" }, 	
+		units = { "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armpnix", "armcybr", "armcybr" }, 	
 		type = "air_bomber_strategic"
 	},		
+	["ICU_armaap_air_bomber_3"] = { 
+		units = { "armcybr", "armcybr", "armcybr", "armcybr", "armcybr" }, 	
+		type = "air_bomber_strategic"
+	},			
 -- icugant
 	["ICU_icugant_medium_patrol_1"] = {
 		units = { "armshock", "armshock", "armtigre" }, 
@@ -327,7 +337,122 @@ local SQUAD_TEMPLATES = {
 ---------------
 -- AND gruppi creati per il lvl 5+ -------- 
 ---------------
--- ################################## da completare	
+-- andlab
+	["AND_andlab_medium_patrol_1"] = {
+		units = { "anddauber", "anddauber", "andbrskr", "andspmis", "andspmis" , "andspmis", "andspaa", "andbrskr"  }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},
+	["AND_andlab_medium_patrol_2"] = {
+		units = { "anddauber", "andbrskr", "andspmis", "andspmis", "andspmis", "andspmis", "andbrskr", "andspaa", "anddauber" },				
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+-- andhp	
+	["AND_andhp_medium_patrol_1"] = {
+		units = { "andmisa", "andmisa", "andmisa", "andhart", "andmisa", "andlipo", "andlipo", "andmisa" }, 
+		type = "ground"
+	},
+	["AND_andhp_medium_patrol_2"] = {
+		units = { "andmisa", "andmisa", "andmisa", "andhart", "andlipo", "andhart", "andlipo", "andlipo", "andlipo", "andlipo" }, 
+		type = "ground"
+	},	
+-- andplat	
+	["AND_andplat_air_mediumraid_1"] = { 			
+		units = { "andmer", "andfig", "andfig", "andmer", "andmer", "andmer", "andmer", "andmer", "andmer", "andmer" },
+		type = "air_toground"
+	},
+	["AND_andplat_antiair_mediumraid_1"] = { 
+		units = { "andfig", "andfig", "andfig", "andfig", "andfig", "andfig", "andfig", "andfig", "andfig", "andfig" },
+		type = "air_toair"
+	},
+	["AND_andplat_air_mediumbomber_1"] = { 
+		units = { "andbomb", "andbomb", "andbomb", "andbomb", "andbomb", "andbomb", "andbomb", "andbomb", "andbomb", "andbomb" }, 	-- gruppo da 10 bombardieri
+		type = "air_bomber"
+	},	
+	["AND_andplat_air_mediumstrategicbomber_1"] = { 
+		units = { "andbomb", "andbomb", "andbomb", "andbomb", "andbomb", "andbomb", "andbomb", "andbomb", "andbomb", "andbomb", "andbomb", "andbomb" }, 	-- gruppo da 12 bombardieri
+		type = "air_bomber_strategic"
+	},				
+--	["naval_fleet"] = { -- ## nel caso non ci sono unità navali -> usare hovercraft
+--		units = { "corbats", "corbats", "corbats" },
+--		type = "naval"
+--	}
+-- andalab
+	["AND_andalab_medium_patrol_1"] = {
+		units = { "andogre", "andogre", "exxec", "walker", "interceptor", "interceptor", "andogre" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},
+	["AND_andalab_medium_patrol_2"] = {
+		units = { "walker", "walker", "exxec", "walker", "walker", "walker", "walker", "walker" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+-- andahp
+	["AND_andahp_medium_patrol_1"] = {
+		units = { "androck", "androck", "andahaa", "androck", "androck", "androck", "androck", "androck", "androck", "andtanko", "andtanko" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},
+	["AND_andahp_medium_patrol_2"] = {
+		units = { "andnikola", "andnikola", "andtanko", "andtanko", "androck", "andahaa"}, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+	["AND_andahp_medium_patrol_3"] = {
+		units = { "andnikola", "andnikola", "andtanko", "andtanko", "androck", "andahaa", "andnikola", "andtanko", "andtanko"}, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},		
+-- andaplat
+	["AND_andaplat_medium_patrol_1"] = {
+		units = { "andhawk", "andhawk", "andhawk", "andhawk", "andhawk", "andhawk", "andhawk", "andhawk", "andhawk" }, 
+		type = "air_toair" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},
+	["AND_andaplat_medium_patrol_2"] = {
+		units = { "anddragon", "anddragon", "corhors", "corhors", "anddragon", "anddragon", "corhors", "corhors", "corhors", "corhors"}, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},		
+	["AND_andaplat_air_bomber_1"] = { 
+		units = { "corhors", "corhors", "corhors", "corhors", "andstr", "andstr", "corhors", "corhors", "corhors" }, 	
+		type = "air_bomber"
+	},		
+	["AND_andaplat_air_bomber_2"] = { 
+		units = { "andstr", "andstr", "andstr", "andstr", "andstr", "andstr", "andstr", "andstr", "andstr", "andstr", "andstr", "andstr", "andstr", "corhors", "corhors" }, 	
+		type = "air_bomber_strategic"
+	},		
+	["AND_andaplat_air_bomber_3"] = { 
+		units = { "corhors", "corhors", "anddragon", "anddragon", "anddragon" }, 	
+		type = "air_bomber_strategic"
+	},			
+-- andgant_terrestre -- ####################### definire ed inserire i ragnoni
+	["AND_andgant_terrestre_medium_patrol_1"] = { -- ####################### definire ed inserire i ragnoni
+		units = { "armshock", "armshock", "armtigre" },  -- ####################### definire ed inserire i ragnoni
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},		
+	["AND_andgant_terrestre_medium_patrol_2"] = { -- ####################### definire ed inserire i ragnoni
+		units = { "armshock", "armshock" },  -- ####################### definire ed inserire i ragnoni
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},			
+	["AND_andgant_terrestre_medium_patrol_3"] = { -- ####################### definire ed inserire i ragnoni
+		units = { "armtigre", "armtigre" },  -- ####################### definire ed inserire i ragnoni
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},			
+-- andgant
+	["AND_andgant_medium_patrol_1"] = {
+		units = { "bigb", "bigb", "bigb" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+	["AND_andgant_medium_patrol_2"] = {
+		units = { "bigb", "bigb", "bigb", "bigb", "conartist" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+	["AND_andgant_medium_patrol_3"] = {
+		units = { "armpraet" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+	["AND_andgant_medium_patrol_4"] = {
+		units = { "cordem", "bigb","bigb" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},			
+	["AND_andgant_medium_patrol_5"] = {
+		units = { "conartist", "conartist", "bigb","bigb" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},		
 } -- end tabella squadre
 
 --------------------------------------------------------------------------------
@@ -340,8 +465,6 @@ local teamLevels = {}       -- Tabella: [teamID] = livello attuale dell'AI per o
 local teamConfigs = {}      -- Tabella: [teamID] = la FACTORY_CONFIG specifica per livello di ogni team
 
 local FACTORY_CONFIG = {} 		-- all'inizio imposto la tabella vuota ################################  SOSTITUIRE???
--- local livello_AI = 0 			-- ##################### all'inizio imposto il livello della AI = 0 (livello iniziale #################
--- local lastLevel = -1 			-- ##################### Usiamo -1 così al primo frame carica il livello 0. Questa variabile serve come "antiripetizione" e verrà utilizzata per aumentare di livello l' AI una volta sola #####################
 
 local function GetConfigPerLivello(livello) -- Questa funzione restituisce, per ciascun team, la tabella delle fabbriche in funzione del livello corrente del team
     if livello <= 4 then					
@@ -353,13 +476,13 @@ local function GetConfigPerLivello(livello) -- Questa funzione restituisce, per 
             ["armalab"] = { "ICU_armalab_light_patrol_1", "ICU_armalab_light_patrol_2" },							-- inseriti in caso di recessione della AI dal livello 4+ a 0
             ["armavp"] = { "ICU_armavp_light_patrol_1", "ICU_armavp_light_patrol_2" },			
             ["armaap"]  = { "ICU_armaap_light_patrol_1", "ICU_armaap_light_patrol_2"},			
-            -- AND -- ################### CONCLUDERE
+            -- AND --
             ["andlab"] = { "AND_andlab_light_patrol_1", "AND_andlab_light_patrol_2" },
-            ["andalab"] = { "AND_andalab_light_patrol_1", "AND_andalab_light_patrol_2" }, 
             ["andhp"] = { "AND_andhp_light_patrol_1", "AND_andhp_light_patrol_2" },
-            ["andahp"] = { "AND_andahp_light_patrol_1", "AND_andahp_light_patrol_2" },        
-            ["andplat"]  = { "AND_andplatplat_air_raid_1", "AND_andplat_antiair_raid_1","AND_andplat_air_bomber_1" },
-            ["andaplat"]  = { "AND_andaplatplat_air_raid_1", "AND_andaplat_air_bomber_1","AND_andaplat_air_bomber_2" },
+            ["andplat"]  = { "AND_andplat_antiair_raid_1", "AND_andplat_air_raid_1","AND_andplat_air_bomber_1" },			
+            ["andalab"] = { "AND_andalab_light_patrol_1", "AND_andalab_light_patrol_2" },							-- inseriti in caso di recessione della AI dal livello 4+ a 0
+            ["andahp"] = { "AND_andahp_light_patrol_1", "AND_andahp_light_patrol_2" },			
+            ["andaplat"]  = { "AND_andaplat_light_patrol_1", "AND_andaplat_light_patrol_2"},	
         }
     elseif livello > 4 then
         return {
@@ -369,13 +492,18 @@ local function GetConfigPerLivello(livello) -- Questa funzione restituisce, per 
             ["armap"]  = { "ICU_armap_air_mediumraid_1", "ICU_armap_antiair_mediumraid_1","ICU_armap_air_mediumbomber_1","ICU_armap_air_mediumstrategicbomber_1" },
             ["armalab"] = { "ICU_armalab_medium_patrol_1", "ICU_armalab_medium_patrol_2" },			
             ["armavp"] = { "ICU_armavp_medium_patrol_1", "ICU_armavp_medium_patrol_2", "ICU_armavp_medium_patrol_3" },
-            ["armaap"]  = { "ICU_armaap_medium_patrol_1", "ICU_armaap_medium_patrol_2","ICU_armaap_air_bomber_1","ICU_armaap_air_bomber_2" },		
+            ["armaap"]  = { "ICU_armaap_medium_patrol_1", "ICU_armaap_medium_patrol_2","ICU_armaap_air_bomber_1","ICU_armaap_air_bomber_2", "ICU_armaap_air_bomber_3" },		
             ["icugant"] = { "ICU_icugant_medium_patrol_1", "ICU_icugant_medium_patrol_2", "ICU_icugant_medium_patrol_3" },		
             ["armshltx"] = { "ICU_armshltx_medium_patrol_1", "ICU_armshltx_medium_patrol_2", "ICU_armshltx_medium_patrol_3", "ICU_armshltx_medium_patrol_4", "ICU_armshltx_medium_patrol_5" },		
-            -- AND -- ################### CONCLUDERE
-            ["andlab"] = { "AND_andlab_light_patrol_1", "AND_andlab_light_patrol_2" },
-            ["andhp"] = { "AND_andhp_light_patrol_1", "AND_andhp_light_patrol_2" },
-            ["andplat"]  = { "AND_andplatplat_air_raid_1", "AND_andplat_antiair_raid_1","AND_andplat_air_bomber_1" },
+            -- AND --
+            ["andlab"] = { "AND_andlab_medium_patrol_1", "AND_andlab_medium_patrol_2" },
+            ["andhp"] = { "AND_andhp_medium_patrol_1", "AND_andhp_medium_patrol_2" },
+            ["andplat"]  = { "AND_andplat_air_mediumraid_1", "AND_andplat_antiair_mediumraid_1","AND_andplat_air_mediumbomber_1","AND_andplat_air_mediumstrategicbomber_1" },
+            ["andalab"] = { "AND_andalab_medium_patrol_1", "AND_andalab_medium_patrol_2" },			
+            ["andahp"] = { "AND_andahp_medium_patrol_1", "AND_andahp_medium_patrol_2", "AND_andahp_medium_patrol_3" },
+            ["andaplat"]  = { "AND_andaplat_medium_patrol_1", "AND_andaplat_medium_patrol_2","AND_andaplat_air_bomber_1","AND_andaplat_air_bomber_2", "AND_andaplat_air_bomber_3" },		
+            ["andgant_terrestre"] = { "AND_andgant_terrestre_medium_patrol_1", "AND_andgant_terrestre_medium_patrol_2", "AND_andgant_terrestre_medium_patrol_3" },		
+            ["andgant"] = { "AND_andgant_medium_patrol_1", "AND_andgant_medium_patrol_2", "AND_andgant_medium_patrol_3", "AND_andgant_medium_patrol_4", "AND_andgant_medium_patrol_5" },				
         }
     end
     return {} -- default vuoto
@@ -414,6 +542,33 @@ end
 --------------------------------------------------------------------------------
 -- 4b) LOGICA DI TARGETING LIMITATA AL RAGGIO DELLA BASE
 --------------------------------------------------------------------------------
+-- Funzione per trovare tutte le unità all'interno e all'esterno del raggio della base
+local function SplitUnitsByRadius(unitList, bPos, bRad)
+    local unitsInside = {}
+    local unitsOutside = {}
+    
+    if not bPos or not bRad then return unitsInside, unitsOutside end
+
+    local radSq = bRad * bRad
+    for i = 1, #unitList do
+        local uID = unitList[i]
+        if Spring.ValidUnitID(uID) then
+            local ux, _, uz = Spring.GetUnitPosition(uID)
+            if ux then
+                local dx = ux - bPos.x
+                local dz = uz - bPos.z
+                local distSq = (dx * dx) + (dz * dz)
+                
+                if distSq <= radSq then
+                    table.insert(unitsInside, uID)
+                else
+                    table.insert(unitsOutside, uID)
+                end
+            end
+        end
+    end
+    return unitsInside, unitsOutside
+end
 
 -- Funzione per trovare il bersaglio in tutta la mappa (verrà utilizzata nella modalità attacco)
 local function GetSmartEnemyTarget(myTeamID, squadType)
@@ -522,7 +677,7 @@ local function GetSmartEnemyTarget(myTeamID, squadType)
 	return { x = Game.mapSizeX/2, y = 0, z = Game.mapSizeZ/2 }	-- decidere come impegnare le unità senza target
 end
 
--- Funzione per trovare il bersaglio nel raggio della base (verrà utilizzata nella modalità difesa)
+-- Funzione per trovare il bersaglio nel raggio della base (verrà utilizzata nella modalità difesa). Se non troverà alcun bersaglio all'interno dell'area (perchè ha distrutto tutto), chiama la funzione GetSmartEnemyTarget che è quella per l'attacco.
 local function GetSmartEnemyTargetInBaseRadious(myTeamID, squadType)
 	local bPos = basePoint[myTeamID]
 	local bRad = baseRadius[myTeamID]
@@ -622,7 +777,6 @@ local function GetSmartEnemyTargetInBaseRadious(myTeamID, squadType)
 			end
 		end
 	end
-	
 	return bestTarget -- Restituisce nil se non trova nessuno nel raggio
 end
 
@@ -735,8 +889,8 @@ function gadget:UnitFinished(unitID, unitDefID, unitTeam)
 end
 
 function gadget:GameFrame(n)
-    if (n % 30 ~= 0) then return end 
-	-- GESTIONE DEI LIVELLI (CARICO I LIVELLI DALLA VARIABILE GLOBALE GESTITA DA constructionManagement GADGET 
+    if (n % 30 ~= 0) then return end  		-- una volta al secondo...
+	-- Controlla il livello della AI gestito dal gadget "constructionManagement"
 	for teamID, _ in pairs(aiTeamIDs) do
 		local nuovoLivello = (GG.WMRTS_Levels and GG.WMRTS_Levels[teamID]) or 0		-- Leggo il valore globale (se non esiste ancora, considero livello 0)
         if teamLevels[teamID] ~= nuovoLivello then 								-- Se il livello del team è cambiato (o non è ancora inizializzato)
@@ -744,7 +898,7 @@ function gadget:GameFrame(n)
             teamConfigs[teamID] = GetConfigPerLivello(nuovoLivello)
             Spring.Echo("WMRTS_militMngm_AI:: Team " .. teamID .. " si è allineato al livello " .. nuovoLivello)      
         end
-	-- GESTIONE DEL PUNTO DELLA BASE, indica dove è il centro della base
+	-- Controlla la posizione della base gestita dal gadget "constructionManagement" 
         local newBP = GG.AI_BasePos and GG.AI_BasePos[teamID]
         if newBP then
             -- Se non esiste ancora una posizione locale, o se le coordinate sono cambiate
@@ -755,13 +909,13 @@ function gadget:GameFrame(n)
                Spring.Echo(string.format("WMRTS_militMngm_AI:: Team %d BasePos: X=%.0f Z=%.0f", teamID, newBP.x, newBP.z))
             end
         end
-	-- GESTIONE DEL RAGGIO DI DIFESA DAL PUNTO DELLA BASE, servirà, in funzione dello stato di guerra, a mandare all'attacco le truppe o a difendere la base entro questo raggio
+	-- Controlla il raggio di difersa della base gestito dal gadget "constructionManagement", servirà, in funzione dello stato di guerra, a mandare all'attacco le truppe o a difendere la base entro questo raggio
 		local newRadius = (GG.AI_RaggioDifesa and GG.AI_RaggioDifesa[teamID]) or 100 				-- imposto un raggio di default poi tanto si aggiorna automaticamente	
         if baseRadius[teamID] ~= newRadius then 													-- Se il raggio di difesa del team è cambiato...
             baseRadius[teamID] = newRadius
             Spring.Echo("WMRTS_militMngm_AI:: Team " .. teamID .. " ha impostato il raggio della base a: " .. newRadius)
         end		
-	-- GESTIONE DELLO STATO DI GUERRA, servirà per mandare in attacco le truppe, difendere lievemente la base o difenderla pesantemente
+	-- Controlla lo stato di guerra gestito dal gadget "constructionManagement", servirà per mandare in attacco le truppe, difendere lievemente la base o difenderla pesantemente
 		local newWS = (GG.AI_StatoGuerra and GG.AI_StatoGuerra[teamID]) or "attacco" 		-- imposto l'attacco di default, poi tanto si aggiorna automaticamente
         if warStatus[teamID] ~= newWS then 													-- se lo stato di guerra è cambiato...
             warStatus[teamID] = newWS
@@ -820,13 +974,12 @@ function gadget:GameFrame(n)
 
 	-- GESTIONE SQUADRE, Questa sezione è il "cervello operativo" che decide cosa devono fare i gruppi di unità una volta usciti dalle fabbriche. Gestisce il ciclo di vita di una squadra, dalla sua nascita fino alla sua distruzione.
 	-- Il codice divide le squadre in due stati principali: gathering (raduno) e attacking_monitor (attacco e monitoraggio).
-	
+	for sID, sData in pairs(squads) do	
+		local teamID = sData.myTeam -- Definiamo teamID 
 	-- gathering
 	-- Cosa fa: Controlla se il numero di unità attuali (#sData.units) ha raggiunto la dimensione prevista (targetSize).
 	-- Il Timeout: Se la fabbrica viene distrutta o rallenta, il SQUAD_TIMEOUT_SECONDS (10 minuti nel tuo codice) forza la squadra a partire anche se incompleta, per evitare che le unità restino ferme in base per sempre.
-	-- Azione: Appena la squadra è pronta, cerca un bersaglio globale e impartisce il primo ordine di attacco.
-	for sID, sData in pairs(squads) do
-		local teamID = sData.myTeam -- Definiamo teamID 
+	-- Azione: Appena la squadra è pronta, cerca un bersaglio globale e impartisce il primo ordine di attacco.		
 		if sData.state == "gathering" then
 			if warStatus[teamID] == "attacco" then
 				if #sData.units >= sData.targetSize or (Spring.GetGameSeconds() - sData.startTime) > SQUAD_TIMEOUT_SECONDS then -- CONTROLLO: La squadra è pronta o è passato troppo tempo?
@@ -851,35 +1004,72 @@ function gadget:GameFrame(n)
 	-- Controllo Idle: Verifica se l'unità è "disoccupata" (CommandQueue == 0). Se ha finito di distruggere il suo bersaglio, diventerà Idle.	
 		elseif sData.state == "attacking_monitor" then
 			if n % 90 == 0 then			-- Esegue il controllo ogni 90 frame (circa ogni 3 secondi)
-				local anyAlive = false
-				local anyIdle = false
+				local anyAlive = false	-- Controlla che il gruppo non sia stato completamente distrutto.
+				local anyIdle = false	-- È una condizione di efficienza. Dice al gadget: "tutti i membri della squadra stanno ancora sparando a qualcosa"
 				for i = #sData.units, 1, -1 do	-- CICLO DI PULIZIA: Rimuove i morti dalla tabella della squadra
 					local uID = sData.units[i]
 					if Spring.ValidUnitID(uID) and not Spring.GetUnitIsDead(uID) then
 						anyAlive = true
-						if Spring.GetCommandQueue(uID, 0) == 0 then anyIdle = true end	-- Controlla se l'unità ha finito gli ordini (è ferma/idle)
+						if Spring.GetCommandQueue(uID, 0) == 0 then anyIdle = true end	-- Controlla se l'unità ha finito gli ordini e ne imposti anyIdle true(è ferma/idle)
 					else
 						table.remove(sData.units, i)		-- Rimuove l'unità morta dalla lista
 					end
 				end
 	-- Logica di ri-puntamento (Re-targeting)
-	-- Nuovo Ordine: Se almeno un'unità della squadra è viva (anyAlive) e almeno una è ferma (anyIdle), l'AI ricalcola il bersaglio.
-	-- Efficienza: L'ordine di attacco viene ridato solo alle unità ferme. Quelle che stanno ancora combattendo o sparando non vengono disturbate, permettendo loro di finire il lavoro locale.
+	-- Nuovo Ordine: Se almeno un'unità della squadra è viva (anyAlive) e almeno una è ferma (anyIdle) e soprattutto se ogni singola unità è IDLE (Spring.GetCommandQueue(uID, 0) == 0), l'AI ricalcola il loro bersaglio (targetAttack/targetDefence) e lo assegna a seconda dello stato di guerra
+	-- Efficienza: L'ordine di attacco viene ridato solo alle unità ferme (Spring.GetCommandQueue(uID, 0) == 0) e o dentro/fuori dal raggio della base (ipairs(insideUnits)/ipairs(outsideUnits)), a seconda dello stato di guerra. 
 	-- Cancellazione Squadra: Se anyAlive è falso, significa che l'intera squadra è stata annientata. Il codice rimuove l'intera squadra (squads[sID] = nil) per liberare memoria.	
 				if anyAlive and anyIdle then
-					if warStatus[teamID] == "attacco" then
-						sData.attackTarget = GetSmartEnemyTarget(sData.myTeam, sData.type)	-- Trova un nuovo bersaglio nella mappa (modalità attacco)
-					else
-						sData.attackTarget = GetSmartEnemyTargetInBaseRadious(sData.myTeam, sData.type)
-					end
-					for _, uID in ipairs(sData.units) do
-						if Spring.GetCommandQueue(uID, 0) == 0 then		-- Ordina di attaccare solo a chi è effettivamente fermo
-							GiveAttackOrder(uID, sData.attackTarget)
-						end
-					end
-				end
-				if not anyAlive then squads[sID] = nil end				-- Se sono tutti morti, elimina la squadra dal database globale
-			end
+					local targetAttack = nil															-- imposto i targetAttack di attacco
+					local targetDefence = nil															-- imposto i target di difesa
+					targetAttack = GetSmartEnemyTarget(sData.myTeam, sData.type)						-- ... cerca tutti i target in tutta la mappa e salvali in targetAttack
+					targetDefence = GetSmartEnemyTargetInBaseRadious(sData.myTeam, sData.type)			-- ... cerca tutti i target all'interno del raggio della base e salvali in targetDefence
+					local bPos = basePoint[teamID]
+					local bRad = baseRadius[teamID]					
+					local insideUnits, outsideUnits = SplitUnitsByRadius(sData.units, basePoint[teamID], baseRadius[teamID])	-- creo la lista insideUnits e outsideUnits, liste di unità rispettivamente dentro il raggio della base e fuori dal raggio della base
+					-- attacco
+					if warStatus[teamID] == "attacco" then										-- a) in modalità attacco...
+						for _, uID in ipairs(sData.units) do									-- esegui un ciclo for su tutte le unità presenti sulla mappa...
+							if Spring.GetCommandQueue(uID, 0) == 0 then							-- Controllo ogni singola unità, e, se è ferma (Idle)...  ##### verificare qui se dividere tra attacco, difesa leggera o difesa pesante (magari nella difesa pesante fare in modo che le unità tornino a prescindere che siano idle???) ##### molix
+								GiveAttackOrder(uID, targetAttack)								-- ...invia l'ordine alle singole unità tramite la funzione "GiveAttackOrder")
+							end
+						end -- ciclo for
+					-- difesa_leggera						
+					elseif 	warStatus[teamID] == "difesa_leggera" then							-- b) in modalità difesa leggera...
+						for _, uID in ipairs(insideUnits) do									-- cicla e trova tutte le unità all'interno del raggio della base
+--							if Spring.GetCommandQueue(uID, 0) == 0 then							-- Controllo ogni singola unità, se è ferma (Idle)...  ##### verificare qui se dividere tra attacco, difesa leggera o difesa pesante (magari nella difesa pesante fare in modo che le unità tornino a prescindere che siano idle???) ##### molix	
+								if targetDefence then											-- Se è presente un target in difesa...
+									GiveAttackOrder(uID, targetDefence)							-- attacca il targetDefence (difesa attiva)
+								else															-- altrimenti...
+									GiveAttackOrder(uID, targetAttack)							-- passa all'attacco a prescindere -- ### valutare se spostare le unità al centro della base e lasciare che si fermino, per ricevere un ulteriore ordine
+								end
+--							end
+						end			
+						for _, uID in ipairs(outsideUnits) do									-- cicla e trova tutte le unità all'esterno del raggio della base
+							if Spring.GetCommandQueue(uID, 0) == 0 then							-- Controllo ogni singola unità, se è ferma (Idle)...  ##### verificare qui se dividere tra attacco, difesa leggera o difesa pesante (magari nella difesa pesante fare in modo che le unità tornino a prescindere che siano idle???) ##### molix	
+								GiveAttackOrder(uID, targetAttack)								-- attacca il targetDefence (difesa attiva)
+							end
+						end					
+					-- difesa_pesante
+					elseif warStatus[teamID] == "difesa_pesante" then							-- c) in modalità difesa pesante...
+						for _, uID in ipairs(insideUnits) do									-- cicla e trova tutte le unità all'interno del raggio della base
+--							if Spring.GetCommandQueue(uID, 0) == 0 then		
+								if targetDefence then
+									GiveAttackOrder(uID, targetDefence)							-- attacca il target di difesa, se esiste... (difesa attiva)
+								else 
+									GiveAttackOrder(uID, targetAttack)							-- ...altrimenti attacca un target di attacco
+								end -- end se esiste targetDefence
+--							end
+						end	-- end ciclo for (unità interno base)		
+						for _, uID in ipairs(outsideUnits) do									-- cicla e trova tutte le unità all'esterno del raggio della base
+							if Spring.GetCommandQueue(uID, 0) == 0 then							-- Controllo ogni singola unità, se è ferma (Idle)...  ##### verificare qui se dividere tra attacco, difesa leggera o difesa pesante (magari nella difesa pesante fare in modo che le unità tornino a prescindere che siano idle???) ##### molix
+								GiveAttackOrder(uID, targetDefence)								-- attacca il target (difesa attiva)							
+							end
+						end	-- end ciclo for (unità esterno base)
+					end -- warStatus	
+				end		-- end anyAlive and anyIdle		
+				if not anyAlive then squads[sID] = nil end										-- Se sono tutti morti, elimina la squadra dal database globale
+			end -- end anylive
 		end
-	end
-end
+	end	-- end for gestione squadre
+end	-- end funzione

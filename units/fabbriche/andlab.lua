@@ -57,10 +57,12 @@ return {
 --- INSERT BUILDLIST
 -----------------------------------
                buildoptions = { 
-			[1] = "andcsp",
+			[1] = "andcsp",		
 			[2] = "andscouter",
-			[3] = "anddauber",
-			[4] = "andbrskr",
+			[3] = "andspmis",			
+			[4] = "andspaa",
+			[5] = "anddauber",
+			[6] = "andbrskr",
 
 		},
 -----------------------------------------------------------
