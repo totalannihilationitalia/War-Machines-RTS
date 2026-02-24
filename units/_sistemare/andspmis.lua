@@ -46,7 +46,7 @@ return {
                name = "Recluse",
                noAutoFire = false,
                nochasecategory = "VTOL",
-               objectname = "andscouter.s3o",
+               objectname = "andspmis.s3o",
                seismicsignature = 0,
                selfdestructas = "BIG_UNIT",
                sightdistance = 440,

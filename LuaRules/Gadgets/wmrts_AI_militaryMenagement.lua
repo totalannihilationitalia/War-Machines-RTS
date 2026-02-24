@@ -1037,13 +1037,13 @@ function gadget:GameFrame(n)
 					-- difesa_leggera						
 					elseif 	warStatus[teamID] == "difesa_leggera" then							-- b) in modalità difesa leggera...
 						for _, uID in ipairs(insideUnits) do									-- cicla e trova tutte le unità all'interno del raggio della base
---							if Spring.GetCommandQueue(uID, 0) == 0 then							-- Controllo ogni singola unità, se è ferma (Idle)...  ##### verificare qui se dividere tra attacco, difesa leggera o difesa pesante (magari nella difesa pesante fare in modo che le unità tornino a prescindere che siano idle???) ##### molix	
+							if Spring.GetCommandQueue(uID, 0) == 0 then							-- Controllo ogni singola unità, se è ferma (Idle)...  ##### verificare qui se dividere tra attacco, difesa leggera o difesa pesante (magari nella difesa pesante fare in modo che le unità tornino a prescindere che siano idle???) ##### molix	
 								if targetDefence then											-- Se è presente un target in difesa...
 									GiveAttackOrder(uID, targetDefence)							-- attacca il targetDefence (difesa attiva)
 								else															-- altrimenti...
 									GiveAttackOrder(uID, targetAttack)							-- passa all'attacco a prescindere -- ### valutare se spostare le unità al centro della base e lasciare che si fermino, per ricevere un ulteriore ordine
 								end
---							end
+							end
 						end			
 						for _, uID in ipairs(outsideUnits) do									-- cicla e trova tutte le unità all'esterno del raggio della base
 							if Spring.GetCommandQueue(uID, 0) == 0 then							-- Controllo ogni singola unità, se è ferma (Idle)...  ##### verificare qui se dividere tra attacco, difesa leggera o difesa pesante (magari nella difesa pesante fare in modo che le unità tornino a prescindere che siano idle???) ##### molix	
@@ -1053,13 +1053,13 @@ function gadget:GameFrame(n)
 					-- difesa_pesante
 					elseif warStatus[teamID] == "difesa_pesante" then							-- c) in modalità difesa pesante...
 						for _, uID in ipairs(insideUnits) do									-- cicla e trova tutte le unità all'interno del raggio della base
---							if Spring.GetCommandQueue(uID, 0) == 0 then		
+							if Spring.GetCommandQueue(uID, 0) == 0 then		
 								if targetDefence then
 									GiveAttackOrder(uID, targetDefence)							-- attacca il target di difesa, se esiste... (difesa attiva)
 								else 
 									GiveAttackOrder(uID, targetAttack)							-- ...altrimenti attacca un target di attacco
 								end -- end se esiste targetDefence
---							end
+							end
 						end	-- end ciclo for (unità interno base)		
 						for _, uID in ipairs(outsideUnits) do									-- cicla e trova tutte le unità all'esterno del raggio della base
 							if Spring.GetCommandQueue(uID, 0) == 0 then							-- Controllo ogni singola unità, se è ferma (Idle)...  ##### verificare qui se dividere tra attacco, difesa leggera o difesa pesante (magari nella difesa pesante fare in modo che le unità tornino a prescindere che siano idle???) ##### molix
