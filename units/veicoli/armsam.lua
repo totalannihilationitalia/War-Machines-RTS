@@ -194,7 +194,7 @@ weapondefs = {
 -----------------------------------------------------------
 weapons = {
                  [1] = {
-                 badtargetcategory = "NOTAIR",
+                 badtargetcategory = "VTOL",
                  def = "armtruck_missile",
                  onlytargetcategory = "SURFACE",
                  },
