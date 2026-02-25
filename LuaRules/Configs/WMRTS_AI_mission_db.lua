@@ -20,7 +20,7 @@
 --			type = strategicdefence 	-> unità fissa di difesa strategica ( Es bertha, corbuzz, toaster, ecc )
 --			type = strategicshield		-> unità fissa shield (plasma repulsor) -- viene utilizzata: a) nel gadget "longWeaponManagement" per identificare i plasma repulsor ed evitare di colpire bersagli all'interno dello scudo con l'artiglieria a lungo raggio; b) nel gadget "wmrts_AI_militaryMenagement.lua" come target obiettivo delle unità attaccanti
 --			tutte le unità che non sono identificate in questo database, prenderanno valore type = unknown , vedere poi la logica di targetin come gestirle
--- definizione della caratteristica "ignore": può essere true o false (se non dichiarata). Se True, l'unità ad esso associata verrà completamente ignorata dal gadget "military_factory": quando creata dalla fabbrica, quell'unità non viene inclusa in alcun gruppo e non viene mandata all'attacco. Sarà un altro Gadget a gestire l'unità (come ad esempio i costruttori) oppure le unità saranno gestite dal mission editor
+-- definizione della caratteristica "ignore": può essere true o false (se non dichiarata). Se True, l'unità o la fabbrica ad esso associata verrà completamente ignorata dal gadget "military_factory": quando creata dalla fabbrica, quell'unità non viene inclusa in alcun gruppo e non viene mandata all'attacco. Sarà un altro Gadget a gestire l'unità (come ad esempio i costruttori) oppure le unità saranno gestite dal mission editor
 -- definizione della caratteristica "isLRA = true": se true, il gadget "wmrts_AI_longWeaponManagement.lua" vede l'unità come cannone Long Range Artillery
 -- definizione della caratteristica "isSILO = true": se true, il gadget "wmrts_AI_longWeaponManagement.lua" vede l'unità come silos di missili nucleari
 -- definizione della caratteristica "isAMD = true": se true, il gadget "wmrts_AI_longWeaponManagement.lua" vede l'unità come silos di difesa da missili nucleari
@@ -32,6 +32,14 @@
 -- 20/02/2026 = Aggiunto type "strategicshield"
 
 local UNIT_DB = {
+	--------------------------------------------------------------------------------
+	-- UNITà CHE NON DEVONO ESSERE CONTROLLATE DALLA AI (PERCHè CONTROLLATE NELLE MISSIONI
+	--------------------------------------------------------------------------------	
+["andhp_noai"] = { type = "building", ignore = true },
+["andgaso_noai"] = { type = "ground", ignore = true },
+["andlipo_noai"] = { type = "ground", ignore = true },
+["andmisa_noai"] = { type = "ground", ignore = true },
+
 	--------------------------------------------------------------------------------
 	-- ICU
 	--------------------------------------------------------------------------------	
