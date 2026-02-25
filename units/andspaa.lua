@@ -37,7 +37,7 @@ return {
                idletime = 1800,
 --               maneuverleashlength  = 640,
                mass = 1000,
-               maxdamage = 1050,
+               maxdamage = 680,
                maxvelocity = 1.72,
                maxwaterdepth = 12,
                metalStorage = 0,
@@ -104,8 +104,13 @@ featuredefs = {
                },  -- Close heap
 },  --  Wreckage and heaps
 -----------------------------------------------------------
---- NO EFFECTS
+--- EFFECTS
 -----------------------------------------------------------
+sfxtypes = {
+  explosiongenerators = {
+               [1]="custom:rocketflare",
+               }, -- close effects list
+}, -- close section sfxtypes
 -----------------------------------------------------------
 --- UNITS SOUND
 -----------------------------------------------------------
@@ -136,6 +141,7 @@ sounds = {
 		weapondefs = {
 			andspaa_missile = {
 				areaofeffect = 48,
+                burst = 2, -- lua:salvoSize				
 				canattackground = false,
 				craterboost = 0,
 				cratermult = 0,
