@@ -1,0 +1,12 @@
+# Blender MTL File: 'TAWF013.blend'
+# Material Count: 1
+newmtl _tawf013_tex.bmp
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd C:\Users\Dario\AppData\Local\Temp\7zO8B866FA9\tawf013_tex.bmp
+
+

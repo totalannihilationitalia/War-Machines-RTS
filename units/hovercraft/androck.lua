@@ -7,7 +7,7 @@ return {
   androck= {
                acceleration = 0.078,
                brakerate  = 0.125,
-                buildcostenergy = 12477,
+               buildcostenergy = 12477,
                buildcostmetal = 1129,
                builder = false,
                buildpic = "androck.png",

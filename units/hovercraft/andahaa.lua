@@ -4,14 +4,14 @@ return {
 -----------------------------------------------------------
 --- UNITS FEATURES
 -----------------------------------------------------------
-  androck= {
+  andahaa= {
                acceleration = 0.078,
                brakerate  = 0.125,
-               buildcostenergy = 22000,
-               buildcostmetal = 1700,
+               buildcostenergy = 12477,
+               buildcostmetal = 1129,
                builder = false,
                buildpic = "androck.png",
-               buildtime  = 32000,
+               buildtime  = 25000,
                canAttack = true,
                canGuard = true,
                canmove = true,
@@ -23,7 +23,7 @@ return {
                --collisionvolumetype = "",
 --               corpse = "armlatnk_dead",
 --               defaultmissiontype = Standby,
-               description = "Heavy Cannon Hovercraft",
+               description = "Heavy Rocket Hovercraft",
 --               firestandorders = 1,
                energystorage = 0,
                explodeas = "BIG_UNITEX",
@@ -32,15 +32,15 @@ return {
                idleautoheal = 5,
                idletime = 1800,
 --               maneuverleashlength  = 640,
---               mass = 0 --definire massa,
-               maxdamage = 5000,
+               mass = 3000,
+               maxdamage = 3500,
                maxslope = 16,
-               maxvelocity = 3.326,
+               maxvelocity = 1.8,
                maxwaterdepth = 12,
                metalStorage = 0,
 --               mobilestandorders= 1,
                movementclass = "HOVER3",
-               name = "Rocket",
+               name = "Rocker",
                noAutoFire = false,
                nochasecategory = "VTOL",
                objectname = "androck.s3o",
@@ -135,60 +135,56 @@ sounds = {
 -----------------------------------------------------------
 --- WEAPONS DEFINITION
 -----------------------------------------------------------
-weapondefs = {
-		adv_rocket = {
-                     areaofeffect = 72,
-                     avoidfeature = true,
-                     burst = 5, -- lua:salvoSize
-                     burstrate = 0.3, -- lua: salvoDelay
---                     cegTag = "",
---                     craterareaofeffect =  ,
-                     craterboost = 0,
-                     cratermult = 0,
-                     edgeeffectiveness = 0.5,
-                     explosiongenerator = "custom:FLASH2",
-                     firestarter = 70,
-                     flighttime = 6,
-                     impulseboost = 0.123,
-                     impulsefactor = 0.123,
-                     model = "shipmissile",
-                     name= "HeavyRocket",
-                     noselfdamage = true,
-                     range = 950,
-                     reloadtime = 3,
-                     smoketrail = true,
-                     soundhit = "xplosml1",
- --                   soundhitdry = "",
---                    soundhitwet = "",
---                    soundhitwetvolume = "",
-                     soundstart = "rockhvy3",
-                     soundtrigger = "1",
-                     startvelocity = 120,
-                     targetmoveerror = 0.2,
-                     texture2 = "andsmoketrail",
-		     trajectoryheight = 1,
-                     turnrate = 2000,
-                     turret  = true, 
-                     weaponacceleration = 80,
-                     weapontimer = 6,
-                     weapontype = "MissileLauncher",
-                     weaponvelocity  = 395,
-                     damage = {
-                         default = 120,
-                     }, -- close damage
-             }, --close single weapon definitions
-
-}, -- close weapon definition
+		weapondefs = {
+			andahaa_missile = {
+				areaofeffect = 16,
+				canattackground = false,
+				craterboost = 0,
+				cratermult = 0,
+				energypershot = 0,
+				explosiongenerator = "custom:FLASH2",
+				firestarter = 72,
+				flighttime = 3,
+				impulseboost = 0.12300000339746,
+				impulsefactor = 0.12300000339746,
+				metalpershot = 0,
+				model = "missile",
+				name = "AA2Missile",
+				noselfdamage = true,
+				projectiles = 2,
+				proximitypriority = 1,
+				range = 840,
+				reloadtime = 0.85,
+				smoketrail = true,
+				soundhit = "packohit",
+				soundstart = "packolau",
+				soundtrigger = true,
+				startvelocity = 800,
+				texture2 = "armsmoketrail",
+				toairweapon = true,
+				tolerance = 9950,
+				tracks = true,
+				turnrate = 68000,
+				turret = true,
+				weaponacceleration = 200,
+				weapontimer = 2,
+				weapontype = "MissileLauncher",
+				weaponvelocity = 1200,
+				damage = {
+					default = 75,
+					subs = 5,
+				},
+			},
+		},
 -----------------------------------------------------------
 --- WEAPONS USAGE
 -----------------------------------------------------------
 weapons = {
                  [1] = {
-                 badtargetcategory = "VTOL",
-                 def = "adv_rocket",
-                 onlytargetcategory = "SURFACE",
+                 badtargetcategory = "SURFACE",
+                 def = "andahaa_missile",
+                 onlytargetcategory = "VTOL",
                  },
 }, -- close weapon usage
-
 }, -- close unit data 
 } -- close total

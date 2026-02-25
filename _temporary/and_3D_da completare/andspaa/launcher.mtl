@@ -1,0 +1,24 @@
+# Blender MTL File: 'andspider_AA.blend'
+# Material Count: 2
+newmtl _packo_tex.bmp
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.800000 0.800000 0.800000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\\Users\\Dario\\AppData\\Local\\Temp\\7zO8B8ABEB7\\packo_tex.bmp
+
+
+newmtl _packo_tex.bmp_packo_tex.bmp
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.800000 0.800000 0.800000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Dario\AppData\Local\Temp\7zO8B8ABEB7\packo_tex.bmp
+
+
