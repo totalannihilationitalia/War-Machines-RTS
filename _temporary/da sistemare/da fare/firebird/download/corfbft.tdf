@@ -1,7 +1,0 @@
-[MENUENTRY1]
-	{
-	MENU=3;
-	BUTTON=5;
-	UNITNAME=corfbft;	//CORE Fire Bird (Flamethrower Plane)
-	UNITMENU=CORAAP;	//CORE Adv. Aircraft Plant (Produces Aircraft)
-	}
