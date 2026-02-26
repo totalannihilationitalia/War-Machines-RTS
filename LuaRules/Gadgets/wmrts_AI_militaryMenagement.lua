@@ -1084,7 +1084,16 @@ function gadget:UnitFinished(unitID, unitDefID, unitTeam)
 		local sID = fData.squadID
 		local squad = squads[sID]
 		table.insert(squad.units, unitID)
-		
+		--------------------------------------------------------------------------------
+		-- INIZIO LOG DI DEBUG
+		--------------------------------------------------------------------------------
+		local uName = UnitDefs[unitDefID].name
+		local sType = squad.type
+		local tID = unitTeam
+		Spring.Echo(string.format("--- AI LOG [Team %d]: L'unita '%s' e' stata associata al gruppo tipo '%s' (ID Squadra: %s)", tID, uName, sType, sID))
+		--------------------------------------------------------------------------------
+		-- FINE LOG DI DEBUG
+		--------------------------------------------------------------------------------		
 		if squad.state == "gathering" then
 			local fX, _, fZ = Spring.GetUnitPosition(bestFactoryID)
 			Spring.GiveOrderToUnit(unitID, CMD.MOVE, {fX + math.random(-300,300), 0, fZ + math.random(300,500)}, {"shift"})
@@ -1243,13 +1252,14 @@ function gadget:GameFrame(n)
 					-- difesa_leggera						
 					elseif 	warStatus[teamID] == "difesa_leggera" then							-- b) in modalità difesa leggera...
 						for _, uID in ipairs(insideUnits) do									-- cicla e trova tutte le unità all'interno del raggio della base
-							if Spring.GetCommandQueue(uID, 0) == 0 then							-- Controllo ogni singola unità, se è ferma (Idle)...  ##### verificare qui se dividere tra attacco, difesa leggera o difesa pesante (magari nella difesa pesante fare in modo che le unità tornino a prescindere che siano idle???) ##### molix	
+--							if Spring.GetCommandQueue(uID, 0) == 0 then							-- Controllo ogni singola unità, se è ferma (Idle)...  ##### verificare qui se dividere tra attacco, difesa leggera o difesa pesante (magari nella difesa pesante fare in modo che le unità tornino a prescindere che siano idle???) ##### molix	
 								if targetDefence then											-- Se è presente un target in difesa...
-									GiveAttackOrder(uID, targetDefence)							-- attacca il targetDefence (difesa attiva)
+									GiveAttackOrder(uID, {x = targetAttack.x, y = targetAttack.y, z = targetAttack.z}) -- Passiamo una tabella che ha SOLO x, y, z. L'ID viene ignorato.
+								--	GiveAttackOrder(uID, targetDefence)							-- attacca il targetDefence (difesa attiva)
 								else															-- altrimenti...
 									GiveAttackOrder(uID, targetAttack)							-- passa all'attacco a prescindere -- ### valutare se spostare le unità al centro della base e lasciare che si fermino, per ricevere un ulteriore ordine
 								end
-							end
+--							end
 						end			
 						for _, uID in ipairs(outsideUnits) do									-- cicla e trova tutte le unità all'esterno del raggio della base
 							if Spring.GetCommandQueue(uID, 0) == 0 then							-- Controllo ogni singola unità, se è ferma (Idle)...  ##### verificare qui se dividere tra attacco, difesa leggera o difesa pesante (magari nella difesa pesante fare in modo che le unità tornino a prescindere che siano idle???) ##### molix	

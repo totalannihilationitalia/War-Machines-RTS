@@ -1048,8 +1048,15 @@ end
 					aiTeamIDs[teamID] = true
 					teamLevels[teamID] = 0
 					local side = select(5, Spring.GetTeamInfo(teamID))
-					teamFactions[teamID] = (side and string.find(string.lower(side), "and")) and "AND" or "ICU"
-					Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " detected (" .. teamFactions[teamID] .. ")")
+					local lowerSide = string.lower(side or "")
+					if string.find(lowerSide, "and") then
+						teamFactions[teamID] = "AND"
+					elseif string.find(lowerSide, "nfa") then
+						teamFactions[teamID] = "NFA"
+					else
+						teamFactions[teamID] = "ICU" -- Default se non trova nulla o è ICU
+					end
+					Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " detected Side: " .. lowerSide .. " -> Assigned Faction: " .. teamFactions[teamID])
 				end
 			end
 		end
