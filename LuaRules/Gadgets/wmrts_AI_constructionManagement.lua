@@ -24,6 +24,8 @@
 	-- 12/02/2026 = V15 Aggiunto T3, shield, longrange cannon - per ora tutto ICU
 	-- 20/02/2026 = V16 Aggiungo tre variabili globali. a) le variabili "AI_RaggioDifesa" e "AI_BasePos" che sono il valore dell'espansione attuale della base che ogni team controllato dalla WMRTSAI, dettato dalla variabile "raggioDinamicoFactory" e la posizione centrale della base. b) la variabile di "AI_StatoGuerra" di ogni team controllato dalla WMRTSAI, e questa variabile può assumere due valori: "attacco", "difesa_leggera", "difesa_pesante". Questa variabile globale servirà a variare il comportamento delle unità in possesso dal team gestite dal gadget "wmrts_AI_militaryMenagement.lua" e che manderà all'attacco o in difesa le unità.	
 	-- 20/02/2026 = bugfix: l'AI carica se è impostata come "WarMachinesRTSmissionAI", prima partiva a prescindere dal nome.
+	-- 26/02/2026 = V17 aggiunte unità NFA
+	
 	-- TO DO
 
 	-- implementare naval e sub
@@ -121,7 +123,49 @@ nanotower o costruttori aiutanti???
 			},		
 			["CAT_CONSTRUCTORS_T1"]		= { "icuck", "armcv", "armca", "armcs" }, 				-- solo costruttori T1
 			["CAT_CONSTRUCTORS_T2"] 	= { "armack", "armacv", "armaca", "armacs" }, 			-- solo costruttori T2	
-		},
+		}, -- end ICU
+		["NFA"] = {
+	-- categorie per le FUNZIONI - utilizzate nelle funzioni helper o nella logica CORE del gadget. ATTENZIONE, QUANDO SI MODIFICA UNA DI QUESTE CATEGORIE, VERIFICARE SEMPRE DOVE VIENE USATA NELLA LOGICA!!!!
+			["CAT_ALL_CONSTRUCTORS"] 		= { "nfacom", "corck", "corcv", "corca", "corcs" }, 	-- categoria con tutti i costruttori (incluso il comandante), la uso al livello 0 per due motivi: 1) in caso di distruzione totale, quando l'AI torna a 0, se uno dei costruttori elencati è sopravvissuto, lo usa per ripartire con le costruzioni dal livello 0. 2) col game start, si parte col comandante, che è incluso nella lista. Soddisfa quindi il requisito del lvl 0.	
+			["CAT_ALL_AIR_CONSTRUCTORS"] 	= { "corca", "coraca" }, 								-- categoria con tutti gli aerei costruttori, necessaria ad ignorare le unità indicate nella funzione per il calcolo del pathfinding durante la costruzione dell'estrattore più vicino. Vanno direttamente a costruire in quel punto x,y,z preferendo la "linea d'aria"
+	-- categorie per le costruzioni
+			["CAT_MEX_T1"]          = { "cormex" },					-- estrattori T1			
+			["CAT_MEX_T2"]          = { "cormoho","cormexp"	},		-- estrattori T2	
+			["CAT_ENERGY_T1"]      	= { "corsolar" },				-- energyplant T1
+			["CAT_ENERGY_T1_2"]    	= { "coradvsol" },				-- energyplant T1/2		
+			["CAT_ENERGY_T2"]      	= { "cafus", "corfus","corfus","corfus" },					-- energyplant T2, con più possibilità di realizzare corfus
+			["CAT_ESTORAGE_T1"]		= { "corestor" },				-- storage Energy T1
+			["CAT_MSTORAGE_T1"]		= { "cormstor" },				-- storage Metal T1		
+			["CAT_LASER_T1"]       	= { "corllt" },
+			["CAT_LASER_T1_2"]      = { "corhlt" },		
+			["CAT_LASER_T2"]      	= { "cordoom" },		
+			["CAT_CANNON_T2"]      	= { "cortoast" },			
+			["CAT_AA_T1"]          	= { "corrl" },
+			["CAT_AA_T1_2"]         = { "madsam" },			
+			["CAT_SHIELD"]         	= { "corgate" },						
+			["CAT_LONG_CANNON"]     = { "corint" },									
+			["CAT_AA_T2"]          	= { "corflak", "corflak", "corflak", "screamer" },		
+			["CAT_ATOMICDEFENCE"]   = { "corfmd" },						
+			["CAT_ATOMICATTACK"]    = { "corsilo" },							
+			
+			["CAT_FACTORY_T1"] = {									-- fabbrica T1 si categorizza per tipologia ( terra, aria o mare), in funzione dei MAP_PROFILES l'AI effettuerà una scelta
+				land = { "corlab", "corvp" },						-- randomizza la fabbrica
+				air  = { "corap" },
+				sea  = { "corsy" },
+			},
+			["CAT_FACTORY_T2"] = {
+				land = { "coralab", "coravp" },
+				air  = { "coraap" },
+				sea  = { "corasy" },
+			},		
+			["CAT_FACTORY_T3"] = {
+				land = { "corgant" },
+				air  = { "nfafff" },
+				sea  = { "corasy" },
+			},		
+			["CAT_CONSTRUCTORS_T1"]		= { "corck", "corcv", "corca", "corcs" }, 				-- solo costruttori T1
+			["CAT_CONSTRUCTORS_T2"] 	= { "corack", "coracv", "coraca", "coracs" }, 			-- solo costruttori T2	
+		}, -- end NFA
 	----------------------------
 	-- AND ########################################################################################### configurare
 	----------------------------
@@ -136,8 +180,8 @@ nanotower o costruttori aiutanti???
 				sea  = { "andplat", "andhp" },
 			},
 			["CAT_ALL_CONSTRUCTORS"] = { "andcom", "andcon", "andcv", "andca", "andcs" },
-		}
-	}
+		} -- end AND
+	} -- end "CATEGORY_TO_UNIT"
 
 	local AI_BUILD_LEVELS = {
 	-- il numero [0] o [1] rappresenta il livello della AI. L'AI parte sempre dal livello 0. Per ogni livello vengono specificate quante unità devono essere costruite. l'AI sale di livello una volta che ha completato tutte le unità di quel livello. Se vengono distrutte le unità, e i requisiti di un livello non vengono rispettati, l'AI scende di livello per "recuperare" i requisiti che lo soddisfano.
