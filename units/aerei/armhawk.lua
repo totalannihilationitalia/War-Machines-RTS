@@ -115,12 +115,12 @@ return {
 		},
 		weapons = {
 			[1] = {
-				badtargetcategory = "SMALLVTOL TINYVTOL",
+				badtargetcategory = "SURFACE",
 				def = "ARMVTOL_ADVMISSILE",
 				onlytargetcategory = "VTOL",
 			},
 			[2] = {
-				badtargetcategory = "SMALLVTOL TINYVTOL",
+				badtargetcategory = "SURFACE",
 				def = "ARMVTOL_ADVMISSILE",
 				onlytargetcategory = "VTOL",
 			},
