@@ -21,6 +21,8 @@ end
 -- 09/02/2025 = Aggiunta priorità nella categoria di attacco (per bombardieri & Co) e aggiunta categoria defence e strategicdefence
 -- 20/02/2026 = Ho aggiunto la categoria (type) strategicshield in quanto prima gli shield erano inclusi in "strategicbuilding". In questo modo i cannoni a lungo raggio gestiti dalla AI del gadget "wmrts_AI_longWeaponManagement.lua" non prendono di mira gli shield (antiplasma) che prima erano categorizzati come "strategicbuilding". Il codice in questo gadget viene modificato in modo che, se prima, la categoria "X" attaccava solo "strategicbuilding", ora deve attaccare anche la type scorporata "strategicbuilding"
 -- 24/02/2026 = road to V17 - ora il gadget riceve lo stato di guerra, il punto base e il raggio della base. a seconda dello stato di guerra, gestisce le unità dentro/fuori raggio base mandandole all'attacco o in difesa
+-- 26/02/2026 = V17, aggiunte unità NFA e AND
+
 -- to do LIST ################################
 -- 1) implementare i SUB
 
@@ -145,6 +147,73 @@ local SQUAD_TEMPLATES = {
 		units = { "armhawk", "armhawk"}, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},		
+	
+---------------
+-- NFA gruppi creati per il lvl 0÷4 -------- 
+---------------
+-- corlab
+	["NFA_corlab_light_patrol_1"] = {
+		units = { "nfaak", "nfaak", "nfastorm", "nfastorm" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},
+	["NFA_corlab_light_patrol_2"] = {
+		units = { "nfathud", "nfaak", "nfastorm", "nfastorm" },				
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+-- corvp	
+	["NFA_corvp_light_patrol_1"] = {
+		units = { "nfafav", "nfagator", "nfagator", "nfagator" }, 
+		type = "ground"
+	},
+	["NFA_corvp_light_patrol_2"] = {
+		units = { "cormist", "cormist", "nfagarp", "nfalevlr", "nfaraid","corwolv" }, 
+		type = "ground"
+	},	
+-- corap	
+	["NFA_corap_air_raid_1"] = { 			
+		units = { "bladew", "corveng", "corveng", "bladew", "bladew" },
+		type = "air_toground"
+	},
+	["NFA_corap_antiair_raid_1"] = { 
+		units = { "corveng", "corveng", "corveng" },
+		type = "air_toair"
+	},
+	["NFA_corap_air_bomber_1"] = { 
+		units = { "corshad", "corshad", "corshad", "corshad", "corshad" }, 	-- gruppo da 5 bombardieri
+		type = "air_bomber"
+	},	
+--	["naval_fleet"] = {
+--		units = { "corbats", "corbats", "corbats" },
+--		type = "naval"
+--	}
+-- coralab
+	["NFA_coralab_light_patrol_1"] = {
+		units = { "nfapyro", "nfapyro", "nfapyro" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},
+	["NFA_coralab_light_patrol_2"] = {
+		units = { "nfapyro", "nfapyro", "corcan" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+-- coravp
+	["NFA_coravp_light_patrol_1"] = {
+		units = { "cormart", "cormart", "corparrow" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},
+	["NFA_coravp_light_patrol_2"] = {
+		units = { "corparrow", "tawf114"}, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+-- coraap
+	["NFA_coraap_light_patrol_1"] = {
+		units = { "corvamp", "corvamp", "corvamp" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},
+	["NFA_coraap_light_patrol_2"] = {
+		units = { "corvamp", "corvamp"}, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},		
+	
 ---------------
 -- AND gruppi creati per il lvl 0÷4 -------- 
 ---------------
@@ -278,7 +347,11 @@ local SQUAD_TEMPLATES = {
 	["ICU_armavp_medium_patrol_3"] = {
 		units = { "armlatnk", "armlatnk", "icubull", "icubull", "armmart", "armyork", "armmanni", "armcroc", "armcroc"}, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
-	},		
+	},	
+	["ICU_armavp_medium_patrol_4"] = {
+		units = { "armcamp", "armcamp", "icubull", "icubull", "armcamp", "armyork", "armmanni", "armcroc", "armcroc"}, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},			
 -- armaap
 	["ICU_armaap_medium_patrol_1"] = {
 		units = { "armhawk", "armhawk", "armhawk", "armhawk", "armhawk", "armhawk", "armhawk", "armhawk", "armhawk" }, 
@@ -333,7 +406,125 @@ local SQUAD_TEMPLATES = {
 	["ICU_armshltx_medium_patrol_5"] = {
 		units = { "warhammer", "warhammer", "icuraz","icuraz" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},		
+---------------
+-- NFA gruppi creati per il lvl 5+ -------- 
+---------------
+-- corlab
+	["NFA_corlab_medium_patrol_1"] = {
+		units = { "nfathud", "nfathud", "nfathud", "nfastorm", "nfastorm" , "nfastorm", "nfathud", "corcrash"  }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},
+	["NFA_corlab_medium_patrol_2"] = {
+		units = { "nfathud", "nfathud", "nfastorm", "nfastorm", "nfastorm", "nfastorm", "corcrash", "nfathud", "nfathud" },				
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+-- corvp	
+	["NFA_corvp_medium_patrol_1"] = {
+		units = { "cormist", "cormist", "cormist", "corwolv", "cormist", "nfagarp", "nfaraid", "cormist" }, 
+		type = "ground"
+	},
+	["NFA_corvp_medium_patrol_2"] = {
+		units = { "cormist", "cormist", "cormist", "corwolv", "nfagarp", "corwolv", "nfagarp", "nfaraid", "nfalevlr", "nfalevlr" }, 
+		type = "ground"
+	},	
+-- corap	
+	["NFA_corap_air_mediumraid_1"] = { 			
+		units = { "bladew", "corveng", "corveng", "bladew", "bladew", "bladew", "bladew", "bladew", "bladew", "bladew" },
+		type = "air_toground"
+	},
+	["NFA_corap_antiair_mediumraid_1"] = { 
+		units = { "corveng", "corveng", "corveng", "corveng", "corveng", "corveng", "corveng", "corveng", "corveng", "corveng" },
+		type = "air_toair"
+	},
+	["NFA_corap_air_mediumbomber_1"] = { 
+		units = { "corshad", "corshad", "corshad", "corshad", "corshad", "corshad", "corshad", "corshad", "corshad", "corshad" }, 	-- gruppo da 10 bombardieri
+		type = "air_bomber"
+	},	
+	["NFA_corap_air_mediumstrategicbomber_1"] = { 
+		units = { "corshad", "corshad", "corshad", "corshad", "corshad", "corshad", "corshad", "corshad", "corshad", "corshad", "corshad", "corshad" }, 	-- gruppo da 12 bombardieri
+		type = "air_bomber_strategic"
 	},				
+--	["naval_fleet"] = {
+--		units = { "corbats", "corbats", "corbats" },
+--		type = "naval"
+--	}
+-- coralab
+	["NFA_coralab_medium_patrol_1"] = {
+		units = { "corcan", "corsumo", "corsumo", "coraak", "corhrk", "corhrk", "cormort" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},
+	["NFA_coralab_medium_patrol_2"] = {
+		units = { "cormort", "cormort", "cormort", "cormort", "cormort", "coraak", "cormort", "cormort" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+	["NFA_coralab_medium_patrol_3"] = {
+		units = { "corsumo", "corsumo", "corsumo", "coraak", "corsumo" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+-- coravp
+	["NFA_coravp_medium_patrol_1"] = {
+		units = { "cormart", "cormart", "corsent", "cormart", "cormart", "cormart", "cormart", "cormart", "cormart", "nfareap", "nfareap" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},
+	["NFA_coravp_medium_patrol_2"] = {
+		units = { "tawf114", "corparrow", "nfareap", "nfareap", "cormart", "corsent"}, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+	["NFA_coravp_medium_patrol_3"] = {
+		units = { "tawf114", "corparrow", "nfareap", "nfareap", "cormart", "corsent", "nfagol", "corparrow", "tawf114"}, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},		
+	["NFA_coravp_medium_patrol_4"] = {
+		units = { "tawf114", "corparrow", "nfareap", "nfareap", "nfagol", "corsent", "nfagol", "nfagol", "corparrow"}, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},			
+-- coraap
+	["NFA_coraap_medium_patrol_1"] = {
+		units = { "corvamp", "corvamp", "corvamp", "corvamp", "corvamp", "corvamp", "corvamp", "corvamp", "corvamp" }, 
+		type = "air_toair" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare ################################### i NFA possono attaccare anche unità di terra. Creare una nuova categoria ait_toall ? cosi da definire poi le logiche di target in caso di assenza di aerei nemici ###
+	},
+	["NFA_coraap_medium_patrol_2"] = {
+		units = { "blade", "blade", "corape", "corape", "blade", "blade", "corape", "corape", "corape", "corape"}, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},		
+	["NFA_coraap_air_bomber_1"] = { 
+		units = { "corape", "corape", "corape", "corape", "corhurc", "corhurc", "corape", "corape", "corape" }, 	
+		type = "air_bomber"
+	},		
+	["NFA_coraap_air_bomber_2"] = { 
+		units = { "corhurc", "corhurc", "corhurc", "corhurc", "corhurc", "corhurc", "corhurc", "corhurc", "corhurc", "corhurc", "corhurc", "corhurc", "corhurc", "corcrw", "corcrw" }, 	
+		type = "air_bomber_strategic"
+	},		
+	["NFA_coraap_air_bomber_3"] = { 
+		units = { "corcrw", "corcrw", "corcrw", "corcrw", "corcrw" }, 	
+		type = "air_bomber_strategic"
+	},		
+-- corgant
+	["NFA_corgant_medium_patrol_1"] = {
+		units = { "nfakarg", "nfakarg", "nfakarg" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+	["NFA_corgant_medium_patrol_2"] = {
+		units = { "nfakarg", "nfakarg", "armraven", "armraven", "armraven" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+	["NFA_corgant_medium_patrol_3"] = {
+		units = { "corkrog" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},	
+	["NFA_corgant_medium_patrol_4"] = {
+		units = { "corkrog", "nfakarg","nfakarg" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},			
+	["NFA_corgant_medium_patrol_5"] = {
+		units = { "armraven", "nfacoug", "nfakarg","nfakarg" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},		
+	["NFA_corgant_medium_patrol_6"] = {
+		units = { "gorg" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},			
 ---------------
 -- AND gruppi creati per il lvl 5+ -------- 
 ---------------
@@ -475,7 +666,14 @@ local function GetConfigPerLivello(livello) -- Questa funzione restituisce, per 
             ["armap"]  = { "ICU_armap_antiair_raid_1", "ICU_armap_air_raid_1","ICU_armap_air_bomber_1" },			
             ["armalab"] = { "ICU_armalab_light_patrol_1", "ICU_armalab_light_patrol_2" },							-- inseriti in caso di recessione della AI dal livello 4+ a 0
             ["armavp"] = { "ICU_armavp_light_patrol_1", "ICU_armavp_light_patrol_2" },			
-            ["armaap"]  = { "ICU_armaap_light_patrol_1", "ICU_armaap_light_patrol_2"},			
+            ["armaap"]  = { "ICU_armaap_light_patrol_1", "ICU_armaap_light_patrol_2"},		
+            -- NFA --
+            ["corlab"] = { "NFA_corlab_light_patrol_1", "NFA_corlab_light_patrol_2" },
+            ["corvp"] = { "NFA_corvp_light_patrol_1", "NFA_corvp_light_patrol_2" },
+            ["corap"]  = { "NFA_corap_antiair_raid_1", "NFA_corap_air_raid_1","NFA_corap_air_bomber_1" },			
+            ["coralab"] = { "NFA_coralab_light_patrol_1", "NFA_coralab_light_patrol_2" },							-- inseriti in caso di recessione della AI dal livello 4+ a 0
+            ["coravp"] = { "NFA_coravp_light_patrol_1", "NFA_coravp_light_patrol_2" },			
+            ["coraap"]  = { "NFA_coraap_light_patrol_1", "NFA_coraap_light_patrol_2"},					
             -- AND --
             ["andlab"] = { "AND_andlab_light_patrol_1", "AND_andlab_light_patrol_2" },
             ["andhp"] = { "AND_andhp_light_patrol_1", "AND_andhp_light_patrol_2" },
@@ -491,10 +689,18 @@ local function GetConfigPerLivello(livello) -- Questa funzione restituisce, per 
             ["armvp"] = { "ICU_armvp_medium_patrol_1", "ICU_armvp_medium_patrol_2" },
             ["armap"]  = { "ICU_armap_air_mediumraid_1", "ICU_armap_antiair_mediumraid_1","ICU_armap_air_mediumbomber_1","ICU_armap_air_mediumstrategicbomber_1" },
             ["armalab"] = { "ICU_armalab_medium_patrol_1", "ICU_armalab_medium_patrol_2" },			
-            ["armavp"] = { "ICU_armavp_medium_patrol_1", "ICU_armavp_medium_patrol_2", "ICU_armavp_medium_patrol_3" },
+            ["armavp"] = { "ICU_armavp_medium_patrol_1", "ICU_armavp_medium_patrol_2", "ICU_armavp_medium_patrol_3", "ICU_armavp_medium_patrol_4" },
             ["armaap"]  = { "ICU_armaap_medium_patrol_1", "ICU_armaap_medium_patrol_2","ICU_armaap_air_bomber_1","ICU_armaap_air_bomber_2", "ICU_armaap_air_bomber_3" },		
             ["icugant"] = { "ICU_icugant_medium_patrol_1", "ICU_icugant_medium_patrol_2", "ICU_icugant_medium_patrol_3" },		
             ["armshltx"] = { "ICU_armshltx_medium_patrol_1", "ICU_armshltx_medium_patrol_2", "ICU_armshltx_medium_patrol_3", "ICU_armshltx_medium_patrol_4", "ICU_armshltx_medium_patrol_5" },		
+            -- NFA --
+            ["corlab"] = { "NFA_corlab_medium_patrol_1", "NFA_corlab_medium_patrol_2" },
+            ["corvp"] = { "NFA_corvp_medium_patrol_1", "NFA_corvp_medium_patrol_2" },
+            ["corap"]  = { "NFA_corap_air_mediumraid_1", "NFA_corap_antiair_mediumraid_1","NFA_corap_air_mediumbomber_1","NFA_corap_air_mediumstrategicbomber_1" },
+            ["coralab"] = { "NFA_coralab_medium_patrol_1", "NFA_coralab_medium_patrol_2" },			
+            ["coravp"] = { "NFA_coravp_medium_patrol_1", "NFA_coravp_medium_patrol_2", "NFA_coravp_medium_patrol_3", "NFA_coravp_medium_patrol_4" },
+            ["coraap"]  = { "NFA_coraap_medium_patrol_1", "NFA_coraap_medium_patrol_2","NFA_coraap_air_bomber_1","NFA_coraap_air_bomber_2", "NFA_coraap_air_bomber_3" },		
+            ["corgant"] = { "NFA_corgant_medium_patrol_1", "NFA_corgant_medium_patrol_2", "NFA_corgant_medium_patrol_3", "NFA_corgant_medium_patrol_4", "NFA_corgant_medium_patrol_5", "NFA_corgant_medium_patrol_6" },					
             -- AND --
             ["andlab"] = { "AND_andlab_medium_patrol_1", "AND_andlab_medium_patrol_2" },
             ["andhp"] = { "AND_andhp_medium_patrol_1", "AND_andhp_medium_patrol_2" },
