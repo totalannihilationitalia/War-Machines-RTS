@@ -20,7 +20,7 @@
 --			type = strategicdefence 	-> unità fissa di difesa strategica ( Es bertha, corbuzz, toaster, ecc )
 --			type = strategicshield		-> unità fissa shield (plasma repulsor) -- viene utilizzata: a) nel gadget "longWeaponManagement" per identificare i plasma repulsor ed evitare di colpire bersagli all'interno dello scudo con l'artiglieria a lungo raggio; b) nel gadget "wmrts_AI_militaryMenagement.lua" come target obiettivo delle unità attaccanti
 --			tutte le unità che non sono identificate in questo database, prenderanno valore type = unknown , vedere poi la logica di targetin come gestirle
--- definizione della caratteristica "ignore": può essere true o false (se non dichiarata). Se True, l'unità o la fabbrica ad esso associata verrà completamente ignorata dal gadget "military_factory": quando creata dalla fabbrica, quell'unità non viene inclusa in alcun gruppo e non viene mandata all'attacco. Sarà un altro Gadget a gestire l'unità (come ad esempio i costruttori) oppure le unità saranno gestite dal mission editor
+-- definizione della caratteristica "ignore": può essere true o false (se non dichiarata). Se True, l'unità, la struttura o la fabbrica ad esso associata verrà completamente ignorata dalla gestione del gadget "military_factory": quando creata dalla fabbrica, quell'unità non viene considerata nella gestione dei gruppi e non riceve ordini di targetin all'attacco. Sarà un altro Gadget oppure il Mission Editor a gestire l'unità (come ad esempio i costruttori). E' importante sapere che comunque, anche se ignorata, il gadget categorizza comunque l'unità come bersaglio target.
 -- definizione della caratteristica "isLRA = true": se true, il gadget "wmrts_AI_longWeaponManagement.lua" vede l'unità come cannone Long Range Artillery
 -- definizione della caratteristica "isSILO = true": se true, il gadget "wmrts_AI_longWeaponManagement.lua" vede l'unità come silos di missili nucleari
 -- definizione della caratteristica "isAMD = true": se true, il gadget "wmrts_AI_longWeaponManagement.lua" vede l'unità come silos di difesa da missili nucleari
@@ -30,10 +30,11 @@
 -- 09/02/2026 = Aggiunte categorie defence e strategicdefence. Molix
 -- 20/02/2026 = Aggiunte definizioni isLRA, isSILO, isAMD per il gadget "wmrts_AI_longWeaponManagement.lua". Molix
 -- 20/02/2026 = Aggiunto type "strategicshield"
+-- 27/02/2026 = Aggiunto "ignore = true" a tutte le strutture, aggiornati i "type" di alcune unità
 
 local UNIT_DB = {
 	--------------------------------------------------------------------------------
-	-- UNITà CHE NON DEVONO ESSERE CONTROLLATE DALLA AI (PERCHè CONTROLLATE NELLE MISSIONI
+	-- UNITà CHE NON DEVONO ESSERE CONTROLLATE DALLA AI (Perchè controllate dal Mission Editor)
 	--------------------------------------------------------------------------------	
 ["andhp_noai"] = { type = "building", ignore = true },
 ["andgaso_noai"] = { type = "ground", ignore = true },
@@ -47,66 +48,66 @@ local UNIT_DB = {
 ["icucom"] = { type = "ground", ignore = true },
 
 -- Costruzioni Tier 1
-["armsolar"] = { type = "building" },
-["icuadvsol"] = { type = "building" },
-["icuwind"] = { type = "building" },
-["armmstor"] = { type = "building" },
-["armgeo"] = { type = "building" },
-["icuestor"] = { type = "building" },
-["icumetex"] = { type = "building" },
-["armamex"] = { type = "building" },
-["armmakr"] = { type = "building" },
-["armeyes"] = { type = "building" },
-["armrad"] = { type = "building" },
-["armsonar"] = { type = "navalbuilding" },
-["armdrag"] = { type = "building" },
-["iculighlturr"] = { type = "building" },
-["armhlt"] = { type = "defence" },
-["tawf001"] = { type = "defence" },
-["armguard"] = { type = "defence" },
-["armrl"] = { type = "building" },
-["packo"] = { type = "building" },
-["armjamt"] = { type = "building" },
-["armtl"] = { type = "navalbuilding" },
-["armfrad"] = { type = "navalbuilding" },
-["armfrl"] = { type = "navalbuilding" }, 		-- ### creare floating defence????
-["armfllt"] = { type = "navalbuilding" },		-- ### creare floating defence????
-["armfhlt"] = { type = "navalbuilding" },		-- ### creare floating defence????
-["armfhllt"] = { type = "navalbuilding" },		-- ### creare floating defence????
-["armfguard"] = { type = "navalbuilding" },		-- ### creare floating defence????
-["fpacko"] = { type = "navalbuilding" },		-- ### creare floating defence????
+["armsolar"] = { type = "building", ignore = true },
+["icuadvsol"] = { type = "building", ignore = true },
+["icuwind"] = { type = "building", ignore = true },
+["armmstor"] = { type = "building", ignore = true },
+["armgeo"] = { type = "building", ignore = true },
+["icuestor"] = { type = "building", ignore = true },
+["icumetex"] = { type = "building", ignore = true },
+["armamex"] = { type = "building", ignore = true },
+["armmakr"] = { type = "building", ignore = true },
+["armeyes"] = { type = "building", ignore = true },
+["armrad"] = { type = "building", ignore = true },
+["armsonar"] = { type = "navalbuilding", ignore = true },
+["armdrag"] = { type = "building", ignore = true },
+["iculighlturr"] = { type = "defence", ignore = true },
+["armhlt"] = { type = "defence", ignore = true },
+["tawf001"] = { type = "defence", ignore = true },
+["armguard"] = { type = "defence", ignore = true },
+["armrl"] = { type = "defence", ignore = true },
+["packo"] = { type = "defence", ignore = true },
+["armjamt"] = { type = "building", ignore = true },
+["armtl"] = { type = "navalbuilding", ignore = true },
+["armfrad"] = { type = "navalbuilding", ignore = true },
+["armfrl"] = { type = "navalbuilding", ignore = true }, 		-- ### creare floating defence????
+["armfllt"] = { type = "navalbuilding", ignore = true },		-- ### creare floating defence????
+["armfhlt"] = { type = "navalbuilding", ignore = true },		-- ### creare floating defence????
+["armfhllt"] = { type = "navalbuilding", ignore = true },		-- ### creare floating defence????
+["armfguard"] = { type = "navalbuilding", ignore = true },		-- ### creare floating defence????
+["fpacko"] = { type = "navalbuilding", ignore = true },		-- ### creare floating defence????
 
 -- Costruzioni Tier 2 e +
-["aafus"] = { type = "strategicbuilding" },
-["armfus"] = { type = "strategicbuilding" },
-["amgeo"] = { type = "strategicbuilding" },
-["armgmm"] = { type = "strategicbuilding" },
-["armmoho"] = { type = "strategicbuilding" },
-["armmmkr"] = { type = "strategicbuilding" },
-["armuwadves"] = { type = "building" },
-["armuwadvms"] = { type = "building" },
-["armarad"] = { type = "building" },
-["armveil"] = { type = "building" },
-["armfort"] = { type = "building" },
-["armasp"] = { type = "building" },
-["armtarg"] = { type = "building" },
-["armsd"] = { type = "building" },
-["armgate"] = { type = "strategicshield", shieldRange = 300 },
-["armamb"] = { type = "strategicdefence" },
-["armpb"] = { type = "defence" },
-["armanni"] = { type = "strategicdefence" },
-["armflak"] = { type = "building" },
-["mercury"] = { type = "building" },
-["armamd"] = { type = "strategicbuilding", isAMD = true },
-["armsilo"] = { type = "strategicbuilding", isSILO = true, range = 72000 },
-["armbrtha"] = { type = "strategicdefence", isLRA = true, range = 6100 },
-["armvulc"] = { type = "strategicdefence", isLRA = true, range = 5600 },
-["advmoho"] = { type = "strategicbuilding" },
-["armfarad"] = { type = "navalbuilding" },
-["armfamb"] = { type = "navalbuilding" },		-- ### creare floating defence????
-["armfanni"] = { type = "navalbuilding" },		-- ### creare floating defence????
-["armfflak"] = { type = "navalbuilding" },		-- ### creare floating defence????
-["armfmercury"] = { type = "navalbuilding" },	-- ### creare floating defence????
+["aafus"] = { type = "strategicbuilding", ignore = true },
+["armfus"] = { type = "strategicbuilding", ignore = true },
+["amgeo"] = { type = "strategicbuilding", ignore = true },
+["armgmm"] = { type = "strategicbuilding", ignore = true },
+["armmoho"] = { type = "strategicbuilding", ignore = true },
+["armmmkr"] = { type = "strategicbuilding", ignore = true },
+["armuwadves"] = { type = "building", ignore = true },
+["armuwadvms"] = { type = "building", ignore = true },
+["armarad"] = { type = "building", ignore = true },
+["armveil"] = { type = "building", ignore = true },
+["armfort"] = { type = "building", ignore = true },
+["armasp"] = { type = "building", ignore = true },
+["armtarg"] = { type = "building", ignore = true },
+["armsd"] = { type = "building", ignore = true },
+["armgate"] = { type = "strategicshield", shieldRange = 300, ignore = true },
+["armamb"] = { type = "strategicdefence", ignore = true },
+["armpb"] = { type = "defence", ignore = true },
+["armanni"] = { type = "strategicdefence", ignore = true },
+["armflak"] = { type = "defence", ignore = true },
+["mercury"] = { type = "defence", ignore = true },
+["armamd"] = { type = "strategicbuilding", isAMD = true, ignore = true },
+["armsilo"] = { type = "strategicbuilding", isSILO = true, range = 72000, ignore = true },
+["armbrtha"] = { type = "strategicdefence", isLRA = true, range = 6100, ignore = true },
+["armvulc"] = { type = "strategicdefence", isLRA = true, range = 5600, ignore = true },
+["advmoho"] = { type = "strategicbuilding", ignore = true },
+["armfarad"] = { type = "navalbuilding", ignore = true },
+["armfamb"] = { type = "navalbuilding", ignore = true },		-- ### creare floating defence????
+["armfanni"] = { type = "navalbuilding", ignore = true },		-- ### creare floating defence????
+["armfflak"] = { type = "navalbuilding", ignore = true },		-- ### creare floating defence????
+["armfmercury"] = { type = "navalbuilding", ignore = true },	-- ### creare floating defence????
 
 -- fabbriche Tier 1
 ["armlab"] = { type = "building" },
@@ -226,71 +227,68 @@ local UNIT_DB = {
 ["nfacom"] = { type = "ground", ignore = true  },	
 
 -- Costruzioni Tier 1
-["corsolar"] = { type = "building" },
-["coradvsol"] = { type = "building" },
-["cornanotc"] = { type = "building" },
-["corwin"] = { type = "building" },
-["corgeo"] = { type = "building" },
-["corjamt"] = { type = "building" }, 
-["cormstor"] = { type = "building" },
-["corestor"] = { type = "building" },
-["cormex"] = { type = "building" },
-["corexp"] = { type = "building" },
-["cormakr"] = { type = "building" },
-["coreyes"] = { type = "building" },
-["corrad"] = { type = "building" },
-["corsonar"] = { type = "navalbuilding" },
-["cordrag"] = { type = "building" },
-["corllt"] = { type = "building" },
-["hllt"] = { type = "building" },
-["corhlt"] = { type = "defence" },
-["cormaw"] = { type = "defence" },
-["corpun"] = { type = "defence" },
-["cortl"] = { type = "building" },
-["madsam"] = { type = "building" },
-["corrl"] = { type = "building" },
-["corfrad"] = { type = "navalbuilding" },	
-["corfhlt"] = { type = "navalbuilding" },		-- ### creare floating defence????
-["corfpun"] = { type = "navalbuilding" },		-- ### creare floating defence????
-["fmadsam"] = { type = "navalbuilding" },		-- ### creare floating defence????
-["corfrad"] = { type = "navalbuilding" },		-- ### creare floating defence????
-["corfrl"] = { type = "navalbuilding" },		-- ### creare floating defence????
-["corfllt"] = { type = "navalbuilding" },		-- ### creare floating defence????
+["corsolar"] = { type = "building", ignore = true },
+["coradvsol"] = { type = "building", ignore = true },
+["cornanotc"] = { type = "building", ignore = true },
+["corwin"] = { type = "building", ignore = true },
+["corgeo"] = { type = "building", ignore = true },
+["corjamt"] = { type = "building", ignore = true }, 
+["cormstor"] = { type = "building", ignore = true },
+["corestor"] = { type = "building", ignore = true },
+["cormex"] = { type = "building", ignore = true },
+["corexp"] = { type = "building", ignore = true },
+["cormakr"] = { type = "building", ignore = true },
+["coreyes"] = { type = "building", ignore = true },
+["corrad"] = { type = "building", ignore = true },
+["corsonar"] = { type = "navalbuilding", ignore = true },
+["cordrag"] = { type = "building", ignore = true },
+["corllt"] = { type = "defence", ignore = true },
+["hllt"] = { type = "defence", ignore = true },
+["corhlt"] = { type = "defence", ignore = true },
+["cormaw"] = { type = "defence", ignore = true },
+["corpun"] = { type = "defence", ignore = true },
+["cortl"] = { type = "building", ignore = true },			-- naval building ##############
+["madsam"] = { type = "defence", ignore = true },
+["corrl"] = { type = "defence", ignore = true },
+["corfrad"] = { type = "navalbuilding", ignore = true },	
+["corfhlt"] = { type = "navalbuilding", ignore = true },		-- ### creare floating defence????
+["corfpun"] = { type = "navalbuilding", ignore = true },		-- ### creare floating defence????
+["fmadsam"] = { type = "navalbuilding", ignore = true },		-- ### creare floating defence????
+["corfrl"] = { type = "navalbuilding", ignore = true },		-- ### creare floating defence????
+["corfllt"] = { type = "navalbuilding", ignore = true },		-- ### creare floating defence????
 
 -- Costruzioni Tier 2 e +
-["corfus"] = { type = "strategicbuilding" },
-["cafus"] = { type = "strategicbuilding" },
-["cmgeo"] = { type = "strategicbuilding" },
-["corbhmth"] = { type = "strategicdefence" },
-["cormoho"] = { type = "strategicdefence" },
-["cormexp"] = { type = "strategicdefence" },
-["cormmkr"] = { type = "building" },
-["coruwadves"] = { type = "building" },
-["coruwadvms"] = { type = "building" },
-["corarad"] = { type = "building" },
-["corshroud"] = { type = "building" },
-["corfort"] = { type = "building" },
-["corasp"] = { type = "building" },
-["cortarg"] = { type = "building" },
-["corsd"] = { type = "building" },
-["corgate"] = { type = "strategicshield",shieldRange = 300 },			
-["cortoast"] = { type = "strategicdefence" },
-["corvipe"] = { type = "building" },
-["cordoom"] = { type = "strategicdefence" },
-["corflak"] = { type = "building" },
-["screamer"] = { type = "building" },
-["corfmd"] = { type = "strategicbuilding", isAMD = true },
-["corsilo"] = { type = "strategicbuilding", isSILO = true, range = 72000 },
-["corint"] = { type = "strategicdefence", isLRA = true, range = 6500 },
-["corbuzz"] = { type = "strategicdefence",isLRA = true, range = 6000 },
-["corvp"] = { type = "building" },
-["coravp"] = { type = "building" },
-["corfarad"] = { type = "navalbuilding" },
-["corftoast"] = { type = "navalbuilding" },		-- ### creare floating defence????
-["corfvipe"] = { type = "navalbuilding" },		-- ### creare floating defence????
-["corfdoom"] = { type = "navalbuilding" },		-- ### creare floating defence????
-["corfflak"] = { type = "navalbuilding" },		-- ### creare floating defence????
-["corfscreamer"] = { type = "navalbuilding" },	-- ### creare floating defence????
+["corfus"] = { type = "strategicbuilding", ignore = true },
+["cafus"] = { type = "strategicbuilding", ignore = true },
+["cmgeo"] = { type = "strategicbuilding", ignore = true },
+["corbhmth"] = { type = "strategicdefence", ignore = true },
+["cormoho"] = { type = "strategicdefence", ignore = true },
+["cormexp"] = { type = "strategicdefence", ignore = true },
+["cormmkr"] = { type = "building", ignore = true },
+["coruwadves"] = { type = "building", ignore = true },
+["coruwadvms"] = { type = "building", ignore = true },
+["corarad"] = { type = "building", ignore = true },
+["corshroud"] = { type = "building", ignore = true },
+["corfort"] = { type = "building", ignore = true },
+["corasp"] = { type = "building", ignore = true },
+["cortarg"] = { type = "building", ignore = true },
+["corsd"] = { type = "building", ignore = true },
+["corgate"] = { type = "strategicshield",shieldRange = 300, ignore = true },			
+["cortoast"] = { type = "strategicdefence", ignore = true },
+["corvipe"] = { type = "building", ignore = true },
+["cordoom"] = { type = "strategicdefence", ignore = true },
+["corflak"] = { type = "defence", ignore = true },
+["screamer"] = { type = "defence", ignore = true },
+["corfmd"] = { type = "strategicbuilding", isAMD = true, ignore = true },
+["corsilo"] = { type = "strategicbuilding", isSILO = true, range = 72000, ignore = true },
+["corint"] = { type = "strategicdefence", isLRA = true, range = 6500, ignore = true },
+["corbuzz"] = { type = "strategicdefence",isLRA = true, range = 6000, ignore = true },
+["corfarad"] = { type = "navalbuilding", ignore = true },
+["corftoast"] = { type = "navalbuilding", ignore = true },		-- ### creare floating defence????
+["corfvipe"] = { type = "navalbuilding", ignore = true },		-- ### creare floating defence????
+["corfdoom"] = { type = "navalbuilding", ignore = true },		-- ### creare floating defence????
+["corfflak"] = { type = "navalbuilding", ignore = true },		-- ### creare floating defence????
+["corfscreamer"] = { type = "navalbuilding", ignore = true },	-- ### creare floating defence????
 
 -- Fabbriche Tier 1
 ["corlab"] = { type = "building" },
@@ -360,7 +358,7 @@ local UNIT_DB = {
 ["cormart"] = { type = "ground" },
 ["corvroc"] = { type = "ground" },
 ["corsent"] = { type = "ground" },
-["cormabm"] = { type = "strategicbuilding" },
+["cormabm"] = { type = "ground" },
 ["coreter"] = { type = "ground" },
 ["nfavrad"] = { type = "ground" },
 
@@ -375,8 +373,8 @@ local UNIT_DB = {
 
 -- Unità prodotte da corasy
 ["coracsub"] = { type = "naval", ignore = true  },		-- ############################ sistemare categorizzazione e gestire sub 
-["corshark"] = { type = "naval" },		-- ############################ sistemare categorizzazione e gestire sub 
-["corssub"] = { type = "naval" },		-- ############################ sistemare categorizzazione e gestire sub 
+["corshark"] = { type = "naval" },						-- ############################ sistemare categorizzazione e gestire sub 
+["corssub"] = { type = "naval" },						-- ############################ sistemare categorizzazione e gestire sub 
 ["corarch"] = { type = "naval" },
 ["corcrus"] = { type = "naval" },
 ["corbats"] = { type = "naval" },
@@ -403,33 +401,33 @@ local UNIT_DB = {
 ["andcom"] = { type = "ground", ignore = true  },	
 	
 -- Costruzioni Tier 1
-["andsolar"] = { type = "building" },
-["andwind"] = { type = "building" },
-["andmstor"] = { type = "building" },
-["andestor"] = { type = "building" },
-["andmexun"] = { type = "building" },
-["andmex"] = { type = "building" },
-["andrad"] = { type = "building" }, 
-["andlartic"] = { type = "building" },
-["andartic"] = { type = "building" },
-["andhartic"] = { type = "defence" },
-["andpopaa"] = { type = "building" },
+["andsolar"] = { type = "building", ignore = true },
+["andwind"] = { type = "building", ignore = true },
+["andmstor"] = { type = "building", ignore = true },
+["andestor"] = { type = "building", ignore = true },
+["andmexun"] = { type = "building", ignore = true },
+["andmex"] = { type = "building", ignore = true },
+["andrad"] = { type = "building", ignore = true }, 
+["andlartic"] = { type = "building", ignore = true },
+["andartic"] = { type = "building", ignore = true },
+["andhartic"] = { type = "defence", ignore = true },
+["andpopaa"] = { type = "building", ignore = true },
 
 -- Costruzioni Tier 2
-["andfus"] = { type = "strategicbuilding" },
-["andaafus"] = { type = "strategicbuilding" },
-["andametex"] = { type = "building" },
-["andaestor"] = { type = "building" },
-["andarad"] = { type = "building" },
-["andshield"] = { type = "strategicshield", shieldRange = 300 },
-["anddfens"] = { type = "strategicdefence" },
-["andill"] = { type = "strategicdefence" },
-["andchaos"] = { type = "strategicdefence" },
-["andernie"] = { type = "building" },
-["chemist"] = { type = "building" },
-["andlaunch"] = { type = "strategicbuilding",  isLRA = true, range = 65000 }, -- non è un cannone ma è un arma energetica a lungo raggio
-["andangel"] = { type = "strategicdefence", isLRA = true },
-["medusa"] = { type = "building" },
+["andfus"] = { type = "strategicbuilding", ignore = true },
+["andaafus"] = { type = "strategicbuilding", ignore = true },
+["andametex"] = { type = "building", ignore = true },
+["andaestor"] = { type = "building", ignore = true },
+["andarad"] = { type = "building", ignore = true },
+["andshield"] = { type = "strategicshield", shieldRange = 300, ignore = true },
+["anddfens"] = { type = "strategicdefence", ignore = true },
+["andill"] = { type = "strategicdefence", ignore = true },
+["andchaos"] = { type = "strategicdefence", ignore = true },
+["andernie"] = { type = "building", ignore = true },
+["chemist"] = { type = "building", ignore = true },
+["andlaunch"] = { type = "strategicbuilding",  isLRA = true, range = 65000, ignore = true }, -- non è un cannone ma è un arma energetica a lungo raggio
+["andangel"] = { type = "strategicdefence", isLRA = true, ignore = true },
+["medusa"] = { type = "building", ignore = true },
 
 -- Fabbriche Tier 1
 ["andlab"] = { type = "building" },
@@ -508,22 +506,22 @@ local UNIT_DB = {
 -- da definire ###################################################################################
 
 -- Costruzioni Tier 1
-["eufsolar"] = { type = "building" },
-["eufmstor"] = { type = "building" },
-["eufestor"] = { type = "building" },
-["eufmetex"] = { type = "building" },
-["eufametex"] = { type = "building" },
-["euf_radar"] = { type = "building" },
-["eufpathsmall"] = { type = "building" },
-["eufsnpr"] = { type = "building" },
-["eufpath"] = { type = "building" },
-["armarch"] = { type = "building" },
-["eufloony"] = { type = "building" },
-["euf_fence_gate"] = { type = "building" },
-["euf_fence_wall"] = { type = "building" },
+["eufsolar"] = { type = "building", ignore = true },
+["eufmstor"] = { type = "building", ignore = true },
+["eufestor"] = { type = "building", ignore = true },
+["eufmetex"] = { type = "building", ignore = true },
+["eufametex"] = { type = "building", ignore = true },
+["euf_radar"] = { type = "building", ignore = true },
+["eufpathsmall"] = { type = "building", ignore = true },
+["eufsnpr"] = { type = "building", ignore = true },
+["eufpath"] = { type = "building", ignore = true },
+["armarch"] = { type = "building", ignore = true },
+["eufloony"] = { type = "building", ignore = true },
+["euf_fence_gate"] = { type = "building", ignore = true },
+["euf_fence_wall"] = { type = "building", ignore = true },
 
 -- Costruzioni Tier 2
-["eufadvmetex"] = { type = "building" },
+["eufadvmetex"] = { type = "building", ignore = true },
 
 -- Fabbriche Tier 1
 ["eufvp"] = { type = "building" },

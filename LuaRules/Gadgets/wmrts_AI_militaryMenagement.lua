@@ -1,7 +1,7 @@
 function gadget:GetInfo()
 	return {
 		name      = "WMRTS Squad Commander AI",
-		desc      = "AI V16-17 for War Machnines RTS",
+		desc      = "AI V17-18 for War Machnines RTS",
 		author    = "molix",
 		date      = "2025",
 		license   = "GPL",
@@ -22,9 +22,21 @@ end
 -- 20/02/2026 = Ho aggiunto la categoria (type) strategicshield in quanto prima gli shield erano inclusi in "strategicbuilding". In questo modo i cannoni a lungo raggio gestiti dalla AI del gadget "wmrts_AI_longWeaponManagement.lua" non prendono di mira gli shield (antiplasma) che prima erano categorizzati come "strategicbuilding". Il codice in questo gadget viene modificato in modo che, se prima, la categoria "X" attaccava solo "strategicbuilding", ora deve attaccare anche la type scorporata "strategicbuilding"
 -- 24/02/2026 = road to V17 - ora il gadget riceve lo stato di guerra, il punto base e il raggio della base. a seconda dello stato di guerra, gestisce le unità dentro/fuori raggio base mandandole all'attacco o in difesa
 -- 26/02/2026 = V17, aggiunte unità NFA e AND
+-- 27/02/2026 = road to V18, sistemo un bug inerente alla modalità difesa, invece di attaccare direttamente una unità, si spostano le unità verso il bersaglio in modalità fight.
 
 -- to do LIST ################################
--- 1) implementare i SUB
+-- risolvere il bersaglio dei bombardieri, loro attaccano direttamente l'unita tramite ID, ma se l'unità è al buio dal LOS, o dalla nebbia, queste vanno al punto target ma non sparano.
+--	-- come risolvere?
+--	-- o aumentare il raggio visuale dei bombardieri
+--  -- o implementare la logica di attacco utilizzata nel "wmrts_AI_longWeaponManagement.lua" per i LRA
+-- implementare i SUB
+--[[
+nello units database, ho inserito le seguenti unità:
+ICU: armmark (radar mobile), armjam (jammer mobile).
+NFA: corvoyr, corspec, coreter, nfavrad.
+AND: andscouter.
+Cosa succede: Queste unità non hanno armi. Quando il gadget dà l'ordine FIGHT o ATTACK, loro seguiranno il gruppo, ma se il bersaglio è un'unità nemica, cercheranno di "attaccarla" avvicinandosi molto (perché non hanno armi). Se vuoi che restino in vita più a lungo, potresti mettere anche loro in ignore = true e gestirle con uno script che le fa stare sempre dietro la linea di fuoco. Ma per ora, lasciarle in ground va bene se vuoi che facciano da "esca" o forniscano copertura mentre si muovono.
+]]--
 
 
 if (not gadgetHandler:IsSyncedCode()) then
@@ -887,66 +899,53 @@ end
 local function GetSmartEnemyTargetInBaseRadious(myTeamID, squadType)
 	local bPos = basePoint[myTeamID]
 	local bRad = baseRadius[myTeamID]
-	
 	-- Se non abbiamo informazioni sulla base o sul raggio, non possiamo filtrare
 	if not bPos or not bRad then return nil end
-
 	local allUnits = Spring.GetAllUnits()
 	local gaiaTeamID = Spring.GetGaiaTeamID()
 	local radSq = bRad * bRad -- Usiamo il quadrato del raggio per evitare math.sqrt (ottimizzazione)
-	
 	local bestTarget = nil
 	local highestPriority = -1
-
 	for i = 1, #allUnits do
 		local uID = allUnits[i]
 		local uTeam = Spring.GetUnitTeam(uID)
-		
 		-- Solo nemici (non alleati, non Gaia)
 		if uTeam ~= gaiaTeamID and not Spring.AreTeamsAllied(myTeamID, uTeam) then
 			local x, y, z = Spring.GetUnitPosition(uID)
-			
 			if x then
 				-- CONTROLLO DISTANZA: L'unità nemica è dentro il raggio della base?
 				local dx = x - bPos.x
 				local dz = z - bPos.z
 				local distSq = (dx * dx) + (dz * dz)
-
 				if distSq <= radSq then
 					local enemyCat = GetUnitCategoryFromDB(uID)
-					
 					-------------
 					-- LOGICA CATEGORIE (Identica a GetSmartEnemyTarget)
 					-------------
 					if squadType == "ground" then
 						if enemyCat == "ground" or enemyCat == "unknown" or enemyCat == "building" or enemyCat == "strategicbuilding" or enemyCat == "strategicdefence" or enemyCat == "defence" or enemyCat == "strategicshield" then 
-							return {x=x, y=y, z=z, id=uID}
+							return {x=x, y=y, z=z}
 						elseif enemyCat == "hover" and y >= -1 then
-							return {x=x, y=y, z=z, id=uID}
+							return {x=x, y=y, z=z}
 						end
-
 					elseif squadType == "ground_hovercraft" then
 						if enemyCat == "ground" or enemyCat == "unknown" or enemyCat == "building" or enemyCat == "strategicbuilding" or enemyCat == "strategicdefence" or enemyCat == "hover" or enemyCat == "defence" or enemyCat == "strategicshield" then  
-							return {x=x, y=y, z=z, id=uID}
+							return {x=x, y=y, z=z}
 						end
-
 					elseif squadType == "naval" then
 						if enemyCat == "naval" then
-							return {x=x, y=y, z=z, id=uID}
+							return {x=x, y=y, z=z}
 						elseif enemyCat == "hover" and y < -1 then
-							return {x=x, y=y, z=z, id=uID}
+							return {x=x, y=y, z=z}
 						end
-
 					elseif squadType == "air_toair" then
 						if enemyCat == "air" then 
-							return {x=x, y=y, z=z, id=uID} 
+							return {x=x, y=y, z=z} 
 						end
-
 					elseif squadType == "air_toground" then
 						if enemyCat == "ground" or enemyCat == "naval" or enemyCat == "hover" then
-							return {x=x, y=y, z=z, id=uID} 
+							return {x=x, y=y, z=z} 
 						end				
-
 					elseif squadType == "air_bomber" then 
 						local currentPriority = 0
 						if enemyCat == "defence" then currentPriority = 6
@@ -956,13 +955,11 @@ local function GetSmartEnemyTargetInBaseRadious(myTeamID, squadType)
 						elseif enemyCat == "strategicshield" then currentPriority = 2						
 						elseif enemyCat == "ground" then currentPriority = 1						
 						end
-						
 						if currentPriority > highestPriority then
 							highestPriority = currentPriority
 							bestTarget = {x=x, y=y, z=z, id=uID}
 							if highestPriority == 6 then break end
 						end					
-
 					elseif squadType == "air_bomber_strategic" then
 						local currentPriority = 0
 						if enemyCat == "strategicbuilding" then currentPriority = 6
@@ -972,7 +969,6 @@ local function GetSmartEnemyTargetInBaseRadious(myTeamID, squadType)
 						elseif enemyCat == "defence" then currentPriority = 2
 						elseif enemyCat == "ground" then currentPriority = 1		
 						end
-						
 						if currentPriority > highestPriority then
 							highestPriority = currentPriority
 							bestTarget = {x=x, y=y, z=z, id=uID}
@@ -1094,11 +1090,13 @@ function gadget:UnitFinished(unitID, unitDefID, unitTeam)
 		--------------------------------------------------------------------------------
 		-- FINE LOG DI DEBUG
 		--------------------------------------------------------------------------------		
-		if squad.state == "gathering" then
+		if squad.state == "gathering" then									-- se l'unità è completata ed il suo gruppo è in modalità "gathering", spostala fuori dalla fabbrica
 			local fX, _, fZ = Spring.GetUnitPosition(bestFactoryID)
 			Spring.GiveOrderToUnit(unitID, CMD.MOVE, {fX + math.random(-300,300), 0, fZ + math.random(300,500)}, {"shift"})
-		elseif squad.state == "attacking_monitor" then
-			GiveAttackOrder(unitID, squad.attackTarget)
+		elseif squad.state == "attacking_monitor" then						-- se l'unità è completata ed il suo gruppo è in modalità "attacking_monitor", spostala fuori dalla fabbrica ####  alla fine del movimento, sarà il sistema ad ingaggiarla, ogni 3 secondi. In alternativa è possibile mandarla direttamente all' attacco, ma in questo caso bisogna introdurre la stessa logica del sistema di targetin ripetendo le condizioni (in funzione se lo stato di guerra è attacco, difesa leggera o pesante)
+			local fX, _, fZ = Spring.GetUnitPosition(bestFactoryID)				
+			Spring.GiveOrderToUnit(unitID, CMD.MOVE, {fX + math.random(-300,300), 0, fZ + math.random(300,500)}, {"shift"})
+--			GiveAttackOrder(unitID, squad.attackTarget)						-- ### verificare se rimetterlo per accelerare i tempi di attacco, al posto delle due righe sopra per spostare l'unità fuori dalla fabbrica.
 		end
 	end
 end
@@ -1169,7 +1167,7 @@ function gadget:GameFrame(n)
                             squads[newSquadID] = {
                                 units = {},
                                 targetSize = #template.units,
-                                state = "gathering",
+                                state = "gathering",							-- imposta lo stato di gathering, ossia rimani in attesa di raggruppamento (in questa fase l'unità non riceve ordini di attacco, ma rimane immobile vicina a dove è stata costruita)
                                 startTime = Spring.GetGameSeconds(),
                                 myTeam = fData.teamID,
                                 attackTarget = nil,
@@ -1191,28 +1189,30 @@ function gadget:GameFrame(n)
 	-- Il codice divide le squadre in due stati principali: gathering (raduno) e attacking_monitor (attacco e monitoraggio).
 	for sID, sData in pairs(squads) do	
 		local teamID = sData.myTeam -- Definiamo teamID 
-	-- gathering
-	-- Cosa fa: Controlla se il numero di unità attuali (#sData.units) ha raggiunto la dimensione prevista (targetSize).
-	-- Il Timeout: Se la fabbrica viene distrutta o rallenta, il SQUAD_TIMEOUT_SECONDS (10 minuti nel tuo codice) forza la squadra a partire anche se incompleta, per evitare che le unità restino ferme in base per sempre.
-	-- Azione: Appena la squadra è pronta, cerca un bersaglio globale e impartisce il primo ordine di attacco.		
-		if sData.state == "gathering" then
-			if warStatus[teamID] == "attacco" then
-				if #sData.units >= sData.targetSize or (Spring.GetGameSeconds() - sData.startTime) > SQUAD_TIMEOUT_SECONDS then -- CONTROLLO: La squadra è pronta o è passato troppo tempo?
-					sData.state = "attacking_monitor" 									-- Cambia stato: si va all'attacco!
-					sData.attackTarget = GetSmartEnemyTarget(sData.myTeam, sData.type)	-- Trova il primo bersaglio
-					for _, uID in ipairs(sData.units) do								-- ORDINE INIZIALE: Invia tutte le unità della squadra al bersaglio
-						if Spring.ValidUnitID(uID) then GiveAttackOrder(uID, sData.attackTarget) end
+	-- gathering in modalità attacco: 
+	-- Condizione: Controlla se il numero di unità attuali (#sData.units) ha raggiunto la dimensione prevista (targetSize) oppure se il Timeout è scaduto: Se la fabbrica viene distrutta o rallenta, il SQUAD_TIMEOUT_SECONDS (10 minuti nel tuo codice) forza la squadra a partire anche se incompleta, per evitare che le unità restino ferme in base per sempre.
+	-- Azione: Appena la squadra è pronta, cambia lo stato da "gathering" ad "attacking_monitor" a cerca un bersaglio per la modalità attacco ( con la funzione GetSmartEnemyTarget )
+
+			if sData.state == "gathering" then																
+				if warStatus[teamID] == "attacco" then
+					if #sData.units >= sData.targetSize or (Spring.GetGameSeconds() - sData.startTime) > SQUAD_TIMEOUT_SECONDS then -- CONTROLLO: se la squadra completa di tutte le unità che lo compongono, oppure è passato troppo tempo (fabbrica distrutta)
+						sData.state = "attacking_monitor" 																			-- Cambia stato in "attacking_monitor", cioè da ora ricevi gli ordini di attacco
+						sData.attackTarget = GetSmartEnemyTarget(sData.myTeam, sData.type)											-- Trova il primo bersaglio
+--						for _, uID in ipairs(sData.units) do																		-- Si da subito un ORDINE INIZIALE: Invia tutte le unità della squadra al bersaglio
+--							if Spring.ValidUnitID(uID) then GiveAttackOrder(uID, sData.attackTarget) end
+--						end
 					end
+	-- gathering in modalità difesa leggera o pesante: 		
+	-- Condizione: controlla tutti i gruppi composti da una o + unità (stato di emergenza)
+				elseif warStatus[teamID] == "difesa_leggera" or warStatus[teamID] == "difesa_pesante"  then -- se siamo in modalità difesa leggera o pesante
+					if #sData.units <= sData.targetSize then 												-- CONTROLLO: La squadrà è composta da almeno una unità?
+						sData.state = "attacking_monitor" 													--- Cambia stato in "attacking_monitor", cioè da ora ricevi gli ordini di attacco. L'unità appena prodotta che riceverà l'ingaggio, farà sempre parte del gruppo completato o da completare.
+						sData.attackTarget = GetSmartEnemyTargetInBaseRadious(sData.myTeam, sData.type)		-- Trova il primo bersaglio all'interno del raggio della base, per difendere
+--						for _, uID in ipairs(sData.units) do												-- Si da subito un ORDINE INIZIALE: Invia tutte le unità della squadra al bersaglio
+--							if Spring.ValidUnitID(uID) then GiveAttackOrder(uID, sData.attackTarget) end
+--						end
+					end			
 				end
-			elseif warStatus[teamID] == "difesa_leggera" or warStatus[teamID] == "difesa_pesante"  then -- se siamo in modalità difesa leggera o pesante, le unità in gathering passano in modalità attacco all'interno del raggio della base (ingaggiano in difesa)
-				if #sData.units >= sData.targetSize or (Spring.GetGameSeconds() - sData.startTime) > SQUAD_TIMEOUT_SECONDS then -- CONTROLLO: La squadra è pronta o è passato troppo tempo?
-					sData.state = "attacking_monitor" 									-- Cambia stato: si va all'attacco!
-					sData.attackTarget = GetSmartEnemyTargetInBaseRadious(sData.myTeam, sData.type)	-- Trova il primo bersaglio all'interno del raggio della base, per difendere
-					for _, uID in ipairs(sData.units) do								-- ORDINE INIZIALE: Invia tutte le unità della squadra al bersaglio
-						if Spring.ValidUnitID(uID) then GiveAttackOrder(uID, sData.attackTarget) end
-					end
-				end			
-			end
 	-- attacking_monitor
 	-- Ottimizzazione (n % 90): Non controlla ogni istante (sarebbe pesante per la CPU), ma ogni 3 secondi.
 	-- Pulizia Lista: Cicla la lista delle unità all'indietro (da #sData.units a 1). Questo è fondamentale in programmazione: se rimuovi un elemento da una lista mentre la scorri in avanti, salteresti l'elemento successivo.
@@ -1220,7 +1220,7 @@ function gadget:GameFrame(n)
 		elseif sData.state == "attacking_monitor" then
 			if n % 90 == 0 then			-- Esegue il controllo ogni 90 frame (circa ogni 3 secondi)
 				local anyAlive = false	-- Controlla che il gruppo non sia stato completamente distrutto.
-				local anyIdle = false	-- È una condizione di efficienza. Dice al gadget: "tutti i membri della squadra stanno ancora sparando a qualcosa"
+				local anyIdle = false	-- Indica se almeno una unità della squadra è ferma
 				for i = #sData.units, 1, -1 do	-- CICLO DI PULIZIA: Rimuove i morti dalla tabella della squadra
 					local uID = sData.units[i]
 					if Spring.ValidUnitID(uID) and not Spring.GetUnitIsDead(uID) then
@@ -1254,8 +1254,8 @@ function gadget:GameFrame(n)
 						for _, uID in ipairs(insideUnits) do									-- cicla e trova tutte le unità all'interno del raggio della base
 --							if Spring.GetCommandQueue(uID, 0) == 0 then							-- Controllo ogni singola unità, se è ferma (Idle)...  ##### verificare qui se dividere tra attacco, difesa leggera o difesa pesante (magari nella difesa pesante fare in modo che le unità tornino a prescindere che siano idle???) ##### molix	
 								if targetDefence then											-- Se è presente un target in difesa...
-									GiveAttackOrder(uID, {x = targetAttack.x, y = targetAttack.y, z = targetAttack.z}) -- Passiamo una tabella che ha SOLO x, y, z. L'ID viene ignorato.
-								--	GiveAttackOrder(uID, targetDefence)							-- attacca il targetDefence (difesa attiva)
+								--	GiveAttackOrder(uID, {x = targetDefence.x, y = targetDefence.y, z = targetDefence.z}) -- Passiamo una tabella che ha SOLO x, y, z. L'ID viene ignorato.
+									GiveAttackOrder(uID, targetDefence)							-- attacca il targetDefence (difesa attiva)
 								else															-- altrimenti...
 									GiveAttackOrder(uID, targetAttack)							-- passa all'attacco a prescindere -- ### valutare se spostare le unità al centro della base e lasciare che si fermino, per ricevere un ulteriore ordine
 								end
