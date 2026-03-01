@@ -23,10 +23,8 @@ end
 -- 24/02/2026 = road to V17 - ora il gadget riceve lo stato di guerra, il punto base e il raggio della base. a seconda dello stato di guerra, gestisce le unità dentro/fuori raggio base mandandole all'attacco o in difesa
 -- 26/02/2026 = V17, aggiunte unità NFA e AND
 -- 27/02/2026 = road to V18, sistemo un bug inerente alla modalità difesa, invece di attaccare direttamente una unità, si spostano le unità verso il bersaglio in modalità fight.
--- 01/03/2026 = V18, risolto il problema delle unità orfane durante il cambio di stato "attacco -> difesa_leggera"
 
 -- to do LIST ################################
--- includere i radar nelle costruzioni!!
 -- risolvere il bersaglio dei bombardieri, loro attaccano direttamente l'unita tramite ID, ma se l'unità è al buio dal LOS, o dalla nebbia, queste vanno al punto target ma non sparano.
 --	-- come risolvere?
 --	-- o aumentare il raggio visuale dei bombardieri
@@ -1178,27 +1176,22 @@ function gadget:GameFrame(n)
     end -- end ciclo for
 
     -- GESTIONE FABBRICHE
-for fID, fData in pairs(factories) do
-    local qSize = Spring.GetCommandQueue(fID, 0)
-    
-    if qSize == nil then
-        factories[fID] = nil 
-    else        
-        local isBuilding = Spring.GetUnitIsBuilding(fID)
-        local isLocked = false
+    for fID, fData in pairs(factories) do
+        local qSize = Spring.GetCommandQueue(fID, 0)
         
-        if fData.squadID and squads[fData.squadID] then
-            local sData = squads[fData.squadID]
-            -- La fabbrica resta occupata finché la squadra non è piena OPPURE finché non è passato il timeout
-            local isSquadFull = #sData.units >= sData.targetSize
-            local isTimeout = (Spring.GetGameSeconds() - sData.startTime) > SQUAD_TIMEOUT_SECONDS
-
-            if (qSize > 0) or isBuilding or (not isSquadFull and not isTimeout) then
-                isLocked = true
-            else
-                fData.squadID = nil -- Ora la rilascia solo quando è davvero finita
+        if qSize == nil then
+            factories[fID] = nil 
+        else		
+            local isBuilding = Spring.GetUnitIsBuilding(fID)
+            local isLocked = false
+            
+            if fData.squadID and squads[fData.squadID] then
+                if (qSize > 0) or isBuilding or (squads[fData.squadID].state == "gathering") then
+                    isLocked = true
+                else
+                    fData.squadID = nil
+                end
             end
-        end
 
             if not isLocked and qSize == 0 and not isBuilding then
                 -- RECUPERO LA CONFIGURAZIONE SPECIFICA DI QUEL TEAM
@@ -1251,7 +1244,7 @@ for fID, fData in pairs(factories) do
 	-- gathering in modalità difesa leggera o pesante: 		
 	-- Condizione: controlla tutti i gruppi composti da una o + unità (stato di emergenza)
 				elseif warStatus[teamID] == "difesa_leggera" or warStatus[teamID] == "difesa_pesante"  then -- se siamo in modalità difesa leggera o pesante
-					if #sData.units >= 1 then 				 												-- CONTROLLO: La squadrà è composta da almeno una unità?
+					if #sData.units <= sData.targetSize then 												-- CONTROLLO: La squadrà è composta da almeno una unità?
 						sData.state = "attacking_monitor" 													--- Cambia stato in "attacking_monitor", cioè da ora ricevi gli ordini di attacco. L'unità appena prodotta che riceverà l'ingaggio, farà sempre parte del gruppo completato o da completare.
 						sData.attackTarget = GetSmartEnemyTargetInBaseRadious(sData.myTeam, sData.type)		-- Trova il primo bersaglio all'interno del raggio della base, per difendere
 --						for _, uID in ipairs(sData.units) do												-- Si da subito un ORDINE INIZIALE: Invia tutte le unità della squadra al bersaglio
