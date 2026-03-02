@@ -668,8 +668,7 @@ local SQUAD_TEMPLATES = {
 -- ogni livello è indipendente per ogni team
 local teamLevels = {}       -- Tabella: [teamID] = livello attuale dell'AI per ogni singolo team (0, 1, 2...)
 local teamConfigs = {}      -- Tabella: [teamID] = la FACTORY_CONFIG specifica per livello di ogni team
-
-local FACTORY_CONFIG = {} 		-- all'inizio imposto la tabella vuota ################################  SOSTITUIRE???
+local FACTORY_CONFIG = {} 	-- all'inizio imposto la tabella vuota 
 
 local function GetConfigPerLivello(livello) -- Questa funzione restituisce, per ciascun team, la tabella delle fabbriche in funzione del livello corrente del team
     if livello <= 4 then					
@@ -729,7 +728,7 @@ local function GetConfigPerLivello(livello) -- Questa funzione restituisce, per 
     return {} -- default vuoto
 end
 
-local TARGET_AI_NAME = "WarMachinesRTSmissionAI" 
+local TARGET_AI_NAME = "WMAI" 
 local SQUAD_TIMEOUT_SECONDS = 600 -- questo timeout definisce i secondi di attesa per la formazione del gruppo delle unità uscite dalla fabbrica. Oltre questo timeout il gruppo si completa cosi com'è e parte all'attacco o difesa 
 
 --------------------------------------------------------------------------------
@@ -742,6 +741,7 @@ local squads = {}
 local basePoint = {}		-- Tabella: [teamID] = coordinate del punto base per ogni singolo team (0, 1, 2...)
 local baseRadius = {}		-- Tabella: [teamID] = raggio di difesa della base per ogni singolo team (0, 1, 2...)
 local warStatus = {}		-- Tabella: [teamID] = stato di guerra  per ogni singolo team (0, 1, 2...), può essere "attacco", "difesa_leggera", "difesa_pesante". Si veda "wmrts_AI_constructionManagement.lua" per maggiori dettagli        
+local bomberTargets = {} 	-- Tabella per memorizzare quale bombardiere sta puntando quale unità Memorizza -> [unitID_Bombardiere] = targetID_Nemico
 
 --------------------------------------------------------------------------------
 -- 4) LOGICA DI TARGETING BASATA SU DATABASE
@@ -984,24 +984,37 @@ local function GetSmartEnemyTargetInBaseRadious(myTeamID, squadType)
 	return bestTarget -- Restituisce nil se non trova nessuno nel raggio
 end
 
+-- Questa funzione serve ad impartire gli ordini di attacco specifici per bombardieri. La funzione associa l'ID del nemico al bombardiere ma impartisce l'ordine alle coordinate (tramite ID il bombardiere non attacca se il target è fuori dai radar o nella nebbia, tramite coordinate invece attacca sempre)
+local function GiveBombingOrder(unitID, targetData)
+    if not targetData or not targetData.id then return end 					-- se il target del bombardiere non esiste più, non restituire niente e ferma questa funzione
+    bomberTargets[unitID] = targetData.id									-- ...altrimenti registra l'ID del bersaglio per questo bombardiere
+    Spring.GiveOrderToUnit(unitID, CMD.STOP, {}, {})						-- Stoppa e diamo l'ordine di attacco alle COORDINATE (x, y, z), questo permette al bombardiere di sganciare anche se perde LOS
+    Spring.GiveOrderToUnit(unitID, CMD.ATTACK, {targetData.x, targetData.y, targetData.z}, {})
+end
+
+-- questa funzione serve ad impartire gli ordini di attacco
+local function GiveAttackOrder(unitID, targetData, squadType)
+	if not targetData then return end								-- se il target non esiste più, non restituire niente e ferma questa funzione
+   -- Se l'unità è di tipo air_bomber o air_bomber_strategic, usa la funzione GiveBombingOrder
+    if squadType == "air_bomber" or squadType == "air_bomber_strategic" then
+        GiveBombingOrder(unitID, targetData)
+	-- altrimenti utilizza la logica "standard" per le altre unità (ricerca con fight o attacco diretto)
+    else	
+	Spring.GiveOrderToUnit(unitID, CMD.STOP, {}, {}) 					-- ######## valutare se mantenere questa linea per "pulire gli ordini precedenti" ################################
+		if targetData.id and Spring.ValidUnitID(targetData.id) then			-- Se abbiamo un unitID valido...
+			Spring.GiveOrderToUnit(unitID, CMD.ATTACK, {targetData.id}, {}) -- ... SPARTISCO L' ORDINE DI ATTACCO DIRETTO ALL'UNITÀ (Cruciale per i bombardieri)
+		else																-- Se non abbiamo un unitID, usiamo le coordinate come ripiego (Area Attack)
+			local tx = targetData.x + math.random(-250, 250)
+			local tz = targetData.z + math.random(-250, 250)
+			local ty = Spring.GetGroundHeight(tx, tz)		
+			Spring.GiveOrderToUnit(unitID, CMD.FIGHT, {tx, ty, tz}, {})
+		end
+	end -- end squadtype
+end
+
 --------------------------------------------------------------------------------
 -- 5) GESTIONE ORDINI E GADGET CORE 
 --------------------------------------------------------------------------------
-local function GiveAttackOrder(unitID, targetData)
-	if not targetData then 
-		return 
-	end
-	Spring.GiveOrderToUnit(unitID, CMD.STOP, {}, {}) 					-- ######## valutare se mantenere questa linea per "pulire gli ordini precedenti" ################################
-	if targetData.id and Spring.ValidUnitID(targetData.id) then			-- Se abbiamo un unitID valido...
-		Spring.GiveOrderToUnit(unitID, CMD.ATTACK, {targetData.id}, {}) -- ... SPARTISCO L' ORDINE DI ATTACCO DIRETTO ALL'UNITÀ (Cruciale per i bombardieri)
-	else																-- Se non abbiamo un unitID, usiamo le coordinate come ripiego (Area Attack)
-		local tx = targetData.x + math.random(-250, 250)
-		local tz = targetData.z + math.random(-250, 250)
-		local ty = Spring.GetGroundHeight(tx, tz)		
-		Spring.GiveOrderToUnit(unitID, CMD.FIGHT, {tx, ty, tz}, {})
-	end
-end
-
 -- Questa funzione serve ad evitare che l'AI "rubi" o interferisca con unità non sue (ad esempio di altre AI), ci si assicura che le tabelle siano sempre pulite. In questo modo se spring dovesse riassegnare l'ID di una unità distrutta ad un altra squadra, il codice non lo utilizza come se fosse sua
 function gadget:UnitDestroyed(unitID, unitDefID, unitTeam)
     -- 1. Se muore una fabbrica, cancellala subito dalle nostre liste
@@ -1271,6 +1284,18 @@ for fID, fData in pairs(factories) do
 					local uID = sData.units[i]
 					if Spring.ValidUnitID(uID) and not Spring.GetUnitIsDead(uID) then
 						anyAlive = true
+							----- LOGICA PER BOMBARDIERI ---
+						if sData.type == "air_bomber" or sData.type == "air_bomber_strategic" then	-- se l'unità è del tipo "air_bomber" o "air_bomber_strategic"
+							local tID = bomberTargets[uID]											-- assegna alla variabile tID il target dall tabella
+							if tID then																-- se il berstaglio tID è stato già assegnato...
+								if not Spring.ValidUnitID(tID) or Spring.GetUnitIsDead(tID) then 	-- ... e se il bersaglio tID è morto o non più valido... 
+									Spring.GiveOrderToUnit(uID, CMD.STOP, {}, {})					-- ... allora ferma il bombardiere (cosi prenderà successivi ordini perchè idle) #### valutare questa parte
+									bomberTargets[uID] = nil										-- rendi nil il target del bombardiere
+									anyIdle = true 													-- Forziamo lo stato Idle per fargli cercare un nuovo target subito
+								end
+							end
+						end
+							-----------------------------------
 						if Spring.GetCommandQueue(uID, 0) == 0 then anyIdle = true end	-- Controlla se l'unità ha finito gli ordini e ne imposti anyIdle true(è ferma/idle)
 					else
 						table.remove(sData.units, i)		-- Rimuove l'unità morta dalla lista
@@ -1292,7 +1317,7 @@ for fID, fData in pairs(factories) do
 					if warStatus[teamID] == "attacco" then										-- a) in modalità attacco...
 						for _, uID in ipairs(sData.units) do									-- esegui un ciclo for su tutte le unità presenti sulla mappa...
 							if Spring.GetCommandQueue(uID, 0) == 0 then							-- Controllo ogni singola unità, e, se è ferma (Idle)...  ##### verificare qui se dividere tra attacco, difesa leggera o difesa pesante (magari nella difesa pesante fare in modo che le unità tornino a prescindere che siano idle???) ##### molix
-								GiveAttackOrder(uID, targetAttack)								-- ...invia l'ordine alle singole unità tramite la funzione "GiveAttackOrder")
+								GiveAttackOrder(uID, targetAttack, sData.type)					-- ...invia l'ordine alle singole unità tramite la funzione "GiveAttackOrder")
 							end
 						end -- ciclo for
 					-- difesa_leggera						
@@ -1301,15 +1326,15 @@ for fID, fData in pairs(factories) do
 --							if Spring.GetCommandQueue(uID, 0) == 0 then							-- Controllo ogni singola unità, se è ferma (Idle)...  ##### verificare qui se dividere tra attacco, difesa leggera o difesa pesante (magari nella difesa pesante fare in modo che le unità tornino a prescindere che siano idle???) ##### molix	
 								if targetDefence then											-- Se è presente un target in difesa...
 								--	GiveAttackOrder(uID, {x = targetDefence.x, y = targetDefence.y, z = targetDefence.z}) -- Passiamo una tabella che ha SOLO x, y, z. L'ID viene ignorato.
-									GiveAttackOrder(uID, targetDefence)							-- attacca il targetDefence (difesa attiva)
+									GiveAttackOrder(uID, targetDefence, sData.type)				-- attacca il targetDefence (difesa attiva)
 								else															-- altrimenti...
-									GiveAttackOrder(uID, targetAttack)							-- passa all'attacco a prescindere -- ### valutare se spostare le unità al centro della base e lasciare che si fermino, per ricevere un ulteriore ordine
+									GiveAttackOrder(uID, targetAttack, sData.type)				-- passa all'attacco a prescindere -- ### valutare se spostare le unità al centro della base e lasciare che si fermino, per ricevere un ulteriore ordine
 								end
 --							end
 						end			
 						for _, uID in ipairs(outsideUnits) do									-- cicla e trova tutte le unità all'esterno del raggio della base
 							if Spring.GetCommandQueue(uID, 0) == 0 then							-- Controllo ogni singola unità, se è ferma (Idle)...  ##### verificare qui se dividere tra attacco, difesa leggera o difesa pesante (magari nella difesa pesante fare in modo che le unità tornino a prescindere che siano idle???) ##### molix	
-								GiveAttackOrder(uID, targetAttack)								-- attacca il targetDefence (difesa attiva)
+								GiveAttackOrder(uID, targetAttack, sData.type)					-- attacca il targetDefence (difesa attiva)
 							end
 						end					
 					-- difesa_pesante
@@ -1317,15 +1342,15 @@ for fID, fData in pairs(factories) do
 						for _, uID in ipairs(insideUnits) do									-- cicla e trova tutte le unità all'interno del raggio della base
 							if Spring.GetCommandQueue(uID, 0) == 0 then		
 								if targetDefence then
-									GiveAttackOrder(uID, targetDefence)							-- attacca il target di difesa, se esiste... (difesa attiva)
+									GiveAttackOrder(uID, targetDefence, sData.type)				-- attacca il target di difesa, se esiste... (difesa attiva)
 								else 
-									GiveAttackOrder(uID, targetAttack)							-- ...altrimenti attacca un target di attacco
+									GiveAttackOrder(uID, targetAttack, sData.type)				-- ...altrimenti attacca un target di attacco
 								end -- end se esiste targetDefence
 							end
 						end	-- end ciclo for (unità interno base)		
 						for _, uID in ipairs(outsideUnits) do									-- cicla e trova tutte le unità all'esterno del raggio della base
 							if Spring.GetCommandQueue(uID, 0) == 0 then							-- Controllo ogni singola unità, se è ferma (Idle)...  ##### verificare qui se dividere tra attacco, difesa leggera o difesa pesante (magari nella difesa pesante fare in modo che le unità tornino a prescindere che siano idle???) ##### molix
-								GiveAttackOrder(uID, targetDefence)								-- attacca il target (difesa attiva)							
+								GiveAttackOrder(uID, targetDefence, sData.type)					-- attacca il target (difesa attiva)							
 							end
 						end	-- end ciclo for (unità esterno base)
 					end -- warStatus	

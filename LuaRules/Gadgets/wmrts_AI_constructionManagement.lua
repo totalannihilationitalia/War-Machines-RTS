@@ -23,8 +23,9 @@
 	-- 09/02/2026 = V14 Implementato raggio dinamico sviluppo base, in funzione del livello. I raggi sono settati livello per livello
 	-- 12/02/2026 = V15 Aggiunto T3, shield, longrange cannon - per ora tutto ICU
 	-- 20/02/2026 = V16 Aggiungo tre variabili globali. a) le variabili "AI_RaggioDifesa" e "AI_BasePos" che sono il valore dell'espansione attuale della base che ogni team controllato dalla WMRTSAI, dettato dalla variabile "raggioDinamicoFactory" e la posizione centrale della base. b) la variabile di "AI_StatoGuerra" di ogni team controllato dalla WMRTSAI, e questa variabile può assumere due valori: "attacco", "difesa_leggera", "difesa_pesante". Questa variabile globale servirà a variare il comportamento delle unità in possesso dal team gestite dal gadget "wmrts_AI_militaryMenagement.lua" e che manderà all'attacco o in difesa le unità.	
-	-- 20/02/2026 = bugfix: l'AI carica se è impostata come "WarMachinesRTSmissionAI", prima partiva a prescindere dal nome.
+	-- 20/02/2026 = bugfix: l'AI carica se è impostata come "WMAI", prima partiva a prescindere dal nome.
 	-- 26/02/2026 = V17 aggiunte unità NFA
+	-- 02/03/2026 = V18 aggiunte unità nella lista dei livelli - cambio nome della AI da "WarMachinesRTSmissionAI" a "WMAI", per inserirlo nella lobby del gioco
 	
 	-- TO DO
 
@@ -432,7 +433,7 @@ nanotower o costruttori aiutanti???
 	local metalSpots = {}
 	local scanDone = false
 	local commanderCurrentBehaviour = {} 							-- comportamento del comandante
-	local TARGET_AI_NAME = "WarMachinesRTSmissionAI"				-- nome della AI
+	local TARGET_AI_NAME = "WMAI"				-- nome della AI
 	-- Inizializzo le tabelle/variabili globali 
 	if (not GG.AI_RaggioDifesa) then GG.AI_RaggioDifesa = {} end 	-- raggio di difesa della base del team
 	if (not GG.AI_StatoGuerra) then GG.AI_StatoGuerra = {} end		-- stato di guerra del team

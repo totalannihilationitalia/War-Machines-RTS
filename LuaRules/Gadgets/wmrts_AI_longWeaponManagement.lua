@@ -21,7 +21,7 @@ if (not gadgetHandler:IsSyncedCode()) then return end
 local dbPath = "LuaRules/Configs/WMRTS_AI_mission_db.lua"
 local UNIT_DB = VFS.Include(dbPath)
 
-local TARGET_AI_NAME = "WarMachinesRTSmissionAI" -- Filtro per attivare l'IA
+local TARGET_AI_NAME = "WMAI" -- Filtro per attivare l'IA
 local aiTeamIDs = {}
 local lastNukeFrame = {} 
 local artilleryTargets = {} -- Memorizza: [unitID_Cannone] = targetID_Nemico -- Quando l'IA trova un bersaglio (es. ID 500) alle coordinate (100, 0, 200), l'ID 500 viene salvato. Nel ciclo successivo, il gadget controlla se l'ID 500 è ancora vivo. Se l'unità muore, invia un CMD.STOP al cannone. Questo svuota la coda comandi e permette al blocco if #updatedCmdQueue == 0 di attivarsi e cercare un nuovo bersaglio al ciclo successivo.
@@ -149,24 +149,23 @@ function gadget:GameFrame(n)
                         local cmdQueue = Spring.GetCommandQueue(uID, 1)
                         local currentTargetID = artilleryTargets[uID]
 
-                        -- Se il cannone sta sparando, controlliamo se il bersaglio esiste ancora
-                        if #cmdQueue > 0 and currentTargetID then
-                            if not Spring.ValidUnitID(currentTargetID) or Spring.GetUnitIsDead(currentTargetID) then
-                                -- Il bersaglio è morto o sparito: STOP
-                                Spring.GiveOrderToUnit(uID, CMD.STOP, {}, {})
-                                artilleryTargets[uID] = nil
+
+                        if #cmdQueue > 0 and currentTargetID then															                        -- Se il cannone sta sparando e gli è stato assegnato un target..
+                            if not Spring.ValidUnitID(currentTargetID) or Spring.GetUnitIsDead(currentTargetID) then								-- se il target non è più valido oppure è morto allora...
+                                Spring.GiveOrderToUnit(uID, CMD.STOP, {}, {})																		-- Fermati, non fare più niente -> STOP
+                                artilleryTargets[uID] = nil																							-- Rendi nil la variabile del target
                             end
                         end
 
-                        -- Se il cannone è libero, cerca un nuovo bersaglio
-                        local updatedCmdQueue = Spring.GetCommandQueue(uID, 1)
-                        if #updatedCmdQueue == 0 then
-                            local weaponRange = dbEntry.range or 6000  -- Usiamo il range dal DB (obbligatorio per evitare errori)
-                            local target = GetTargetInRange(teamID, ux, uz, weaponRange, 1, currentEnemyShields) -- priorità dei target da 1 in su ( che vuol dire in ordine da 10 a 1, definiti nella funzione GetTargetInRange)
+                       
+                        local updatedCmdQueue = Spring.GetCommandQueue(uID, 1)																		
+                        if #updatedCmdQueue == 0 then																								-- Se la lista dei comandi del cannone è libera, cerca un nuovo bersaglio
+                            local weaponRange = dbEntry.range or 6000  																				-- Usiamo il range dal DB WMRTS_AI_mission_db.lua
+                            local target = GetTargetInRange(teamID, ux, uz, weaponRange, 1, currentEnemyShields) 									-- Utilizza la funzione GetTargetInRange per assegnare il target
                             
-                            if target then
-                                Spring.GiveOrderToUnit(uID, CMD.ATTACK, {target.x, target.y, target.z}, {}) 	-- Ordine alle coordinate, in questo modo l'AI colpisce anche senza radar ########## verificare se creare una tabella con le unità spottate (almeno una volta) e colpire solo quelle, anche fuori dai radar per rendere l'AI più "umana"
-                                artilleryTargets[uID] = target.id -- Memorizziamo chi stiamo colpendo
+                            if target then																											-- se il target è stato trovato...
+                                Spring.GiveOrderToUnit(uID, CMD.ATTACK, {target.x, target.y, target.z}, {}) 										-- Ordine di attacco alle coordinate, in questo modo l'AI colpisce anche senza radar ########## verificare se creare una tabella con le unità spottate (almeno una volta) e colpire solo quelle, anche fuori dai radar per rendere l'AI più "umana"
+                                artilleryTargets[uID] = target.id 																					-- Memorizziamo chi stiamo colpendo per monitorarne lo stato (vivo o morto)
                             end
                         end
                     end           
