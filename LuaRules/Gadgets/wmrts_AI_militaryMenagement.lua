@@ -24,6 +24,7 @@ end
 -- 26/02/2026 = V17, aggiunte unità NFA e AND
 -- 27/02/2026 = road to V18, sistemo un bug inerente alla modalità difesa, invece di attaccare direttamente una unità, si spostano le unità verso il bersaglio in modalità fight.
 -- 01/03/2026 = V18, risolto il problema delle unità orfane durante il cambio di stato "attacco -> difesa_leggera"
+-- 02/03/2025 = road to V19 - bombardieri non attaccano i target fuori dal radar o nella nebbia. Modificato codice per far si che attacchino direttamente a x, y e z del target uID, monitorandone costantemente se vivo o morto
 
 -- to do LIST ################################
 -- includere i radar nelle costruzioni!!
