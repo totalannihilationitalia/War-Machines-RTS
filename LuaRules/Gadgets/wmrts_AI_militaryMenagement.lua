@@ -1016,11 +1016,39 @@ local function GetSmartEnemyTargetInBaseRadious(myTeamID, squadType)
 	return bestTarget -- Restituisce nil se non trova nessuno nel raggio
 end
 
+-- Questa funzione aggiorna costantemente il punto di sgancio dei bombardieri 
+-- seguendo le coordinate reali dell'unità target (anche se è in movimento o nella nebbia)
+local function UpdateBomberTracking()
+    for bID, tID in pairs(bomberTargets) do
+        -- 1. Verifichiamo se il bombardiere è ancora operativo
+        if not Spring.ValidUnitID(bID) or Spring.GetUnitIsDead(bID) then
+            bomberTargets[bID] = nil
+        else
+            -- 2. Verifichiamo se il bersaglio è ancora vivo
+            if not Spring.ValidUnitID(tID) or Spring.GetUnitIsDead(tID) then
+                -- Il bersaglio è morto: fermiamo il bombardiere e liberiamolo
+                Spring.GiveOrderToUnit(bID, CMD.STOP, {}, {})
+                bomberTargets[bID] = nil
+            else
+                -- 3. Il bersaglio è vivo: prendiamo le sue coordinate attuali
+                local tx, ty, tz = Spring.GetUnitPosition(tID)
+                if tx then
+                    -- Inviamo l'ordine di attacco alle nuove coordinate.
+                    -- NOTA: NON usiamo CMD.STOP qui, altrimenti l'aereo resetta 
+                    -- continuamente la sua traiettoria di volo (jittering).
+                    -- Usiamo semplicemente CMD.ATTACK che sovrascrive il precedente.
+                    Spring.GiveOrderToUnit(bID, CMD.ATTACK, {tx, ty, tz}, {})
+                end
+            end
+        end
+    end
+end
+
 -- Questa funzione serve ad impartire gli ordini di attacco specifici per bombardieri. La funzione associa l'ID del nemico al bombardiere ma impartisce l'ordine alle coordinate (tramite ID il bombardiere non attacca se il target è fuori dai radar o nella nebbia, tramite coordinate invece attacca sempre)
 local function GiveBombingOrder(unitID, targetData)
     if not targetData or not targetData.id then return end 					-- se il target del bombardiere non esiste più, non restituire niente e ferma questa funzione
     bomberTargets[unitID] = targetData.id									-- ...altrimenti registra l'ID del bersaglio per questo bombardiere
-    Spring.GiveOrderToUnit(unitID, CMD.STOP, {}, {})						-- Stoppa e diamo l'ordine di attacco alle COORDINATE (x, y, z), questo permette al bombardiere di sganciare anche se perde LOS
+--    Spring.GiveOrderToUnit(unitID, CMD.STOP, {}, {})						-- Stoppa e diamo l'ordine di attacco alle COORDINATE (x, y, z), questo permette al bombardiere di sganciare anche se perde LOS
     Spring.GiveOrderToUnit(unitID, CMD.ATTACK, {targetData.x, targetData.y, targetData.z}, {})
 end
 
@@ -1110,7 +1138,7 @@ function gadget:UnitFinished(unitID, unitDefID, unitTeam)
 
     -- 2) Ricerca della squadra migliore per l'unità
     local bestFactoryID = nil
-    local nearestDist = 700 -- Distanza generosa per coprire decolli e fabbriche grandi
+    local nearestDist = 3000 -- era 700 Distanza generosa per coprire decolli e fabbriche grandi
     local unitCat = GetUnitCategoryFromDB(unitID)
     local isAirUnit = (unitCat == "air")
 
@@ -1183,6 +1211,7 @@ function gadget:UnitFinished(unitID, unitDefID, unitTeam)
         end
     else         -- altrimenti l'unità rimane orfana (vuoi per un attacco subito, la fabbrica distrutta ecc)
         Spring.Echo("--- AI WARNING: Unità " .. unitName .. " (ID:" .. unitID .. ") è rimasta orfana. Cat:" .. tostring(unitCat)) -- loggo il fatto che rimane orfana
+--[[
 		-- ora tento di recuperarla
         local unitCat = GetUnitCategoryFromDB(unitID)
         local foundSquad = false
@@ -1198,16 +1227,21 @@ function gadget:UnitFinished(unitID, unitDefID, unitTeam)
         
         if not foundSquad then
             -- Se proprio non c'è una squadra, mandala almeno verso il centro base
-            local bp = teamBasePos[unitTeam]
+            local bp = basePoint[unitTeam]
             if bp then
                 Spring.GiveOrderToUnit(unitID, CMD.FIGHT, {bp.x, bp.y, bp.z}, {})
                 Spring.Echo("--- AI WARNING: Unità " .. unitName .. " totalmente isolata. Mandata in base.") -- ### gestirla all'attacco ####
             end
         end
+]]--		
     end
 end
 
 function gadget:GameFrame(n)
+
+    if (n % 30 == 0) then 		-- ogni secondo...
+        UpdateBomberTracking()	-- ...eseguiamo la funzione per aggiornare le coordinate x, y e z dei target dei bombardieri 
+    end
     if (n % 30 ~= 0) then return end  		-- una volta al secondo...
 	-- Controlla il livello della AI gestito dal gadget "constructionManagement"
 	for teamID, _ in pairs(aiTeamIDs) do
@@ -1252,16 +1286,16 @@ for fID, fData in pairs(factories) do
         local isBuilding = Spring.GetUnitIsBuilding(fID)
         local isLocked = false
         
-        if fData.squadID and squads[fData.squadID] then
+      if fData.squadID and squads[fData.squadID] then
             local sData = squads[fData.squadID]
-            local factoryHasFinished = (qSize == 0 and not isBuilding)
+            -- La fabbrica resta occupata finché la squadra non è piena OPPURE finché non è passato il timeout
             local isSquadFull = #sData.units >= sData.targetSize
             local isTimeout = (Spring.GetGameSeconds() - sData.startTime) > SQUAD_TIMEOUT_SECONDS
--- Se la coda è vuota e la fabbrica non sta lavorando, significa che ha finito il suo compito, anche se la squadra non è piena.
-            if not factoryHasFinished and not isSquadFull and not isTimeout then
-                isLocked = true			-- blocca la fabbrica, non riceverà ulteriori ordini di costruzine
+
+            if (qSize > 0) or isBuilding or (not isSquadFull and not isTimeout) then
+                isLocked = true
             else
-                fData.squadID = nil 	-- altrimenti isLocked rimane falsa e quindi la fabbrica "sbloccata" -> riceverà ordini di costruzione
+                fData.squadID = nil -- Ora la rilascia solo quando è davvero finita
             end
         end
 
@@ -1341,8 +1375,8 @@ for fID, fData in pairs(factories) do
 							local tID = bomberTargets[uID]											-- assegna alla variabile tID il target dall tabella
 							if tID then																-- se il berstaglio tID è stato già assegnato...
 								if not Spring.ValidUnitID(tID) or Spring.GetUnitIsDead(tID) then 	-- ... e se il bersaglio tID è morto o non più valido... 
-									Spring.GiveOrderToUnit(uID, CMD.STOP, {}, {})					-- ... allora ferma il bombardiere (cosi prenderà successivi ordini perchè idle) #### valutare questa parte
-									bomberTargets[uID] = nil										-- rendi nil il target del bombardiere
+--									Spring.GiveOrderToUnit(uID, CMD.STOP, {}, {})					-- ######Questo controllo è corretto, ma viene fatto anche da UpdateBomberTracking. Non crea bug, è solo un po' ridondante, ma puoi lasciarlo per sicurezza (doppio controllo).... allora ferma il bombardiere (cosi prenderà successivi ordini perchè idle) #### valutare questa parte
+--									bomberTargets[uID] = nil										-- ######Questo controllo è corretto, ma viene fatto anche da UpdateBomberTracking. Non crea bug, è solo un po' ridondante, ma puoi lasciarlo per sicurezza (doppio controllo).rendi nil il target del bombardiere
 									anyIdle = true 													-- Forziamo lo stato Idle per fargli cercare un nuovo target subito
 								end
 							end

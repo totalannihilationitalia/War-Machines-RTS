@@ -1102,8 +1102,8 @@ end
 					if GG.WMRTS_Levels then GG.WMRTS_Levels[teamID] = 0 end
 					
 					local motivo = fallimentoFabbriche and "No Factories" or (fallimentoMetallo and "Low Metal" or "Low Energy")
-					Spring.Echo(string.char(255, 255, 0, 0) .."WMRTS_contrMngm_AI: Team " .. teamID .. " Critical Failure (" .. motivo .. ")! Reverting to Level 0.")
-					
+					Spring.Echo(string.char(255, 0, 0, 0))
+					Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Critical Failure (" .. motivo .. ")! Reverting to Level 0.")
 					currentLvl = 0 
 				end
 			end
@@ -1158,7 +1158,8 @@ end
 				teamLevels[teamID] = currentLvl + 1
 				if not GG.WMRTS_Levels then GG.WMRTS_Levels = {} end
 				GG.WMRTS_Levels[teamID] = teamLevels[teamID]
-				Spring.Echo(string.char(255, 0, 255, 0) .."WMRTS_contrMngm_AI: Team " .. teamID .. " Level Up -> " .. teamLevels[teamID])
+				Spring.Echo(string.char(0, 255, 0, 0))
+				Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Level Up -> " .. teamLevels[teamID])
 				return
 			end
 
