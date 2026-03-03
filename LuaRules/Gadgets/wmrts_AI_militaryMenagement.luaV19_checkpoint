@@ -24,9 +24,7 @@ end
 -- 26/02/2026 = V17, aggiunte unità NFA e AND
 -- 27/02/2026 = road to V18, sistemo un bug inerente alla modalità difesa, invece di attaccare direttamente una unità, si spostano le unità verso il bersaglio in modalità fight.
 -- 01/03/2026 = V18, risolto il problema delle unità orfane durante il cambio di stato "attacco -> difesa_leggera"
--- 02/03/2026 = road to V19 - bombardieri non attaccano i target fuori dal radar o nella nebbia. Modificato codice per far si che attacchino direttamente a x, y e z del target uID, monitorandone costantemente se vivo o morto
--- 03/03/2026 = road to V20 - alcune fabbriche rimangono in standby e non producono più, variata logica per renderle libere
--- 03/03/2026 = inserita gestione "recupero orfani", ossia quelle unità che per qualche ragione di guerra (fabbrica distrutta, sotto attacco ecc) non riesce ad inserirsi in un gruppo e quindi non riceverebbe ordini
+-- 02/03/2025 = road to V19 - bombardieri non attaccano i target fuori dal radar o nella nebbia. Modificato codice per far si che attacchino direttamente a x, y e z del target uID, monitorandone costantemente se vivo o morto
 
 -- to do LIST ################################
 -- includere i radar nelle costruzioni!!
@@ -424,20 +422,6 @@ local SQUAD_TEMPLATES = {
 		units = { "warhammer", "warhammer", "icuraz","icuraz" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},		
--- icufff	
-	["ICU_icufff_medium_patrol_1"] = {
-		units = { "demr", "orcl", "cirr","cirr" }, 
-		type = "air_toground" 
-	},		
-	["ICU_icufff_medium_patrol_2"] = {
-		units = { "demr" }, 
-		type = "air_toground" 
-	},		
-	["ICU_icufff_medium_patrol_3"] = {
-		units = { "demr", "demr" }, 
-		type = "air_toground" 
-	},			
-		
 ---------------
 -- NFA gruppi creati per il lvl 5+ -------- 
 ---------------
@@ -555,19 +539,6 @@ local SQUAD_TEMPLATES = {
 	["NFA_corgant_medium_patrol_6"] = {
 		units = { "gorg" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
-	},		
--- nfafff
-	["NFA_nfafff_medium_patrol_1"] = {
-		units = { "ostr", "odyc", "taln","taln" }, 
-		type = "air_toground" 
-	},		
-	["NFA_nfafff_medium_patrol_2"] = {
-		units = { "ostr" }, 
-		type = "air_toground" 
-	},		
-	["NFA_nfafff_medium_patrol_3"] = {
-		units = { "ostr", "ostr" }, 
-		type = "air_toground" 
 	},			
 ---------------
 -- AND gruppi creati per il lvl 5+ -------- 
@@ -736,7 +707,6 @@ local function GetConfigPerLivello(livello) -- Questa funzione restituisce, per 
             ["armaap"]  = { "ICU_armaap_medium_patrol_1", "ICU_armaap_medium_patrol_2","ICU_armaap_air_bomber_1","ICU_armaap_air_bomber_2", "ICU_armaap_air_bomber_3" },		
             ["icugant"] = { "ICU_icugant_medium_patrol_1", "ICU_icugant_medium_patrol_2", "ICU_icugant_medium_patrol_3" },		
             ["armshltx"] = { "ICU_armshltx_medium_patrol_1", "ICU_armshltx_medium_patrol_2", "ICU_armshltx_medium_patrol_3", "ICU_armshltx_medium_patrol_4", "ICU_armshltx_medium_patrol_5" },		
-            ["icufff"]  = { "ICU_icufff_medium_patrol_1", "ICU_icufff_medium_patrol_2","ICU_icufff_medium_patrol_3" },				
             -- NFA --
             ["corlab"] = { "NFA_corlab_medium_patrol_1", "NFA_corlab_medium_patrol_2" },
             ["corvp"] = { "NFA_corvp_medium_patrol_1", "NFA_corvp_medium_patrol_2" },
@@ -745,7 +715,6 @@ local function GetConfigPerLivello(livello) -- Questa funzione restituisce, per 
             ["coravp"] = { "NFA_coravp_medium_patrol_1", "NFA_coravp_medium_patrol_2", "NFA_coravp_medium_patrol_3", "NFA_coravp_medium_patrol_4" },
             ["coraap"]  = { "NFA_coraap_medium_patrol_1", "NFA_coraap_medium_patrol_2","NFA_coraap_air_bomber_1","NFA_coraap_air_bomber_2", "NFA_coraap_air_bomber_3" },		
             ["corgant"] = { "NFA_corgant_medium_patrol_1", "NFA_corgant_medium_patrol_2", "NFA_corgant_medium_patrol_3", "NFA_corgant_medium_patrol_4", "NFA_corgant_medium_patrol_5", "NFA_corgant_medium_patrol_6" },					
-            ["nfafff"]  = { "NFA_nfafff_medium_patrol_1", "NFA_nfafff_medium_patrol_2","NFA_nfafff_medium_patrol_3" },					
             -- AND --
             ["andlab"] = { "AND_andlab_medium_patrol_1", "AND_andlab_medium_patrol_2" },
             ["andhp"] = { "AND_andhp_medium_patrol_1", "AND_andhp_medium_patrol_2" },
@@ -1181,29 +1150,9 @@ function gadget:UnitFinished(unitID, unitDefID, unitTeam)
             -- Se la squadra è già in attacco, l'unità si muoverà verso il target 
             -- non appena finisce il MOVE (grazie al check Idle nel GameFrame)
         end
-    else         -- altrimenti l'unità rimane orfana (vuoi per un attacco subito, la fabbrica distrutta ecc)
-        Spring.Echo("--- AI WARNING: Unità " .. unitName .. " (ID:" .. unitID .. ") è rimasta orfana. Cat:" .. tostring(unitCat)) -- loggo il fatto che rimane orfana
-		-- ora tento di recuperarla
-        local unitCat = GetUnitCategoryFromDB(unitID)
-        local foundSquad = false
-        
-        for sID, sData in pairs(squads) do
-            if sData.myTeam == unitTeam and sData.type == unitCat then
-                table.insert(sData.units, unitID)
-                foundSquad = true
-                Spring.Echo("--- AI RECOVERY: Unità " .. unitName .. " orfana recuperata in squadra " .. sID)
-                break
-            end
-        end
-        
-        if not foundSquad then
-            -- Se proprio non c'è una squadra, mandala almeno verso il centro base
-            local bp = teamBasePos[unitTeam]
-            if bp then
-                Spring.GiveOrderToUnit(unitID, CMD.FIGHT, {bp.x, bp.y, bp.z}, {})
-                Spring.Echo("--- AI WARNING: Unità " .. unitName .. " totalmente isolata. Mandata in base.") -- ### gestirla all'attacco ####
-            end
-        end
+    else
+        -- Questo log ti dirà se il problema persiste
+        Spring.Echo("--- AI WARNING: Unità " .. unitName .. " (ID:" .. unitID .. ") orfana. Cat:" .. tostring(unitCat))
     end
 end
 
@@ -1254,14 +1203,14 @@ for fID, fData in pairs(factories) do
         
         if fData.squadID and squads[fData.squadID] then
             local sData = squads[fData.squadID]
-            local factoryHasFinished = (qSize == 0 and not isBuilding)
+            -- La fabbrica resta occupata finché la squadra non è piena OPPURE finché non è passato il timeout
             local isSquadFull = #sData.units >= sData.targetSize
             local isTimeout = (Spring.GetGameSeconds() - sData.startTime) > SQUAD_TIMEOUT_SECONDS
--- Se la coda è vuota e la fabbrica non sta lavorando, significa che ha finito il suo compito, anche se la squadra non è piena.
-            if not factoryHasFinished and not isSquadFull and not isTimeout then
-                isLocked = true			-- blocca la fabbrica, non riceverà ulteriori ordini di costruzine
+
+            if (qSize > 0) or isBuilding or (not isSquadFull and not isTimeout) then
+                isLocked = true
             else
-                fData.squadID = nil 	-- altrimenti isLocked rimane falsa e quindi la fabbrica "sbloccata" -> riceverà ordini di costruzione
+                fData.squadID = nil -- Ora la rilascia solo quando è davvero finita
             end
         end
 

@@ -11,6 +11,9 @@ function gadget:GetInfo()
 end
 -- 23/02/2026 V17	- introdotta la tabella esterna "WMRTS_AI_mission_db.lua" Questo gadget utilizza le unità di type = "strategicshield" e la relativa opzione "shieldRange" 
 -- 23/02/2026		- l'artiglieria "LRA" non colpisce bersagli vicini alle unità di tipo "strategicshield" entro un certo raggio "shieldRange"
+-- to do
+-- aggiornare i bersagli dei LRA, se attualmente viene assegnato un target ground (unità mobile) al LRA viene assegnata xyz iniziale dell'unità e i cannoni sparano continuamente a quelle coordinate fino a che l'unità muore.
+-- fare una funzione che aggiorna le coordinate della tabell artilleryTargets = {} che viene chiamata ogni x secondi: in questa tabella, se cannone LRA ID xxx ha un target YYY e se sono entrambi vivi -> aggiorna x,y,z target + give attack order a nuove coordinate dello stesso bersaglio
 
 if (not gadgetHandler:IsSyncedCode()) then return end
 

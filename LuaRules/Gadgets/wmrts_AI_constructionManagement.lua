@@ -393,7 +393,7 @@ nanotower o costruttori aiutanti???
 		},		-- end livello  [n]		
 		[12] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 9,								
-			fattoreVariazioneRaggio = 6,						
+			fattoreVariazioneRaggio = 7,						
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "upgrade",				
 			requisiti = {			
@@ -1276,7 +1276,7 @@ end
 								elseif not capableFound then
 --									Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - ERRORE COSTRUTTORE: " .. totalFree .. " costruttori liberi, ma NESSUNO sa costruire " .. unitName)
 								else
---									Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - SPAZIO PIENO: Costruttori pronti, ma non trovo una posizione valida (SafePos) per " .. unitName)
+									Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - SPAZIO PIENO: Costruttori pronti, ma non trovo una posizione valida (SafePos) per " .. unitName)
 								end
 							end
 						-- CASO B: È un UNITA' MOBILE COSTRUTTRICE CHE RICHIEDE UNA FABBRICA
