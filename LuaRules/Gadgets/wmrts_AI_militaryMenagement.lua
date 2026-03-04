@@ -768,16 +768,36 @@ local SQUAD_TIMEOUT_SECONDS = 600 -- questo timeout definisce i secondi di attes
 --------------------------------------------------------------------------------
 
 local aiTeamIDs = {}      
-local factories = {}      
-local squads = {}     
+local factories = {}   		
+-- Esempio contenuto:
+-- factories[fID] = { 
+--    inUso = false, 
+--    unitName = "armap", 
+--    nProgressivo = 0, 
+--    squadType = "air_toair", 
+--    bucket = {} -- Qui finiscono gli ID delle unità mentre vengono create
+-- }
+local squads = {}     		-- [sID] = { units = {}, targetSize, state, type, myTeam, etc }
 local basePoint = {}		-- Tabella: [teamID] = coordinate del punto base per ogni singolo team (0, 1, 2...)
 local baseRadius = {}		-- Tabella: [teamID] = raggio di difesa della base per ogni singolo team (0, 1, 2...)
 local warStatus = {}		-- Tabella: [teamID] = stato di guerra  per ogni singolo team (0, 1, 2...), può essere "attacco", "difesa_leggera", "difesa_pesante". Si veda "wmrts_AI_constructionManagement.lua" per maggiori dettagli        
 local bomberTargets = {} 	-- Tabella per memorizzare quale bombardiere sta puntando quale unità Memorizza -> [unitID_Bombardiere] = targetID_Nemico
 
 --------------------------------------------------------------------------------
--- 4) LOGICA DI TARGETING BASATA SU DATABASE
+-- 4) FUNZIONI HELPER
 --------------------------------------------------------------------------------
+
+-- Funzione per restituire true se l'unità è segnata come ignore nel DB WMRTS_AI_mission_db.lua (ignore = true). sono ignore = true tutte le unità che non devono essere gestite in questo gadget (come gruppi da mandare all'attacco)
+local function IsUnitIgnored(unitID)
+	local uDefID = Spring.GetUnitDefID(unitID)				-- definisci localmente uDefID
+	if not uDefID then return false end						-- se uDefID non è presente restituisci false (usato per altre logiche)
+	local unitName = UnitDefs[uDefID].name					-- altrimenti prosegui e definisci localmente unitName
+	
+	if UNIT_DB[unitName] and UNIT_DB[unitName].ignore then	-- se nel database è presente l'unità unitName, e la voce "ignore" di quella unità = true allora...
+		return true											-- ...restituisci true (usato poi per altre logiche)
+	end
+	return false											-- ...altrimenti restituisci false (usato poi per altre logiche)
+end
 
 -- Funzione per ottenere la categoria dal NOSTRO database
 local function GetUnitCategoryFromDB(unitID)
@@ -791,9 +811,6 @@ local function GetUnitCategoryFromDB(unitID)
 	return "unknown" 							-- altrimenti se niente di cui sopra è avvenuto, restituisci "unknown"
 end
 
---------------------------------------------------------------------------------
--- 4b) LOGICA DI TARGETING LIMITATA AL RAGGIO DELLA BASE
---------------------------------------------------------------------------------
 -- Funzione per trovare tutte le unità all'interno e all'esterno del raggio della base
 local function SplitUnitsByRadius(unitList, bPos, bRad)
     local unitsInside = {}
@@ -1073,16 +1090,30 @@ local function GiveAttackOrder(unitID, targetData, squadType)
 end
 
 --------------------------------------------------------------------------------
--- 5) GESTIONE ORDINI E GADGET CORE 
+-- 5) FUNZIONI SPRING
 --------------------------------------------------------------------------------
--- Questa funzione serve ad evitare che l'AI "rubi" o interferisca con unità non sue (ad esempio di altre AI), ci si assicura che le tabelle siano sempre pulite. In questo modo se spring dovesse riassegnare l'ID di una unità distrutta ad un altra squadra, il codice non lo utilizza come se fosse sua
-function gadget:UnitDestroyed(unitID, unitDefID, unitTeam)
-    -- 1. Se muore una fabbrica, cancellala subito dalle nostre liste
-    if factories[unitID] then
-        factories[unitID] = nil
-    end
+function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
+    if not aiTeamIDs[unitTeam] then return end
+    if IsUnitIgnored(unitID) then return end
 
-    -- 2. Se muore un'unità, rimuovila da qualsiasi squadra (squads) la stia usando
+    -- Se l'unità è prodotta da una nostra fabbrica
+    if builderID and factories[builderID] then
+        local fData = factories[builderID]
+        
+        -- Se la fabbrica è inUso, aggiungiamo l'ID al secchiello
+        if fData.inUso then
+            table.insert(fData.bucket, unitID)
+            local uName = UnitDefs[unitDefID].name
+            Spring.Echo(string.format("AI [Fabbrica %d]: Aggiunto %s al secchiello per il gruppo %d", builderID, uName, fData.nProgressivo))
+        end
+    end
+end
+
+-- unità distrutta -> rimuovila dalle tabelle
+function gadget:UnitDestroyed(unitID, unitDefID, unitTeam)
+    -- Se muore una fabbrica, cancellala subito dalle nostre liste
+    if factories[unitID] then factories[unitID] = nil end
+    -- Se muore un'unità, rimuovila da qualsiasi squadra (squads) la stia usando
     for sID, sData in pairs(squads) do
         for i = #sData.units, 1, -1 do
             if sData.units[i] == unitID then
@@ -1090,6 +1121,8 @@ function gadget:UnitDestroyed(unitID, unitDefID, unitTeam)
             end
         end
     end
+	-- Se muore il target di un bombardiere, eliminalo dalle nostre liste
+    if bomberTargets[unitID] then bomberTargets[unitID] = nil end
 end
 
 -- Come UnitDestroyed ma in caso di "cambio di proprietà" (es. se un'unità viene catturata)
@@ -1103,225 +1136,82 @@ function gadget:Initialize()
 		local assignedAI = Spring.GetTeamLuaAI(teamID)
 		if assignedAI and string.find(string.lower(assignedAI), string.lower(TARGET_AI_NAME)) then
 			aiTeamIDs[teamID] = true
-            teamLevels[teamID] = -1 						-- era 0, impostazione livello 0 per il team corrente (for... do...) 
-            teamConfigs[teamID] = GetConfigPerLivello(0)	-- impostazione livello 0 per il team corrente (for... do...) 
+            teamLevels[teamID] = 0 						
+            teamConfigs[teamID] = GetConfigPerLivello(0)	
+            
+            -- SCANNER PER FABBRICHE ESISTENTI
+            local teamUnits = Spring.GetTeamUnits(teamID)
+            for _, uID in ipairs(teamUnits) do
+                local uDefID = Spring.GetUnitDefID(uID)
+                local uName = UnitDefs[uDefID].name
+                if teamConfigs[teamID][uName] then
+                    factories[uID] = { 
+                        teamID = teamID, unitName = uName, inUso = false, 
+                        nProgressivo = 0, bucket = {}, squadType = "unknown" 
+                    }
+                end
+            end
 		end
 	end
 end
 
--- Funzione per restituire true se l'unità è segnata come ignore nel DB WMRTS_AI_mission_db.lua (ignore = true). sono ignore = true tutte le unità che non devono essere gestite in questo gadget (come gruppi da mandare all'attacco)
-local function IsUnitIgnored(unitID)
-	local uDefID = Spring.GetUnitDefID(unitID)				-- definisci localmente uDefID
-	if not uDefID then return false end						-- se uDefID non è presente restituisci false (usato per altre logiche)
-	local unitName = UnitDefs[uDefID].name					-- altrimenti prosegui e definisci localmente unitName
-	
-	if UNIT_DB[unitName] and UNIT_DB[unitName].ignore then	-- se nel database è presente l'unità unitName, e la voce "ignore" di quella unità = true allora...
-		return true											-- ...restituisci true (usato poi per altre logiche)
-	end
-	return false											-- ...altrimenti restituisci false (usato poi per altre logiche)
-end
-
+-- Funzione che avviene a completamento costruzione unità (L'unità è pronta (100%))
 function gadget:UnitFinished(unitID, unitDefID, unitTeam)
-    if not aiTeamIDs[unitTeam] then return end 
-    
+    if not aiTeamIDs[unitTeam] then return end
     if IsUnitIgnored(unitID) then return end
 
-    local unitDef = UnitDefs[unitDefID]
-    local unitName = unitDef.name
+    local unitName = UnitDefs[unitDefID].name
     local config = teamConfigs[unitTeam]
 
-    -- 1) Se è una fabbrica, registrala e esci
+    -- Se è una fabbrica, la registriamo con la NUOVA struttura
     if config and config[unitName] then 
-        factories[unitID] = { defName = unitName, squadID = nil, teamID = unitTeam }
+factories[unitID] = { 
+			teamID = unitTeam,
+			unitName = unitName,
+			inUso = false,
+			bucket = {},
+			nProgressivo = 0 }
         return
     end
 
-    -- 2) Ricerca della squadra migliore per l'unità
-    local bestFactoryID = nil
-    local nearestDist = 3000 -- era 700 Distanza generosa per coprire decolli e fabbriche grandi
-    local unitCat = GetUnitCategoryFromDB(unitID)
-    local isAirUnit = (unitCat == "air")
-
-    for fID, fData in pairs(factories) do
-        if fData.teamID == unitTeam then
-            local dist = Spring.GetUnitSeparation(unitID, fID)
-            
-            if dist and dist < nearestDist then
-                -- TENTATIVO A: La fabbrica ha ancora il puntatore alla squadra?
-                local sID = fData.squadID
-                
-                -- TENTATIVO B: Se il puntatore è sparito (bug del tempismo), 
-                -- cerchiamo tra le squadre una che appartenga a questa fabbrica
-                if not sID then
-                    for potentialSID, _ in pairs(squads) do
-                        if string.find(potentialSID, "_" .. fID) then
-                            sID = potentialSID
-                            break
-                        end
-                    end
-                end
-
-                -- Se abbiamo trovato una squadra (A o B), verifichiamo il tipo
-                if sID and squads[sID] then
-                    local squad = squads[sID]
-                    local squadType = squad.type or ""
-                    local isAirSquad = (string.find(squadType, "air") ~= nil)
-
-                    -- FILTRO INCROCIATO: Aria con Aria, Terra con Terra
-                    if (isAirSquad == isAirUnit) then
-                        nearestDist = dist
-                        bestFactoryID = fID
-                        -- Se troviamo la fabbrica esatta che ha sID, abbiamo finito
-                        if fData.squadID == sID then break end 
-                    end
-                end
-            end
-        end
-    end
-
-    -- 3) Associazione finale e ordine di movimento
-    if bestFactoryID then
-        local fData = factories[bestFactoryID]
-        -- Recuperiamo sID di nuovo per sicurezza
-        local sID = fData.squadID
-        if not sID then
-            for potentialSID, _ in pairs(squads) do
-                if string.find(potentialSID, "_" .. bestFactoryID) then
-                    sID = potentialSID
-                    break
-                end
-            end
-        end
-
-        if sID and squads[sID] then
-            local squad = squads[sID]
-            table.insert(squad.units, unitID)
-            
-            Spring.Echo(string.format("--- AI LOG [Team %d]: %s associato a squadra %s (ID: %s)", unitTeam, unitName, squad.type, sID))
-
-            -- ORDINE DI USCITA (Sempre, per evitare incastri)
-            local fX, _, fZ = Spring.GetUnitPosition(bestFactoryID)
-            local tx = fX + math.random(-250, 250)
-            local tz = fZ + math.random(300, 500)
-            local ty = Spring.GetGroundHeight(tx, tz)
-            Spring.GiveOrderToUnit(unitID, CMD.MOVE, {tx, ty, tz}, {})
-            
-            -- Se la squadra è già in attacco, l'unità si muoverà verso il target 
-            -- non appena finisce il MOVE (grazie al check Idle nel GameFrame)
-        end
-    else         -- altrimenti l'unità rimane orfana (vuoi per un attacco subito, la fabbrica distrutta ecc)
-        Spring.Echo("--- AI WARNING: Unità " .. unitName .. " (ID:" .. unitID .. ") è rimasta orfana. Cat:" .. tostring(unitCat)) -- loggo il fatto che rimane orfana
---[[
-		-- ora tento di recuperarla
-        local unitCat = GetUnitCategoryFromDB(unitID)
-        local foundSquad = false
-        
-        for sID, sData in pairs(squads) do
-            if sData.myTeam == unitTeam and sData.type == unitCat then
-                table.insert(sData.units, unitID)
-                foundSquad = true
-                Spring.Echo("--- AI RECOVERY: Unità " .. unitName .. " orfana recuperata in squadra " .. sID)
-                break
-            end
-        end
-        
-        if not foundSquad then
-            -- Se proprio non c'è una squadra, mandala almeno verso il centro base
-            local bp = basePoint[unitTeam]
-            if bp then
-                Spring.GiveOrderToUnit(unitID, CMD.FIGHT, {bp.x, bp.y, bp.z}, {})
-                Spring.Echo("--- AI WARNING: Unità " .. unitName .. " totalmente isolata. Mandata in base.") -- ### gestirla all'attacco ####
-            end
-        end
-]]--		
+    -- Se è un'unità militare, diamo l'ordine di uscita
+    local fX, fY, fZ = Spring.GetUnitPosition(unitID)
+    if fX then
+        local tx = fX + math.random(-200, 200)
+        local tz = fZ + math.random(250, 450)
+        local ty = Spring.GetGroundHeight(tx, tz)
+        Spring.GiveOrderToUnit(unitID, CMD.MOVE, {tx, ty, tz}, {"shift"})
     end
 end
 
 function gadget:GameFrame(n)
 
-    if (n % 30 == 0) then 		-- ogni secondo...
-        UpdateBomberTracking()	-- ...eseguiamo la funzione per aggiornare le coordinate x, y e z dei target dei bombardieri 
+    -- 1) UPDATE BOMBARDIERI (Ogni secondo)
+    if (n % 30 == 0) then 
+        UpdateBomberTracking() 
     end
-    if (n % 30 ~= 0) then return end  		-- una volta al secondo...
-	-- Controlla il livello della AI gestito dal gadget "constructionManagement"
-	for teamID, _ in pairs(aiTeamIDs) do
-		local nuovoLivello = (GG.WMRTS_Levels and GG.WMRTS_Levels[teamID]) or 0		-- Leggo il valore globale (se non esiste ancora, considero livello 0)
-        if teamLevels[teamID] ~= nuovoLivello then 								-- Se il livello del team è cambiato (o non è ancora inizializzato)
-            teamLevels[teamID] = nuovoLivello
-            teamConfigs[teamID] = GetConfigPerLivello(nuovoLivello)
-            Spring.Echo("WMRTS_militMngm_AI:: Team " .. teamID .. " si è allineato al livello " .. nuovoLivello)      
-        end
-	-- Controlla la posizione della base gestita dal gadget "constructionManagement" 
-        local newBP = GG.AI_BasePos and GG.AI_BasePos[teamID]
-        if newBP then
-            -- Se non esiste ancora una posizione locale, o se le coordinate sono cambiate
-            if not basePoint[teamID] or 
-               basePoint[teamID].x ~= newBP.x or 
-               basePoint[teamID].z ~= newBP.z then              
-               basePoint[teamID] = {x = newBP.x, y = newBP.y, z = newBP.z}
-               Spring.Echo(string.format("WMRTS_militMngm_AI:: Team %d BasePos: X=%.0f Z=%.0f", teamID, newBP.x, newBP.z))
-            end
-        end
-	-- Controlla il raggio di difersa della base gestito dal gadget "constructionManagement", servirà, in funzione dello stato di guerra, a mandare all'attacco le truppe o a difendere la base entro questo raggio
-		local newRadius = (GG.AI_RaggioDifesa and GG.AI_RaggioDifesa[teamID]) or 100 				-- imposto un raggio di default poi tanto si aggiorna automaticamente	
-        if baseRadius[teamID] ~= newRadius then 													-- Se il raggio di difesa del team è cambiato...
-            baseRadius[teamID] = newRadius
-            Spring.Echo("WMRTS_militMngm_AI:: Team " .. teamID .. " ha impostato il raggio della base a: " .. newRadius)
-        end		
-	-- Controlla lo stato di guerra gestito dal gadget "constructionManagement", servirà per mandare in attacco le truppe, difendere lievemente la base o difenderla pesantemente
-		local newWS = (GG.AI_StatoGuerra and GG.AI_StatoGuerra[teamID]) or "attacco" 		-- imposto l'attacco di default, poi tanto si aggiorna automaticamente
-        if warStatus[teamID] ~= newWS then 													-- se lo stato di guerra è cambiato...
-            warStatus[teamID] = newWS
-            Spring.Echo("WMRTS_militMngm_AI:: Team " .. teamID .. " ha impostato lo stato di guerra a: " .. newWS)
-        end			
-    end -- end ciclo for
 
-    -- GESTIONE FABBRICHE
-for fID, fData in pairs(factories) do
-    local qSize = Spring.GetCommandQueue(fID, 0)
-    
-    if qSize == nil then
-        factories[fID] = nil 
-    else        
-        local isBuilding = Spring.GetUnitIsBuilding(fID)
-        local isLocked = false
-        
-      if fData.squadID and squads[fData.squadID] then
-            local sData = squads[fData.squadID]
-            -- La fabbrica resta occupata finché la squadra non è piena OPPURE finché non è passato il timeout
-            local isSquadFull = #sData.units >= sData.targetSize
-            local isTimeout = (Spring.GetGameSeconds() - sData.startTime) > SQUAD_TIMEOUT_SECONDS
-
-            if (qSize > 0) or isBuilding or (not isSquadFull and not isTimeout) then
-                isLocked = true
-            else
-                fData.squadID = nil -- Ora la rilascia solo quando è davvero finita
-            end
-        end
-
-            if not isLocked and qSize == 0 and not isBuilding then
-                -- RECUPERO LA CONFIGURAZIONE SPECIFICA DI QUEL TEAM
-                local configDelTeam = teamConfigs[fData.teamID]
-                if configDelTeam then
-                    local options = configDelTeam[fData.defName]
-                    if options then
-                        local templateName = options[math.random(1, #options)]
-                        local template = SQUAD_TEMPLATES[templateName]
-                        if template then
-                            local newSquadID = n .. "_" .. fID
-                            squads[newSquadID] = {
-                                units = {},
-                                targetSize = #template.units,
-                                state = "gathering",							-- imposta lo stato di gathering, ossia rimani in attesa di raggruppamento (in questa fase l'unità non riceve ordini di attacco, ma rimane immobile vicina a dove è stata costruita)
-                                startTime = Spring.GetGameSeconds(),
-                                myTeam = fData.teamID,
-                                attackTarget = nil,
-                                type = template.type 
-                            }
-                            fData.squadID = newSquadID
-                            for _, uName in ipairs(template.units) do
-                                local uDef = UnitDefNames[uName]
-                                if uDef then Spring.GiveOrderToUnit(fID, -uDef.id, {}, {}) end
+    -- 2) MONITORAGGIO ORFANI (Ogni 10 secondi) - Soccorso Stradale
+    if (n % 300 == 0) then
+        for tID, _ in pairs(aiTeamIDs) do
+            local allUnits = Spring.GetTeamUnits(tID)
+            if allUnits then
+                for _, uID in ipairs(allUnits) do
+                    if not IsUnitIgnored(uID) then
+                        local hasSquad = false
+                        for sID, sData in pairs(squads) do
+                            if sData.myTeam == tID then
+                                for _, suID in ipairs(sData.units) do
+                                    if suID == uID then hasSquad = true; break end
+                                end
+                            end
+                            if hasSquad then break end
+                        end
+                        if not hasSquad then
+                            local uCat = GetUnitCategoryFromDB(uID)
+                            if uCat == "air" or uCat == "ground" or uCat == "hover" then
+                                local target = GetSmartEnemyTarget(tID, uCat)
+                                if target then Spring.GiveOrderToUnit(uID, CMD.FIGHT, {target.x, target.y, target.z}, {}) end
                             end
                         end
                     end
@@ -1330,119 +1220,121 @@ for fID, fData in pairs(factories) do
         end
     end
 
-	-- GESTIONE SQUADRE, Questa sezione è il "cervello operativo" che decide cosa devono fare i gruppi di unità una volta usciti dalle fabbriche. Gestisce il ciclo di vita di una squadra, dalla sua nascita fino alla sua distruzione.
-	-- Il codice divide le squadre in due stati principali: gathering (raduno) e attacking_monitor (attacco e monitoraggio).
-	for sID, sData in pairs(squads) do	
-		local teamID = sData.myTeam -- Definiamo teamID 
-	-- gathering in modalità attacco: 
-	-- Condizione: Controlla se il numero di unità attuali (#sData.units) ha raggiunto la dimensione prevista (targetSize) oppure se il Timeout è scaduto: Se la fabbrica viene distrutta o rallenta, il SQUAD_TIMEOUT_SECONDS (10 minuti nel tuo codice) forza la squadra a partire anche se incompleta, per evitare che le unità restino ferme in base per sempre.
-	-- Azione: Appena la squadra è pronta, cambia lo stato da "gathering" ad "attacking_monitor" a cerca un bersaglio per la modalità attacco ( con la funzione GetSmartEnemyTarget )
+    -- Esci se non è un frame di calcolo (ottimizzazione)
+    if (n % 30 ~= 0) then return end
 
-			if sData.state == "gathering" then																
-				if warStatus[teamID] == "attacco" then
-					if #sData.units >= sData.targetSize or (Spring.GetGameSeconds() - sData.startTime) > SQUAD_TIMEOUT_SECONDS then -- CONTROLLO: se la squadra completa di tutte le unità che lo compongono, oppure è passato troppo tempo (fabbrica distrutta)
-						sData.state = "attacking_monitor" 																			-- Cambia stato in "attacking_monitor", cioè da ora ricevi gli ordini di attacco
-						sData.attackTarget = GetSmartEnemyTarget(sData.myTeam, sData.type)											-- Trova il primo bersaglio
---						for _, uID in ipairs(sData.units) do																		-- Si da subito un ORDINE INIZIALE: Invia tutte le unità della squadra al bersaglio
---							if Spring.ValidUnitID(uID) then GiveAttackOrder(uID, sData.attackTarget) end
---						end
-					end
-	-- gathering in modalità difesa leggera o pesante: 		
-	-- Condizione: controlla tutti i gruppi composti da una o + unità (stato di emergenza)
-				elseif warStatus[teamID] == "difesa_leggera" or warStatus[teamID] == "difesa_pesante"  then -- se siamo in modalità difesa leggera o pesante
-					if #sData.units >= 1 then 				 												-- CONTROLLO: La squadrà è composta da almeno una unità?
-						sData.state = "attacking_monitor" 													--- Cambia stato in "attacking_monitor", cioè da ora ricevi gli ordini di attacco. L'unità appena prodotta che riceverà l'ingaggio, farà sempre parte del gruppo completato o da completare.
-						sData.attackTarget = GetSmartEnemyTargetInBaseRadious(sData.myTeam, sData.type)		-- Trova il primo bersaglio all'interno del raggio della base, per difendere
---						for _, uID in ipairs(sData.units) do												-- Si da subito un ORDINE INIZIALE: Invia tutte le unità della squadra al bersaglio
---							if Spring.ValidUnitID(uID) then GiveAttackOrder(uID, sData.attackTarget) end
---						end
-					end			
-				end
-	-- attacking_monitor
-	-- Ottimizzazione (n % 90): Non controlla ogni istante (sarebbe pesante per la CPU), ma ogni 3 secondi.
-	-- Pulizia Lista: Cicla la lista delle unità all'indietro (da #sData.units a 1). Questo è fondamentale in programmazione: se rimuovi un elemento da una lista mentre la scorri in avanti, salteresti l'elemento successivo.
-	-- Controllo Idle: Verifica se l'unità è "disoccupata" (CommandQueue == 0). Se ha finito di distruggere il suo bersaglio, diventerà Idle.	
-		elseif sData.state == "attacking_monitor" then
-			if n % 90 == 0 then			-- Esegue il controllo ogni 90 frame (circa ogni 3 secondi)
-				local anyAlive = false	-- Controlla che il gruppo non sia stato completamente distrutto.
-				local anyIdle = false	-- Indica se almeno una unità della squadra è ferma
-				for i = #sData.units, 1, -1 do	-- CICLO DI PULIZIA: Rimuove i morti dalla tabella della squadra
-					local uID = sData.units[i]
-					if Spring.ValidUnitID(uID) and not Spring.GetUnitIsDead(uID) then
-						anyAlive = true
-							----- LOGICA PER BOMBARDIERI ---
-						if sData.type == "air_bomber" or sData.type == "air_bomber_strategic" then	-- se l'unità è del tipo "air_bomber" o "air_bomber_strategic"
-							local tID = bomberTargets[uID]											-- assegna alla variabile tID il target dall tabella
-							if tID then																-- se il berstaglio tID è stato già assegnato...
-								if not Spring.ValidUnitID(tID) or Spring.GetUnitIsDead(tID) then 	-- ... e se il bersaglio tID è morto o non più valido... 
---									Spring.GiveOrderToUnit(uID, CMD.STOP, {}, {})					-- ######Questo controllo è corretto, ma viene fatto anche da UpdateBomberTracking. Non crea bug, è solo un po' ridondante, ma puoi lasciarlo per sicurezza (doppio controllo).... allora ferma il bombardiere (cosi prenderà successivi ordini perchè idle) #### valutare questa parte
---									bomberTargets[uID] = nil										-- ######Questo controllo è corretto, ma viene fatto anche da UpdateBomberTracking. Non crea bug, è solo un po' ridondante, ma puoi lasciarlo per sicurezza (doppio controllo).rendi nil il target del bombardiere
-									anyIdle = true 													-- Forziamo lo stato Idle per fargli cercare un nuovo target subito
-								end
-							end
-						end
-							-----------------------------------
-						if Spring.GetCommandQueue(uID, 0) == 0 then anyIdle = true end	-- Controlla se l'unità ha finito gli ordini e ne imposti anyIdle true(è ferma/idle)
-					else
-						table.remove(sData.units, i)		-- Rimuove l'unità morta dalla lista
-					end
-				end
-	-- Logica di ri-puntamento (Re-targeting)
-	-- Nuovo Ordine: Se almeno un'unità della squadra è viva (anyAlive) e almeno una è ferma (anyIdle) e soprattutto se ogni singola unità è IDLE (Spring.GetCommandQueue(uID, 0) == 0), l'AI ricalcola il loro bersaglio (targetAttack/targetDefence) e lo assegna a seconda dello stato di guerra
-	-- Efficienza: L'ordine di attacco viene ridato solo alle unità ferme (Spring.GetCommandQueue(uID, 0) == 0) e o dentro/fuori dal raggio della base (ipairs(insideUnits)/ipairs(outsideUnits)), a seconda dello stato di guerra. 
-	-- Cancellazione Squadra: Se anyAlive è falso, significa che l'intera squadra è stata annientata. Il codice rimuove l'intera squadra (squads[sID] = nil) per liberare memoria.	
-				if anyAlive and anyIdle then
-					local targetAttack = nil															-- imposto i targetAttack di attacco
-					local targetDefence = nil															-- imposto i target di difesa
-					targetAttack = GetSmartEnemyTarget(sData.myTeam, sData.type)						-- ... cerca tutti i target in tutta la mappa e salvali in targetAttack
-					targetDefence = GetSmartEnemyTargetInBaseRadious(sData.myTeam, sData.type)			-- ... cerca tutti i target all'interno del raggio della base e salvali in targetDefence
-					local bPos = basePoint[teamID]
-					local bRad = baseRadius[teamID]					
-					local insideUnits, outsideUnits = SplitUnitsByRadius(sData.units, basePoint[teamID], baseRadius[teamID])	-- creo la lista insideUnits e outsideUnits, liste di unità rispettivamente dentro il raggio della base e fuori dal raggio della base
-					-- attacco
-					if warStatus[teamID] == "attacco" then										-- a) in modalità attacco...
-						for _, uID in ipairs(sData.units) do									-- esegui un ciclo for su tutte le unità presenti sulla mappa...
-							if Spring.GetCommandQueue(uID, 0) == 0 then							-- Controllo ogni singola unità, e, se è ferma (Idle)...  ##### verificare qui se dividere tra attacco, difesa leggera o difesa pesante (magari nella difesa pesante fare in modo che le unità tornino a prescindere che siano idle???) ##### molix
-								GiveAttackOrder(uID, targetAttack, sData.type)					-- ...invia l'ordine alle singole unità tramite la funzione "GiveAttackOrder")
-							end
-						end -- ciclo for
-					-- difesa_leggera						
-					elseif 	warStatus[teamID] == "difesa_leggera" then							-- b) in modalità difesa leggera...
-						for _, uID in ipairs(insideUnits) do									-- cicla e trova tutte le unità all'interno del raggio della base
---							if Spring.GetCommandQueue(uID, 0) == 0 then							-- Controllo ogni singola unità, se è ferma (Idle)...  ##### verificare qui se dividere tra attacco, difesa leggera o difesa pesante (magari nella difesa pesante fare in modo che le unità tornino a prescindere che siano idle???) ##### molix	
-								if targetDefence then											-- Se è presente un target in difesa...
-								--	GiveAttackOrder(uID, {x = targetDefence.x, y = targetDefence.y, z = targetDefence.z}) -- Passiamo una tabella che ha SOLO x, y, z. L'ID viene ignorato.
-									GiveAttackOrder(uID, targetDefence, sData.type)				-- attacca il targetDefence (difesa attiva)
-								else															-- altrimenti...
-									GiveAttackOrder(uID, targetAttack, sData.type)				-- passa all'attacco a prescindere -- ### valutare se spostare le unità al centro della base e lasciare che si fermino, per ricevere un ulteriore ordine
-								end
---							end
-						end			
-						for _, uID in ipairs(outsideUnits) do									-- cicla e trova tutte le unità all'esterno del raggio della base
-							if Spring.GetCommandQueue(uID, 0) == 0 then							-- Controllo ogni singola unità, se è ferma (Idle)...  ##### verificare qui se dividere tra attacco, difesa leggera o difesa pesante (magari nella difesa pesante fare in modo che le unità tornino a prescindere che siano idle???) ##### molix	
-								GiveAttackOrder(uID, targetAttack, sData.type)					-- attacca il targetDefence (difesa attiva)
-							end
-						end					
-					-- difesa_pesante
-					elseif warStatus[teamID] == "difesa_pesante" then							-- c) in modalità difesa pesante...
-						for _, uID in ipairs(insideUnits) do									-- cicla e trova tutte le unità all'interno del raggio della base
-							if Spring.GetCommandQueue(uID, 0) == 0 then		
-								if targetDefence then
-									GiveAttackOrder(uID, targetDefence, sData.type)				-- attacca il target di difesa, se esiste... (difesa attiva)
-								else 
-									GiveAttackOrder(uID, targetAttack, sData.type)				-- ...altrimenti attacca un target di attacco
-								end -- end se esiste targetDefence
-							end
-						end	-- end ciclo for (unità interno base)		
-						for _, uID in ipairs(outsideUnits) do									-- cicla e trova tutte le unità all'esterno del raggio della base
-							if Spring.GetCommandQueue(uID, 0) == 0 then							-- Controllo ogni singola unità, se è ferma (Idle)...  ##### verificare qui se dividere tra attacco, difesa leggera o difesa pesante (magari nella difesa pesante fare in modo che le unità tornino a prescindere che siano idle???) ##### molix
-								GiveAttackOrder(uID, targetDefence, sData.type)					-- attacca il target (difesa attiva)							
-							end
-						end	-- end ciclo for (unità esterno base)
-					end -- warStatus	
-				end		-- end anyAlive and anyIdle		
-				if not anyAlive then squads[sID] = nil end										-- Se sono tutti morti, elimina la squadra dal database globale
-			end -- end anylive
-		end
-	end	-- end for gestione squadre
-end	-- end funzione
+    -- 3) SINCRONIZZAZIONE STATO AI (Livelli, Base, Guerra)
+    for teamID, _ in pairs(aiTeamIDs) do
+        -- Livello
+        local nuovoLivello = (GG.WMRTS_Levels and GG.WMRTS_Levels[teamID]) or 0
+        if teamLevels[teamID] ~= nuovoLivello then 
+            teamLevels[teamID] = nuovoLivello
+            teamConfigs[teamID] = GetConfigPerLivello(nuovoLivello)
+        end
+        -- Posizione Base
+        local newBP = GG.AI_BasePos and GG.AI_BasePos[teamID]
+        if newBP then basePoint[teamID] = {x = newBP.x, y = newBP.y, z = newBP.z} end
+        -- Raggio Base
+        baseRadius[teamID] = (GG.AI_RaggioDifesa and GG.AI_RaggioDifesa[teamID]) or 2000
+        -- Stato Guerra
+        warStatus[teamID] = (GG.AI_StatoGuerra and GG.AI_StatoGuerra[teamID]) or "attacco"
+    end
+
+    -- 4) GESTIONE FABBRICHE (Logica "Secchiello" proposta da te)
+    for fID, fData in pairs(factories) do
+        local qSize = Spring.GetCommandQueue(fID, 0) or 0
+        local isBuilding = Spring.GetUnitIsBuilding(fID)
+        
+        -- STATO A: Fabbrica IDLE e NON in uso -> Inizia nuovo gruppo
+        if qSize == 0 and not isBuilding and not fData.inUso then
+            local config = teamConfigs[fData.teamID]
+            if config and config[fData.unitName] then
+                local options = config[fData.unitName]
+                local templateName = options[math.random(1, #options)]
+                local template = SQUAD_TEMPLATES[templateName]
+                
+                if template then
+                    fData.inUso = true
+                    fData.squadType = template.type
+                    fData.nProgressivo = fData.nProgressivo + 1
+                    fData.bucket = {} 
+                    
+                    for i, uName in ipairs(template.units) do
+                        local uDef = UnitDefNames[uName]
+                        if uDef then
+                            local cmdTag = (i == 1) and {} or {"shift"}
+                            Spring.GiveOrderToUnit(fID, -uDef.id, {}, cmdTag)
+                        end
+                    end
+                    Spring.Echo(string.format("AI [Fabbrica %d]: Avvio produzione gruppo %s", fID, templateName))
+                end
+            end
+
+        -- STATO B: Fabbrica IDLE ma RISULTA IN USO -> Scarica Secchiello e Crea Squadra!
+        elseif qSize == 0 and not isBuilding and fData.inUso then
+            if #fData.bucket > 0 then
+                local newSquadID = fID .. "_" .. fData.nProgressivo
+                squads[newSquadID] = {
+                    units = fData.bucket,
+                    state = "attacking_monitor", -- Le unità sono già tutte finite, partono subito
+                    myTeam = fData.teamID,
+                    type = fData.squadType,
+                    startTime = Spring.GetGameSeconds()
+                }
+                Spring.Echo(string.format("AI [Gruppo %s]: Gruppo pronto (%d unità). All'attacco!", newSquadID, #fData.bucket))
+                
+                -- Primo ordine d'attacco immediato
+                local target = GetSmartEnemyTarget(fData.teamID, fData.squadType)
+                for _, uID in ipairs(fData.bucket) do
+                    if Spring.ValidUnitID(uID) then GiveAttackOrder(uID, target, fData.squadType) end
+                end
+            end
+            fData.inUso = false
+            fData.bucket = {}
+        end
+    end
+
+    -- 5) GESTIONE SQUADRE (Monitoraggio e Re-targeting)
+    -- Eseguiamo questo ogni 90 frame (3 secondi) per non pesare sulla CPU
+    if n % 90 == 0 then
+        for sID, sData in pairs(squads) do
+            local anyAlive = false
+            local anyIdle = false
+            local teamID = sData.myTeam
+
+            -- Pulizia morti e check Idle
+            for i = #sData.units, 1, -1 do
+                local uID = sData.units[i]
+                if Spring.ValidUnitID(uID) and not Spring.GetUnitIsDead(uID) then
+                    anyAlive = true
+                    if Spring.GetCommandQueue(uID, 0) == 0 then anyIdle = true end
+                else
+                    table.remove(sData.units, i)
+                end
+            end
+
+            if anyAlive then
+                if anyIdle then
+                    local targetAttack = GetSmartEnemyTarget(teamID, sData.type)
+                    local targetDefence = GetSmartEnemyTargetInBaseRadious(teamID, sData.type)
+                    local insideUnits, outsideUnits = SplitUnitsByRadius(sData.units, basePoint[teamID], baseRadius[teamID])
+                    
+                    -- Logica Attacco/Difesa
+                    if warStatus[teamID] == "attacco" then
+                        for _, uID in ipairs(sData.units) do
+                            if Spring.GetCommandQueue(uID, 0) == 0 then GiveAttackOrder(uID, targetAttack, sData.type) end
+                        end
+                    elseif warStatus[teamID] == "difesa_leggera" or warStatus[teamID] == "difesa_pesante" then
+                        local target = targetDefence or targetAttack
+                        for _, uID in ipairs(sData.units) do
+                            if Spring.GetCommandQueue(uID, 0) == 0 then GiveAttackOrder(uID, target, sData.type) end
+                        end
+                    end
+                end
+            else
+                -- Se sono tutti morti, elimina la squadra
+                squads[sID] = nil
+            end
+        end
+    end
+end -- Fine funzione GameFrame
