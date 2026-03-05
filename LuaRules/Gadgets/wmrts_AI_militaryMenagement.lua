@@ -1095,7 +1095,9 @@ end
 --------------------------------------------------------------------------------
 function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
     if not aiTeamIDs[unitTeam] then return end
-    if IsUnitIgnored(unitID) then return end
+    if IsUnitIgnored(unitID) then 
+	Spring.Echo("Ignoro l'unità costruttrice dalla gestione dei gruppi")
+	return end
 
     -- Se l'unità è prodotta da una nostra fabbrica
     if builderID and factories[builderID] then
@@ -1181,7 +1183,7 @@ factories[unitID] = {
         local tx = fX + math.random(-200, 200)
         local tz = fZ + math.random(250, 450)
         local ty = Spring.GetGroundHeight(tx, tz)
-        Spring.GiveOrderToUnit(unitID, CMD.MOVE, {tx, ty, tz}, {"shift"})
+        Spring.GiveOrderToUnit(unitID, CMD.MOVE, {tx, ty, tz}, {})	-- elimino lo shift, cosi l'unità di ferma e al prossimo ciclo prende un ordine
     end
 end
 
@@ -1191,7 +1193,7 @@ function gadget:GameFrame(n)
     if (n % 30 == 0) then 
         UpdateBomberTracking() 
     end
-
+--[[
     -- 2) MONITORAGGIO ORFANI (Ogni 10 secondi) - Soccorso Stradale
     if (n % 300 == 0) then
         for tID, _ in pairs(aiTeamIDs) do
@@ -1220,7 +1222,7 @@ function gadget:GameFrame(n)
             end
         end
     end
-
+]]--
     -- Esci se non è un frame di calcolo (ottimizzazione)
     if (n % 30 ~= 0) then return end
 
@@ -1241,7 +1243,7 @@ function gadget:GameFrame(n)
         warStatus[teamID] = (GG.AI_StatoGuerra and GG.AI_StatoGuerra[teamID]) or "attacco"
     end
 
-    -- 4) GESTIONE FABBRICHE (Logica "Secchiello" proposta da te)
+    -- 4) GESTIONE FABBRICHE 
     for fID, fData in pairs(factories) do
         local qSize = Spring.GetCommandQueue(fID, 0) or 0
         local isBuilding = Spring.GetUnitIsBuilding(fID)
@@ -1259,14 +1261,17 @@ function gadget:GameFrame(n)
                     fData.squadType = template.type
                     fData.nProgressivo = fData.nProgressivo + 1
                     fData.bucket = {} 
-                    fData.groupSize = #template.units -- la variabile groupsize = quante entità ci sono nel gruuppo
+                    fData.groupSize = #template.units 									-- la variabile groupsize = quante entità ci sono nel gruuppo (in lua # restituisce il numero di entità nella tabella)
 
-                    for i, uName in ipairs(template.units) do
-                        local uDef = UnitDefNames[uName]
-                        if uDef then
-                            local cmdTag = (i == 1) and {} or {"shift"}
-                            Spring.GiveOrderToUnit(fID, -uDef.id, {}, cmdTag)
-                        end
+                    for i, uName in ipairs(template.units) do							-- Avvia un loop da ripetere i volte in base a quante unità ci sono nel tamplate (nel gruppo che ho scelto) -- ipairs(template.units): Prende la lista delle unità (es. {"icupatroller", "icupatroller", "icurock", "icurock"}); i: È l'indice del ciclo (1, 2, 3, 4); uName: È il nome dell'unità in quel momento (es. al primo giro è "icupatroller").
+                        local uDef = UnitDefNames[uName]								-- per ogni ciclo assegna uDef al nome dell'unità
+                        if uDef then													-- se esiste...
+--                            local cmdTag = (i == 1) and {} or {"shift"}					-- ... a) assegna la variabile cmdTag = ""  ???? che vuol dire?? o a "shift"
+							Spring.Echo("AI sta ordinando " .. uName .. " (ID: " .. uDef.id .. ") alla fabbrica " .. fID)							
+                            Spring.GiveOrderToUnit(fID, -uDef.id, {}, {})				-- aggiungo l'unità alla coda alla fabbrica -- fID: L'ID della fabbrica; -uDef.id: Nota il segno MENO (-). In Spring, dare un ordine con un ID negativo significa: "Costruisci l'unità che ha questo ID"; {}: Qui andrebbero le coordinate (x,y,z), ma per costruire non servono, quindi è vuoto; cmdTag: Passa il valore {} vuoto (non premo ne shift ne alt)
+						else
+							Spring.Echo("ATTENZIONE: L'engine non riconosce l'unità: " .. uName .. "!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+						end						
                     end
                     Spring.Echo(string.format("AI [Fabbrica %d]: Avvio produzione gruppo %s", fID, templateName))
                 end
@@ -1277,7 +1282,7 @@ function gadget:GameFrame(n)
             if #fData.bucket > 0 then
                 local newSquadID = fID .. "_" .. fData.nProgressivo
                 squads[newSquadID] = {
-                    units = fData.bucket,
+                    units = fData.bucket,		 -- elenca questa riga con tutte le unità elencate nella riga bucket, facenti parte del gruppo che la fabbrica ha scelto e creato
                     state = "attacking_monitor", -- Le unità sono già tutte finite, partono subito
                     myTeam = fData.teamID,
                     type = fData.squadType,

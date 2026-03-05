@@ -1300,8 +1300,9 @@ end
 									end
 
 									if not alreadyBuilding then
---										Spring.Echo("WMRTS_contrMngm_AI: Factory " .. fID .. " priority production: " .. unitName)
-										Spring.GiveOrderToUnit(fID, -uDef.id, {}, {"alt"})
+										Spring.Echo("WMRTS_contrMngm_AI: Factory " .. fID .. " priority production: inietto l'unità " .. unitName)
+--										Spring.GiveOrderToUnit(fID, -uDef.id, {}, {"alt"}) 			-- elimino questa priorità, altrimenti interferirebbe con la formazione di gruppi nel target military, devo inserire l'unità senza interrompere quella che sta facendo
+										Spring.GiveOrderToUnit(fID, CMD.INSERT, {1, -uDef.id, 0}, {"alt", "ctrl"})
 										started = started + 1
 										break 
 									end
