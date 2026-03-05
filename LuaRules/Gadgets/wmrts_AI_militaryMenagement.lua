@@ -775,6 +775,7 @@ local factories = {}
 --    unitName = "armap", 
 --    nProgressivo = 0, 
 --    squadType = "air_toair", 
+-- 	  groupSize = 0,
 --    bucket = {} -- Qui finiscono gli ID delle unità mentre vengono create
 -- }
 local squads = {}     		-- [sID] = { units = {}, targetSize, state, type, myTeam, etc }
@@ -1258,7 +1259,8 @@ function gadget:GameFrame(n)
                     fData.squadType = template.type
                     fData.nProgressivo = fData.nProgressivo + 1
                     fData.bucket = {} 
-                    
+                    fData.groupSize = #template.units -- la variabile groupsize = quante entità ci sono nel gruuppo
+
                     for i, uName in ipairs(template.units) do
                         local uDef = UnitDefNames[uName]
                         if uDef then
@@ -1271,7 +1273,7 @@ function gadget:GameFrame(n)
             end
 
         -- STATO B: Fabbrica IDLE ma RISULTA IN USO -> Scarica Secchiello e Crea Squadra!
-        elseif qSize == 0 and not isBuilding and fData.inUso then
+        elseif fData.inUso and (#fData.bucket >= (fData.groupSize or 1)) then
             if #fData.bucket > 0 then
                 local newSquadID = fID .. "_" .. fData.nProgressivo
                 squads[newSquadID] = {
@@ -1291,6 +1293,7 @@ function gadget:GameFrame(n)
             end
             fData.inUso = false
             fData.bucket = {}
+			fData.groupSize = 0 -- Resettiamo il gruppo
         end
     end
 
