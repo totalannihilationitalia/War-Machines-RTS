@@ -27,9 +27,12 @@ end
 -- 02/03/2026 = road to V19 - bombardieri non attaccano i target fuori dal radar o nella nebbia. Modificato codice per far si che attacchino direttamente a x, y e z del target uID, monitorandone costantemente se vivo o morto
 -- 03/03/2026 = road to V20 - alcune fabbriche rimangono in standby e non producono più, variata logica per renderle libere
 -- 03/03/2026 = inserita gestione "recupero orfani", ossia quelle unità che per qualche ragione di guerra (fabbrica distrutta, sotto attacco ecc) non riesce ad inserirsi in un gruppo e quindi non riceverebbe ordini
+-- 06/03/2026 = irrobustito il codice (la gestione delle unità ora viene fatta esclusivamente da tabelle cosi da avere i gruppi corretti). Rimossa temporaneamente la gestione del recupero orfani in quanto con le tabelle esisteranno orfani solo se le fabbriche vengono distrutte durante la produzione del gruppo
+
 
 -- to do LIST ################################
 -- includere i radar nelle costruzioni!!
+-- aggiungere il trasporto?? (gadget esterno??)
 -- risolvere il bersaglio dei bombardieri, loro attaccano direttamente l'unita tramite ID, ma se l'unità è al buio dal LOS, o dalla nebbia, queste vanno al punto target ma non sparano.
 --	-- come risolvere?
 --	-- o aumentare il raggio visuale dei bombardieri
