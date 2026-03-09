@@ -41,7 +41,7 @@ return {
 		name = "Phoenix",
 		noautofire = true,
 		nochasecategory = "VTOL",
-		objectname = "icupnx.s3o",
+		objectname = "andabomb.s3o",
 		scale = 1,
 		seismicsignature = 0,
 		selfdestructas = "BIG_UNIT_VTOL",

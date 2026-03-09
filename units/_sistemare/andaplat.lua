@@ -60,7 +60,8 @@ return {
 			[1] = "andstr",
 			[2] = "anddragon",
 			[3] = "corhors",
-			[4] = "andhawk",			
+			[4] = "andabomb",
+			[5] = "andhawk",			
                },
 
 

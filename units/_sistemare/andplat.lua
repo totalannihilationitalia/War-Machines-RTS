@@ -61,6 +61,7 @@ return {
 			[2] = "andfig",
 			[3] = "andbomb",
 			[4] = "andstr",
+			[5] = "andmerv",			
                },
 
 
