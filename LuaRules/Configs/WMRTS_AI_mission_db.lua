@@ -462,7 +462,7 @@ local UNIT_DB = {
 ["andfig"] = { type = "air" },
 ["andbomb"] = { type = "air" },
 ["andstr"] = { type = "air" },
-["andmer"] = { type = "air" },
+["andmerv"] = { type = "air" },
 
 -- Unità prodotte da andinc
 -- sono le stesse di andlab + andhp
@@ -487,6 +487,8 @@ local UNIT_DB = {
 ["anddragon"] = { type = "air" },
 ["corhors"] = { type = "air" },
 ["andhawk"] = { type = "air" },
+["andabomb"] = { type = "air" },
+
 
 -- Unità prodotte da andgant
 ["cordem"] = { type = "ground" },

@@ -257,7 +257,7 @@ local SQUAD_TEMPLATES = {
 	},	
 -- andplat	
 	["AND_andplat_air_raid_1"] = { 			
-		units = { "andmer", "andfig", "andfig", "andmer", "andmer" },
+		units = { "andmerv", "andfig", "andfig", "andmerv", "andmerv" },
 		type = "air_toground"
 	},
 	["AND_andplat_antiair_raid_1"] = { 
@@ -595,7 +595,7 @@ local SQUAD_TEMPLATES = {
 	},	
 -- andplat	
 	["AND_andplat_air_mediumraid_1"] = { 			
-		units = { "andmer", "andfig", "andfig", "andmer", "andmer", "andmer", "andmer", "andmer", "andmer", "andmer" },
+		units = { "andmerv", "andfig", "andfig", "andmerv", "andmerv", "andmerv", "andmerv", "andmerv", "andmerv", "andmerv" },
 		type = "air_toground"
 	},
 	["AND_andplat_antiair_mediumraid_1"] = { 
@@ -650,7 +650,7 @@ local SQUAD_TEMPLATES = {
 		type = "air_bomber"
 	},		
 	["AND_andaplat_air_bomber_2"] = { 
-		units = { "andstr", "andstr", "andstr", "andstr", "andstr", "andstr", "andstr", "andstr", "andstr", "andstr", "andstr", "andstr", "andstr", "corhors", "corhors" }, 	
+		units = { "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "corhors", "corhors" }, 	
 		type = "air_bomber_strategic"
 	},		
 	["AND_andaplat_air_bomber_3"] = { 
