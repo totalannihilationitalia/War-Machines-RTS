@@ -14,10 +14,8 @@ activatescr()
 	{
 		move sterGL to x-axis [0.000000] now;
 		move sterGL to x-axis [1.999994] speed [2.004004];
-
 		move sterGP to x-axis [0.000000] now;
-		move sterGP to x-axis [-2.249994] speed [2.254504];
-
+		move sterGP to x-axis [-2.249994] speed [2.254498];
 		sleep 998;
 	}
 	sleep 44;
@@ -30,7 +28,7 @@ deactivatescr()
 		move sterGL to x-axis [1.999994] now;
 		move sterGL to x-axis [0.000000] speed [2.004004];
 		move sterGP to x-axis [-2.249994] now;
-		move sterGP to x-axis [0.000000] speed [2.254504];
+		move sterGP to x-axis [0.000000] speed [2.254498];
 		sleep 998;
 	}
 	sleep 44;
@@ -100,11 +98,6 @@ MoveRate2()
 	if( Rand( 1, 10 ) == 1 AND ( !Static_Var_1 ) )
 	{
 		Static_Var_1 = 1;
-//		turn base to z-axis <240.054945> speed <120.027473>;
-//		wait-for-turn base around z-axis;
-//		turn base to z-axis <120.027473> speed <180.043956>;
-//		wait-for-turn base around z-axis;
-//		turn base to z-axis <0.000000> speed <120.027473>;
 		Static_Var_1 = 0;
 	}
 }

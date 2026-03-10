@@ -39,7 +39,7 @@ return {
 		metalstorage = 0,
 		mobilestandorders = 1,
 		moverate1 = 3,
-		name = "Banshee",
+		name = "Minerva",
 		noautofire = false,
 		nochasecategory = "SUB VTOL",
 		objectname = "andmerv.s3o",

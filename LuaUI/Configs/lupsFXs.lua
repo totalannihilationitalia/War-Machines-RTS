@@ -225,6 +225,15 @@ andaafusShieldSphere = {
   colormap2 = { {1, 0.85, 0, 0.4},{1, 0.85, 0, 0.55},{1, 0.9, 0, 0.75},{1, 0.9, 0, 0.7} },
   repeatEffect=true
 }
+andmervSphere = {
+  layer=-35,
+  life=20,
+  pos={0,0,0},
+  size=12,
+  colormap1 = { {1, 0.7, 0, 0.75},{1, 0.8, 0, 1.0},{1, 0.9, 0, 1.0},{1, 0.8, 0, 0.75} },
+  colormap2 = { {1, 0.85, 0, 0.4},{1, 0.85, 0, 0.55},{1, 0.9, 0, 0.75},{1, 0.9, 0, 0.7} },
+  repeatEffect=true
+}
 
 teleShieldSphere = {
   life=20,

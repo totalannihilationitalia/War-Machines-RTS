@@ -43,7 +43,7 @@ return {
                metalStorage = 0,
 --               mobilestandorders= 1,
                movementclass = "HOVER3",
-               name = "Recluse",
+               name = "Snipe",
                noAutoFire = false,
                nochasecategory = "VTOL",
                objectname = "andhart.s3o",

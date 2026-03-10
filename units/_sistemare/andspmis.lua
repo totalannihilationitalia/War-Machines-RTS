@@ -43,7 +43,7 @@ return {
                metalStorage = 0,
 --               mobilestandorders= 1,
                movementclass = "TKBOT3",
-               name = "Recluse",
+               name = "Center",
                noAutoFire = false,
                nochasecategory = "VTOL",
                objectname = "andspmis.s3o",

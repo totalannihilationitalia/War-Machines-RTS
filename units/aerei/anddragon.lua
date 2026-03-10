@@ -10,7 +10,7 @@ return {
                brakerate  = 3,
                buildcostenergy = 22973,
                buildcostmetal = 1305,
-               buildpic = "da_fare",
+               buildpic = "da_fare.png",
                buildtime  = 26500,
                canAttack = true,
                canfly = true,

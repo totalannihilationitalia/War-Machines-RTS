@@ -40,7 +40,7 @@ return {
                metalStorage = 0,
 --               mobilestandorders= 1,
                movementclass = "HOVER3",
-               name = "Rocker",
+               name = "Predator",
                noAutoFire = false,
                nochasecategory = "VTOL",
                objectname = "andahaa.s3o",

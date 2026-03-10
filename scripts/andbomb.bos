@@ -3,27 +3,27 @@
 #include "sfxtype.h"
 #include "exptype.h"
 
-piece  base, bombdrop, thrust1, thrust2, thrust3, thrust4, bombdrop2, engine;
+piece  base, nose, thrust1, thrust2, thrust3, thrust4;
 
-static-var  Static_Var_1, statechg_DesiredState, statechg_StateChanging;
+static-var  statechg_DesiredState, statechg_StateChanging;
 
 
 activatescr()
 {
 	if( TRUE )
 	{
-		sleep 998;
+		sleep 1457;
 	}
-	sleep 44;
+	sleep 6;
 }
 
 deactivatescr()
 {
 	if( TRUE )
 	{
-		sleep 998;
+		sleep 1446;
 	}
-	sleep 44;
+	sleep 4;
 }
 
 SmokeUnit(healthpercent, sleeptime, smoketype)
@@ -87,7 +87,6 @@ RequestState(requestedstate, currentstate)
 
 Create()
 {
-	Static_Var_1 = 3000;
 	call-script InitState();
 	start-script SmokeUnit();
 }
@@ -102,19 +101,9 @@ Deactivate()
 	start-script RequestState(1);
 }
 
-RestoreAfterDelay()
-{
-	sleep Static_Var_1;
-}
-
 QueryPrimary(piecenum)
 {
-	piecenum = bombdrop;
-}
-
-QueryTertiary(piecenum)
-{
-	piecenum = bombdrop2;
+	piecenum = base;
 }
 
 SweetSpot(piecenum)
@@ -128,32 +117,24 @@ Killed(severity, corpsetype)
 	{
 		corpsetype = 1;
 		explode base type BITMAPONLY | BITMAP1;
-		explode bombdrop type FALL | BITMAP2;
-		explode thrust1 type FALL | BITMAP1;
-		explode thrust2 type FALL | BITMAP1;
+		explode nose type BITMAPONLY | BITMAP3;
 		return (0);
 	}
 	if( severity <= 50 )
 	{
 		corpsetype = 2;
 		explode base type BITMAPONLY | BITMAP1;
-		explode bombdrop type FALL | BITMAP2;
-		explode thrust1 type FALL | BITMAP1;
-		explode thrust2 type FALL | BITMAP1;
+		explode nose type FALL | BITMAP3;
 		return (0);
 	}
 	if( severity <= 99 )
 	{
 		corpsetype = 3;
 		explode base type BITMAPONLY | BITMAP1;
-		explode bombdrop type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
-		explode thrust1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
-		explode thrust2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		explode nose type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
 		return (0);
 	}
 	corpsetype = 3;
 	explode base type BITMAPONLY | BITMAP1;
-	explode bombdrop type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
-	explode thrust1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
-	explode thrust2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+	explode nose type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
 }
