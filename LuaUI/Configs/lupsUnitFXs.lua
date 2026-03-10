@@ -312,6 +312,17 @@ armatlas = {
     {class='ShieldSphere', options=MergeTable(valkShieldSphere, {piece="jet3", onActive=true})},
     {class='StaticParticles', options=MergeTable(valkCorona, {piece="jet3", onActive=true})},
      }, 
+andmerv = {
+--    {class='AirJet', options={color={0.2,0.4,0.8}, width=3.5, length=22, piece="thrust", onActive=true}},
+    {class='ShieldSphere', options=MergeTable(andaafusShieldSphere, {piece="jet1", onActive=true})},
+    {class='StaticParticles', options=MergeTable(amdCorona, {piece="jet1", onActive=true})},
+    {class='ShieldSphere', options=MergeTable(andaafusShieldSphere, {piece="jet2", onActive=true})},
+    {class='StaticParticles', options=MergeTable(amdCorona, {piece="jet2", onActive=true})},
+    {class='ShieldSphere', options=MergeTable(andaafusShieldSphere, {piece="jet3", onActive=true})},
+    {class='StaticParticles', options=MergeTable(amdCorona, {piece="jet3", onActive=true})},
+    {class='ShieldSphere', options=MergeTable(andaafusShieldSphere, {piece="jet4", onActive=true})},
+    {class='StaticParticles', options=MergeTable(amdCorona, {piece="jet4", onActive=true})},	
+     }, 	 
  armdfly = {
     {class='AirJet', options={color={0.1,0.4,0.6}, width=3.5, length=25, piece="jet1", onActive=true}},	
 {class='AirJet', options={color={0.1,0.4,0.6}, width=3.5, length=25, piece="jet2", onActive=true}},	
@@ -373,8 +384,12 @@ andbomb= {
     {class='AirJet', options={color={0.6,0,0.8}, width=3.5, length=25, piece="thrust3", onActive=true,emitVector = {0, 0, -1}}},	
     {class='AirJet', options={color={0.6,0,0.8}, width=3.5, length=25, piece="thrust4", onActive=true,emitVector = {0, 0, -1}}},	
   },
-
-
+andabomb= {
+    {class='AirJet', options={color={0.6,0,0.8}, width=3.5, length=25, piece="thrust1", onActive=true, emitVector = {0, 0, -1}}},
+    {class='AirJet', options={color={0.6,0,0.8}, width=3.5, length=25, piece="thrust2", onActive=true,emitVector = {0, 0, -1}}},	
+    {class='AirJet', options={color={0.6,0,0.8}, width=3.5, length=25, piece="thrust3", onActive=true,emitVector = {0, 0, -1}}},	
+    {class='AirJet', options={color={0.6,0,0.8}, width=3.5, length=25, piece="thrust4", onActive=true,emitVector = {0, 0, -1}}},	
+  },
   corawac = {
     {class='AirJet', options={color={0.9,0.2,0.2}, width=3.5, length=25, piece="thrust", onActive=true}},
    -- {class='Ribbon', options={width=1, size=8, piece="wingtipl"}},

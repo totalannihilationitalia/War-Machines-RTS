@@ -7,7 +7,7 @@ return {
 		brakerate = 0.112,
 		buildcostenergy = 10200,
 		buildcostmetal = 140,
-		buildpic = "icuhawk.png",
+		buildpic = "da_fare.png",
 		buildtime = 11685,
 		canattack = true,
 		canfly = true,
@@ -39,10 +39,9 @@ return {
 		moverate1 = 8,
 		name = "Hawk",
 		nochasecategory = "NOTAIR",
-		objectname = "icuhawk.s3o",
+		objectname = "andhawk.s3o",
 		seismicsignature = 0,
 		selfdestructas = "BIG_UNIT",
-		side = "ARM",
 		sightdistance = 560,
 		standingfireorder = 2,
 		standingmoveorder = 1,
@@ -51,7 +50,6 @@ return {
 		turninplaceanglelimit = 140,
 		turninplacespeedlimit = 7.8936,
 		turnrate = 1425,
-		unitname = "icuhawk.s3o",
 		unitrestricted = 150,
 	
 		sounds = {

@@ -11,7 +11,7 @@ return {
                buildcostenergy = 897,
                buildcostmetal = 45,
                builder = false,
-               buildpic = "dafare.png",
+               buildpic = "da_fare.png",
                buildtime  = 1420,
                canAttack = true,
                canGuard = true,

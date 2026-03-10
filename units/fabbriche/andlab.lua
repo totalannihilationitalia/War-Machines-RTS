@@ -61,9 +61,8 @@ return {
 			[2] = "andscouter",
 			[3] = "andspmis",			
 			[4] = "andspaa",
-			[5] = "andhart",
-			[6] = "anddauber",
-			[7] = "andbrskr",
+			[5] = "anddauber",
+			[6] = "andbrskr",
 		},
 -----------------------------------------------------------
 --- Units wreckage and heaps

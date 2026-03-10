@@ -87,7 +87,7 @@ end
 -- Il nome dello "squad_template" identifica solamente il nome del gruppo da creare. Es. ["ICU_armlab_light_patrol_1"], verrà poi impiegato nel punto 2b per dire alla fabbrica: costruisci le unità di questo gruppo e forma il gruppo
 -- units = l'elenco delle unità (solo militari) che comporranno il gruppo (ad esempio il gruppo "ICU_armlab_light_patrol_1". Le unità di costruzione (dichiarate nel database) non verranno gestite nel gruppo ma verranno ignorate per essere gestite da altri gadget
 -- type = tipologia di squadra, la tipologia verrà impiegata nella logica di targeting (punto 4) per dire quali unità devono attaccare. In generale descrizioni a seguito:
--- 					type = "ground" 				-> manda all'attacco verso la prima unità, trovata in base all'ID, che corrisponda a "ground", "building", "strategicbuilding", "strategicdefence", "unknown" e "defence" se y di quest'ultima > -1 (vedere punto 4). Ideale per le truppe di terra o gli aerei.
+-- 					type = "ground" 				-> manda all'attacco verso la prima unità, trovata in base all'ID, che corrisponda a "ground", "building", "strategicbuilding", "strategicdefence", "unknown", "defence" e "hover" se y di quest'ultima > -1 (vedere punto 4). Ideale per le truppe di terra o gli aerei.
 -- 					type = "ground_hovercraft" 		-> manda all'attacco verso la prima unità, trovata in base all'ID, che corrisponda a "ground", "building", "strategicbuilding", "strategicdefence", "unknown", "defence" e "hover" a prescindere dalla y di quest'ultima (rispetto al gruppo "ground". Ideale per gli hovecraft e per gli aerei
 --					type = "air_toair" 				-> tutti gli aerei destinati ad attaccare solo aerei
 --					type = "air_toground" 			-> tutti gli aerei destinati ad attaccare tutte le unità mobili di terra (ground, hovercraft e naval). Attenzione: non sono presenti "building", "strategicbuilding", "strategicdefence", "defence". In questa categoria non mettere bombardieri in quanto sorvolerebbero solamente la zona per poi "sedersi". Per loro ci vuole una logica di attacco diretto sull'unità, per questo usare i gruppi specifici per bombardieri
@@ -646,7 +646,7 @@ local SQUAD_TEMPLATES = {
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},		
 	["AND_andaplat_air_bomber_1"] = { 
-		units = { "corhors", "corhors", "corhors", "corhors", "andstr", "andstr", "corhors", "corhors", "corhors" }, 	
+		units = { "corhors", "corhors", "corhors", "corhors", "anddragon", "anddragon", "corhors", "corhors", "corhors" }, 	
 		type = "air_bomber"
 	},		
 	["AND_andaplat_air_bomber_2"] = { 

@@ -483,7 +483,6 @@ local UNIT_DB = {
 ["andahaa"] = { type = "hovercraft" },
  
 -- Unità prodotte da andaplat
-["andstr"] = { type = "air" },
 ["anddragon"] = { type = "air" },
 ["corhors"] = { type = "air" },
 ["andhawk"] = { type = "air" },

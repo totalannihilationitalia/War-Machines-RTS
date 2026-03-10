@@ -408,6 +408,18 @@ valkCorona = {
   repeatEffect = true,
 }
 
+amdCorona = {
+  pos	      = {0,0,0},
+  life        = math.huge,
+  lifeSpread  = 0,
+  size        = 30,
+  sizeGrowth  = 0,
+  colormap    = { {1, 0.7, 0, 0.01} },
+  texture     = 'bitmaps/GPL/groundflash.tga',
+  count       = 1,
+  repeatEffect = true,
+}
+
 fffCorona = {
   pos	      = {0,0,0},
   life        = math.huge,
