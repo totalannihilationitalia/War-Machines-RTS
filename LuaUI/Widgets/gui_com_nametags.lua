@@ -228,7 +228,7 @@ local function DrawName(unitID, attributes)
     if attributes.country then
         gl.Texture(flagsDirectory .. tostring(attributes.country) .. ".png")
         -- X da -40 a -15 (larghezza 25)
-        gl.TexRect(startX + 5, iconY, startX + 30, iconY + iconSize)
+        gl.TexRect(startX + 45, iconY+15, startX + 65, iconY + 15+ iconSize)
         gl.Texture(false)
     end
     
@@ -236,7 +236,7 @@ local function DrawName(unitID, attributes)
     if attributes.avatar then
         gl.Texture(avatarDirectory .. tostring(attributes.avatar) .. ".png")
         -- X da -65 a -45 (larghezza 20)
-        gl.TexRect(startX - 20, iconY, startX, iconY + iconSize)
+        gl.TexRect(startX+25 , iconY+15, startX+45, iconY+15 + iconSize)
         gl.Texture(false)
     end
 
