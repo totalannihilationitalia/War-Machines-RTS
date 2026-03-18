@@ -80,54 +80,39 @@ local function GetCommAttributes(unitID, unitDefID)
     local team = GetUnitTeam(unitID)
     if team == nil then return nil end
     
-    -- Otteniamo informazioni sul team
-    -- isAI è true se è un bot (Skynet, Circuit, ecc.)
-    local _, _, _, isAI, side, allyTeam = Spring.GetTeamInfo(team, false)
-    local luaAI = Spring.GetTeamLuaAI(team)
-
+    local players = GetPlayerList(team)
     local name = 'AI'
     local country = nil
-    local avatarFilename = nil
+    local rank = nil
+    local avatar = nil
 
-    if (luaAI ~= "" or isAI) then
-        -- È una CPU/AI: impostiamo un nome generico e nessun avatar
-        name = (luaAI ~= "") and luaAI or "CPU"
-        avatarFilename = nil 
-        country = nil
-    else
-        -- È un umano: cerchiamo i dati del giocatore
-        local players = GetPlayerList(team)
-        if players and #players > 0 then
-            for _, pID in ipairs(players) do
-                local pname, active, spec, _, _, _, _, pcountry = GetPlayerInfo(pID)
-                -- Consideriamo solo i giocatori attivi che non sono spettatori
-                if active and not spec then
-                    name = pname
-                    country = pcountry
-                    
-                    -- Recupero Avatar criptato
-                    local hexName = stringToHex(name)
-                    local key = "avatar_" .. hexName
-                    local modOpts = Spring.GetModOptions()
-                    avatarFilename = modOpts[key]
-                    break
-                end
+    if players and #players > 0 then
+        for _, pID in ipairs(players) do
+            local pname, active, _, _, _, _, _, pcountry, prank = GetPlayerInfo(pID)
+            if active then
+                name = pname
+                country = pcountry
+                rank = prank
+				-- AVATAR
+                local hexName = stringToHex(name) 			                -- 1. Trasformiamo il nome in Hex (es. "test" -> "74657374")
+                local modOpts = Spring.GetModOptions()		                -- 2. Cerchiamo nelle ModOptions la chiave "avatar_74657374"
+                local key = "avatar_" .. hexName
+                avatarFilename = modOpts[key]								-- Se esiste, avatarFilename prenderà il valore (es. "av96")
+                break
             end
         end
     end
 
-    -- Sicurezza: se la stringa è vuota o l'immagine non esiste, non disegnare nulla
-    if avatarFilename == "" or avatarFilename == nil then avatarFilename = nil end
-
     local r, g, b, a = GetTeamColor(team)
-    local height = (UnitDefs[unitDefID] and UnitDefs[unitDefID].height or 0) + heightOffset
+    local height = UnitDefs[unitDefID].height + heightOffset
     
     return {
         name = name, 
         color = {r, g, b, a}, 
         height = height, 
-        avatar = avatarFilename, 
-        country = country
+        avatar = avatarFilename, 											-- conterra "av96"
+        country = country, 
+        rank = rank
     }
 end
 
