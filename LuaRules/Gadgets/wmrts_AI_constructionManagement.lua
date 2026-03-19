@@ -27,6 +27,7 @@
 	-- 26/02/2026 = V17 aggiunte unità NFA
 	-- 02/03/2026 = V18 aggiunte unità nella lista dei livelli - cambio nome della AI da "WarMachinesRTSmissionAI" a "WMAI", per inserirlo nella lobby del gioco
 	-- 06/03/2026 = V20, aggiungo un test di raggiungimento della destinazione per i builder, non solo per la costruzione del metallo, ma anche per tutte le altre unità.
+	-- 19/03/2026 = Added Andronians faction. Molix
 	
 	-- TO DO
 
@@ -126,6 +127,9 @@ nanotower o costruttori aiutanti???
 			["CAT_CONSTRUCTORS_T1"]		= { "icuck", "armcv", "armca", "armcs" }, 				-- solo costruttori T1
 			["CAT_CONSTRUCTORS_T2"] 	= { "armack", "armacv", "armaca", "armacs" }, 			-- solo costruttori T2	
 		}, -- end ICU
+	----------------------------
+	-- NFA
+	----------------------------		
 		["NFA"] = {
 	-- categorie per le FUNZIONI - utilizzate nelle funzioni helper o nella logica CORE del gadget. ATTENZIONE, QUANDO SI MODIFICA UNA DI QUESTE CATEGORIE, VERIFICARE SEMPRE DOVE VIENE USATA NELLA LOGICA!!!!
 			["CAT_ALL_CONSTRUCTORS"] 		= { "nfacom", "corck", "corcv", "corca", "corcs" }, 	-- categoria con tutti i costruttori (incluso il comandante), la uso al livello 0 per due motivi: 1) in caso di distruzione totale, quando l'AI torna a 0, se uno dei costruttori elencati è sopravvissuto, lo usa per ripartire con le costruzioni dal livello 0. 2) col game start, si parte col comandante, che è incluso nella lista. Soddisfa quindi il requisito del lvl 0.	
@@ -169,19 +173,49 @@ nanotower o costruttori aiutanti???
 			["CAT_CONSTRUCTORS_T2"] 	= { "corack", "coracv", "coraca", "coracs" }, 			-- solo costruttori T2	
 		}, -- end NFA
 	----------------------------
-	-- AND ########################################################################################### configurare
+	-- AND
 	----------------------------
 		["AND"] = {
-			["CAT_MEX_T1"]      	= { "andmex" },
-			["CAT_ENERGY_T1"]     	= { "andsolar" },
-			["CAT_LASER_T1"]   		= { "andlaser" },
-			["CAT_AA_T1"]          	= { "andaa" },
-			["CAT_FACTORY_T1"] = {
-				land = { "andlab", "andhp" },
+	-- categorie per le FUNZIONI - utilizzate nelle funzioni helper o nella logica CORE del gadget. ATTENZIONE, QUANDO SI MODIFICA UNA DI QUESTE CATEGORIE, VERIFICARE SEMPRE DOVE VIENE USATA NELLA LOGICA!!!!
+			["CAT_ALL_CONSTRUCTORS"] 		= { "andcom", "andcsp", "andch", "andca" }, 			-- categoria con tutti i costruttori (incluso il comandante), la uso al livello 0 per due motivi: 1) in caso di distruzione totale, quando l'AI torna a 0, se uno dei costruttori elencati è sopravvissuto, lo usa per ripartire con le costruzioni dal livello 0. 2) col game start, si parte col comandante, che è incluso nella lista. Soddisfa quindi il requisito del lvl 0.	
+			["CAT_ALL_AIR_CONSTRUCTORS"] 	= { "andca", "andaca" }, 								-- categoria con tutti gli aerei costruttori, necessaria ad ignorare le unità indicate nella funzione per il calcolo del pathfinding durante la costruzione dell'estrattore più vicino. Vanno direttamente a costruire in quel punto x,y,z preferendo la "linea d'aria"
+	-- categorie per le costruzioni
+			["CAT_MEX_T1"]          = { "andmexun" },									-- estrattori T1			
+			["CAT_MEX_T2"]          = { "andametex" },									-- estrattori T2	
+			["CAT_ENERGY_T1"]      	= { "andsolar" },									-- energyplant T1
+			["CAT_ENERGY_T1_2"]    	= { "andadvsol" },									-- energyplant T1/2		#################################################################################################################
+			["CAT_ENERGY_T2"]      	= { "andaafus", "andfus","andfus","andfus" },					-- energyplant T2, con più possibilità di realizzare armfus
+			["CAT_ESTORAGE_T1"]		= { "andestor" },									-- storage Energy T1
+			["CAT_MSTORAGE_T1"]		= { "andmstor" },									-- storage Metal T1		
+			["CAT_LASER_T1"]       	= { "andlartic" },
+			["CAT_LASER_T1_2"]      = { "andhartic" },		
+			["CAT_LASER_T2"]      	= { "andill", "andchaos" },		
+			["CAT_CANNON_T2"]      	= { "anddfens" },			
+			["CAT_AA_T1"]          	= { "andrl" },
+			["CAT_AA_T1_2"]         = { "andaa" },			
+			["CAT_SHIELD"]         	= { "andshield" },						
+			["CAT_LONG_CANNON"]     = { "andangel" },									
+			["CAT_AA_T2"]          	= { "andernie", "andernie", "andernie", "chemist" },		
+			["CAT_ATOMICDEFENCE"]   = { "anddefensor" },										-- ##############################################################				
+			["CAT_ATOMICATTACK"]    = { "andlaunch" },							
+			
+			["CAT_FACTORY_T1"] = {									-- fabbrica T1 si categorizza per tipologia ( terra, aria o mare), in funzione dei MAP_PROFILES l'AI effettuerà una scelta
+				land = { "andlab", "andhp" },						-- randomizza la fabbrica
 				air  = { "andplat" },
-				sea  = { "andplat", "andhp" },
+				sea  = { "andhp" },
 			},
-			["CAT_ALL_CONSTRUCTORS"] = { "andcom", "andcon", "andcv", "andca", "andcs" },
+			["CAT_FACTORY_T2"] = {
+				land = { "andalab", "andahp" },
+				air  = { "andaplat" },
+				sea  = { "andahp" },
+			},		
+			["CAT_FACTORY_T3"] = {
+				land = { "andgant" },															-- #################### aggiungere "andspidfactory"
+				air  = { "andaplat" },															-- #################### aggiungere andfff appena completato
+				sea  = { "andahp" }, -- pagliativo per non bloccare l'AI
+			},		
+			["CAT_CONSTRUCTORS_T1"]		= { "andcsp", "andch", "andca" }, 						-- solo costruttori T1
+			["CAT_CONSTRUCTORS_T2"] 	= { "andacsp", "andach", "andaca" }, 					-- solo costruttori T2	
 		} -- end AND
 	} -- end "CATEGORY_TO_UNIT"
 

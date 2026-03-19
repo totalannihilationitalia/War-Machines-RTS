@@ -68,7 +68,7 @@ return {
 -----------------------------------
                buildoptions = { 
 		[1] = "andsolar",
-		[2]= "andwind",
+		[2] = "andwind",
 		[3] = "andmstor",
 		[4] = "andestor",
 		[5] = "andmexun",
