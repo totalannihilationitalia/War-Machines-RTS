@@ -3,8 +3,7 @@
 #include "sfxtype.h"
 #include "exptype.h"
 
-piece  base, turret, door1, door2, door3, door4, door5, door6,
-       sleeve, flare1,flare2,flare3,flare4;
+piece  base, turret,  sleeve, flare1, flare2, flare3, flare4;
 
 static-var  Static_Var_1, restore_delay, bAiming, statechg_DesiredState, statechg_StateChanging,
             Static_Var_6, Static_Var_7, Static_Var_8;
@@ -17,16 +16,15 @@ activatescr()
 {
 	if( TRUE )
 	{
-		turn door1 to z-axis <0.000000> speed <110.000000>;
-		turn door2 to z-axis <0.000000> speed <110.000000>;
-		turn door3 to z-axis <0.000000> speed <110.000000>;
-		turn door4 to z-axis <0.000000> speed <110.000000>;
-		turn door5 to x-axis <0.000000> speed <110.000000>;
-		turn door6 to x-axis <0.000000> speed <110.000000>;
+//		turn door1 to z-axis <0.000000> speed <110.000000>;
+//		turn door2 to z-axis <0.000000> speed <110.000000>;
+//		turn door3 to z-axis <0.000000> speed <110.000000>;
+//		turn door4 to z-axis <0.000000> speed <110.000000>;
+//		turn door5 to x-axis <0.000000> speed <110.000000>;
+//		turn door6 to x-axis <0.000000> speed <110.000000>;
 		sleep 650;
 		move turret to y-axis [0.000000] speed [15.000000];
 		sleep 600;
-//		move barrel to z-axis [0.000000] speed [5.000000];
 	}
 	sleep 10;
 }
@@ -35,7 +33,6 @@ deactivatescr()
 {
 	if( TRUE )
 	{
-//		move barrel to z-axis [-3.500000] speed [5.000000];
 		sleep 500;
 	}
 	if( TRUE )
@@ -45,12 +42,11 @@ deactivatescr()
 	}
 	if( TRUE )
 	{
-		turn door1 to z-axis <120.000000> speed <110.000000>;
-		turn door2 to z-axis <120.000000> speed <110.000000>;
-		turn door3 to z-axis <-120.000000> speed <110.000000>;
-		turn door4 to z-axis <-120.000000> speed <110.000000>;
-		turn door5 to x-axis <120.000000> speed <110.000000>;
-		turn door6 to x-axis <-120.000000> speed <110.000000>;
+//		turn door1 to z-axis <120.000000> speed <110.000000>;
+//		turn door2 to z-axis <120.000000> speed <110.000000>;
+//		turn door3 to z-axis <-120.000000> speed <110.000000>;
+//		turn door4 to z-axis <-120.000000> speed <110.000000>;
+//		turn door6 to x-axis <-120.000000> speed <110.000000>;
 	}
 	sleep 10;
 }
@@ -63,8 +59,8 @@ HitByWeapon(Func_Var_1, Func_Var_2, Func_Var_3)
 		if( Static_Var_6 == 0 )
 		{
 			Static_Var_6 = 1;
-			hide door1;
-			explode door1 type FALL | SHATTER | SMOKE | BITMAP2;
+//			hide door1;
+//			explode door1 type FALL | SHATTER | SMOKE | BITMAP2;
 		}
 	}
 	if( Func_Var_3 <= 50 )
@@ -72,8 +68,8 @@ HitByWeapon(Func_Var_1, Func_Var_2, Func_Var_3)
 		if( Static_Var_7 == 0 )
 		{
 			Static_Var_7 = 1;
-			hide door3;
-			explode door3 type FALL | SHATTER | SMOKE | BITMAP2;
+//			hide door3;
+//			explode door3 type FALL | SHATTER | SMOKE | BITMAP2;
 		}
 	}
 	if( Func_Var_3 <= 35 )
@@ -81,8 +77,8 @@ HitByWeapon(Func_Var_1, Func_Var_2, Func_Var_3)
 		if( Static_Var_8 == 0 )
 		{
 			Static_Var_8 = 1;
-			hide door4;
-			explode door4 type FALL | SHATTER | SMOKE | BITMAP2;
+//			hide door4;
+//			explode door4 type FALL | SHATTER | SMOKE | BITMAP2;
 		}
 	}
 }
@@ -104,7 +100,7 @@ SmokeUnit(healthpercent, sleeptime, smoketype)
 			if( Static_Var_8 == 1 )
 			{
 				Static_Var_8 = 0;
-				show door4;
+//				show door4;
 			}
 		}
 		if( healthpercent >= 60 )
@@ -112,7 +108,7 @@ SmokeUnit(healthpercent, sleeptime, smoketype)
 			if( Static_Var_7 == 1 )
 			{
 				Static_Var_7 = 0;
-				show door3;
+//				show door3;
 			}
 		}
 		if( healthpercent >= 75 )
@@ -120,7 +116,7 @@ SmokeUnit(healthpercent, sleeptime, smoketype)
 			if( Static_Var_6 == 1 )
 			{
 				Static_Var_6 = 0;
-				show door1;
+//				show door1;
 			}
 		}
 		if( healthpercent < 66 )
@@ -143,14 +139,9 @@ SmokeUnit(healthpercent, sleeptime, smoketype)
 
 Go()
 {
-	dont-cache door1;
-	dont-cache door2;
-	dont-cache door3;
-	dont-cache door4;
-	dont-cache door5;
-	dont-cache door6;
+//	dont-cache door1;
+
 	dont-cache sleeve;
-//	dont-cache barrel;
 	dont-cache turret;
 	if( !Static_Var_1 )
 	{
@@ -165,14 +156,13 @@ Stop()
 	set ARMORED to 1;
 	Static_Var_1 = 0;
 	call-script deactivatescr();
-	cache door1;
-	cache door2;
-	cache door3;
-	cache door4;
-	cache door5;
-	cache door6;
+//	cache door1;
+//	cache door2;
+//	cache door3;
+//	cache door4;
+//	cache door5;
+//	cache door6;
 	cache sleeve;
-	//cache barrel;
 	cache turret;
 }
 
@@ -227,19 +217,13 @@ RestoreAfterDelay()
 
 Create()
 {
-	dont-shade door1;
-	dont-shade door2;
-	dont-shade door3;
-	dont-shade door4;
-	dont-shade door5;
-	dont-shade door6;
+
 	dont-shade sleeve;
-	//dont-shade barrel;
 	dont-shade turret;
 	hide flare1;
-	hide flare2;	
-	hide flare3;	
-	hide flare4;	
+	hide flare2;
+	hide flare3;
+	hide flare4;
 	Static_Var_1 = 1;
 	bAiming = FALSE;
 	restore_delay = 3000;
@@ -286,10 +270,8 @@ AimPrimary(heading, pitch)
 
 FirePrimary()
 {
-//	move barrel to z-axis [-1.500000] speed [200.000000];
 	emit-sfx 1024 from flare1;
 	sleep 150;
-//	move barrel to z-axis [0.000000] speed [10.000000];
 }
 
 AimFromPrimary(piecenum)
@@ -318,13 +300,7 @@ Killed(severity, corpsetype)
 		{
 			corpsetype = 2;
 		}
-//		explode barrel type BITMAPONLY | BITMAP1;
-		explode door1 type BITMAPONLY | BITMAP3;
-		explode door2 type BITMAPONLY | BITMAP4;
-		explode door3 type BITMAPONLY | BITMAP3;
-		explode door4 type BITMAPONLY | BITMAP4;
-		explode door5 type BITMAPONLY | BITMAP3;
-		explode door6 type BITMAPONLY | BITMAP4;
+
 		explode sleeve type BITMAPONLY | BITMAP1;
 		explode turret type BITMAPONLY | BITMAP3;
 	}
@@ -339,11 +315,7 @@ Killed(severity, corpsetype)
 			corpsetype = 3;
 		}
 		explode turret type BITMAPONLY | BITMAP2;
-		explode door1 type FALL | BITMAP3;
-		explode door2 type FALL | BITMAP4;
-//		explode barrel type FALL | BITMAP5;
-		explode door4 type FALL | BITMAP3;
-		explode door6 type FALL | BITMAP4;
+
 		explode sleeve type BITMAPONLY | BITMAP4;
 		return (0);
 	}
@@ -358,22 +330,12 @@ Killed(severity, corpsetype)
 			corpsetype = 4;
 		}
 		explode turret type BITMAPONLY | BITMAP2;
-		explode door1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
-		explode door2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
-		explode door3 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
-		explode door5 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
-//		explode barrel type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+
 		explode sleeve type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
 		return (0);
 	}
 	corpsetype = 4;
 	explode turret type BITMAPONLY | BITMAP2;
-	explode door1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
-	explode door2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
-	explode door3 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
-	explode door4 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
-	explode door5 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
-	explode door6 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
-//	explode barrel type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+
 	explode sleeve type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
 }
