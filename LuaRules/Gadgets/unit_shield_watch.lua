@@ -12,6 +12,7 @@ end
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
+-- aggiungo andshield. Molix 23/03/2026
 
 if (not gadgetHandler:IsSyncedCode()) then
   return
@@ -26,6 +27,8 @@ local mathMin = math.min
 local shieldDef = {}
 shieldDef[UnitDefNames["armgate"].id] = true
 shieldDef[UnitDefNames["corgate"].id] = true
+shieldDef[UnitDefNames["andshield"].id] = true
+
 local shields = {}
 local gameFrame = 0
 
