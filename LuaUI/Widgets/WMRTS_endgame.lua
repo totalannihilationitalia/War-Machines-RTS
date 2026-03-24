@@ -19,7 +19,8 @@ function widget:GetInfo()
     date      = "10 Ottobre, 2025",
     license   = "GNU GPL, v2 or later",
     layer     = 0,
-    enabled   = true 
+    enabled   = true, 
+	hidden 	  = true
   }
 end
 
@@ -57,15 +58,16 @@ function listavincenti(winnerString) -- ogni volta che si richiama questa funzio
 end
 
 -- inizializzo il widget
-function widget:Initialize() 											-- scrivo quando inizializzo il widget, cosi da preparare un file nuovo
-	local file = io.open(nomeFile, "w")									-- apro il file, "w" significa "write mode" (modalità di scrittura). Usiamo io.open() per aprire il file.-- Se il file non esiste, lo crea. Se esiste già, CANCELLA tutto il suo contenuto.	
+function widget:Initialize() 	
+    local myPlayerID = Spring.GetMyPlayerID()							-- Ottengo il mio ID
+	local file = io.open(nomeFile, "w")									-- Apro il file, "w" significa "write mode" (modalità di scrittura). Usiamo io.open() per aprire il file.-- Se il file non esiste, lo crea. Se esiste già, CANCELLA tutto il suo contenuto.	
 	file:write("[winninglist_skirmish]\n") 								-- scrivo l'intestazione del file
 	widgetHandler:RegisterGlobal('VictoryListEvent',listavincenti) 		-- ogni volta che si verifica l'evento VictoryListEvent nel gadget show_winner.lua (o in altri gadget), esegui la funzione listavincenti in questo widget. è importante che ogni volta che si richiama questo script, la variabile winnerString assuma il valore del parlato che si vuole avere (vedi sopra)
 	startframe = Spring.GetGameFrame()									-- setto lo startframe
-	local isSpectator = Spring.GetSpectatorMode()						-- verifico se l'utente è spettatore o meno	
-	if isSpectator then
-	file:write("springisspectator = confirmed\n") 						-- confermo l'inizializzazione del widget 		
-	end
+	local _, _, isSpectator = Spring.GetPlayerInfo(myPlayerID)			-- verifico se l'utente è spettatore o meno	
+		if isSpectator then
+			file:write("springisspectator = confirmed\n") 				-- confermo l'inizializzazione del widget 		
+		end
 	file:write("springinitialized = confirmed\n") 						-- confermo l'inizializzazione del widget 
 	file:close()												        -- chiudi il file. Questo salva le modifiche e "libera" il file. Se non lo fai, il file potrebbe rimanere vuoto!		
 end
