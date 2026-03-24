@@ -6,10 +6,10 @@ return {
 		buildangle = 8192,
 		buildcostenergy = 5357,
 		buildcostmetal = 338,
-               buildinggrounddecaldecayspeed= 0.01,
-               buildinggrounddecalsizex= 4,
-               buildinggrounddecalsizey = 4,
-               buildinggrounddecaltype = "Pavimentazione3.png",
+--               buildinggrounddecaldecayspeed= 0.01,
+ --              buildinggrounddecalsizex= 4,
+ --              buildinggrounddecalsizey = 4,
+ --              buildinggrounddecaltype = "Pavimentazione3.png",
 		buildpic = "da_fare.png",
 		buildtime = 5810,
 		category = "ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE",
@@ -33,7 +33,7 @@ return {
 		seismicsignature = 0,
 		selfdestructas = "BIG_UNIT",
 		sightdistance = 375,
-		usebuildinggrounddecal = true,
+--		usebuildinggrounddecal = true,
 		yardmap = "ooooooooo",
 		featuredefs = {
 			dead = {

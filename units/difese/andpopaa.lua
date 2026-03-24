@@ -28,6 +28,7 @@ return {
                explodeas = "lARGE_BUILDINGEX",
                footprintx = 3,
                footprintz = 3,
+			   highTrajectory = 2,
 --               mass = 0 --definire massa,
                maxdamage = 1600,
                maxslope = 10,
@@ -88,36 +89,63 @@ sounds = {
 --- WEAPONS DEFINITION
 -----------------------------------------------------------
 weapondefs = {
-		arm_antiair = {
-                     areaofeffect = 72,
+		armfixed_gun = {
+                     accuracy = 75,
+                     areaofeffect = 128,
                      avoidfeature = true,
-                     canattackground = false,
 --                     cegTag = "",
 --                     craterareaofeffect =  ,
-                     firestarter = 50,
-                     metalpershot = 0,
-                     model = "heatmis1",
-                     name= "Fast Heat-seeking Missiles",
-                     range = 1000,
-                     reloadtime = 3,
-                     smoketrail = true,
+                     craterboost = 0,
+                     cratermult = 0,
+                     edgeeffectiveness = 0.25,
+                     explosiongenerator = "custom:FLASH96",
+                     impulseboost = 0.123,
+                     impulsefactor = 0.123,
+                     name= "PlasmaCannon",
+                     noselfdamage = true,
+                     range = 1220,
+                     reloadtime = 3.25,
                      soundhit = "xplomed2",
  --                   soundhitdry = "",
 --                    soundhitwet = "",
 --                    soundhitwetvolume = "",
-                     soundstart = "rockhvy2",
-                     startvelocity = 700,
-                     tolerance = 10000,
-                     tracks = true, 
-                     toairweapon = true,
-                     turnrate = 90000,
+                     soundstart = "cannhvy5",
+                     targetmoveerror = 0.2,
                      turret  = true, 
-                     weaponacceleration = 300,
-                     weapontimer = 5,
-                     weapontype = "MissileLauncher",
-                     weaponvelocity  = 1080,
+                     weapontype = "Cannon",
+                     weaponvelocity  = 450,
                      damage = {
-                         default = 160,
+                         default = 263,
+                     }, -- close damage
+             }, --close single weapon definitions
+
+		armfixed_gun_high = {
+                     accuracy = 75,
+                     areaofeffect = 192,
+                     avoidfeature = true,
+--                     cegTag = "",
+--                     craterareaofeffect =  ,
+                     craterboost = 0,
+                     cratermult = 0,
+                     edgeeffectiveness = 0.5,
+                     explosiongenerator = "custom:FLASH96",
+                     impulseboost = 0.123,
+                     impulsefactor = 2,
+                     name= "PlasmaCannon",
+                     noselfdamage = true,
+                     proximitypriority = -2,
+                     range = 1220,
+                     reloadtime = 7,
+                     soundhit = "xplomed2",
+--                    soundhitdry = "",
+--                    soundhitwet = "",
+--                    soundhitwetvolume = "",
+                     soundstart = "cannhvy5",
+                     turret  = true, 
+                     weapontype = "Cannon",
+                     weaponvelocity  = 440,
+                     damage = {
+                         default = 461,
                      }, -- close damage
              }, --close single weapon definitions
 
@@ -127,9 +155,16 @@ weapondefs = {
 -----------------------------------------------------------
 weapons = {
                  [1] = {
---                 badtargetcategory = "NOTAIR",
-                 def = "arm_antiair",
-		 onlytargetcategory = "VTOL",
+                 badtargetcategory = "VTOL",
+                 def = "armfixed_gun",
+                 onlytargetcategory = "SURFACE",
+                 maxAngleDif = 230,
+                 maindir = "0 1 0",
+                 },
+                 [2] = {
+                 badtargetcategory = "VTOL",
+                 def = "armfixed_gun_high",
+                 onlytargetcategory = "SURFACE",
                  },
 }, -- close weapon usage
 
