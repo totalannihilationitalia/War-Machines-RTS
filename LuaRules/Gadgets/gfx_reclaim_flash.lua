@@ -24,10 +24,10 @@ function gadget:FeatureDestroyed(featureID,allyteam)
 		if (rm ~= nil) then
 			if me > mm and rl == 0 then
 				Spring.SpawnCEG(eceg, fx, fy, fz)
-				Spring.PlaySoundFile('Sounds/RECLAIM1.wav', 1, fx, fy, fz) 
+				Spring.PlaySoundFile('Sounds/reclaim1.wav', 1, fx, fy, fz) 
 			elseif mm >= me and rl == 0 then
 				Spring.SpawnCEG(mceg, fx, fy, fz)
-				Spring.PlaySoundFile('Sounds/RECLAIM1.wav', 1, fx, fy, fz) 
+				Spring.PlaySoundFile('Sounds/reclaim1.wav', 1, fx, fy, fz) 
 			end
 		end
 	end
