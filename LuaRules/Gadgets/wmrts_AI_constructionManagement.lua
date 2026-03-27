@@ -1147,8 +1147,8 @@ end
 					if GG.WMRTS_Levels then GG.WMRTS_Levels[teamID] = 0 end
 					
 					local motivo = fallimentoFabbriche and "No Factories" or (fallimentoMetallo and "Low Metal" or "Low Energy")
-					Spring.Echo(string.char(255, 0, 0, 0))
-					Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Critical Failure (" .. motivo .. ")! Reverting to Level 0.")
+--					Spring.Echo(string.char(255, 0, 0, 0))
+--					Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Critical Failure (" .. motivo .. ")! Reverting to Level 0.")
 					currentLvl = 0 
 				end
 			end
@@ -1203,7 +1203,7 @@ end
 				teamLevels[teamID] = currentLvl + 1
 				if not GG.WMRTS_Levels then GG.WMRTS_Levels = {} end
 				GG.WMRTS_Levels[teamID] = teamLevels[teamID]
-				Spring.Echo(string.char(0, 255, 0, 0))
+--				Spring.Echo(string.char(0, 255, 0, 0))
 				Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Level Up -> " .. teamLevels[teamID])
 				return
 			end
@@ -1299,7 +1299,7 @@ end
 							elseif not capableFound then
 --									Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - ERRORE COSTRUTTORE: " .. totalFree .. " costruttori liberi, ma NESSUNO sa costruire " .. unitName)
 							else
-								Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - SPAZIO PIENO: Costruttori pronti, ma non trovo una posizione valida (SafePos) per " .. unitName)
+--								Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - SPAZIO PIENO: Costruttori pronti, ma non trovo una posizione valida (SafePos) per " .. unitName)
 							end
 						end
 					-- CASO B: È un UNITA' MOBILE COSTRUTTRICE CHE RICHIEDE UNA FABBRICA
@@ -1322,7 +1322,7 @@ end
 								end
 
 								if not alreadyBuilding then
-									Spring.Echo("WMRTS_contrMngm_AI: Factory " .. fID .. " priority production: inietto l'unità " .. unitName)
+--									Spring.Echo("WMRTS_contrMngm_AI: Factory " .. fID .. " priority production: inietto l'unità " .. unitName)
 --										Spring.GiveOrderToUnit(fID, -uDef.id, {}, {"alt"}) 			-- elimino questa priorità, altrimenti interferirebbe con la formazione di gruppi nel target military, devo inserire l'unità senza interrompere quella che sta facendo
 									Spring.GiveOrderToUnit(fID, CMD.INSERT, {1, -uDef.id, 0}, {"alt", "ctrl"})
 									started = started + 1

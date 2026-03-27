@@ -1099,7 +1099,7 @@ end
 function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
     if not aiTeamIDs[unitTeam] then return end
     if IsUnitIgnored(unitID) then 
-	Spring.Echo("Ignoro l'unità costruttrice dalla gestione dei gruppi")
+--	Spring.Echo("Ignoro l'unità dalla gestione di militaryMenagement AI")
 	return end
 
     -- Se l'unità è prodotta da una nostra fabbrica
@@ -1110,7 +1110,7 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
         if fData.inUso then
             table.insert(fData.bucket, unitID)
             local uName = UnitDefs[unitDefID].name
-            Spring.Echo(string.format("AI [Fabbrica %d]: Aggiunto %s al secchiello per il gruppo %d", builderID, uName, fData.nProgressivo))
+--            Spring.Echo(string.format("AI [Fabbrica %d]: Aggiunto %s al secchiello per il gruppo %d", builderID, uName, fData.nProgressivo))
         end
     end
 end
@@ -1270,13 +1270,13 @@ function gadget:GameFrame(n)
                         local uDef = UnitDefNames[uName]								-- per ogni ciclo assegna uDef al nome dell'unità
                         if uDef then													-- se esiste...
 --                            local cmdTag = (i == 1) and {} or {"shift"}					-- ... a) assegna la variabile cmdTag = ""  ???? che vuol dire?? o a "shift"
-							Spring.Echo("AI sta ordinando " .. uName .. " (ID: " .. uDef.id .. ") alla fabbrica " .. fID)							
+--							Spring.Echo("AI sta ordinando " .. uName .. " (ID: " .. uDef.id .. ") alla fabbrica " .. fID)							
                             Spring.GiveOrderToUnit(fID, -uDef.id, {}, {})				-- aggiungo l'unità alla coda alla fabbrica -- fID: L'ID della fabbrica; -uDef.id: Nota il segno MENO (-). In Spring, dare un ordine con un ID negativo significa: "Costruisci l'unità che ha questo ID"; {}: Qui andrebbero le coordinate (x,y,z), ma per costruire non servono, quindi è vuoto; cmdTag: Passa il valore {} vuoto (non premo ne shift ne alt)
 						else
-							Spring.Echo("ATTENZIONE: L'engine non riconosce l'unità: " .. uName .. "!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+--							Spring.Echo("ATTENZIONE: L'engine non riconosce l'unità: " .. uName .. "!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 						end						
                     end
-                    Spring.Echo(string.format("AI [Fabbrica %d]: Avvio produzione gruppo %s", fID, templateName))
+--                    Spring.Echo(string.format("AI [Fabbrica %d]: Avvio produzione gruppo %s", fID, templateName))
                 end
             end
 
@@ -1291,7 +1291,7 @@ function gadget:GameFrame(n)
                     type = fData.squadType,
                     startTime = Spring.GetGameSeconds()
                 }
-                Spring.Echo(string.format("AI [Gruppo %s]: Gruppo pronto (%d unità). All'attacco!", newSquadID, #fData.bucket))
+--                Spring.Echo(string.format("AI [Gruppo %s]: Gruppo pronto (%d unità). All'attacco!", newSquadID, #fData.bucket))
                 
                 -- Primo ordine d'attacco immediato
                 local target = GetSmartEnemyTarget(fData.teamID, fData.squadType)
