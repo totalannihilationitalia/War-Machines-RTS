@@ -23,30 +23,18 @@ end
 
 -- tabella / feature -> effetto esplosione, qui associo ad ogni feature la relativa esplosione
 local config = {
---[[
-  pala001_feature   = "building_destruction_heavy", 
-  pala002_feature   = "building_destruction_heavy",
-  pala003_feature   = "building_destruction_heavy",
-  pala004_feature   = "building_destruction_heavy",
-  pala005_feature   = "building_destruction_heavy",
-  pala006_feature   = "building_destruction_heavy",
-  pala007_feature   = "building_destruction_heavy",
-  pala008_feature   = "building_destruction_heavy",
-  pala009_feature   = "building_destruction_heavy",
-  pala010_feature   = "building_destruction_heavy",
-  pala011_feature   = "building_destruction_heavy",
-]]-- 
-  pala001_feature   = "fleaesplosionipostatterraggio", 
-  pala002_feature   = "fleaesplosionipostatterraggio",
-  pala003_feature   = "fleaesplosionipostatterraggio",
-  pala004_feature   = "fleaesplosionipostatterraggio",
-  pala005_feature   = "fleaesplosionipostatterraggio",
-  pala006_feature   = "fleaesplosionipostatterraggio",
-  pala007_feature   = "fleaesplosionipostatterraggio",
-  pala008_feature   = "fleaesplosionipostatterraggio",
-  pala009_feature   = "fleaesplosionipostatterraggio",
-  pala010_feature   = "fleaesplosionipostatterraggio",
-  pala011_feature   = "fleaesplosionipostatterraggio",  
+  pala001_feature   = "FLASH224", 
+  pala002_feature   = "FLASH224",
+  pala003_feature   = "FLASH224",
+  pala004_feature   = "FLASH224",
+  pala005_feature   = "FLASH224",
+  pala006_feature   = "FLASH224",
+  pala007_feature   = "FLASH224",
+  pala008_feature   = "FLASH224",
+  pala009_feature   = "FLASH224",
+  pala010_feature   = "FLASH224",
+  pala011_feature   = "FLASH224",
+  
   Station_one_antenna_feature = "FLASH224",
   -- ########## continuare la lista #########################################
   
