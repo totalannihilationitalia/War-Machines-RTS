@@ -62,7 +62,8 @@ return {
 			[3] = "bigb",			-- simile a raven + aggiungere raggio laser
 			[4] = "ebigb",			-- unità aliena
 			[5] = "kill2",			-- fare hvy machinesgun
-			[6] = "armpraet",
+			[6] = "interceptor",			
+			[7] = "armpraet",
 		},
 -----------------------------------------------------------
 --- Units wreckage and heaps

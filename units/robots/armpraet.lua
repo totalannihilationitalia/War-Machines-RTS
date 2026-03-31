@@ -4,7 +4,7 @@ return {
 -----------------------------------------------------------
 --- UNITS FEATURES
 -----------------------------------------------------------
-  ARMPRAET= {
+  armpraet= {
                acceleration = 0.09,
                activatewhenbuilt = true,
                brakerate  = 0.99,
