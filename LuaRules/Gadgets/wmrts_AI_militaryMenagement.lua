@@ -292,11 +292,11 @@ local SQUAD_TEMPLATES = {
 	},	
 -- andaplat
 	["AND_andaplat_light_patrol_1"] = {
-		units = { "anddragon", "corhors", "corhors" }, 
+		units = { "anddragon", "andhors", "andhors" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["AND_andaplat_light_patrol_2"] = {
-		units = { "anddragon", "corhors"}, 
+		units = { "anddragon", "andhors"}, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},		
 
@@ -642,19 +642,19 @@ local SQUAD_TEMPLATES = {
 		type = "air_toair" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["AND_andaplat_medium_patrol_2"] = {
-		units = { "anddragon", "anddragon", "corhors", "corhors", "anddragon", "anddragon", "corhors", "corhors", "corhors", "corhors"}, 
+		units = { "anddragon", "anddragon", "andhors", "andhors", "anddragon", "anddragon", "andhors", "andhors", "andhors", "andhors"}, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},		
 	["AND_andaplat_air_bomber_1"] = { 
-		units = { "corhors", "corhors", "corhors", "corhors", "anddragon", "anddragon", "corhors", "corhors", "corhors" }, 	
+		units = { "andhors", "andhors", "andhors", "andhors", "anddragon", "anddragon", "andhors", "andhors", "andhors" }, 	
 		type = "air_bomber"
 	},		
 	["AND_andaplat_air_bomber_2"] = { 
-		units = { "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "corhors", "corhors" }, 	
+		units = { "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andabomb", "andhors", "andhors" }, 	
 		type = "air_bomber_strategic"
 	},		
 	["AND_andaplat_air_bomber_3"] = { 
-		units = { "corhors", "corhors", "anddragon", "anddragon", "anddragon" }, 	
+		units = { "andhors", "andhors", "anddragon", "anddragon", "anddragon" }, 	
 		type = "air_bomber_strategic"
 	},			
 -- andgant_terrestre -- ####################### definire ed inserire i ragnoni

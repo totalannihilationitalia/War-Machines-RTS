@@ -57,11 +57,11 @@ return {
 --- INSERT BUILDLIST
 -----------------------------------
                buildoptions = { 
-			[1] = "cordem",
-			[2] = "conartist",
-			[3] = "bigb",
-			[4] = "ebigb",
-			[5] = "kill2",
+			[1] = "cordem",			-- unità lanciafiamme
+			[2] = "conartist", 		-- unità aliena
+			[3] = "bigb",			-- simile a raven + aggiungere raggio laser
+			[4] = "ebigb",			-- unità aliena
+			[5] = "kill2",			-- fare hvy machinesgun
 			[6] = "armpraet",
 		},
 -----------------------------------------------------------
