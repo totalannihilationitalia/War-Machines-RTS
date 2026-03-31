@@ -1,567 +1,567 @@
-unit_id,nome_unita,descrizione,costo_energia,costo_metallo,tempo_costruzione,salute,potere_costruttivo,estrazione_metallo,immagine,e_costruttore,categoria,puo_costruire
-andainc,Incubator Lab,Produces Level 2 Kbots,1772,723,7151,2800,100,,andainc.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,andacsp|walker|andogre|exxec|andtanko|andtesla|androck
-andbrskr,Berserker,Battle Kbot,1972,244,2918,412,0,,andbrskr.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-andhart,Snipe,Light Artillery Hovercraft,897,45,1420,1050,0,,da_fare.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-andhawk,Eagle,Stealth Fighter,10200,140,11685,900,,,da_fare.png,,ALL NOTLAND MOBILE WEAPON ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOTSHIP,
-andinc,Incubator Lab,Produces Level 1 Kbots,1772,723,7151,2800,100,,andinc.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,andcsp|andscouter|anddauber|andbrskr|andgaso|andlipo|andmisa
-andspaa,Hunter,All-Terrain Anti-Air Spider,897,45,1420,680,0,,da_fare.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armfortgv,Fortification Gate,Electric Gate,4432,980,5705,1263,0,,ARMFORTGV.bmp,false,NOWEAPON NOTAIR NOTSUB NOTSHIP SURFACE,
-armtigre,Tiger,Assault evol. Tank,270000,13000,290000,20850,0,,armtigre,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-corrlnofire,Pulverizer,Anti-air Tower,0,0,1749,300,,,CORRL.DDS,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,
-eufacd,Adv. Construction Drone,Tech Level 2,5263,431,12397,1860,250,,da_fare.png,true,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,eufsolar|eufmstor|eufestor|eufmetex|eufavp|eufvp|eufap|euf_radar|eufpathsmall|eufsnpr|eufpath|armarch|eufloony|eufblab|euf_fence_gate|euf_fence_wall|eufadvmetex
-eufavp,Advanced Vehicle Plant,Produces EUF Vehicles,13440,2698,17940,4300,200,,eufavp.png,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,eufacd|eufbomb|eufher|euflong|eufopp|eufrld|eufshat|eufbigfoot|eufkaat|eufpilonax
-eufbigfoot,Goliath,Experimental Assault Tank,19892,1567,26125,7000,0,,nfagol.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-eufbomb,Bombarder X-5,Medium Range Plasma Tank,66789,4987,132786,1600,,,eufbomb.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-eufcd,Construction Drone,Tech Level 1,1802,128,4066,905,90,,,true,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,eufsolar|eufmstor|eufestor|eufmetex|eufametex|eufavp|eufvp|eufap|euf_radar|eufpathsmall|eufsnpr|eufpath|armarch|eufloony|eufblab|euf_fence_gate|euf_fence_wall
-eufher,Heretic,Assault Tank,1395,222,2938,2100,,,eufher.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-eufkaat,KAAT,Advanced Mobile Missile Launcher,5135,595,2,3250,0,,eufkaat.pcx,false,TANK WEAPON NOTAIR NOTSUB SURFACE,
-euflong,Longbow,Flak Tank,4611,567,8249,502,,,euflong.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-eufmedic,Anabolic Medic,Repairing BodyGuard,3801,111,2489,281,90,,eufmedic.png,true,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-eufopp,Oppressor,Support Tank,1316,158,2174,1900,,,eufopp.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-eufpilonax,PILONAX,Very Heavy artillery Tank,12650,1080,16012,8000,0,,eufpilonax.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-eufrld,Loader,Heavy Support Vehicle,3409,365,7631,1400,,,eufrld.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-eufsab,Sabre,Missile Tank,1190,143,2438,850,,,eufsab.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-eufshat,Shatterer,Heavy Missile Vehicle,2437,286,5991,1120,,,eufshat.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-eufthorn,Thorn,Laser Tank,1014,120,1866,655,,,eufthorn.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-euftrasparte,Transport Vehicle,Transport Vehicle,2137,194,5213,905,100,,euftrasparte.png,true,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-eufvp,Tank Plant,Builds 1 lvl tanks,1853,743,7192,2580,100,,eufvp.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,eufcd|eufthorn|eufsab
-medusa,Medusa,Heavy Quad-HLT Battery,27687,2546,25656,2195,0,,medusa,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-andabomb,Bombero,Strategic Bomber,11332,244,31064,1440,0,,da_fare.png,false,ALL NOTLAND MOBILE WEAPON ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOTSHIP,
-andbomb,Thunder,Bomber,4075,145,4778,560,0,,andbomb.png,false,ALL MOBILE WEAPON NOTLAND ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOTSHIP,
-anddragon,Dragon,Standoff Attack Missleboat,22973,1305,26500,1150,,,da_fare.png,,ALL WEAPON VTOL NOTSUB,
-andfig,Freedom Fighter,Fighter,2687,68,3465,150,,,andfig.png,,ALL MOBILE WEAPON ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER NOTLAND VTOL NOTSHIP,
-andhors,Flying Ray,Support Gun Ship,28234,2334,50584,2394,0,,da_fare.png,false,ALL WEAPON VTOL NOTSUB,
-andmerv,Minerva,Light Gunship,2374,133,5046,350,0,,icukam.png,false,ALL MOBILE NOTSUB VTOL WEAPON,
-armawac,Eagle,Radar/Sonar Plane,8599,176,12819,1600,0,,icuawac.png,false,ALL ANTIEMG NOTLAND MOBILE NOTSUB ANTIFLAME ANTIGATOR ANTILASER VTOL NOWEAPON NOTSHIP,
-armbrawl,Brawler,Gunship,6000,300,20000,1150,0,,icubraw.png,false,ALL NOTLAND MOBILE WEAPON ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOTSHIP,
-armcybr,Liche,Atomic Bomber,43062,2243,76203,3600,0,,iculiche.png,false,ALL WEAPON NOTSUB VTOL,
-armfig,Freedom Fighter,Fighter,2687,68,3465,150,,,icufig.png,,OGGETTISTATICI,
-armhawk,Hawk,Stealth Fighter,10200,140,11685,650,,,icuhawk.png,,ALL NOTLAND MOBILE WEAPON ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOTSHIP,
-armkam,Banshee,Light Gunship,2374,133,5046,350,0,,icukam.png,false,ALL MOBILE NOTSUB VTOL WEAPON,
-armlance,Lancet,Torpedo Bomber,7030,340,15000,1800,0,,iculance.png,false,ALL NOTLAND MOBILE WEAPON ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOTSHIP,
-armpeep,Peeper,Scout Plane,1475,30,2585,80,0,,icupeep.png,false,ALL MOBILE NOTLAND NOTSUB ANTIFLAME ANTIGATOR ANTIEMG ANTILASER VTOL NOWEAPON NOTSHIP,
-armpnix,Phoenix,Strategic Bomber,11332,244,31064,1440,0,,ICUPNIX.png,false,ALL NOTLAND MOBILE WEAPON ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOTSHIP,
-armthund,Thunder,Bomber,4075,145,4778,560,0,,icuthund.png,false,ALL MOBILE WEAPON NOTLAND ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOTSHIP,
-blade,Blade,Rapid Assault Flak Resistant Gunship,17403,951,30964,2400,0,,icublade.png,false,ALL WEAPON NOTSUB VTOL,
-bladew,Bladewing,Light Paralyzer Drone,1280,58,2073,60,0,,nfablade.png,,ALL WEAPON VTOL NOTSUB,
-cirr,Cirrus,Light Skycruiser,19946,1961,43453,7000,0,,cirr.png,false,ALL WEAPON VTOL NOTSUB,
-corape,Rapier,Gunship,5800,320,20000,1200,0,,nfaape.png,false,ALL MOBILE WEAPON NOTLAND ANTIGATOR VTOL ANTIFLAME ANTIEMG ANTILASER NOTSUB NOTSHIP,
-corawac,Vulture,Radar/Sonar Plane,8346,180,13264,1800,0,,nfaawac.png,false,ALL ANTIEMG NOTLAND MOBILE ANTIGATOR NOTSUB ANTIFLAME ANTILASER VTOL NOWEAPON NOTSHIP,
-corcrw,Krow,Flying Fortress,72000,6400,150000,19000,0,,nfacrw.png,false,ALL WEAPON VTOL NOTSUB,
-corfink,Fink,Scout Plane,1460,28,2156,90,0,,nfafink.png,false,ALL MOBILE NOTLAND ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOWEAPON NOTSHIP,
-corhurc,Hurricane,Heavy Strategic Bomber,14365,313,28461,1371,0,,nfahurc.png,false,ALL NOTLAND MOBILE WEAPON ANTIGATOR VTOL ANTIFLAME ANTIEMG ANTILASER NOTSUB NOTSHIP,
-corshad,Shadow,Bomber,5968,156,5054,615,0,,nfashad.png,false,ALL MOBILE WEAPON NOTLAND ANTIGATOR VTOL ANTIFLAME ANTIEMG ANTILASER NOTSUB NOTSHIP,
-cortitan,Titan,Torpedo Bomber,7800,360,22072,1900,0,,nfatitan.png,false,ALL NOTLAND MOBILE WEAPON ANTIGATOR VTOL ANTIFLAME ANTIEMG ANTILASER NOTSUB NOTSHIP,
-corvamp,Vamp,Stealth Fighter,9600,150,9055,600,,,nfavamp.png,,ALL NOTLAND MOBILE WEAPON ANTIGATOR VTOL ANTIFLAME ANTIEMG ANTILASER NOTSUB NOTSHIP,
-corveng,Avenger,Fighter,2025,90,3333,200,,,nfaveng.png,,ALL MOBILE WEAPON ANTIGATOR VTOL ANTIFLAME ANTIEMG ANTILASER NOTLAND NOTSUB NOTSHIP,
-demr,Demarcator,Heavy Skycruiser,47644,5264,171754,14000,0,,demr.png,false,VTOL WEAPON NOTSUB,
-odyc,Odyssey,Radar/Sonar Skycruiser,36083,3443,57045,5000,0,,odyc.png,false,ALL WEAPON VTOL NOTSUB,
-orcl,Oracle,Radar/Sonar Skycruiser,38023,3511,59993,5000,0,,orcl.png,false,ALL WEAPON VTOL NOTSUB,
-ostr,Ostraciser,Heavy Skycruiser,53598,4999,179033,14000,0,,ostr.png,false,ALL WEAPON VTOL NOTSUB,
-taln,Talon,Light Skycruiser,19001,2014,44398,7000,0,,taln.png,false,ALL WEAPON VTOL NOTSUB,
-andhvytransp,Astra,Heavy container transporter,72000,6400,150000,210000,0,,da_fare.png,false,ALL WEAPON VTOL NOTSUB,
-andstarcruiser,Krow,Star Cruiser,72000,6400,150000,21000,0,,andstarcruiser.png,false,ALL WEAPON VTOL NOTSUB,
-euffig,Freedom Fighter,Fighter,2687,68,3465,150,,,icufig.png,,OGGETTISTATICI,
-euftransp,Bobby,Air Transport,6667,318,16022,1050,0,,euftransp.png,false,ALL NOTLAND MOBILE NOTSUB VTOL NOWEAPON NOTSHIP,
-euf_hvytranspcontainer,Astra,Heavy container transporter,72000,6400,150000,210000,0,,euf_hvytranspcontainer.png,false,ALL WEAPON VTOL NOTSUB,
-piratesfig,Freedom Fighter,Fighter,2687,68,3465,150,,,icufig.png,,ALL MOBILE WEAPON ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER NOTLAND VTOL NOTSHIP,
-armatlas,Atlas,Air Transport,1239,64,3850,240,0,,icuatlas.png,false,ALL MOBILE WEAPON NOTLAND ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOTSHIP,
-armdfly,Dragonfly,Stealthy Armed Transport,6667,318,16022,1050,0,,icudfly.png,false,ALL NOTLAND MOBILE NOTSUB VTOL NOWEAPON NOTSHIP,
-corvalk,Valkyrie,Air Transport,1437,74,4122,250,0,,nfavalk.png,false,ALL MOBILE WEAPON NOTLAND ANTIGATOR VTOL ANTIFLAME ANTIEMG ANTILASER NOTSUB NOTSHIP,
-andcom,AND Commander,AND Commander,25000,2500,75000,3800,300,,andcom.png,true,ALL WEAPON NOTSUB COMMANDER NOTSHIP NOTAIR SURFACE,andsolar|andwind|andmstor|andestor|andmexun|andlab|andhp|andplat|andrad|andlartic
-icucom,ICU Commander,ICU Commander,25000,2500,75000,3000,300,,icucom.png,true,ALL WEAPON NOTSUB COMMANDER NOTSHIP NOTAIR SURFACE,armsolar|icuwind|armmstor|icuestor|icumetex|armmakr|armlab|armvp|armap|armsy|armeyes|armrad|armsonar|armdrag|iculighlturr|armtl|armrl|armfrad|armfrl|armfllt
-kicucom,Commander,Commander,25000,2500,75000,3000,300,,kicucom.png,true,ALL COMMANDER WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,armsolar|icuwind|armmstor|icuestor|icumetex|armmakr|armlab|armvp|armap|armsy|armeyes|armrad|armsonar|armdrag|iculighlturr|armtl|armrl|icupcan|armfrad|armfrl|armfllt
-knfacom,NFA K-Commander,ICU K-Commander,25000,2500,75000,3000,300,,kicucom.png,true,ALL WEAPON NOTSUB COMMANDER NOTSHIP NOTAIR SURFACE,corsolar|corwin|cormstor|corestor|cormex|cormakr|corlab|corvp|corap|corsy|coreyes|corrad|corsonar|cordrag|corllt|cortl|corrl|nfaacan|corfrad|corfrl|corfllt
-nfacom,ICU Commander,NFA Commander,25000,2500,75000,3000,300,,nfacom.png,true,ALL WEAPON NOTSUB COMMANDER NOTSHIP NOTAIR SURFACE,corsolar|corwin|cormstor|corestor|cormex|cormakr|corlab|corvp|corap|corsy|coreyes|corrad|corsonar|cordrag|corllt|cortl|corrl|corfrad|corfrl|corfllt
-icucom_u1,ICU Commander LvL1,International Combat Union Commander,25000,2500,75000,7000,300,,icucom.png,true,ALL WEAPON NOTSUB COMMANDER NOTSHIP NOTAIR SURFACE,armsolar|icuwind|armmstor|icuestor|icumetex|armmakr|armlab|armvp|armap|armsy|armeyes|armrad|armsonar|armdrag|iculighlturr|armtl|armrl|armfrad|armfrl|armfllt
-icucom_u2,ICU Commander LvL2,International Combat Union Commander,25000,2500,75000,8000,300,,icucom.png,true,ALL WEAPON NOTSUB COMMANDER NOTSHIP NOTAIR SURFACE,armsolar|icuwind|armmstor|icuestor|icumetex|armmakr|armlab|armvp|armap|armsy|armeyes|armrad|armsonar|armdrag|iculighlturr|armtl|armrl|armfrad|armfrl|armfllt
-icucom_u3,ICU Commander LvL3,International Combat Union Commander,25000,2500,75000,10000,300,,icucom.png,true,ALL WEAPON NOTSUB COMMANDER NOTSHIP NOTAIR SURFACE,armsolar|icuwind|armmstor|icuestor|icumetex|armmakr|armlab|armvp|armap|armsy|armeyes|armrad|armsonar|armdrag|iculighlturr|armtl|armrl|armfrad|armfrl|armfllt
-icucom_u4,ICU Commander LvL4,International Combat Union Commander,25000,2500,75000,15000,300,,icucom.png,true,ALL WEAPON NOTSUB COMMANDER NOTSHIP NOTAIR SURFACE,armsolar|icuwind|armmstor|icuestor|icumetex|armmakr|armlab|armvp|armap|armsy|armeyes|armrad|armsonar|armdrag|iculighlturr|armtl|armrl|armfrad|armfrl|armfllt
-icudecom,ICU Commander,Decoy Commander,12085,705,26941,3000,150,,icucom.png,true,ALL WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-nfacom_u1,NFA Commander LvL1,Commander,25000,2500,75000,7000,300,,CORCOM.DDS,true,ALL WEAPON COMMANDER NOTSUB NOTSHIP NOTAIR SURFACE,corsolar|corwin|cormstor|corestor|cormex|cormakr|corlab|corvp|corap|corsy|coreyes|corrad|corsonar|cordrag|corllt|cortl|corrl|corfrad|corfrl|corfllt
-nfacom_u2,NFA Commander LvL2,Commander,25000,2500,75000,8000,300,,CORCOM.DDS,true,ALL WEAPON COMMANDER NOTSUB NOTSHIP NOTAIR SURFACE,corsolar|corwin|cormstor|corestor|cormex|cormakr|corlab|corvp|corap|corsy|coreyes|corrad|corsonar|cordrag|corllt|cortl|corrl|corfrad|corfrl|corfllt
-nfacom_u3,NFA Commander LvL3,Commander,25000,2500,75000,10000,300,,CORCOM.DDS,true,ALL WEAPON COMMANDER NOTSUB NOTSHIP NOTAIR SURFACE,corsolar|corwin|cormstor|corestor|cormex|cormakr|corlab|corvp|corap|corsy|coreyes|corrad|corsonar|cordrag|corllt|cortl|corrl|corfrad|corfrl|corfllt
-nfacom_u4,NFA Commander LvL4,Commander,25000,2500,75000,15000,300,,CORCOM.DDS,true,ALL WEAPON COMMANDER NOTSUB NOTSHIP NOTAIR SURFACE,corsolar|corwin|cormstor|corestor|cormex|cormakr|corlab|corvp|corap|corsy|coreyes|corrad|corsonar|cordrag|corllt|cortl|corrl|corfrad|corfrl|corfllt
-nfadecom,NFA Commander,Decoy Commander,12085,705,26941,3000,150,,nfacom.png,true,ALL WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-andaca,Construction Aircraft,Tech Level 1,4320,105,8844,140,45,,da_fare.png,true,ALL MOBILE NOTLAND NOTSUB ANTIFLAME ANTIGATOR ANTIEMG ANTILASER VTOL NOWEAPON NOTSHIP,andfus|andaafus|andametex|andaestor|andarad|andshield|anddfens|andill|andchaos|andernie|chemist|andlaunch|andangel|andhp|medusa|andahp
-andach,Adv. Construction Hovercraft,Hovercraft Constructor,4000,285,12882,1930,140,,andach.png,true,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,andfus|andaafus|andametex|andaestor|andarad|andshield|anddfens|andill|andchaos|andernie|chemist|andlaunch|andangel|andhp|medusa|andahp
-andca,Construction Aircraft,Tech Level 1,4320,105,8844,140,45,,andca.png,true,ALL MOBILE NOTLAND NOTSUB ANTIFLAME ANTIGATOR ANTIEMG ANTILASER VTOL NOWEAPON NOTSHIP,andsolar|andwind|andmstor|andestor|andmexun|andmex|andaplat|andahp|andhp|andlab|andplat|andrad|andlartic|andartic|andhartic|andpopaa|andrl|andaa
-andch,Construction Hovercraft,Light Hovercraft Constructor,1400,110,3551,600,90,,andch.png,true,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,andsolar|andwind|andmstor|andestor|andmexun|andmex|andahp|andhp|andlab|andplat|andrad|andlartic|andartic|andhartic|andpopaa|andrl|andaa
-armaca,Advanced Construction Aircraft,Tech Level 2,31029,2901,27763,2180,180,,icuaca.png,true,ALL NOTLAND MOBILE NOTSUB ANTIFLAME ANTIGATOR ANTIEMG ANTILASER VTOL NOWEAPON NOTSHIP,armfus|amgeo|armgmm|armmoho|armmmkr|armuwadves|armuwadvms|armarad|armveil|armfort|armasp|armtarg|armsd|armgate|armamb|armpb|armanni|armflak|mercury|armamd|armsilo|armbrtha|armvulc|armap|armaap|icufff|advmoho|armfarad|armfamb|armfanni|armfflak|armfmercury
-armack,Advanced Construction Kbot,Tech Level 2,4084,290,9432,840,140,,icuack.png,true,KBOT MOBILE ALL NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armfus|armshltx|amgeo|armgmm|armmoho|armmmkr|armuwadves|armuwadvms|armarad|armveil|armfort|armasp|armtarg|armsd|armgate|armamb|armpb|armanni|armflak|mercury|armamd|armsilo|armbrtha|armvulc|armlab|armalab|advmoho|armfarad|armfamb|armfanni|armfflak|armfmercury
-armacsub,Advanced Construction Sub,Tech Level 2,7568,695,16565,360,300,,icuacsub.png,true,UNDERWATER ALL NOTLAND MOBILE NOWEAPON NOTAIR,armuwmme|armsy|armasy|armfarad|armfamb|armfanni|armfflak
-armacv,Advanced Construction Vehicle,Tech Level 3,5263,431,12397,1860,250,,icuacv.png,true,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armfus|icugant|aafus|amgeo|armgmm|armmoho|armmmkr|armuwadves|armuwadvms|armarad|armveil|armfort|armasp|armtarg|armsd|armgate|armamb|armpb|armanni|armflak|mercury|armamd|armsilo|armbrtha|armvulc|armvp|armavp|advmoho|armfarad|armfamb|armfanni|armfflak|armfmercury
-armca,Construction Aircraft,Tech Level 1,4320,105,8844,140,45,,icuca.png,true,ALL MOBILE NOTLAND NOTSUB ANTIFLAME ANTIGATOR ANTIEMG ANTILASER VTOL NOWEAPON NOTSHIP,armsolar|icuadvsol|icuwind|armgeo|armmstor|icuestor|icumetex|armamex|armmakr|armaap|armlab|armvp|armap|armsy|armeyes|armrad|armdrag|iculighlturr|tawf001|armhlt|armguard|armrl|packo|armjamt|armsonar|armtl|armfrad|armfrl|armfllt|armfhlt|armfhllt|armfguard|fpacko
-armcs,Construction Ship,Tech Level 1,2130,255,5121,1105,250,,icucs.png,true,ALL NOTLAND MOBILE NOTSUB NOWEAPON SHIP NOTAIR SURFACE,armuwmex|armsy|armasy|armsonar|armtl|armfrad|armfrl|armfllt|armfhlt|armfhllt|armfguard|fpacko
-armcv,Construction Vehicle,Tech Level 1,1802,128,4066,1240,90,,icucv.png,true,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armsolar|icuadvsol|icuwind|armgeo|armmstor|icuestor|icumetex|armamex|armmakr|armavp|armlab|armvp|armap|armsy|armeyes|armrad|armdrag|iculighlturr|tawf001|armhlt|armguard|armrl|packo|armjamt|armsonar|armtl|armfrad|armfrl|armfllt|armfhlt|armfhllt|armfguard|fpacko
-coraca,Advanced Construction Aircraft,Tech Level 2,8824,231,18001,185,80,,nfaaca.png,true,ALL NOTLAND MOBILE ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOWEAPON NOTSHIP,corfus|cmgeo|corbhmth|cormoho|cormexp|cormmkr|coruwadves|coruwadvms|corarad|corshroud|corfort|corasp|cortarg|corsd|corgate|cortoast|corvipe|cordoom|corflak|screamer|corfmd|corsilo|corint|corbuzz|corap|coraap|nfafff|corfarad|corftoast|corfvipe|corfflak
-corack,Advanced Construction Kbot,Tech Level 2,4342,319,9709,900,140,,nfaack.png,true,KBOT MOBILE ALL NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,corfus|corgant|cmgeo|corbhmth|cormoho|cormexp|cormmkr|coruwadves|coruwadvms|corarad|corshroud|corfort|corasp|cortarg|corsd|corgate|cortoast|corvipe|cordoom|corflak|screamer|corfmd|corsilo|corint|corbuzz|corlab|coralab|corfarad|corftoast|corfvipe|corfdoom|corfflak|corfscreamer
-coracsub,Advanced Construction Sub,Tech Level 2,7911,690,17228,370,300,,nfaacsub.png,true,ALL UNDERWATER MOBILE NOTLAND NOWEAPON NOTAIR,coruwmme|coruwadves|coruwadvms|corsy|corasy|corfarad|corfvipe|corfflak|corftoast
-coracv,Advanced Construction Vehicle,Tech Level 3,5512,452,12882,1930,250,,nfaacv.png,true,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,corfus|cafus|cmgeo|corbhmth|cormoho|cormexp|cormmkr|coruwadves|coruwadvms|corarad|corshroud|corfort|corasp|cortarg|corsd|corgate|cortoast|corvipe|cordoom|corflak|screamer|corfmd|corsilo|corint|corbuzz|corvp|coravp|corfarad|corftoast|corfvipe|corfdoom|corfflak|corfscreamer
-corca,Construction Aircraft,Tech Level 1,4580,110,9286,145,45,,nfaca.png,true,ALL MOBILE NOTLAND ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOWEAPON NOTSHIP,corsolar|coradvsol|corwin|corgeo|cormstor|corestor|cormex|corexp|cormakr|coraap|corlab|corvp|corap|corsy|cornanotc|coreyes|corrad|cordrag|cormaw|corllt|hllt|corhlt|corpun|corrl|madsam|corjamt|corsonar|cortl|corfrad|corfrl|corfhlt|corfllt|fhllt|corfpun|fmadsam
-corck,Construction Kbot,Tech Level 1,1622,113,3551,590,90,,nfack.png,true,KBOT MOBILE ALL NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,corsolar|coradvsol|corwin|corgeo|cormstor|corestor|cormex|corexp|cormakr|coralab|corlab|corvp|corap|corsy|cornanotc|coreyes|corrad|cordrag|cormaw|corllt|hllt|corhlt|corpun|corrl|madsam|corjamt|corsonar|cortl|corfrad|corfrl|corfhlt|corfllt|fhllt|corfpun|fmadsam
-corcs,Construction Ship,Tech Level 1,2375,260,5537,1150,250,,nfacs.png,true,ALL NOTLAND MOBILE NOTSUB SHIP NOWEAPON NOTAIR SURFACE,coruwmex|coreyes|corsy|corasy|corsonar|cortl|corfrad|corfrl|corfhlt|corfllt|fhllt|corfpun|fmadsam
-corcv,Construction Vehicle,Tech Level 1,1979,134,4160,1290,90,,nfacv.png,true,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,corsolar|coradvsol|corwin|corgeo|cormstor|corestor|cormex|corexp|cormakr|coravp|corlab|corvp|corap|corsy|cornanotc|coreyes|corrad|cordrag|cormaw|corllt|hllt|corhlt|corpun|corrl|madsam|corjamt|corsonar|cortl|corfrad|corfrl|corfhlt|corfllt|fhllt|corfpun|fmadsam
-icuck,Construction Kbot,Tech Level 1,1521,102,3453,540,90,,icuck.png,true,KBOT MOBILE ALL NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armsolar|icuadvsol|icuwind|armgeo|armmstor|icuestor|icumetex|armamex|armmakr|armalab|armlab|armvp|armap|armsy|armeyes|armrad|armdrag|iculighlturr|tawf001|armhlt|armguard|armrl|packo|armjamt|armsonar|armtl|armfrad|armfrl|armfllt|armfhlt|armfhllt|armfguard|fpacko
-andaestor,Hardened Energy Storage,Increases Energy Storage (40000),10032,790,20416,11400,0,,andaestor.png,false,ALL NOTSUB NOWEAPON NOTAIR SURFACE,
-andestor,NFA Energy Storage,Increases Energy Storage (6000),1659,166,4257,1800,0,,andestor.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-andmstor,Metal Storage,Increases Metal Storage (3000),535,305,2925,2658,0,,andmstor.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-andwall,Fortification Gate,Electric Gate,4432,980,5705,1263,0,,andwall.png,false,NOWEAPON NOTAIR NOTSUB NOTSHIP SURFACE,
-armdrag,Dragon's Teeth,Perimeter Defense,150,10,255,100,0,,icudrag.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armfort,Fortification Wall,Perimeter Defense,675,27,965,100,0,,icufort.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armmakr,Metal Maker,Converts Energy to Metal,1087,1,2605,150,0,,icumakr.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armmmkr,Moho Metal Maker,Converts Energy to Metal,19350,358,34980,400,0,,icummkr.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armmstor,Metal Storage,Increases Metal Storage (3000),535,305,2925,2658,0,,icumstor.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armtarg,Targeting Facility,Enhanced Radar Targeting,6802,757,8707,1900,0,,icutarg.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armuwadves,Hardened Energy Storage,Increases Energy Storage (40000),10094,773,20302,10500,0,,icuuwadves.png,false,ALL NOTSUB NOWEAPON NOTAIR SURFACE,
-armuwadvms,Hardened Metal Storage,Increases Metal Storage (10000),10493,705,20391,9300,0,,icuuwadvms.png,false,ALL NOTSUB NOWEAPON NOTAIR SURFACE,
-cordrag,Dragon's Teeth,Perimeter Defense,150,10,255,100,0,,nfadrag.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-corestor,NFA Energy Storage,Increases Energy Storage (6000),1659,166,4257,1800,0,,nfaestor.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-corfort,Fortification Wall,Perimeter Defense,612,23,810,100,0,,nfafort.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-cormakr,Metal Maker,Converts Energy to Metal,1156,1,2682,150,0,,nfamakr.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-cormmkr,Moho Metal Maker,Converts Energy to Metal,18928,351,31253,500,0,,nfammkr.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-cormstor,Metal Storage,Increases Metal Storage (3000),550,320,2925,2612,0,,nfamstor.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-cortarg,Targeting Facility,Enhanced Radar Targeting,7058,749,10898,1800,0,,nfatarg.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-coruwadves,Hardened Energy Storage,Increases Energy Storage (40000),10032,790,20416,11400,0,,nfauwadves.png,false,ALL NOTSUB NOWEAPON NOTAIR SURFACE,
-coruwadvms,Hardened Metal Storage,Increases Metal Storage (10000),10400,710,20524,10050,0,,nfauwadvms.png,false,ALL NOTSUB NOWEAPON NOTAIR SURFACE,
-eufestor,EUF Energy Storage,Increases Energy Storage (6000),1592,159,4119,1700,0,,eufestor.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-eufhq,EUF HQ,EUF headquarters,600,54,1137,10000,0,,eufhq.png,false,OGGETTISTATICI,
-eufmstor,Metal Storage,Increases Metal Storage (3000),535,305,2925,2658,0,,eufmstor.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-euf_fence_gate,Fortification Gate,Electric Gate,4432,980,5705,1263,0,,euf_fence_gate.png,true,ARM NOWEAPON NOTAIR NOTSUB NOTSHIP SURFACE,
-euf_fence_wall,Fortification Gate,Electric Gate,300,140,1600,1263,0,,euf_fence_wall.png,false,NOWEAPON NOTAIR NOTSUB NOTSHIP SURFACE,
-icuestor,ICU Energy Storage,Increases Energy Storage (6000),1592,159,4119,1700,0,,icuestor.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-andaa,Ints,Pop-Up Missile Battery,5357,338,5810,1200,,,da_fare.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,
-andchaos,Chaos Machine,Heavy-Duty Stunner,12968,1584,18575,2060,0,,andchaos.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-anddfens,D-FENS,Defensive-Fusillade Energy Nullifying System,11327,2463,16765,3862,0,,anddfens.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-andernie,Ernie,Long Range Plasma and Anti Air Cannon,84680,7384,89185,2250,0,,da_fare.png,false,NOTAIR NOTSUB SURFACE,
-andill,Illuminator,Rapid-Firing Plasma Beam Defense Tower,12000,3500,100000,2400,0,,andill.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-andlartic,LLT,Light Laser Tower,652,84,2724,585,0,,andlartic.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-andlaunch,Orbital Laser,Launch Facility,2686524,120965,1774578,4651,0,,andlaunch.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-andpopaa,Controller,Pop-up Anti-Air Missile Launcher,11788,735,20800,1600,0,,andpopaa.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,
-andrl,System AA,Anti-air Tower,805,76,1749,300,,,da_fare.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,
-andshield,Shield,Plasma Deflector,62191,3532,54139,3000,0,,andshield.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armamb,Ambusher,Cloakable Heavy Plasma Cannon,16821,2342,27072,3600,0,,ICUAMB.PNG,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armamd,Protector,Anti-Nuke System,59439,1437,95678,3300,0,,icuamd.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armanni,Annihilator,Tachyon Accelerator,62563,2985,52071,5500,0,,icuanni.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armbrtha,Big Bertha,Long Range Plasma Cannon,60680,4184,85185,4200,0,,icuBRTHA.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armfamb,Ambusher,Cloakable Heavy Plasma Cannon,16821,2342,27072,3600,0,,icufamb.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armfanni,Annihilator,Tachyon Accelerator,62563,2985,52071,5500,0,,icufanni.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armfflak,Floating Flakker,Floating Anti-Air Flak Gun,12198,769,19005,1575,,,icufflak.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,
-armfguard,Guardian,Medium Range Plasma Battery,11687,1645,21377,2760,0,,icufguard.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armfhllt,Beamer,Beam Laser Turret,1434,176,5324,1290,0,,icufhllt.png,false,ALL WEAPON NOTSUB NOTAIR SURFACE,
-armfhlt,Sentinel,Heavy Laser Floating Tower,4398,414,9575,2325,0,,icufhlt.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armflak,Flakker,Anti-Air Flak Gun,12198,769,19005,1575,,,icuflak.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,
-armfllt,ICU LLT,Light Laser Tower,637,81,2662,560,0,,icufllt.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armfmercury,Mercury,Long-Range Missile Tower,32802,1572,27190,2250,,,icufmercury.png,,ALL WEAPON NOTSUB SPECIAL NOTAIR NOTHOVER SURFACE,
-armfrl,Defender,Anti-air Tower,843,79,1843,295,,,icufrl.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,
-armgate,Keeper,Plasma Deflector,62191,3532,54139,3000,0,,icugate.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armguard,Guardian,Medium Range Plasma Battery,11687,1645,21377,2760,0,,icuguard.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armhlt,Sentinel,Heavy Laser Tower,4398,414,9575,2325,0,,icuhlt.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armpb,Pit Bull,Pop-up Gauss Cannon,12896,638,14961,2531,,,icupb.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armrl,Defender,Anti-air Tower,843,79,1843,295,,,icurl.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,
-armsd,Tracer,Intrusion Countermeasure System,6739,661,11877,2400,,,icusd.png,,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armsilo,Retaliator,Nuclear ICBM Launcher,84268,7625,178453,5300,0,,icusilo.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armtl,Harpoon,Torpedo Launcher,2058,302,4120,1450,0,,icutl.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armvulc,Vulcan,Rapid-Fire Long-Range Plasma Cannon,503644,33890,672961,34440,0,,icuvulc.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-chemist,Screamer,Long-Range Missile Tower,40362,1762,26280,2355,,,chemist.png,,ALL WEAPON NOTSUB SPECIAL NOTAIR NOTHOVER SURFACE,
-corbuzz,Buzzsaw,Rapid-Fire Long-Range Plasma Cannon,481404,32460,680630,34960,0,,nfabuzz.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-cordoom,Doomsday Machine,Energy Weapon,22599,2478,55276,10000,0,,nfadoom.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-corfflak,Cobra,Floating Anti-Air Flak Gun,13297,792,20112,1655,,,nfafflak.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,
-corfhlt,Gaat Gun,Heavy Laser Tower,4443,449,9622,2475,0,,nfafhlt.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-corflak,Cobra,Anti-Air Flak Gun,13297,792,20112,1655,,,nfaflak.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,
-corfllt,LLT,Light Laser Tower,652,84,2724,585,0,,nfafllt.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-corfmd,Fortitude,Anti-Nuke System,64321,1508,96450,3280,0,,nfafmd.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-corfpun,Pit,Medium Range Plasma Battery,12585,1727,19268,2940,0,,nfafpun.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-corfrl,Pulverizer,Floating Anti-air Tower,805,76,1749,300,,,nfafrl.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,
-corftoast,Toaster,Heavy Plasma Cannon,16115,2318,25717,3840,0,,nfaftoast.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-corgate,Overseer,Plasma Deflector,63833,3736,57166,3200,0,,nfagate.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-corhlt,Gaat Gun,Heavy Laser Tower,4443,449,9622,2475,0,,nfahlt.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-corint,Intimidator,Long Range Plasma Cannon,62520,4328,93237,4600,0,,nfaint.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-corllt,LLT,Light Laser Tower,652,84,2724,585,0,,nfallt.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-cormaw,Dragon's Maw,Pop-up Flamethrower Turret,1412,273,4419,1100,0,,nfamaw.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-corpun,Pit,Medium Range Plasma Battery,12585,1727,19268,2940,0,,nfapun.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-corrl,Pulverizer,Anti-air Tower,805,76,1749,300,,,nfarl.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,
-corsd,Nemesis,Intrusion Countermeasure System,6363,698,11955,2500,,,nfasd.png,,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-corsilo,Silencer,Nuclear ICBM Launcher,77536,7187,181243,5560,0,,nfasilo.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-cortl,Urchin,Torpedo Launcher,2058,316,4233,1520,0,,nfatl.png,false,ALL NOTLAND WEAPON NOTSHIP NOTSUB SPECIAL NOTAIR SURFACE,
-cortoast,Toaster,Heavy Plasma Cannon,16115,2318,25717,3840,0,,nfatoast.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-eufflakker,Flakker,Anti-Air Flak Gun,17425,1069,28508,2286,0,,da_fare.png,false,NOTAIR NOTSUB SURFACE,
-eufloony,Lunatic,Pop-up Rocket Battery,6298,702,13525,1100,,,eufloony.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-eufpath,Psychopath,Heavy Gatling Tower,4598,514,10575,2500,,,eufpath.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-eufpathsmall,Psychopath,Light Gatling Tower,652,84,2724,600,,,eufpathsmall.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-eufsnpr,Sniper Tower,Sniper Tower,5098,1092,11005,1000,,,eufsnpr.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-fhllt,fhllt,Anti-Swarm Double LLT,1467,185,5448,1500,0,,fhllt.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-fmadsam,SAM,Hardened Missile Battery,5750,295,5237,2500,,,nfafmadsam.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,
-fpacko,Pack0,Floating pop-Up Missile Battery,5357,338,5810,1200,,,fpacko.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,
-hllt,HLLT,Anti-Swarm Double LLT,1467,185,5448,1500,0,,hllt.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-iculighlturr,ICU LLT,Light Laser Tower,637,81,2662,560,0,,icullt.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-icupcan,Patroller Cannon,Patroller Cannon,8000,960,45000,4200,0,,icupcan.png,false,ALL NOTSUB NOTVTOL WEAPON SURFACE,
-madsam,SAM,Hardened Missile Battery,5750,295,5237,2500,,,nfamadsam.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,
-mercury,Mercury,Long-Range Missile Tower,32802,1572,27190,2250,,,icumercury.png,,ALL WEAPON NOTSUB SPECIAL NOTAIR NOTHOVER SURFACE,
-nfaacan,Ak Cannon,Ak Cannon,8000,960,45000,4200,0,,nfaacan.png,false,ALL NOTHOVER NOTVTOL NOTSUB NOTVTOL WEAPON SURFACE,
-packo,Pack0,Pop-Up Missile Battery,5357,338,5810,1200,,,packo.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,
-screamer,Screamer,Long-Range Missile Tower,40362,1762,26280,2355,,,nfascreamer.png,,ALL WEAPON NOTSUB SPECIAL NOTAIR NOTHOVER SURFACE,
-tawf001,Beamer,Beam Laser Turret,1434,176,5324,1290,0,,tawf001.png,false,ALL WEAPON NOTSUB NOTAIR SURFACE,
-aafus,Advanced Fusion Reactor,Enhanced Energy Output / Storage,64115,9109,157529,7150,0,,AAFUS.PNG,false,ALL NOTSUB NOWEAPON SPECIAL NOTAIR SURFACE,
-amgeo,Moho Geothermal Powerplant,Hazardous Energy Source,24852,1520,33152,3240,0,,icuamgeo.png,false,ALL NOTSUB NOWEAPON NOTAIR SURFACE,
-andaafus,Advanced Fusion Reactor,Enhanced Energy Output / Storage,64115,9109,157529,9150,0,,andaafus.png,false,ALL NOTSUB NOWEAPON SPECIAL NOTAIR SURFACE,
-andadvsol,ICU Advanced Solar Collector,Produces Energy,4725,343,7945,1020,0,,da_fare.png,false,ALL NOTSUB NOWEAPON NOTAIR SURFACE,
-andfus,Fusion Reactor,Produces Energy / Storage,19846,4004,70014,4000,0,,andfus.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-andsolar,Solar Collector,Produces Energy,0,141,2766,320,0,,andsolar.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-andwind,AND Wind Generator,Produces Energy,162,35,1603,176,0,,andwind.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armfus,Fusion Reactor,Produces Energy / Storage,19846,4004,70014,4000,0,,icufus.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armgeo,Geothermal Powerplant,Produces Energy / Storage,12568,520,13078,1750,0,,icugeo.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armgmm,Prude,Safe Geothermal Powerplant,24230,1058,41347,12500,0,,icugmm.PNG,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armsolar,Solar Collector,Produces Energy,0,145,2845,306,0,,icusolar.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-cafus,Advanced Fusion Reactor,Enhanced Energy Output / Storage,44730,9107,158390,8500,0,,nfaafus.png,false,ALL NOTSUB NOWEAPON SPECIAL NOTAIR SURFACE,
-cmgeo,Moho Geothermal Powerplant,Hazardous Energy Source,24568,1420,32078,3720,0,,nfacmgeo.png,false,ALL NOTSUB NOWEAPON NOTAIR SURFACE,
-coradvsol,Advanced Solar Collector,Produces Energy,3703,348,8143,1080,0,,nfaadvsol.png,false,ALL NOTSUB NOWEAPON NOTAIR SURFACE,
-corbhmth,Behemoth,Geothermal Plasma Battery,32428,2949,59640,7500,0,,nfabhmth.png,false,ALL NOTLAND NOTSUB WEAPON NOTSHIP NOTAIR SURFACE,
-corfus,Fusion Reactor,Produces Energy / Storage,25292,4203,75424,4500,0,,nfafus.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-corgeo,Geothermal Powerplant,Produces Energy / Storage,12375,505,12875,1850,0,,nfageo.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-corsolar,Solar Collector,Produces Energy,0,141,2766,320,0,,nfasolar.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-corwin,Wind Generator,Produces Energy,163,42,1687,179,0,,nfawin.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-eufsolar,Solar Collector,Produces Energy,0,145,2845,306,0,,eufsolar.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-icuadvsol,ICU Advanced Solar Collector,Produces Energy,4725,343,7945,1020,0,,icuadvsol.png,false,ALL NOTSUB NOWEAPON NOTAIR SURFACE,
-icuwind,ICU Wind Generator,Produces Energy,162,35,1603,176,0,,icuwing.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-andalab,Teleport units,Teleport units,1772,723,7151,2800,100,,andincubator2.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,andacsp|walker|andogre|exxec|interceptor
-andlab,Teleport units,Teleport units,1772,723,7151,2800,100,,andincubator1.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,andcsp|andscouter|andspmis|andspaa|anddauber|andbrskr
-armaap,Advanced Aircraft Plant,Produces Level 2 Aircraft,26986,3006,20851,3360,200,,icuaap.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armaca|armbrawl|armpnix|armlance|armhawk|armawac|armdfly|blade|armcybr
-armalab,Advanced Kbot Lab,Produces Level 2 Kbots,13761,2729,16224,3808,200,,icualab.png,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armack|armfast|armzeus|armmav|armsptk|armfido|armsnipe|icufboy|armaak|icudecom|armmark|armscab
-armap,Aircraft Plant,Produces Level 1 Aircraft,1370,850,7240,1850,100,,icuap.png,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armca|armpeep|armfig|armthund|armatlas|armkam
-armasy,Advanced Shipyard,Produces Level 2 Ships,10096,3432,15972,4512,200,,icuasy.png,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armacsub|armsubk|armaas|armcrus|armbats|armmship|aseadragon|armcarry
-armavp,Advanced Vehicle Plant,Produces Level 2 Vehicles,13440,2698,17940,4296,200,,icuavp.png,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armacv|armcroc|armlatnk|icubull|armst|armmart|armmerl|armmanni|armyork|icuseer|armjam|armcamp
-armlab,Kbot Lab,Produces Level 1 Kbots,1130,605,6760,2690,100,,ICULAB.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,icuck|icupatroller|icurock|icuinv|armjeth|icuwar
-armshltx,Experimental Gantry,Produces Level 3 Units,54540,7396,61380,14400,600,,icushltx.png,true,ALL PLANT NOTSUB NOWEAPON NOTAIR SURFACE,icuraz|warhammer|icufurie
-armsy,Shipyard,Produces Level 1 Ships,775,615,6050,2990,100,,icusy.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armcs|armsub|armpt|decade|armroy
-armvp,Vehicle Plant,Produces Level 1 Vehicles,1853,743,7192,2780,100,,icuvp.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armcv|armfav|icuflash|armpincer|armstump|tawf013|icujanus|armsam
-blab,Saitan's Lair,Builds encryp family,25748,15485,3912,5298,350,,,true,CORE PLANT CTRL_F LEVEL3 NOWEAPON NOTAIR NOTSUB,
-coraap,Advanced Aircraft Plant,Produces Level 2 Aircraft,26571,2979,20678,3520,200,,nfaaap.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,coraca|corape|corhurc|cortitan|corvamp|corawac|corcrw
-coralab,Advanced Kbot Lab,Produces Level 2 Kbots,15232,2681,16819,4072,200,,nfaalab.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,corack|nfapyro|corcan|corsumo|cormort|corhrk|coraak|corvoyr|corspy|corspec
-corap,Aircraft Plant,Produces Level 1 Aircraft,1340,830,7180,1925,100,,nfaap.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,corca|corfink|corveng|corshad|corvalk|bladew
-corasy,Advanced Shipyard,Produces Level 2 Ships,10763,3345,15696,4416,200,,nfaasy.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,coracsub|corshark|corssub|corarch|corcrus|corbats|corblackhy|corcarry|corsjam
-coravp,Advanced Vehicle Plant,Produces Level 2 Vehicles,14784,2647,18492,4628,200,,nfaavp.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,coracv|corseal|nfareap|corparrow|nfagol|tawf114|cormart|corvroc|corsent|cormabm|coreter|nfavrad
-corgant,Experimental Gantry,Produces Level 3 Units,58524,7848,67321,16000,600,,nfagant.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,nfakarg|nfacoug|corkrog|armraven|gorg
-corlab,Kbot Lab,Produces Level 1 Kbots,1250,580,7000,2600,100,,nfalab.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,corck|nfaak|nfastorm|nfathud|corcrash
-corsy,Shipyard,Produces Level 1 Ships,750,600,6000,2990,100,,nfasy.png,true,ALL PLANT NOTSUB NOWEAPON NOTAIR SURFACE,corcs|corsub|corpt|coresupp|corroy
-corvp,Vehicle Plant,Produces Level 1 Vehicles,1772,723,7151,2650,100,,nfavp.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,corcv|nfafav|nfagator|nfagarp|nfaraid|nfalevlr|corwolv|cormist
-eufap,Aircraft Plant,Produces Level 1 Aircraft,1370,850,7240,1850,100,,eufap.png,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,euffig
-eufblab,Bio Lab,Produces Clones,756,470,4004,1234,69,,eufblab.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armmedic
-euf_harvester_factory,Harvester factory,Harvester Factory,4639,919,14538,11010,0,,euf_harvester_factory.png,false,ALL NOTLAND MOBILE WEAPON NOTSUB SHIP NOTAIR SURFACE,
-icufff,Anti-gravity hangar,Builds sky cruisers,21941,5284,80132,4802,400,,icufff.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,cirr|orcl|demr
-icugant,Tiger Gantry,Builds Tiger,60000,8000,68000,16000,600,,icugant.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,armshock|armtigre
-nfafff,Anti-gravity hangar,Builds very large aircraft,21520,5345,80210,5200,400,,nfafff.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,taln|odyc|ostr
-andahp,Adv. Hovercraft Platform,Builds Level 2 Hovercraft,14000,3607,18492,5205,200,,andahp.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,andach|androck|andtanko|andtesla|andnikola|andahaa
-andahp_nocostr,Adv. Hovercraft Platform,Builds Level 2 Hovercraft,14000,3607,18492,5205,200,,andahp_noconstr.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,androck|andtanko|andtesla|andnikola|andahaa
-andhp,Hovercraft vehicles lvl1,Builds Hovercraft,1772,723,7151,2800,100,,andhp.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,andch|andgaso|andlipo|andmisa|andhart
-andhp_noai,Hovercraft vehicles lvl1,Builds Hovercraft,1772,723,7151,2800,100,,andhpnoai.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,andch|andgaso|andlipo|andmisa|andgaso_noai|andlipo_noai|andmisa_noai|andhart|andhart_noai
-andhp_nocostr,Hovercraft vehicles lvl1,Builds Hovercraft,1772,723,7151,2800,100,,andhp_nocostr.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,andgaso|andlipo|andmisa|andhart
-andincubator1,Teleport units,Teleport units,1772,723,7151,2800,100,,andincubator1.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,andgaso|andlipo|andmisa
-andincubator2,Teleport units,Teleport units,1772,723,7151,2800,100,,andincubator2.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,andtanko|andtesla|androck
-andtorreattacco,Gabriel,Line of death,1772,723,7151,2800,100,,andtorreattacco.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,andch|andgaso|andlipo|andmisa
-andtorreattacco_anim1,Gabriel,Line of death,1772,723,7151,2800,100,,andtorreattacco.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,andch|andgaso|andlipo|andmisa
-andtorreattacco_anim2,Gabriel,Line of death,1772,723,7151,2800,100,,andtorreattacco.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,andch|andgaso|andlipo|andmisa
-andgant,Teleport units,Teleport units,1772,723,7151,16000,100,,andgant.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,cordem|conartist|bigb|ebigb|kill2|armpraet
-armflea,Flea,Fast Light Scout Kbot,212,21,1000,58,0,,flea_1.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-armfleaa,Accurate Flea,Long Range Kbot,542,81,1000,358,0,,flea_2.png,false,KBOT WEAPON NOTAIR NOTSUB SURFACE,
-armfly,Fly,Fast Light Laser Fleaship,514,24,333,72,0,,,false,ALL WEAPON NOTSUB VTOL,
-armflyk,Fly bomber,Fly bomber,1000,100,333,101,0,,,false,ALL MOBILE WEAPON NOTLAND ANTIGATOR VTOL ANTIFLAME ANTIEMG ANTILASER NOTSUB NOTSHIP,
-juju,Arachno Killer,Spider Hunter,27321,2157,23087,235000,0,,,false,KBOT WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-mflea,Marco Flea,Killer Kbot,8563,935,4013,1154,0,,,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-minigoth,mini,Fast Light Scout Kbot,23412,2621,55555,4532,0,,minigoth.jpg,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-omegaa,Omega Weapon,Omega Energy weapon AA,1185025,62685,2832943,5210,0,,,false,ARM SPECIAL WEAPON LEVEL3 NOTAIR NOTSUB SURFACE,
-omegat,Omega Weapon,Omega Energy weapon,1185025,62685,2832943,5210,0,,da_fare.png,false,ARM SPECIAL WEAPON LEVEL3 NOTAIR NOTSUB SURFACE,
-order_deathray,Flying DeathLaser,Floating Deathray,1280,58,1333,1337,0,,nfablade.png,,ALL WEAPON SURFACE NOTSUB,
-order_drill,Unknown Contraption,Fire-Breathing WallBuster,31212,1551,100000,13543,0,,Order_drill.jpg,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-order_fork,Spooning Fork,Floating Spaceship,13212,4151,33333,2000,0,,da_fare.png,false,ALL VTOL NOTSHIP,
-roost,Unidentified Unit,Gates God-Like Forces,1337.0,500,3315,1800,0,,roost.DDS,,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-andahaa,Predator,Heavy Rocket Hovercraft,12477,1129,25000,3500,0,,da_fare.png,false,ALL HOVER MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-andgaso,Gaso,Light Hovercraft,1042,118,2300,693,0,,andgaso.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-andgaso_noai,Gaso,Light Hovercraft,1042,118,2300,693,0,,andgaso_noai.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-andlipo,Lipo,Light Hovercraft,1042,118,1761,1000,0,,andlipo.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-andlipo_noai,Lipo,Light Hovercraft,1042,118,1761,1000,0,,andlipo_noai.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-andmisa,Misa,Light Missile hovercraft,2027,140,2945,690,0,,andmisa.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-andmisa_noai,Misa,Light Missile hovercraft,2027,140,2945,690,0,,andmisa_noai.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-andnikola,Nikola,Heavy Laser Hovercraft,12477,1129,25000,3500,0,,andnikola.png,false,ALL HOVER MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-androck,Rocker,Heavy Rocket Hovercraft,12477,1129,25000,3500,0,,androck.png,false,ALL HOVER MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-andtanko,Tanko,Heavy Cannon Hovercraft,12477,1129,25000,3500,0,,andtanko.png,false,ALL HOVER MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-andtesla,Tesla,Heavy Cannon Hovercraft,12477,1129,25000,3500,0,,andtesla.png,false,ALL HOVER MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-advmoho,Advanced Moho Mine,Advanced Moho Metal Extractor,27000,2100,39640,3000,0,0.0100,icuadvmoho.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-andametex,Advanced Moho Mine,Advanced Moho Metal Extractor,27000,2100,39640,3000,0,0.0100,andametex.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-andmex,Metal Extractor,Extracts metal,514,51,2100,200,0,0.00175,andmex.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-andmexun,Metal Extractor,Extracts metal,514,51,1800,200,0,0.001,,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armamex,Twilight,Stealthy Cloakable Metal Extractor,2081,159,2611,1450,0,0.0009,icuamex.png,false,ALL NOTSUB NOWEAPON NOTAIR SURFACE,
-armmoho,Moho Mine,Advanced Metal Extractor / Storage,7214,582,14938,2500,0,0.004,icumoho.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-corexp,Exploiter,Armed Metal Extractor,2264,188,3460,1300,0,0.0009,nfaexp.png,false,ALL NOTLAND ANTIGATOR NOTSUB ANTIEMG NOWEAPON NOTSHIP NOTAIR SURFACE,
-cormex,NFA Metal Extractor,Extracts Metal,514,51,1874,175,0,0.001,nfamex.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-cormexp,Moho Exploiter,Convertible Metal Extractor,12121,2219,32500,2000,0,0.0035,nfamexp.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-cormoho,Moho Mine,Advanced Metal Extractor / Storage,7677,598,14125,3500,0,0.004,nfamoho.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-eufadvmetex,Advanced Moho Mine,Advanced Moho Metal Extractor,27000,2100,39640,3000,0,0.0100,eufadvmetex.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-eufametex,EUF Advanced Metal Extractor,Extracts Metal,521,50,1800,170,0,0.001,eufametex.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-eufmetex,EUF Metal Extractor,Extracts Metal,521,50,1800,170,0,0.001,eufmetex.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-icumetex,ICU Metal Extractor,Extracts Metal,521,50,1800,170,0,0.001,icumetex.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armuwmex,Underwater Metal Extractor,Extracts Metal,674,55,1875,180,0,0.001,icuuwmex.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR,
-armuwmme,Underwater Moho Mine,Advanced Metal Extractor / Storage,9164,601,35370,2053,0,0.004,icuuwmme.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR,
-coruwmex,Underwater Metal Extractor,Extracts Metal,519,56,1887,185,0,0.001,nfauwmex.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR,
-coruwmme,Underwater Moho Mine,Advanced Metal Extractor / Storage,10076,846,34783,2072,0,0.004,nfauwmme.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR,
-armaas,Archer,Anti-Air Ship,7058,658,8628,2360,,,icuaas.png,,ALL NOTLAND MOBILE WEAPON NOTSUB SHIP NOTAIR NOTHOVER SURFACE,
-armbats,Millennium,Battleship,20731,5181,58730,15810,0,,icubats.png,false,ALL NOTLAND MOBILE WEAPON NOTSUB SHIP NOTAIR SURFACE,
-armcarry,Colossus,Aircraft Carrier with Anti-Nuke,71257,1572,85394,7640,1000,,icucarry.png,true,ALL NOTLAND MOBILE NOTSUB NOWEAPON SHIP NOTAIR SURFACE,
-armcrus,Conqueror,Cruiser,13608,1719,19789,4506,0,,icucrus.png,false,ALL NOTLAND MOBILE WEAPON NOTSUB SHIP NOTAIR SURFACE,
-armmship,Ranger,Cruise Missile Ship,9804,2648,22317,2200,0,,icumship.png,false,ALL NOTLAND MOBILE WEAPON NOTSUB SHIP NOTAIR SURFACE,
-armpt,Skeeter,Scout Boat,985,100,2062,224,0,,icupt.png,false,ALL NOTLAND MOBILE WEAPON NOTSUB SHIP NOTAIR SURFACE,
-armroy,Crusader,Destroyer,5671,987,13391,2575,0,,icuroy.png,false,ALL NOTLAND MOBILE WEAPON NOTSUB SHIP NOTAIR SURFACE,
-armsub,Lurker,Submarine,3724,651,9894,835,0,,icusub.png,false,UNDERWATER ALL MOBILE WEAPON NOTLAND NOTAIR,
-armsubk,Piranha,Submarine Killer,9481,1048,17767,895,0,,icusubk.png,false,UNDERWATER ALL NOTLAND MOBILE WEAPON NOTAIR,
-aseadragon,Epoch,Flagship,238406,32122,299523,71250,,,icuseadragon.png,,ALL WEAPON NOTSUB SHIP NOTAIR SURFACE,
-corarch,Shredder,Anti-Air Ship,7921,614,9791,2450,,,nfaarch.png,,ALL MOBILE WEAPON NOTLAND SHIP NOTSUB NOTAIR NOTHOVER SURFACE,
-corbats,Warlord,Battleship,21941,5404,60640,16685,0,,nfabats.png,false,ALL NOTLAND MOBILE WEAPON SHIP NOTSUB NOTAIR SURFACE,
-corblackhy,Black Hydra,Flagship,252321,34585,309264,77500,,,nfablackhy.png,,ALL WEAPON NOTSUB SHIP NOTAIR SURFACE,
-corcarry,Hive,Aircraft Carrier with Anti-Nuke,74715,1579,85271,7950,1000,,nfacarry.png,true,ALL NOTLAND MOBILE NOTSUB SHIP NOWEAPON NOTAIR SURFACE,
-corcrus,Executioner,Cruiser,13551,1794,19950,4649,0,,nfacrus.png,false,ALL NOTLAND MOBILE WEAPON SHIP NOTSUB NOTAIR SURFACE,
-coresupp,Supporter,Corvette,1912,367,6660,1700,0,,nfasupp.png,false,ALL WEAPON SHIP NOTSUB NOTAIR SURFACE,
-corpt,Searcher,Scout Boat,917,95,1877,228,,,nfapt.png,,ALL MOBILE WEAPON NOTLAND SHIP NOTSUB NOTAIR NOTHOVER SURFACE,
-corroy,Enforcer,Destroyer,5756,1021,13368,2800,0,,nfaroy.png,false,ALL NOTLAND MOBILE WEAPON SHIP NOTSUB NOTAIR SURFACE,
-corshark,Shark,Submarine Killer,9245,956,15529,835,0,,nfashark.png,false,ALL UNDERWATER MOBILE WEAPON NOTLAND NOTAIR,
-corsjam,Phantom,Radar Jammer Ship,2254,135,7025,570,0,,nfasjam.png,false,ALL NOTLAND MOBILE NOTSUB SHIP NOWEAPON NOTAIR SURFACE,
-corssub,Leviathan,Battle Submarine,11940,1757,23007,2320,0,,nfassub.png,false,ALL UNDERWATER MOBILE WEAPON NOTLAND NOTAIR,
-corsub,Snake,Submarine,3902,679,9729,835,0,,nfasub.png,false,ALL UNDERWATER MOBILE WEAPON NOTLAND NOTAIR,
-decade,Decade,Corvette,2055,378,6525,1650,0,,icudecade.png,false,ALL WEAPON NOTSUB SHIP NOTAIR SURFACE,
-andarad,Radar Tower,Adv. Radar System,600,54,1137,81,0,,andarad.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-andrad,Radar Tower,Early Warning System,600,54,1137,81,0,,andrad.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armarad,Advanced Radar Tower,Long-Range Radar,17830,525,11800,320,,,icuarad.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armeyes,Dragon's Eye,Perimeter Camera,800,30,1500,250,0,,icu_camera.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armfarad,Advanced Radar Tower,Long-Range Radar,17830,525,11800,320,,,icufarad.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armfrad,Floating Radar Tower,Early Warning System,600,54,1137,81,0,,icufrad.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armjamt,Sneaky Pete,Cloakable Jammer Tower,7945,226,9955,712,0,,icujamt.png,false,ALL NOTSUB NOWEAPON SPECIAL NOTAIR SURFACE,
-armrad,Radar Tower,Early Warning System,600,54,1137,81,0,,icurad.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armsonar,Sonar Station,Locates Water Units,403,20,912,50,0,,icusonar.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armveil,Veil,Long-Range Jamming Tower,17501,119,9080,750,0,,icuveil.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-corarad,Advanced Radar Tower,Long-Range Radar,17920,522,11960,330,0,,nfaarad.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-coreyes,Dragon's Eye,Perimeter Camera,800,30,1500,250,0,,nfaeye.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-corfarad,Advanced Radar Tower,Long-Range Radar,17920,522,11960,330,0,,nfafarad.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-corfrad,Radar Tower,Early Warning System,600,54,1137,81,0,,nfafrad.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-corjamt,Castro,Short-Range Jamming Device,4791,109,4577,960,0,,nfajamt.png,false,ALL NOTSUB NOWEAPON SPECIAL NOTAIR SURFACE,
-corrad,Radar Tower,Early Warning System,600,54,1137,81,0,,nfarad.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-corshroud,Shroud,Long-Range Jamming Tower,18304,124,9392,800,0,,nfashroud.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-corsonar,Sonar Station,Locates Water Units,399,20,900,52,0,,nfasonar.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-euf_radar,Radar Tower,Early Warning System,600,54,1137,81,0,,euf_radar.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-anddauber,Dauber,Heavy Laser Escort,4265,285,8427,795,0,,anddauber.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-andogre,Ogre,Heavy Amphibious Kbot,33562,2020,50975,14000,0,,,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-armaak,Archangel,Advanced Amphibious Anti-Air Kbot,5266,483,6958,1020,,,icuaak.png,,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,
-armfast,Zipper,Fast Raider Kbot,4382,177,3960,620,0,,icufast.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-armfido,Fido,Mortar/Skirmish Kbot,5849,253,7693,1150,0,,ICUFIDO.PNG,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-armjeth,Jethro,Amphibious Anti-air Kbot,1097,115,1831,570,,,icujeth.png,,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,
-armmark,Marky,Radar Kbot,1152,95,3800,320,0,,icumark.png,false,KBOT MOBILE ALL NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armmav,Maverick,Skirmish Kbot (Combat Auto-Repair),12180,655,18384,1120,0,,icumav.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-armpraet,Praetorian,Experimental ICU BioMech,577039,27182,552145,80000,0,,andpraetorian.png,false,KBOT WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-armraven,Catapult,Heavy Rocket Kbot,75625,4551,126522,5500,0,,nfaraven.png,false,KBOT MOBILE WEAPON ALL ANTIGATOR NOTSUB ANTIEMG NOTSHIP NOTAIR SURFACE,
-armsptk,Recluse,All-Terrain Rocket Spider,4200,375,8775,1050,0,,icusptk.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armzeus,Zeus,Assault Kbot,5668,329,7252,2975,0,,icuzeus.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-coraak,Manticore,Heavy Amphibious Anti-Air Kbot,5814,608,7581,1280,,,nfaaak.png,,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,
-corcan,Can,Armored Assault Kbot,8722,522,11734,4350,0,,nfacan.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-corcrash,Crasher,Amphibious Anti-air Kbot,1101,116,1900,580,,,nfacrash.png,,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,
-corhrk,Dominator,Heavy Rocket Kbot,5507,560,6591,550,0,,nfahrk.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-corkrog,Krogoth,Experimental Assault Kbot,577039,27182,552145,133700,0,,nfakrog.png,,KBOT WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-cormort,Morty,Mobile Mortar Kbot,2065,382,5139,850,0,,nfamort.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-corspec,Spectre,Radar Jammer Kbot,1453,70,5439,310,0,,nfaspec.png,false,KBOT MOBILE ALL NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-corspy,Parasite,Radar-Invisible Spy Kbot,11452,156,22247,340,0,,nfaspy.png,false,KBOT MOBILE ALL NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-corsumo,Sumo,Heavily Armored Assault Kbot,33562,2020,50975,14000,0,,nfasumo.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-corvoyr,Voyeur,Radar Kbot,1283,93,3945,350,0,,nfavoyr.png,false,KBOT MOBILE ALL NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-exxec,Exxec,heavy assault K-bot,5311,475,8500,1700,500,,exxec.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-gorg,Juggernaut,(barely) Mobile Heavy Turret,481165,18705,629630,300000,0,,gorg.png,false,KBOT WEAPON ALL NOTSUB NOTAIR SURFACE,
-icufboy,Fatboy,Heavy Plasma Kbot,11193,1418,22397,7000,0,,icufboy.png,false,KBOT WEAPON ALL NOTSUB NOTAIR SURFACE,
-icufurie,Arm Furie,Experimental Kbot,116664,29489,302193,20489,0,,icufurie.png,false,KBOT NOTAIR NOTSUB SURFACE,
-icuinv,ICU Invasor,Light Plasma Kbot,1231,121,2210,810,0,,icuinv.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-icupatroller,Patroller,ICU Light Fantry Robot,897,45,1420,300,0,,icupatroller.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-icuraz,Razorback,Battle Mech,63286,3577,88566,10000,0,,icuraz.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTAIR SURFACE,
-icurock,Rocko,Rocket Kbot,944,97,1887,650,0,,icurock.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-icusnipe,Sharpshooter,Sniper Kbot,14727,535,19137,520,0,,icusnipe.png,false,KBOT MOBILE WEAPON ALL NOTSHIP NOTAIR SURFACE,
-icuwar,Warrior,Medium Infantry Kbot,2944,248,3828,1300,0,,icuwar.png,false,KBOT MOBILE WEAPON ALL ANTIGATOR NOTSUB ANTIEMG NOTSHIP NOTAIR SURFACE,
-interceptor,Interceptor,Medium Laser-Artillery Mech,1400,800,30000,1700,0,,,false,KBOT MOBILE WEAPON ALL NOTSUB NOTAIR SURFACE,
-marauder,Marauder,Amphibious Assault Mech,19534,910,28957,4000,0,,MARAUDER.DDS,false,KBOT MOBILE WEAPON ALL NOTSUB NOTAIR SURFACE,
-nfaak,Saboteur,Infantry Kbot,826,34,1279,260,0,,nfaak.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-nfacoug,Cougar,Heavy Assault Mech,24535,1730,56042,4000,0,,nfacougar.png,false,KBOT WEAPON NOTAIR NOTSUB SURFACE,
-nfakarg,Karganeth,All-Terrain Assault Mech,63286,3577,88609,10000,0,,nfakarg.png,false,KBOT WEAPON ALL NOTSTRUCTURE NOTSUB NOTAIR SURFACE,
-nfapyro,Pyro,Fast Assault Kbot,2783,189,5027,1000,0,,nfapyro.png,false,KBOT MOBILE WEAPON ALL ANTIFLAME NOTSUB NOTSHIP NOTAIR SURFACE,
-nfastorm,Tempest,Rocket Kbot,853,81,1722,670,0,,nfastorm.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-nfathud,Thud,Light Plasma Kbot,1061,132,1971,900,0,,nfathud.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,
-walker,Walker,Assault Kbot,2631,265,3124,1489,0,,,false,ARM KBOT WEAPON NOTAIR NOTSUB SURFACE,
-warhammer,Warhammer WHM-6K,Assault / Heavy Weapons Battlemech,66000,3700,58000,4000,0,,warhammer.png,,KBOT MOBILE WEAPON ALL NOTSUB NOTAIR SURFACE,
-andbarracs,Building,A building,600,54,1137,1200,0,,andbarracs.png,false,SURFACE,
-andflag,Building,A flag,600,54,1137,600,0,,andflag.png,false,SURFACE,
-andhangar_close,Building,Barracs,600,54,1137,1200,0,,andhangar_close.png,false,SURFACE,
-andmuos,Building,A space radar,2000,54,1137,600,0,,andmuos.png,false,SURFACE,
-andtower,Building,A building,600,54,1137,600,0,,andtower.png,false,SURFACE,
-andtowercontrol,Building,A control tower,2000,54,1137,2000,0,,andtowercontrol.png,false,SURFACE,
-armgeneratore,armgeneratore,An electric generator.,0,1000,10000,50000,,,armgeneratore.bmp,,,
-armhvytransp,Heavy Transporter,Trasport Units,13761,2729,16224,3808,200,,armhvytransp.bmp,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR,
-artefatto_sporco,Alien,Tech Level 1,1802,128,4066,1240,90,,icucv.png,true,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR,
-asteroide01,Building,An asteroid,200,0.00006,300,50,,,asteroide01.png,,OGGETTISTATICI,
-asteroide02,Building,An asteroid,200,0.00006,300,50,,,asteroide02.png,,OGGETTISTATICI,
-asteroide03,Building,An asteroid,200,0.00006,300,50,,,asteroide03.png,,OGGETTISTATICI,
-bigrock001,Rock,A rock,200,0.00006,300,50,,,bigrock001.png,,OGGETTISTATICI,
-bigrock002,Rock,A rock,200,0.00006,300,50,,,bigrock002.png,,OGGETTISTATICI,
-bigrock003,Rock,A rock,200,0.00006,300,50,,,bigrock003.png,,OGGETTISTATICI,
-bigrock004,Rock,A rock,200,0.00006,300,50,,,bigrock004.png,,OGGETTISTATICI,
-bigrock005,Rock,A rock,200,0.00006,300,50,,,bigrock005.png,,OGGETTISTATICI,
-bigrock006,Rock,A rock,200,0.00006,300,50,,,bigrock006.png,,OGGETTISTATICI,
-bigrock007,Rock,A rock,200,0.00006,300,50,,,bigrock007.png,,OGGETTISTATICI,
-bigrock008,Rock,A rock,200,0.00006,300,50,,,bigrock008.png,,OGGETTISTATICI,
-bigrock009,Rock,A rock,200,0.00006,300,50,,,bigrock009.png,,OGGETTISTATICI,
-car001,Car,Civilian car,944,97,1887,300,0,,car001.png,false,OGGETTISTATICI,
-car002,Car,Civilian car,944,97,1887,300,0,,car002.png,false,OGGETTISTATICI,
-car003,Car,Civilian car,944,97,1887,300,0,,car003.png,false,OGGETTISTATICI,
-container_1,Livrium Container,EUF Container,1802,128,4066,2000,90,,container_1.png,true,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE OGGETTISTATICI,
-controllo_spazioporto,Tower Control,Capture this to take control of objects,600,54,1137,81,0,,controllo_spazioporto.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR,
-crane,Building,A crane,200,0.00006,300,50,,,crane.png,,OGGETTISTATICI,
-cumulo_1,Rock,A lava pile,200,0.00006,300,50,,,rock001.png,,OGGETTISTATICI,
-cumulo_2,Rock,A lava pile,200,0.00006,300,50,,,rock001.png,,OGGETTISTATICI,
-cumulo_3,Rock,A lava pile,200,0.00006,300,50,,,rock001.png,,OGGETTISTATICI,
-cumulo_4,Rock,A lava pile,200,0.00006,300,50,,,rock001.png,,OGGETTISTATICI,
-cumulo_5,Rock,A lava pile,200,0.00006,300,50,,,rock001.png,,OGGETTISTATICI,
-cumulo_6,Rock,A lava pile,200,0.00006,300,50,,,rock001.png,,OGGETTISTATICI,
-eridlon_antenna,Antenna,Antenna,4432,980,5705,1263,0,,ARMFORTGV.bmp,false,OGGETTISTATICI,
-eridlon_bridge1,Bridge,Building,0.1,20,100,1500,,,,,SURFACE,
-eridlon_bridge2,Bridge,Building,0.1,20,100,1500,,,,,SURFACE,
-eridlon_fence,Fence,Port fence,0.1,20,100,1500,,,,,OGGETTISTATICI,
-eridlon_fence_dx,Fence,Port fence,0.1,20,100,1500,,,,,OGGETTISTATICI,
-eridlon_fort,Fence,Port fence,0.1,20,100,1500,,,,,OGGETTISTATICI,
-eridlon_gate,Fortification Gate,Eridlon Gate,10000,980,5705,6000,0,,ARMFORTGV.bmp,false,OGGETTISTATICI,
-eridlon_gate_wall,Fortification Gate,Eridlon Gate,10000,980,5705,6000,0,,ARMFORTGV.bmp,false,OGGETTISTATICI,
-eridlon_pala_eolica,Wind Generator,Produces Energy,162,35,1603,3000,0,,armwing.png,false,OGGETTISTATICI,
-eridlon_semaforo,traffic lights,traffic lights,944,97,1887,300,0,,eridlon_semaforo.png,false,OGGETTISTATICI,
-eridlon_semaforo_60,traffic lights,traffic lights,944,97,1887,300,0,,da_fare.png,false,OGGETTISTATICI,
-eridlon_semaforo_dx,traffic lights,traffic lights,944,97,1887,300,0,,da_fare.png,false,OGGETTISTATICI,
-eridlon_semaforo_sx,traffic lights,traffic lights,944,97,1887,300,0,,da_fare.png,false,OGGETTISTATICI,
-eufspazioporto,Spaceport,ICU Spaceport,13761,2729,16224,400000,200,,,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-eufspazioportoanim,Spaceport,Transport units,13761,2729,1224,80000,3500,,eufspazioportodin.pcx,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-eufspazioportodin,Spaceport,Transport units,13761,2729,1224,80000,3500,,,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,euftrasparte|nfagol|ruspa_builder
-euf_harvester,Reinforced Bus Vehicle,Tech Level 1,1802,128,4066,1240,90,,da_fare.png,false,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-euf_saving_vehicle,Reinforced Bus Vehicle,Tech Level 1,1802,128,4066,1240,90,,da_fare.png,false,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-folsom_dam_fogna_e,Sewage Outfalls,Sewage Outfalls,600,54,1137,3000,0,,folsom_dam_fogna.png,false,OGGETTISTATICI,
-folsom_dam_fogna_n,Sewage Outfalls,Sewage Outfalls,600,54,1137,3000,0,,folsom_dam_fogna.png,false,OGGETTISTATICI,
-folsom_dam_fogna_o,Sewage Outfalls,Sewage Outfalls,600,54,1137,3000,0,,folsom_dam_fogna.png,false,OGGETTISTATICI,
-folsom_dam_fogna_s,Sewage Outfalls,Sewage Outfalls,600,54,1137,3000,0,,folsom_dam_fogna.png,false,OGGETTISTATICI,
-livrium00,Building,A livrium crystal,200,0.00006,300,50,,,livrium00.png,,OGGETTISTATICI,
-livrium01,Building,A livrium crystal,200,0.00006,300,50,,,livrium01.png,,OGGETTISTATICI,
-livrium02,Building,A livrium crystal,200,0.00006,300,50,,,livrium02.png,,OGGETTISTATICI,
-livrium03,Building,A livrium crystal,200,0.00006,300,50,,,livrium03.png,,OGGETTISTATICI,
-livrium04,Building,A livrium crystal,200,0.00006,300,50,,,livrium04.png,,OGGETTISTATICI,
-nfahvytrsp,Shark transporter,Heavy transporter,13761,2729,1224,400000,3500,,,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR,
-pala001,Building,A building,600,54,1137,81,0,,pala001.png,false,OGGETTISTATICI,
-pala001_d,Building,Building,0.1,20,100,1500,,,,,OGGETTISTATICI,
-pala002,Building,A building,200,0.00006,300,50,,,pala002.png,,OGGETTISTATICI,
-pala002_d,Building,Building,0.1,20,100,1500,,,,,OGGETTISTATICI,
-pala003,Building,A building,200,0.00006,300,50,,,pala003.png,,OGGETTISTATICI,
-pala003_d,Building,Building,0.1,20,100,1500,,,,,OGGETTISTATICI,
-pala004,Building,A building,200,0.00006,300,50,,,pala004.png,,OGGETTISTATICI,
-pala004_d,Building,Building,0.1,20,100,1500,,,,,OGGETTISTATICI,
-pala005,Building,A building,200,0.00006,300,50,,,pala005.png,,OGGETTISTATICI,
-pala005_d,Building,Building,0.1,20,100,1500,,,,,OGGETTISTATICI,
-pala006,Building,A building,200,0.00006,300,50,,,pala006.png,,OGGETTISTATICI,
-pala008,Building,A building,200,0.00006,300,50,,,pala006.png,,OGGETTISTATICI,
-pala009,Building,A building,200,0.00006,300,50,,,pala006.png,,OGGETTISTATICI,
-pala010,Building,A building,200,0.00006,300,50,,,pala010.png,,OGGETTISTATICI,
-pala011,Building,A building,200,0.00006,300,50,,,pala011.png,,OGGETTISTATICI,
-palma001,Palm,A palm,200,0.00006,300,50,,,palma.png,,OGGETTISTATICI,
-palma002,Palm,A palm,200,0.00006,300,50,,,palma.png,,OGGETTISTATICI,
-palma003,Palm,A palm,200,0.00006,300,50,,,palma.png,,OGGETTISTATICI,
-palma004,Palm,A palm,200,0.00006,300,50,,,palma.png,,OGGETTISTATICI,
-palma005,Palm,A palm,200,0.00006,300,50,,,palma.png,,OGGETTISTATICI,
-palma006,Palm,A palm,200,0.00006,300,50,,,palma.png,,OGGETTISTATICI,
-pino001,pine,A pine,200,0.00006,300,50,,,pino001.png,,OGGETTISTATICI,
-pino002,pine,A pine,200,0.00006,300,50,,,pino002.png,,OGGETTISTATICI,
-pino003,pine,A pine,200,0.00006,300,50,,,pino003.png,,OGGETTISTATICI,
-pino004,pine,A pine,200,0.00006,300,50,,,pino004.png,,OGGETTISTATICI,
-pino005,pine,A pine,200,0.00006,300,50,,,pino005.png,,OGGETTISTATICI,
-rock001,Rock,A rock,200,0.00006,300,50,,,rock001.png,,OGGETTISTATICI,
-rock002,Rock,A rock,200,0.00006,300,50,,,rock002.png,,OGGETTISTATICI,
-rock003,Rock,A rock,200,0.00006,300,50,,,rock003.png,,OGGETTISTATICI,
-rock004,Rock,A rock,200,0.00006,300,50,,,rock004.png,,OGGETTISTATICI,
-ruspa,Bulldozer,Bulldozer,0.1,20,100,1500,,,ruspa.png,,OGGETTISTATICI,
-ruspa_builder,Construction Vehicle,Tech Level 1,1802,128,4066,1240,90,,ruspa_builder.png,{,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,controllo_spazioporto|eufhq
-ruspa_camion,Truck,Truck,0.1,20,100,1500,,,ruspa_camion.png,,OGGETTISTATICI,
-ruspa_gru,Crane,Crane mobile,0.1,20,100,1500,,,ruspa_gru.png,,OGGETTISTATICI,
-ruspa_rimorchio,Trailer,Truck trailer,0.1,20,100,1500,,,ruspa_rimorchio.png,,OGGETTISTATICI,
-station_one_antenna,Orbital Radar Tower,Antenna,600,54,1137,30000,0,,Station_one_antenna.png,false,OGGETTISTATICI,
-station_one_antenna_small,Orbital Radar Tower,Early Warning System,600,54,1137,6000,0,,Station_one_antenna_small.png,false,OGGETTISTATICI,
-station_one_cannon,SAM,EUF Anti Air cannon,5750,295,5237,2500,,,station_one_cannon.png,,OGGETTISTATICI,
-station_one_scudi,Orbital Gate Shield,Orbital Station Shield,600,54,1137,6000,0,,Station_one_scudi.png,false,OGGETTISTATICI,
-station_one_tunnel,Orbital Gate Tunnel,Orbital Station Bracket,600,54,1137,1500,0,,Station_one_tunnel.png,false,OGGETTISTATICI,
-stazione_controllo_1,Building,A control station,600,54,1137,3500,0,,stazione_radar_1.png,false,OGGETTISTATICI,
-stazione_radar_1,Building,A radar station,600,54,1137,3500,0,,stazione_radar_1.png,false,OGGETTISTATICI,
-tank_1,Building,A gas tank,600,54,1137,3500,0,,tank_1.png,false,OGGETTISTATICI,
-tank_2,Building,A gas tank,600,54,1137,3500,0,,tank_2.png,false,OGGETTISTATICI,
-therock001,Rock,A rock,200,0.00006,300,50,,,therock001.png,,OGGETTISTATICI,
-therock002,Rock,A rock,200,0.00006,300,50,,,therock002.png,,OGGETTISTATICI,
-therock003,Rock,A rock,200,0.00006,300,50,,,therock003.png,,OGGETTISTATICI,
-therock004,Rock,A rock,200,0.00006,300,50,,,therock004.png,,OGGETTISTATICI,
-therock005,Rock,A rock,200,0.00006,300,50,,,therock004.png,,OGGETTISTATICI,
-therock006,Rock,A rock,200,0.00006,300,50,,,therock004.png,,OGGETTISTATICI,
-therock007,Rock,A rock,200,0.00006,300,50,,,therock004.png,,OGGETTISTATICI,
-therock008,Rock,A rock,200,0.00006,300,50,,,therock004.png,,OGGETTISTATICI,
-treno_locomotiva,Building,A railroad car,600,54,1137,800,0,,treno_locomotiva.png,false,OGGETTISTATICI,
-treno_vagone_aperto,Building,A railroad car,600,54,1137,800,0,,treno_vagone_aperto.png,false,OGGETTISTATICI,
-treno_vagone_chiuso,Building,A railroad car,600,54,1137,800,0,,treno_vagone_chiuso.png,false,OGGETTISTATICI,
-treno_vagone_container,Building,A railroad car,600,54,1137,800,0,,treno_vagone_container.png,false,OGGETTISTATICI,
-wmrtsbuilder,WMRTS freatures builder,the WMRTS features builder,31029,2901,27763,2180,180,,icuaca.png,{,ALL NOTLAND MOBILE NOTSUB ANTIFLAME ANTIGATOR ANTIEMG ANTILASER VTOL NOWEAPON NOTSHIP,palma001|palma002|palma003|palma004|palma005|palma006|pino001|pino002|pino003|pino004|pino005|pala001|pala002|pala003|pala004|pala005|pala006|pala008|pala009|pala010|pala011|pala005_d|ruspa|ruspa_camion|ruspa_gru|ruspa_rimorchio|rock001|rock002|rock003|rock004|Station_one_tunnel|Station_one_antenna_small|eridlon_gate|eridlon_gate_wall|eridlon_semaforo|euf_fence_gate|euf_fence_wall|eufspazioporto|station_one_cannon|Station_one_scudi|folsom_dam_fogna_n|folsom_dam_fogna_s|folsom_dam_fogna_o|folsom_dam_fogna_e|Station_one_antenna|cumulo_1|cumulo_2|cumulo_3|cumulo_4|cumulo_5|cumulo_6|fabbrica_1|fabbrica_3|fabbrica_3_bis|fabbrica_4|lampione_sud|lampione_dx|car001|car002|car003|therock001|therock002|therock003|therock004|therock005|therock006|therock007|therock008|stazione_radar_1|stazione_controllo_1|tank_1|tank_2|container_1|treno_locomotiva|treno_vagone_chiuso|treno_vagone_aperto|treno_vagone_container|andwall|euf_fence_wall|crane|andbarracs|andhangar_close|andmuos|andtowercontrol|livrium00|livrium01|livrium02|livrium03|livrium04|andflag|andtower|bigrock001|bigrock002|bigrock003|bigrock004|bigrock005|bigrock006|bigrock007|bigrock008|bigrock009
-fabbrica_1,Building,A factory,600,54,1137,81,0,,fabbrica_1.png,false,OGGETTISTATICI,
-fabbrica_3,Building,A factory,600,54,1137,81,0,,fabbrica_3.png,false,OGGETTISTATICI,
-fabbrica_3_bis,Building,A factory,600,54,1137,81,0,,fabbrica_3_bis.png,false,OGGETTISTATICI,
-fabbrica_4,Building,A factory,600,54,1137,81,0,,fabbrica_4.png,false,OGGETTISTATICI,
-lampione_dx,Building,A street light,600,54,1137,81,0,,lampione_sud.png,false,OGGETTISTATICI,
-lampione_sud,Building,A street light,600,54,1137,81,0,,lampione_sud.png,false,OGGETTISTATICI,
-armasp,Air Repair Pad,Automatically Repairs Aircraft,4311,403,9315,1600,1000,,icuasp.png,true,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armnanotc,Nano Turret,Repairs and builds in large radius,5021,597,5312,500,50,,nfananotc.png,true,ALL NOTSUB CONSTR NOWEAPON NOTAIR SURFACE,
-corasp,Air Repair Pad,Automatically Repairs Aircraft,4311,403,9315,1600,1000,,nfaasp.png,true,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-cornanotc,Nano Turret,Repairs and builds in large radius,5021,597,5312,500,50,,nfananotc.png,true,ALL NOTSUB CONSTR NOWEAPON NOTAIR SURFACE,
-armcamp,M1A4 Campbell,Heavy Assault Tank,22000,1700,32000,6500,0,,icucampbell.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armcroc,Triton,Heavy Amphibious Tank,11512,467,13367,3360,0,,icucroc.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armfav,Jeffy,Light Scout Vehicle,342,29,912,80,0,,icufav.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armjam,Jammer,Radar Jammer Vehicle,1621,97,5933,460,0,,icujam.png,false,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-armlatnk,Panther,Lightning Tank,7000,307,7534,950,0,,ARMLATNK.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armmanni,Penetrator,Mobile Tachyon Weapon,12477,1129,25706,2500,0,,icumanni.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armmart,Luger,Mobile Artillery,3840,254,5530,600,0,,icumart.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armmerl,Merl,Mobile Rocket Launcher,6146,862,15592,1100,0,,icumerl.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armpincer,Pincer,Light Amphibious Tank,1921,187,2613,1148,0,,icupincer.png,false,ALL TANK PHIB WEAPON NOTSUB NOTAIR SURFACE,
-armsam,Samson,Missile Truck,2027,140,2945,850,0,,icusam.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armst,Gremlin,Stealth Tank,3480,212,6704,950,0,,icust.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armstump,Stumpy,Medium Assault Tank,1746,201,2904,1530,0,,icustump.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armyork,Phalanx,Anti-Air Flak Vehicle,8510,425,9964,2350,,,icuyork.png,,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,
-coreter,Deleter,Radar Jammer Vehicle,1757,100,6404,520,0,,nfaeter.png,false,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-cormabm,Hedgehog,Mobile Anti-missile Defense,92321,1508,96450,780,0,,nfamabm.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-cormart,Pillager,Mobile Artillery,3005,263,4270,560,0,,nfamart.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-cormist,Slasher,Missile Truck,2177,146,3065,1120,0,,nfamist.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-corparrow,Poison Arrow,Very Heavy Amphibious Tank,26854,988,22181,5700,0,,nfaparrow.png,false,ALL TANK PHIB WEAPON NOTSUB NOTAIR SURFACE,
-corseal,Croc,Medium Amphibious Tank,12013,450,8762,2340,0,,nfaseal.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-corsent,Copperhead,Anti-Air Flak Vehicle,9487,443,11986,2425,,,nfasent.png,,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,
-corvroc,Diplomat,Mobile Rocket Launcher,6270,827,15002,1250,0,,nfavroc.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-corwolv,Wolverine,Light Mobile Artillery,2219,159,3254,550,0,,nfawolv.png,false,ALL TANK WEAPON NOTSUB NOTAIR SURFACE,
-grayhound,Greyhound,Prototype Field/Command Tank,6935,793,13013,3000,0,,da_fare.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-icubull,Bulldog,Heavy Assault Tank,14593,844,17228,4200,0,,icubull.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-icuflash,Flash,Fast Assault Tank,914,109,1963,570,0,,icuflash.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-icujanus,Janus,Twin Medium Rocket Launcher,2361,226,3545,880,0,,icujanus.png,false,ALL TANK WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-icuseer,Seer,Radar Vehicle,1941,115,6186,880,0,,icuseer.png,false,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-nfafav,Weasel,Light Scout Vehicle,256,24,1104,95,0,,nfafav.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-nfagarp,Garpike,Light Amphibious Tank,2441,206,3101,1219,0,,nfagarp.png,false,ALL TANK PHIB WEAPON NOTSUB NOTAIR SURFACE,
-nfagator,Instigator,Light Tank,1042,118,1761,693,0,,nfagator.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-nfagol,Goliath,Very Heavy Assault Tank,19892,1567,26125,7000,0,,nfagol.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-nfalevlr,Leveler,Riot Tank,2387,210,3009,1275,0,,nfalevlr.png,false,ALL TANK MOBILE WEAPON ANTIGATOR ANTIEMG NOTSUB NOTSHIP NOTAIR SURFACE,
-nfaraid,Raider,Medium Assault Tank,2219,211,3312,1685,0,,nfaraid.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-nfareap,Reaper,Heavy Assault Tank,11348,589,13530,4900,0,,nfareap.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-nfavrad,Informer,Radar Vehicle,1209,86,4223,510,0,,nfavrad.png,false,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,
-tawf013,Shellshocker,Light Artillery Vehicle,2016,142,2998,530,0,,tawf013.png,false,ALL TANK WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-tawf114,Banisher,Heavy Missile Tank,20701,939,23129,2250,0,,nfabanisher.png,false,ALL TANK WEAPON NOTSUB NOTAIR SURFACE,
-andacsp,Advanced Construction Spider,All-Terrain Constructor Spider lvl2,4084,400,9432,840,140,,da_fare.png,true,KBOT MOBILE ALL NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,andfus|andgant|andaafus|andametex|andaestor|andarad|andshield|anddfens|andill|andchaos|andernie|chemist|andlaunch|andangel|andhp|medusa|andahp
-andangel,Super Cannon,Long Range Plasma Cannon,60680,4184,85185,4200,0,,andangel.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-andaplat,Aircraft Plant,Produces Level 2 Aircraft,26986,3006,20851,3450,200,,CORPLAT.DDS,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,anddragon|corhors|andabomb|andhawk
-andartic,Artic,Energy weapon,1467,185,5448,1500,0,,andartic.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-andcsp,Construction Spider,All-Terrain Constructor Spider,1622,113,3551,650,90,,andcsp.png,true,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,andsolar|andwind|andmstor|andestor|andmexun|andmex|andalab|andlab|andhp|andplat|andrad|andlartic|andartic|andhartic|andpopaa|andrl|andaa
-andfury,Fury,Rapid Anti-Air Flakker,20154,3601,40358,2574,0,,,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-andhartic,Artic,Energy weapon,4443,449,9622,2475,0,,andhartic.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-andplat,Aircraft Plant,Produces Level 1 Aircraft,1370,850,7240,2000,100,,andplat.png,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,andca|andfig|andbomb|andstr|andmerv
-andscouter,Recluse,All-Terrain scouter,897,45,1420,780,0,,andscouter.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-andspmis,Center,All-Terrain Missile Launcher,897,45,1420,780,0,,da_fare.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armscab,Scarab,Mobile Anti-missile Defense,88000,1437,95678,780,0,,armscab.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
-armshock,Vanguard,All-Terrain Heavy Plasma Cannon,54739,3120,101218,18000,,,ARMSHOCK.DDS,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,
+unit_id,nome_unita,descrizione,costo_energia,costo_metallo,tempo_costruzione,salute,potere_costruttivo,estrazione_metallo,radar,sonar,jammer,stealth,immagine,e_costruttore,categoria,puo_costruire,sfondi
+andainc,Incubator Lab,Produces Level 2 Kbots,1772,723,7151,2800,100,,50,,,,andainc.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,andacsp|walker|andogre|exxec|andtanko|andtesla|androck,andainc_1.jpg|andainc_2.jpg|andainc_3.jpg
+andbrskr,Berserker,Battle Kbot,1972,244,2918,412,0,,0,,,,andbrskr.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,andbrskr_1.jpg|andbrskr_2.jpg|andbrskr_3.jpg
+andhart,Snipe,Light Artillery Hovercraft,897,45,1420,1050,0,,,,,,da_fare.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,andhart_1.jpg|andhart_2.jpg|andhart_3.jpg
+andhawk,Eagle,Stealth Fighter,10200,140,11685,900,,,,,,true,da_fare.png,,ALL NOTLAND MOBILE WEAPON ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOTSHIP,,andhawk_1.jpg|andhawk_2.jpg|andhawk_3.jpg
+andinc,Incubator Lab,Produces Level 1 Kbots,1772,723,7151,2800,100,,50,,,,andinc.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,andcsp|andscouter|anddauber|andbrskr|andgaso|andlipo|andmisa,andinc_1.jpg|andinc_2.jpg|andinc_3.jpg
+andspaa,Hunter,All-Terrain Anti-Air Spider,897,45,1420,680,0,,,,,,da_fare.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,andspaa_1.jpg|andspaa_2.jpg|andspaa_3.jpg
+armfortgv,Fortification Gate,Electric Gate,4432,980,5705,1263,0,,0,,,,ARMFORTGV.bmp,false,NOWEAPON NOTAIR NOTSUB NOTSHIP SURFACE,,armfortgv_1.jpg|armfortgv_2.jpg|armfortgv_3.jpg
+armtigre,Tiger,Assault evol. Tank,270000,13000,290000,20850,0,,230,230,,,armtigre,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armtigre_1.jpg|armtigre_2.jpg|armtigre_3.jpg
+corrlnofire,Pulverizer,Anti-air Tower,0,0,1749,300,,,,,,,CORRL.DDS,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,,corrlnofire_1.jpg|corrlnofire_2.jpg|corrlnofire_3.jpg
+eufacd,Adv. Construction Drone,Tech Level 2,5263,431,12397,1860,250,,50,,,,da_fare.png,true,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,eufsolar|eufmstor|eufestor|eufmetex|eufavp|eufvp|eufap|euf_radar|eufpathsmall|eufsnpr|eufpath|armarch|eufloony|eufblab|euf_fence_gate|euf_fence_wall|eufadvmetex,eufacd_1.jpg|eufacd_2.jpg|eufacd_3.jpg
+eufavp,Advanced Vehicle Plant,Produces EUF Vehicles,13440,2698,17940,4300,200,,50,,,,eufavp.png,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,eufacd|eufbomb|eufher|euflong|eufopp|eufrld|eufshat|eufbigfoot|eufkaat|eufpilonax,eufavp_1.jpg|eufavp_2.jpg|eufavp_3.jpg
+eufbigfoot,Goliath,Experimental Assault Tank,19892,1567,26125,7000,0,,,,,,nfagol.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,eufbigfoot_1.jpg|eufbigfoot_2.jpg|eufbigfoot_3.jpg
+eufbomb,Bombarder X-5,Medium Range Plasma Tank,66789,4987,132786,1600,,,,,,,eufbomb.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,eufbomb_1.jpg|eufbomb_2.jpg|eufbomb_3.jpg
+eufcd,Construction Drone,Tech Level 1,1802,128,4066,905,90,,50,,,,,true,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,eufsolar|eufmstor|eufestor|eufmetex|eufametex|eufavp|eufvp|eufap|euf_radar|eufpathsmall|eufsnpr|eufpath|armarch|eufloony|eufblab|euf_fence_gate|euf_fence_wall,eufcd_1.jpg|eufcd_2.jpg|eufcd_3.jpg
+eufher,Heretic,Assault Tank,1395,222,2938,2100,,,,,,,eufher.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,eufher_1.jpg|eufher_2.jpg|eufher_3.jpg
+eufkaat,KAAT,Advanced Mobile Missile Launcher,5135,595,2,3250,0,,,,,,eufkaat.pcx,false,TANK WEAPON NOTAIR NOTSUB SURFACE,,eufkaat_1.jpg|eufkaat_2.jpg|eufkaat_3.jpg
+euflong,Longbow,Flak Tank,4611,567,8249,502,,,,,,,euflong.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,euflong_1.jpg|euflong_2.jpg|euflong_3.jpg
+eufmedic,Anabolic Medic,Repairing BodyGuard,3801,111,2489,281,90,,0,,,,eufmedic.png,true,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,eufmedic_1.jpg|eufmedic_2.jpg|eufmedic_3.jpg
+eufopp,Oppressor,Support Tank,1316,158,2174,1900,,,,,,,eufopp.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,eufopp_1.jpg|eufopp_2.jpg|eufopp_3.jpg
+eufpilonax,PILONAX,Very Heavy artillery Tank,12650,1080,16012,8000,0,,1000,,,,eufpilonax.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,eufpilonax_1.jpg|eufpilonax_2.jpg|eufpilonax_3.jpg
+eufrld,Loader,Heavy Support Vehicle,3409,365,7631,1400,,,,,,,eufrld.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,eufrld_1.jpg|eufrld_2.jpg|eufrld_3.jpg
+eufsab,Sabre,Missile Tank,1190,143,2438,850,,,,,,,eufsab.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,eufsab_1.jpg|eufsab_2.jpg|eufsab_3.jpg
+eufshat,Shatterer,Heavy Missile Vehicle,2437,286,5991,1120,,,,,,,eufshat.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,eufshat_1.jpg|eufshat_2.jpg|eufshat_3.jpg
+eufthorn,Thorn,Laser Tank,1014,120,1866,655,,,,,,,eufthorn.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,eufthorn_1.jpg|eufthorn_2.jpg|eufthorn_3.jpg
+euftrasparte,Transport Vehicle,Transport Vehicle,2137,194,5213,905,100,,,,,,euftrasparte.png,true,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,euftrasparte_1.jpg|euftrasparte_2.jpg|euftrasparte_3.jpg
+eufvp,Tank Plant,Builds 1 lvl tanks,1853,743,7192,2580,100,,50,,,,eufvp.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,eufcd|eufthorn|eufsab,eufvp_1.jpg|eufvp_2.jpg|eufvp_3.jpg
+medusa,Medusa,Heavy Quad-HLT Battery,27687,2546,25656,2195,0,,0,,,,medusa,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,medusa_1.jpg|medusa_2.jpg|medusa_3.jpg
+andabomb,Bombero,Strategic Bomber,11332,244,31064,1440,0,,,,,,da_fare.png,false,ALL NOTLAND MOBILE WEAPON ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOTSHIP,,andabomb_1.jpg|andabomb_2.jpg|andabomb_3.jpg
+andbomb,Thunder,Bomber,4075,145,4778,560,0,,,,,,andbomb.png,false,ALL MOBILE WEAPON NOTLAND ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOTSHIP,,andbomb_1.jpg|andbomb_2.jpg|andbomb_3.jpg
+anddragon,Dragon,Standoff Attack Missleboat,22973,1305,26500,1150,,,1000,,,,da_fare.png,,ALL WEAPON VTOL NOTSUB,,anddragon_1.jpg|anddragon_2.jpg|anddragon_3.jpg
+andfig,Freedom Fighter,Fighter,2687,68,3465,150,,,,,,,andfig.png,,ALL MOBILE WEAPON ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER NOTLAND VTOL NOTSHIP,,andfig_1.jpg|andfig_2.jpg|andfig_3.jpg
+andhors,Flying Ray,Support Gun Ship,28234,2334,50584,2394,0,,1300,,,,da_fare.png,false,ALL WEAPON VTOL NOTSUB,,andhors_1.jpg|andhors_2.jpg|andhors_3.jpg
+andmerv,Minerva,Light Gunship,2374,133,5046,350,0,,,,,,icukam.png,false,ALL MOBILE NOTSUB VTOL WEAPON,,andmerv_1.jpg|andmerv_2.jpg|andmerv_3.jpg
+armawac,Eagle,Radar/Sonar Plane,8599,176,12819,1600,0,,2500,1200,,,icuawac.png,false,ALL ANTIEMG NOTLAND MOBILE NOTSUB ANTIFLAME ANTIGATOR ANTILASER VTOL NOWEAPON NOTSHIP,,armawac_1.jpg|armawac_2.jpg|armawac_3.jpg
+armbrawl,Brawler,Gunship,6000,300,20000,1150,0,,,,,,icubraw.png,false,ALL NOTLAND MOBILE WEAPON ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOTSHIP,,armbrawl_1.jpg|armbrawl_2.jpg|armbrawl_3.jpg
+armcybr,Liche,Atomic Bomber,43062,2243,76203,3600,0,,,,,,iculiche.png,false,ALL WEAPON NOTSUB VTOL,,armcybr_1.jpg|armcybr_2.jpg|armcybr_3.jpg
+armfig,Freedom Fighter,Fighter,2687,68,3465,150,,,,,,,icufig.png,,OGGETTISTATICI,,armfig_1.jpg|armfig_2.jpg|armfig_3.jpg
+armhawk,Hawk,Stealth Fighter,10200,140,11685,650,,,,,,true,icuhawk.png,,ALL NOTLAND MOBILE WEAPON ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOTSHIP,,armhawk_1.jpg|armhawk_2.jpg|armhawk_3.jpg
+armkam,Banshee,Light Gunship,2374,133,5046,350,0,,,,,,icukam.png,false,ALL MOBILE NOTSUB VTOL WEAPON,,armkam_1.jpg|armkam_2.jpg|armkam_3.jpg
+armlance,Lancet,Torpedo Bomber,7030,340,15000,1800,0,,,,,,iculance.png,false,ALL NOTLAND MOBILE WEAPON ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOTSHIP,,armlance_1.jpg|armlance_2.jpg|armlance_3.jpg
+armpeep,Peeper,Scout Plane,1475,30,2585,80,0,,1140,,,,icupeep.png,false,ALL MOBILE NOTLAND NOTSUB ANTIFLAME ANTIGATOR ANTIEMG ANTILASER VTOL NOWEAPON NOTSHIP,,armpeep_1.jpg|armpeep_2.jpg|armpeep_3.jpg
+armpnix,Phoenix,Strategic Bomber,11332,244,31064,1440,0,,,,,,ICUPNIX.png,false,ALL NOTLAND MOBILE WEAPON ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOTSHIP,,armpnix_1.jpg|armpnix_2.jpg|armpnix_3.jpg
+armthund,Thunder,Bomber,4075,145,4778,560,0,,,,,,icuthund.png,false,ALL MOBILE WEAPON NOTLAND ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOTSHIP,,armthund_1.jpg|armthund_2.jpg|armthund_3.jpg
+blade,Blade,Rapid Assault Flak Resistant Gunship,17403,951,30964,2400,0,,,,,,icublade.png,false,ALL WEAPON NOTSUB VTOL,,blade_1.jpg|blade_2.jpg|blade_3.jpg
+bladew,Bladewing,Light Paralyzer Drone,1280,58,2073,60,0,,,,,,nfablade.png,,ALL WEAPON VTOL NOTSUB,,bladew_1.jpg|bladew_2.jpg|bladew_3.jpg
+cirr,Cirrus,Light Skycruiser,19946,1961,43453,7000,0,,0,,,,cirr.png,false,ALL WEAPON VTOL NOTSUB,,cirr_1.jpg|cirr_2.jpg|cirr_3.jpg
+corape,Rapier,Gunship,5800,320,20000,1200,0,,,,,,nfaape.png,false,ALL MOBILE WEAPON NOTLAND ANTIGATOR VTOL ANTIFLAME ANTIEMG ANTILASER NOTSUB NOTSHIP,,corape_1.jpg|corape_2.jpg|corape_3.jpg
+corawac,Vulture,Radar/Sonar Plane,8346,180,13264,1800,0,,2400,1200,,,nfaawac.png,false,ALL ANTIEMG NOTLAND MOBILE ANTIGATOR NOTSUB ANTIFLAME ANTILASER VTOL NOWEAPON NOTSHIP,,corawac_1.jpg|corawac_2.jpg|corawac_3.jpg
+corcrw,Krow,Flying Fortress,72000,6400,150000,19000,0,,,,,,nfacrw.png,false,ALL WEAPON VTOL NOTSUB,,corcrw_1.jpg|corcrw_2.jpg|corcrw_3.jpg
+corfink,Fink,Scout Plane,1460,28,2156,90,0,,1120,,,,nfafink.png,false,ALL MOBILE NOTLAND ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOWEAPON NOTSHIP,,corfink_1.jpg|corfink_2.jpg|corfink_3.jpg
+corhurc,Hurricane,Heavy Strategic Bomber,14365,313,28461,1371,0,,,,,,nfahurc.png,false,ALL NOTLAND MOBILE WEAPON ANTIGATOR VTOL ANTIFLAME ANTIEMG ANTILASER NOTSUB NOTSHIP,,corhurc_1.jpg|corhurc_2.jpg|corhurc_3.jpg
+corshad,Shadow,Bomber,5968,156,5054,615,0,,,,,,nfashad.png,false,ALL MOBILE WEAPON NOTLAND ANTIGATOR VTOL ANTIFLAME ANTIEMG ANTILASER NOTSUB NOTSHIP,,corshad_1.jpg|corshad_2.jpg|corshad_3.jpg
+cortitan,Titan,Torpedo Bomber,7800,360,22072,1900,0,,,,,,nfatitan.png,false,ALL NOTLAND MOBILE WEAPON ANTIGATOR VTOL ANTIFLAME ANTIEMG ANTILASER NOTSUB NOTSHIP,,cortitan_1.jpg|cortitan_2.jpg|cortitan_3.jpg
+corvamp,Vamp,Stealth Fighter,9600,150,9055,600,,,,,,true,nfavamp.png,,ALL NOTLAND MOBILE WEAPON ANTIGATOR VTOL ANTIFLAME ANTIEMG ANTILASER NOTSUB NOTSHIP,,corvamp_1.jpg|corvamp_2.jpg|corvamp_3.jpg
+corveng,Avenger,Fighter,2025,90,3333,200,,,,,,,nfaveng.png,,ALL MOBILE WEAPON ANTIGATOR VTOL ANTIFLAME ANTIEMG ANTILASER NOTLAND NOTSUB NOTSHIP,,corveng_1.jpg|corveng_2.jpg|corveng_3.jpg
+demr,Demarcator,Heavy Skycruiser,47644,5264,171754,14000,0,,0,,,,demr.png,false,VTOL WEAPON NOTSUB,,demr_1.jpg|demr_2.jpg|demr_3.jpg
+odyc,Odyssey,Radar/Sonar Skycruiser,36083,3443,57045,5000,0,,4000,4000,,,odyc.png,false,ALL WEAPON VTOL NOTSUB,,odyc_1.jpg|odyc_2.jpg|odyc_3.jpg
+orcl,Oracle,Radar/Sonar Skycruiser,38023,3511,59993,5000,0,,4000,4000,,,orcl.png,false,ALL WEAPON VTOL NOTSUB,,orcl_1.jpg|orcl_2.jpg|orcl_3.jpg
+ostr,Ostraciser,Heavy Skycruiser,53598,4999,179033,14000,0,,0,,,,ostr.png,false,ALL WEAPON VTOL NOTSUB,,ostr_1.jpg|ostr_2.jpg|ostr_3.jpg
+taln,Talon,Light Skycruiser,19001,2014,44398,7000,0,,0,,,,taln.png,false,ALL WEAPON VTOL NOTSUB,,taln_1.jpg|taln_2.jpg|taln_3.jpg
+andhvytransp,Astra,Heavy container transporter,72000,6400,150000,210000,0,,,,,,da_fare.png,false,ALL WEAPON VTOL NOTSUB,,andhvytransp_1.jpg|andhvytransp_2.jpg|andhvytransp_3.jpg
+andstarcruiser,Krow,Star Cruiser,72000,6400,150000,21000,0,,,,,,andstarcruiser.png,false,ALL WEAPON VTOL NOTSUB,,andstarcruiser_1.jpg|andstarcruiser_2.jpg|andstarcruiser_3.jpg
+euffig,Freedom Fighter,Fighter,2687,68,3465,150,,,,,,,icufig.png,,OGGETTISTATICI,,euffig_1.jpg|euffig_2.jpg|euffig_3.jpg
+euftransp,Bobby,Air Transport,6667,318,16022,1050,0,,,,,true,euftransp.png,false,ALL NOTLAND MOBILE NOTSUB VTOL NOWEAPON NOTSHIP,,euftransp_1.jpg|euftransp_2.jpg|euftransp_3.jpg
+euf_hvytranspcontainer,Astra,Heavy container transporter,72000,6400,150000,210000,0,,,,,,euf_hvytranspcontainer.png,false,ALL WEAPON VTOL NOTSUB,,euf_hvytranspcontainer_1.jpg|euf_hvytranspcontainer_2.jpg|euf_hvytranspcontainer_3.jpg
+piratesfig,Freedom Fighter,Fighter,2687,68,3465,150,,,,,,,icufig.png,,ALL MOBILE WEAPON ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER NOTLAND VTOL NOTSHIP,,piratesfig_1.jpg|piratesfig_2.jpg|piratesfig_3.jpg
+armatlas,Atlas,Air Transport,1239,64,3850,240,0,,,,,,icuatlas.png,false,ALL MOBILE WEAPON NOTLAND ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOTSHIP,,armatlas_1.jpg|armatlas_2.jpg|armatlas_3.jpg
+armdfly,Dragonfly,Stealthy Armed Transport,6667,318,16022,1050,0,,,,,true,icudfly.png,false,ALL NOTLAND MOBILE NOTSUB VTOL NOWEAPON NOTSHIP,,armdfly_1.jpg|armdfly_2.jpg|armdfly_3.jpg
+corvalk,Valkyrie,Air Transport,1437,74,4122,250,0,,,,,,nfavalk.png,false,ALL MOBILE WEAPON NOTLAND ANTIGATOR VTOL ANTIFLAME ANTIEMG ANTILASER NOTSUB NOTSHIP,,corvalk_1.jpg|corvalk_2.jpg|corvalk_3.jpg
+andcom,AND Commander,AND Commander,25000,2500,75000,3800,300,,1000,300,,,andcom.png,true,ALL WEAPON NOTSUB COMMANDER NOTSHIP NOTAIR SURFACE,andsolar|andwind|andmstor|andestor|andmexun|andlab|andhp|andplat|andrad|andlartic,andcom_1.jpg|andcom_2.jpg|andcom_3.jpg
+icucom,ICU Commander,ICU Commander,25000,2500,75000,3000,300,,700,300,,,icucom.png,true,ALL WEAPON NOTSUB COMMANDER NOTSHIP NOTAIR SURFACE,armsolar|icuwind|armmstor|icuestor|icumetex|armmakr|armlab|armvp|armap|armsy|armeyes|armrad|armsonar|armdrag|iculighlturr|armtl|armrl|armfrad|armfrl|armfllt,icucom_1.jpg|icucom_2.jpg|icucom_3.jpg
+kicucom,Commander,Commander,25000,2500,75000,3000,300,,700,300,,,kicucom.png,true,ALL COMMANDER WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,armsolar|icuwind|armmstor|icuestor|icumetex|armmakr|armlab|armvp|armap|armsy|armeyes|armrad|armsonar|armdrag|iculighlturr|armtl|armrl|icupcan|armfrad|armfrl|armfllt,kicucom_1.jpg|kicucom_2.jpg|kicucom_3.jpg
+knfacom,NFA K-Commander,ICU K-Commander,25000,2500,75000,3000,300,,700,300,,,kicucom.png,true,ALL WEAPON NOTSUB COMMANDER NOTSHIP NOTAIR SURFACE,corsolar|corwin|cormstor|corestor|cormex|cormakr|corlab|corvp|corap|corsy|coreyes|corrad|corsonar|cordrag|corllt|cortl|corrl|nfaacan|corfrad|corfrl|corfllt,knfacom_1.jpg|knfacom_2.jpg|knfacom_3.jpg
+nfacom,ICU Commander,NFA Commander,25000,2500,75000,3000,300,,700,300,,,nfacom.png,true,ALL WEAPON NOTSUB COMMANDER NOTSHIP NOTAIR SURFACE,corsolar|corwin|cormstor|corestor|cormex|cormakr|corlab|corvp|corap|corsy|coreyes|corrad|corsonar|cordrag|corllt|cortl|corrl|corfrad|corfrl|corfllt,nfacom_1.jpg|nfacom_2.jpg|nfacom_3.jpg
+icucom_u1,ICU Commander LvL1,International Combat Union Commander,25000,2500,75000,7000,300,,700,300,,,icucom.png,true,ALL WEAPON NOTSUB COMMANDER NOTSHIP NOTAIR SURFACE,armsolar|icuwind|armmstor|icuestor|icumetex|armmakr|armlab|armvp|armap|armsy|armeyes|armrad|armsonar|armdrag|iculighlturr|armtl|armrl|armfrad|armfrl|armfllt,icucom_u1_1.jpg|icucom_u1_2.jpg|icucom_u1_3.jpg
+icucom_u2,ICU Commander LvL2,International Combat Union Commander,25000,2500,75000,8000,300,,700,300,,,icucom.png,true,ALL WEAPON NOTSUB COMMANDER NOTSHIP NOTAIR SURFACE,armsolar|icuwind|armmstor|icuestor|icumetex|armmakr|armlab|armvp|armap|armsy|armeyes|armrad|armsonar|armdrag|iculighlturr|armtl|armrl|armfrad|armfrl|armfllt,icucom_u2_1.jpg|icucom_u2_2.jpg|icucom_u2_3.jpg
+icucom_u3,ICU Commander LvL3,International Combat Union Commander,25000,2500,75000,10000,300,,700,300,,,icucom.png,true,ALL WEAPON NOTSUB COMMANDER NOTSHIP NOTAIR SURFACE,armsolar|icuwind|armmstor|icuestor|icumetex|armmakr|armlab|armvp|armap|armsy|armeyes|armrad|armsonar|armdrag|iculighlturr|armtl|armrl|armfrad|armfrl|armfllt,icucom_u3_1.jpg|icucom_u3_2.jpg|icucom_u3_3.jpg
+icucom_u4,ICU Commander LvL4,International Combat Union Commander,25000,2500,75000,15000,300,,700,300,,,icucom.png,true,ALL WEAPON NOTSUB COMMANDER NOTSHIP NOTAIR SURFACE,armsolar|icuwind|armmstor|icuestor|icumetex|armmakr|armlab|armvp|armap|armsy|armeyes|armrad|armsonar|armdrag|iculighlturr|armtl|armrl|armfrad|armfrl|armfllt,icucom_u4_1.jpg|icucom_u4_2.jpg|icucom_u4_3.jpg
+icudecom,ICU Commander,Decoy Commander,12085,705,26941,3000,150,,50,,,,icucom.png,true,ALL WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,icudecom_1.jpg|icudecom_2.jpg|icudecom_3.jpg
+nfacom_u1,NFA Commander LvL1,Commander,25000,2500,75000,7000,300,,700,300,,,CORCOM.DDS,true,ALL WEAPON COMMANDER NOTSUB NOTSHIP NOTAIR SURFACE,corsolar|corwin|cormstor|corestor|cormex|cormakr|corlab|corvp|corap|corsy|coreyes|corrad|corsonar|cordrag|corllt|cortl|corrl|corfrad|corfrl|corfllt,nfacom_u1_1.jpg|nfacom_u1_2.jpg|nfacom_u1_3.jpg
+nfacom_u2,NFA Commander LvL2,Commander,25000,2500,75000,8000,300,,700,300,,,CORCOM.DDS,true,ALL WEAPON COMMANDER NOTSUB NOTSHIP NOTAIR SURFACE,corsolar|corwin|cormstor|corestor|cormex|cormakr|corlab|corvp|corap|corsy|coreyes|corrad|corsonar|cordrag|corllt|cortl|corrl|corfrad|corfrl|corfllt,nfacom_u2_1.jpg|nfacom_u2_2.jpg|nfacom_u2_3.jpg
+nfacom_u3,NFA Commander LvL3,Commander,25000,2500,75000,10000,300,,700,300,,,CORCOM.DDS,true,ALL WEAPON COMMANDER NOTSUB NOTSHIP NOTAIR SURFACE,corsolar|corwin|cormstor|corestor|cormex|cormakr|corlab|corvp|corap|corsy|coreyes|corrad|corsonar|cordrag|corllt|cortl|corrl|corfrad|corfrl|corfllt,nfacom_u3_1.jpg|nfacom_u3_2.jpg|nfacom_u3_3.jpg
+nfacom_u4,NFA Commander LvL4,Commander,25000,2500,75000,15000,300,,700,300,,,CORCOM.DDS,true,ALL WEAPON COMMANDER NOTSUB NOTSHIP NOTAIR SURFACE,corsolar|corwin|cormstor|corestor|cormex|cormakr|corlab|corvp|corap|corsy|coreyes|corrad|corsonar|cordrag|corllt|cortl|corrl|corfrad|corfrl|corfllt,nfacom_u4_1.jpg|nfacom_u4_2.jpg|nfacom_u4_3.jpg
+nfadecom,NFA Commander,Decoy Commander,12085,705,26941,3000,150,,50,,,,nfacom.png,true,ALL WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,nfadecom_1.jpg|nfadecom_2.jpg|nfadecom_3.jpg
+andaca,Construction Aircraft,Tech Level 1,4320,105,8844,140,45,,,,,,da_fare.png,true,ALL MOBILE NOTLAND NOTSUB ANTIFLAME ANTIGATOR ANTIEMG ANTILASER VTOL NOWEAPON NOTSHIP,andfus|andaafus|andametex|andaestor|andarad|andshield|anddfens|andill|andchaos|andernie|chemist|andlaunch|andangel|andhp|medusa|andahp,andaca_1.jpg|andaca_2.jpg|andaca_3.jpg
+andach,Adv. Construction Hovercraft,Hovercraft Constructor,4000,285,12882,1930,140,,50,,,,andach.png,true,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,andfus|andaafus|andametex|andaestor|andarad|andshield|anddfens|andill|andchaos|andernie|chemist|andlaunch|andangel|andhp|medusa|andahp,andach_1.jpg|andach_2.jpg|andach_3.jpg
+andca,Construction Aircraft,Tech Level 1,4320,105,8844,140,45,,,,,,andca.png,true,ALL MOBILE NOTLAND NOTSUB ANTIFLAME ANTIGATOR ANTIEMG ANTILASER VTOL NOWEAPON NOTSHIP,andsolar|andwind|andmstor|andestor|andmexun|andmex|andaplat|andahp|andhp|andlab|andplat|andrad|andlartic|andartic|andhartic|andpopaa|andrl|andaa,andca_1.jpg|andca_2.jpg|andca_3.jpg
+andch,Construction Hovercraft,Light Hovercraft Constructor,1400,110,3551,600,90,,,,,,andch.png,true,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,andsolar|andwind|andmstor|andestor|andmexun|andmex|andahp|andhp|andlab|andplat|andrad|andlartic|andartic|andhartic|andpopaa|andrl|andaa,andch_1.jpg|andch_2.jpg|andch_3.jpg
+armaca,Advanced Construction Aircraft,Tech Level 2,31029,2901,27763,2180,180,,50,,,,icuaca.png,true,ALL NOTLAND MOBILE NOTSUB ANTIFLAME ANTIGATOR ANTIEMG ANTILASER VTOL NOWEAPON NOTSHIP,armfus|amgeo|armgmm|armmoho|armmmkr|armuwadves|armuwadvms|armarad|armveil|armfort|armasp|armtarg|armsd|armgate|armamb|armpb|armanni|armflak|mercury|armamd|armsilo|armbrtha|armvulc|armap|armaap|icufff|advmoho|armfarad|armfamb|armfanni|armfflak|armfmercury,armaca_1.jpg|armaca_2.jpg|armaca_3.jpg
+armack,Advanced Construction Kbot,Tech Level 2,4084,290,9432,840,140,,50,,,,icuack.png,true,KBOT MOBILE ALL NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armfus|armshltx|amgeo|armgmm|armmoho|armmmkr|armuwadves|armuwadvms|armarad|armveil|armfort|armasp|armtarg|armsd|armgate|armamb|armpb|armanni|armflak|mercury|armamd|armsilo|armbrtha|armvulc|armlab|armalab|advmoho|armfarad|armfamb|armfanni|armfflak|armfmercury,armack_1.jpg|armack_2.jpg|armack_3.jpg
+armacsub,Advanced Construction Sub,Tech Level 2,7568,695,16565,360,300,,50,,,,icuacsub.png,true,UNDERWATER ALL NOTLAND MOBILE NOWEAPON NOTAIR,armuwmme|armsy|armasy|armfarad|armfamb|armfanni|armfflak,armacsub_1.jpg|armacsub_2.jpg|armacsub_3.jpg
+armacv,Advanced Construction Vehicle,Tech Level 3,5263,431,12397,1860,250,,50,,,,icuacv.png,true,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armfus|icugant|aafus|amgeo|armgmm|armmoho|armmmkr|armuwadves|armuwadvms|armarad|armveil|armfort|armasp|armtarg|armsd|armgate|armamb|armpb|armanni|armflak|mercury|armamd|armsilo|armbrtha|armvulc|armvp|armavp|advmoho|armfarad|armfamb|armfanni|armfflak|armfmercury,armacv_1.jpg|armacv_2.jpg|armacv_3.jpg
+armca,Construction Aircraft,Tech Level 1,4320,105,8844,140,45,,,,,,icuca.png,true,ALL MOBILE NOTLAND NOTSUB ANTIFLAME ANTIGATOR ANTIEMG ANTILASER VTOL NOWEAPON NOTSHIP,armsolar|icuadvsol|icuwind|armgeo|armmstor|icuestor|icumetex|armamex|armmakr|armaap|armlab|armvp|armap|armsy|armeyes|armrad|armdrag|iculighlturr|tawf001|armhlt|armguard|armrl|packo|armjamt|armsonar|armtl|armfrad|armfrl|armfllt|armfhlt|armfhllt|armfguard|fpacko,armca_1.jpg|armca_2.jpg|armca_3.jpg
+armcs,Construction Ship,Tech Level 1,2130,255,5121,1105,250,,50,,,,icucs.png,true,ALL NOTLAND MOBILE NOTSUB NOWEAPON SHIP NOTAIR SURFACE,armuwmex|armsy|armasy|armsonar|armtl|armfrad|armfrl|armfllt|armfhlt|armfhllt|armfguard|fpacko,armcs_1.jpg|armcs_2.jpg|armcs_3.jpg
+armcv,Construction Vehicle,Tech Level 1,1802,128,4066,1240,90,,50,,,,icucv.png,true,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armsolar|icuadvsol|icuwind|armgeo|armmstor|icuestor|icumetex|armamex|armmakr|armavp|armlab|armvp|armap|armsy|armeyes|armrad|armdrag|iculighlturr|tawf001|armhlt|armguard|armrl|packo|armjamt|armsonar|armtl|armfrad|armfrl|armfllt|armfhlt|armfhllt|armfguard|fpacko,armcv_1.jpg|armcv_2.jpg|armcv_3.jpg
+coraca,Advanced Construction Aircraft,Tech Level 2,8824,231,18001,185,80,,50,,,,nfaaca.png,true,ALL NOTLAND MOBILE ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOWEAPON NOTSHIP,corfus|cmgeo|corbhmth|cormoho|cormexp|cormmkr|coruwadves|coruwadvms|corarad|corshroud|corfort|corasp|cortarg|corsd|corgate|cortoast|corvipe|cordoom|corflak|screamer|corfmd|corsilo|corint|corbuzz|corap|coraap|nfafff|corfarad|corftoast|corfvipe|corfflak,coraca_1.jpg|coraca_2.jpg|coraca_3.jpg
+corack,Advanced Construction Kbot,Tech Level 2,4342,319,9709,900,140,,50,,,,nfaack.png,true,KBOT MOBILE ALL NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,corfus|corgant|cmgeo|corbhmth|cormoho|cormexp|cormmkr|coruwadves|coruwadvms|corarad|corshroud|corfort|corasp|cortarg|corsd|corgate|cortoast|corvipe|cordoom|corflak|screamer|corfmd|corsilo|corint|corbuzz|corlab|coralab|corfarad|corftoast|corfvipe|corfdoom|corfflak|corfscreamer,corack_1.jpg|corack_2.jpg|corack_3.jpg
+coracsub,Advanced Construction Sub,Tech Level 2,7911,690,17228,370,300,,50,,,,nfaacsub.png,true,ALL UNDERWATER MOBILE NOTLAND NOWEAPON NOTAIR,coruwmme|coruwadves|coruwadvms|corsy|corasy|corfarad|corfvipe|corfflak|corftoast,coracsub_1.jpg|coracsub_2.jpg|coracsub_3.jpg
+coracv,Advanced Construction Vehicle,Tech Level 3,5512,452,12882,1930,250,,50,,,,nfaacv.png,true,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,corfus|cafus|cmgeo|corbhmth|cormoho|cormexp|cormmkr|coruwadves|coruwadvms|corarad|corshroud|corfort|corasp|cortarg|corsd|corgate|cortoast|corvipe|cordoom|corflak|screamer|corfmd|corsilo|corint|corbuzz|corvp|coravp|corfarad|corftoast|corfvipe|corfdoom|corfflak|corfscreamer,coracv_1.jpg|coracv_2.jpg|coracv_3.jpg
+corca,Construction Aircraft,Tech Level 1,4580,110,9286,145,45,,50,,,,nfaca.png,true,ALL MOBILE NOTLAND ANTIGATOR NOTSUB ANTIFLAME ANTIEMG ANTILASER VTOL NOWEAPON NOTSHIP,corsolar|coradvsol|corwin|corgeo|cormstor|corestor|cormex|corexp|cormakr|coraap|corlab|corvp|corap|corsy|cornanotc|coreyes|corrad|cordrag|cormaw|corllt|hllt|corhlt|corpun|corrl|madsam|corjamt|corsonar|cortl|corfrad|corfrl|corfhlt|corfllt|fhllt|corfpun|fmadsam,corca_1.jpg|corca_2.jpg|corca_3.jpg
+corck,Construction Kbot,Tech Level 1,1622,113,3551,590,90,,,,,,nfack.png,true,KBOT MOBILE ALL NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,corsolar|coradvsol|corwin|corgeo|cormstor|corestor|cormex|corexp|cormakr|coralab|corlab|corvp|corap|corsy|cornanotc|coreyes|corrad|cordrag|cormaw|corllt|hllt|corhlt|corpun|corrl|madsam|corjamt|corsonar|cortl|corfrad|corfrl|corfhlt|corfllt|fhllt|corfpun|fmadsam,corck_1.jpg|corck_2.jpg|corck_3.jpg
+corcs,Construction Ship,Tech Level 1,2375,260,5537,1150,250,,50,,,,nfacs.png,true,ALL NOTLAND MOBILE NOTSUB SHIP NOWEAPON NOTAIR SURFACE,coruwmex|coreyes|corsy|corasy|corsonar|cortl|corfrad|corfrl|corfhlt|corfllt|fhllt|corfpun|fmadsam,corcs_1.jpg|corcs_2.jpg|corcs_3.jpg
+corcv,Construction Vehicle,Tech Level 1,1979,134,4160,1290,90,,50,,,,nfacv.png,true,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,corsolar|coradvsol|corwin|corgeo|cormstor|corestor|cormex|corexp|cormakr|coravp|corlab|corvp|corap|corsy|cornanotc|coreyes|corrad|cordrag|cormaw|corllt|hllt|corhlt|corpun|corrl|madsam|corjamt|corsonar|cortl|corfrad|corfrl|corfhlt|corfllt|fhllt|corfpun|fmadsam,corcv_1.jpg|corcv_2.jpg|corcv_3.jpg
+icuck,Construction Kbot,Tech Level 1,1521,102,3453,540,90,,,,,,icuck.png,true,KBOT MOBILE ALL NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armsolar|icuadvsol|icuwind|armgeo|armmstor|icuestor|icumetex|armamex|armmakr|armalab|armlab|armvp|armap|armsy|armeyes|armrad|armdrag|iculighlturr|tawf001|armhlt|armguard|armrl|packo|armjamt|armsonar|armtl|armfrad|armfrl|armfllt|armfhlt|armfhllt|armfguard|fpacko,icuck_1.jpg|icuck_2.jpg|icuck_3.jpg
+andaestor,Hardened Energy Storage,Increases Energy Storage (40000),10032,790,20416,11400,0,,,,,,andaestor.png,false,ALL NOTSUB NOWEAPON NOTAIR SURFACE,,andaestor_1.jpg|andaestor_2.jpg|andaestor_3.jpg
+andestor,NFA Energy Storage,Increases Energy Storage (6000),1659,166,4257,1800,0,,,,,,andestor.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,andestor_1.jpg|andestor_2.jpg|andestor_3.jpg
+andmstor,Metal Storage,Increases Metal Storage (3000),535,305,2925,2658,0,,,,,,andmstor.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,andmstor_1.jpg|andmstor_2.jpg|andmstor_3.jpg
+andwall,Fortification Gate,Electric Gate,4432,980,5705,1263,0,,0,,,,andwall.png,false,NOWEAPON NOTAIR NOTSUB NOTSHIP SURFACE,,andwall_1.jpg|andwall_2.jpg|andwall_3.jpg
+armdrag,Dragon's Teeth,Perimeter Defense,150,10,255,100,0,,,,,,icudrag.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armdrag_1.jpg|armdrag_2.jpg|armdrag_3.jpg
+armfort,Fortification Wall,Perimeter Defense,675,27,965,100,0,,,,,,icufort.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armfort_1.jpg|armfort_2.jpg|armfort_3.jpg
+armmakr,Metal Maker,Converts Energy to Metal,1087,1,2605,150,0,,,,,,icumakr.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armmakr_1.jpg|armmakr_2.jpg|armmakr_3.jpg
+armmmkr,Moho Metal Maker,Converts Energy to Metal,19350,358,34980,400,0,,,,,,icummkr.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armmmkr_1.jpg|armmmkr_2.jpg|armmmkr_3.jpg
+armmstor,Metal Storage,Increases Metal Storage (3000),535,305,2925,2658,0,,,,,,icumstor.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armmstor_1.jpg|armmstor_2.jpg|armmstor_3.jpg
+armtarg,Targeting Facility,Enhanced Radar Targeting,6802,757,8707,1900,0,,,,,,icutarg.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armtarg_1.jpg|armtarg_2.jpg|armtarg_3.jpg
+armuwadves,Hardened Energy Storage,Increases Energy Storage (40000),10094,773,20302,10500,0,,,,,,icuuwadves.png,false,ALL NOTSUB NOWEAPON NOTAIR SURFACE,,armuwadves_1.jpg|armuwadves_2.jpg|armuwadves_3.jpg
+armuwadvms,Hardened Metal Storage,Increases Metal Storage (10000),10493,705,20391,9300,0,,,,,,icuuwadvms.png,false,ALL NOTSUB NOWEAPON NOTAIR SURFACE,,armuwadvms_1.jpg|armuwadvms_2.jpg|armuwadvms_3.jpg
+cordrag,Dragon's Teeth,Perimeter Defense,150,10,255,100,0,,,,,,nfadrag.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,cordrag_1.jpg|cordrag_2.jpg|cordrag_3.jpg
+corestor,NFA Energy Storage,Increases Energy Storage (6000),1659,166,4257,1800,0,,,,,,nfaestor.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,corestor_1.jpg|corestor_2.jpg|corestor_3.jpg
+corfort,Fortification Wall,Perimeter Defense,612,23,810,100,0,,,,,,nfafort.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,corfort_1.jpg|corfort_2.jpg|corfort_3.jpg
+cormakr,Metal Maker,Converts Energy to Metal,1156,1,2682,150,0,,,,,,nfamakr.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,cormakr_1.jpg|cormakr_2.jpg|cormakr_3.jpg
+cormmkr,Moho Metal Maker,Converts Energy to Metal,18928,351,31253,500,0,,,,,,nfammkr.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,cormmkr_1.jpg|cormmkr_2.jpg|cormmkr_3.jpg
+cormstor,Metal Storage,Increases Metal Storage (3000),550,320,2925,2612,0,,,,,,nfamstor.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,cormstor_1.jpg|cormstor_2.jpg|cormstor_3.jpg
+cortarg,Targeting Facility,Enhanced Radar Targeting,7058,749,10898,1800,0,,,,,,nfatarg.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,cortarg_1.jpg|cortarg_2.jpg|cortarg_3.jpg
+coruwadves,Hardened Energy Storage,Increases Energy Storage (40000),10032,790,20416,11400,0,,,,,,nfauwadves.png,false,ALL NOTSUB NOWEAPON NOTAIR SURFACE,,coruwadves_1.jpg|coruwadves_2.jpg|coruwadves_3.jpg
+coruwadvms,Hardened Metal Storage,Increases Metal Storage (10000),10400,710,20524,10050,0,,,,,,nfauwadvms.png,false,ALL NOTSUB NOWEAPON NOTAIR SURFACE,,coruwadvms_1.jpg|coruwadvms_2.jpg|coruwadvms_3.jpg
+eufestor,EUF Energy Storage,Increases Energy Storage (6000),1592,159,4119,1700,0,,,,,,eufestor.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,eufestor_1.jpg|eufestor_2.jpg|eufestor_3.jpg
+eufhq,EUF HQ,EUF headquarters,600,54,1137,10000,0,,,,,,eufhq.png,false,OGGETTISTATICI,,eufhq_1.jpg|eufhq_2.jpg|eufhq_3.jpg
+eufmstor,Metal Storage,Increases Metal Storage (3000),535,305,2925,2658,0,,,,,,eufmstor.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,eufmstor_1.jpg|eufmstor_2.jpg|eufmstor_3.jpg
+euf_fence_gate,Fortification Gate,Electric Gate,4432,980,5705,1263,0,,0,,,,euf_fence_gate.png,true,ARM NOWEAPON NOTAIR NOTSUB NOTSHIP SURFACE,,euf_fence_gate_1.jpg|euf_fence_gate_2.jpg|euf_fence_gate_3.jpg
+euf_fence_wall,Fortification Gate,Electric Gate,300,140,1600,1263,0,,0,,,,euf_fence_wall.png,false,NOWEAPON NOTAIR NOTSUB NOTSHIP SURFACE,,euf_fence_wall_1.jpg|euf_fence_wall_2.jpg|euf_fence_wall_3.jpg
+icuestor,ICU Energy Storage,Increases Energy Storage (6000),1592,159,4119,1700,0,,,,,,icuestor.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,icuestor_1.jpg|icuestor_2.jpg|icuestor_3.jpg
+andaa,Ints,Pop-Up Missile Battery,5357,338,5810,1200,,,,,,,da_fare.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,,andaa_1.jpg|andaa_2.jpg|andaa_3.jpg
+andchaos,Chaos Machine,Heavy-Duty Stunner,12968,1584,18575,2060,0,,0,,,,andchaos.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,andchaos_1.jpg|andchaos_2.jpg|andchaos_3.jpg
+anddfens,D-FENS,Defensive-Fusillade Energy Nullifying System,11327,2463,16765,3862,0,,0,,,,anddfens.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,anddfens_1.jpg|anddfens_2.jpg|anddfens_3.jpg
+andernie,Ernie,Long Range Plasma and Anti Air Cannon,84680,7384,89185,2250,0,,0,,,,da_fare.png,false,NOTAIR NOTSUB SURFACE,,andernie_1.jpg|andernie_2.jpg|andernie_3.jpg
+andill,Illuminator,Rapid-Firing Plasma Beam Defense Tower,12000,3500,100000,2400,0,,1480,,,,andill.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,andill_1.jpg|andill_2.jpg|andill_3.jpg
+andlartic,LLT,Light Laser Tower,652,84,2724,585,0,,,,,,andlartic.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,andlartic_1.jpg|andlartic_2.jpg|andlartic_3.jpg
+andlaunch,Orbital Laser,Launch Facility,2686524,120965,1774578,4651,0,,0,,,,andlaunch.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,andlaunch_1.jpg|andlaunch_2.jpg|andlaunch_3.jpg
+andpopaa,Controller,Pop-up Anti-Air Missile Launcher,11788,735,20800,1600,0,,0,,,,andpopaa.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,,andpopaa_1.jpg|andpopaa_2.jpg|andpopaa_3.jpg
+andrl,System AA,Anti-air Tower,805,76,1749,300,,,,,,,da_fare.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,,andrl_1.jpg|andrl_2.jpg|andrl_3.jpg
+andshield,Shield,Plasma Deflector,62191,3532,54139,3000,0,,,,,,andshield.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,andshield_1.jpg|andshield_2.jpg|andshield_3.jpg
+armamb,Ambusher,Cloakable Heavy Plasma Cannon,16821,2342,27072,3600,0,,,,,,ICUAMB.PNG,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armamb_1.jpg|armamb_2.jpg|armamb_3.jpg
+armamd,Protector,Anti-Nuke System,59439,1437,95678,3300,0,,50,,,,icuamd.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armamd_1.jpg|armamd_2.jpg|armamd_3.jpg
+armanni,Annihilator,Tachyon Accelerator,62563,2985,52071,5500,0,,1500,,,,icuanni.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armanni_1.jpg|armanni_2.jpg|armanni_3.jpg
+armbrtha,Big Bertha,Long Range Plasma Cannon,60680,4184,85185,4200,0,,,,,,icuBRTHA.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armbrtha_1.jpg|armbrtha_2.jpg|armbrtha_3.jpg
+armfamb,Ambusher,Cloakable Heavy Plasma Cannon,16821,2342,27072,3600,0,,,,,,icufamb.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armfamb_1.jpg|armfamb_2.jpg|armfamb_3.jpg
+armfanni,Annihilator,Tachyon Accelerator,62563,2985,52071,5500,0,,1500,,,,icufanni.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armfanni_1.jpg|armfanni_2.jpg|armfanni_3.jpg
+armfflak,Floating Flakker,Floating Anti-Air Flak Gun,12198,769,19005,1575,,,,,,,icufflak.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,,armfflak_1.jpg|armfflak_2.jpg|armfflak_3.jpg
+armfguard,Guardian,Medium Range Plasma Battery,11687,1645,21377,2760,0,,,,,,icufguard.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armfguard_1.jpg|armfguard_2.jpg|armfguard_3.jpg
+armfhllt,Beamer,Beam Laser Turret,1434,176,5324,1290,0,,,,,,icufhllt.png,false,ALL WEAPON NOTSUB NOTAIR SURFACE,,armfhllt_1.jpg|armfhllt_2.jpg|armfhllt_3.jpg
+armfhlt,Sentinel,Heavy Laser Floating Tower,4398,414,9575,2325,0,,,,,,icufhlt.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armfhlt_1.jpg|armfhlt_2.jpg|armfhlt_3.jpg
+armflak,Flakker,Anti-Air Flak Gun,12198,769,19005,1575,,,,,,,icuflak.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,,armflak_1.jpg|armflak_2.jpg|armflak_3.jpg
+armfllt,ICU LLT,Light Laser Tower,637,81,2662,560,0,,,,,,icufllt.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armfllt_1.jpg|armfllt_2.jpg|armfllt_3.jpg
+armfmercury,Mercury,Long-Range Missile Tower,32802,1572,27190,2250,,,,,,,icufmercury.png,,ALL WEAPON NOTSUB SPECIAL NOTAIR NOTHOVER SURFACE,,armfmercury_1.jpg|armfmercury_2.jpg|armfmercury_3.jpg
+armfrl,Defender,Anti-air Tower,843,79,1843,295,,,,,,,icufrl.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,,armfrl_1.jpg|armfrl_2.jpg|armfrl_3.jpg
+armgate,Keeper,Plasma Deflector,62191,3532,54139,3000,0,,,,,,icugate.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armgate_1.jpg|armgate_2.jpg|armgate_3.jpg
+armguard,Guardian,Medium Range Plasma Battery,11687,1645,21377,2760,0,,,,,,icuguard.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armguard_1.jpg|armguard_2.jpg|armguard_3.jpg
+armhlt,Sentinel,Heavy Laser Tower,4398,414,9575,2325,0,,,,,,icuhlt.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armhlt_1.jpg|armhlt_2.jpg|armhlt_3.jpg
+armpb,Pit Bull,Pop-up Gauss Cannon,12896,638,14961,2531,,,,,,,icupb.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armpb_1.jpg|armpb_2.jpg|armpb_3.jpg
+armrl,Defender,Anti-air Tower,843,79,1843,295,,,,,,,icurl.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,,armrl_1.jpg|armrl_2.jpg|armrl_3.jpg
+armsd,Tracer,Intrusion Countermeasure System,6739,661,11877,2400,,,,,,,icusd.png,,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armsd_1.jpg|armsd_2.jpg|armsd_3.jpg
+armsilo,Retaliator,Nuclear ICBM Launcher,84268,7625,178453,5300,0,,50,,,,icusilo.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armsilo_1.jpg|armsilo_2.jpg|armsilo_3.jpg
+armtl,Harpoon,Torpedo Launcher,2058,302,4120,1450,0,,,,,,icutl.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armtl_1.jpg|armtl_2.jpg|armtl_3.jpg
+armvulc,Vulcan,Rapid-Fire Long-Range Plasma Cannon,503644,33890,672961,34440,0,,,,,,icuvulc.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armvulc_1.jpg|armvulc_2.jpg|armvulc_3.jpg
+chemist,Screamer,Long-Range Missile Tower,40362,1762,26280,2355,,,,,,,chemist.png,,ALL WEAPON NOTSUB SPECIAL NOTAIR NOTHOVER SURFACE,,chemist_1.jpg|chemist_2.jpg|chemist_3.jpg
+corbuzz,Buzzsaw,Rapid-Fire Long-Range Plasma Cannon,481404,32460,680630,34960,0,,,,,,nfabuzz.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,corbuzz_1.jpg|corbuzz_2.jpg|corbuzz_3.jpg
+cordoom,Doomsday Machine,Energy Weapon,22599,2478,55276,10000,0,,1200,,,,nfadoom.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,cordoom_1.jpg|cordoom_2.jpg|cordoom_3.jpg
+corfflak,Cobra,Floating Anti-Air Flak Gun,13297,792,20112,1655,,,,,,,nfafflak.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,,corfflak_1.jpg|corfflak_2.jpg|corfflak_3.jpg
+corfhlt,Gaat Gun,Heavy Laser Tower,4443,449,9622,2475,0,,,,,,nfafhlt.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,corfhlt_1.jpg|corfhlt_2.jpg|corfhlt_3.jpg
+corflak,Cobra,Anti-Air Flak Gun,13297,792,20112,1655,,,,,,,nfaflak.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,,corflak_1.jpg|corflak_2.jpg|corflak_3.jpg
+corfllt,LLT,Light Laser Tower,652,84,2724,585,0,,,,,,nfafllt.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,corfllt_1.jpg|corfllt_2.jpg|corfllt_3.jpg
+corfmd,Fortitude,Anti-Nuke System,64321,1508,96450,3280,0,,50,,,,nfafmd.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,corfmd_1.jpg|corfmd_2.jpg|corfmd_3.jpg
+corfpun,Pit,Medium Range Plasma Battery,12585,1727,19268,2940,0,,,,,,nfafpun.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,corfpun_1.jpg|corfpun_2.jpg|corfpun_3.jpg
+corfrl,Pulverizer,Floating Anti-air Tower,805,76,1749,300,,,,,,,nfafrl.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,,corfrl_1.jpg|corfrl_2.jpg|corfrl_3.jpg
+corftoast,Toaster,Heavy Plasma Cannon,16115,2318,25717,3840,0,,,,,,nfaftoast.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,corftoast_1.jpg|corftoast_2.jpg|corftoast_3.jpg
+corgate,Overseer,Plasma Deflector,63833,3736,57166,3200,0,,,,,,nfagate.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,corgate_1.jpg|corgate_2.jpg|corgate_3.jpg
+corhlt,Gaat Gun,Heavy Laser Tower,4443,449,9622,2475,0,,,,,,nfahlt.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,corhlt_1.jpg|corhlt_2.jpg|corhlt_3.jpg
+corint,Intimidator,Long Range Plasma Cannon,62520,4328,93237,4600,0,,,,,,nfaint.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,corint_1.jpg|corint_2.jpg|corint_3.jpg
+corllt,LLT,Light Laser Tower,652,84,2724,585,0,,,,,,nfallt.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,corllt_1.jpg|corllt_2.jpg|corllt_3.jpg
+cormaw,Dragon's Maw,Pop-up Flamethrower Turret,1412,273,4419,1100,0,,,,,,nfamaw.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,cormaw_1.jpg|cormaw_2.jpg|cormaw_3.jpg
+corpun,Pit,Medium Range Plasma Battery,12585,1727,19268,2940,0,,,,,,nfapun.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,corpun_1.jpg|corpun_2.jpg|corpun_3.jpg
+corrl,Pulverizer,Anti-air Tower,805,76,1749,300,,,,,,,nfarl.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,,corrl_1.jpg|corrl_2.jpg|corrl_3.jpg
+corsd,Nemesis,Intrusion Countermeasure System,6363,698,11955,2500,,,,,,,nfasd.png,,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,corsd_1.jpg|corsd_2.jpg|corsd_3.jpg
+corsilo,Silencer,Nuclear ICBM Launcher,77536,7187,181243,5560,0,,50,,,,nfasilo.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,corsilo_1.jpg|corsilo_2.jpg|corsilo_3.jpg
+cortl,Urchin,Torpedo Launcher,2058,316,4233,1520,0,,,,,,nfatl.png,false,ALL NOTLAND WEAPON NOTSHIP NOTSUB SPECIAL NOTAIR SURFACE,,cortl_1.jpg|cortl_2.jpg|cortl_3.jpg
+cortoast,Toaster,Heavy Plasma Cannon,16115,2318,25717,3840,0,,,,,,nfatoast.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,cortoast_1.jpg|cortoast_2.jpg|cortoast_3.jpg
+eufflakker,Flakker,Anti-Air Flak Gun,17425,1069,28508,2286,0,,0,,,,da_fare.png,false,NOTAIR NOTSUB SURFACE,,eufflakker_1.jpg|eufflakker_2.jpg|eufflakker_3.jpg
+eufloony,Lunatic,Pop-up Rocket Battery,6298,702,13525,1100,,,,,,,eufloony.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,eufloony_1.jpg|eufloony_2.jpg|eufloony_3.jpg
+eufpath,Psychopath,Heavy Gatling Tower,4598,514,10575,2500,,,,,,,eufpath.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,eufpath_1.jpg|eufpath_2.jpg|eufpath_3.jpg
+eufpathsmall,Psychopath,Light Gatling Tower,652,84,2724,600,,,,,,,eufpathsmall.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,eufpathsmall_1.jpg|eufpathsmall_2.jpg|eufpathsmall_3.jpg
+eufsnpr,Sniper Tower,Sniper Tower,5098,1092,11005,1000,,,,,,,eufsnpr.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,eufsnpr_1.jpg|eufsnpr_2.jpg|eufsnpr_3.jpg
+fhllt,fhllt,Anti-Swarm Double LLT,1467,185,5448,1500,0,,,,,,fhllt.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,fhllt_1.jpg|fhllt_2.jpg|fhllt_3.jpg
+fmadsam,SAM,Hardened Missile Battery,5750,295,5237,2500,,,,,,,nfafmadsam.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,,fmadsam_1.jpg|fmadsam_2.jpg|fmadsam_3.jpg
+fpacko,Pack0,Floating pop-Up Missile Battery,5357,338,5810,1200,,,,,,,fpacko.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,,fpacko_1.jpg|fpacko_2.jpg|fpacko_3.jpg
+hllt,HLLT,Anti-Swarm Double LLT,1467,185,5448,1500,0,,,,,,hllt.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,hllt_1.jpg|hllt_2.jpg|hllt_3.jpg
+iculighlturr,ICU LLT,Light Laser Tower,637,81,2662,560,0,,,,,,icullt.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,iculighlturr_1.jpg|iculighlturr_2.jpg|iculighlturr_3.jpg
+icupcan,Patroller Cannon,Patroller Cannon,8000,960,45000,4200,0,,,,,,icupcan.png,false,ALL NOTSUB NOTVTOL WEAPON SURFACE,,icupcan_1.jpg|icupcan_2.jpg|icupcan_3.jpg
+madsam,SAM,Hardened Missile Battery,5750,295,5237,2500,,,,,,,nfamadsam.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,,madsam_1.jpg|madsam_2.jpg|madsam_3.jpg
+mercury,Mercury,Long-Range Missile Tower,32802,1572,27190,2250,,,,,,,icumercury.png,,ALL WEAPON NOTSUB SPECIAL NOTAIR NOTHOVER SURFACE,,mercury_1.jpg|mercury_2.jpg|mercury_3.jpg
+nfaacan,Ak Cannon,Ak Cannon,8000,960,45000,4200,0,,,,,,nfaacan.png,false,ALL NOTHOVER NOTVTOL NOTSUB NOTVTOL WEAPON SURFACE,,nfaacan_1.jpg|nfaacan_2.jpg|nfaacan_3.jpg
+packo,Pack0,Pop-Up Missile Battery,5357,338,5810,1200,,,,,,,packo.png,,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,,packo_1.jpg|packo_2.jpg|packo_3.jpg
+screamer,Screamer,Long-Range Missile Tower,40362,1762,26280,2355,,,,,,,nfascreamer.png,,ALL WEAPON NOTSUB SPECIAL NOTAIR NOTHOVER SURFACE,,screamer_1.jpg|screamer_2.jpg|screamer_3.jpg
+tawf001,Beamer,Beam Laser Turret,1434,176,5324,1290,0,,,,,,tawf001.png,false,ALL WEAPON NOTSUB NOTAIR SURFACE,,tawf001_1.jpg|tawf001_2.jpg|tawf001_3.jpg
+aafus,Advanced Fusion Reactor,Enhanced Energy Output / Storage,64115,9109,157529,7150,0,,,,,,AAFUS.PNG,false,ALL NOTSUB NOWEAPON SPECIAL NOTAIR SURFACE,,aafus_1.jpg|aafus_2.jpg|aafus_3.jpg
+amgeo,Moho Geothermal Powerplant,Hazardous Energy Source,24852,1520,33152,3240,0,,,,,,icuamgeo.png,false,ALL NOTSUB NOWEAPON NOTAIR SURFACE,,amgeo_1.jpg|amgeo_2.jpg|amgeo_3.jpg
+andaafus,Advanced Fusion Reactor,Enhanced Energy Output / Storage,64115,9109,157529,9150,0,,,,,,andaafus.png,false,ALL NOTSUB NOWEAPON SPECIAL NOTAIR SURFACE,,andaafus_1.jpg|andaafus_2.jpg|andaafus_3.jpg
+andadvsol,ICU Advanced Solar Collector,Produces Energy,4725,343,7945,1020,0,,,,,,da_fare.png,false,ALL NOTSUB NOWEAPON NOTAIR SURFACE,,andadvsol_1.jpg|andadvsol_2.jpg|andadvsol_3.jpg
+andfus,Fusion Reactor,Produces Energy / Storage,19846,4004,70014,4000,0,,,,,,andfus.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,andfus_1.jpg|andfus_2.jpg|andfus_3.jpg
+andsolar,Solar Collector,Produces Energy,0,141,2766,320,0,,,,,,andsolar.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,andsolar_1.jpg|andsolar_2.jpg|andsolar_3.jpg
+andwind,AND Wind Generator,Produces Energy,162,35,1603,176,0,,,,,,andwind.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,andwind_1.jpg|andwind_2.jpg|andwind_3.jpg
+armfus,Fusion Reactor,Produces Energy / Storage,19846,4004,70014,4000,0,,,,,,icufus.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armfus_1.jpg|armfus_2.jpg|armfus_3.jpg
+armgeo,Geothermal Powerplant,Produces Energy / Storage,12568,520,13078,1750,0,,,,,,icugeo.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armgeo_1.jpg|armgeo_2.jpg|armgeo_3.jpg
+armgmm,Prude,Safe Geothermal Powerplant,24230,1058,41347,12500,0,,,,,,icugmm.PNG,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armgmm_1.jpg|armgmm_2.jpg|armgmm_3.jpg
+armsolar,Solar Collector,Produces Energy,0,145,2845,306,0,,,,,,icusolar.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armsolar_1.jpg|armsolar_2.jpg|armsolar_3.jpg
+cafus,Advanced Fusion Reactor,Enhanced Energy Output / Storage,44730,9107,158390,8500,0,,,,,,nfaafus.png,false,ALL NOTSUB NOWEAPON SPECIAL NOTAIR SURFACE,,cafus_1.jpg|cafus_2.jpg|cafus_3.jpg
+cmgeo,Moho Geothermal Powerplant,Hazardous Energy Source,24568,1420,32078,3720,0,,,,,,nfacmgeo.png,false,ALL NOTSUB NOWEAPON NOTAIR SURFACE,,cmgeo_1.jpg|cmgeo_2.jpg|cmgeo_3.jpg
+coradvsol,Advanced Solar Collector,Produces Energy,3703,348,8143,1080,0,,,,,,nfaadvsol.png,false,ALL NOTSUB NOWEAPON NOTAIR SURFACE,,coradvsol_1.jpg|coradvsol_2.jpg|coradvsol_3.jpg
+corbhmth,Behemoth,Geothermal Plasma Battery,32428,2949,59640,7500,0,,,,,,nfabhmth.png,false,ALL NOTLAND NOTSUB WEAPON NOTSHIP NOTAIR SURFACE,,corbhmth_1.jpg|corbhmth_2.jpg|corbhmth_3.jpg
+corfus,Fusion Reactor,Produces Energy / Storage,25292,4203,75424,4500,0,,,,,,nfafus.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,corfus_1.jpg|corfus_2.jpg|corfus_3.jpg
+corgeo,Geothermal Powerplant,Produces Energy / Storage,12375,505,12875,1850,0,,,,,,nfageo.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,corgeo_1.jpg|corgeo_2.jpg|corgeo_3.jpg
+corsolar,Solar Collector,Produces Energy,0,141,2766,320,0,,,,,,nfasolar.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,corsolar_1.jpg|corsolar_2.jpg|corsolar_3.jpg
+corwin,Wind Generator,Produces Energy,163,42,1687,179,0,,,,,,nfawin.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,corwin_1.jpg|corwin_2.jpg|corwin_3.jpg
+eufsolar,Solar Collector,Produces Energy,0,145,2845,306,0,,,,,,eufsolar.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,eufsolar_1.jpg|eufsolar_2.jpg|eufsolar_3.jpg
+icuadvsol,ICU Advanced Solar Collector,Produces Energy,4725,343,7945,1020,0,,,,,,icuadvsol.png,false,ALL NOTSUB NOWEAPON NOTAIR SURFACE,,icuadvsol_1.jpg|icuadvsol_2.jpg|icuadvsol_3.jpg
+icuwind,ICU Wind Generator,Produces Energy,162,35,1603,176,0,,,,,,icuwing.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,icuwind_1.jpg|icuwind_2.jpg|icuwind_3.jpg
+andalab,Teleport units,Teleport units,1772,723,7151,2800,100,,50,,,,andincubator2.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,andacsp|walker|andogre|exxec|interceptor,andalab_1.jpg|andalab_2.jpg|andalab_3.jpg
+andlab,Teleport units,Teleport units,1772,723,7151,2800,100,,50,,,,andincubator1.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,andcsp|andscouter|andspmis|andspaa|anddauber|andbrskr,andlab_1.jpg|andlab_2.jpg|andlab_3.jpg
+armaap,Advanced Aircraft Plant,Produces Level 2 Aircraft,26986,3006,20851,3360,200,,,,,,icuaap.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armaca|armbrawl|armpnix|armlance|armhawk|armawac|armdfly|blade|armcybr,armaap_1.jpg|armaap_2.jpg|armaap_3.jpg
+armalab,Advanced Kbot Lab,Produces Level 2 Kbots,13761,2729,16224,3808,200,,50,,,,icualab.png,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armack|armfast|armzeus|armmav|armsptk|armfido|armsnipe|icufboy|armaak|icudecom|armmark|armscab,armalab_1.jpg|armalab_2.jpg|armalab_3.jpg
+armap,Aircraft Plant,Produces Level 1 Aircraft,1370,850,7240,1850,100,,500,,,,icuap.png,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armca|armpeep|armfig|armthund|armatlas|armkam,armap_1.jpg|armap_2.jpg|armap_3.jpg
+armasy,Advanced Shipyard,Produces Level 2 Ships,10096,3432,15972,4512,200,,50,,,,icuasy.png,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armacsub|armsubk|armaas|armcrus|armbats|armmship|aseadragon|armcarry,armasy_1.jpg|armasy_2.jpg|armasy_3.jpg
+armavp,Advanced Vehicle Plant,Produces Level 2 Vehicles,13440,2698,17940,4296,200,,50,,,,icuavp.png,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armacv|armcroc|armlatnk|icubull|armst|armmart|armmerl|armmanni|armyork|icuseer|armjam|armcamp,armavp_1.jpg|armavp_2.jpg|armavp_3.jpg
+armlab,Kbot Lab,Produces Level 1 Kbots,1130,605,6760,2690,100,,50,,,,ICULAB.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,icuck|icupatroller|icurock|icuinv|armjeth|icuwar,armlab_1.jpg|armlab_2.jpg|armlab_3.jpg
+armshltx,Experimental Gantry,Produces Level 3 Units,54540,7396,61380,14400,600,,,,,,icushltx.png,true,ALL PLANT NOTSUB NOWEAPON NOTAIR SURFACE,icuraz|warhammer|icufurie,armshltx_1.jpg|armshltx_2.jpg|armshltx_3.jpg
+armsy,Shipyard,Produces Level 1 Ships,775,615,6050,2990,100,,50,,,,icusy.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armcs|armsub|armpt|decade|armroy,armsy_1.jpg|armsy_2.jpg|armsy_3.jpg
+armvp,Vehicle Plant,Produces Level 1 Vehicles,1853,743,7192,2780,100,,50,,,,icuvp.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armcv|armfav|icuflash|armpincer|armstump|tawf013|icujanus|armsam,armvp_1.jpg|armvp_2.jpg|armvp_3.jpg
+blab,Saitan's Lair,Builds encryp family,25748,15485,3912,5298,350,,0,,,,,true,CORE PLANT CTRL_F LEVEL3 NOWEAPON NOTAIR NOTSUB,,blab_1.jpg|blab_2.jpg|blab_3.jpg
+coraap,Advanced Aircraft Plant,Produces Level 2 Aircraft,26571,2979,20678,3520,200,,,,,,nfaaap.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,coraca|corape|corhurc|cortitan|corvamp|corawac|corcrw,coraap_1.jpg|coraap_2.jpg|coraap_3.jpg
+coralab,Advanced Kbot Lab,Produces Level 2 Kbots,15232,2681,16819,4072,200,,50,,,,nfaalab.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,corack|nfapyro|corcan|corsumo|cormort|corhrk|coraak|corvoyr|corspy|corspec,coralab_1.jpg|coralab_2.jpg|coralab_3.jpg
+corap,Aircraft Plant,Produces Level 1 Aircraft,1340,830,7180,1925,100,,510,,,,nfaap.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,corca|corfink|corveng|corshad|corvalk|bladew,corap_1.jpg|corap_2.jpg|corap_3.jpg
+corasy,Advanced Shipyard,Produces Level 2 Ships,10763,3345,15696,4416,200,,50,,,,nfaasy.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,coracsub|corshark|corssub|corarch|corcrus|corbats|corblackhy|corcarry|corsjam,corasy_1.jpg|corasy_2.jpg|corasy_3.jpg
+coravp,Advanced Vehicle Plant,Produces Level 2 Vehicles,14784,2647,18492,4628,200,,50,,,,nfaavp.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,coracv|corseal|nfareap|corparrow|nfagol|tawf114|cormart|corvroc|corsent|cormabm|coreter|nfavrad,coravp_1.jpg|coravp_2.jpg|coravp_3.jpg
+corgant,Experimental Gantry,Produces Level 3 Units,58524,7848,67321,16000,600,,50,,,,nfagant.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,nfakarg|nfacoug|corkrog|armraven|gorg,corgant_1.jpg|corgant_2.jpg|corgant_3.jpg
+corlab,Kbot Lab,Produces Level 1 Kbots,1250,580,7000,2600,100,,50,,,,nfalab.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,corck|nfaak|nfastorm|nfathud|corcrash,corlab_1.jpg|corlab_2.jpg|corlab_3.jpg
+corsy,Shipyard,Produces Level 1 Ships,750,600,6000,2990,100,,,,,,nfasy.png,true,ALL PLANT NOTSUB NOWEAPON NOTAIR SURFACE,corcs|corsub|corpt|coresupp|corroy,corsy_1.jpg|corsy_2.jpg|corsy_3.jpg
+corvp,Vehicle Plant,Produces Level 1 Vehicles,1772,723,7151,2650,100,,50,,,,nfavp.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,corcv|nfafav|nfagator|nfagarp|nfaraid|nfalevlr|corwolv|cormist,corvp_1.jpg|corvp_2.jpg|corvp_3.jpg
+eufap,Aircraft Plant,Produces Level 1 Aircraft,1370,850,7240,1850,100,,500,,,,eufap.png,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,euffig,eufap_1.jpg|eufap_2.jpg|eufap_3.jpg
+eufblab,Bio Lab,Produces Clones,756,470,4004,1234,69,,0,,,,eufblab.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,armmedic,eufblab_1.jpg|eufblab_2.jpg|eufblab_3.jpg
+euf_harvester_factory,Harvester factory,Harvester Factory,4639,919,14538,11010,0,,,,,,euf_harvester_factory.png,false,ALL NOTLAND MOBILE WEAPON NOTSUB SHIP NOTAIR SURFACE,,euf_harvester_factory_1.jpg|euf_harvester_factory_2.jpg|euf_harvester_factory_3.jpg
+icufff,Anti-gravity hangar,Builds sky cruisers,21941,5284,80132,4802,400,,0,,,,icufff.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,cirr|orcl|demr,icufff_1.jpg|icufff_2.jpg|icufff_3.jpg
+icugant,Tiger Gantry,Builds Tiger,60000,8000,68000,16000,600,,0,,,,icugant.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,armshock|armtigre,icugant_1.jpg|icugant_2.jpg|icugant_3.jpg
+nfafff,Anti-gravity hangar,Builds very large aircraft,21520,5345,80210,5200,400,,0,,,,nfafff.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,taln|odyc|ostr,nfafff_1.jpg|nfafff_2.jpg|nfafff_3.jpg
+andahp,Adv. Hovercraft Platform,Builds Level 2 Hovercraft,14000,3607,18492,5205,200,,50,,,,andahp.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,andach|androck|andtanko|andtesla|andnikola|andahaa,andahp_1.jpg|andahp_2.jpg|andahp_3.jpg
+andahp_nocostr,Adv. Hovercraft Platform,Builds Level 2 Hovercraft,14000,3607,18492,5205,200,,50,,,,andahp_noconstr.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,androck|andtanko|andtesla|andnikola|andahaa,andahp_nocostr_1.jpg|andahp_nocostr_2.jpg|andahp_nocostr_3.jpg
+andhp,Hovercraft vehicles lvl1,Builds Hovercraft,1772,723,7151,2800,100,,50,,,,andhp.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,andch|andgaso|andlipo|andmisa|andhart,andhp_1.jpg|andhp_2.jpg|andhp_3.jpg
+andhp_noai,Hovercraft vehicles lvl1,Builds Hovercraft,1772,723,7151,2800,100,,50,,,,andhpnoai.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,andch|andgaso|andlipo|andmisa|andgaso_noai|andlipo_noai|andmisa_noai|andhart|andhart_noai,andhp_noai_1.jpg|andhp_noai_2.jpg|andhp_noai_3.jpg
+andhp_nocostr,Hovercraft vehicles lvl1,Builds Hovercraft,1772,723,7151,2800,100,,50,,,,andhp_nocostr.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,andgaso|andlipo|andmisa|andhart,andhp_nocostr_1.jpg|andhp_nocostr_2.jpg|andhp_nocostr_3.jpg
+andincubator1,Teleport units,Teleport units,1772,723,7151,2800,100,,50,,,,andincubator1.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,andgaso|andlipo|andmisa,andincubator1_1.jpg|andincubator1_2.jpg|andincubator1_3.jpg
+andincubator2,Teleport units,Teleport units,1772,723,7151,2800,100,,50,,,,andincubator2.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,andtanko|andtesla|androck,andincubator2_1.jpg|andincubator2_2.jpg|andincubator2_3.jpg
+andtorreattacco,Gabriel,Line of death,1772,723,7151,2800,100,,50,,,,andtorreattacco.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,andch|andgaso|andlipo|andmisa,andtorreattacco_1.jpg|andtorreattacco_2.jpg|andtorreattacco_3.jpg
+andtorreattacco_anim1,Gabriel,Line of death,1772,723,7151,2800,100,,50,,,,andtorreattacco.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,andch|andgaso|andlipo|andmisa,andtorreattacco_anim1_1.jpg|andtorreattacco_anim1_2.jpg|andtorreattacco_anim1_3.jpg
+andtorreattacco_anim2,Gabriel,Line of death,1772,723,7151,2800,100,,50,,,,andtorreattacco.png,true,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,andch|andgaso|andlipo|andmisa,andtorreattacco_anim2_1.jpg|andtorreattacco_anim2_2.jpg|andtorreattacco_anim2_3.jpg
+andgant,Teleport units,Teleport units,1772,723,7151,16000,100,,50,,,,andgant.png,true,ALL PLANT NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,cordem|conartist|bigb|ebigb|kill2|armpraet,andgant_1.jpg|andgant_2.jpg|andgant_3.jpg
+armflea,Flea,Fast Light Scout Kbot,212,21,1000,58,0,,0,800,,,flea_1.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,armflea_1.jpg|armflea_2.jpg|armflea_3.jpg
+armfleaa,Accurate Flea,Long Range Kbot,542,81,1000,358,0,,0,800,,,flea_2.png,false,KBOT WEAPON NOTAIR NOTSUB SURFACE,,armfleaa_1.jpg|armfleaa_2.jpg|armfleaa_3.jpg
+armfly,Fly,Fast Light Laser Fleaship,514,24,333,72,0,,0,,,,,false,ALL WEAPON NOTSUB VTOL,,armfly_1.jpg|armfly_2.jpg|armfly_3.jpg
+armflyk,Fly bomber,Fly bomber,1000,100,333,101,0,,0,,,,,false,ALL MOBILE WEAPON NOTLAND ANTIGATOR VTOL ANTIFLAME ANTIEMG ANTILASER NOTSUB NOTSHIP,,armflyk_1.jpg|armflyk_2.jpg|armflyk_3.jpg
+juju,Arachno Killer,Spider Hunter,27321,2157,23087,235000,0,,0,,,,,false,KBOT WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,juju_1.jpg|juju_2.jpg|juju_3.jpg
+mflea,Marco Flea,Killer Kbot,8563,935,4013,1154,0,,0,,,,,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,mflea_1.jpg|mflea_2.jpg|mflea_3.jpg
+minigoth,mini,Fast Light Scout Kbot,23412,2621,55555,4532,0,,3555,800,,,minigoth.jpg,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,minigoth_1.jpg|minigoth_2.jpg|minigoth_3.jpg
+omegaa,Omega Weapon,Omega Energy weapon AA,1185025,62685,2832943,5210,0,,2750,,,,,false,ARM SPECIAL WEAPON LEVEL3 NOTAIR NOTSUB SURFACE,,omegaa_1.jpg|omegaa_2.jpg|omegaa_3.jpg
+omegat,Omega Weapon,Omega Energy weapon,1185025,62685,2832943,5210,0,,2750,,,,da_fare.png,false,ARM SPECIAL WEAPON LEVEL3 NOTAIR NOTSUB SURFACE,,omegat_1.jpg|omegat_2.jpg|omegat_3.jpg
+order_deathray,Flying DeathLaser,Floating Deathray,1280,58,1333,1337,0,,,,,,nfablade.png,,ALL WEAPON SURFACE NOTSUB,,order_deathray_1.jpg|order_deathray_2.jpg|order_deathray_3.jpg
+order_drill,Unknown Contraption,Fire-Breathing WallBuster,31212,1551,100000,13543,0,,0,800,,,Order_drill.jpg,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,order_drill_1.jpg|order_drill_2.jpg|order_drill_3.jpg
+order_fork,Spooning Fork,Floating Spaceship,13212,4151,33333,2000,0,,0,1800,,,da_fare.png,false,ALL VTOL NOTSHIP,,order_fork_1.jpg|order_fork_2.jpg|order_fork_3.jpg
+roost,Unidentified Unit,Gates God-Like Forces,1337.0,500,3315,1800,0,,,,,,roost.DDS,,ALL PLANT NOTLAND NOWEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,roost_1.jpg|roost_2.jpg|roost_3.jpg
+andahaa,Predator,Heavy Rocket Hovercraft,12477,1129,25000,3500,0,,,,,,da_fare.png,false,ALL HOVER MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,andahaa_1.jpg|andahaa_2.jpg|andahaa_3.jpg
+andgaso,Gaso,Light Hovercraft,1042,118,2300,693,0,,,,,,andgaso.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,andgaso_1.jpg|andgaso_2.jpg|andgaso_3.jpg
+andgaso_noai,Gaso,Light Hovercraft,1042,118,2300,693,0,,,,,,andgaso_noai.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,andgaso_noai_1.jpg|andgaso_noai_2.jpg|andgaso_noai_3.jpg
+andlipo,Lipo,Light Hovercraft,1042,118,1761,1000,0,,,,,,andlipo.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,andlipo_1.jpg|andlipo_2.jpg|andlipo_3.jpg
+andlipo_noai,Lipo,Light Hovercraft,1042,118,1761,1000,0,,,,,,andlipo_noai.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,andlipo_noai_1.jpg|andlipo_noai_2.jpg|andlipo_noai_3.jpg
+andmisa,Misa,Light Missile hovercraft,2027,140,2945,690,0,,,,,,andmisa.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,andmisa_1.jpg|andmisa_2.jpg|andmisa_3.jpg
+andmisa_noai,Misa,Light Missile hovercraft,2027,140,2945,690,0,,,,,,andmisa_noai.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,andmisa_noai_1.jpg|andmisa_noai_2.jpg|andmisa_noai_3.jpg
+andnikola,Nikola,Heavy Laser Hovercraft,12477,1129,25000,3500,0,,,,,,andnikola.png,false,ALL HOVER MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,andnikola_1.jpg|andnikola_2.jpg|andnikola_3.jpg
+androck,Rocker,Heavy Rocket Hovercraft,12477,1129,25000,3500,0,,,,,,androck.png,false,ALL HOVER MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,androck_1.jpg|androck_2.jpg|androck_3.jpg
+andtanko,Tanko,Heavy Cannon Hovercraft,12477,1129,25000,3500,0,,,,,,andtanko.png,false,ALL HOVER MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,andtanko_1.jpg|andtanko_2.jpg|andtanko_3.jpg
+andtesla,Tesla,Heavy Cannon Hovercraft,12477,1129,25000,3500,0,,,,,,andtesla.png,false,ALL HOVER MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,andtesla_1.jpg|andtesla_2.jpg|andtesla_3.jpg
+advmoho,Advanced Moho Mine,Advanced Moho Metal Extractor,27000,2100,39640,3000,0,0.0100,0,,,,icuadvmoho.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,advmoho_1.jpg|advmoho_2.jpg|advmoho_3.jpg
+andametex,Advanced Moho Mine,Advanced Moho Metal Extractor,27000,2100,39640,3000,0,0.0100,0,,,,andametex.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,andametex_1.jpg|andametex_2.jpg|andametex_3.jpg
+andmex,Metal Extractor,Extracts metal,514,51,2100,200,0,0.00175,0,,,,andmex.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,andmex_1.jpg|andmex_2.jpg|andmex_3.jpg
+andmexun,Metal Extractor,Extracts metal,514,51,1800,200,0,0.001,0,,,,,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,andmexun_1.jpg|andmexun_2.jpg|andmexun_3.jpg
+armamex,Twilight,Stealthy Cloakable Metal Extractor,2081,159,2611,1450,0,0.0009,,,,,icuamex.png,false,ALL NOTSUB NOWEAPON NOTAIR SURFACE,,armamex_1.jpg|armamex_2.jpg|armamex_3.jpg
+armmoho,Moho Mine,Advanced Metal Extractor / Storage,7214,582,14938,2500,0,0.004,,,,,icumoho.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armmoho_1.jpg|armmoho_2.jpg|armmoho_3.jpg
+corexp,Exploiter,Armed Metal Extractor,2264,188,3460,1300,0,0.0009,,,,,nfaexp.png,false,ALL NOTLAND ANTIGATOR NOTSUB ANTIEMG NOWEAPON NOTSHIP NOTAIR SURFACE,,corexp_1.jpg|corexp_2.jpg|corexp_3.jpg
+cormex,NFA Metal Extractor,Extracts Metal,514,51,1874,175,0,0.001,,,,,nfamex.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,cormex_1.jpg|cormex_2.jpg|cormex_3.jpg
+cormexp,Moho Exploiter,Convertible Metal Extractor,12121,2219,32500,2000,0,0.0035,,,,,nfamexp.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,cormexp_1.jpg|cormexp_2.jpg|cormexp_3.jpg
+cormoho,Moho Mine,Advanced Metal Extractor / Storage,7677,598,14125,3500,0,0.004,,,,,nfamoho.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,cormoho_1.jpg|cormoho_2.jpg|cormoho_3.jpg
+eufadvmetex,Advanced Moho Mine,Advanced Moho Metal Extractor,27000,2100,39640,3000,0,0.0100,0,,,,eufadvmetex.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,eufadvmetex_1.jpg|eufadvmetex_2.jpg|eufadvmetex_3.jpg
+eufametex,EUF Advanced Metal Extractor,Extracts Metal,521,50,1800,170,0,0.001,,,,,eufametex.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,eufametex_1.jpg|eufametex_2.jpg|eufametex_3.jpg
+eufmetex,EUF Metal Extractor,Extracts Metal,521,50,1800,170,0,0.001,,,,,eufmetex.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,eufmetex_1.jpg|eufmetex_2.jpg|eufmetex_3.jpg
+icumetex,ICU Metal Extractor,Extracts Metal,521,50,1800,170,0,0.001,,,,,icumetex.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,icumetex_1.jpg|icumetex_2.jpg|icumetex_3.jpg
+armuwmex,Underwater Metal Extractor,Extracts Metal,674,55,1875,180,0,0.001,,,,,icuuwmex.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR,,armuwmex_1.jpg|armuwmex_2.jpg|armuwmex_3.jpg
+armuwmme,Underwater Moho Mine,Advanced Metal Extractor / Storage,9164,601,35370,2053,0,0.004,,,,,icuuwmme.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR,,armuwmme_1.jpg|armuwmme_2.jpg|armuwmme_3.jpg
+coruwmex,Underwater Metal Extractor,Extracts Metal,519,56,1887,185,0,0.001,,,,,nfauwmex.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR,,coruwmex_1.jpg|coruwmex_2.jpg|coruwmex_3.jpg
+coruwmme,Underwater Moho Mine,Advanced Metal Extractor / Storage,10076,846,34783,2072,0,0.004,,,,,nfauwmme.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR,,coruwmme_1.jpg|coruwmme_2.jpg|coruwmme_3.jpg
+armaas,Archer,Anti-Air Ship,7058,658,8628,2360,,,,,,,icuaas.png,,ALL NOTLAND MOBILE WEAPON NOTSUB SHIP NOTAIR NOTHOVER SURFACE,,armaas_1.jpg|armaas_2.jpg|armaas_3.jpg
+armbats,Millennium,Battleship,20731,5181,58730,15810,0,,,,,,icubats.png,false,ALL NOTLAND MOBILE WEAPON NOTSUB SHIP NOTAIR SURFACE,,armbats_1.jpg|armbats_2.jpg|armbats_3.jpg
+armcarry,Colossus,Aircraft Carrier with Anti-Nuke,71257,1572,85394,7640,1000,,2950,760,,,icucarry.png,true,ALL NOTLAND MOBILE NOTSUB NOWEAPON SHIP NOTAIR SURFACE,,armcarry_1.jpg|armcarry_2.jpg|armcarry_3.jpg
+armcrus,Conqueror,Cruiser,13608,1719,19789,4506,0,,,375,,,icucrus.png,false,ALL NOTLAND MOBILE WEAPON NOTSUB SHIP NOTAIR SURFACE,,armcrus_1.jpg|armcrus_2.jpg|armcrus_3.jpg
+armmship,Ranger,Cruise Missile Ship,9804,2648,22317,2200,0,,1400,,,,icumship.png,false,ALL NOTLAND MOBILE WEAPON NOTSUB SHIP NOTAIR SURFACE,,armmship_1.jpg|armmship_2.jpg|armmship_3.jpg
+armpt,Skeeter,Scout Boat,985,100,2062,224,0,,,,,,icupt.png,false,ALL NOTLAND MOBILE WEAPON NOTSUB SHIP NOTAIR SURFACE,,armpt_1.jpg|armpt_2.jpg|armpt_3.jpg
+armroy,Crusader,Destroyer,5671,987,13391,2575,0,,,400,,,icuroy.png,false,ALL NOTLAND MOBILE WEAPON NOTSUB SHIP NOTAIR SURFACE,,armroy_1.jpg|armroy_2.jpg|armroy_3.jpg
+armsub,Lurker,Submarine,3724,651,9894,835,0,,,450,,,icusub.png,false,UNDERWATER ALL MOBILE WEAPON NOTLAND NOTAIR,,armsub_1.jpg|armsub_2.jpg|armsub_3.jpg
+armsubk,Piranha,Submarine Killer,9481,1048,17767,895,0,,,525,,,icusubk.png,false,UNDERWATER ALL NOTLAND MOBILE WEAPON NOTAIR,,armsubk_1.jpg|armsubk_2.jpg|armsubk_3.jpg
+aseadragon,Epoch,Flagship,238406,32122,299523,71250,,,1530,,,,icuseadragon.png,,ALL WEAPON NOTSUB SHIP NOTAIR SURFACE,,aseadragon_1.jpg|aseadragon_2.jpg|aseadragon_3.jpg
+corarch,Shredder,Anti-Air Ship,7921,614,9791,2450,,,,,,,nfaarch.png,,ALL MOBILE WEAPON NOTLAND SHIP NOTSUB NOTAIR NOTHOVER SURFACE,,corarch_1.jpg|corarch_2.jpg|corarch_3.jpg
+corbats,Warlord,Battleship,21941,5404,60640,16685,0,,,,,,nfabats.png,false,ALL NOTLAND MOBILE WEAPON SHIP NOTSUB NOTAIR SURFACE,,corbats_1.jpg|corbats_2.jpg|corbats_3.jpg
+corblackhy,Black Hydra,Flagship,252321,34585,309264,77500,,,1510,,,,nfablackhy.png,,ALL WEAPON NOTSUB SHIP NOTAIR SURFACE,,corblackhy_1.jpg|corblackhy_2.jpg|corblackhy_3.jpg
+corcarry,Hive,Aircraft Carrier with Anti-Nuke,74715,1579,85271,7950,1000,,2700,740,,,nfacarry.png,true,ALL NOTLAND MOBILE NOTSUB SHIP NOWEAPON NOTAIR SURFACE,,corcarry_1.jpg|corcarry_2.jpg|corcarry_3.jpg
+corcrus,Executioner,Cruiser,13551,1794,19950,4649,0,,,375,,,nfacrus.png,false,ALL NOTLAND MOBILE WEAPON SHIP NOTSUB NOTAIR SURFACE,,corcrus_1.jpg|corcrus_2.jpg|corcrus_3.jpg
+coresupp,Supporter,Corvette,1912,367,6660,1700,0,,,,,,nfasupp.png,false,ALL WEAPON SHIP NOTSUB NOTAIR SURFACE,,coresupp_1.jpg|coresupp_2.jpg|coresupp_3.jpg
+corpt,Searcher,Scout Boat,917,95,1877,228,,,,,,,nfapt.png,,ALL MOBILE WEAPON NOTLAND SHIP NOTSUB NOTAIR NOTHOVER SURFACE,,corpt_1.jpg|corpt_2.jpg|corpt_3.jpg
+corroy,Enforcer,Destroyer,5756,1021,13368,2800,0,,,400,,,nfaroy.png,false,ALL NOTLAND MOBILE WEAPON SHIP NOTSUB NOTAIR SURFACE,,corroy_1.jpg|corroy_2.jpg|corroy_3.jpg
+corshark,Shark,Submarine Killer,9245,956,15529,835,0,,,525,,,nfashark.png,false,ALL UNDERWATER MOBILE WEAPON NOTLAND NOTAIR,,corshark_1.jpg|corshark_2.jpg|corshark_3.jpg
+corsjam,Phantom,Radar Jammer Ship,2254,135,7025,570,0,,,,,,nfasjam.png,false,ALL NOTLAND MOBILE NOTSUB SHIP NOWEAPON NOTAIR SURFACE,,corsjam_1.jpg|corsjam_2.jpg|corsjam_3.jpg
+corssub,Leviathan,Battle Submarine,11940,1757,23007,2320,0,,,550,,,nfassub.png,false,ALL UNDERWATER MOBILE WEAPON NOTLAND NOTAIR,,corssub_1.jpg|corssub_2.jpg|corssub_3.jpg
+corsub,Snake,Submarine,3902,679,9729,835,0,,,450,,,nfasub.png,false,ALL UNDERWATER MOBILE WEAPON NOTLAND NOTAIR,,corsub_1.jpg|corsub_2.jpg|corsub_3.jpg
+decade,Decade,Corvette,2055,378,6525,1650,0,,,,,,icudecade.png,false,ALL WEAPON NOTSUB SHIP NOTAIR SURFACE,,decade_1.jpg|decade_2.jpg|decade_3.jpg
+andarad,Radar Tower,Adv. Radar System,600,54,1137,81,0,,2100,,,,andarad.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,andarad_1.jpg|andarad_2.jpg|andarad_3.jpg
+andrad,Radar Tower,Early Warning System,600,54,1137,81,0,,2100,,,,andrad.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,andrad_1.jpg|andrad_2.jpg|andrad_3.jpg
+armarad,Advanced Radar Tower,Long-Range Radar,17830,525,11800,320,,,3500,,,,icuarad.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armarad_1.jpg|armarad_2.jpg|armarad_3.jpg
+armeyes,Dragon's Eye,Perimeter Camera,800,30,1500,250,0,,,,,true,icu_camera.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armeyes_1.jpg|armeyes_2.jpg|armeyes_3.jpg
+armfarad,Advanced Radar Tower,Long-Range Radar,17830,525,11800,320,,,3500,,,,icufarad.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armfarad_1.jpg|armfarad_2.jpg|armfarad_3.jpg
+armfrad,Floating Radar Tower,Early Warning System,600,54,1137,81,0,,2100,,,,icufrad.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armfrad_1.jpg|armfrad_2.jpg|armfrad_3.jpg
+armjamt,Sneaky Pete,Cloakable Jammer Tower,7945,226,9955,712,0,,,,,,icujamt.png,false,ALL NOTSUB NOWEAPON SPECIAL NOTAIR SURFACE,,armjamt_1.jpg|armjamt_2.jpg|armjamt_3.jpg
+armrad,Radar Tower,Early Warning System,600,54,1137,81,0,,2100,,,,icurad.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armrad_1.jpg|armrad_2.jpg|armrad_3.jpg
+armsonar,Sonar Station,Locates Water Units,403,20,912,50,0,,,1200,,,icusonar.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armsonar_1.jpg|armsonar_2.jpg|armsonar_3.jpg
+armveil,Veil,Long-Range Jamming Tower,17501,119,9080,750,0,,,,,,icuveil.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armveil_1.jpg|armveil_2.jpg|armveil_3.jpg
+corarad,Advanced Radar Tower,Long-Range Radar,17920,522,11960,330,0,,3500,,,,nfaarad.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,corarad_1.jpg|corarad_2.jpg|corarad_3.jpg
+coreyes,Dragon's Eye,Perimeter Camera,800,30,1500,250,0,,,,,,nfaeye.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,coreyes_1.jpg|coreyes_2.jpg|coreyes_3.jpg
+corfarad,Advanced Radar Tower,Long-Range Radar,17920,522,11960,330,0,,3500,,,,nfafarad.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,corfarad_1.jpg|corfarad_2.jpg|corfarad_3.jpg
+corfrad,Radar Tower,Early Warning System,600,54,1137,81,0,,2100,,,,nfafrad.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,corfrad_1.jpg|corfrad_2.jpg|corfrad_3.jpg
+corjamt,Castro,Short-Range Jamming Device,4791,109,4577,960,0,,,,,,nfajamt.png,false,ALL NOTSUB NOWEAPON SPECIAL NOTAIR SURFACE,,corjamt_1.jpg|corjamt_2.jpg|corjamt_3.jpg
+corrad,Radar Tower,Early Warning System,600,54,1137,81,0,,2100,,,,nfarad.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,corrad_1.jpg|corrad_2.jpg|corrad_3.jpg
+corshroud,Shroud,Long-Range Jamming Tower,18304,124,9392,800,0,,,,,,nfashroud.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,corshroud_1.jpg|corshroud_2.jpg|corshroud_3.jpg
+corsonar,Sonar Station,Locates Water Units,399,20,900,52,0,,,1200,,,nfasonar.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,corsonar_1.jpg|corsonar_2.jpg|corsonar_3.jpg
+euf_radar,Radar Tower,Early Warning System,600,54,1137,81,0,,2100,,,,euf_radar.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,euf_radar_1.jpg|euf_radar_2.jpg|euf_radar_3.jpg
+anddauber,Dauber,Heavy Laser Escort,4265,285,8427,795,0,,0,,,,anddauber.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,anddauber_1.jpg|anddauber_2.jpg|anddauber_3.jpg
+andogre,Ogre,Heavy Amphibious Kbot,33562,2020,50975,14000,0,,0,120,,,,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,andogre_1.jpg|andogre_2.jpg|andogre_3.jpg
+armaak,Archangel,Advanced Amphibious Anti-Air Kbot,5266,483,6958,1020,,,,,,,icuaak.png,,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,,armaak_1.jpg|armaak_2.jpg|armaak_3.jpg
+armfast,Zipper,Fast Raider Kbot,4382,177,3960,620,0,,,,,,icufast.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,armfast_1.jpg|armfast_2.jpg|armfast_3.jpg
+armfido,Fido,Mortar/Skirmish Kbot,5849,253,7693,1150,0,,,,,,ICUFIDO.PNG,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,armfido_1.jpg|armfido_2.jpg|armfido_3.jpg
+armjeth,Jethro,Amphibious Anti-air Kbot,1097,115,1831,570,,,,,,,icujeth.png,,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,,armjeth_1.jpg|armjeth_2.jpg|armjeth_3.jpg
+armmark,Marky,Radar Kbot,1152,95,3800,320,0,,2200,0,,,icumark.png,false,KBOT MOBILE ALL NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armmark_1.jpg|armmark_2.jpg|armmark_3.jpg
+armmav,Maverick,Skirmish Kbot (Combat Auto-Repair),12180,655,18384,1120,0,,,,,,icumav.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,armmav_1.jpg|armmav_2.jpg|armmav_3.jpg
+armpraet,Praetorian,Experimental ICU BioMech,577039,27182,552145,80000,0,,1200,1200,,,andpraetorian.png,false,KBOT WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,armpraet_1.jpg|armpraet_2.jpg|armpraet_3.jpg
+armraven,Catapult,Heavy Rocket Kbot,75625,4551,126522,5500,0,,,,,,nfaraven.png,false,KBOT MOBILE WEAPON ALL ANTIGATOR NOTSUB ANTIEMG NOTSHIP NOTAIR SURFACE,,armraven_1.jpg|armraven_2.jpg|armraven_3.jpg
+armsptk,Recluse,All-Terrain Rocket Spider,4200,375,8775,1050,0,,,,,,icusptk.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armsptk_1.jpg|armsptk_2.jpg|armsptk_3.jpg
+armzeus,Zeus,Assault Kbot,5668,329,7252,2975,0,,,,,,icuzeus.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,armzeus_1.jpg|armzeus_2.jpg|armzeus_3.jpg
+coraak,Manticore,Heavy Amphibious Anti-Air Kbot,5814,608,7581,1280,,,,,,,nfaaak.png,,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,,coraak_1.jpg|coraak_2.jpg|coraak_3.jpg
+corcan,Can,Armored Assault Kbot,8722,522,11734,4350,0,,,,,,nfacan.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,corcan_1.jpg|corcan_2.jpg|corcan_3.jpg
+corcrash,Crasher,Amphibious Anti-air Kbot,1101,116,1900,580,,,,,,,nfacrash.png,,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,,corcrash_1.jpg|corcrash_2.jpg|corcrash_3.jpg
+corhrk,Dominator,Heavy Rocket Kbot,5507,560,6591,550,0,,,,,,nfahrk.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,corhrk_1.jpg|corhrk_2.jpg|corhrk_3.jpg
+corkrog,Krogoth,Experimental Assault Kbot,577039,27182,552145,133700,0,,,,,,nfakrog.png,,KBOT WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,corkrog_1.jpg|corkrog_2.jpg|corkrog_3.jpg
+cormort,Morty,Mobile Mortar Kbot,2065,382,5139,850,0,,,,,,nfamort.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,cormort_1.jpg|cormort_2.jpg|cormort_3.jpg
+corspec,Spectre,Radar Jammer Kbot,1453,70,5439,310,0,,0,,,,nfaspec.png,false,KBOT MOBILE ALL NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,corspec_1.jpg|corspec_2.jpg|corspec_3.jpg
+corspy,Parasite,Radar-Invisible Spy Kbot,11452,156,22247,340,0,,,,,,nfaspy.png,false,KBOT MOBILE ALL NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,corspy_1.jpg|corspy_2.jpg|corspy_3.jpg
+corsumo,Sumo,Heavily Armored Assault Kbot,33562,2020,50975,14000,0,,,,,,nfasumo.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,corsumo_1.jpg|corsumo_2.jpg|corsumo_3.jpg
+corvoyr,Voyeur,Radar Kbot,1283,93,3945,350,0,,2200,,,,nfavoyr.png,false,KBOT MOBILE ALL NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,corvoyr_1.jpg|corvoyr_2.jpg|corvoyr_3.jpg
+exxec,Exxec,heavy assault K-bot,5311,475,8500,1700,500,,0,,,,exxec.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,exxec_1.jpg|exxec_2.jpg|exxec_3.jpg
+gorg,Juggernaut,(barely) Mobile Heavy Turret,481165,18705,629630,300000,0,,,,,,gorg.png,false,KBOT WEAPON ALL NOTSUB NOTAIR SURFACE,,gorg_1.jpg|gorg_2.jpg|gorg_3.jpg
+icufboy,Fatboy,Heavy Plasma Kbot,11193,1418,22397,7000,0,,,,,,icufboy.png,false,KBOT WEAPON ALL NOTSUB NOTAIR SURFACE,,icufboy_1.jpg|icufboy_2.jpg|icufboy_3.jpg
+icufurie,Arm Furie,Experimental Kbot,116664,29489,302193,20489,0,,0,,,,icufurie.png,false,KBOT NOTAIR NOTSUB SURFACE,,icufurie_1.jpg|icufurie_2.jpg|icufurie_3.jpg
+icuinv,ICU Invasor,Light Plasma Kbot,1231,121,2210,810,0,,,,,,icuinv.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,icuinv_1.jpg|icuinv_2.jpg|icuinv_3.jpg
+icupatroller,Patroller,ICU Light Fantry Robot,897,45,1420,300,0,,,,,,icupatroller.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,icupatroller_1.jpg|icupatroller_2.jpg|icupatroller_3.jpg
+icuraz,Razorback,Battle Mech,63286,3577,88566,10000,0,,,,,,icuraz.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTAIR SURFACE,,icuraz_1.jpg|icuraz_2.jpg|icuraz_3.jpg
+icurock,Rocko,Rocket Kbot,944,97,1887,650,0,,,,,,icurock.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,icurock_1.jpg|icurock_2.jpg|icurock_3.jpg
+icusnipe,Sharpshooter,Sniper Kbot,14727,535,19137,520,0,,,,,,icusnipe.png,false,KBOT MOBILE WEAPON ALL NOTSHIP NOTAIR SURFACE,,icusnipe_1.jpg|icusnipe_2.jpg|icusnipe_3.jpg
+icuwar,Warrior,Medium Infantry Kbot,2944,248,3828,1300,0,,,,,,icuwar.png,false,KBOT MOBILE WEAPON ALL ANTIGATOR NOTSUB ANTIEMG NOTSHIP NOTAIR SURFACE,,icuwar_1.jpg|icuwar_2.jpg|icuwar_3.jpg
+interceptor,Interceptor,Medium Laser-Artillery Mech,1400,800,30000,1700,0,,0,,,,,false,KBOT MOBILE WEAPON ALL NOTSUB NOTAIR SURFACE,,interceptor_1.jpg|interceptor_2.jpg|interceptor_3.jpg
+marauder,Marauder,Amphibious Assault Mech,19534,910,28957,4000,0,,,,,,MARAUDER.DDS,false,KBOT MOBILE WEAPON ALL NOTSUB NOTAIR SURFACE,,marauder_1.jpg|marauder_2.jpg|marauder_3.jpg
+nfaak,Saboteur,Infantry Kbot,826,34,1279,260,0,,,,,,nfaak.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,nfaak_1.jpg|nfaak_2.jpg|nfaak_3.jpg
+nfacoug,Cougar,Heavy Assault Mech,24535,1730,56042,4000,0,,0,,,,nfacougar.png,false,KBOT WEAPON NOTAIR NOTSUB SURFACE,,nfacoug_1.jpg|nfacoug_2.jpg|nfacoug_3.jpg
+nfakarg,Karganeth,All-Terrain Assault Mech,63286,3577,88609,10000,0,,,,,,nfakarg.png,false,KBOT WEAPON ALL NOTSTRUCTURE NOTSUB NOTAIR SURFACE,,nfakarg_1.jpg|nfakarg_2.jpg|nfakarg_3.jpg
+nfapyro,Pyro,Fast Assault Kbot,2783,189,5027,1000,0,,,,,,nfapyro.png,false,KBOT MOBILE WEAPON ALL ANTIFLAME NOTSUB NOTSHIP NOTAIR SURFACE,,nfapyro_1.jpg|nfapyro_2.jpg|nfapyro_3.jpg
+nfastorm,Tempest,Rocket Kbot,853,81,1722,670,0,,,,,,nfastorm.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,nfastorm_1.jpg|nfastorm_2.jpg|nfastorm_3.jpg
+nfathud,Thud,Light Plasma Kbot,1061,132,1971,900,0,,,,,,nfathud.png,false,KBOT MOBILE WEAPON ALL NOTSUB NOTSHIP NOTAIR SURFACE,,nfathud_1.jpg|nfathud_2.jpg|nfathud_3.jpg
+walker,Walker,Assault Kbot,2631,265,3124,1489,0,,0,,,,,false,ARM KBOT WEAPON NOTAIR NOTSUB SURFACE,,walker_1.jpg|walker_2.jpg|walker_3.jpg
+warhammer,Warhammer WHM-6K,Assault / Heavy Weapons Battlemech,66000,3700,58000,4000,0,,900,,,,warhammer.png,,KBOT MOBILE WEAPON ALL NOTSUB NOTAIR SURFACE,,warhammer_1.jpg|warhammer_2.jpg|warhammer_3.jpg
+andbarracs,Building,A building,600,54,1137,1200,0,,,,,,andbarracs.png,false,SURFACE,,andbarracs_1.jpg|andbarracs_2.jpg|andbarracs_3.jpg
+andflag,Building,A flag,600,54,1137,600,0,,,,,,andflag.png,false,SURFACE,,andflag_1.jpg|andflag_2.jpg|andflag_3.jpg
+andhangar_close,Building,Barracs,600,54,1137,1200,0,,,,,,andhangar_close.png,false,SURFACE,,andhangar_close_1.jpg|andhangar_close_2.jpg|andhangar_close_3.jpg
+andmuos,Building,A space radar,2000,54,1137,600,0,,,,,,andmuos.png,false,SURFACE,,andmuos_1.jpg|andmuos_2.jpg|andmuos_3.jpg
+andtower,Building,A building,600,54,1137,600,0,,,,,,andtower.png,false,SURFACE,,andtower_1.jpg|andtower_2.jpg|andtower_3.jpg
+andtowercontrol,Building,A control tower,2000,54,1137,2000,0,,,,,,andtowercontrol.png,false,SURFACE,,andtowercontrol_1.jpg|andtowercontrol_2.jpg|andtowercontrol_3.jpg
+armgeneratore,armgeneratore,An electric generator.,0,1000,10000,50000,,,,,,,armgeneratore.bmp,,,,armgeneratore_1.jpg|armgeneratore_2.jpg|armgeneratore_3.jpg
+armhvytransp,Heavy Transporter,Trasport Units,13761,2729,16224,3808,200,,50,,,,armhvytransp.bmp,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR,,armhvytransp_1.jpg|armhvytransp_2.jpg|armhvytransp_3.jpg
+artefatto_sporco,Alien,Tech Level 1,1802,128,4066,1240,90,,50,,,,icucv.png,true,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR,,artefatto_sporco_1.jpg|artefatto_sporco_2.jpg|artefatto_sporco_3.jpg
+asteroide01,Building,An asteroid,200,0.00006,300,50,,,,,,,asteroide01.png,,OGGETTISTATICI,,asteroide01_1.jpg|asteroide01_2.jpg|asteroide01_3.jpg
+asteroide02,Building,An asteroid,200,0.00006,300,50,,,,,,,asteroide02.png,,OGGETTISTATICI,,asteroide02_1.jpg|asteroide02_2.jpg|asteroide02_3.jpg
+asteroide03,Building,An asteroid,200,0.00006,300,50,,,,,,,asteroide03.png,,OGGETTISTATICI,,asteroide03_1.jpg|asteroide03_2.jpg|asteroide03_3.jpg
+bigrock001,Rock,A rock,200,0.00006,300,50,,,,,,,bigrock001.png,,OGGETTISTATICI,,bigrock001_1.jpg|bigrock001_2.jpg|bigrock001_3.jpg
+bigrock002,Rock,A rock,200,0.00006,300,50,,,,,,,bigrock002.png,,OGGETTISTATICI,,bigrock002_1.jpg|bigrock002_2.jpg|bigrock002_3.jpg
+bigrock003,Rock,A rock,200,0.00006,300,50,,,,,,,bigrock003.png,,OGGETTISTATICI,,bigrock003_1.jpg|bigrock003_2.jpg|bigrock003_3.jpg
+bigrock004,Rock,A rock,200,0.00006,300,50,,,,,,,bigrock004.png,,OGGETTISTATICI,,bigrock004_1.jpg|bigrock004_2.jpg|bigrock004_3.jpg
+bigrock005,Rock,A rock,200,0.00006,300,50,,,,,,,bigrock005.png,,OGGETTISTATICI,,bigrock005_1.jpg|bigrock005_2.jpg|bigrock005_3.jpg
+bigrock006,Rock,A rock,200,0.00006,300,50,,,,,,,bigrock006.png,,OGGETTISTATICI,,bigrock006_1.jpg|bigrock006_2.jpg|bigrock006_3.jpg
+bigrock007,Rock,A rock,200,0.00006,300,50,,,,,,,bigrock007.png,,OGGETTISTATICI,,bigrock007_1.jpg|bigrock007_2.jpg|bigrock007_3.jpg
+bigrock008,Rock,A rock,200,0.00006,300,50,,,,,,,bigrock008.png,,OGGETTISTATICI,,bigrock008_1.jpg|bigrock008_2.jpg|bigrock008_3.jpg
+bigrock009,Rock,A rock,200,0.00006,300,50,,,,,,,bigrock009.png,,OGGETTISTATICI,,bigrock009_1.jpg|bigrock009_2.jpg|bigrock009_3.jpg
+car001,Car,Civilian car,944,97,1887,300,0,,,,,,car001.png,false,OGGETTISTATICI,,car001_1.jpg|car001_2.jpg|car001_3.jpg
+car002,Car,Civilian car,944,97,1887,300,0,,,,,,car002.png,false,OGGETTISTATICI,,car002_1.jpg|car002_2.jpg|car002_3.jpg
+car003,Car,Civilian car,944,97,1887,300,0,,,,,,car003.png,false,OGGETTISTATICI,,car003_1.jpg|car003_2.jpg|car003_3.jpg
+container_1,Livrium Container,EUF Container,1802,128,4066,2000,90,,50,,,,container_1.png,true,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE OGGETTISTATICI,,container_1_1.jpg|container_1_2.jpg|container_1_3.jpg
+controllo_spazioporto,Tower Control,Capture this to take control of objects,600,54,1137,81,0,,,,,,controllo_spazioporto.png,false,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR,,controllo_spazioporto_1.jpg|controllo_spazioporto_2.jpg|controllo_spazioporto_3.jpg
+crane,Building,A crane,200,0.00006,300,50,,,,,,,crane.png,,OGGETTISTATICI,,crane_1.jpg|crane_2.jpg|crane_3.jpg
+cumulo_1,Rock,A lava pile,200,0.00006,300,50,,,,,,,rock001.png,,OGGETTISTATICI,,cumulo_1_1.jpg|cumulo_1_2.jpg|cumulo_1_3.jpg
+cumulo_2,Rock,A lava pile,200,0.00006,300,50,,,,,,,rock001.png,,OGGETTISTATICI,,cumulo_2_1.jpg|cumulo_2_2.jpg|cumulo_2_3.jpg
+cumulo_3,Rock,A lava pile,200,0.00006,300,50,,,,,,,rock001.png,,OGGETTISTATICI,,cumulo_3_1.jpg|cumulo_3_2.jpg|cumulo_3_3.jpg
+cumulo_4,Rock,A lava pile,200,0.00006,300,50,,,,,,,rock001.png,,OGGETTISTATICI,,cumulo_4_1.jpg|cumulo_4_2.jpg|cumulo_4_3.jpg
+cumulo_5,Rock,A lava pile,200,0.00006,300,50,,,,,,,rock001.png,,OGGETTISTATICI,,cumulo_5_1.jpg|cumulo_5_2.jpg|cumulo_5_3.jpg
+cumulo_6,Rock,A lava pile,200,0.00006,300,50,,,,,,,rock001.png,,OGGETTISTATICI,,cumulo_6_1.jpg|cumulo_6_2.jpg|cumulo_6_3.jpg
+eridlon_antenna,Antenna,Antenna,4432,980,5705,1263,0,,0,,,,ARMFORTGV.bmp,false,OGGETTISTATICI,,eridlon_antenna_1.jpg|eridlon_antenna_2.jpg|eridlon_antenna_3.jpg
+eridlon_bridge1,Bridge,Building,0.1,20,100,1500,,,,,,,,,SURFACE,,eridlon_bridge1_1.jpg|eridlon_bridge1_2.jpg|eridlon_bridge1_3.jpg
+eridlon_bridge2,Bridge,Building,0.1,20,100,1500,,,,,,,,,SURFACE,,eridlon_bridge2_1.jpg|eridlon_bridge2_2.jpg|eridlon_bridge2_3.jpg
+eridlon_fence,Fence,Port fence,0.1,20,100,1500,,,,,,,,,OGGETTISTATICI,,eridlon_fence_1.jpg|eridlon_fence_2.jpg|eridlon_fence_3.jpg
+eridlon_fence_dx,Fence,Port fence,0.1,20,100,1500,,,,,,,,,OGGETTISTATICI,,eridlon_fence_dx_1.jpg|eridlon_fence_dx_2.jpg|eridlon_fence_dx_3.jpg
+eridlon_fort,Fence,Port fence,0.1,20,100,1500,,,,,,,,,OGGETTISTATICI,,eridlon_fort_1.jpg|eridlon_fort_2.jpg|eridlon_fort_3.jpg
+eridlon_gate,Fortification Gate,Eridlon Gate,10000,980,5705,6000,0,,0,,,,ARMFORTGV.bmp,false,OGGETTISTATICI,,eridlon_gate_1.jpg|eridlon_gate_2.jpg|eridlon_gate_3.jpg
+eridlon_gate_wall,Fortification Gate,Eridlon Gate,10000,980,5705,6000,0,,0,,,,ARMFORTGV.bmp,false,OGGETTISTATICI,,eridlon_gate_wall_1.jpg|eridlon_gate_wall_2.jpg|eridlon_gate_wall_3.jpg
+eridlon_pala_eolica,Wind Generator,Produces Energy,162,35,1603,3000,0,,,,,,armwing.png,false,OGGETTISTATICI,,eridlon_pala_eolica_1.jpg|eridlon_pala_eolica_2.jpg|eridlon_pala_eolica_3.jpg
+eridlon_semaforo,traffic lights,traffic lights,944,97,1887,300,0,,,,,,eridlon_semaforo.png,false,OGGETTISTATICI,,eridlon_semaforo_1.jpg|eridlon_semaforo_2.jpg|eridlon_semaforo_3.jpg
+eridlon_semaforo_60,traffic lights,traffic lights,944,97,1887,300,0,,,,,,da_fare.png,false,OGGETTISTATICI,,eridlon_semaforo_60_1.jpg|eridlon_semaforo_60_2.jpg|eridlon_semaforo_60_3.jpg
+eridlon_semaforo_dx,traffic lights,traffic lights,944,97,1887,300,0,,,,,,da_fare.png,false,OGGETTISTATICI,,eridlon_semaforo_dx_1.jpg|eridlon_semaforo_dx_2.jpg|eridlon_semaforo_dx_3.jpg
+eridlon_semaforo_sx,traffic lights,traffic lights,944,97,1887,300,0,,,,,,da_fare.png,false,OGGETTISTATICI,,eridlon_semaforo_sx_1.jpg|eridlon_semaforo_sx_2.jpg|eridlon_semaforo_sx_3.jpg
+eufspazioporto,Spaceport,ICU Spaceport,13761,2729,16224,400000,200,,50,,,,,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,eufspazioporto_1.jpg|eufspazioporto_2.jpg|eufspazioporto_3.jpg
+eufspazioportoanim,Spaceport,Transport units,13761,2729,1224,80000,3500,,1500,,,,eufspazioportodin.pcx,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,eufspazioportoanim_1.jpg|eufspazioportoanim_2.jpg|eufspazioportoanim_3.jpg
+eufspazioportodin,Spaceport,Transport units,13761,2729,1224,80000,3500,,1500,,,,,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,euftrasparte|nfagol|ruspa_builder,eufspazioportodin_1.jpg|eufspazioportodin_2.jpg|eufspazioportodin_3.jpg
+euf_harvester,Reinforced Bus Vehicle,Tech Level 1,1802,128,4066,1240,90,,50,,,,da_fare.png,false,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,euf_harvester_1.jpg|euf_harvester_2.jpg|euf_harvester_3.jpg
+euf_saving_vehicle,Reinforced Bus Vehicle,Tech Level 1,1802,128,4066,1240,90,,50,,,,da_fare.png,false,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,euf_saving_vehicle_1.jpg|euf_saving_vehicle_2.jpg|euf_saving_vehicle_3.jpg
+folsom_dam_fogna_e,Sewage Outfalls,Sewage Outfalls,600,54,1137,3000,0,,,,,,folsom_dam_fogna.png,false,OGGETTISTATICI,,folsom_dam_fogna_e_1.jpg|folsom_dam_fogna_e_2.jpg|folsom_dam_fogna_e_3.jpg
+folsom_dam_fogna_n,Sewage Outfalls,Sewage Outfalls,600,54,1137,3000,0,,,,,,folsom_dam_fogna.png,false,OGGETTISTATICI,,folsom_dam_fogna_n_1.jpg|folsom_dam_fogna_n_2.jpg|folsom_dam_fogna_n_3.jpg
+folsom_dam_fogna_o,Sewage Outfalls,Sewage Outfalls,600,54,1137,3000,0,,,,,,folsom_dam_fogna.png,false,OGGETTISTATICI,,folsom_dam_fogna_o_1.jpg|folsom_dam_fogna_o_2.jpg|folsom_dam_fogna_o_3.jpg
+folsom_dam_fogna_s,Sewage Outfalls,Sewage Outfalls,600,54,1137,3000,0,,,,,,folsom_dam_fogna.png,false,OGGETTISTATICI,,folsom_dam_fogna_s_1.jpg|folsom_dam_fogna_s_2.jpg|folsom_dam_fogna_s_3.jpg
+livrium00,Building,A livrium crystal,200,0.00006,300,50,,,,,,,livrium00.png,,OGGETTISTATICI,,livrium00_1.jpg|livrium00_2.jpg|livrium00_3.jpg
+livrium01,Building,A livrium crystal,200,0.00006,300,50,,,,,,,livrium01.png,,OGGETTISTATICI,,livrium01_1.jpg|livrium01_2.jpg|livrium01_3.jpg
+livrium02,Building,A livrium crystal,200,0.00006,300,50,,,,,,,livrium02.png,,OGGETTISTATICI,,livrium02_1.jpg|livrium02_2.jpg|livrium02_3.jpg
+livrium03,Building,A livrium crystal,200,0.00006,300,50,,,,,,,livrium03.png,,OGGETTISTATICI,,livrium03_1.jpg|livrium03_2.jpg|livrium03_3.jpg
+livrium04,Building,A livrium crystal,200,0.00006,300,50,,,,,,,livrium04.png,,OGGETTISTATICI,,livrium04_1.jpg|livrium04_2.jpg|livrium04_3.jpg
+nfahvytrsp,Shark transporter,Heavy transporter,13761,2729,1224,400000,3500,,1500,,,,,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR,,nfahvytrsp_1.jpg|nfahvytrsp_2.jpg|nfahvytrsp_3.jpg
+pala001,Building,A building,600,54,1137,81,0,,,,,,pala001.png,false,OGGETTISTATICI,,pala001_1.jpg|pala001_2.jpg|pala001_3.jpg
+pala001_d,Building,Building,0.1,20,100,1500,,,,,,,,,OGGETTISTATICI,,pala001_d_1.jpg|pala001_d_2.jpg|pala001_d_3.jpg
+pala002,Building,A building,200,0.00006,300,50,,,,,,,pala002.png,,OGGETTISTATICI,,pala002_1.jpg|pala002_2.jpg|pala002_3.jpg
+pala002_d,Building,Building,0.1,20,100,1500,,,,,,,,,OGGETTISTATICI,,pala002_d_1.jpg|pala002_d_2.jpg|pala002_d_3.jpg
+pala003,Building,A building,200,0.00006,300,50,,,,,,,pala003.png,,OGGETTISTATICI,,pala003_1.jpg|pala003_2.jpg|pala003_3.jpg
+pala003_d,Building,Building,0.1,20,100,1500,,,,,,,,,OGGETTISTATICI,,pala003_d_1.jpg|pala003_d_2.jpg|pala003_d_3.jpg
+pala004,Building,A building,200,0.00006,300,50,,,,,,,pala004.png,,OGGETTISTATICI,,pala004_1.jpg|pala004_2.jpg|pala004_3.jpg
+pala004_d,Building,Building,0.1,20,100,1500,,,,,,,,,OGGETTISTATICI,,pala004_d_1.jpg|pala004_d_2.jpg|pala004_d_3.jpg
+pala005,Building,A building,200,0.00006,300,50,,,,,,,pala005.png,,OGGETTISTATICI,,pala005_1.jpg|pala005_2.jpg|pala005_3.jpg
+pala005_d,Building,Building,0.1,20,100,1500,,,,,,,,,OGGETTISTATICI,,pala005_d_1.jpg|pala005_d_2.jpg|pala005_d_3.jpg
+pala006,Building,A building,200,0.00006,300,50,,,,,,,pala006.png,,OGGETTISTATICI,,pala006_1.jpg|pala006_2.jpg|pala006_3.jpg
+pala008,Building,A building,200,0.00006,300,50,,,,,,,pala006.png,,OGGETTISTATICI,,pala008_1.jpg|pala008_2.jpg|pala008_3.jpg
+pala009,Building,A building,200,0.00006,300,50,,,,,,,pala006.png,,OGGETTISTATICI,,pala009_1.jpg|pala009_2.jpg|pala009_3.jpg
+pala010,Building,A building,200,0.00006,300,50,,,,,,,pala010.png,,OGGETTISTATICI,,pala010_1.jpg|pala010_2.jpg|pala010_3.jpg
+pala011,Building,A building,200,0.00006,300,50,,,,,,,pala011.png,,OGGETTISTATICI,,pala011_1.jpg|pala011_2.jpg|pala011_3.jpg
+palma001,Palm,A palm,200,0.00006,300,50,,,,,,true,palma.png,,OGGETTISTATICI,,palma001_1.jpg|palma001_2.jpg|palma001_3.jpg
+palma002,Palm,A palm,200,0.00006,300,50,,,,,,true,palma.png,,OGGETTISTATICI,,palma002_1.jpg|palma002_2.jpg|palma002_3.jpg
+palma003,Palm,A palm,200,0.00006,300,50,,,,,,true,palma.png,,OGGETTISTATICI,,palma003_1.jpg|palma003_2.jpg|palma003_3.jpg
+palma004,Palm,A palm,200,0.00006,300,50,,,,,,true,palma.png,,OGGETTISTATICI,,palma004_1.jpg|palma004_2.jpg|palma004_3.jpg
+palma005,Palm,A palm,200,0.00006,300,50,,,,,,true,palma.png,,OGGETTISTATICI,,palma005_1.jpg|palma005_2.jpg|palma005_3.jpg
+palma006,Palm,A palm,200,0.00006,300,50,,,,,,true,palma.png,,OGGETTISTATICI,,palma006_1.jpg|palma006_2.jpg|palma006_3.jpg
+pino001,pine,A pine,200,0.00006,300,50,,,,,,,pino001.png,,OGGETTISTATICI,,pino001_1.jpg|pino001_2.jpg|pino001_3.jpg
+pino002,pine,A pine,200,0.00006,300,50,,,,,,,pino002.png,,OGGETTISTATICI,,pino002_1.jpg|pino002_2.jpg|pino002_3.jpg
+pino003,pine,A pine,200,0.00006,300,50,,,,,,,pino003.png,,OGGETTISTATICI,,pino003_1.jpg|pino003_2.jpg|pino003_3.jpg
+pino004,pine,A pine,200,0.00006,300,50,,,,,,,pino004.png,,OGGETTISTATICI,,pino004_1.jpg|pino004_2.jpg|pino004_3.jpg
+pino005,pine,A pine,200,0.00006,300,50,,,,,,,pino005.png,,OGGETTISTATICI,,pino005_1.jpg|pino005_2.jpg|pino005_3.jpg
+rock001,Rock,A rock,200,0.00006,300,50,,,,,,,rock001.png,,OGGETTISTATICI,,rock001_1.jpg|rock001_2.jpg|rock001_3.jpg
+rock002,Rock,A rock,200,0.00006,300,50,,,,,,,rock002.png,,OGGETTISTATICI,,rock002_1.jpg|rock002_2.jpg|rock002_3.jpg
+rock003,Rock,A rock,200,0.00006,300,50,,,,,,,rock003.png,,OGGETTISTATICI,,rock003_1.jpg|rock003_2.jpg|rock003_3.jpg
+rock004,Rock,A rock,200,0.00006,300,50,,,,,,,rock004.png,,OGGETTISTATICI,,rock004_1.jpg|rock004_2.jpg|rock004_3.jpg
+ruspa,Bulldozer,Bulldozer,0.1,20,100,1500,,,,,,,ruspa.png,,OGGETTISTATICI,,ruspa_1.jpg|ruspa_2.jpg|ruspa_3.jpg
+ruspa_builder,Construction Vehicle,Tech Level 1,1802,128,4066,1240,90,,50,,,,ruspa_builder.png,{,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,controllo_spazioporto|eufhq,ruspa_builder_1.jpg|ruspa_builder_2.jpg|ruspa_builder_3.jpg
+ruspa_camion,Truck,Truck,0.1,20,100,1500,,,,,,,ruspa_camion.png,,OGGETTISTATICI,,ruspa_camion_1.jpg|ruspa_camion_2.jpg|ruspa_camion_3.jpg
+ruspa_gru,Crane,Crane mobile,0.1,20,100,1500,,,,,,,ruspa_gru.png,,OGGETTISTATICI,,ruspa_gru_1.jpg|ruspa_gru_2.jpg|ruspa_gru_3.jpg
+ruspa_rimorchio,Trailer,Truck trailer,0.1,20,100,1500,,,,,,,ruspa_rimorchio.png,,OGGETTISTATICI,,ruspa_rimorchio_1.jpg|ruspa_rimorchio_2.jpg|ruspa_rimorchio_3.jpg
+station_one_antenna,Orbital Radar Tower,Antenna,600,54,1137,30000,0,,,,,,Station_one_antenna.png,false,OGGETTISTATICI,,station_one_antenna_1.jpg|station_one_antenna_2.jpg|station_one_antenna_3.jpg
+station_one_antenna_small,Orbital Radar Tower,Early Warning System,600,54,1137,6000,0,,,,,,Station_one_antenna_small.png,false,OGGETTISTATICI,,station_one_antenna_small_1.jpg|station_one_antenna_small_2.jpg|station_one_antenna_small_3.jpg
+station_one_cannon,SAM,EUF Anti Air cannon,5750,295,5237,2500,,,,,,,station_one_cannon.png,,OGGETTISTATICI,,station_one_cannon_1.jpg|station_one_cannon_2.jpg|station_one_cannon_3.jpg
+station_one_scudi,Orbital Gate Shield,Orbital Station Shield,600,54,1137,6000,0,,,,,,Station_one_scudi.png,false,OGGETTISTATICI,,station_one_scudi_1.jpg|station_one_scudi_2.jpg|station_one_scudi_3.jpg
+station_one_tunnel,Orbital Gate Tunnel,Orbital Station Bracket,600,54,1137,1500,0,,,,,,Station_one_tunnel.png,false,OGGETTISTATICI,,station_one_tunnel_1.jpg|station_one_tunnel_2.jpg|station_one_tunnel_3.jpg
+stazione_controllo_1,Building,A control station,600,54,1137,3500,0,,2100,,,,stazione_radar_1.png,false,OGGETTISTATICI,,stazione_controllo_1_1.jpg|stazione_controllo_1_2.jpg|stazione_controllo_1_3.jpg
+stazione_radar_1,Building,A radar station,600,54,1137,3500,0,,2100,,,,stazione_radar_1.png,false,OGGETTISTATICI,,stazione_radar_1_1.jpg|stazione_radar_1_2.jpg|stazione_radar_1_3.jpg
+tank_1,Building,A gas tank,600,54,1137,3500,0,,2100,,,,tank_1.png,false,OGGETTISTATICI,,tank_1_1.jpg|tank_1_2.jpg|tank_1_3.jpg
+tank_2,Building,A gas tank,600,54,1137,3500,0,,2100,,,,tank_2.png,false,OGGETTISTATICI,,tank_2_1.jpg|tank_2_2.jpg|tank_2_3.jpg
+therock001,Rock,A rock,200,0.00006,300,50,,,,,,,therock001.png,,OGGETTISTATICI,,therock001_1.jpg|therock001_2.jpg|therock001_3.jpg
+therock002,Rock,A rock,200,0.00006,300,50,,,,,,,therock002.png,,OGGETTISTATICI,,therock002_1.jpg|therock002_2.jpg|therock002_3.jpg
+therock003,Rock,A rock,200,0.00006,300,50,,,,,,,therock003.png,,OGGETTISTATICI,,therock003_1.jpg|therock003_2.jpg|therock003_3.jpg
+therock004,Rock,A rock,200,0.00006,300,50,,,,,,,therock004.png,,OGGETTISTATICI,,therock004_1.jpg|therock004_2.jpg|therock004_3.jpg
+therock005,Rock,A rock,200,0.00006,300,50,,,,,,,therock004.png,,OGGETTISTATICI,,therock005_1.jpg|therock005_2.jpg|therock005_3.jpg
+therock006,Rock,A rock,200,0.00006,300,50,,,,,,,therock004.png,,OGGETTISTATICI,,therock006_1.jpg|therock006_2.jpg|therock006_3.jpg
+therock007,Rock,A rock,200,0.00006,300,50,,,,,,,therock004.png,,OGGETTISTATICI,,therock007_1.jpg|therock007_2.jpg|therock007_3.jpg
+therock008,Rock,A rock,200,0.00006,300,50,,,,,,,therock004.png,,OGGETTISTATICI,,therock008_1.jpg|therock008_2.jpg|therock008_3.jpg
+treno_locomotiva,Building,A railroad car,600,54,1137,800,0,,2100,,,,treno_locomotiva.png,false,OGGETTISTATICI,,treno_locomotiva_1.jpg|treno_locomotiva_2.jpg|treno_locomotiva_3.jpg
+treno_vagone_aperto,Building,A railroad car,600,54,1137,800,0,,2100,,,,treno_vagone_aperto.png,false,OGGETTISTATICI,,treno_vagone_aperto_1.jpg|treno_vagone_aperto_2.jpg|treno_vagone_aperto_3.jpg
+treno_vagone_chiuso,Building,A railroad car,600,54,1137,800,0,,2100,,,,treno_vagone_chiuso.png,false,OGGETTISTATICI,,treno_vagone_chiuso_1.jpg|treno_vagone_chiuso_2.jpg|treno_vagone_chiuso_3.jpg
+treno_vagone_container,Building,A railroad car,600,54,1137,800,0,,2100,,,,treno_vagone_container.png,false,OGGETTISTATICI,,treno_vagone_container_1.jpg|treno_vagone_container_2.jpg|treno_vagone_container_3.jpg
+wmrtsbuilder,WMRTS freatures builder,the WMRTS features builder,31029,2901,27763,2180,180,,50,,,,icuaca.png,{,ALL NOTLAND MOBILE NOTSUB ANTIFLAME ANTIGATOR ANTIEMG ANTILASER VTOL NOWEAPON NOTSHIP,palma001|palma002|palma003|palma004|palma005|palma006|pino001|pino002|pino003|pino004|pino005|pala001|pala002|pala003|pala004|pala005|pala006|pala008|pala009|pala010|pala011|pala005_d|ruspa|ruspa_camion|ruspa_gru|ruspa_rimorchio|rock001|rock002|rock003|rock004|Station_one_tunnel|Station_one_antenna_small|eridlon_gate|eridlon_gate_wall|eridlon_semaforo|euf_fence_gate|euf_fence_wall|eufspazioporto|station_one_cannon|Station_one_scudi|folsom_dam_fogna_n|folsom_dam_fogna_s|folsom_dam_fogna_o|folsom_dam_fogna_e|Station_one_antenna|cumulo_1|cumulo_2|cumulo_3|cumulo_4|cumulo_5|cumulo_6|fabbrica_1|fabbrica_3|fabbrica_3_bis|fabbrica_4|lampione_sud|lampione_dx|car001|car002|car003|therock001|therock002|therock003|therock004|therock005|therock006|therock007|therock008|stazione_radar_1|stazione_controllo_1|tank_1|tank_2|container_1|treno_locomotiva|treno_vagone_chiuso|treno_vagone_aperto|treno_vagone_container|andwall|euf_fence_wall|crane|andbarracs|andhangar_close|andmuos|andtowercontrol|livrium00|livrium01|livrium02|livrium03|livrium04|andflag|andtower|bigrock001|bigrock002|bigrock003|bigrock004|bigrock005|bigrock006|bigrock007|bigrock008|bigrock009,wmrtsbuilder_1.jpg|wmrtsbuilder_2.jpg|wmrtsbuilder_3.jpg
+fabbrica_1,Building,A factory,600,54,1137,81,0,,,,,,fabbrica_1.png,false,OGGETTISTATICI,,fabbrica_1_1.jpg|fabbrica_1_2.jpg|fabbrica_1_3.jpg
+fabbrica_3,Building,A factory,600,54,1137,81,0,,,,,,fabbrica_3.png,false,OGGETTISTATICI,,fabbrica_3_1.jpg|fabbrica_3_2.jpg|fabbrica_3_3.jpg
+fabbrica_3_bis,Building,A factory,600,54,1137,81,0,,,,,,fabbrica_3_bis.png,false,OGGETTISTATICI,,fabbrica_3_bis_1.jpg|fabbrica_3_bis_2.jpg|fabbrica_3_bis_3.jpg
+fabbrica_4,Building,A factory,600,54,1137,81,0,,,,,,fabbrica_4.png,false,OGGETTISTATICI,,fabbrica_4_1.jpg|fabbrica_4_2.jpg|fabbrica_4_3.jpg
+lampione_dx,Building,A street light,600,54,1137,81,0,,,,,,lampione_sud.png,false,OGGETTISTATICI,,lampione_dx_1.jpg|lampione_dx_2.jpg|lampione_dx_3.jpg
+lampione_sud,Building,A street light,600,54,1137,81,0,,,,,,lampione_sud.png,false,OGGETTISTATICI,,lampione_sud_1.jpg|lampione_sud_2.jpg|lampione_sud_3.jpg
+armasp,Air Repair Pad,Automatically Repairs Aircraft,4311,403,9315,1600,1000,,,,,,icuasp.png,true,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armasp_1.jpg|armasp_2.jpg|armasp_3.jpg
+armnanotc,Nano Turret,Repairs and builds in large radius,5021,597,5312,500,50,,,,,,nfananotc.png,true,ALL NOTSUB CONSTR NOWEAPON NOTAIR SURFACE,,armnanotc_1.jpg|armnanotc_2.jpg|armnanotc_3.jpg
+corasp,Air Repair Pad,Automatically Repairs Aircraft,4311,403,9315,1600,1000,,,,,,nfaasp.png,true,ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,corasp_1.jpg|corasp_2.jpg|corasp_3.jpg
+cornanotc,Nano Turret,Repairs and builds in large radius,5021,597,5312,500,50,,,,,,nfananotc.png,true,ALL NOTSUB CONSTR NOWEAPON NOTAIR SURFACE,,cornanotc_1.jpg|cornanotc_2.jpg|cornanotc_3.jpg
+armcamp,M1A4 Campbell,Heavy Assault Tank,22000,1700,32000,6500,0,,0,,,,icucampbell.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armcamp_1.jpg|armcamp_2.jpg|armcamp_3.jpg
+armcroc,Triton,Heavy Amphibious Tank,11512,467,13367,3360,0,,,,,,icucroc.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armcroc_1.jpg|armcroc_2.jpg|armcroc_3.jpg
+armfav,Jeffy,Light Scout Vehicle,342,29,912,80,0,,,,,,icufav.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armfav_1.jpg|armfav_2.jpg|armfav_3.jpg
+armjam,Jammer,Radar Jammer Vehicle,1621,97,5933,460,0,,0,,,,icujam.png,false,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,armjam_1.jpg|armjam_2.jpg|armjam_3.jpg
+armlatnk,Panther,Lightning Tank,7000,307,7534,950,0,,,,,,ARMLATNK.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armlatnk_1.jpg|armlatnk_2.jpg|armlatnk_3.jpg
+armmanni,Penetrator,Mobile Tachyon Weapon,12477,1129,25706,2500,0,,,,,,icumanni.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armmanni_1.jpg|armmanni_2.jpg|armmanni_3.jpg
+armmart,Luger,Mobile Artillery,3840,254,5530,600,0,,,,,,icumart.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armmart_1.jpg|armmart_2.jpg|armmart_3.jpg
+armmerl,Merl,Mobile Rocket Launcher,6146,862,15592,1100,0,,,,,,icumerl.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armmerl_1.jpg|armmerl_2.jpg|armmerl_3.jpg
+armpincer,Pincer,Light Amphibious Tank,1921,187,2613,1148,0,,,,,,icupincer.png,false,ALL TANK PHIB WEAPON NOTSUB NOTAIR SURFACE,,armpincer_1.jpg|armpincer_2.jpg|armpincer_3.jpg
+armsam,Samson,Missile Truck,2027,140,2945,850,0,,,,,,icusam.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armsam_1.jpg|armsam_2.jpg|armsam_3.jpg
+armst,Gremlin,Stealth Tank,3480,212,6704,950,0,,,,,,icust.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armst_1.jpg|armst_2.jpg|armst_3.jpg
+armstump,Stumpy,Medium Assault Tank,1746,201,2904,1530,0,,,,,,icustump.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armstump_1.jpg|armstump_2.jpg|armstump_3.jpg
+armyork,Phalanx,Anti-Air Flak Vehicle,8510,425,9964,2350,,,,,,,icuyork.png,,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,,armyork_1.jpg|armyork_2.jpg|armyork_3.jpg
+coreter,Deleter,Radar Jammer Vehicle,1757,100,6404,520,0,,,,,,nfaeter.png,false,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,coreter_1.jpg|coreter_2.jpg|coreter_3.jpg
+cormabm,Hedgehog,Mobile Anti-missile Defense,92321,1508,96450,780,0,,50,,,,nfamabm.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,cormabm_1.jpg|cormabm_2.jpg|cormabm_3.jpg
+cormart,Pillager,Mobile Artillery,3005,263,4270,560,0,,,,,,nfamart.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,cormart_1.jpg|cormart_2.jpg|cormart_3.jpg
+cormist,Slasher,Missile Truck,2177,146,3065,1120,0,,,,,,nfamist.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,cormist_1.jpg|cormist_2.jpg|cormist_3.jpg
+corparrow,Poison Arrow,Very Heavy Amphibious Tank,26854,988,22181,5700,0,,,,,,nfaparrow.png,false,ALL TANK PHIB WEAPON NOTSUB NOTAIR SURFACE,,corparrow_1.jpg|corparrow_2.jpg|corparrow_3.jpg
+corseal,Croc,Medium Amphibious Tank,12013,450,8762,2340,0,,,,,,nfaseal.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,corseal_1.jpg|corseal_2.jpg|corseal_3.jpg
+corsent,Copperhead,Anti-Air Flak Vehicle,9487,443,11986,2425,,,,,,,nfasent.png,,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE,,corsent_1.jpg|corsent_2.jpg|corsent_3.jpg
+corvroc,Diplomat,Mobile Rocket Launcher,6270,827,15002,1250,0,,,,,,nfavroc.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,corvroc_1.jpg|corvroc_2.jpg|corvroc_3.jpg
+corwolv,Wolverine,Light Mobile Artillery,2219,159,3254,550,0,,,,,,nfawolv.png,false,ALL TANK WEAPON NOTSUB NOTAIR SURFACE,,corwolv_1.jpg|corwolv_2.jpg|corwolv_3.jpg
+grayhound,Greyhound,Prototype Field/Command Tank,6935,793,13013,3000,0,,1200,,,,da_fare.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,grayhound_1.jpg|grayhound_2.jpg|grayhound_3.jpg
+icubull,Bulldog,Heavy Assault Tank,14593,844,17228,4200,0,,,,,,icubull.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,icubull_1.jpg|icubull_2.jpg|icubull_3.jpg
+icuflash,Flash,Fast Assault Tank,914,109,1963,570,0,,,,,,icuflash.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,icuflash_1.jpg|icuflash_2.jpg|icuflash_3.jpg
+icujanus,Janus,Twin Medium Rocket Launcher,2361,226,3545,880,0,,,,,,icujanus.png,false,ALL TANK WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,icujanus_1.jpg|icujanus_2.jpg|icujanus_3.jpg
+icuseer,Seer,Radar Vehicle,1941,115,6186,880,0,,2300,,,,icuseer.png,false,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,icuseer_1.jpg|icuseer_2.jpg|icuseer_3.jpg
+nfafav,Weasel,Light Scout Vehicle,256,24,1104,95,0,,,,,,nfafav.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,nfafav_1.jpg|nfafav_2.jpg|nfafav_3.jpg
+nfagarp,Garpike,Light Amphibious Tank,2441,206,3101,1219,0,,,,,,nfagarp.png,false,ALL TANK PHIB WEAPON NOTSUB NOTAIR SURFACE,,nfagarp_1.jpg|nfagarp_2.jpg|nfagarp_3.jpg
+nfagator,Instigator,Light Tank,1042,118,1761,693,0,,,,,,nfagator.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,nfagator_1.jpg|nfagator_2.jpg|nfagator_3.jpg
+nfagol,Goliath,Very Heavy Assault Tank,19892,1567,26125,7000,0,,,,,,nfagol.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,nfagol_1.jpg|nfagol_2.jpg|nfagol_3.jpg
+nfalevlr,Leveler,Riot Tank,2387,210,3009,1275,0,,,,,,nfalevlr.png,false,ALL TANK MOBILE WEAPON ANTIGATOR ANTIEMG NOTSUB NOTSHIP NOTAIR SURFACE,,nfalevlr_1.jpg|nfalevlr_2.jpg|nfalevlr_3.jpg
+nfaraid,Raider,Medium Assault Tank,2219,211,3312,1685,0,,,,,,nfaraid.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,nfaraid_1.jpg|nfaraid_2.jpg|nfaraid_3.jpg
+nfareap,Reaper,Heavy Assault Tank,11348,589,13530,4900,0,,,,,,nfareap.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,nfareap_1.jpg|nfareap_2.jpg|nfareap_3.jpg
+nfavrad,Informer,Radar Vehicle,1209,86,4223,510,0,,2200,0,,,nfavrad.png,false,ALL TANK MOBILE NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,,nfavrad_1.jpg|nfavrad_2.jpg|nfavrad_3.jpg
+tawf013,Shellshocker,Light Artillery Vehicle,2016,142,2998,530,0,,,,,,tawf013.png,false,ALL TANK WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,tawf013_1.jpg|tawf013_2.jpg|tawf013_3.jpg
+tawf114,Banisher,Heavy Missile Tank,20701,939,23129,2250,0,,,,,,nfabanisher.png,false,ALL TANK WEAPON NOTSUB NOTAIR SURFACE,,tawf114_1.jpg|tawf114_2.jpg|tawf114_3.jpg
+andacsp,Advanced Construction Spider,All-Terrain Constructor Spider lvl2,4084,400,9432,840,140,,,,,,da_fare.png,true,KBOT MOBILE ALL NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,andfus|andgant|andaafus|andametex|andaestor|andarad|andshield|anddfens|andill|andchaos|andernie|chemist|andlaunch|andangel|andhp|medusa|andahp,andacsp_1.jpg|andacsp_2.jpg|andacsp_3.jpg
+andangel,Super Cannon,Long Range Plasma Cannon,60680,4184,85185,4200,0,,,,,,andangel.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,andangel_1.jpg|andangel_2.jpg|andangel_3.jpg
+andaplat,Aircraft Plant,Produces Level 2 Aircraft,26986,3006,20851,3450,200,,500,,,,CORPLAT.DDS,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,anddragon|corhors|andabomb|andhawk,andaplat_1.jpg|andaplat_2.jpg|andaplat_3.jpg
+andartic,Artic,Energy weapon,1467,185,5448,1500,0,,,,,,andartic.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,andartic_1.jpg|andartic_2.jpg|andartic_3.jpg
+andcsp,Construction Spider,All-Terrain Constructor Spider,1622,113,3551,650,90,,,,,,andcsp.png,true,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,andsolar|andwind|andmstor|andestor|andmexun|andmex|andalab|andlab|andhp|andplat|andrad|andlartic|andartic|andhartic|andpopaa|andrl|andaa,andcsp_1.jpg|andcsp_2.jpg|andcsp_3.jpg
+andfury,Fury,Rapid Anti-Air Flakker,20154,3601,40358,2574,0,,0,,,,,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,andfury_1.jpg|andfury_2.jpg|andfury_3.jpg
+andhartic,Artic,Energy weapon,4443,449,9622,2475,0,,,,,,andhartic.png,false,ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,andhartic_1.jpg|andhartic_2.jpg|andhartic_3.jpg
+andplat,Aircraft Plant,Produces Level 1 Aircraft,1370,850,7240,2000,100,,500,,,,andplat.png,true,ALL NOTLAND PLANT NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE,andca|andfig|andbomb|andstr|andmerv,andplat_1.jpg|andplat_2.jpg|andplat_3.jpg
+andscouter,Recluse,All-Terrain scouter,897,45,1420,780,0,,,,,,andscouter.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,andscouter_1.jpg|andscouter_2.jpg|andscouter_3.jpg
+andspmis,Center,All-Terrain Missile Launcher,897,45,1420,780,0,,,,,,da_fare.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,andspmis_1.jpg|andspmis_2.jpg|andspmis_3.jpg
+armscab,Scarab,Mobile Anti-missile Defense,88000,1437,95678,780,0,,50,,,,armscab.png,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armscab_1.jpg|armscab_2.jpg|armscab_3.jpg
+armshock,Vanguard,All-Terrain Heavy Plasma Cannon,54739,3120,101218,18000,,,,,,,ARMSHOCK.DDS,false,ALL TANK MOBILE WEAPON NOTSUB NOTSHIP NOTAIR SURFACE,,armshock_1.jpg|armshock_2.jpg|armshock_3.jpg
