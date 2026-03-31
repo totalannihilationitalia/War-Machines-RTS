@@ -402,6 +402,7 @@ local UNIT_DB = {
 	
 -- Costruzioni Tier 1
 ["andsolar"] = { type = "building", ignore = true },
+["andadvsol"] = { type = "building", ignore = true },
 ["andwind"] = { type = "building", ignore = true },
 ["andmstor"] = { type = "building", ignore = true },
 ["andestor"] = { type = "building", ignore = true },
@@ -472,7 +473,6 @@ local UNIT_DB = {
 ["walker"] = { type = "ground" },
 ["andogre"] = { type = "ground" },
 ["exxec"] = { type = "ground" },
-["interceptor"] = { type = "ground" },
 
 -- Unità prodotte da andahp
 ["andach"] = { type = "hovercraft", ignore = true  },
@@ -483,8 +483,9 @@ local UNIT_DB = {
 ["andahaa"] = { type = "hovercraft" },
  
 -- Unità prodotte da andaplat
+["andaca"] = { type = "air", ignore = true  },
 ["anddragon"] = { type = "air" },
-["corhors"] = { type = "air" },
+["andhors"] = { type = "air" },
 ["andhawk"] = { type = "air" },
 ["andabomb"] = { type = "air" },
 
@@ -495,6 +496,7 @@ local UNIT_DB = {
 ["bigb"] = { type = "ground" },
 ["ebigb"] = { type = "ground" },
 ["kill2"] = { type = "ground" },
+["interceptor"] = { type = "ground" },
 ["armpraet"] = { type = "ground" },
 
 -- Unità prodotte da andainc

@@ -64,25 +64,26 @@ return {
 -----------------------------------
                buildoptions = { 
 		[1] = "andsolar",
-		[2] = "andwind",
-		[3] = "andmstor",
-		[4] = "andestor",
-		[5] = "andmexun",
-		[6] = "andmex",
-		[7] = "andaplat",
-		[8] = "andahp",
-		[9] = "andhp",
-		[10] = "andlab",
-		[11] = "andplat",
+		[2] = "andadvsol",			
+		[3] = "andwind",
+		[4] = "andmstor",
+		[5] = "andestor",
+		[6] = "andmexun",
+		[7] = "andmex",
+		[8] = "andaplat",
+		[9] = "andahp",
+		[10] = "andhp",
+		[11] = "andlab",
+		[12] = "andplat",
 --		mettere le altre fabbriche
-		[12] = "andrad", -- creare un radarino semplice
+		[13] = "andrad", -- creare un radarino semplice
 --		mettere un muro semplice tipo dente di drago
-		[13] = "andlartic",
-		[14] = "andartic",
-		[15] = "andhartic",
-		[16] = "andpopaa",
-		[17] = "andrl",		
-		[18] = "andaa",				
+		[14] = "andlartic",
+		[15] = "andartic",
+		[16] = "andhartic",
+		[17] = "andpopaa",
+		[18] = "andrl",		
+		[19] = "andaa",				
 --		ricavare da cordfens = mettere un cannoncino
 --		armpopaa = mettere un antiaerea media
 --		mettere un jammer

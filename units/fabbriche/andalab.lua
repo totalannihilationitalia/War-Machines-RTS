@@ -61,7 +61,6 @@ return {
 			[2] = "walker",
 			[3] = "andogre",
 			[4] = "exxec",
-			[5] = "interceptor",
 		},
 -----------------------------------------------------------
 --- Units wreckage and heaps

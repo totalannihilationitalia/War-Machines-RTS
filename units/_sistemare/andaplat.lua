@@ -57,10 +57,11 @@ return {
 --- BUILDLIST
 -----------------------------------
                buildoptions = { 
-			[1] = "anddragon",
-			[2] = "corhors",
-			[3] = "andabomb",
-			[4] = "andhawk",			
+			[1] = "andaca",			
+			[2] = "anddragon",
+			[3] = "andhors",
+			[4] = "andabomb",
+			[5] = "andhawk",			
                },
 
 

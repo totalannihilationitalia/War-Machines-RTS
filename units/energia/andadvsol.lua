@@ -40,7 +40,7 @@ return {
                maxvelocity = 0,
                maxwaterdepth = 0,
                metalStorage = 0,
-               name = "ICU Advanced Solar Collector",
+               name = "Mini nuclear plant",
                noAutoFire = false,
                objectname = "andadvsol.s3o",
                onoffable = false,
