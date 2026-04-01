@@ -103,7 +103,7 @@
 			alpha=0.5;
 			alphadecay=0.15;
 			color=0.44, 0.4, 0.35;
-			alwaysVisible=0;
+			alwaysVisible=1;
 
 		}
 		air=1;
@@ -132,7 +132,7 @@
 		
 		particleLife=50; //100//250
 		numParticles=50; //100
-		particleSpeed=0.05; 
+		particleSpeed=0.2; 
 		particleSize=17; //24
 
 		
@@ -141,7 +141,7 @@
 		emitRot=80;
 		emitRotSpread=5; 
 		directional=0; 
-		alwaysVisible=0;
+		alwaysVisible=1;
 
 		}
 	air=1;
@@ -171,7 +171,7 @@
 		
 		particleLife=50; //100; //250
 		numParticles=50;  //100
-		particleSpeed=0.05; 
+		particleSpeed=0.2; 
 		particleSize=24;
 		
 		
@@ -179,7 +179,7 @@
 		emitRot=80;
 		emitRotSpread=5; 
 		directional=0; 
-		alwaysVisible=0;
+		alwaysVisible=1;
 
 		}
 	air=1;
