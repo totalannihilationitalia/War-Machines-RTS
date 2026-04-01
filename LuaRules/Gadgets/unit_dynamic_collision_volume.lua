@@ -117,21 +117,31 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 		
 		local p
-		for unitID,defs in pairs(popupUnits) do
-			-- Controlla lo stato "ARMORED" per decidere se l'unità è attiva o nascosta
-			if spArmor(unitID) then -- Nascosta / Chiusa
-				if (defs.state ~= 0) then
-					p = unitCollisionVolume[defs.name].off
-					spSetUnitCollisionData(unitID, p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9])
-					popupUnits[unitID].state = 0
+		for unitID, defs in pairs(popupUnits) do
+			local stateChanged = false
+			local currentState = 0
+			
+			-- Se è il cancello, controlliamo se è ACCESO (Active)
+			if defs.name == "euf_fence_gate" then
+				if spActive(unitID) then 
+					currentState = 1 -- Aperto (Hitbox 0)
+				else 
+					currentState = 0 -- Chiuso (Hitbox solida)
 				end
-			else -- Attiva / Aperta
-				if (defs.state ~= 1) then
-					p = unitCollisionVolume[defs.name].on
-					spSetUnitCollisionData(unitID, p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9])
-					popupUnits[unitID].state = 1
+			else
+				-- Per le altre unità (pop-up) continuiamo a usare spArmor
+				if spArmor(unitID) then currentState = 0 else currentState = 1 end
+			end
+
+			if (defs.state ~= currentState) then
+				if currentState == 1 then
+					p = unitCollisionVolume[defs.name].off -- Usa i valori 0,0,0
+				else
+					p = unitCollisionVolume[defs.name].on  -- Usa i valori 49,45,49
 				end
-			end			
+				spSetUnitCollisionData(unitID, p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9])
+				popupUnits[unitID].state = currentState
+			end
 		end
 	end
 end
