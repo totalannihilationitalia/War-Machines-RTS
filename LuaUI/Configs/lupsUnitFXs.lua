@@ -390,6 +390,16 @@ andabomb= {
     {class='AirJet', options={color={0.6,0,0.8}, width=3.5, length=25, piece="thrust3", onActive=true,emitVector = {0, 0, -1}}},	
     {class='AirJet', options={color={0.6,0,0.8}, width=3.5, length=25, piece="thrust4", onActive=true,emitVector = {0, 0, -1}}},	
   },
+andaca= {
+    {class='AirJet', options={color={0.6,0,0.8}, width=3.5, length=25, piece="thrust1", onActive=true,emitVector = {0, 0, -1}}},
+    {class='AirJet', options={color={0.6,0,0.8}, width=3.5, length=25, piece="thrust2", onActive=true,emitVector = {0, 0, -1}}},	
+    {class='AirJet', options={color={0.6,0,0.8}, width=3.5, length=25, piece="thrust3", onActive=true,emitVector = {0, 0, -1}}},	
+    {class='AirJet', options={color={0.6,0,0.8}, width=3.5, length=25, piece="thrust4", onActive=true,emitVector = {0, 0, -1}}},	
+  }, 
+andca= {
+    {class='AirJet', options={color={0.6,0,0.8}, width=3.5, length=25, piece="thrust1", onActive=true,emitVector = {0, 0, -1}}},
+    {class='AirJet', options={color={0.6,0,0.8}, width=3.5, length=25, piece="thrust2", onActive=true,emitVector = {0, 0, -1}}},	
+  },    
 andhawk= {
     {class='AirJet', options={color={0.6,0,0.8}, width=3.5, length=25, piece="rearthrust", onActive=true, emitVector = {0, 0, -1}}},
   },
