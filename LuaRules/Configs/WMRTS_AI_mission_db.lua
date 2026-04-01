@@ -21,7 +21,7 @@
 --			type = strategicshield		-> unità fissa shield (plasma repulsor) -- viene utilizzata: a) nel gadget "longWeaponManagement" per identificare i plasma repulsor ed evitare di colpire bersagli all'interno dello scudo con l'artiglieria a lungo raggio; b) nel gadget "wmrts_AI_militaryMenagement.lua" come target obiettivo delle unità attaccanti
 --			tutte le unità che non sono identificate in questo database, prenderanno valore type = unknown , vedere poi la logica di targetin come gestirle
 -- definizione della caratteristica "ignore": può essere true o false (se non dichiarata). Se True, l'unità, la struttura o la fabbrica ad esso associata verrà completamente ignorata dalla gestione del gadget "military_factory": quando creata dalla fabbrica, quell'unità non viene considerata nella gestione dei gruppi e non riceve ordini di targetin all'attacco. Sarà un altro Gadget oppure il Mission Editor a gestire l'unità (come ad esempio i costruttori). E' importante sapere che comunque, anche se ignorata, il gadget categorizza comunque l'unità come bersaglio target.
--- definizione della caratteristica "isLRA = true": se true, il gadget "wmrts_AI_longWeaponManagement.lua" vede l'unità come cannone Long Range Artillery
+-- definizione della caratteristica "isLRA = true": se true, il gadget "wmrts_AI_longWeaponManagement.lua" vede l'unità come cannone Long Range Artillery (o un arma energetica a lungo raggio)
 -- definizione della caratteristica "isSILO = true": se true, il gadget "wmrts_AI_longWeaponManagement.lua" vede l'unità come silos di missili nucleari
 -- definizione della caratteristica "isAMD = true": se true, il gadget "wmrts_AI_longWeaponManagement.lua" vede l'unità come silos di difesa da missili nucleari
 -- definizione della caratteristica "range = xxx": la gettata delle armi (definita nello weaponDef - range). Ho difficoltà a reperire direttamente questa informazione, pertanto per ora la scrivo manualmente
@@ -426,7 +426,8 @@ local UNIT_DB = {
 ["andchaos"] = { type = "strategicdefence", ignore = true },
 ["andernie"] = { type = "building", ignore = true },
 ["chemist"] = { type = "building", ignore = true },
-["andlaunch"] = { type = "strategicbuilding",  isLRA = true, range = 65000, ignore = true }, -- non è un cannone ma è un arma energetica a lungo raggio
+["anddefensor"] = { type = "strategicbuilding", isAMD = true, ignore = true },
+["andlaunch"] = { type = "strategicbuilding",  isLRA = true, range = 65000, ignore = true }, -- non è un cannone ma è un arma energetica a lungo raggio, ad ogni modo la inserisco per la gestione isLRA 
 ["andangel"] = { type = "strategicdefence", isLRA = true, ignore = true },
 ["medusa"] = { type = "building", ignore = true },
 
