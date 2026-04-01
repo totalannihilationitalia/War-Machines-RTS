@@ -118,8 +118,8 @@ local moveDefs = {
 	 {
 		name = "HKBOT4",
 		crushstrength = 1400,
-		footprintx = 4,
-		footprintz = 4,
+		footprintx = 2, -- era 4 02/04/2026 
+		footprintz = 2, -- era 4 02/04/2026
 		maxslope = 15, -- era 36
 		maxwaterdepth = 26,
 		depthModParams = {

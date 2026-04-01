@@ -14,7 +14,7 @@ return {
                buildtime  = 5705,
                category = "ARM NOWEAPON NOTAIR NOTSUB NOTSHIP SURFACE",
 --	       useFootPrintCollisionVolume = true,
-	       usePieceCollisionVolumes = true,
+--	       usePieceCollisionVolumes = true,
 --               collisionvolumeoffsets = "0 -10 0",
 --               collisionvolumescales = "29 10 160", -- larghezza altezza lunghezza 
 --              collisionvolumetype = "Box",
@@ -23,7 +23,7 @@ return {
                energyUse = 0.8,
                explodeas = "LARGE_BUILDINGEX",
                footprintx = 3,
-               footprintz = 10,
+               footprintz = 11,
                hidedamage = true,
 --               mass = 0 --definire massa,
                maxdamage = 1263,
@@ -42,7 +42,7 @@ return {
 --               script = "Gate.lua",
                TEDClass = "PLANT", -- verificare se necessario
                workertime = 0,
-               YardMap= "ooo ccc ccc ccc ccc ccc ccc ccc ccc ooo",
+               YardMap= "ooo ccc ccc ccc ccc ccc ccc ccc ccc ccc ooo",
 -----------------------------------------------------------
 --- NO EFFECTS
 -----------------------------------------------------------
