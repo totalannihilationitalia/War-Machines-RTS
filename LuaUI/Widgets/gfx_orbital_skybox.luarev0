@@ -1,0 +1,88 @@
+function widget:GetInfo()
+  return {
+    name      = "Orbital Sky Override",
+    desc      = "Disegna il cielo in DrawWorld per evitare il blocco del motore",
+    author    = "Molix",
+    layer     = -1000,
+    enabled   = true
+  }
+end
+
+local skyTexture = "maps/eveningsky.dds" 
+local rotationSpeed = 2.0 -- test
+local angle = 0
+
+function widget:Initialize()
+    -- Proviamo a spegnere il giallo e le nuvole
+    Spring.SendCommands("sky 0")
+    Spring.SendCommands("dynamicsky 0")
+    Spring.SendCommands("clouds 0")
+end
+
+function widget:Update()
+
+    if (Spring.GetGameFrame() % 30 == 0) then
+        Spring.Echo("Widget Orbital: VIVO - Angolo: " .. angle)
+    end
+end
+
+function widget:DrawWorld()
+    angle = (os.clock() * rotationSpeed) % 360
+    
+    local x, y, z = Spring.GetCameraPosition()
+    local s = 8000 -- Dimensione enorme
+
+    -- Settaggi OpenGL per disegnare "sotto" la mappa
+    gl.DepthTest(false)
+    gl.DepthMask(false)
+    
+    -- Se la texture non carica, disegnerà un cubo rosso (per debug)
+    if not gl.Texture(skyTexture) then
+        gl.Color(1, 0, 0, 1) 
+    else
+        gl.Color(1, 1, 1, 1)
+    end
+    
+    gl.PushMatrix()
+        gl.Translate(x, y, z) -- Il cubo segue la telecamera
+        gl.Rotate(angle, 0, 1, 0)
+        
+        gl.BeginEnd(GL.QUADS, function()
+            -- Front
+            gl.TexCoord(0,0) gl.Vertex(-s, -s,  s)
+            gl.TexCoord(1,0) gl.Vertex( s, -s,  s)
+            gl.TexCoord(1,1) gl.Vertex( s,  s,  s)
+            gl.TexCoord(0,1) gl.Vertex(-s,  s,  s)
+            -- Back
+            gl.TexCoord(0,0) gl.Vertex( s, -s, -s)
+            gl.TexCoord(1,0) gl.Vertex(-s, -s, -s)
+            gl.TexCoord(1,1) gl.Vertex(-s,  s, -s)
+            gl.TexCoord(0,1) gl.Vertex( s,  s, -s)
+            -- Right
+            gl.TexCoord(0,0) gl.Vertex( s, -s,  s)
+            gl.TexCoord(1,0) gl.Vertex( s, -s, -s)
+            gl.TexCoord(1,1) gl.Vertex( s,  s, -s)
+            gl.TexCoord(0,1) gl.Vertex( s,  s,  s)
+            -- Left
+            gl.TexCoord(0,0) gl.Vertex(-s, -s, -s)
+            gl.TexCoord(1,0) gl.Vertex(-s, -s,  s)
+            gl.TexCoord(1,1) gl.Vertex(-s,  s,  s)
+            gl.TexCoord(0,1) gl.Vertex(-s,  s, -s)
+            -- Top
+            gl.TexCoord(0,0) gl.Vertex(-s,  s,  s)
+            gl.TexCoord(1,0) gl.Vertex( s,  s,  s)
+            gl.TexCoord(1,1) gl.Vertex( s,  s, -s)
+            gl.TexCoord(0,1) gl.Vertex(-s,  s, -s)
+            -- Bottom
+            gl.TexCoord(0,0) gl.Vertex(-s, -s, -s)
+            gl.TexCoord(1,0) gl.Vertex( s, -s, -s)
+            gl.TexCoord(1,1) gl.Vertex( s, -s,  s)
+            gl.TexCoord(0,1) gl.Vertex(-s, -s,  s)
+        end)
+    gl.PopMatrix()
+    
+    gl.Texture(false)
+    gl.Color(1, 1, 1, 1)
+    gl.DepthMask(true)
+    gl.DepthTest(true)
+end
