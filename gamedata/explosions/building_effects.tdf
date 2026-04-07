@@ -130,7 +130,7 @@
 		particleSpeedSpread=20;  
 		particleSizeSpread=10;   
 		
-		particleLife=50; //100//250
+		particleLife=150; //100//250  ////////////////// era 50
 		numParticles=50; //100
 		particleSpeed=0.05; 
 		particleSize=17; //24
@@ -169,7 +169,7 @@
 		particleSpeedSpread=30; //49  
 		particleSizeSpread=10;   
 		
-		particleLife=50; //100; //250
+		particleLife=150; //100; //250 //////////////////////// era 50
 		numParticles=50;  //100
 		particleSpeed=0.05; 
 		particleSize=24;
