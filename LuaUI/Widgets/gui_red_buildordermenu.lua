@@ -11,37 +11,35 @@ function widget:GetInfo()
 	handler   = true, --can use widgetHandler:x()
 	}
 end
+-- rev 1 - 07/04/2026 Elimino autoresize. Rendo statiche le dimensioni del menù per una migliore visualizzazione grafica
+-- aggiungo size (sarà selezionabile del minimenu di WarMachinesRTS. Molix
 
 local stateTexture		= LUAUI_DIRNAME.."images/menu/resbar.dds"
 local buttonTexture		= LUAUI_DIRNAME.."images/menu/button.png"
 local showNoobButtons   = tonumber(Spring.GetConfigInt("XTA_ShowNoobButtons",1) or 1) == 1
-
+local size				= "small"
 local NeededFrameworkVersion = 9
 local CanvasX,CanvasY = 1272,734 --resolution in which the widget was made (for 1:1 size)
+local vsx, vsy 			= widgetHandler:GetViewSizes()	-- prelevo la dimensione della finestra si Spring
 --1272,734 == 1280,768 windowed
 
 --todo: build categories (eco | labs | defences | etc) basically sublists of buildcmds (maybe for regular orders too)
-
 local iconScaling = true
 
 local Config = {
 	buildmenu = { -- menu delle costruzioni (unità)
 		menuname = "buildmenu",
-		px = -0.5,py = CanvasY - 415, --default start position
-		
-		isx = 37,isy = 37, --icon size 38 e 36
-		ix = 5,iy = 3, -- menù delle icone icons x/y
-		
+		px = vsx+5,			-- pos x
+		py = vsy+5, 		-- pos y
+		isx = 45,isy = 45, 	-- icon size x e y 37x37
+		ix = 5,iy = 3, 		-- n° icone nel menù (x colonne /y righe
+
 		roundedPercentage = 0.2,	-- 0.25 == iconsize / 4 == cornersize -- era 0.2
 		
 		iconscale = 0.92,
 		iconhoverscale = 0.92,
 		ispreadx=0,ispready=0, --space between icons
-		
-		margin = 5, --distance from background border -- offfset del riquadro esterno rispetto i bottoni del menù
-		
---		padding = 30, -- 3 for border effect -- riquadro interno, indica l'offset del riquadro interno rispetto il riquadro esterno (rimosso, vedi righe successive)
---		color2 = {0,0,0,1}, -- {0,0,0,0.5} for border effect -- colore riquadro interno (che ho rimosso, vedi righe successive)
+		margin = 5, -- distanza tra il margine sinistro ed il margine superiore del riquadro di background alla prima icona
 		
 		fadetime = 0.3, --fade effect time, in seconds
 		fadetimeOut = 0.3, --fade effect time, in seconds
@@ -58,9 +56,11 @@ local Config = {
 	
 	ordermenu = { -- menu degli ordini
 		menuname = "ordermenu",
-		px = -0.5,py = CanvasY - 415 - 145,
-		
-		isx = 37,isy = 37,
+		px = 100, 
+		py = 500, 
+		dimy = 200,
+		dimx = 300,		
+		isx = 45,isy = 45,
 		ix = 4,iy = 3, -- menù degli ordini
 		
 		roundedPercentage = 0.2,	-- 0.25 == iconsize / 4 == cornersize
@@ -70,9 +70,8 @@ local Config = {
 		ispreadx=0,ispready=0,
 		
 		margin = 5,
-		
---		padding = 4, -- for border effect (rimosso, vedi righe successive)
---		color2 = {0,0,0,1}, -- riquadro interno che ho rimosso (vedi codice successivo)
+	
+
 		
 		fadetime = 0.3,
 		fadetimeOut = 0.3, --fade effect time, in seconds
@@ -90,7 +89,6 @@ local Config = {
 }
 
 local guishaderEnabled = WG['guishader_api'] or false
-
 local sGetSelectedUnitsCount = Spring.GetSelectedUnitsCount
 local sGetActiveCommand = Spring.GetActiveCommand
 local sGetActiveCmdDescs = Spring.GetActiveCmdDescs
@@ -126,86 +124,29 @@ local function RedUIchecks()
 	return true
 end
 
-local function AutoResizeObjects() --autoresize v2
-	if (LastAutoResizeX==nil) then
-		LastAutoResizeX = CanvasX
-		LastAutoResizeY = CanvasY
-	end
-	local lx,ly = LastAutoResizeX,LastAutoResizeY
-	local vsx,vsy = Screen.vsx,Screen.vsy
-	if ((lx ~= vsx) or (ly ~= vsy)) then
-		local objects = GetWidgetObjects(widget)
-		local scale = vsy/ly
-		local skippedobjects = {}
-		for i=1,#objects do
-			local o = objects[i]
-			local adjust = 0
-			if ((o.movableslaves) and (#o.movableslaves > 0)) then
-				adjust = (o.px*scale+o.sx*scale)-vsx
-				if (((o.px+o.sx)-lx) == 0) then
-					o._moveduetoresize = true
-				end
-			end
-			if (o.px) then o.px = o.px * scale end
-			if (o.py) then o.py = o.py * scale end
-			if (o.sx) then o.sx = o.sx * scale end
-			if (o.sy) then o.sy = o.sy * scale end
-			if (o.fontsize) then o.fontsize = o.fontsize * scale end
-			if (adjust > 0) then
-				o._moveduetoresize = true
-				o.px = o.px - adjust
-				for j=1,#o.movableslaves do
-					local s = o.movableslaves[j]
-					s.px = s.px - adjust/scale
-				end
-			elseif ((adjust < 0) and o._moveduetoresize) then
-				o._moveduetoresize = nil
-				o.px = o.px - adjust
-				for j=1,#o.movableslaves do
-					local s = o.movableslaves[j]
-					s.px = s.px - adjust/scale
-				end
-			end
-		end
-		LastAutoResizeX,LastAutoResizeY = vsx,vsy
-	end
-end
-
+---------------------------------------------------------------------
+-- funzione per creare la griglia del buildmenu o del ordermenu
+---------------------------------------------------------------------
 local function CreateGrid(r)
-
--- rimuovo il riquadro interno
---	local background2 = {"rectanglerounded",
---		px=r.px+r.padding,py=r.py+r.padding,
---		sx=(r.isx*r.ix+r.ispreadx*(r.ix-1) +r.margin*2) -r.padding -r.padding,
---		sy=(r.isy*(r.iy)+r.ispready*(r.iy) +r.margin*2) -r.padding -r.padding,
---		color=r.color2,
---	}
-	local background = {"rectanglerounded",
-		px=r.px,py=r.py,
-		sx=r.isx*r.ix+r.ispreadx*(r.ix-1) +r.margin*2,
-		sy=r.isy*(r.iy)+r.ispready*(r.iy) +r.margin*2,
+	local background = {"rectangle",
+		px= r.px,
+		py=r.py,
+		sx =((r.margin*2)+(r.isx*r.ix)+(r.ispreadx*(r.ix-1))),		-- calcolo la larghezza del menu build
+		sy= ((r.margin*2)+(r.isy*r.iy)+(r.ispready*(r.iy-1))), 		-- calcolo l'altezza del menu build				
 		color=r.cbackground,
 		border=r.cborder,
 		movable=r.dragbutton,
 		obeyscreenedge = true,
 		overrideclick = {1},
-		
-		padding=r.padding,
-		
 		effects = {
 			fadein_at_activation = r.fadetime,
 			fadeout_at_deactivation = r.fadetimeOut,
 		},
 		onupdate=function(self)
--- rimuovo il riquadro interno
---			background2.px = self.px + self.padding
---			background2.py = self.py + self.padding
---			background2.sx = self.sx - self.padding - self.padding
---			background2.sy = self.sy - self.padding - self.padding
 		end,
 	}
 	
-	local selecthighlight = {"rectanglerounded",
+	local selecthighlight = {"rectangle",
 		roundedsize = math.floor(r.isy*r.roundedPercentage),
 		px=0,py=0,
 		sx=r.isx,sy=r.isy,
@@ -308,8 +249,6 @@ local function CreateGrid(r)
 	}
 	
 	New(background)
--- rimuovo riquadro interno
---	New(background2)
 	
 	local backward = New(Copy(icon,true))
 	backward.texture = LUAUI_DIRNAME.."Images/menu/backward.png"
@@ -365,8 +304,6 @@ local function CreateGrid(r)
 	return {
 		["menuname"] = r.menuname,
 		["background"] = background,
---rimuovo riquadro interno
---		["background2"] = background2,
 		["icons"] = icons,
 		["backward"] = backward,
 		["forward"] = forward,
@@ -376,14 +313,11 @@ local function CreateGrid(r)
 	}
 end
 
-
 local function UpdateGrid(g,cmds,ordertype)
 	if (#cmds==0) then
 		g.background.active = false
---		g.background2.active = false -- rimuovo riquadro interno
 	else
 		g.background.active = nil
---		g.background2.active = nil -- rimuovo riquadro interno
 	end
 
 	local curpage = g.page
@@ -402,7 +336,6 @@ local function UpdateGrid(g,cmds,ordertype)
 		end
 	end
 	g.pagecount = #page
-	
 	
 	if (curpage > g.pagecount) then
 		curpage = 1
@@ -488,11 +421,7 @@ local function UpdateGrid(g,cmds,ordertype)
 					s.sy = (sy/6.75)
 					s.px = px+spread + (s.sx+spread)*(i-1)
 					s.py = py + sy - s.sy -spread
-					
-					--s.sx = (icon.sx-(spread*(statecount-1+2)))/statecount
-					--s.sy = (icon.sy/7)
-					--s.px = icon.px+spread + (s.sx+spread)*(i-1)
-					--s.py = icon.py + icon.sy - s.sy -spread
+
 					
 					if (i == curstate) then
 						if (statecount < 4) then
@@ -559,7 +488,7 @@ end
 function widget:TextCommand(command)
 	if (string.find(command, "iconspace") == 1  and  string.len(command) == 9) then 
 		iconScaling = not iconScaling
-		--AutoResizeObjects()
+
 		Spring.ForceLayoutUpdate()
 		if iconScaling then
 			Spring.Echo("Build/order menu icon spacing:  enabled")
@@ -570,8 +499,6 @@ function widget:TextCommand(command)
 end
 
 function widget:Initialize()
---	widgetHandler:DisableWidget("CtrlPanel Improved")
---	widgetHandler:DisableWidget("XTA Layout")
 	widgetHandler:EnableWidget("Red_UI_Framework")
 	widgetHandler:EnableWidget("Red_Drawing")
 	PassedStartupCheck = RedUIchecks()
@@ -583,7 +510,7 @@ function widget:Initialize()
 	buildmenu.page = 1
 	ordermenu.page = 1
 	
-	AutoResizeObjects() --fix for displacement on crash issue
+
 end
 
 local function onNewCommands(buildcmds,othercmds)
@@ -597,14 +524,15 @@ local function onNewCommands(buildcmds,othercmds)
 end
 
 local function onWidgetUpdate() --function widget:Update()
-	AutoResizeObjects()
+
 	SelectedUnitsCount = sGetSelectedUnitsCount()
 end
 
 --save/load stuff
 --currently only position
+-- ### rimosso provvisoriamente, salveremo altri dati. molix
 function widget:GetConfigData() --save config
-	if (PassedStartupCheck) then
+--[[	if (PassedStartupCheck) then
 		local vsy = Screen.vsy
 		local unscale = CanvasY/vsy --needed due to autoresize, stores unresized variables
 		Config.buildmenu.px = buildmenu.background.px * unscale
@@ -613,8 +541,14 @@ function widget:GetConfigData() --save config
 		Config.ordermenu.py = ordermenu.background.py * unscale
 		return {Config=Config, iconScaling=iconScaling}
 	end
+]]--
+return nil	
 end
+
+
+-- ### rimosso provvisoriamente, salveremo altri dati. molix
 function widget:SetConfigData(data) --load config
+--[[
 	if (data.Config ~= nil) then
 		Config.buildmenu.px = data.Config.buildmenu.px
 		Config.buildmenu.py = data.Config.buildmenu.py
@@ -624,6 +558,8 @@ function widget:SetConfigData(data) --load config
 			iconScaling = data.iconScaling
 		end
 	end
+]]--
+return nil	
 end
 
 
