@@ -12,17 +12,20 @@ function widget:GetInfo()
 	}
 end
 local rescalevalue = 1.26
-local buttonScale = 0.5
+local buttonScale = 1
 local NeededFrameworkVersion = 8
 local CanvasX,CanvasY = 1272/rescalevalue,734/rescalevalue --resolution in which the widget was made (for 1:1 size)
 --1272,734 == 1280,768 windowed
 
 local Config = {
 	minimap = {
-		px = -0.5,py = -0.5, --default start position
-		sx = math.min(135*Game.mapX/Game.mapY,270),sy = 135, --background size
+		ancora_x = 5,  			-- 5 pixel da sinistra
+		ancora_y = 5,  			-- 5 pixel dal TOP	
+		px = -0.5,py = -0.5, 	--default start position
+		sx = 180, 				--math.min(135*Game.mapX/Game.mapY,270),		--background size
+		sy = 180, 				--135, 											--background size
 		
-		bsx = 15,bsy = 15, --button size
+		bsx = 15,bsy = 15, 		--button size
 
 		fadetime = 0.10, --fade effect time, in seconds
 		fadedistance = 100, --distance from cursor at which console shows up when empty
@@ -35,7 +38,7 @@ local Config = {
 		
 
 --		cbackground = {0,0.67,0.99,0}, -- sfondo -- rimosso
-		cborder = {0,0.67,0.99,1}, -- bordo 
+		cborder = {0,0.67,0.99,1}, -- colore del bordo 
 --		cbordersize = 2,
 		
 		dragbutton = {1}, --left mouse button
@@ -81,6 +84,7 @@ local function RedUIchecks()
 	return true
 end
 
+--[[
 local function AutoResizeObjects() --autoresize v2
 	if (LastAutoResizeX==nil) then
 		LastAutoResizeX = CanvasX
@@ -125,6 +129,52 @@ local function AutoResizeObjects() --autoresize v2
 		LastAutoResizeX,LastAutoResizeY = vsx,vsy
 	end
 end
+]]--
+
+local function AutoResizeObjects()
+	if (LastAutoResizeX==nil) then
+		LastAutoResizeX = CanvasX
+		LastAutoResizeY = CanvasY
+	end
+	local vsx,vsy = Screen.vsx,Screen.vsy
+	
+	if ((LastAutoResizeX ~= vsx) or (LastAutoResizeY ~= vsy)) then
+		local objects = GetWidgetObjects(widget)
+		local isSlave = {}
+		for i=1,#objects do
+			local o = objects[i]
+			if (o.movableslaves) then
+				for j=1,#o.movableslaves do isSlave[o.movableslaves[j]] = true end
+			end
+		end
+
+		for i=1,#objects do
+			local o = objects[i]
+			if not isSlave[o] then
+				local oldPx, oldPy = o.px, o.py
+				
+				-- ANCORAGGIO TOP-LEFT
+				if (o.ancora_x) then 
+					o.px = math.floor(o.ancora_x + 0.5) 
+				end
+				if (o.ancora_y) then 
+					o.py = math.floor(o.ancora_y + 0.5)
+				end
+
+				if (o.movableslaves) then
+					local dx = o.px - oldPx
+					local dy = o.py - oldPy
+					for j=1,#o.movableslaves do
+						local s = o.movableslaves[j]
+						if (s.px) then s.px = math.floor(s.px + dx + 0.5) end
+						if (s.py) then s.py = math.floor(s.py + dy + 0.5) end
+					end
+				end
+			end
+		end
+		LastAutoResizeX,LastAutoResizeY = vsx,vsy
+	end
+end
 
 local function createminimap(r)
 	local minimap = {"rectangle",
@@ -132,6 +182,8 @@ local function createminimap(r)
 		sx=r.sx,sy=r.sy,
 		border=r.cborder,
 		obeyscreenedge = true,
+		ancora_x = r.ancora_x,
+		ancora_y = r.ancora_y,		
 	}
 --	local minimapbg = {"rectanglerounded",
 --		px=r.px-r.cbordersize,py=r.py,
@@ -332,11 +384,16 @@ function widget:Update()
 
 	AutoResizeObjects()
 	if ((lastPos.px ~= rMinimap.px) or (lastPos.py ~= rMinimap.py) or (lastPos.sx ~= rMinimap.sx) or (lastPos.sy ~= rMinimap.sy) or sceduleMinimapGeometry) then
+		local out_px = math.floor(rMinimap.px + 0.5)
+		local out_py = math.floor(rMinimap.py + 0.5)
+		local out_sx = math.floor(rMinimap.sx + 0.5)
+		local out_sy = math.floor(rMinimap.sy + 0.5)
+		
 		sSendCommands(sformat("minimap geometry %i %i %i %i",
-		rMinimap.px,
-		rMinimap.py,
-		rMinimap.sx,
-		rMinimap.sy))
+		out_px,
+		out_py,
+		out_sx,
+		out_sy))
 		sceduleMinimapGeometry = false
 	end
 	lastPos.px = rMinimap.px

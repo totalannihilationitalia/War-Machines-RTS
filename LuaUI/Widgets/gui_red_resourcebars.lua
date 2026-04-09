@@ -11,6 +11,8 @@ function widget:GetInfo()
 	}
 end
 
+-- 08/04/2026 -- modificato da molix, eliminato il fattore "scaling" per rendere più nitide le immagini. Utilizzati background images. 
+
 local barTexture = LUAUI_DIRNAME.."Images/resbar.dds"
 
 local NeededFrameworkVersion = 8
@@ -21,7 +23,8 @@ local Config = {
 	metal = {
 		px = 370,py = -0.5, --default start position
 		sx = 260,sy = 29, --background size
-		
+		ancora_x = 7,  
+		ancora_y = 165,   
 		barsy = 5, --width of the actual bar
 		fontsize = 11,
 		
@@ -31,9 +34,9 @@ local Config = {
 --		color2 = {0,0,0,0.5}, -- riquadro interno --rimosso vedi codice seguente
 		
 		expensefadetime = 0.5, --fade effect time, in seconds
-		
-		cbackground = {0.03,0.18,0.3,0.5}, --color {r,g,b,alpha} riquadro esterno metallo
-		cborder =  {0,0.67,0.99,1}, -- bordo barra  metallo
+		background_texture = ":n:"..LUAUI_DIRNAME.."images/menu/resourcesmenu/metal_bkgnd.png",
+		cbackground = {0,0,0,0}, --{0.03,0.18,0.3,0.5}, --color {r,g,b,alpha} riquadro esterno metallo
+		cborder =  {0,0,0,0}, --{0,0.67,0.99,1}, -- bordo barra  metallo
 		cbarbackground = {1,1,1,1}, -- boh
 		cbar = {1,0.8,0,1}, -- colore barra metallo
 		cindicator = {1,0,0,1}, -- cursore rosso metallo
@@ -44,23 +47,24 @@ local Config = {
 		ccurrent = {1,1,1,1},
 		cstorage = {1,1,1,1},
 -- aggiungo icona
-		cicona = LUAUI_DIRNAME.."Images/menu/metal_icon.png",
+		cicona = ":n:"..LUAUI_DIRNAME.."Images/menu/resourcesmenu/metal_icon.png",
 		dragbutton = {2}, --middle mouse button
 		tooltip = {
 			background ="In CTRL+F11 mode: Hold \255\255\255\1middle mouse button\255\255\255\255 to drag the resource bar.\n\n"..
 			"\255\255\255\1Leftclick\255\255\255\255 on the bar to set team share.",
-			income = "Your metal income.",
-			pull = "Your metal pull.",
-			expense = "Your metal expense, same as pull if not shown.",
-			storage = "Your maximum metal storage.",
-			current = "Your current metal storage.",
+			income = "Your Livrium income.",
+			pull = "Your Livrium pull.",
+			expense = "Your Livrium expense, same as pull if not shown.",
+			storage = "Your maximum Livrium storage.",
+			current = "Your current Livrium storage.",
 		},
 	},
 	
 	energy = {
 		px = 636,py = -0.5,
 		sx = 260,sy = 29, --background size
-		
+		ancora_x = 7,  
+		ancora_y = 131,   
 		barsy = 5, --width of the actual bar
 		fontsize = 11,
 		
@@ -70,11 +74,11 @@ local Config = {
 --		color2 = {0,0,0,0.5}, -- riquadro interno --rimosso vedi codice seguente
 		
 		expensefadetime = 0.25,
-		
-		cbackground = {0.03,0.18,0.3,0.5}, --riquadro esteno
-		cborder =  {0,0.67,0.99,1},
+		background_texture = ":n:"..LUAUI_DIRNAME.."images/menu/resourcesmenu/energy_bkgnd.png",
+		cbackground = {0,0,0,0},	-- {0.03,0.18,0.3,0.5}, --riquadro esteno
+		cborder =  {0,0,0,0}, 		-- {0,0.67,0.99,1},
 		cbarbackground = {0,0,0,1},
-		cbar = {0.33,0.45,0.81,1}, --0,0.7,1,1
+		cbar = {0.33,0.45,0.81,1}, 	--0,0.7,1,1
 		cindicator = {1,0,0,0.8},
 		
 		cincome = {0,1,0,1},
@@ -83,7 +87,7 @@ local Config = {
 		ccurrent = {1,1,1,1},
 		cstorage = {1,1,1,1},
 
-		cicona = LUAUI_DIRNAME.."Images/menu/energy_icon.png",	
+		cicona = ":n:"..LUAUI_DIRNAME.."Images/menu/resourcesmenu/energy_icon.png",	
 		dragbutton = {2}, --middle mouse button
 		tooltip = {
 			background ="In CTRL+F11 mode: Hold \255\255\255\1middle mouse button\255\255\255\255 to drag the resource bar.\n\n"..
@@ -132,6 +136,7 @@ local function RedUIchecks()
 	return true
 end
 
+--[[ 
 local function AutoResizeObjects() --autoresize v2
 	if (LastAutoResizeX==nil) then
 		LastAutoResizeX = CanvasX
@@ -176,6 +181,59 @@ local function AutoResizeObjects() --autoresize v2
 		LastAutoResizeX,LastAutoResizeY = vsx,vsy
 	end
 end
+]]--
+
+local function AutoResizeObjects()
+	if (LastAutoResizeX==nil) then
+		LastAutoResizeX = CanvasX
+		LastAutoResizeY = CanvasY
+	end
+	local vsx,vsy = Screen.vsx,Screen.vsy
+	
+	if ((LastAutoResizeX ~= vsx) or (LastAutoResizeY ~= vsy)) then
+		local objects = GetWidgetObjects(widget)
+
+		-- 1. Identifica gli slave
+		local isSlave = {}
+		for i=1,#objects do
+			local o = objects[i]
+			if (o.movableslaves) then
+				for j=1,#o.movableslaves do isSlave[o.movableslaves[j]] = true end
+			end
+		end
+
+		-- 2. Riposiziona i Master
+		for i=1,#objects do
+			local o = objects[i]
+			if not isSlave[o] then
+				local oldPx, oldPy = o.px, o.py
+				
+				-- Applica ancore (Arrotondate per nitidezza)
+				if (o.ancora_x) then 
+					o.px = math.floor(o.ancora_x + 0.5) 
+				end
+				
+				if (o.ancora_y) then 
+					-- Se vuoi ancorare dal TOP:
+					o.py = math.floor(vsy - o.ancora_y + 0.5)
+					
+				end
+
+				-- 3. Muovi i figli mantenendo le distanze originali (Delta)
+				if (o.movableslaves) then
+					local dx = o.px - oldPx
+					local dy = o.py - oldPy
+					for j=1,#o.movableslaves do
+						local s = o.movableslaves[j]
+						if (s.px) then s.px = math.floor(s.px + dx + 0.5) end
+						if (s.py) then s.py = math.floor(s.py + dy + 0.5) end
+					end
+				end
+			end
+		end
+		LastAutoResizeX,LastAutoResizeY = vsx,vsy
+	end
+end
 
 local function short(n,f)
 	if (f == nil) then
@@ -197,16 +255,18 @@ local function createbar(r)
 --		sx=r.sx-r.padding-r.padding,sy=r.sy-r.padding-r.padding,
 --		color=r.color2,
 --	}
-	local background = {"rectanglerounded",
+	local background = {"rectangle",
 		px=r.px,py=r.py,
 		sx=r.sx,sy=r.sy,
 		color=r.cbackground,
 		border=r.cborder,
 		movable=r.dragbutton,
 		obeyscreenedge = true,
-		
+		ancora_x = r.ancora_x,				-- aggiungo ancora, molix
+		ancora_y = r.ancora_y,				-- aggiungo ancora, molix
 		padding=r.padding,
-		
+        texture = r.background_texture,		-- aggiungo texture, molix
+        texturecolor = {1,1,1,1}, 			-- aggiungo texture, molix	
 		--overridecursor = true,
 		overrideclick = {1},
 		onupdate=function(self)
@@ -249,11 +309,16 @@ local function createbar(r)
 
 ----- test inserisco l'icona energia 
 	local icona = 	{"rectangle",
-		px=r.px-5,py=r.py+4,
+	--[[	px=r.px-5,py=r.py+4,
 		sx=r.sx-240,sy=r.sy-8,
+	]]--
+		px = math.floor(r.px - 5 + 0.5),
+		py = math.floor(r.py + 3 + 0.5),
+		sx = math.floor(r.sx - 240 + 0.5),
+		sy = math.floor(r.sy - 8 + 0.5),	
 
-		color=r.cbar,
-		border=r.cborder,
+		color={0,0,0,0},
+		border={0,0,0,0},
 		texture = r.cicona, 
 		texturecolor = {1,1,1,1},	
 	}
@@ -311,8 +376,16 @@ local function createbar(r)
 	}
 	
 	background.movableslaves = {
-		barbackground,barborder,bar,shareindicator,
-		income,pull,expense,current,storage,
+		barbackground,
+		barborder,
+		bar,
+		shareindicator,
+		income,
+		pull,
+		expense,
+		current,
+		storage,
+		icona,
 	}
 	
 	-- smaller fontsize for fontsize of income and pull
@@ -425,7 +498,7 @@ end
 --save/load stuff
 --currently only position
 function widget:GetConfigData() --save config
-	if (PassedStartupCheck) then
+--[[	if (PassedStartupCheck) then
 		local vsy = Screen.vsy
 		local unscale = CanvasY/vsy --needed due to autoresize, stores unresized variables
 		Config.metal.px = metal.background.px * unscale
@@ -434,6 +507,7 @@ function widget:GetConfigData() --save config
 		Config.energy.py = energy.background.py * unscale
 		return {Config=Config}
 	end
+]]--	
 end
 function widget:SetConfigData(data) --load config
 	if (data.Config ~= nil) then

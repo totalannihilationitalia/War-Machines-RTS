@@ -50,12 +50,12 @@ local posx_selettore_buttons 			 	= 0						-- posizione x del selettore dei puls
 local posy_selettore_buttons 			 	= 0						-- posizione y del selettore dei pulsanti close, back ecc
 
 -- definizione immagini
-local main_background				= "LuaUI/Images/menu/mainmenu/sfondo_sound.png"
-local icona_menu_exit				= "LuaUI/Images/menu/mainmenu/menu_exit.png"
-local buttons_back					= "LuaUI/Images/menu/mainmenu/menu_back.png"
-local buttons_close					= "LuaUI/Images/menu/mainmenu/menu_close.png"
-local buttons_ok					= "LuaUI/Images/menu/mainmenu/menu_ok.png"
-local selettore_button 				= "LuaUI/Images/menu/mainmenu/main_menu_buttonselection.png"
+local main_background				= ":n:".."LuaUI/Images/menu/mainmenu/sfondo_sound.png"
+local icona_menu_exit				= ":n:".."LuaUI/Images/menu/mainmenu/menu_exit.png"
+local buttons_back					= ":n:".."LuaUI/Images/menu/mainmenu/menu_back.png"
+local buttons_close					= ":n:".."LuaUI/Images/menu/mainmenu/menu_close.png"
+local buttons_ok					= ":n:".."LuaUI/Images/menu/mainmenu/menu_ok.png"
+local selettore_button 				= ":n:".."LuaUI/Images/menu/mainmenu/main_menu_buttonselection.png"
 
 --caratteristche testo
 local titolo_menu_col				= {0.8, 0.8, 1.0, 1}

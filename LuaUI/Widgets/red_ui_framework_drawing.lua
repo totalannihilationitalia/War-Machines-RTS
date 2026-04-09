@@ -293,7 +293,7 @@ local function TexRect(px,py,sx,sy,texture,c,scale)
 end
 
 local function RectQuad(px,py,sx,sy)
-	local o = 0.008		-- texture offset, because else grey line might show at the edges
+	local o = 0 --0.008		-- texture offset, because else grey line might show at the edges
 	gl.TexCoord(o,1-o)
 	gl.Vertex(px, py, 0)
 	gl.TexCoord(1-o,1-o)
@@ -317,7 +317,7 @@ local function CreateStartList()
 		glDepthTest(false)
 		glMatrixMode(GL_MODELVIEW)
 		glLoadIdentity()
-		glTranslate(0.375,0.375,0) -- for exact pixelization
+		glTranslate(0,0,0) -- for exact pixelization era glTranslate(0.375,0.375,0)
 	end)
 end
 

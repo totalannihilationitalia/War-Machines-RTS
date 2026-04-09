@@ -20,18 +20,19 @@ local CanvasX,CanvasY = 1280,734 --resolution in which the widget was made (for 
 local Config = {
 	tooltip = {
 		px = -0.5,py = CanvasY-82, --default start position
-		sx = 260,sy = 60, --background size
-		
-		fontsize = 7,
+		sx = 260,sy = 95, 	--background size
+		ancora_x = 7,		-- posizione da sinistra
+		ancora_y = 97,		-- posizione dal basso
+		fontsize = 10,
 		
 --		padding = 3, --distanza del riquadro interno rispetto quello esterno
 --		color2 = {0,0,0,0.5}, -- riquadro interno eliminato
 		
 		margin = 11, --distance from background border
 		
-		cbackground = {0.03,0.18,0.3,0.5}, --color {r,g,b,alpha} riquadro esterno
-		cborder = {0,0.67,0.99,1},
-		
+		cbackground = {0,0,0,0}, --{0.03,0.18,0.3,0.5}, --color {r,g,b,alpha} riquadro esterno
+		cborder = {0,0,0,0}, --{0,0.67,0.99,1},
+		background_texture = ":n:"..LUAUI_DIRNAME.."images/menu/tooltip/tool_bkgnd.png",
 		dragbutton = {2}, --middle mouse button
 		tooltip = {
 			background = "In CTRL+F11 mode: Hold \255\255\255\1middle mouse button\255\255\255\255 to drag this element.",
@@ -79,6 +80,7 @@ local function RedUIchecks()
 	return true
 end
 
+--[[
 local function AutoResizeObjects() --autoresize v2
 	if (LastAutoResizeX==nil) then
 		LastAutoResizeX = CanvasX
@@ -123,6 +125,53 @@ local function AutoResizeObjects() --autoresize v2
 		LastAutoResizeX,LastAutoResizeY = vsx,vsy
 	end
 end
+]]--
+
+local function AutoResizeObjects()
+	if (LastAutoResizeX==nil) then
+		LastAutoResizeX = CanvasX
+		LastAutoResizeY = CanvasY
+	end
+	local vsx,vsy = Screen.vsx,Screen.vsy
+	
+	if ((LastAutoResizeX ~= vsx) or (LastAutoResizeY ~= vsy)) then
+		local objects = GetWidgetObjects(widget)
+
+		local isSlave = {}
+		for i=1,#objects do
+			local o = objects[i]
+			if (o.movableslaves) then
+				for j=1,#o.movableslaves do isSlave[o.movableslaves[j]] = true end
+			end
+		end
+
+		for i=1,#objects do
+			local o = objects[i]
+			if not isSlave[o] then
+				local oldPx, oldPy = o.px, o.py
+				
+				if (o.ancora_x) then 
+					o.px = math.floor(o.ancora_x + 0.5) 
+				end
+				if (o.ancora_y) then 
+					o.py = math.floor(vsy - o.ancora_y + 0.5)
+				end
+
+				if (o.movableslaves) then
+					local dx = o.px - oldPx
+					local dy = o.py - oldPy
+					for j=1,#o.movableslaves do
+						local s = o.movableslaves[j]
+						if (s.px) then s.px = math.floor(s.px + dx + 0.5) end
+						if (s.py) then s.py = math.floor(s.py + dy + 0.5) end
+					end
+				end
+			end
+		end
+		LastAutoResizeX,LastAutoResizeY = vsx,vsy
+	end
+end
+
 local function getEditedCurrentTooltip() 
 	local text = sGetCurrentTooltip() 
 	--extract the exp value with regexp 
@@ -200,12 +249,15 @@ local function createtooltip(r)
 --		sx=r.sx-r.padding-r.padding,sy=r.sy-r.padding-r.padding,
 --		color=r.color2,
 --	}
-	local background = {"rectanglerounded",
+	local background = {"rectangle",
 		px=r.px,py=r.py,
 		sx=r.sx,sy=r.sy,
 		color=r.cbackground,
 		border=r.cborder,
-		
+		texture = r.background_texture,
+		texturecolor = {1,1,1,1},
+		ancora_x = r.ancora_x,
+		ancora_y = r.ancora_y,		
 		padding=r.padding,
 		
 		movable=r.dragbutton,
@@ -218,22 +270,22 @@ local function createtooltip(r)
 		onupdate=function(self)
 			if (self.px < (Screen.vsx/2)) then --left side of screen
 				if ((self.sx-r.margin*2) <= text.getwidth()) then
-					self.sx = (text.getwidth()+r.margin*2) -1
+					self.sx = math.floor(text.getwidth()+r.margin*2) -- self.sx = (text.getwidth()+r.margin*2) -1
 				else
-					self.sx = r.sx * Screen.vsy/CanvasY
+					self.sx = math.floor(r.sx + 0.5) --self.sx = r.sx * Screen.vsy/CanvasY
 				end
-				text.px = self.px + r.margin
+				text.px = math.floor(self.px + r.margin + 0.5) --text.px = self.px + r.margin
 			else --right side of screen
 				if ((self.sx-r.margin*2 -1) <= text.getwidth()) then
-					self.px = self.px - ((text.getwidth() + r.margin*2) - self.sx)
-					self.sx = (text.getwidth() + r.margin*2)
+					self.px = math.floor(self.px - ((text.getwidth() + r.margin*2) - self.sx) + 0.5) -- self.px = self.px - ((text.getwidth() + r.margin*2) - self.sx)
+					self.sx = math.floor(text.getwidth() + r.margin*2 + 0.5) --self.sx = (text.getwidth() + r.margin*2)
 				else
-					self.px = self.px - ((r.sx * Screen.vsy/CanvasY) - self.sx)
-					self.sx = r.sx * Screen.vsy/CanvasY
+					self.px = math.floor(self.px - (r.sx - self.sx) + 0.5) --self.px = self.px - ((r.sx * Screen.vsy/CanvasY) - self.sx)
+					self.sx = math.floor(r.sx + 0.5) --self.sx = r.sx * Screen.vsy/CanvasY
 				end
-				text.px = self.px + r.margin
+				text.px = math.floor(self.px + r.margin + 0.5) --text.px = self.px + r.margin
 			end
-			unitcounter.px = self.sx - ((r.margin/2)* Screen.vsy/CanvasY)
+			unitcounter.px = math.floor(self.px + self.sx - (r.margin/2) + 0.5) --unitcounter.px = self.sx - ((r.margin/2)* Screen.vsy/CanvasY)
 -- rimuovo background2
 --			background2.px = self.px + self.padding
 --			background2.py = self.py + self.padding
@@ -248,7 +300,8 @@ local function createtooltip(r)
 			text._mouseoverself = nil
 		end,
 	}
-
+	
+	background.movableslaves = {text, unitcounter}
 	
 	New(background)
 --	New(background2)

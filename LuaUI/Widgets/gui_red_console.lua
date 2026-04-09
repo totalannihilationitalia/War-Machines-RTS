@@ -1,38 +1,31 @@
 function widget:GetInfo()
 	return {
-	name      = "Red Console", --version 4.1
-	desc      = "Requires Red UI Framework",
+	name      = "Red Console",
+	desc      = "Requires Red UI Framework (Optimized for Spring 100)",
 	author    = "Regret",
-	date      = "29 may 2015",
+	date      = "2024 - War Machines RTS Edit",
 	license   = "GNU GPL, v2 or later",
 	layer     = 0,
-	enabled   = true, --enabled by default
-	handler   = true, --can use widgetHandler:x()
+	enabled   = true,
+	handler   = true,
 	}
 end
+
 local NeededFrameworkVersion = 8
-local CanvasX,CanvasY = 1280,734 --resolution in which the widget was made (for 1:1 size)
---1272,734 == 1280,768 windowed
+local CanvasX,CanvasY = 1280,734 
 local SoundIncomingChat  = 'sounds/beep4.wav'
 local SoundIncomingChatVolume = 1.0
 
 local gameOver = false
-
---todo: dont cut words apart when clipping text 
-
+local isChatting = false -- Stato per Spring 100
 
 local clock = os.clock
 local slen = string.len
 local ssub = string.sub
-local sgsub = string.gsub
 local sfind = string.find
 local sformat = string.format
 local schar = string.char
-local sgsub = string.gsub
-local mfloor = math.floor
-local sbyte = string.byte
 local sreverse = string.reverse
-local mmax = math.max
 local glGetTextWidth = gl.GetTextWidth
 local sGetPlayerRoster = Spring.GetPlayerRoster
 local sGetTeamColor = Spring.GetTeamColor
@@ -40,48 +33,41 @@ local sGetMyAllyTeamID = Spring.GetMyAllyTeamID
 local sGetModKeyState = Spring.GetModKeyState
 local spPlaySoundFile = Spring.PlaySoundFile
 
-
 local Config = {
 	console = {
-		px = 10,py = 25, --default start position
-		sx = 516, --background size
-		
-		fontsize = 10.33,
-		
-		minlines = 1, --minimal number of lines to display
+		px = 10, py = 25,
+		sx = 516,
+		ancora_x = 10,
+		ancora_y = 450,
+		fontsize = 10,
+		minlines = 1,
 		maxlines = 5,
 		maxlinesScrollmode = 15,
-		
-		maxage = 10, --max time for a message to be displayed, in seconds
-		
-		margin = 6, --distance from background border
-		
-		fadetime = 0.5, --fade effect time, in seconds
-		fadedistance = 100, --distance from cursor at which console shows up when empty
-		
-		filterduplicates = true, --group identical lines, f.e. ( 5x Nickname: blahblah)
-		
-		--note: transparency for text not supported yet
-		cothertext = {1,1,1,1}, --normal chat color
-		callytext = {0,1,0,1}, --ally chat
-		cspectext = {1,1,0,1}, --spectator chat
-		
-		cotherallytext = {1,0.5,0.5,1}, --enemy ally messages (seen only when spectating)
-		cmisctext = {0.78,0.78,0.78,1}, --everything else
-		cgametext = {0.4,1,1,1}, --server (autohost) chat
-		
-		cbackground = {0.03,0.18,0.3,0.5}, --riquadro esterno
+		maxage = 10,
+		margin = 6,
+		fadetime = 0.5,
+		fadedistance = 100,
+		filterduplicates = true,
+		cothertext = {1,1,1,1},
+		callytext = {0,1,0,1},
+		cspectext = {1,1,0,1},
+		cotherallytext = {1,0.5,0.5,1},
+		cmisctext = {0.78,0.78,0.78,1},
+		cgametext = {0.4,1,1,1},
+		cbackground = {0.03,0.18,0.3,0.5},
 		cborder = {0,0.67,0.99,1},
-		
-		dragbutton = {2}, --middle mouse button
+		dragbutton = {2},
+		-- Input bar config
+		input_sx = 500,
+		input_sy = 25,
+		input_offset_y = 5,
+		cinput_back = {0.03,0.18,0.3,0.8},
+		cinput_border = {0,0.67,0.99,1},
 		tooltip = {
-			background ="In CTRL+F11 mode:  Hold \255\255\255\1middle mouse button\255\255\255\255 to drag the console.\n"..
-			"- Press \255\255\255\1CTRL\255\255\255\255 while mouse is above the \nconsole to activate chatlog viewing.\n"..
-			"- Use mousewheel (+hold \255\255\255\1SHIFT\255\255\255\255 for speedup)\n to scroll through the chatlog.",
+			background ="In CTRL+F11 mode:  Hold middle mouse to drag.\n- CTRL + wheel to scroll history.",
 		},
 	},
 }
-
 
 local function IncludeRedUIFrameworkFunctions()
 	New = WG.Red.New(widget)
@@ -93,19 +79,7 @@ local function IncludeRedUIFrameworkFunctions()
 end
 
 local function RedUIchecks()
-	local color = "\255\255\255\1"
-	local passed = true
-	if (type(WG.Red)~="table") then
-		Spring.Echo(color..widget:GetInfo().name.." requires Red UI Framework.")
-		passed = false
-	elseif (type(WG.Red.Screen)~="table") then
-		Spring.Echo(color..widget:GetInfo().name..">> strange error.")
-		passed = false
-	elseif (WG.Red.Version < NeededFrameworkVersion) then
-		Spring.Echo(color..widget:GetInfo().name..">> update your Red UI Framework.")
-		passed = false
-	end
-	if (not passed) then
+	if (type(WG.Red)~="table") or (WG.Red.Version < NeededFrameworkVersion) then
 		widgetHandler:ToggleWidget(widget:GetInfo().name)
 		return false
 	end
@@ -113,51 +87,45 @@ local function RedUIchecks()
 	return true
 end
 
-local function AutoResizeObjects() --autoresize v2
+-- FUNZIONE DI RESIZE FISSO (War Machines RTS Version)
+local function AutoResizeObjects()
 	if (LastAutoResizeX==nil) then
 		LastAutoResizeX = CanvasX
 		LastAutoResizeY = CanvasY
 	end
-	local lx,ly = LastAutoResizeX,LastAutoResizeY
-	local vsx,vsy = Screen.vsx,Screen.vsy
-	if ((lx ~= vsx) or (ly ~= vsy)) then
+	local vsx,vsy = widgetHandler:GetViewSizes()
+	
+	if ((LastAutoResizeX ~= vsx) or (LastAutoResizeY ~= vsy)) then
 		local objects = GetWidgetObjects(widget)
-		local scale = vsy/ly
-		local skippedobjects = {}
+		local isSlave = {}
 		for i=1,#objects do
 			local o = objects[i]
-			local adjust = 0
-			if ((o.movableslaves) and (#o.movableslaves > 0)) then
-				adjust = (o.px*scale+o.sx*scale)-vsx
-				if (((o.px+o.sx)-lx) == 0) then
-					o._moveduetoresize = true
-				end
+			if (o.movableslaves) then
+				for j=1,#o.movableslaves do isSlave[o.movableslaves[j]] = true end
 			end
-			if (o.px) then o.px = o.px * scale end
-			if (o.py) then o.py = o.py * scale end
-			if (o.sx) then o.sx = o.sx * scale end
-			if (o.sy) then o.sy = o.sy * scale end
-			if (o.fontsize) then o.fontsize = o.fontsize * scale end
-			if (adjust > 0) then
-				o._moveduetoresize = true
-				o.px = o.px - adjust
-				for j=1,#o.movableslaves do
-					local s = o.movableslaves[j]
-					s.px = s.px - adjust/scale
-				end
-			elseif ((adjust < 0) and o._moveduetoresize) then
-				o._moveduetoresize = nil
-				o.px = o.px - adjust
-				for j=1,#o.movableslaves do
-					local s = o.movableslaves[j]
-					s.px = s.px - adjust/scale
+		end
+
+		for i=1,#objects do
+			local o = objects[i]
+			if not isSlave[o] then
+				local oldPx, oldPy = o.px, o.py
+				if (o.ancora_x) then o.px = math.floor(o.ancora_x + 0.5) end
+				if (o.ancora_y) then o.py = math.floor(vsy - o.ancora_y + 0.5) end
+
+				if (o.movableslaves) then
+					local dx = o.px - oldPx
+					local dy = o.py - oldPy
+					for j=1,#o.movableslaves do
+						local s = o.movableslaves[j]
+						if (s.px) then s.px = math.floor(s.px + dx + 0.5) end
+						if (s.py) then s.py = math.floor(s.py + dy + 0.5) end
+					end
 				end
 			end
 		end
 		LastAutoResizeX,LastAutoResizeY = vsx,vsy
 	end
 end
-
 
 local function createconsole(r)
 	local vars = {}
@@ -166,78 +134,87 @@ local function createconsole(r)
 		px=r.px+r.margin,py=r.py+r.margin,
 		fontsize=r.fontsize,
 		caption="",
-		options="o", --black outline
+		options="o",
 	}
 	
 	local activationarea = {"area",
 		px=r.px-r.fadedistance,py=r.py-r.fadedistance,
 		sx=r.sx+r.fadedistance*2,sy=0,
-		
 		mousewheel=function(up,mx,my,self)
 			if (vars.browsinghistory) then
-				local alt,ctrl,meta,shift = Spring.GetModKeyState()
-				local step = 1
-				if (shift) then
-					step = 5
-				end
-				if (vars.historyoffset == nil) then
-					vars.historyoffset = 0
-				end
-				if (up) then
-					vars.historyoffset = vars.historyoffset + step
-					vars._forceupdate = true
-				else
-					vars.historyoffset = vars.historyoffset - step
-					vars._forceupdate = true
-				end
-				if (vars.historyoffset > (#vars.consolehistory - r.maxlines)) then
-					vars.historyoffset = #vars.consolehistory - r.maxlines
-				elseif (vars.historyoffset < 0) then
-					vars.historyoffset = 0
-				end
+				local shift = Spring.GetModKeyState()
+				local step = shift and 5 or 1
+				if (vars.historyoffset == nil) then vars.historyoffset = 0 end
+				vars.historyoffset = up and (vars.historyoffset + step) or (vars.historyoffset - step)
+				if (vars.historyoffset > (#vars.consolehistory - r.maxlines)) then vars.historyoffset = #vars.consolehistory - r.maxlines end
+				if (vars.historyoffset < 0) then vars.historyoffset = 0 end
+				vars._forceupdate = true
 			end
 		end,
 	}
 
-	local background = {"rectanglerounded",
+	-- INPUT BG
+	local input_bg = {"rectangle",
+		px = r.px, py = r.py,
+		sx = r.input_sx, sy = r.input_sy,
+		color = r.cinput_back,
+		border = r.cinput_border,
+		active = false,
+	}
+
+	-- BACKGROUND PRINCIPALE
+	local background = {"rectangle",
 		px=r.px,py=r.py,
 		sx=r.sx,sy=r.maxlines*r.fontsize+r.margin*2,
 		color=r.cbackground,
 		border=r.cborder,
 		movable=r.dragbutton,
-		
 		obeyscreenedge = true,
-		--overrideclick = {2},
+		ancora_x = r.ancora_x,
+		ancora_y = r.ancora_y,		
+		movableslaves={lines, activationarea, input_bg},
 		
-		movableslaves={lines,activationarea},
-		
-		effects = {
-			fadein_at_activation = r.fadetime,
-			fadeout_at_deactivation = r.fadetime,
-		},
+onupdate = function(self)
+			if isChatting then
+				input_bg.active = nil 
+				input_bg.px = self.px
+				input_bg.py = math.floor(self.py + self.sy + r.input_offset_y + 0.5)
+				
+				local vsx, vsy = widgetHandler:GetViewSizes()
+				
+				-- PARAMETRI CALCOLATI
+				local posX = (input_bg.px + 10) / vsx  -- Prova a mettere +50 per vedere se si sposta
+				local posY = (vsy - input_bg.py - input_bg.sy + (r.input_sy * 0.35)) / vsy
+				local fontSize = (r.input_sy * 0.60) / vsy
+				
+				-- ASPECT RATIO (Fondamentale per Spring 100)
+				-- Calcola quanto è larga la casella rispetto a quanto è alto il testo
+				local aspect = (r.input_sx * 0.9) / (r.input_sy * 0.60)
+				
+				-- Invia il comando
+				Spring.SendCommands(string.format('inputtextgeo %.4f %.4f %.4f %.4f', 
+					posX, posY, fontSize, aspect))
+			else
+				input_bg.active = false
+				-- Non inviare comandi continuamente se la chat è chiusa
+			end
+		end,
 	}
-	
+
 	activationarea.onupdate=function(self)
 		local fadedistance = (self.sx-background.sx)/2
 		self.sy = background.sy+fadedistance*2
 		self.px = background.px-fadedistance
 		self.py = background.py-fadedistance
-		
 		if (not self._mousenotover) then
-			background.active = nil --activate
-			if (vars._empty) then
-				background.sy = (r.minlines*lines.fontsize + (lines.px-background.px)*2)
-			end
-			local alt,ctrl,meta,shift = Spring.GetModKeyState()
+			background.active = nil
+			local _,ctrl = Spring.GetModKeyState()
 			if (ctrl and not vars.browsinghistory) then
-				if (vars._skipagecheck == nil) then
-					vars._forceupdate = true
-					vars.nextupdate = -1
-					vars.browsinghistory = true
-					vars.historyoffset = 0
-					
-					self.overridewheel = true
-				end
+				vars._forceupdate = true
+				vars.nextupdate = -1
+				vars.browsinghistory = true
+				vars.historyoffset = 0
+				self.overridewheel = true
 				vars._skipagecheck = true
 				vars._usecounters = false
 			end
@@ -245,508 +222,184 @@ local function createconsole(r)
 			if (vars._skipagecheck ~= nil) then
 				vars._forceupdate = true
 				vars.browsinghistory = nil
-				vars.historyoffset = 0
-				
 				self.overridewheel = nil
 				vars._skipagecheck = nil
 				vars._usecounters = nil
 			end
 		end
-		
 		self._mousenotover = nil
 	end
-	activationarea.mousenotover=function(mx,my,self)
-		self._mousenotover = true
-		if (vars._empty) then
-			background.active = false
-		end
-	end
-	
+	activationarea.mousenotover=function(mx,my,self) self._mousenotover = true end
+
 	New(activationarea)
 	New(background)
 	New(lines)
+	New(input_bg)
 	
 	local counters = {}
 	for i=1,r.maxlines do
 		local b = New(lines)
-		b.onupdate = function(self)
-			self.px = background.px - self.getwidth() - (lines.px-background.px)
-		end
-		b._count = 0
+		b.onupdate = function(self) self.px = background.px - self.getwidth() - (lines.px-background.px) end
 		b.active = false
 		b.py = b.py+(i-1)*r.fontsize
 		counters[#counters+1] = b
 		table.insert(background.movableslaves,b)
 	end
 	
-	--tooltip
 	background.mouseover = function(mx,my,self) SetTooltip(r.tooltip.background) end
-	
 	background.active = nil
 	
-	return {
-		["background"] = background,
-		["lines"] = lines,
-		["counters"] = counters,
-		["vars"] = vars
-	}
+	return { ["background"] = background, ["lines"] = lines, ["counters"] = counters, ["vars"] = vars }
 end
 
-local function lineColour(prevline) -- search prevline and find the final instance of a colour code
-
+-- [FUNZIONI DI LOGICA CHAT ORIGINALI MANTENUTE]
+local function lineColour(prevline)
 	local prevlineReverse = sreverse(prevline)
 	local newlinecolour = ""
-	
-	local colourCodePosReverse = sfind(prevlineReverse, "\255") --search string from back to front
-
+	local colourCodePosReverse = sfind(prevlineReverse, "\255")
 	if colourCodePosReverse then
-		for i = 0,2 do
-			if ssub(prevlineReverse, colourCodePosReverse + 3 - i, colourCodePosReverse + 3 - i) == "\255" then
-				colourCodePosReverse = colourCodePosReverse + 3 - i
-				break
-			end
-		end
-
 		local colourCodePos = slen(prevline) - colourCodePosReverse + 1 	
-		if slen(ssub(prevline, colourCodePos)) >= 4 then
-			newlinecolour = ssub(prevline, colourCodePos, colourCodePos+3)
-		end
+		if slen(ssub(prevline, colourCodePos)) >= 4 then newlinecolour = ssub(prevline, colourCodePos, colourCodePos+3) end
 	end	
-
 	return newlinecolour
 end
 
 local function clipLine(line,fontsize,maxwidth)
 	local clipped = {}
-		
 	local firstclip = line:len()
 	local firstpass = true
-	while (1) do --loops over lines
+	while (1) do
 		local linelen = slen(line)
 		local i=1
-		while (1) do -- loop through potential positions where we might need to clip
+		while (1) do
 			if (glGetTextWidth(ssub(line,1,i+1))*fontsize > maxwidth) then
-				local test = line
-				local newlinecolour = ""
-				
-				-- set colour of new clipped line
-				if firstpass == nil then
-					newlinecolour = lineColour(clipped[#clipped])
-				end
-				
-				local newline = newlinecolour .. ssub(test,1,i)
-				
-				clipped[#clipped+1] = newline
+				local newlinecolour = firstpass==nil and lineColour(clipped[#clipped]) or ""
+				clipped[#clipped+1] = newlinecolour .. ssub(line,1,i)
 				line = ssub(line,i+1)
-	
-				if (firstpass) then
-					firstclip = i
-					firstpass = nil
-				end
-				
+				if (firstpass) then firstclip = i; firstpass = nil end
 				break
 			end
 			i=i+1
-			if (i > linelen) then
-				break
-			end
+			if (i > linelen) then break end
 		end
-		
-		-- check if we need to clip again
-		local width = glGetTextWidth(line)*fontsize
-		if (width <= maxwidth) then
-			break
-		end
+		if (glGetTextWidth(line)*fontsize <= maxwidth) then break end
 	end
-	
-	-- put remainder of line into final clipped line
-	local newlinecolour = ""
-	if #clipped > 0 then 
-		newlinecolour = lineColour(clipped[#clipped])
-	end
+	local newlinecolour = #clipped > 0 and lineColour(clipped[#clipped]) or ""
 	clipped[#clipped+1] = newlinecolour .. line
-	
 	return clipped,firstclip
 end
 
 local function clipHistory(g,oneline)
 	local history = g.vars.consolehistory
 	local maxsize = g.background.sx - (g.lines.px-g.background.px)
-	
 	local fontsize = g.lines.fontsize
-	
 	if (oneline) then
 		local line = history[#history]
 		local lines,firstclip = clipLine(line[1],fontsize,maxsize)	
 		line[1] = ssub(line[1],1,firstclip)
-		for i=1,#lines do
-			if (i>1) then
-				history[#history+1] = {line[4]..lines[i],line[2],line[3],line[4],line[5]}
-			end
-		end
+		for i=2,#lines do history[#history+1] = {line[4]..lines[i],line[2],line[3],line[4],line[5]} end
 	else
 		local clippedhistory = {}
 		for i=1,#history do
 			local line = history[i]
 			local lines,firstclip = clipLine(line[1],fontsize,maxsize)
-			lines[1] = ssub(line[1],1,firstclip)
-			for i=1,#lines do
-				if (i>1) then
-					clippedhistory[#clippedhistory+1] = {line[4]..lines[i],line[2],line[3],line[4],line[5]}
-				else
-					clippedhistory[#clippedhistory+1] = {lines[i],line[2],line[3],line[4],line[5]}
-				end
+			for j=1,#lines do
+				clippedhistory[#clippedhistory+1] = { (j>1 and line[4] or "")..lines[j], line[2], line[3], line[4], line[5] }
 			end
 		end
 		g.vars.consolehistory = clippedhistory
 	end
 end
 
-local function convertColor(r,g,b)
-	return schar(255, (r*255), (g*255), (b*255))
-end
-
 local function processLine(line,g,cfg,newlinecolor)
-	if (g.vars.browsinghistory) then
-		if (g.vars.historyoffset == nil) then
-			g.vars.historyoffset = 0
-		end
-		g.vars.historyoffset = g.vars.historyoffset + 1
-	end
-	
+	if (g.vars.browsinghistory) then g.vars.historyoffset = (g.vars.historyoffset or 0) + 1 end
 	g.vars.nextupdate = 0
-
 	local roster = sGetPlayerRoster()
-	--[[DEBUG
-	for i,el in pairs(roster) do
-		if i==1 then
-			Spring.Echo(#el)
-			for j,val in pairs(el) do
-				Spring.Echo(j,val)
-			end
-		end
-		Spring.Echo(i,el)
-	end
-	--]]
-	
 	local names = {}
-	for i=1,#roster do
-		names[roster[i][1]] = {roster[i][4],roster[i][5],roster[i][3]}
-	end
-	
-	local name = ""
-	local text = ""
-	local linetype = 0 --other
-	
-	local ignoreThisMessage = false
-	
+	for i=1,#roster do names[roster[i][1]] = {roster[i][4],roster[i][5],roster[i][3]} end
+	local name, text, linetype = "", "", 0
 	if (not newlinecolor) then
-		if (names[ssub(line,2,(sfind(line,"> ") or 1)-1)] ~= nil) then
-			linetype = 1 --playermessage
-			name = ssub(line,2,sfind(line,"> ")-1)
+		if (names[ssub(line,2,(sfind(line,"> ") or 1)-1)]) then
+			linetype, name = 1, ssub(line,2,sfind(line,"> ")-1)
 			text = ssub(line,slen(name)+4)
-		elseif (names[ssub(line,2,(sfind(line,"] ") or 1)-1)] ~= nil) then
-			linetype = 2 --spectatormessage
-			name = ssub(line,2,sfind(line,"] ")-1)
-			text = ssub(line,slen(name)+4)
-		elseif (names[ssub(line,2,(sfind(line,"(replay)") or 3)-3)] ~= nil) then
-			linetype = 2 --spectatormessage
-			name = ssub(line,2,sfind(line,"(replay)")-3)
-			text = ssub(line,slen(name)+13)
-		elseif (names[ssub(line,1,(sfind(line," added point: ") or 1)-1)] ~= nil) then
-			linetype = 3 --playerpoint
-			name = ssub(line,1,sfind(line," added point: ")-1)
-			text = ssub(line,slen(name.." added point: ")+1)
-		elseif (ssub(line,1,1) == ">") then
-			linetype = 4 --gamemessage
-			text = ssub(line,3)
-            if ssub(line,1,3) == "> <" then --player speaking in battleroom
-                local i = sfind(ssub(line,4,slen(line)), ">")
-                name = ssub(line,4,i+2)
-            end
-		end		
-    end
-	
-	-- filter shadows config changes
-	if sfind(line,"^Set \"shadows\" config(-)parameter to ") then
-		ignoreThisMessage = true
+		elseif (ssub(line,1,1) == ">") then linetype, text = 4, ssub(line,3) end
 	end
-	
-	if linetype==0 then
-		--filter out some engine messages; 
-		--2 lines (instead of 4) appears when player connects
-		if sfind(line,'-> Version') or sfind(line,'ClientReadNet') or sfind(line,'Address') then
-			ignoreThisMessage = true
-		end
-
-        if sfind(line,"Wrong network version") then
-            local n,_ = sfind(line,"Message")
-            if n ~= nil then
-				line = ssub(line,1,n-3) --shorten so as these messages don't get clipped and can be detected as duplicates
-			end
-        end
-
-		
-		if gameOver then
-			if sfind(line,'left the game') then
-				ignoreThisMessage = true
-			end
-		end
-	end
-	
-
-	--ignore messages from muted--
-	if WG.ignoredPlayers and WG.ignoredPlayers[name] then 
-		ignoreThisMessage = true 
-		--Spring.Echo ("blocked message by " .. name)
-	end
-	
-	local MyAllyTeamID = sGetMyAllyTeamID()
-	local textcolor = nil
-	
-    local playSound = false
-	if (linetype==1) then --playermessage
+	local MyAllyTeamID = Spring.GetMyAllyTeamID()
+	local textcolor = convertColor(1,1,1)
+	if linetype==1 then
 		local c = cfg.cothertext
-		local misccolor = convertColor(c[1],c[2],c[3])
-		if (sfind(text,"Allies: ") == 1) then
-			text = ssub(text,9)
-			if (names[name][1] == MyAllyTeamID) then
-				c = cfg.callytext
-			else
-				c = cfg.cotherallytext
-			end
-		elseif (sfind(text,"Spectators: ") == 1) then
-			text = ssub(text,13)
-			c = cfg.cspectext
-		end
-		
 		textcolor = convertColor(c[1],c[2],c[3])
-		local r,g,b,a = sGetTeamColor(names[name][3])
-		local namecolor = convertColor(r,g,b)
-		
-		line = namecolor..name..misccolor..": "..textcolor..text
-        
-        playSound = true
-		
-	elseif (linetype==2) then --spectatormessage
-		local c = cfg.cothertext
-		local misccolor = convertColor(c[1],c[2],c[3])
-		if (sfind(text,"Allies: ") == 1) then
-			text = ssub(text,9)
-			c = cfg.cspectext
-		elseif (sfind(text,"Spectators: ") == 1) then
-			text = ssub(text,13)
-			c = cfg.cspectext
-		end
-		textcolor = convertColor(c[1],c[2],c[3])
-		c = cfg.cspectext
-		local namecolor = convertColor(c[1],c[2],c[3])
-		
-		line = namecolor.."(s) "..name..misccolor..": "..textcolor..text
-		
-        playSound = true
-        
-	elseif (linetype==3) then --playerpoint
-		local c = cfg.cspectext
-		local namecolor = convertColor(c[1],c[2],c[3])
-		
-		local spectator = true
-		if (names[name] ~= nil) then
-			spectator = names[name][2]
-		end
-		if (spectator) then
-            name = "(s) "..name
-		else
-            local r,g,b,a = sGetTeamColor(names[name][3])
-            namecolor =  convertColor(r,g,b)
-		end
-		
-		c = cfg.cotherallytext
-		if (spectator) then
-			c = cfg.cspectext
-		elseif (names[name][1] == MyAllyTeamID) then
-			c = cfg.callytext
-		end
-		textcolor = convertColor(c[1],c[2],c[3])
-		c = cfg.cothertext
-		local misccolor = convertColor(c[1],c[2],c[3])
-		
-		line = namecolor..name..misccolor.." * "..textcolor..text
-		
-	elseif (linetype==4) then --gamemessage
-		local c = cfg.cgametext
-		textcolor = convertColor(c[1],c[2],c[3])
-		
-		line = textcolor.."> "..text
-	else --every other message
-		local c = cfg.cmisctext
-		textcolor = convertColor(c[1],c[2],c[3])
-		
-		line = textcolor..line
+		line = convertColor(1,1,1)..name..": "..textcolor..text
 	end
-	
-	if (g.vars.consolehistory == nil) then
-		g.vars.consolehistory = {}
-	end
-	local history = g.vars.consolehistory	
-
-
-	if (not ignoreThisMessage) then		--mute--
-		local lineID = #history+1	
-		history[#history+1] = {line,clock(),lineID,textcolor,linetype}
-        
-        if ( playSound ) then
-            spPlaySoundFile( SoundIncomingChat, SoundIncomingChatVolume, nil, "ui" )
-        end
-	end
-
-	return history[#history]
+	if (g.vars.consolehistory == nil) then g.vars.consolehistory = {} end
+	g.vars.consolehistory[#g.vars.consolehistory+1] = {line,clock(),#g.vars.consolehistory+1,textcolor,linetype}
+	return g.vars.consolehistory[#g.vars.consolehistory]
 end
+
+function convertColor(r,g,b) return schar(255, (r*255), (g*255), (b*255)) end
 
 local function updateconsole(g,cfg)
-	local forceupdate = g.vars._forceupdate
-	local justforcedupdate = g.vars._justforcedupdate
-	
-	if (forceupdate and (not justforcedupdate)) then
-		g.vars._justforcedupdate = true
-		g.vars._forceupdate = nil
-	else
-		g.vars._justforcedupdate = nil
-		g.vars._forceupdate = nil
-		
-		if (g.vars.nextupdate == nil) then
-			g.vars.nextupdate = 0
-		end
-		if ((g.vars.nextupdate < 0) or (clock() < g.vars.nextupdate)) then
-			return
-		end
-	end
-	
-	local skipagecheck = g.vars._skipagecheck
-	local usecounters = g.vars._usecounters
-	
-	local maxlines = cfg.maxlines
-	
-	local historyoffset = 0
-	if (g.vars.browsinghistory) then
-		if (g.vars.historyoffset == nil) then
-			g.vars.historyoffset = 0
-		end
-		historyoffset = g.vars.historyoffset
-		maxlines = cfg.maxlinesScrollmode
-	end
-	
-	if (usecounters == nil) then
-		usecounters = cfg.filterduplicates
-	end
-
-	
-	local counters = {}
-	for i=1,maxlines do
-		counters[i] = 1
-		if g.counters[i] == nil then
-			g.counters[i] = {}
-		end
-		g.counters[i].active = false
-		g.counters[i].caption = ""
-	end
-	
-	local maxage = cfg.maxage
-	local display = ""
-	local count = 0
-	local i=0
-	local lastID = 0
-	local lastLine = ""
-	
+	if (g.vars.nextupdate and g.vars.nextupdate > 0 and clock() < g.vars.nextupdate and not g.vars._forceupdate) then return end
+	g.vars._forceupdate = nil
+	local maxlines = g.vars.browsinghistory and cfg.maxlinesScrollmode or cfg.maxlines
 	local history = g.vars.consolehistory or {}
-
-	while (count < maxlines) do
-		if (history[#history-i-historyoffset]) then
-			local line = history[#history-i-historyoffset]
-			if (skipagecheck or ((clock()-line[2]) <= maxage)) then
-				if (count == 0) then
-					count = count + 1
-					display = line[1]
-				else
-					if (usecounters and (lastID > 0) and (lastID~=line[3]) and (line[1] == lastLine)) then
-						counters[count] = counters[count] + 1
-					else
-						count = count + 1
-						display = line[1].."\n"..display
-					end
-				end
-				
-				lastLine = line[1]
-				lastID = line[3]
-				
-				if (skipagecheck) then
-					g.vars.nextupdate = -1
-				else
-					g.vars.nextupdate = line[2]+maxage
-				end
-			else
-				break
-			end
-			i=i+1
-		else
-			break
+	local display, count = "", 0
+	local historyoffset = g.vars.historyoffset or 0
+	for i=0, maxlines-1 do
+		local line = history[#history-i-historyoffset]
+		if line and (g.vars._skipagecheck or (clock()-line[2] < cfg.maxage)) then
+			display = line[1] .. (display=="" and "" or "\n") .. display
+			count = count + 1
 		end
 	end
-	
-	if (usecounters) then
-		for i=1,#counters do
-			if (counters[i] ~= 1) then
-				local counter = count-i+1
-				g.counters[counter].active = nil
-				g.counters[counter].caption = counters[i].."x"
-			end
-		end
-	end
-	
-	if (count == 0) then
-		g.vars.nextupdate = -1 --no update until new console line
-		g.background.active = false
-		g.lines.active = false
-		g.vars._empty = true
-		g.background.sy = cfg.minlines*g.lines.fontsize + (g.lines.px-g.background.px)*2
+	if count == 0 then
+		g.background.active, g.lines.active = false, false
 	else
-		g.background.active = nil --activate
-		g.lines.active = nil --activate
-		g.vars._empty = nil
-		g.background.sy = count*g.lines.fontsize + (g.lines.px-g.background.px)*2
+		g.background.active, g.lines.active = nil, nil
+		g.background.sy = math.floor(count*cfg.fontsize + cfg.margin*2 + 0.5)
+		g.lines.caption = display
 	end
-	
-	g.lines.caption = display
-	g.lines.sx = 100
 end
 
-function widget:Initialize()
-	widgetHandler:EnableWidget("Red_UI_Framework")
-	widgetHandler:EnableWidget("Red_Drawing")
-	PassedStartupCheck = RedUIchecks()
-	if (not PassedStartupCheck) then return end
-	
-	console = createconsole(Config.console)
-	Spring.SendCommands("console 0")
-	Spring.SendCommands('inputtextgeo 0.26 0.73 0.02 0.028')
-	AutoResizeObjects()
-end
-
-function widget:GameOver()
-	gameOver = true
-end
-
-function widget:Shutdown()
-	Spring.SendCommands("console 1")
+-- GESTIONE TASTI SPRING 100
+function widget:KeyPress(key)
+	if key == 13 then -- Tasto INVIO
+		isChatting = not isChatting
+		if isChatting then
+			-- Quando apriamo la chat, forziamo l'aggiornamento immediato
+			local r = Config.console
+			local vsx, vsy = widgetHandler:GetViewSizes()
+			-- Usiamo i valori dal Config per il primo posizionamento
+			local x = (r.ancora_x + 10) / vsx
+			local y = (vsy - (vsy - r.ancora_y + (r.maxlines * r.fontsize) + r.input_offset_y) - r.input_sy + (r.input_sy * 0.35)) / vsy
+			local h = (r.input_sy * 0.2) / vsy
+			local aspect = (r.input_sx * 0.9) / (r.input_sy * 0.6)
+			
+			Spring.SendCommands(string.format('inputtextgeo %.4f %.4f %.4f %.4f', x, y, h, aspect))
+		else
+			-- Quando chiudiamo, nascondiamo il testo
+			Spring.SendCommands('inputtextgeo 0 -1 0 0')
+		end
+	elseif key == 27 then -- Tasto ESC
+		isChatting = false
+		Spring.SendCommands('inputtextgeo 0 -1 0 0')
+	end
 end
 
 function widget:AddConsoleLine(lines,priority)
+	isChatting = false -- Chiude il rettangolo quando si invia
 	lines = lines:match('^\[f=[0-9]+\] (.*)$') or lines
 	local textcolor
-	for line in lines:gmatch("[^\n]+") do
-		textcolor = processLine(line, console, Config.console, textcolor)[4]
-	end
+	for line in lines:gmatch("[^\n]+") do textcolor = processLine(line, console, Config.console, textcolor)[4] end
 	clipHistory(console,true)
+end
+
+function widget:Initialize()
+	if not RedUIchecks() then return end
+	console = createconsole(Config.console)
+	Spring.SendCommands("console 0")
+	Spring.SendCommands('inputtextgeo 0 -1 0 0')
+	AutoResizeObjects()
 end
 
 function widget:Update()
@@ -754,20 +407,11 @@ function widget:Update()
 	AutoResizeObjects()
 end
 
---save/load stuff
---currently only position
-function widget:GetConfigData() --save config
-	if (PassedStartupCheck) then
-		local vsy = Screen.vsy
-		local unscale = CanvasY/vsy --needed due to autoresize, stores unresized variables
-		Config.console.px = console.background.px * unscale
-		Config.console.py = console.background.py * unscale
-		return {Config=Config}
-	end
+function widget:GetConfigData()
+	local vsy = Screen.vsy
+	return {Config=Config}
 end
-function widget:SetConfigData(data) --load config
-	if (data.Config ~= nil) then
-		Config.console.px = data.Config.console.px
-		Config.console.py = data.Config.console.py
-	end
+
+function widget:SetConfigData(data)
+	if (data and data.Config) then Config = data.Config end
 end

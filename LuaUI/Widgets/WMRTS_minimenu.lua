@@ -82,8 +82,8 @@ local show_mainmenu						= false	 		 															-- is mainmenu active?
 local valore_resourcesmenu				= 0						-- assumera un valore in funzione delle impostazioni caricate nel springconfig... indica l'ultimo stato del "show map resources"
 
 -- definizioni immagini ON/OFF bottoni e background
-local mainminimenubutton_off = "LuaUI/Images/menu/minimenu/main_menu_off.png"
-local mainminimenubutton_on = "LuaUI/Images/menu/minimenu/main_menu_on.png"
+local mainminimenubutton_off = ":n:".."LuaUI/Images/menu/minimenu/main_menu_off.png"
+local mainminimenubutton_on = ":n:".."LuaUI/Images/menu/minimenu/main_menu_on.png"
 local statisticsbutton_off = "LuaUI/Images/menu/minimenu/statisticsbutton_off.png"
 local statisticsbutton_on = "LuaUI/Images/menu/minimenu/statisticsbutton_on.png"
 local objbutton_off = "LuaUI/Images/menu/minimenu/objbutton_off.png"

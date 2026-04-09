@@ -11,7 +11,6 @@ function widget:GetInfo()
 	handler   = true, --can use widgetHandler:x()
 	}
 end
--- 08/04/2026 -- modificato da molix, eliminato il fattore "scaling" per rendere più nitide le immagini. Utilizzati background images. 
 
 local stateTexture		= LUAUI_DIRNAME.."images/menu/resbar.dds"
 local buttonTexture		= LUAUI_DIRNAME.."images/menu/button.png"
@@ -22,10 +21,10 @@ local x_Nicon_build		= 5
 local y_Nicon_build		= 3
 local x_Nicon_order		= 4
 local y_Nicon_order		= 3
-local x_orderMenu		= 272
-local x_buildMenu		= 320	-- viene poi calcolato successivamente, e verrà dopo l'order menu
-local intButtonsX		= 1
-local intButtonsY		= 1
+local x_orderMenu		= 200
+local x_buildMenu		= 250	-- viene poi calcolato successivamente, e verrà dopo l'order menu
+local intButtonsX		= 0
+local intButtonsY		= 0
 local NeededFrameworkVersion = 9
 local CanvasX,CanvasY = 1272,734 --resolution in which the widget was made (for 1:1 size)
 --1272,734 == 1280,768 windowed
@@ -39,7 +38,7 @@ local Config = {
 		menuname = "buildmenu",
 		px = -0.5,py = CanvasY - 415, 	--default start position
 		ancora_x = x_orderMenu + 2* margine + x_Nicon_order * iconsdimensions + intButtonsX * x_Nicon_order+5,			-- posizione globale da sinistra
-		ancora_y = 165,					-- posizione globale dal fondo
+		ancora_y = 160,					-- posizione globale dal fondo
 		isx = iconsdimensions,
 		isy = iconsdimensions, 
 		ix = x_Nicon_build,				-- n° icone per riga
@@ -47,8 +46,8 @@ local Config = {
 		
 		roundedPercentage = 0.2,		-- 0.25 == iconsize / 4 == cornersize -- era 0.2
 		
-		iconscale = 1,
-		iconhoverscale = 1,
+		iconscale = 0.92,
+		iconhoverscale = 0.92,
 		ispreadx=intButtonsX,			--spazio tra le icone x
 		ispready=intButtonsY, 			--spazio tra le icone y
 		
@@ -61,9 +60,8 @@ local Config = {
 		fadetimeOut = 0.3, --fade effect time, in seconds
 		
 		ctext = {1,1,1,1}, --color {r,g,b,alpha}
-		cbackground = {0,0,0,0}, -- {0.03,0.18,0.3,0.5} lo nascondo per lasciar spazio all'immagine -- molix
-		cborder = {0,0,0,0},  -- bordo del riquadro esterno era azzurro {0,0.67,0.99,1} lo nascondo per lasciar spazio all'immagine -- molix
-		background_texture = ":n:"..LUAUI_DIRNAME.."images/menu/buildmenu/build_bkgnd.png", -- ############## todo ################ impostare small, medium, big ecc le varie taglie dimensionali. molix
+		cbackground = {0.03,0.18,0.3,0.5}, -- {0.03,0.18,0.3,0.5} 
+		cborder = {0,0.67,0.99,1},  -- bordo del riquadro esterno
 		cbuttonbackground = {0.1,0.1,0.1,0.5},
 		dragbutton = {2}, --middle mouse button
 		tooltip = {
@@ -77,7 +75,7 @@ local Config = {
 		py = CanvasY - 415 - 145,
 --		ancora_x = 205,			-- posizione globale da sinistra
 		ancora_x = x_orderMenu,
-		ancora_y = 165,			-- posizione globale dal fondo		
+		ancora_y = 160,			-- posizione globale dal fondo		
 		isx = iconsdimensions,
 		isy = iconsdimensions,
 		ix = x_Nicon_order,		-- n° icone per riga
@@ -85,8 +83,8 @@ local Config = {
 		
 		roundedPercentage = 0.2,	-- 0.25 == iconsize / 4 == cornersize
 		
-		iconscale = 1,
-		iconhoverscale = 1,
+		iconscale = 0.92,
+		iconhoverscale = 0.92,
 		ispreadx=intButtonsX,		--spazio tra le icone x
 		ispready=intButtonsY, 		--spazio tra le icone y
 		
@@ -99,9 +97,8 @@ local Config = {
 		fadetimeOut = 0.3, --fade effect time, in seconds
 		
 		ctext = {1,1,1,1},
-		cbackground = {0,0,0,0}, -- {0.03,0.18,0.3,0.5} lo nascondo per lasciar spazio all'immagine -- molix
-		cborder = {0,0,0,0},  -- bordo del riquadro esterno era azzurro {0,0.67,0.99,1} lo nascondo per lasciar spazio all'immagine -- molix
-		background_texture = ":n:"..LUAUI_DIRNAME.."images/menu/buildmenu/order_bkgnd.png", -- ############## todo ################ impostare small, medium, big ecc le varie taglie dimensionali. molix
+		cbackground = {0.03,0.18,0.3,0.5}, -- riquadro esterno
+		cborder = {0,0.67,0.99,1},
 		cbuttonbackground={0.1,0.1,0.1,0.2},
 		
 		dragbutton = {2}, --middle mouse button
@@ -232,11 +229,11 @@ local function AutoResizeObjects() -- autoresize v3 (Fixed Spacing)
 --				if (o.py) then o.py = o.py * scale end -- originale
 --				if (o.py) then o.py = vsy-150 end  -- funzionante ma per tutti i menu (inserire if then ecc)
                if (o.ancora_x) then 
-                    o.px = math.floor(o.ancora_x + 0.5) --o.px = o.ancora_x  -- Fissato a sinistra (es. 10px)
+                    o.px = o.ancora_x  -- Fissato a sinistra (es. 10px)
                 end
                 
                 if (o.ancora_y) then 
-                    o.py = math.floor(vsy - o.ancora_y + 0.5) --o.py = vsy - o.ancora_y -- Fissato dal fondo (es. vsy - 150)
+                    o.py = vsy - o.ancora_y -- Fissato dal fondo (es. vsy - 150)
                 end
 
 				
@@ -249,8 +246,8 @@ local function AutoResizeObjects() -- autoresize v3 (Fixed Spacing)
 					
 					for j=1,#o.movableslaves do
 						local s = o.movableslaves[j]
-						if (s.px) then s.px = math.floor(s.px + dx + 0.5) end --if (s.px) then s.px = s.px + dx end
-						if (s.py) then s.py = math.floor(s.py + dy + 0.5) end --if (s.py) then s.py = s.py + dy end
+						if (s.px) then s.px = s.px + dx end
+						if (s.py) then s.py = s.py + dy end
 						-- Dimensioni e font degli slave restano invariati (pixel fissi)
 					end
 				end
@@ -286,12 +283,10 @@ local function CreateGrid(r)
 --		sy=(r.isy*(r.iy)+r.ispready*(r.iy) +r.margin*2) -r.padding -r.padding,
 --		color=r.color2,
 --	}
-	local background = {"rectangle",
+	local background = {"rectanglerounded",
 		px=r.px,py=r.py,
 		sx=r.isx*r.ix+r.ispreadx*(r.ix-1) +r.margin*2,
 		sy=r.isy*(r.iy)+r.ispready*(r.iy) +r.margin*2,
-        texture = r.background_texture,
-        texturecolor = {1,1,1,1}, 		
 		color=r.cbackground,
 		border=r.cborder,
 		movable=r.dragbutton,
