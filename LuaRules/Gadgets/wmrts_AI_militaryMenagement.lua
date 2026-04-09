@@ -107,11 +107,11 @@ local SQUAD_TEMPLATES = {
 ---------------
 -- armlab
 	["ICU_armlab_light_patrol_1"] = {
-		units = { "icupatroller", "icupatroller", "icurock", "icurock" }, 
+		units = { "icupatroller", "icupatroller", "icurock", "icurock", "armjeth" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["ICU_armlab_light_patrol_2"] = {
-		units = { "icuwar", "icupatroller", "icurock", "icurock" },				
+		units = { "icuwar", "icupatroller", "icurock", "icurock", "armjeth" },				
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
 -- armvp	
@@ -142,11 +142,11 @@ local SQUAD_TEMPLATES = {
 --	}
 -- armalab
 	["ICU_armalab_light_patrol_1"] = {
-		units = { "armfast", "armfast", "armfast" }, 
+		units = { "armfast", "armfast", "armfast", "armaak" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["ICU_armalab_light_patrol_2"] = {
-		units = { "armfast", "armfast", "armzeus" }, 
+		units = { "armfast", "armfast", "armzeus", "armaak" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
 -- armavp
@@ -173,11 +173,11 @@ local SQUAD_TEMPLATES = {
 ---------------
 -- corlab
 	["NFA_corlab_light_patrol_1"] = {
-		units = { "nfaak", "nfaak", "nfastorm", "nfastorm" }, 
+		units = { "nfaak", "nfaak", "nfastorm", "nfastorm", "corcrash" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["NFA_corlab_light_patrol_2"] = {
-		units = { "nfathud", "nfaak", "nfastorm", "nfastorm" },				
+		units = { "nfathud", "nfaak", "nfastorm", "nfastorm", "corcrash" },				
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
 -- corvp	
@@ -208,11 +208,11 @@ local SQUAD_TEMPLATES = {
 --	}
 -- coralab
 	["NFA_coralab_light_patrol_1"] = {
-		units = { "nfapyro", "nfapyro", "nfapyro" }, 
+		units = { "nfapyro", "nfapyro", "nfapyro", "coraak" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["NFA_coralab_light_patrol_2"] = {
-		units = { "nfapyro", "nfapyro", "corcan" }, 
+		units = { "nfapyro", "nfapyro", "corcan", "coraak" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
 -- coravp
@@ -239,11 +239,11 @@ local SQUAD_TEMPLATES = {
 ---------------
 -- andlab
 	["AND_andlab_light_patrol_1"] = {
-		units = { "andscouter", "andscouter", "andspmis", "andspmis" }, 
+		units = { "andscouter", "andscouter", "andspmis", "andspmis", "andspaa" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["AND_andlab_light_patrol_2"] = {
-		units = { "anddauber", "andscouter", "andspmis", "andspmis" },				
+		units = { "anddauber", "andscouter", "andspmis", "andspmis", "andspaa" },				
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
 -- andhp	
@@ -283,11 +283,11 @@ local SQUAD_TEMPLATES = {
 	},	
 -- andahp
 	["AND_andahp_light_patrol_1"] = {
-		units = { "armmart", "armmart", "armlatnk" }, 
+		units = { "armmart", "armmart", "armlatnk", "andahaa" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["AND_andahp_light_patrol_2"] = {
-		units = { "armlatnk", "armlatnk"}, 
+		units = { "armlatnk", "armlatnk", "andahaa"}, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
 -- andaplat
@@ -309,11 +309,11 @@ local SQUAD_TEMPLATES = {
 ---------------
 -- armlab
 	["ICU_armlab_medium_patrol_1"] = {
-		units = { "icuwar", "icuwar", "icuwar", "icurock", "icurock" , "icurock", "icuinv", "armjeth"  }, 
+		units = { "icuwar", "icuwar", "icuwar", "icurock", "icurock" , "icurock", "icuinv", "armjeth", "armjeth"  }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["ICU_armlab_medium_patrol_2"] = {
-		units = { "icuwar", "icuwar", "icurock", "icurock", "icurock", "icurock", "armjeth", "icuinv", "icuinv" },				
+		units = { "icuwar", "icuwar", "icurock", "icurock", "icurock", "icurock", "armjeth", "icuinv", "icuinv", "armjeth" },				
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
 -- armvp	
@@ -348,13 +348,17 @@ local SQUAD_TEMPLATES = {
 --	}
 -- armalab
 	["ICU_armalab_medium_patrol_1"] = {
-		units = { "icufboy", "icufboy", "icufboy", "armaak", "icufboy", "icufboy", "armfido" }, 
+		units = { "icufboy", "icufboy", "icufboy", "armaak", "icufboy", "icufboy", "armfido", "armaak" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["ICU_armalab_medium_patrol_2"] = {
-		units = { "armsptk", "armsptk", "armsptk", "armsptk", "armsptk", "armaak", "armsptk", "armsptk" }, 
+		units = { "armsptk", "armsptk", "armsptk", "armsptk", "armsptk", "armaak", "armsptk", "armsptk", "armaak" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
+	["ICU_armalab_medium_patrol_3"] = {
+		units = { "icufboy", "armaak", "icufboy", "icufboy", "armaak" }, 
+		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+	},		
 -- armavp
 	["ICU_armavp_medium_patrol_1"] = {
 		units = { "armmart", "armmart", "armyork", "armmart", "armmart", "armmart", "armmart", "armmart", "armmart", "icubull", "icubull" }, 
@@ -446,11 +450,11 @@ local SQUAD_TEMPLATES = {
 ---------------
 -- corlab
 	["NFA_corlab_medium_patrol_1"] = {
-		units = { "nfathud", "nfathud", "nfathud", "nfastorm", "nfastorm" , "nfastorm", "nfathud", "corcrash"  }, 
+		units = { "nfathud", "nfathud", "nfathud", "nfastorm", "nfastorm" , "nfastorm", "nfathud", "corcrash", "corcrash"  }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["NFA_corlab_medium_patrol_2"] = {
-		units = { "nfathud", "nfathud", "nfastorm", "nfastorm", "nfastorm", "nfastorm", "corcrash", "nfathud", "nfathud" },				
+		units = { "nfathud", "nfathud", "nfastorm", "nfastorm", "nfastorm", "nfastorm", "corcrash", "nfathud", "nfathud", "corcrash" },				
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
 -- corvp	
@@ -485,15 +489,15 @@ local SQUAD_TEMPLATES = {
 --	}
 -- coralab
 	["NFA_coralab_medium_patrol_1"] = {
-		units = { "corcan", "corsumo", "corsumo", "coraak", "corhrk", "corhrk", "cormort" }, 
+		units = { "corcan", "corsumo", "corsumo", "coraak", "corhrk", "corhrk", "cormort", "coraak" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["NFA_coralab_medium_patrol_2"] = {
-		units = { "cormort", "cormort", "cormort", "cormort", "cormort", "coraak", "cormort", "cormort" }, 
+		units = { "cormort", "cormort", "cormort", "cormort", "cormort", "coraak", "cormort", "cormort", "coraak" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
 	["NFA_coralab_medium_patrol_3"] = {
-		units = { "corsumo", "corsumo", "corsumo", "coraak", "corsumo" }, 
+		units = { "corsumo", "corsumo", "corsumo", "coraak", "corsumo", "coraak" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
 -- coravp
@@ -577,11 +581,11 @@ local SQUAD_TEMPLATES = {
 ---------------
 -- andlab
 	["AND_andlab_medium_patrol_1"] = {
-		units = { "anddauber", "anddauber", "andbrskr", "andspmis", "andspmis" , "andspmis", "andspaa", "andbrskr"  }, 
+		units = { "anddauber", "anddauber", "andbrskr", "andspmis", "andspmis" , "andspmis", "andspaa", "andbrskr", "andspaa"  }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["AND_andlab_medium_patrol_2"] = {
-		units = { "anddauber", "andbrskr", "andspmis", "andspmis", "andspmis", "andspmis", "andbrskr", "andspaa", "anddauber" },				
+		units = { "anddauber", "andbrskr", "andspmis", "andspmis", "andspmis", "andspmis", "andbrskr", "andspaa", "anddauber", "andspaa" },				
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
 -- andhp	
@@ -625,15 +629,15 @@ local SQUAD_TEMPLATES = {
 	},	
 -- andahp
 	["AND_andahp_medium_patrol_1"] = {
-		units = { "androck", "androck", "andahaa", "androck", "androck", "androck", "androck", "androck", "androck", "andtanko", "andtanko" }, 
+		units = { "androck", "androck", "andahaa", "androck", "androck", "androck", "androck", "androck", "androck", "andtanko", "andtanko", "andahaa" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["AND_andahp_medium_patrol_2"] = {
-		units = { "andnikola", "andnikola", "andtanko", "andtanko", "androck", "andahaa"}, 
+		units = { "andnikola", "andahaa", "andnikola", "andtanko", "andtanko", "androck", "andahaa"}, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
 	["AND_andahp_medium_patrol_3"] = {
-		units = { "andnikola", "andnikola", "andtanko", "andtanko", "androck", "andahaa", "andnikola", "andtanko", "andtanko"}, 
+		units = { "andnikola", "andnikola", "andtanko", "andtanko", "androck", "andahaa", "andnikola", "andtanko", "andtanko", "andahaa"}, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},		
 -- andaplat
@@ -734,7 +738,7 @@ local function GetConfigPerLivello(livello) -- Questa funzione restituisce, per 
             ["armlab"] = { "ICU_armlab_medium_patrol_1", "ICU_armlab_medium_patrol_2" },
             ["armvp"] = { "ICU_armvp_medium_patrol_1", "ICU_armvp_medium_patrol_2" },
             ["armap"]  = { "ICU_armap_air_mediumraid_1", "ICU_armap_antiair_mediumraid_1","ICU_armap_air_mediumbomber_1","ICU_armap_air_mediumstrategicbomber_1" },
-            ["armalab"] = { "ICU_armalab_medium_patrol_1", "ICU_armalab_medium_patrol_2" },			
+            ["armalab"] = { "ICU_armalab_medium_patrol_1", "ICU_armalab_medium_patrol_2", "ICU_armalab_medium_patrol_3"},			
             ["armavp"] = { "ICU_armavp_medium_patrol_1", "ICU_armavp_medium_patrol_2", "ICU_armavp_medium_patrol_3", "ICU_armavp_medium_patrol_4" },
             ["armaap"]  = { "ICU_armaap_medium_patrol_1", "ICU_armaap_medium_patrol_2","ICU_armaap_air_bomber_1","ICU_armaap_air_bomber_2", "ICU_armaap_air_bomber_3" },		
             ["icugant"] = { "ICU_icugant_medium_patrol_1", "ICU_icugant_medium_patrol_2", "ICU_icugant_medium_patrol_3" },		
@@ -744,7 +748,7 @@ local function GetConfigPerLivello(livello) -- Questa funzione restituisce, per 
             ["corlab"] = { "NFA_corlab_medium_patrol_1", "NFA_corlab_medium_patrol_2" },
             ["corvp"] = { "NFA_corvp_medium_patrol_1", "NFA_corvp_medium_patrol_2" },
             ["corap"]  = { "NFA_corap_air_mediumraid_1", "NFA_corap_antiair_mediumraid_1","NFA_corap_air_mediumbomber_1","NFA_corap_air_mediumstrategicbomber_1" },
-            ["coralab"] = { "NFA_coralab_medium_patrol_1", "NFA_coralab_medium_patrol_2" },			
+            ["coralab"] = { "NFA_coralab_medium_patrol_1", "NFA_coralab_medium_patrol_2", "NFA_coralab_medium_patrol_3" },			
             ["coravp"] = { "NFA_coravp_medium_patrol_1", "NFA_coravp_medium_patrol_2", "NFA_coravp_medium_patrol_3", "NFA_coravp_medium_patrol_4" },
             ["coraap"]  = { "NFA_coraap_medium_patrol_1", "NFA_coraap_medium_patrol_2","NFA_coraap_air_bomber_1","NFA_coraap_air_bomber_2", "NFA_coraap_air_bomber_3" },		
             ["corgant"] = { "NFA_corgant_medium_patrol_1", "NFA_corgant_medium_patrol_2", "NFA_corgant_medium_patrol_3", "NFA_corgant_medium_patrol_4", "NFA_corgant_medium_patrol_5", "NFA_corgant_medium_patrol_6" },					
