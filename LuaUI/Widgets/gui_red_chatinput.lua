@@ -1,0 +1,152 @@
+function widget:GetInfo()
+	return {
+		name      = "Red Chat Input",
+		desc      = "Custom chat input field with Layout Selector",
+		author    = "molix",
+		date      = "2026",
+		license   = "GNU GPL, v2 or later",
+		layer     = -1, 
+		enabled   = true,
+		handler   = true,
+	}
+end
+-- 09/04/2026 aggiunto chatinput box molix
+-- TODO
+-- creare background personalizzato sfumato a destra ( se scrivo un testo infinito, il testo esce dall'attuale box, se è sfumato, da l'impressione che prosegue all'infinito
+-- OPPURE
+-- bloccare il testo o scalarlo, ma preferisco la prima. Molix
+--------------------------------------------------------------------------------
+-- CONFIGURAZIONE LAYOUT
+--------------------------------------------------------------------------------
+local layoutScelto = "IT"  -- "IT" per layout di tastiera Italiano, "US" per layout di tastiera Americano
+--------------------------------------------------------------------------------
+
+local isChatActive = false
+local inputString = ""
+local CanvasX, CanvasY = 1280, 734
+
+local Config = {
+	chat = {
+		sx = 516, sy = 25,
+		ancora_x = 7,
+		ancora_y = 195,
+		fontsize = 14,
+		margin = 6,
+		cbackground = {0.03,0.18,0.3,0.5}, 
+		cborder = {0,0.67,0.99,1},
+		ctext = {1, 1, 1, 1},
+	},
+}
+
+local chatBG, chatTxt
+
+function widget:KeyRelease(key)
+	if isChatActive then
+		if key == 8 then -- Backspace
+			return true  -- Blocca il rilascio del tasto
+		end
+	end
+end
+
+function widget:Initialize()
+	if (type(WG.Red)~="table") then return end
+	local New = WG.Red.New(widget)
+	Spring.SendCommands("inputtextgeo 0 0 0 0")
+
+	chatBG = New({"rectangle",
+		px=0, py=0, sx=Config.chat.sx, sy=Config.chat.sy,
+		color=Config.chat.cbackground, border=Config.chat.cborder,
+		active = false,
+	})
+	chatTxt = New({"text",
+		px=0, py=0, fontsize=Config.chat.fontsize,
+		caption="", color=Config.chat.ctext, options="o",
+		active = false,
+	})
+end
+
+function widget:Update()
+	local vsx, vsy = widgetHandler:GetViewSizes()
+	local r = Config.chat
+	if chatBG and chatTxt then
+		chatBG.px = math.floor(r.ancora_x + 0.5)
+		chatBG.py = math.floor(vsy - r.ancora_y + 0.5)
+		chatTxt.px = chatBG.px + r.margin
+		chatTxt.py = chatBG.py + r.margin
+		if isChatActive then
+			local cursor = (math.floor(os.clock()*3)%2==0) and "_" or ""
+			chatTxt.caption = "\255\255\255\0Chat: \255\255\255\255" .. inputString .. cursor
+		end
+	end
+end
+
+-- TABELLE MAPPATURA
+local keyMap = {
+	[32] = " ", [44] = ",", [46] = ".", [45] = "-", [39] = "'", [60] = "<", [91] = "[", [92] = "\\", [93] = "]",
+	[48] = "0", [49] = "1", [50] = "2", [51] = "3", [52] = "4", [53] = "5", [54] = "6", [55] = "7", [56] = "8", [57] = "9",
+	[97] = "a", [98] = "b", [99] = "c", [100] = "d", [101] = "e", [102] = "f", [103] = "g", [104] = "h", [105] = "i", [106] = "j", [107] = "k", [108] = "l", [109] = "m", [110] = "n", [111] = "o", [112] = "p", [113] = "q", [114] = "r", [115] = "s", [116] = "t", [117] = "u", [118] = "v", [119] = "w", [120] = "x", [121] = "y", [122] = "z",
+}
+
+-- Aggiunta tasti accentati per layout IT
+if layoutScelto == "IT" then
+	keyMap[242] = "ò" keyMap[224] = "à" keyMap[249] = "ù" keyMap[236] = "ì" keyMap[232] = "è" keyMap[233] = "é"
+end
+
+local shiftMapUS = {
+	["1"]="!", ["2"]="@", ["3"]="#", ["4"]="$", ["5"]="%", ["6"]="^", ["7"]="&", ["8"]="*", ["9"]="( ", ["0"]=")",
+	["-"]="_", ["="]="+", ["["]="{", ["]"]="}", ["\\"]="|", [";"]=":", ["'"]="\"", [","]="<", ["."]=">", ["/"]="?"
+}
+
+local shiftMapIT = {
+	["1"]="!", ["2"]='"', ["3"]="£", ["4"]="$", ["5"]="%", ["6"]="&", ["7"]="/", ["8"]="( ", ["9"]=")", ["0"]="=",
+	["'"]="?", ["-"]="_", [","]=";", ["."]=":", ["<"]=">", ["à"]="°", ["ò"]="@", ["ù"]="§", ["è"]="é", ["ì"]="^"
+}
+
+function widget:KeyPress(key, modifier, isRepeat)
+	if key == 13 or key == 271 then 
+		if not isChatActive then
+			isChatActive = true
+			inputString = ""
+			chatBG.active = true
+			chatTxt.active = true
+			return true
+		else
+			if inputString ~= "" then Spring.SendCommands("say " .. inputString) end
+			isChatActive = false
+			chatBG.active = false
+			chatTxt.active = false
+			inputString = ""
+			return true
+		end
+	end
+
+	if isChatActive then
+		if key == 27 then -- ESC
+			isChatActive = false chatBG.active = false chatTxt.active = false inputString = "" return true
+		end
+		if key == 8 then -- BACKSPACE
+			local b = inputString:byte(-1)
+			if b and b >= 128 and b <= 191 then inputString = inputString:sub(1, -3) else inputString = inputString:sub(1, -2) end
+			return true
+		end
+
+		local char = keyMap[key]
+		if char then
+			if modifier.shift then
+				local sMap = (layoutScelto == "IT") and shiftMapIT or shiftMapUS
+				if sMap[char] then char = sMap[char] else char = char:upper() end
+			end
+			inputString = inputString .. char
+			return true
+		end
+		return true 
+	end
+end
+
+function widget:TextInput(utf8char)
+	if isChatActive then return true end
+end
+
+function widget:Shutdown()
+	Spring.SendCommands("inputtextgeo 0.26 0.73 0.02 0.028")
+end
