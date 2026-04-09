@@ -11,6 +11,10 @@ function widget:GetInfo()
 	}
 end
 -- 09/04/2026 aggiunto chatinput box molix
+-- TODO
+-- creare background personalizzato sfumato a destra ( se scrivo un testo infinito, il testo esce dall'attuale box, se è sfumato, da l'impressione che prosegue all'infinito
+-- OPPURE
+-- bloccare il testo o scalarlo, ma preferisco la prima. Molix
 --------------------------------------------------------------------------------
 -- CONFIGURAZIONE LAYOUT
 --------------------------------------------------------------------------------
@@ -50,13 +54,9 @@ function widget:Initialize()
 	local New = WG.Red.New(widget)
 	Spring.SendCommands("inputtextgeo 0 0 0 0")
 
-chatBG = New({"rectangle",
-		px=0, py=0, 
-		sx=Config.chat.sx, sy=Config.chat.sy,
-		color={0,0,0,0}, 
-		texture = Config.chat.background_texture,
-		texturecolor = {1,1,1,1}, 
-		border={0,0,0,0}, 
+	chatBG = New({"rectangle",
+		px=0, py=0, sx=Config.chat.sx, sy=Config.chat.sy,
+		color=Config.chat.cbackground, border=Config.chat.cborder,
 		active = false,
 	})
 	chatTxt = New({"text",
