@@ -180,6 +180,8 @@ local function createminimap(r)
 	local minimap = {"rectangle",
 		px=r.px,py=r.py,
 		sx=r.sx,sy=r.sy,
+		color={0,0,0,0.1},
+		bordersize=3, 
 		border=r.cborder,
 		obeyscreenedge = true,
 		ancora_x = r.ancora_x,
@@ -384,10 +386,12 @@ function widget:Update()
 
 	AutoResizeObjects()
 	if ((lastPos.px ~= rMinimap.px) or (lastPos.py ~= rMinimap.py) or (lastPos.sx ~= rMinimap.sx) or (lastPos.sy ~= rMinimap.sy) or sceduleMinimapGeometry) then
-		local out_px = math.floor(rMinimap.px + 0.5)
-		local out_py = math.floor(rMinimap.py + 0.5)
-		local out_sx = math.floor(rMinimap.sx + 0.5)
-		local out_sy = math.floor(rMinimap.sy + 0.5)
+		local borderPadding = 2 -- Distanza in pixel tra la mappa e il bordo esterno
+		
+		local out_px = math.floor(rMinimap.px + 0.5) + borderPadding
+		local out_py = math.floor(rMinimap.py + 0.5) + borderPadding
+		local out_sx = math.floor(rMinimap.sx + 0.5) - (borderPadding * 2)
+		local out_sy = math.floor(rMinimap.sy + 0.5) - (borderPadding * 2)
 		
 		sSendCommands(sformat("minimap geometry %i %i %i %i",
 		out_px,
