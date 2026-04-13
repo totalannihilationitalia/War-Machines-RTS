@@ -59,6 +59,37 @@ local function IncludeRedUIFrameworkFunctions()
 	GetWidgetObjects = WG.Red.GetWidgetObjects
 end
 
+local function WrapText(text, maxWidth, fontSize)
+	if not text or text == "" then return "" end
+	local lines = {}
+	
+	-- Split del testo per linee esistenti (se ci sono già dei \n nel tooltip originale)
+	for line in text:gmatch("([^\n]*)\n?") do
+		local words = {}
+		for word in line:gmatch("([^%s]+)%s*") do
+			table.insert(words, word)
+		end
+		
+		local currentLine = ""
+		for i, word in ipairs(words) do
+			local testLine = currentLine == "" and word or (currentLine .. " " .. word)
+			
+			-- Usiamo gl.GetTextWidth che è lo standard di Spring
+			-- maxWidth viene confrontato con la larghezza calcolata
+			if (gl.GetTextWidth(testLine) * fontSize) > maxWidth then
+				table.insert(lines, currentLine)
+				currentLine = word
+			else
+				currentLine = testLine
+			end
+		end
+		if currentLine ~= "" then
+			table.insert(lines, currentLine)
+		end
+	end
+	return table.concat(lines, "\n")
+end
+
 local function RedUIchecks()
 	local color = "\255\255\255\1"
 	local passed = true
@@ -178,20 +209,8 @@ local function getEditedCurrentTooltip()
 	local expPattern = "Experience (%d+%.%d%d)" 
 	local currentExp = tonumber(text:match(expPattern)) 
 	--replace with limexp: exp/(1+exp) since all spring exp effects are linear in limexp, multiply by 10 because people like big numbers instead of [0,1] 
-local function truncateText(caption, maxWidth, fontsize)
-	local width = gl.GetTextWidth(caption) * fontsize
-	if width <= maxWidth then
-		return caption
-	end
-	local truncated = caption
-	while #truncated > 0 do
-		truncated = truncated:sub(1, -1)
-		if gl.GetTextWidth(truncated .. "...") * fontsize <= maxWidth then
-			return truncated .. "..."
-		end
-	end
-	return "..."
-end
+	return currentExp and text:gsub(expPattern,string.format("XP ".. OrangeStr .. "%.2f" .. WhiteStr, currentExp)  ) or text 
+end 
 
 local function createtooltip(r)
 	local text = {"text",
@@ -201,29 +220,26 @@ local function createtooltip(r)
 		caption="",
 		options="o",
 		
-				-- add gui shader	
-
-		
-		
 		onupdate=function(self)
 			local unitcount = sGetSelectedUnitsCount()
+			local rawText = ""
 			if (unitcount ~= 0) then
-				self.caption = "Selected units: "..unitcount.."\n"
+				rawText = "Selected units: "..unitcount.."\n"
 			else
-				self.caption = "\n"
+				rawText = "\n"
 			end
 		
 			if (self._mouseoverself) then
-				self.caption = self.caption..r.tooltip.background
+				rawText = rawText..r.tooltip.background
 			else
-				self.caption = self.caption..(getEditedCurrentTooltip() or sGetCurrentTooltip()) 
+				rawText = rawText..(getEditedCurrentTooltip() or sGetCurrentTooltip()) 
 			end
-			-- Truncate text to fit within fixed width
-			local maxWidth = r.sx - 2 * r.margin
-			self.caption = truncateText(self.caption, maxWidth, r.fontsize)
+            
+            -- Applichiamo il wrapping: maxWidth è la larghezza del box meno i margini
+            local maxWidth = r.sx - (r.margin * 2)
+            self.caption = WrapText(rawText, maxWidth, r.fontsize)
 		end
 	}
-	
 	
 	local unitcounter = {"text",
 		px=r.sx-(r.margin/2),py=r.py+(r.margin/2),
@@ -234,36 +250,25 @@ local function createtooltip(r)
 		
 		onupdate=function(self)
 			if Config.tooltip.unitCounterEnabled then
-				-- get total unit count
 				if Spring.GetGameFrame() % 60 == 0 then
 					totalUnits = 0
 					local allyTeamList = Spring.GetAllyTeamList()
-					local numberOfAllyTeams = #allyTeamList
-					for allyTeamListIndex = 1, numberOfAllyTeams do
-						local allyID = allyTeamList[allyTeamListIndex]
+					for _, allyID in pairs(allyTeamList) do
 						local teamList = Spring.GetTeamList(allyID)
 						for _,teamID in pairs(teamList) do
 							totalUnits = totalUnits + spGetTeamUnitCount(teamID)
 						end
 					end
-					local alpha = (totalUnits/6600)
-					if alpha > 0.66 then alpha = 0.66 end
-					if alpha < 0.2 then alpha = 0.2 end
+					local alpha = math.max(0.2, math.min(0.66, totalUnits/6600))
 					self.color={1,1,1,alpha}
 				end
 				self.caption = totalUnits
-				vsx,vsy = gl.GetViewSizes()
-				
 			else
 				self.caption = ""
 			end
 		end
 	}
---	local background2 = {"rectanglerounded",
---		px=r.px+r.padding,py=r.py+r.padding,
---		sx=r.sx-r.padding-r.padding,sy=r.sy-r.padding-r.padding,
---		color=r.color2,
---	}
+
 	local background = {"rectangle",
 		px=r.px,py=r.py,
 		sx=r.sx,sy=r.sy,
@@ -274,22 +279,26 @@ local function createtooltip(r)
 		ancora_x = r.ancora_x,
 		ancora_y = r.ancora_y,		
 		padding=r.padding,
-		
 		movable=r.dragbutton,
---		movableslaves={text,unitcounter,background2}, rimuovo
-		
 		obeyscreenedge = true,
-		--overridecursor = true,
-		--overrideclick = {2},
 		
-		onupdate=function(self)
-			-- Fixed width to prevent overlapping with other UI elements
+onupdate=function(self)
+			-- Manteniamo la larghezza fissa impostata nel Config
 			self.sx = math.floor(r.sx + 0.5)
-			if (self.px < (Screen.vsx/2)) then --left side of screen
-				text.px = math.floor(self.px + r.margin + 0.5)
-			else --right side of screen
-				text.px = math.floor(self.px + r.margin + 0.5)
-			end
+			
+			-- Calcoliamo quante righe ci sono per espandere il box in verticale
+			local textObject = self.movableslaves[1] -- l'oggetto 'text'
+			local _, lineCount = textObject.caption:gsub("\n", "\n")
+			lineCount = lineCount + 1
+			
+			-- Calcolo altezza dinamica: (numero righe * dimensione font * spaziatura) + margini
+			local newHeight = (lineCount * r.fontsize * 1.2) + (r.margin * 2)
+			
+			-- Applichiamo l'altezza minima del config o quella calcolata
+			self.sy = math.max(r.sy, newHeight)
+
+			-- Allineamento testo
+			text.px = math.floor(self.px + r.margin + 0.5)
 			unitcounter.px = math.floor(self.px + self.sx - (r.margin/2) + 0.5)
 		end,
 		
@@ -304,16 +313,13 @@ local function createtooltip(r)
 	background.movableslaves = {text, unitcounter}
 	
 	New(background)
---	New(background2)
 	New(text)
 	New(unitcounter)
 	
 	return {
 		["background"] = background,
---		["background2"] = background2,
 		["text"] = text,
 		["unitcounter"] = unitcounter,
-		
 		margin = r.margin,
 	}
 end
