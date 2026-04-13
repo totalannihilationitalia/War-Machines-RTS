@@ -178,20 +178,8 @@ local function getEditedCurrentTooltip()
 	local expPattern = "Experience (%d+%.%d%d)" 
 	local currentExp = tonumber(text:match(expPattern)) 
 	--replace with limexp: exp/(1+exp) since all spring exp effects are linear in limexp, multiply by 10 because people like big numbers instead of [0,1] 
-local function truncateText(caption, maxWidth, fontsize)
-	local width = gl.GetTextWidth(caption) * fontsize
-	if width <= maxWidth then
-		return caption
-	end
-	local truncated = caption
-	while #truncated > 0 do
-		truncated = truncated:sub(1, -1)
-		if gl.GetTextWidth(truncated .. "...") * fontsize <= maxWidth then
-			return truncated .. "..."
-		end
-	end
-	return "..."
-end
+	return currentExp and text:gsub(expPattern,string.format("XP ".. OrangeStr .. "%.2f" .. WhiteStr, currentExp)  ) or text 
+end 
 
 local function createtooltip(r)
 	local text = {"text",
@@ -218,9 +206,6 @@ local function createtooltip(r)
 			else
 				self.caption = self.caption..(getEditedCurrentTooltip() or sGetCurrentTooltip()) 
 			end
-			-- Truncate text to fit within fixed width
-			local maxWidth = r.sx - 2 * r.margin
-			self.caption = truncateText(self.caption, maxWidth, r.fontsize)
 		end
 	}
 	
@@ -283,14 +268,29 @@ local function createtooltip(r)
 		--overrideclick = {2},
 		
 		onupdate=function(self)
-			-- Fixed width to prevent overlapping with other UI elements
-			self.sx = math.floor(r.sx + 0.5)
 			if (self.px < (Screen.vsx/2)) then --left side of screen
-				text.px = math.floor(self.px + r.margin + 0.5)
+				if ((self.sx-r.margin*2) <= text.getwidth()) then
+					self.sx = math.floor(text.getwidth()+r.margin*2) -- self.sx = (text.getwidth()+r.margin*2) -1
+				else
+					self.sx = math.floor(r.sx + 0.5) --self.sx = r.sx * Screen.vsy/CanvasY
+				end
+				text.px = math.floor(self.px + r.margin + 0.5) --text.px = self.px + r.margin
 			else --right side of screen
-				text.px = math.floor(self.px + r.margin + 0.5)
+				if ((self.sx-r.margin*2 -1) <= text.getwidth()) then
+					self.px = math.floor(self.px - ((text.getwidth() + r.margin*2) - self.sx) + 0.5) -- self.px = self.px - ((text.getwidth() + r.margin*2) - self.sx)
+					self.sx = math.floor(text.getwidth() + r.margin*2 + 0.5) --self.sx = (text.getwidth() + r.margin*2)
+				else
+					self.px = math.floor(self.px - (r.sx - self.sx) + 0.5) --self.px = self.px - ((r.sx * Screen.vsy/CanvasY) - self.sx)
+					self.sx = math.floor(r.sx + 0.5) --self.sx = r.sx * Screen.vsy/CanvasY
+				end
+				text.px = math.floor(self.px + r.margin + 0.5) --text.px = self.px + r.margin
 			end
-			unitcounter.px = math.floor(self.px + self.sx - (r.margin/2) + 0.5)
+			unitcounter.px = math.floor(self.px + self.sx - (r.margin/2) + 0.5) --unitcounter.px = self.sx - ((r.margin/2)* Screen.vsy/CanvasY)
+-- rimuovo background2
+--			background2.px = self.px + self.padding
+--			background2.py = self.py + self.padding
+--			background2.sx = self.sx - self.padding - self.padding
+--			background2.sy = self.sy - self.padding - self.padding
 		end,
 		
 		mouseover=function(mx,my,self)
