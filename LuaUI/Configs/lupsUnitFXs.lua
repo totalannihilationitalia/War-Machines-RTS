@@ -127,6 +127,14 @@ effectUnitDefs = {
   icuestor = {
     {class='GroundFlash', options=groundFlashArmestor},
   },
+  --// METAL EXTRACTORS // ----------------------
+  cormex = {
+    {class='GroundFlash', options=groundFlashNfamex},
+  },
+  icumetex = {
+    {class='GroundFlash', options=groundFlashIcumetex},
+  },  
+  
 
   --// FACTORIES //----------------------------
 --  factoryship = {

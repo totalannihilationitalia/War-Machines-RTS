@@ -72,6 +72,21 @@ groundFlashArmestor = {
   colormap   = { {0.9, 0.9, 0.0, 0.2},{0.9, 0.9, 0.0, 0.3},{0.9, 0.9, 0.0, 0.3},{0.9, 0.9, 0.0, 0.2}, },
   repeatEffect = true,
 }
+groundFlashNfamex = {
+  life       = 50,
+  size       = 80,
+  texture    = "bitmaps/GPL/Lups/gf_nfamex.png",
+  colormap   = { {0, 1, 1, 0.2},{0, 1, 1, 0.3},{0, 1, 1, 0.3},{0, 1, 1, 0.2}, }, 
+  repeatEffect = true,
+}
+groundFlashIcumetex = {
+  life       = 50,
+  size       = 80,
+  texture    = "bitmaps/GPL/Lups/gf_icumetex.png",
+  colormap   = { {0, 1, 0.6, 0.2},{0, 1, 0.6, 0.3},{0, 1, 0.6, 0.3},{0, 1, 0.6, 0.2}, }, 
+  repeatEffect = true,
+}
+
 
 ----------------------------------------------------------------------------
 -- BURSTS ------------------------------------------------------------------
