@@ -2,11 +2,15 @@ function widget:GetInfo()
   return {
     name      = "EUF Resonator FX Dedicated",
     desc      = "Giallo = Collegato, Verde = Attivo",
-    author    = "AI & Molix",
+    author    = "Molix with AI",
     layer     = 10,
     enabled   = true,
   }
 end
+--[[
+15/04/2026 = creato questo widget. Molix
+16/04/2026 = realizzata immagine "aurea" 
+]]--
 
 local Lups, LupsAddFX
 local particleIDs = {} 
@@ -57,7 +61,7 @@ local function AddMexAdvancedFX(unitID, strength)
         sizeGrowth = 0,
         life = math.huge,
         colormap = { colRing, {0,0,0,0} },
-        texture = "bitmaps/GPL/Lups/groundringBW.png",
+        texture = ":n:".."LuaUI/Images/units/resonator_aurea.png", --"bitmaps/GPL/Lups/groundringBW.png",
         repeatEffect = true,
     }))
 
@@ -83,11 +87,11 @@ local function AddMexAdvancedFX(unitID, strength)
 end
 
 -- ########## CALLINS ##########
-
+-- ogni x secondi prelevo lo stato "resonator_status" dal unitparam delle unità 
 function widget:GameFrame(n)
     if n % 30 ~= 0 or not initialized then return end
     for unitID, lastS in pairs(mexUnits) do
-        local curS = Spring.GetUnitRulesParam(unitID, "overdrive") or 1.0
+        local curS = Spring.GetUnitRulesParam(unitID, "resonator_status") or 1.0
         if math.abs(curS - lastS) > 0.1 then
             ClearMexFX(unitID)
             AddMexAdvancedFX(unitID, curS)
