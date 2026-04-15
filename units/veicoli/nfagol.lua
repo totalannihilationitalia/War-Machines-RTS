@@ -46,7 +46,7 @@ return {
                name = "Goliath",
                noAutoFire = false,
                nochasecategory = "VTOL",
-               objectname = "nfa_hvytank.s3o",
+               objectname = "nfagol.s3o",
                seismicsignature = 0,
                selfdestructas = "BIG_UNIT",
                sightdistance = 495,
