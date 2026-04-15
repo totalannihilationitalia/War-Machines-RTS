@@ -1,0 +1,14 @@
+Object base
+ Current Pos:0.000, 0.000, 0.000
+ Current Rotation:0.000, 0.000, 0.000
+ Current Scale:1.000, 1.000, 1.000
+ AnimProperty position with 0 keys
+ AnimProperty rotation with 0 keys
+ AnimProperty scale with 0 keys
+Object resonator_spin
+ Current Pos:0.000, 0.000, 0.000
+ Current Rotation:0.000, 0.000, 0.000
+ Current Scale:1.000, 1.000, 1.000
+ AnimProperty position with 0 keys
+ AnimProperty rotation with 0 keys
+ AnimProperty scale with 0 keys
