@@ -85,6 +85,7 @@ return {
 		[15]= "euf_fence_gate",
 		[16]= "euf_fence_wall",
 		[17] = "eufadvmetex", 
+		[18] = "eufresonator", 		
                },
 
 -----------------------------------------------------------
