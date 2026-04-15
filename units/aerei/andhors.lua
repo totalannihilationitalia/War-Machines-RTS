@@ -33,6 +33,7 @@ return {
                explodeas = "BIG_UNITEX",
                footprintx = 3,
                footprintz = 3,
+			   hoverattack = true,			   
 --               maneuverleashlength  = 1280,
 --               mass = 0 --definire massa,
                maxdamage = 2394,
