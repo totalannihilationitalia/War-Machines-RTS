@@ -36,7 +36,7 @@ return {
                maxvelocity = 0,
                maxwaterdepth = 0,
                metalStorage = 0,
-               name = "EUF resonator",
+               name = "EUF Quantum resonator",
                noAutoFire = false,
                objectname = "eufresonator.s3o",
                onoffable = true,
