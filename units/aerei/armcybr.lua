@@ -1,5 +1,6 @@
 return {
 	armcybr = {
+		
 		acceleration = 0.1423,
 		bankscale = 1,
 		bmcode = 1,
@@ -13,6 +14,7 @@ return {
 		canfly = true,
 		canguard = true,
 		canmove = true,
+		canLoopbackAttack = true,				-- 15/04/2026 aggiunto molix
 		canpatrol = true,
 		canstop = 1,
 		category = "ALL WEAPON NOTSUB VTOL",
