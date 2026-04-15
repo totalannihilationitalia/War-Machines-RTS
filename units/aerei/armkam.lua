@@ -1,5 +1,6 @@
 return {
 	armkam = {
+		airstrafe = true, 		-- default true, For aircraft with hoverAttack= true, controls if the unit strafes side to side while attacking or remains stationary.
 		acceleration = 0.154,
 		bankscale = 1,
 		bmcode = 1,
