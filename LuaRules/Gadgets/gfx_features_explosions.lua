@@ -13,6 +13,11 @@ end
 -- 25/03/2026 realizzato questo gadget. Molix
 -- TODO
 -- abbinare anche il suono alla feature (ogni feature avrà la sua esplosione visiva e sonora)
+-- 15/04/2026 appunto ################################ molix
+-- semplificare questo gadget, utilizzare una unità "fantoccio" alla quale è abbinata l'esplosione. In questo modo aggiungiamo anche i detriti dell'esplosione
+-- a questo punto config diventa "nome_feature" = "nome_unitàDaCreare_edEsplodere"
+-- pertanto i CEG saranno abbinati all'unità
+
 
 if (not gadgetHandler:IsSyncedCode()) then
   return
@@ -57,7 +62,7 @@ local featureNamesToCEG = {}
 
 -- all'inizio (quando il gadget viene caricato)
 function gadget:Initialize()
-  for fName, cegName in pairs(config) do 												-- ciclo for per la compilazione della suddetta tabella
+  for fName, cegName in pairs(config) do 												-- ciclo for per la compilazione della tabella "featureNamesToCEG"
     local fDef = FeatureDefNames[fName]
     if fDef then
       featureNamesToCEG[fDef.id] = cegName
