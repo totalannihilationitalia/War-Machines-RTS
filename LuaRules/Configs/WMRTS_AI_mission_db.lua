@@ -526,6 +526,7 @@ local UNIT_DB = {
 
 -- Costruzioni Tier 2
 ["eufadvmetex"] = { type = "building", ignore = true },
+["eufresonator"] = { type = "strategicbuilding", ignore = true },
 
 -- Fabbriche Tier 1
 ["eufvp"] = { type = "building" },
