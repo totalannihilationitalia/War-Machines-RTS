@@ -17,7 +17,25 @@ local particleIDs = {}
 local mexUnits = {}    
 local initialized = false
 
-local MEX_UNIT_NAME = "cormex"
+-- local MEX_UNIT_NAME = "cormex" trasformo in tabella
+local VALID_UNITS = { 	
+	["cormex"] = true,
+	["corexp"] = true,
+	["cormoho"] = true,		
+	["cormexp"] = true,	
+	["icumetex"] = true,
+	["armamex"] = true,							
+	["armmoho"] = true,
+	["advmoho"] = true,			
+	["eufmetex"] = true,
+	["eufametex"] = true,	
+	["eufadvmetex"] = true,	
+	["andmexun"] = true,	
+	["andmex"] = true,	
+	["andametex"] = true	
+						}
+
+
 local SPOTS = {"spot1", "spot2", "spot3", "spot4"}
 
 -- ########## CORE LOGIC ##########
@@ -101,14 +119,17 @@ function widget:GameFrame(n)
 end
 
 function widget:UnitFinished(unitID, unitDefID)
-    if UnitDefs[unitDefID].name == MEX_UNIT_NAME then mexUnits[unitID] = 0 end
+--    if UnitDefs[unitDefID].name == MEX_UNIT_NAME then mexUnits[unitID] = 0 end -- sostituisco con controllo tabella
+    local name = UnitDefs[unitDefID].name
+    if VALID_UNITS[name] then 
+        mexUnits[unitID] = 0 
+    end
 end
 
 function widget:UnitDestroyed(unitID)
     mexUnits[unitID] = nil
     ClearMexFX(unitID)
 end
-
 function widget:Update()
     if initialized then return end
     Lups = WG['Lups']
@@ -117,8 +138,11 @@ function widget:Update()
         initialized = true
         local allUnits = Spring.GetAllUnits()
         for i=1, #allUnits do
-            local ud = UnitDefs[Spring.GetUnitDefID(allUnits[i])]
-            if ud and ud.name == MEX_UNIT_NAME then mexUnits[allUnits[i]] = 0 end
+            local uID = allUnits[i]
+            local ud = UnitDefs[Spring.GetUnitDefID(uID)]
+            if ud and VALID_UNITS[ud.name] then 
+                mexUnits[uID] = 0 
+            end
         end
     end
 end
