@@ -11,12 +11,10 @@ function gadget:GetInfo()
 end
 --
 -- 25/03/2026 realizzato questo gadget. Molix
+-- 16/04/2026 aggiunta unità "fantoccio" che esplodono con la features, per aggiungere i detriti. Molix
 -- TODO
 -- abbinare anche il suono alla feature (ogni feature avrà la sua esplosione visiva e sonora)
--- 15/04/2026 appunto ################################ molix
--- semplificare questo gadget, utilizzare una unità "fantoccio" alla quale è abbinata l'esplosione. In questo modo aggiungiamo anche i detriti dell'esplosione
--- a questo punto config diventa "nome_feature" = "nome_unitàDaCreare_edEsplodere"
--- pertanto i CEG saranno abbinati all'unità
+
 
 
 if (not gadgetHandler:IsSyncedCode()) then
@@ -79,8 +77,8 @@ function gadget:FeatureDestroyed(featureID, allyTeamID)
 
   if cegName then
     local x, y, z = Spring.GetFeaturePosition(featureID)
-  
-
+	local detriti = Spring.CreateUnit("nfagol", x, y, z, 0, Spring.GetGaiaTeamID())	-- creo l'unità ...
+	Spring.DestroyUnit(detriti,true)												-- che esplode subito, per creare detriti oltre il CEG
     Spring.SpawnCEG(cegName, x, y, z, 0, 1, 0)
     Spring.PlaySoundFile("sounds/bertha6.wav", 1.0, x, y, z)
   end
