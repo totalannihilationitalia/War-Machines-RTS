@@ -89,7 +89,7 @@ return {
 		customparams = {
 			paralyzemultiplier = 0.025000000372529,
 			iscommander = true,
-			lups_unit_fxs = "{'commandAuraRed'}",  -- preset per vari colori (Red, Orange, Green, Blue, Violet).			
+--			lups_unit_fxs = "{'commandAuraRed'}",  -- preset per vari colori (Red, Orange, Green, Blue, Violet).			
 		},
 		featuredefs = {
 			dead = {
