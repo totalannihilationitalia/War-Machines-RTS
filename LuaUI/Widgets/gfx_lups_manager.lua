@@ -116,6 +116,7 @@ end
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
+--[[
 --// cormex overdrive FX
 local cormexDefID 
 local cormexes    = {}
@@ -124,7 +125,7 @@ local cormexFX    = cormexGlow
 if (UnitDefNames["cormex"]) then
   cormexDefID = UnitDefNames["cormex"].id  
 end
-
+]]--
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
@@ -197,13 +198,14 @@ local function UnitFinished(_,unitID,unitDefID)
   end
   registeredUnits[unitID] = true
 
+--[[
   if (unitDefID == cormexDefID) then
     cormexes[unitID] = 0
     cormexFX.unit    = unitID
     particleIDs[unitID] = {}
     AddFxs( unitID, LupsAddFX("StaticParticles",cormexFX) )
   end
-
+]]--
   local effects = UnitEffects[unitDefID]
   if (effects) then
     for i=1,#effects do
@@ -233,10 +235,11 @@ end
 
 local function UnitDestroyed(_,unitID,unitDefID)
   registeredUnits[unitID] = nil
+--[[
   if (unitDefID == cormexDefID) then
     cormexes[unitID] = nil
   end
-
+]]--
   ClearFxs(unitID)
 end
 
@@ -254,12 +257,13 @@ local function UnitEnteredLos(_,unitID)
   registeredUnits[unitID] = true
   ]]
 
-  if (unitDefID == cormexDefID) then
+--[[  if (unitDefID == cormexDefID) then
     cormexes[unitID] = 1
     cormexFX.unit    = unitID
     particleIDs[unitID] = {}
     AddFxs( unitID, LupsAddFX("StaticParticles",cormexFX) )
   end
+]]--  
 
   local unitDefID = spGetUnitDefID(unitID)
   local effects   = UnitEffects[unitDefID]
@@ -282,10 +286,10 @@ local function UnitLeftLos(_,unitID)
   if (spec and fullSpec) then return end
 
   --registeredUnits[unitID] = nil
-  if (unitDefID == cormexDefID) then
+--[[  if (unitDefID == cormexDefID) then
     cormexes[unitID] = nil
   end
-
+]]--
   ClearFxs(unitID)
 end
 
@@ -295,6 +299,7 @@ end
 local color1 = {0,0,0}
 local color2 = {1,0.5,0}
 
+--[[
 local function GameFrame(_,n)
   if (((n+48)%60)<1 and (next(cormexes))) then
     --//Update Overdrive Fx
@@ -319,7 +324,7 @@ local function GameFrame(_,n)
     cormexFX.size   = cormexFX.size1
   end
 end
-
+]]--
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Player status changed (switched team/ally or become a spectator)
@@ -419,13 +424,13 @@ function widget:Update()
   widget.UnitDestroyed  = UnitDestroyed
   widget.UnitEnteredLos = UnitEnteredLos
   widget.UnitLeftLos    = UnitLeftLos
-  widget.GameFrame      = GameFrame
+--  widget.GameFrame      = GameFrame
   widget.PlayerChanged  = PlayerChanged
   widgetHandler:UpdateWidgetCallIn("UnitFinished",widget)
   widgetHandler:UpdateWidgetCallIn("UnitDestroyed",widget)
   widgetHandler:UpdateWidgetCallIn("UnitEnteredLos",widget)
   widgetHandler:UpdateWidgetCallIn("UnitLeftLos",widget)
-  widgetHandler:UpdateWidgetCallIn("GameFrame",widget)
+--  widgetHandler:UpdateWidgetCallIn("GameFrame",widget)
   widgetHandler:UpdateWidgetCallIn("PlayerChanged",widget)
 
   widget.Update = CheckForExistingUnits
