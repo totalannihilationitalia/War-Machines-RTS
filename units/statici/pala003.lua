@@ -19,7 +19,7 @@ return {
                --collisionvolumescales = "",
                --collisionvolumetype = "",
                description = "A building",
-               explodeas = "DEADTREE",
+               explodeas = "palazzo_esplosione", 		-- used for gfx_features_explosions.lua
                footprintx = 2,
                footprintz = 2,
                hidedamage = true,
