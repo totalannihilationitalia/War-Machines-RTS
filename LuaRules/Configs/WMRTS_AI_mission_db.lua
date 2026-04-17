@@ -496,7 +496,7 @@ local UNIT_DB = {
 ["conartist"] = { type = "ground" },
 ["bigb"] = { type = "ground" },
 ["ebigb"] = { type = "ground" },
-["kill2"] = { type = "ground" },
+["andkill"] = { type = "ground" },
 ["interceptor"] = { type = "ground" },
 ["armpraet"] = { type = "ground" },
 

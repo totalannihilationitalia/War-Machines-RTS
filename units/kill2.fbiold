@@ -3,7 +3,7 @@
 	UnitName=kill2;
 	Version=3.0;
 	Side=ARM;
-	Objectname=kill2;
+	Objectname=andkill.s3o;
 	Designation=WMs-BigKB;
 	Name=Encrypter;
 	Description=encryp family;
