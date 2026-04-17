@@ -8,15 +8,16 @@ function gadget:GetInfo()
   }
 end
 --[[ 
-15/04/2026 realizzato questo widget. Molix
+15/04/2026 = realizzato questo widget. Molix
 Questo widget imposta un UnitRules agli estrattori di metallo seguendo questa logica:
 1.0 (Stato Base): L'estrattore NON è nel raggio di alcun Resonator 																		-->		Effetto: Nessuna grafica (Aurea spenta).
 2.0 (Stato "Standby" - GIALLO): L'estrattore È nel raggio, ma il Resonator è SPENTO oppure NON ha abbastanza energia per potenziarlo. 	-->		Effetto: Appare l'anello Giallo (indica che il collegamento c'è, ma non sta producendo extra).
 3.0 (Stato "Boost" - VERDE): L'estrattore È nel raggio E il Resonator è ATTIVO E ha energia sufficiente.								-->		Effetto: L'anello diventa Verde + appaiono le sfere + appare l'effetto calore/vapore.
 Questo gadget imposta solo gli unitrules, per gli effetti vedere il widget 
+17/04/2026 = sistemato spegnimento forzato, prima prendeva il valore del magazzino (indipendentemente dall'energia a disposizione), ora preleva il valore reale di energia (current) in possesso. Se sotto il fabbisogno dei resonator, questi si spengono.
 ]]--
 
-
+ 
 if (not gadgetHandler:IsSyncedCode()) then return end
 
 local RESONATOR_UNIT = "eufresonator" 
@@ -87,7 +88,15 @@ function gadget:GameFrame(n)
 
             -- 2. Calcoliamo il costo TOTALE
             local totalCost = #validMexes * COST_PER_MEX
-            local _, energyStored = Spring.GetTeamResources(ownerTeam, "energy")
+--            local _, energyStored = Spring.GetTeamResources(ownerTeam, "energy") 			-- sostituisco dallo storage al current level: se non hai energia, smette di funzionare. Prima era, se hai storage, funziona comunque anche se non hai energia
+            local energyStored = Spring.GetTeamResources(ownerTeam, "energy") -- return: nil | number currentLevel, number storage, number pull, number income, number expense, number share, number sent, number received
+
+--[[ --DEBUG molix
+			local debugcurrent, debugstorage = Spring.GetTeamResources(ownerTeam, "energy")
+			Spring.Echo("DEBUG current: "..debugcurrent)
+			Spring.Echo("DEBUG storage: "..debugstorage)			
+---- end debug
+]]--
 
             if #validMexes > 0 then
                 if energyStored >= totalCost then
@@ -100,7 +109,7 @@ function gadget:GameFrame(n)
                 else
                     -- NON ABBIAMO ENERGIA: Spegnimento forzato del Resonator
                     Spring.GiveOrderToUnit(oID, CMD.ONOFF, {0}, {})
-                    Spring.SendMessageToTeam(ownerTeam, "\255\255\050\050[EUF] Resonator Tower Emergency Shutdown: Low Energy!")
+                    Spring.SendMessageToTeam(ownerTeam, "\255\255\050\050[EUF] Resonator Tower Emergency Shutdown: Low Energy!") -- ############################### inviare questa stringa al WARNING MESSAGE Widget ##### Molix
                 end
             end
         else
