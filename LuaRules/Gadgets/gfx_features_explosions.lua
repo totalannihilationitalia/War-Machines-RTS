@@ -40,6 +40,7 @@ local config = {
   pala011_feature   = "building_destruction_heavy",
   pala001_feature   = "fleaesplosionipostatterraggio", 
 ]]-- 
+  pala001_feature   = "building_effects",  
   pala002_feature   = "building_effects",
   pala003_feature   = "building_effects",
   pala004_feature   = "building_effects",
@@ -77,7 +78,7 @@ function gadget:FeatureDestroyed(featureID, allyTeamID)
 
   if cegName then
     local x, y, z = Spring.GetFeaturePosition(featureID)
-	local detriti = Spring.CreateUnit("nfagol", x, y, z, 0, Spring.GetGaiaTeamID())	-- creo l'unità ...
+	local detriti = Spring.CreateUnit("pala003", x, y, z, 0, Spring.GetGaiaTeamID())	-- creo l'unità ...
 	Spring.DestroyUnit(detriti,true)												-- che esplode subito, per creare detriti oltre il CEG
     Spring.SpawnCEG(cegName, x, y, z, 0, 1, 0)
     Spring.PlaySoundFile("sounds/bertha6.wav", 1.0, x, y, z)
