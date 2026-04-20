@@ -1,0 +1,34 @@
+#define TAK			// This is a TAK script
+
+#include "sfxtype.h"
+#include "exptype.h"
+
+piece  base, piece_1, piece_2, piece_3, piece_4, piece_5, piece_6, piece_7, piece_8, piece_9, piece_10, piece_11, piece_12, piece_13, piece_14, piece_15, piece_16;
+
+
+Create(Func_Var_1, Func_Var_2)
+{
+}
+
+Killed(Func_Var_1, Func_Var_2)
+{
+//	Func_Var_2 = 3;
+	explode base type BITMAP4|FALL|FIRE|SMOKE;
+	explode piece_1 type BITMAP4|FALL|FIRE|SHATTER|SMOKE;	
+	explode piece_2 type BITMAP4|FALL|FIRE|SMOKE;	
+	explode piece_3 type BITMAP4|FALL|FIRE|SMOKE;	
+	explode piece_4 type BITMAP4|FALL|FIRE|SMOKE;	
+	explode piece_5 type BITMAP4|FALL|FIRE|SMOKE;	
+	explode piece_6 type BITMAP4|FALL|FIRE|SHATTER|SMOKE;	
+	explode piece_7 type BITMAP4|FALL|FIRE|SMOKE;	
+	explode piece_8 type BITMAP4|FALL|FIRE|SMOKE;	
+	explode piece_9 type BITMAP4|FALL|FIRE|SMOKE;	
+	explode piece_10 type BITMAP4|FALL|FIRE|SMOKE;	
+	explode piece_11 type BITMAP4|FALL|FIRE|SMOKE;	
+	explode piece_12 type BITMAP4|FALL|FIRE|SMOKE;	
+	explode piece_13 type BITMAP4|FALL|FIRE|SMOKE;	
+	explode piece_14 type BITMAP4|FALL|FIRE|SHATTER|SMOKE;	
+	explode piece_15 type BITMAP4|FALL|FIRE|SMOKE;	
+	explode piece_16 type BITMAP4|FALL|FIRE|SMOKE;	
+		
+}

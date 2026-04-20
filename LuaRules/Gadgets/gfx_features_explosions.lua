@@ -78,8 +78,8 @@ function gadget:FeatureDestroyed(featureID, allyTeamID)
 
   if cegName then
     local x, y, z = Spring.GetFeaturePosition(featureID)
-	local detriti = Spring.CreateUnit("pala003", x, y, z, 0, Spring.GetGaiaTeamID())	-- creo l'unità ...
-	Spring.DestroyUnit(detriti,true)												-- che esplode subito, per creare detriti oltre il CEG
+	local detriti = Spring.CreateUnit("pala_macerie", x, y, z, 0, Spring.GetGaiaTeamID())	-- creo l'unità ...
+	Spring.DestroyUnit(detriti,true)														-- ... e la faccio esplodere subito, per creare detriti oltre il CEG
     Spring.SpawnCEG(cegName, x, y, z, 0, 1, 0)
     Spring.PlaySoundFile("sounds/bertha6.wav", 1.0, x, y, z)
   end
