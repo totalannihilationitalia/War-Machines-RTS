@@ -17,10 +17,10 @@ activatescr()
 {
 	if( TRUE )
 	{
-		turn door1 to x-axis <90.021978> speed <120.000000>;
-		turn door2 to x-axis <-90.021978> speed <120.000000>;
-		turn door3 to z-axis <90.021978> speed <120.000000>;
-		turn door4 to x-axis <-90.021978> speed <120.000000>;
+		turn door1 to x-axis <90.016484> speed <120.000000>;
+		turn door2 to x-axis <-90.016484> speed <120.000000>;
+		turn door3 to z-axis <90.016484> speed <120.000000>;
+		turn door4 to x-axis <-90.016484> speed <120.000000>;
 		sleep 400;
 	}
 	if( TRUE )
@@ -39,15 +39,13 @@ activatescr()
 		wait-for-turn launch around x-axis;
 	}
 	sleep 100;
-	return (0);
-	// Build by COBBLER Ver4.0 Copyright @1998 DIGITAL CONCEPT SOFTWARE (MANU@inext.fr) / http://www.annihilationcenter.com/DCS/  
 }
 
 deactivatescr()
 {
 	if( TRUE )
 	{
-		turn launch to x-axis <90.021978> speed <120.000000>;
+		turn launch to x-axis <90.016484> speed <120.000000>;
 		wait-for-turn launch around x-axis;
 	}
 	if( TRUE )
@@ -127,8 +125,6 @@ Stop()
 	cache door2;
 	cache door3;
 	cache door4;
-//	cache missile1;
-//	cache missile2;
 	cache sleeve;
 	cache turret;
 }
@@ -174,10 +170,10 @@ RestoreAfterDelay()
 
 Create()
 {
-	turn door1 to x-axis <90.021978> speed <1000.000000>;
-	turn door2 to x-axis <-90.021978> speed <1000.000000>;
-	turn door3 to z-axis <90.021978> speed <1000.000000>;
-	turn door4 to x-axis <-90.021978> speed <1000.000000>;
+	turn door1 to x-axis <90.016484> speed <1000.000000>;
+	turn door2 to x-axis <-90.016484> speed <1000.000000>;
+	turn door3 to z-axis <90.016484> speed <1000.000000>;
+	turn door4 to x-axis <-90.016484> speed <1000.000000>;
 	dont-shade missile1;
 	dont-shade base;
 	dont-shade door1;
@@ -230,17 +226,13 @@ FirePrimary()
 {
 	if( gun_1 == 1 )
 	{
-		emit-sfx 1024 + 0 from missile1;	
-//		show missile1;
+		emit-sfx 1024 + 0 from missile1;
 		sleep 200;
-//		hide missile1;
 	}
 	if( gun_1 == 2 )
 	{
-		emit-sfx 1024 + 0 from missile2;		
-//		show missile2;
+		emit-sfx 1024 + 0 from missile2;
 		sleep 200;
-//		hide missile2;
 	}
 	++gun_1;
 	if( gun_1 == 3 )
@@ -264,7 +256,61 @@ QueryPrimary(piecenum)
 	{
 	}
 	piecenum = missile2;
-	return (0);
+}
+////////////////////////////////////////////////////////////////////////////
+AimWeapon2(Func_Var_1, Func_Var_2)
+{
+	start-script RequestState(0);
+	signal SIG_AIM;
+	set-signal-mask SIG_AIM;
+	while( !Static_Var_1 )
+	{
+		sleep 250;
+	}
+	turn turret to y-axis Func_Var_1 speed <30.005495>;
+	turn launch to x-axis <0.000000> - Func_Var_2 speed <45.005495>;
+	wait-for-turn turret around y-axis;
+	wait-for-turn launch around x-axis;
+	start-script RestoreAfterDelay();	
+	return (1);
+}
+
+FireWeapon2()
+{
+	if( gun_1 == 1 )
+	{
+		emit-sfx 1024 + 0 from missile1;
+		sleep 200;
+	}
+	if( gun_1 == 2 )
+	{
+		emit-sfx 1024 + 0 from missile2;
+		sleep 200;
+	}
+	++gun_1;
+	if( gun_1 == 3 )
+	{
+		gun_1 = missile1;
+	}
+}
+
+QueryWeapon2(piecenum)
+{
+{
+	if( gun_1 == 1 )
+	{
+		piecenum = missile1;
+	}
+	if( gun_1 )
+	{
+	}
+	piecenum = missile2;
+}
+}
+
+AimFromWeapon2(piecenum)
+{
+	piecenum = turret;
 }
 
 SweetSpot(piecenum)
