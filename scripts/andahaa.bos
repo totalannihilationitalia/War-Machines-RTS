@@ -3,13 +3,58 @@
 #include "sfxtype.h"
 #include "exptype.h"
 
-piece  flare1a, flare1b, flare2a, flare2b, turret1, base, sleeve1, turret2,sleeve2 ;
+piece  flare1a, flare1b, flare2a, flare2b, turret1, base, sleeve1, turret2,
+       sleeve2, wake1, wake2, wake3,wake4;
 
-static-var  restore_delay, gun_1, Static_Var_3, bMoving;
+static-var  restore_delay, gun_1, Static_Var_3,Static_Var_4, bMoving;
 
 // Signal definitions
 #define SIG_AIM				2
 
+EmitSFX()
+{
+	while( TRUE )
+	{
+		if( bMoving )
+		{
+			if( Static_Var_4 == 3 )
+			{
+				emit-sfx 3 from wake2;
+				emit-sfx 3 from wake3;
+				emit-sfx 3 from wake1;
+				emit-sfx 3 from wake4;
+			}
+			if( Static_Var_4 == 2 )
+			{
+				emit-sfx 3 from wake2;
+				emit-sfx 3 from wake3;
+				emit-sfx 3 from wake1;
+				emit-sfx 3 from wake4;
+			}
+			if( Static_Var_4 == 1 )
+			{
+				emit-sfx 3 from wake2;
+				emit-sfx 3 from wake3;
+				emit-sfx 3 from wake1;
+				emit-sfx 3 from wake4;
+			}
+			sleep 150;
+		}
+		if( ( !bMoving ) AND Static_Var_4 == 3 )
+		{
+			emit-sfx 259 from wake1;
+			sleep 700;
+			emit-sfx 259 from wake4;
+			sleep 500;
+		}
+		sleep 200;
+	}
+}
+
+setSFXoccupy(Func_Var_1)
+{
+	Static_Var_4 = Func_Var_1;
+}
 
 HitByWeapon(Func_Var_1, Func_Var_2)
 {
@@ -40,6 +85,7 @@ Create()
 	Static_Var_3 = 4;
 	bMoving = FALSE;
 	gun_1 = flare1a;
+	start-script EmitSFX();	
 	restore_delay = 3000;
 }
 
@@ -54,7 +100,7 @@ RestoreAfterDelay()
 	turn turret1 to y-axis <0.000000> speed <65.000000>;
 	turn sleeve1 to x-axis <0.000000> speed <35.000000>;
 	turn turret2 to y-axis <0.000000> speed <65.000000>;
-	turn sleeve2 to x-axis <0.000000> speed <35.000000>;	
+	turn sleeve2 to x-axis <0.000000> speed <35.000000>;
 }
 
 StartMoving()
@@ -74,10 +120,9 @@ AimPrimary(heading, pitch)
 	turn turret1 to y-axis heading speed <125.000000>;
 	turn turret2 to y-axis heading speed <125.000000>;
 	turn sleeve1 to x-axis <0.000000> - pitch speed <125.000000>;
-	turn sleeve2 to x-axis <0.000000> - pitch speed <125.000000>;	
+	turn sleeve2 to x-axis <0.000000> - pitch speed <125.000000>;
 	wait-for-turn turret1 around y-axis;
 	wait-for-turn sleeve1 around x-axis;
-	
 	start-script RestoreAfterDelay();
 	return (1);
 }
@@ -128,7 +173,7 @@ SweetSpot(piecenum)
 Killed(severity, corpsetype)
 {
 	hide flare1a;
-	hide flare1b;	
+	hide flare1b;
 	hide flare2a;
 	hide flare2b;
 	if( severity <= 25 )
@@ -139,7 +184,6 @@ Killed(severity, corpsetype)
 		explode flare1b type BITMAPONLY | BITMAP5;
 		explode flare2a type BITMAPONLY | BITMAP5;
 		explode flare2b type BITMAPONLY | BITMAP5;
-//		explode flare5 type BITMAPONLY | BITMAP5;
 		explode sleeve1 type BITMAPONLY | BITMAP1;
 		explode turret1 type BITMAPONLY | BITMAP4;
 		return (0);
@@ -152,7 +196,6 @@ Killed(severity, corpsetype)
 		explode flare1b type BITMAPONLY | BITMAP5;
 		explode flare2a type BITMAPONLY | BITMAP5;
 		explode flare2b type BITMAPONLY | BITMAP5;
-//		explode flare5 type BITMAPONLY | BITMAP5;
 		explode sleeve1 type SHATTER | BITMAP1;
 		explode turret1 type FALL | BITMAP4;
 		return (0);
@@ -165,7 +208,6 @@ Killed(severity, corpsetype)
 		explode flare1b type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
 		explode flare2a type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
 		explode flare2b type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
-
 		explode sleeve1 type SHATTER | BITMAP1;
 		explode turret1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
 		return (0);
