@@ -58,12 +58,12 @@ return {
 -----------------------------------
                buildoptions = { 
 			[1] = "cordem",			-- unità lanciafiamme
-			[2] = "conartist", 		-- unità aliena
-			[3] = "bigb",			-- simile a raven + aggiungere raggio laser
-			[4] = "ebigb",			-- unità aliena
-			[5] = "kill2",			-- fare hvy machinesgun
-			[6] = "interceptor",			
-			[7] = "armpraet",
+--			[2] = "conartist", 		-- unità aliena
+			[2] = "bigb",			-- simile a raven + aggiungere raggio laser
+--			[4] = "ebigb",			-- unità aliena
+			[3] = "andkill",			-- fare hvy machinesgun
+			[4] = "interceptor",			
+			[5] = "armpraet",
 		},
 -----------------------------------------------------------
 --- Units wreckage and heaps
