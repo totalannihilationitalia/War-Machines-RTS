@@ -41,7 +41,7 @@ local altezza_content					= 400								-- altezza contenuto
 local larghezza_diarymenu				= 800 								-- larghezza
 local altezza_diarymenu					= altezza_header+altezza_content	-- altezza ( h header + h contenuto)
 local altezza_menubutton				= 25								-- altezza pulsanti di navigazione (maps, units, character ecc)
-local larghezza_menubutton				= 76
+local larghezza_menubutton				= 110	--76
 local larghezza_avantidietro			= 25								-- larghezza pulsanti avanti / dietro
 local altezza_avantidietro				= 25								-- altezza pulsanti avanti / dietro
 local posy_menuicone             	    = 366								-- altezza del primo pulsante a destra del menu diario rispetto al fondo del content
@@ -116,6 +116,29 @@ local button_precedente			= "LuaUI/Images/menu/diary/btnprevious.png"
 local font_intestazione				= gl.LoadFont("FreeSansBold.otf",14, 1.9, 40)
 local font_generale					= gl.LoadFont("FreeSansBold.otf",12, 1.9, 40)
 
+local function aggiornapagine()
+	if diarycategory == 0 then
+		string_currentpage 		= pagcur_maps
+		string_totpage			= pagtot_maps
+		if pagtot_maps > 0 then showpages = true else showpages = false end
+	elseif 	diarycategory == 1 then
+		string_currentpage 		= pagcur_story
+		string_totpage			= pagtot_story	
+		if pagtot_story > 0 then showpages = true else showpages = false end		
+	elseif 	diarycategory == 2 then
+		string_currentpage 		= pagcur_hints
+		string_totpage			= pagtot_hints
+		if pagtot_hints > 0 then showpages = true else showpages = false end		
+	elseif 	diarycategory == 3 then
+		string_currentpage 		= pagcur_character
+		string_totpage			= pagtot_character
+	elseif 	diarycategory == 4 then
+		string_currentpage 		= pagcur_units
+		string_totpage			= pagtot_units
+		if pagtot_units > 0 then showpages = true else showpages = false end		
+	end
+end
+
 --------------------------------------
 -- GESTIONE DELLE CATEGORIE DEL DIARIO -- Ogni volta che viene chiamata questa funziona si setta la categoria del diario e si impostano le stringhe sotto delle pagine (pag 1/2)
 --------------------------------------
@@ -129,8 +152,7 @@ local function diarycategorymanagement()
 	button_hintsmenu		= "LuaUI/Images/menu/diary/buttondiary_hint_off.png" 
 	button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_off.png" 
 	button_unitsmenu		= "LuaUI/Images/menu/diary/buttondiary_units_off.png" 
-	string_currentpage 		= pagcur_maps
-	string_totpage			= pagtot_maps
+
 	elseif diarycategory == 1 then		-- sto leggendo categoria storia
 	contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtsstory"..pagcur_story..".png"
 	-- imposto lo stato ON/OFF dei bottoni	
@@ -139,8 +161,7 @@ local function diarycategorymanagement()
 	button_hintsmenu		= "LuaUI/Images/menu/diary/buttondiary_hint_off.png" 
 	button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_off.png" 
 	button_unitsmenu		= "LuaUI/Images/menu/diary/buttondiary_units_off.png" 	
-	string_currentpage 		= pagcur_story
-	string_totpage			= pagtot_story
+
 	elseif diarycategory == 2 then		-- sto leggendo categoria suggerimenti
 	contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtshints"..pagcur_hints..".png"
 	-- imposto lo stato ON/OFF dei bottoni	
@@ -149,8 +170,7 @@ local function diarycategorymanagement()
 	button_hintsmenu		= "LuaUI/Images/menu/diary/buttondiary_hint_on.png" 
 	button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_off.png" 
 	button_unitsmenu		= "LuaUI/Images/menu/diary/buttondiary_units_off.png" 	
-	string_currentpage 		= pagcur_hints
-	string_totpage			= pagtot_hints	
+	
 	elseif diarycategory == 3 then		-- sto leggendo categoria personaggi
 	contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtschar"..pagcur_character..".png"
 	-- imposto lo stato ON/OFF dei bottoni	
@@ -159,8 +179,7 @@ local function diarycategorymanagement()
 	button_hintsmenu		= "LuaUI/Images/menu/diary/buttondiary_hint_off.png" 
 	button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_on.png" 
 	button_unitsmenu		= "LuaUI/Images/menu/diary/buttondiary_units_off.png" 	
-	string_currentpage 		= pagcur_character
-	string_totpage			= pagtot_character
+
 	elseif diarycategory == 4 then		-- sto leggendo categoria unità
 	contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtsunits"..pagcur_units..".png"
 	-- imposto lo stato ON/OFF dei bottoni	
@@ -169,8 +188,7 @@ local function diarycategorymanagement()
 	button_hintsmenu		= "LuaUI/Images/menu/diary/buttondiary_hint_off.png" 
 	button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_off.png" 
 	button_unitsmenu		= "LuaUI/Images/menu/diary/buttondiary_units_on.png" 
-	string_currentpage 		= pagcur_units
-	string_totpage			= pagtot_units
+
 	end
 end
 
@@ -390,11 +408,13 @@ function widget:MousePress(x, y, button)
 					end
 				diarycategory = 0 -- setto la categoria da mostrare su mappe 
 				diarycategorymanagement() -- chiamo la funzione per settare le immagini del diario
-				if pagtot_maps > 0 then 
-					showpages = true 
-				else
-					showpages = false 			
-				end
+--				if pagtot_maps > 0 then 
+--					aggiornapagine()
+--					showpages = true 
+--				else
+--					showpages = false 			
+--				end
+				aggiornapagine()
 				return true
 				-- clicco su Story button	--------------------------------------------------------------------------------------------
 				elseif
@@ -405,11 +425,13 @@ function widget:MousePress(x, y, button)
 					end				
 				diarycategory = 1 -- setto la categoria da mostrare su story 	
 				diarycategorymanagement() -- chiamo la funzione per settare le immagini del diario	
-				if pagtot_story > 0 then 
-					showpages = true 
-				else
-					showpages = false 			
-				end			
+--				if pagtot_story > 0 then 
+--					aggiornapagine()
+--					showpages = true 
+--				else
+--					showpages = false 			
+--				end			
+				aggiornapagine()
 				return true
 				-- clicco su hints button	--------------------------------------------------------------------------------------------		
 				elseif
@@ -420,11 +442,13 @@ function widget:MousePress(x, y, button)
 					end								
 				diarycategory = 2 -- setto la categoria da mostrare su hint 	
 				diarycategorymanagement() -- chiamo la funzione per settare le immagini del diario		
-				if pagtot_hints > 0 then 
-					showpages = true 
-				else
-					showpages = false 			
-				end						
+--				if pagtot_hints > 0 then 
+--					aggiornapagine()
+--					showpages = true 
+--				else
+--					showpages = false 			
+--				end					
+				aggiornapagine()	
 				return true			
 				-- clicco su character button	--------------------------------------------------------------------------------------------
 				elseif
@@ -435,11 +459,13 @@ function widget:MousePress(x, y, button)
 					end		
 				diarycategory = 3 -- setto la categoria da mostrare su character 	
 				diarycategorymanagement() -- chiamo la funzione per settare le immagini del diario	
-				if pagtot_character > 0 then 
-					showpages = true 
-				else
-					showpages = false 			
-				end						
+--				if pagtot_character > 0 then 
+--					aggiornapagine()
+--					showpages = true 
+--				else
+--					showpages = false 			
+--				end					
+				aggiornapagine()	
 				return true		
 				-- clicco su units button	--------------------------------------------------------------------------------------------	
 				elseif
@@ -450,24 +476,28 @@ function widget:MousePress(x, y, button)
 					end		
 				diarycategory = 4 -- setto la categoria da mostrare su units 			
 				diarycategorymanagement() -- chiamo la funzione per settare le immagini del diario				
-				Spring.Echo(pagtot_units)	
-				Spring.Echo("click_units")
-				if pagtot_units > 0 then 
-					showpages = true 
-				else
-					showpages = false 			
-				end						
+--				Spring.Echo(pagtot_units)	
+--				Spring.Echo("click_units")
+--				if pagtot_units > 0 then 
+--					aggiornapagine()
+--					showpages = true 
+--				else
+--					showpages = false 			
+--				end			
+				aggiornapagine()			
 				return true		
 				-- clicco su pagina precedente	--------------------------------------------------------------------------------------------	
 				elseif
 				((x >= Pos_x_mainmenu+posx_pulsavantidietro) and (x <= Pos_x_mainmenu+posx_pulsavantidietro+larghezza_avantidietro) and (y >= Pos_y_mainmenu-posy_pulsavantidietro) and (y <= Pos_y_mainmenu-posy_pulsavantidietro+altezza_avantidietro)) then
 					diarypagemanagementprevious() -- esegui funzione per pagina precedente
+					aggiornapagine()
 --					Spring.Echo("test_indietro")
 				return true		
 				-- clicco su pagina successiva	--------------------------------------------------------------------------------------------	
 				elseif
 				((x >= Pos_x_mainmenu+posx_pulsavantidietro+75) and (x <= Pos_x_mainmenu+posx_pulsavantidietro+75+larghezza_avantidietro) and (y >= Pos_y_mainmenu-posy_pulsavantidietro) and (y <= Pos_y_mainmenu-posy_pulsavantidietro+altezza_avantidietro)) then
 					diarypagemanagementnext() -- esegui funzione per pagina successiva
+					aggiornapagine()
 --					Spring.Echo("test_avanti")
 				return true		
 				-- clicco sul pulsante close	--------------------------------------------------------------------------------------------	
@@ -586,6 +616,7 @@ function widget:TextCommand(command)
 				end			
 	
 	end
+	aggiornapagine()
 end
 
 --------------------------------------
@@ -648,7 +679,7 @@ end
 			-- testo
 			font_intestazione:SetTextColor(1, 1, 1, 1)
 			font_intestazione:Begin()
-			font_intestazione:Print("Global Map", Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+10,Pos_y_mainmenu+posy_menuicone,9,'ds')
+			font_intestazione:Print("Global Map", Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+38,Pos_y_mainmenu+posy_menuicone+5,13,'rds')
 			font_intestazione:End()		
 		end
 		
@@ -662,7 +693,7 @@ end
 		-- testo
 		font_intestazione:SetTextColor(1, 1, 1, 1)
 		font_intestazione:Begin()
-		font_intestazione:Print("Story", Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+10,Pos_y_mainmenu+posy_menuicone-interassey_menuicone,9,'ds')
+		font_intestazione:Print("Story", Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+38,Pos_y_mainmenu+posy_menuicone-interassey_menuicone,12,'cds')
 		font_intestazione:End()		
 		end
 		
@@ -676,7 +707,7 @@ end
 		-- testo
 		font_intestazione:SetTextColor(1, 1, 1, 1)
 		font_intestazione:Begin()
-		font_intestazione:Print("Hints", Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+10,Pos_y_mainmenu+posy_menuicone-2*interassey_menuicone,9,'ds')
+		font_intestazione:Print("Hints", Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+38,Pos_y_mainmenu+posy_menuicone-2*interassey_menuicone,13,'cds')
 		font_intestazione:End()			
 		end
 		
@@ -690,7 +721,7 @@ end
 		-- testo
 		font_intestazione:SetTextColor(1, 1, 1, 1)
 		font_intestazione:Begin()
-		font_intestazione:Print("Hints", Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+10,Pos_y_mainmenu+posy_menuicone-3*interassey_menuicone,9,'ds')
+		font_intestazione:Print("Character", Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+38,Pos_y_mainmenu+posy_menuicone-3*interassey_menuicone,13,'cds')
 		font_intestazione:End()		
 		end
 		
@@ -704,7 +735,7 @@ end
 		-- testo
 		font_intestazione:SetTextColor(1, 1, 1, 1)
 		font_intestazione:Begin()
-		font_intestazione:Print("Hints", Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+10,Pos_y_mainmenu+posy_menuicone-4*interassey_menuicone,9,'ds')
+		font_intestazione:Print("Units", Pos_x_mainmenu+larghezza_diarymenu+margine_dx_icone_diarymenu+38,Pos_y_mainmenu+posy_menuicone-4*interassey_menuicone,13,'cds')
 		font_intestazione:End()	
 		end
 		
@@ -727,7 +758,7 @@ end
 		if showpages then	
 			font_intestazione:SetTextColor(1, 1, 1, 1)
 			font_intestazione:Begin()
-			font_intestazione:Print("Page"..string_currentpage.." / "..string_totpage, Pos_x_mainmenu+70, Pos_y_mainmenu + 400,14,'ds')
+			font_intestazione:Print(string_currentpage.." / "..string_totpage, Pos_x_mainmenu+135, Pos_y_mainmenu-14,12,'cds')
 			font_intestazione:End()		
 		end
 		
