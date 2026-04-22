@@ -25,10 +25,12 @@ end
 
 -- 09/10/2025: released version 1 - Molix
 -- 10/02/2026: closing widget if unnecessary - Molix
+-- 22/04/2026: add close buttons & logic
 
 --[[ to do list
 #### -- in inizialize disattivare questo widget se non è presente la condizione : wmrtsmission = 1; o isflea #####
 #### -- inserire suoni bottone
+#### -- inserire l'autopopup
 ]]--
 
 local vsx, vsy 						  	= widgetHandler:GetViewSizes()
@@ -46,15 +48,16 @@ local posy_menuicone             	    = 366								-- altezza del primo pulsante
 local interassey_menuicone		        = 25+10								-- distanza y tra le origini di due pulsanti consecutivi
 local autopopup							= 1									-- attiva l'apertura del diario quando si riceve il comando di nuova news
 local autopause							= 1									-- attiva la pausa quando si riceve il comando di nuova news
-local diarymenu_attivo					= false 							-- Indica se questo menu è visualizzabile o meno (default false)
+local diarymenu_attivo					= false 							-- Indica se questo menu è aperto o meno
 local margine_sx_icona_diarymenu		= 20  								-- distanza dal margine sinistro del background e l'icona del menu
 local margine_dx_icone_diarymenu		= 10  								-- distanza dal bordo del diario alle icone di destra del menu
-local margine_su_icona_diarymenu		= -30 								-- distanza di quanto sborda l'immagine dal bordo superiore del background
+local margine_su_icona_diarymenu		= -29 								-- distanza di quanto sborda l'immagine dal bordo superiore del background
 local mousex, mousey				   										-- posizione x e y del mouse, usata per rilevare la sua posizione e far apparire il selettore
 local larghezza_icona_diary				= 40
 local altezza_icona_diary				= 40
-local posx_pulsavantidietro				= 650 								-- posizione x dei pulsanti avanti e dietro rispetto alla posizione del menu
+local posx_pulsavantidietro				= 85 								-- posizione x dei pulsanti avanti e dietro rispetto alla posizione del menu
 local posy_pulsavantidietro				= 15 								-- posizione y dei pulsanti avanti e dietro rispetto alla posizione del menu
+local posx_chiudi						= 650								-- posizione x del pulsante chiudi
 local larghezza_pagxdiy					= 75								-- larghezza intermezzo tra pulsante precedente e successivo (dove c'è il testo pagina 1 di 20 ad esempio)
 local missione_attiva					= 0									-- se 0 partita skirmish, se 1 partita WMRTSmission, se 2 partita FLEAmission. Definira quali pulsanti devono apparire o meno (OBJ e diary)
 -- variabili del selettore pulsanti categoria
@@ -80,6 +83,11 @@ local pagcur_hints				= 0		-- pagina corrente di lettura (variabile con i tasti 
 local pagcur_character			= 0		-- pagina corrente di lettura (variabile con i tasti avanti e dietro fino ad un max definito da pagtot_xxx definito sopra
 local pagcur_units				= 0		-- pagina corrente di lettura (variabile con i tasti avanti e dietro fino ad un max definito da pagtot_xxx definito sopra
 
+-- stringhe di testo delle pagine da mostrare il menu
+local string_currentpage		= 0			-- serviranno per scrivere il testo pag 1/2 della categoria selezionata
+local string_totpage			= 0			-- serviranno per scrivere il testo pag 1/2 della categoria selezionata
+local showpages					= false		-- mostra i numeri di pagina?? (solo se ci sono pagine da leggere)
+
 -- variabili per "blinking" nuove news -- alla ricezione della rispettiva news il pulsante della categoria lampeggia per indicare una nuova news: new_maps = 1 -> lampeggia news map fino al suo click
 local new_maps				= 0
 local new_story				= 0
@@ -90,7 +98,7 @@ local new_units				= 0
 -- definizioni immagini bottoni e background
 local headerdiarymenu 			= "LuaUI/Images/menu/diary/header_menu_bkgnd.png"
 local contentdiarymenu			= "LuaUI/Images/menu/diary/contents/wmrtschar0.png"  				-- assumerà il valore di una delle news sotto, a seconda della categoria e della pagina che si sta guardando
-local button_close				= "LuaUI/Images/menu/diary/menu_close.png"
+local button_close				= "LuaUI/Images/menu/mainmenu/menu_close.png"
 local icona_diarymenu			= "LuaUI/Images/menu/diary/menu_diary_icon.png"
 
 -- definizione delle immagini dei pulsanti di categoria
@@ -109,10 +117,10 @@ local font_intestazione				= gl.LoadFont("FreeSansBold.otf",14, 1.9, 40)
 local font_generale					= gl.LoadFont("FreeSansBold.otf",12, 1.9, 40)
 
 --------------------------------------
--- GESTIONE DELLE CATEGORIE DEL DIARIO -- Ogni volta che viene chiamata questa funziona si setta la categoria del diario ############################ al momento non viene mai richiamata#################
+-- GESTIONE DELLE CATEGORIE DEL DIARIO -- Ogni volta che viene chiamata questa funziona si setta la categoria del diario e si impostano le stringhe sotto delle pagine (pag 1/2)
 --------------------------------------
 local function diarycategorymanagement()
-		-- imposto la categoria del diario
+	-- imposto la categoria del diario
 	if diarycategory == 0 then 			-- sto leggendo categoria mappe globali
 	contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtsmaps"..pagcur_maps..".png" -- imposto l'immagine che sarà inizialmente "wmrtsmaps0.png"
 	-- imposto lo stato ON/OFF dei bottoni
@@ -121,6 +129,8 @@ local function diarycategorymanagement()
 	button_hintsmenu		= "LuaUI/Images/menu/diary/buttondiary_hint_off.png" 
 	button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_off.png" 
 	button_unitsmenu		= "LuaUI/Images/menu/diary/buttondiary_units_off.png" 
+	string_currentpage 		= pagcur_maps
+	string_totpage			= pagtot_maps
 	elseif diarycategory == 1 then		-- sto leggendo categoria storia
 	contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtsstory"..pagcur_story..".png"
 	-- imposto lo stato ON/OFF dei bottoni	
@@ -129,6 +139,8 @@ local function diarycategorymanagement()
 	button_hintsmenu		= "LuaUI/Images/menu/diary/buttondiary_hint_off.png" 
 	button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_off.png" 
 	button_unitsmenu		= "LuaUI/Images/menu/diary/buttondiary_units_off.png" 	
+	string_currentpage 		= pagcur_story
+	string_totpage			= pagtot_story
 	elseif diarycategory == 2 then		-- sto leggendo categoria suggerimenti
 	contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtshints"..pagcur_hints..".png"
 	-- imposto lo stato ON/OFF dei bottoni	
@@ -137,6 +149,8 @@ local function diarycategorymanagement()
 	button_hintsmenu		= "LuaUI/Images/menu/diary/buttondiary_hint_on.png" 
 	button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_off.png" 
 	button_unitsmenu		= "LuaUI/Images/menu/diary/buttondiary_units_off.png" 	
+	string_currentpage 		= pagcur_hints
+	string_totpage			= pagtot_hints	
 	elseif diarycategory == 3 then		-- sto leggendo categoria personaggi
 	contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtschar"..pagcur_character..".png"
 	-- imposto lo stato ON/OFF dei bottoni	
@@ -145,6 +159,8 @@ local function diarycategorymanagement()
 	button_hintsmenu		= "LuaUI/Images/menu/diary/buttondiary_hint_off.png" 
 	button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_on.png" 
 	button_unitsmenu		= "LuaUI/Images/menu/diary/buttondiary_units_off.png" 	
+	string_currentpage 		= pagcur_character
+	string_totpage			= pagtot_character
 	elseif diarycategory == 4 then		-- sto leggendo categoria unità
 	contentdiarymenu = "LuaUI/Images/menu/diary/contents/wmrtsunits"..pagcur_units..".png"
 	-- imposto lo stato ON/OFF dei bottoni	
@@ -152,7 +168,9 @@ local function diarycategorymanagement()
 	button_storymenu		= "LuaUI/Images/menu/diary/buttondiary_story_off.png" 
 	button_hintsmenu		= "LuaUI/Images/menu/diary/buttondiary_hint_off.png" 
 	button_charmenu			= "LuaUI/Images/menu/diary/buttondiary_character_off.png" 
-	button_unitsmenu		= "LuaUI/Images/menu/diary/buttondiary_units_on.png" 	
+	button_unitsmenu		= "LuaUI/Images/menu/diary/buttondiary_units_on.png" 
+	string_currentpage 		= pagcur_units
+	string_totpage			= pagtot_units
 	end
 end
 
@@ -208,19 +226,19 @@ end
 
 -- imposto la pagina 1 se le pagine totali = 1, cosi non mostro la pagina "non hai ricevuto news". Questa funzione viene utilizzata nel caso in cui l'utente disabiliti l'autopop
 local function primanews()
-	if pagtot_maps == 1 then
+	if pagtot_maps > 0 then
 		pagcur_maps = 1
 	end
-	if pagtot_story == 1 then
+	if pagtot_story > 0 then
 		pagtot_story = 1
 	end
-	if pagtot_hints == 1 then
+	if pagtot_hints  > 0 then
 		pagtot_hints = 1
 	end
-	if pagtot_character == 1 then
+	if pagtot_character  > 0 then
 		pagtot_character = 1
 	end
-	if pagtot_units == 1 then
+	if pagtot_units  > 0 then
 		pagtot_units = 1
 	end	
 end
@@ -257,11 +275,9 @@ end
 function widget:Initialize()
 -- verifico che sia necessario il widget (se la partita NON è mission, allora rimuovi il widget) -- #### valutare anche per flea (diario per FLEA)
 --	if not(Spring.GetGameRulesParam('Fleabowl') == 1 or Spring.GetGameRulesParam('Fleabowl') == '1' or Spring.GetGameRulesParam('wmrtsmission') == '1') then
--- ############################# RIPRISTINARE, TOLGO PER TEST -- ############################# RIPRISTINARE, TOLGO PER TEST
---	if not Spring.GetGameRulesParam('wmrtsmission') == '1' then
---		widgetHandler:RemoveWidget()
---	end
--- ############################# RIPRISTINARE, TOLGO PER TEST -- ############################# RIPRISTINARE, TOLGO PER TEST
+	if not Spring.GetGameRulesParam('wmrtsmission') == '1' then
+		widgetHandler:RemoveWidget()
+	end
 -- all'inizio imposto la posizione del mini menu
 	Pos_x_mainmenu = vsx/2 - larghezza_diarymenu/2
 	Pos_y_mainmenu = vsy/2 - altezza_diarymenu/2
@@ -351,6 +367,9 @@ function widget:IsAbove(x, y) -- se il mouse è sopra, gui non è nascosto e la 
 			or
 			-- pagina successiva
 			((x >= Pos_x_mainmenu+posx_pulsavantidietro+75) and (x <= Pos_x_mainmenu+posx_pulsavantidietro+75+larghezza_avantidietro) and (y >= Pos_y_mainmenu-posy_pulsavantidietro) and (y <= Pos_y_mainmenu-posy_pulsavantidietro+altezza_avantidietro))
+			or
+			-- pulsante close
+			((x >= Pos_x_mainmenu+posx_chiudi) and (x <= Pos_x_mainmenu+posx_chiudi+76) and (y >= Pos_y_mainmenu-posy_pulsavantidietro) and (y <= Pos_y_mainmenu-posy_pulsavantidietro+altezza_avantidietro)) 
 	end --is gui hidden
 end
 --------------------------------------
@@ -371,6 +390,11 @@ function widget:MousePress(x, y, button)
 					end
 				diarycategory = 0 -- setto la categoria da mostrare su mappe 
 				diarycategorymanagement() -- chiamo la funzione per settare le immagini del diario
+				if pagtot_maps > 0 then 
+					showpages = true 
+				else
+					showpages = false 			
+				end
 				return true
 				-- clicco su Story button	--------------------------------------------------------------------------------------------
 				elseif
@@ -380,7 +404,12 @@ function widget:MousePress(x, y, button)
 					pagcur_story = 1
 					end				
 				diarycategory = 1 -- setto la categoria da mostrare su story 	
-				diarycategorymanagement() -- chiamo la funzione per settare le immagini del diario				
+				diarycategorymanagement() -- chiamo la funzione per settare le immagini del diario	
+				if pagtot_story > 0 then 
+					showpages = true 
+				else
+					showpages = false 			
+				end			
 				return true
 				-- clicco su hints button	--------------------------------------------------------------------------------------------		
 				elseif
@@ -390,7 +419,12 @@ function widget:MousePress(x, y, button)
 					pagcur_hints = 1
 					end								
 				diarycategory = 2 -- setto la categoria da mostrare su hint 	
-				diarycategorymanagement() -- chiamo la funzione per settare le immagini del diario				
+				diarycategorymanagement() -- chiamo la funzione per settare le immagini del diario		
+				if pagtot_hints > 0 then 
+					showpages = true 
+				else
+					showpages = false 			
+				end						
 				return true			
 				-- clicco su character button	--------------------------------------------------------------------------------------------
 				elseif
@@ -400,7 +434,12 @@ function widget:MousePress(x, y, button)
 					pagcur_character = 1
 					end		
 				diarycategory = 3 -- setto la categoria da mostrare su character 	
-				diarycategorymanagement() -- chiamo la funzione per settare le immagini del diario				
+				diarycategorymanagement() -- chiamo la funzione per settare le immagini del diario	
+				if pagtot_character > 0 then 
+					showpages = true 
+				else
+					showpages = false 			
+				end						
 				return true		
 				-- clicco su units button	--------------------------------------------------------------------------------------------	
 				elseif
@@ -413,20 +452,29 @@ function widget:MousePress(x, y, button)
 				diarycategorymanagement() -- chiamo la funzione per settare le immagini del diario				
 				Spring.Echo(pagtot_units)	
 				Spring.Echo("click_units")
+				if pagtot_units > 0 then 
+					showpages = true 
+				else
+					showpages = false 			
+				end						
 				return true		
 				-- clicco su pagina precedente	--------------------------------------------------------------------------------------------	
 				elseif
 				((x >= Pos_x_mainmenu+posx_pulsavantidietro) and (x <= Pos_x_mainmenu+posx_pulsavantidietro+larghezza_avantidietro) and (y >= Pos_y_mainmenu-posy_pulsavantidietro) and (y <= Pos_y_mainmenu-posy_pulsavantidietro+altezza_avantidietro)) then
 					diarypagemanagementprevious() -- esegui funzione per pagina precedente
-					Spring.Echo("test_indietro")
+--					Spring.Echo("test_indietro")
 				return true		
 				-- clicco su pagina successiva	--------------------------------------------------------------------------------------------	
 				elseif
 				((x >= Pos_x_mainmenu+posx_pulsavantidietro+75) and (x <= Pos_x_mainmenu+posx_pulsavantidietro+75+larghezza_avantidietro) and (y >= Pos_y_mainmenu-posy_pulsavantidietro) and (y <= Pos_y_mainmenu-posy_pulsavantidietro+altezza_avantidietro)) then
 					diarypagemanagementnext() -- esegui funzione per pagina successiva
-					Spring.Echo("test_avanti")
+--					Spring.Echo("test_avanti")
 				return true		
-				------------------------ ################## manca pulsante close
+				-- clicco sul pulsante close	--------------------------------------------------------------------------------------------	
+				elseif
+				((x >= Pos_x_mainmenu+posx_chiudi) and (x <= Pos_x_mainmenu+posx_chiudi+76) and (y >= Pos_y_mainmenu-posy_pulsavantidietro) and (y <= Pos_y_mainmenu-posy_pulsavantidietro+altezza_avantidietro)) then
+					Spring.SendCommands("close_wmrts_diary")			-- spengo il minipulsante menu del minimenu 
+				return true						
 				end
 			end
 		end
@@ -526,17 +574,17 @@ function widget:TextCommand(command)
 -- comando apri menu diario
 	elseif command == 'open_wmrts_diary' then -- se ricevo il comando di aprire il diario (dal minimenu)
 		if autopopup == 0 then -- quando si apre il diario, prima di mostrarlo eseguire una funzione che controlla le pagine totali di ciascuna categoria. Se c'è almeno una pagina, mostra la pagina 1 anzichè la pagina 0 della categoria (che indicherebbe l'assenza di news di categoria)
-			function primanews()
-		end
+			primanews()
+		end	-- autopopup	 
 		diarymenu_attivo = true
 -- comando chiudi menu diario		
 	elseif command == 'close_wmrts_diary' then -- se ricevo il comando di chiudere il diario (dal minimenu)
 		diarymenu_attivo = false	
 			-- disabilito il guishader
-			if (WG['guishader_api'] ~= nil) then
-			WG['guishader_api'].RemoveRect('WMRTS_diary_shad')
-			end			
-		end	
+				if (WG['guishader_api'] ~= nil) then
+				WG['guishader_api'].RemoveRect('WMRTS_diary_shad')
+				end			
+	
 	end
 end
 
@@ -581,7 +629,7 @@ end
 		-- testo
 		font_intestazione:SetTextColor(1, 1, 1, 1)
 		font_intestazione:Begin()
-		font_intestazione:Print("Commander's logbook", Pos_x_mainmenu+70, Pos_y_mainmenu + 220+25,14,'ds')
+		font_intestazione:Print("Commander's logbook", Pos_x_mainmenu+70, Pos_y_mainmenu + 400,14,'ds')
 		font_intestazione:End()	
 		
 	-- icona principale del menu
@@ -673,6 +721,27 @@ end
 		gl.Texture(button_successiva)	
 		gl.TexRect(	Pos_x_mainmenu+posx_pulsavantidietro+larghezza_pagxdiy,Pos_y_mainmenu-posy_pulsavantidietro,Pos_x_mainmenu+posx_pulsavantidietro+larghezza_pagxdiy+larghezza_avantidietro,Pos_y_mainmenu-posy_pulsavantidietro+altezza_avantidietro)	
 		gl.Texture(false)	-- fine texture		
+
+	-- page info
+		-- testo
+		if showpages then	
+			font_intestazione:SetTextColor(1, 1, 1, 1)
+			font_intestazione:Begin()
+			font_intestazione:Print("Page"..string_currentpage.." / "..string_totpage, Pos_x_mainmenu+70, Pos_y_mainmenu + 400,14,'ds')
+			font_intestazione:End()		
+		end
+		
+	-- pulsante close
+		gl.Color(1,1,1,1)
+		gl.Texture(button_close)	
+		gl.TexRect(	Pos_x_mainmenu+posx_chiudi,Pos_y_mainmenu-posy_pulsavantidietro,Pos_x_mainmenu+posx_chiudi+76,Pos_y_mainmenu-posy_pulsavantidietro+altezza_avantidietro)	
+		gl.Texture(false)	-- fine texture			
+
+	-- testo pulsante close	
+		font_generale:SetTextColor(1, 1, 1, 1)
+		font_generale:Begin()
+		font_generale:Print("CLOSE", Pos_x_mainmenu+posx_chiudi+28, Pos_y_mainmenu-posy_pulsavantidietro+7 ,9,'ds')
+		font_generale:End()				
 
 	-- gui shader	
 		if (WG['guishader_api'] ~= nil) then
