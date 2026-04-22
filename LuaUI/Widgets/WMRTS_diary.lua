@@ -46,7 +46,7 @@ local posy_menuicone             	    = 366								-- altezza del primo pulsante
 local interassey_menuicone		        = 25+10								-- distanza y tra le origini di due pulsanti consecutivi
 local autopopup							= 1									-- attiva l'apertura del diario quando si riceve il comando di nuova news
 local autopause							= 1									-- attiva la pausa quando si riceve il comando di nuova news
-local diarymenu_attivo					= false 							-- Indica se questo menu è aperto o meno
+local diarymenu_attivo					= false 							-- Indica se questo menu è visualizzabile o meno (default false)
 local margine_sx_icona_diarymenu		= 20  								-- distanza dal margine sinistro del background e l'icona del menu
 local margine_dx_icone_diarymenu		= 10  								-- distanza dal bordo del diario alle icone di destra del menu
 local margine_su_icona_diarymenu		= -30 								-- distanza di quanto sborda l'immagine dal bordo superiore del background
@@ -257,9 +257,11 @@ end
 function widget:Initialize()
 -- verifico che sia necessario il widget (se la partita NON è mission, allora rimuovi il widget) -- #### valutare anche per flea (diario per FLEA)
 --	if not(Spring.GetGameRulesParam('Fleabowl') == 1 or Spring.GetGameRulesParam('Fleabowl') == '1' or Spring.GetGameRulesParam('wmrtsmission') == '1') then
-	if not Spring.GetGameRulesParam('wmrtsmission') == '1' then
-		widgetHandler:RemoveWidget()
-	end
+-- ############################# RIPRISTINARE, TOLGO PER TEST -- ############################# RIPRISTINARE, TOLGO PER TEST
+--	if not Spring.GetGameRulesParam('wmrtsmission') == '1' then
+--		widgetHandler:RemoveWidget()
+--	end
+-- ############################# RIPRISTINARE, TOLGO PER TEST -- ############################# RIPRISTINARE, TOLGO PER TEST
 -- all'inizio imposto la posizione del mini menu
 	Pos_x_mainmenu = vsx/2 - larghezza_diarymenu/2
 	Pos_y_mainmenu = vsy/2 - altezza_diarymenu/2
@@ -531,10 +533,10 @@ function widget:TextCommand(command)
 	elseif command == 'close_wmrts_diary' then -- se ricevo il comando di chiudere il diario (dal minimenu)
 		diarymenu_attivo = false	
 			-- disabilito il guishader
-				if (WG['guishader_api'] ~= nil) then
-				WG['guishader_api'].RemoveRect('WMRTS_diary_shad')
-				end			
-	end	
+			if (WG['guishader_api'] ~= nil) then
+			WG['guishader_api'].RemoveRect('WMRTS_diary_shad')
+			end			
+		end	
 	end
 end
 
