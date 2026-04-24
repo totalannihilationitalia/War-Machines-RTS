@@ -3,7 +3,7 @@
 #include "sfxtype.h"
 #include "exptype.h"
 
-piece  flare, turret, base, portacannon, gun, sleeve, wake1, wake2;
+piece  base, cannon, flare, portacannon, wake1, wake2;
 
 static-var  restore_delay, bMoving, Static_Var_1, Static_Var_4;
 
@@ -56,7 +56,6 @@ setSFXoccupy(Func_Var_1)
 }
 
 
-
 SmokeUnit(healthpercent, sleeptime, smoketype)
 {
 	while( get BUILD_PERCENT_LEFT )
@@ -94,20 +93,8 @@ HitByWeapon(Func_Var_1, Func_Var_2)
 	turn base to x-axis <0.000000> speed <30.000000>;
 }
 
-RockUnit(anglex, anglez)
-{
-	turn base to x-axis anglex speed <50.000000>;
-	turn base to z-axis anglez speed <50.000000>;
-	wait-for-turn base around z-axis;
-	wait-for-turn base around x-axis;
-	turn base to z-axis <0.000000> speed <20.000000>;
-	turn base to x-axis <0.000000> speed <20.000000>;
-}
-
 Create()
 {
-	dont-cache flare;
-	dont-shade flare;
 	hide flare;
 	restore_delay = 3000;
 	start-script SmokeUnit();
@@ -122,36 +109,28 @@ SetMaxReloadTime(Func_Var_1)
 RestoreAfterDelay()
 {
 	sleep restore_delay;
-	turn turret to y-axis <0.000000> speed <80.000000>;
-	turn sleeve to x-axis <0.000000> speed <80.000000>;
-	wait-for-turn turret around y-axis;
-	wait-for-turn sleeve around x-axis;
-	return (1);
+	turn cannon to y-axis <0.000000> speed <90.000000>;
 }
 
 AimPrimary(heading, pitch)
 {
 	signal SIG_AIM;
 	set-signal-mask SIG_AIM;
-	turn turret to y-axis heading speed <110.000000>;
-	turn sleeve to x-axis <0.000000> - pitch speed <40.000000>;
-	wait-for-turn turret around y-axis;
-	wait-for-turn sleeve around x-axis;
+	turn cannon to y-axis heading speed <175.000000>;
+	wait-for-turn cannon around y-axis;
 	start-script RestoreAfterDelay();
 	return (1);
 }
 
 FirePrimary()
 {
-	move gun to z-axis [-5.000000] now;
 	emit-sfx 1024 + 0 from flare;
-	sleep 155;
-	move gun to z-axis [0.000000] speed [11.000000];
+	sleep 150;
 }
 
 AimFromPrimary(piecenum)
 {
-	piecenum = turret;
+	piecenum = cannon;
 }
 
 QueryPrimary(piecenum)
@@ -161,45 +140,42 @@ QueryPrimary(piecenum)
 
 SweetSpot(piecenum)
 {
-	piecenum = base;
+	piecenum = cannon;
 }
 
 Killed(severity, corpsetype)
 {
+	hide flare;
 	if( severity <= 25 )
 	{
 		corpsetype = 1;
-		explode portacannon type BITMAPONLY | BITMAP1;
-		explode base type BITMAPONLY | BITMAP1;
-		explode turret type BITMAPONLY | BITMAP4;
-		explode sleeve type FALL | SMOKE | FIRE | EXPLODE_ON_HIT;
-		explode gun type FALL | SMOKE | FIRE | EXPLODE_ON_HIT;
+		explode base type BITMAPONLY | BITMAP2;
+		explode flare type BITMAPONLY | BITMAP3;
+		explode cannon type SHATTER | BITMAP5;
+		explode portacannon type SHATTER | BITMAP5;
 		return (0);
 	}
 	if( severity <= 50 )
 	{
 		corpsetype = 2;
-		explode portacannon type BITMAPONLY | BITMAP1;
-		explode base type BITMAPONLY | BITMAP1;
-		explode turret type SHATTER | BITMAP4;
-		explode sleeve type FALL | SMOKE | FIRE | EXPLODE_ON_HIT;
-		explode gun type FALL | SMOKE | FIRE | EXPLODE_ON_HIT;
+		explode base type BITMAPONLY | BITMAP2;
+		explode flare type FALL | BITMAP3;
+		explode cannon type SHATTER | BITMAP5;
+		explode portacannon type SHATTER | BITMAP5;
 		return (0);
 	}
 	if( severity <= 99 )
 	{
 		corpsetype = 3;
-		explode portacannon type BITMAPONLY | BITMAP1;
-		explode base type BITMAPONLY | BITMAP1;
-		explode turret type SHATTER | BITMAP4;
-		explode sleeve type SHATTER | EXPLODE_ON_HIT | BITMAP4;
-		explode gun type FALL | SMOKE | FIRE | EXPLODE_ON_HIT;
+		explode base type BITMAPONLY | BITMAP2;
+		explode flare type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode cannon type SHATTER | BITMAP5;
+		explode portacannon type SHATTER | BITMAP5;
 		return (0);
 	}
 	corpsetype = 3;
-	explode portacannon type BITMAPONLY | BITMAP1;
-	explode base type BITMAPONLY | BITMAP1;
-	explode turret type SHATTER | EXPLODE_ON_HIT | BITMAP4;
-	explode sleeve type SHATTER | EXPLODE_ON_HIT | BITMAP4;
-	explode gun type FALL | SMOKE | FIRE | EXPLODE_ON_HIT;
+	explode base type BITMAPONLY | BITMAP2;
+	explode flare type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+	explode cannon type SHATTER | EXPLODE_ON_HIT | BITMAP5;
+	explode portacannon type SHATTER | EXPLODE_ON_HIT | BITMAP5;
 }

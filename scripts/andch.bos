@@ -3,12 +3,10 @@
 #include "sfxtype.h"
 #include "exptype.h"
 
-piece  base, box, flare1, box2, flare2, wake1, wake2, wake3,
-       wake4;
+piece  base, box, flare1, wake1, wake2;
 
 static-var  Static_Var_1, bMoving, Static_Var_3, Static_Var_4, Static_Var_5,
             Static_Var_6, statechg_DesiredState, statechg_StateChanging;
-
 
 EmitSFX()
 {
@@ -19,23 +17,23 @@ EmitSFX()
 			if( Static_Var_4 == 3 )
 			{
 				emit-sfx 3 from wake2;
-				emit-sfx 3 from wake3;
+//				emit-sfx 3 from wake3;
 				emit-sfx 3 from wake1;
-				emit-sfx 3 from wake4;
+//				emit-sfx 3 from wake4;
 			}
 			if( Static_Var_4 == 2 )
 			{
 				emit-sfx 3 from wake2;
-				emit-sfx 3 from wake3;
+//				emit-sfx 3 from wake3;
 				emit-sfx 3 from wake1;
-				emit-sfx 3 from wake4;
+//				emit-sfx 3 from wake4;
 			}
 			if( Static_Var_4 == 1 )
 			{
 				emit-sfx 3 from wake2;
-				emit-sfx 3 from wake3;
+//				emit-sfx 3 from wake3;
 				emit-sfx 3 from wake1;
-				emit-sfx 3 from wake4;
+//				emit-sfx 3 from wake4;
 			}
 			sleep 150;
 		}
@@ -43,7 +41,7 @@ EmitSFX()
 		{
 			emit-sfx 259 from wake1;
 			sleep 700;
-			emit-sfx 259 from wake4;
+			emit-sfx 259 from wake2;
 			sleep 500;
 		}
 		sleep 200;
@@ -58,14 +56,11 @@ setSFXoccupy(Func_Var_1)
 Build2()
 {
 	turn box to y-axis Static_Var_1 speed <300.000000>;
-	turn box2 to y-axis Static_Var_1 speed <300.000000>;
 	wait-for-turn box around y-axis;
-	wait-for-turn box2 around y-axis;
 	Static_Var_6 = 1;
 	while( Static_Var_6 == 1 )
 	{
 		emit-sfx 2048 from flare1;
-		emit-sfx 2049 from flare2;
 		sleep 60;
 	}
 }
@@ -149,9 +144,7 @@ Stop()
 {
 	set INBUILDSTANCE to 0;
 	turn box to y-axis <0.000000> speed <350.000000>;
-	turn box2 to y-axis <0.000000> speed <350.000000>;
 	wait-for-turn box around y-axis;
-	wait-for-turn box2 around y-axis;
 	if( TRUE )
 	{
 		sleep 50;
@@ -217,7 +210,7 @@ Create()
 	call-script InitState();
 	start-script MotionControl();
 	start-script SmokeUnit();
-	start-script EmitSFX();
+	start-script EmitSFX();	
 }
 
 Activate()
@@ -265,11 +258,6 @@ TargetHeading(Func_Var_1)
 	Static_Var_1 = 0 - Func_Var_1;
 }
 
-AimFromSecondary(piecenum)
-{
-	piecenum = box2;
-}
-
 AimFromPrimary(piecenum)
 {
 	piecenum = box;
@@ -288,7 +276,6 @@ Killed(severity, corpsetype)
 		corpsetype = 1;
 		explode base type BITMAPONLY | BITMAP3;
 		explode box type BITMAPONLY | BITMAP2;
-		explode box2 type BITMAPONLY | BITMAP2;
 		return (0);
 	}
 	if( severity <= 50 )
@@ -296,7 +283,6 @@ Killed(severity, corpsetype)
 		corpsetype = 2;
 		explode base type BITMAPONLY | BITMAP3;
 		explode box type SHATTER | BITMAP2;
-		explode box2 type SHATTER | BITMAP2;
 		return (0);
 	}
 	if( severity <= 99 )
@@ -304,11 +290,9 @@ Killed(severity, corpsetype)
 		corpsetype = 3;
 		explode base type BITMAPONLY | BITMAP3;
 		explode box type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
-		explode box2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
 		return (0);
 	}
 	corpsetype = 3;
 	explode base type BITMAPONLY | BITMAP3;
 	explode box type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
-	explode box2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
 }
