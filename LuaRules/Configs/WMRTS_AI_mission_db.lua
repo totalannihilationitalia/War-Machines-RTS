@@ -34,12 +34,13 @@
 
 local UNIT_DB = {
 	--------------------------------------------------------------------------------
-	-- UNITà CHE NON DEVONO ESSERE CONTROLLATE DALLA AI (Perchè controllate dal Mission Editor)
+	-- UNITà CHE NON DEVONO ESSERE CONTROLLATE DALLA AI (Perchè controllate dal Mission Editor, identificate come *_noai)
 	--------------------------------------------------------------------------------	
 ["andhp_noai"] = { type = "building", ignore = true },
-["andgaso_noai"] = { type = "ground", ignore = true },
-["andlipo_noai"] = { type = "ground", ignore = true },
-["andmisa_noai"] = { type = "ground", ignore = true },
+["andgaso_noai"] = { type = "hovercraft", ignore = true },
+["andlipo_noai"] = { type = "hovercraft", ignore = true },
+["andmisa_noai"] = { type = "hovercraft", ignore = true },
+["andhart_noai"] = { type = "hovercraft", ignore = true },
 
 	--------------------------------------------------------------------------------
 	-- ICU
@@ -75,7 +76,7 @@ local UNIT_DB = {
 ["armfhlt"] = { type = "navalbuilding", ignore = true },		-- ### creare floating defence????
 ["armfhllt"] = { type = "navalbuilding", ignore = true },		-- ### creare floating defence????
 ["armfguard"] = { type = "navalbuilding", ignore = true },		-- ### creare floating defence????
-["fpacko"] = { type = "navalbuilding", ignore = true },		-- ### creare floating defence????
+["fpacko"] = { type = "navalbuilding", ignore = true },			-- ### creare floating defence????
 
 -- Costruzioni Tier 2 e +
 ["aafus"] = { type = "strategicbuilding", ignore = true },
