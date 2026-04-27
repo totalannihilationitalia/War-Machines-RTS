@@ -5,17 +5,17 @@
 
 piece  base, cannon, flare, portacannon, wake1, wake2;
 
-static-var  restore_delay, Static_Var_2, Static_Var_3, Static_Var_4;
+static-var  restore_delay, bMoving, Static_Var_2, Static_Var_3, Static_Var_4;
 
 // Signal definitions
 #define SIG_AIM				2
 
 
-EmitSFX()
+EmitSFX() 	/////////////// aggiungere questa parte
 {
 	while( TRUE )
 	{
-		if( Static_Var_2 )
+		if( bMoving )
 		{
 			if( Static_Var_4 == 3 )
 			{
@@ -34,7 +34,7 @@ EmitSFX()
 			}
 			sleep 150;
 		}
-		if( ( !Static_Var_2 ) AND Static_Var_4 == 3 )
+		if( ( !bMoving ) AND Static_Var_4 == 3 )
 		{
 			emit-sfx 259 from wake1;
 			sleep 700;
@@ -43,12 +43,12 @@ EmitSFX()
 		}
 		sleep 200;
 	}
-}
+}             	/////////////// aggiungere questa parte
 
-setSFXoccupy(Func_Var_1)
-{
-	Static_Var_4 = Func_Var_1;
-}
+//setSFXoccupy(Func_Var_1)  	/////////////// rimuovere
+//{
+//	Static_Var_4 = Func_Var_1;
+//}
 
 SmokeUnit(healthpercent, sleeptime, smoketype)
 {
@@ -90,6 +90,7 @@ HitByWeapon(Func_Var_1, Func_Var_2)
 Create()
 {
 	hide flare;
+	Static_Var_4 = 1;	/////////////// aggiungere questa parte
 	restore_delay = 3000;
 	start-script SmokeUnit();
 	start-script EmitSFX();
@@ -98,6 +99,15 @@ Create()
 SetMaxReloadTime(Func_Var_1)
 {
 	restore_delay = Func_Var_1 * 2;
+}
+StartMoving() 	/////////////// aggiungere questa parte
+{
+	bMoving = TRUE;
+}
+
+StopMoving() 	/////////////// aggiungere questa parte
+{
+	bMoving = FALSE;
 }
 
 RestoreAfterDelay()
