@@ -8,6 +8,7 @@ piece  base, box, flare1, wake1, wake2;
 static-var  Static_Var_1, bMoving, Static_Var_3, Static_Var_4, Static_Var_5,
             Static_Var_6, statechg_DesiredState, statechg_StateChanging;
 
+
 EmitSFX()
 {
 	while( TRUE )
@@ -17,23 +18,17 @@ EmitSFX()
 			if( Static_Var_4 == 3 )
 			{
 				emit-sfx 3 from wake2;
-//				emit-sfx 3 from wake3;
 				emit-sfx 3 from wake1;
-//				emit-sfx 3 from wake4;
 			}
 			if( Static_Var_4 == 2 )
 			{
 				emit-sfx 3 from wake2;
-//				emit-sfx 3 from wake3;
 				emit-sfx 3 from wake1;
-//				emit-sfx 3 from wake4;
 			}
 			if( Static_Var_4 == 1 )
 			{
 				emit-sfx 3 from wake2;
-//				emit-sfx 3 from wake3;
 				emit-sfx 3 from wake1;
-//				emit-sfx 3 from wake4;
 			}
 			sleep 150;
 		}
@@ -47,11 +42,11 @@ EmitSFX()
 		sleep 200;
 	}
 }
-
-setSFXoccupy(Func_Var_1)
-{
-	Static_Var_4 = Func_Var_1;
-}
+//
+//setSFXoccupy(Func_Var_1)
+//{
+//	Static_Var_4 = Func_Var_1;
+//}
 
 Build2()
 {
@@ -210,7 +205,7 @@ Create()
 	call-script InitState();
 	start-script MotionControl();
 	start-script SmokeUnit();
-	start-script EmitSFX();	
+	start-script EmitSFX();
 }
 
 Activate()
