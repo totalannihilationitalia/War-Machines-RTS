@@ -196,8 +196,8 @@ nanotower o costruttori aiutanti???
 			["CAT_SHIELD"]         	= { "andshield" },						
 			["CAT_LONG_CANNON"]     = { "andangel" },									
 			["CAT_AA_T2"]          	= { "andernie", "andernie", "andernie", "chemist" },		
-			["CAT_ATOMICDEFENCE"]   = { "anddefensor" },										-- ##############################################################				
-			["CAT_ATOMICATTACK"]    = { "andlaunch" },							
+			["CAT_ATOMICDEFENCE"]   = { "anddefensor" },										
+			["CAT_ATOMICATTACK"]    = { "andlaunch" },									-- ##########				
 			
 			["CAT_FACTORY_T1"] = {									-- fabbrica T1 si categorizza per tipologia ( terra, aria o mare), in funzione dei MAP_PROFILES l'AI effettuerà una scelta
 				land = { "andlab", "andhp" },						-- randomizza la fabbrica
