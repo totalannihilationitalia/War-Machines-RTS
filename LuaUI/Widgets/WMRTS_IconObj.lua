@@ -12,7 +12,7 @@ end
 
 -- Config immagini
 local icon_attack = "LuaUI/Images/objectives/target.png"
-local aura_attack = "LuaUI/Images/objectives/aura.png"
+local aura_attack = "LuaUI/Images/menu/objectives/marker_attack.png"
 
 -- Limite massimo di punti fissi contemporanei (per ottimizzazione)
 local MAX_FIXED_POINTS = 10 
@@ -25,22 +25,29 @@ local function DrawMarker(x, y, z, type, height, isFixed)
     local pulse = 0.5 + math.sin(time * 2) * 0.2
 
     -- 1. AUREA A TERRA
-    gl.DepthMask(false)
-    if type == 1 then 
-		gl.Color(1, 0, 0, pulse) 	-- Definisco colore rosso per type == 1
+    gl.DepthMask(true)
+    if type == 1 then 				-- type = 1 attacco
+	    gl.PushMatrix()
+		gl.Color(1, 1, 1, pulse) 	-- Definisco colore rosso per type == 1
+		gl.Texture(aura_attack)
+		gl.Translate(x, y + 5, z) 		-- coordinate relative all'unità
+		gl.Rotate(90, 1, 0, 0)
+		gl.TexRect(-85, -85, 85, 85)
+ 		gl.PopMatrix()
+    
     elseif type == 2 then 
 		gl.Color(0, 1, 0, pulse) 	-- Definisco colore rosso per type == 2
+		gl.TexRect(-45, -45, 45, 45)
     else 
 		gl.Color(1, 1, 0, pulse) 	-- Definisco colore giallo per type == 3
+		gl.TexRect(-45, -45, 45, 45)
 	end 				
-    
-    gl.PushMatrix()
-    gl.Translate(x, y + 10, z) 		-- coordinate relative all'unità
-    gl.Rotate(90, 1, 0, 0)
-    gl.Texture(aura_attack)
-    gl.TexRect(-45, -45, 45, 45)
-    gl.Texture(false)
-    gl.PopMatrix()
+  	    gl.Texture(false)	  		-- chiudo la texture
+
+
+
+
+
 
     -- 2. ICONA (Billboard)
     gl.PushMatrix()
@@ -48,7 +55,7 @@ local function DrawMarker(x, y, z, type, height, isFixed)
     gl.Billboard()
     gl.Color(1, 1, 1, 1) -- Colore pieno per l'icona
     gl.Texture(icon_attack)
-    gl.TexRect(-20, -20, 20, 20)
+    gl.TexRect(-20, -20+40, 20, 20+40)
     gl.Texture(false)
     gl.PopMatrix()
     
