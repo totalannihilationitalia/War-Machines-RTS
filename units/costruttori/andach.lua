@@ -87,11 +87,12 @@ return {
 		[11]= "chemist",
 --		inserire antimissile
 		[12]= "andlaunch",
-		[13]= "andangel",
+		[13]= "anddefensor",
+		[14]= "andangel",
 --		inserire long cannon tipo vulcan
-		[14]= "andhp",
-		[15]= "medusa",
-		[16]= "andahp",
+		[15]= "andhp",
+		[16]= "medusa",
+		[17]= "andahp",
                },
 -----------------------------------------------------------
 --- Units wreckage and heaps

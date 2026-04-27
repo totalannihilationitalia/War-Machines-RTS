@@ -84,11 +84,12 @@ return {
 		[12]= "chemist",
 --		inserire antimissile
 		[13]= "andlaunch",
-		[14]= "andangel",
+		[14]= "anddefensor",		
+		[15]= "andangel",
 --		inserire long cannon tipo vulcan
-		[15]= "andhp",
-		[16]= "medusa",
-		[17]= "andahp",
+		[16]= "andhp",
+		[17]= "medusa",
+		[18]= "andahp",
                },
 
 -----------------------------------------------------------
