@@ -10,6 +10,7 @@ end
 --[[
 15/04/2026 = creato questo widget. Molix
 16/04/2026 = realizzata immagine "aurea" 
+25/04/2026 = creo custom size per adattare meglio l' "aurea" alla dimensione dell'estrattore. Molix
 ]]--
 
 local Lups, LupsAddFX
@@ -18,7 +19,7 @@ local mexUnits = {}
 local initialized = false
 
 -- local MEX_UNIT_NAME = "cormex" trasformo in tabella
-local VALID_UNITS = { 	
+--[[local VALID_UNITS = { 	
 	["cormex"] = true,
 	["corexp"] = true,
 	["cormoho"] = true,		
@@ -34,7 +35,25 @@ local VALID_UNITS = {
 	["andmex"] = true,	
 	["andametex"] = true	
 						}
+]]--
 
+local VALID_UNITS = { 	
+
+    ["cormex"]       = { size = 45, texture = "resonator_aurea.png" },
+    ["corexp"]       = { size = 60, texture = "resonator_aurea.png" },
+    ["cormoho"]      = { size = 70, texture = "resonator_aurea_large.png" }, -- esempio texture diversa
+    ["cormexp"]      = { size = 50 }, -- userà la texture di default
+    ["icumetex"]     = { size = 38 },
+    ["armamex"]      = { size = 45 },
+    ["armmoho"]      = { size = 70 },
+    ["advmoho"]      = { size = 85 },
+    ["eufmetex"]     = { size = 55 },
+    ["eufametex"]    = { size = 55 },
+    ["eufadvmetex"]  = { size = 90 },
+    ["andmexun"]     = { size = 50 },
+    ["andmex"]       = { size = 50 },
+    ["andametex"]    = { size = 60 }
+}
 
 local SPOTS = {"spot1", "spot2", "spot3", "spot4"}
 
@@ -50,6 +69,15 @@ end
 local function AddMexAdvancedFX(unitID, strength)
     -- Forza 1.0 = Niente effetto
     if strength < 1.1 then return end
+
+    -- Recuperiamo il nome dell'unità per pescare i dati dalla tabella VALID_UNITS
+    local unitDefID = Spring.GetUnitDefID(unitID)
+    local uName = UnitDefs[unitDefID].name
+    local config = VALID_UNITS[uName] or {} -- se non trova l'unità (strano), usa tabella vuota
+
+    -- PARAMETRI MANUALI (con valori di fallback se mancano nella tabella)
+    local customSize = config.size or 50
+    local customTexture = config.texture or "resonator_aurea.png"
     
     if not particleIDs[unitID] then particleIDs[unitID] = {} end
     local pieceMap = Spring.GetUnitPieceMap(unitID)
@@ -71,15 +99,33 @@ local function AddMexAdvancedFX(unitID, strength)
         showExtra = false
     end
 
-    -- 1. L'AUREA A TERRA (Sempre presente se strength >= 2.0)
-    table.insert(particleIDs[unitID], LupsAddFX("GroundFlash", {
+-- ############ utilizzare questa porzione di codice taggato per creare un icona 3D in testa alle unità. Usare poi per le missioni ######################## molix
+--[[ 
+ table.insert(particleIDs[unitID], LupsAddFX("SimpleParticles", {	-- modifico da GroundFlash per gestire anche l'altezza
         unit = unitID,
-        pos = {ux+4, uy+50, uz+4},
-        size = 50,
+        pos = {0, 20, 0},
+        direction = {0, 1, 0},      -- IMPORTANTE: Forza la particella a guardare in alto (diventa piatta)
+        emitVector = {0, 1, 0},     -- Aiuta a mantenere l'orientamento orizzontale		
+        size = customSize, --50,  		-- sostituisco con il customsize per adattare meglio la larghezza dell'immagine alla dimensione dell'estrattore
         sizeGrowth = 0,
         life = math.huge,
         colormap = { colRing, {0,0,0,0} },
-        texture = ":n:".."LuaUI/Images/units/resonator_aurea.png", --"bitmaps/GPL/Lups/groundringBW.png",
+        texture = ":n:LuaUI/Images/units/" .. customTexture,  -- :n:".."LuaUI/Images/units/resonator_aurea.png", --"bitmaps/GPL/Lups/groundringBW.png", -- anche qui imposto texture custom per evitare troppi stretch (valutare poi se mantenere le stesse dimensioni per tutti e variare solo l'immagine. Molix ############# )
+        repeatEffect = true,
+        alignToPath = false,        -- Evita che ruoti se l'unità si muove		
+    }))
+]]--
+
+
+    -- 1. L'AUREA A TERRA (Sempre presente se strength >= 2.0)
+    table.insert(particleIDs[unitID], LupsAddFX("GroundFlash", {
+        unit = unitID,
+        pos = {ux+3, uy, uz+4},
+        size = customSize, --50,  		-- sostituisco con il customsize per adattare meglio la larghezza dell'immagine alla dimensione dell'estrattore
+        sizeGrowth = 0,
+        life = math.huge,
+        colormap = { colRing, {0,0,0,0} },
+        texture = ":n:LuaUI/Images/units/" .. customTexture,  -- :n:".."LuaUI/Images/units/resonator_aurea.png", --"bitmaps/GPL/Lups/groundringBW.png", -- anche qui imposto texture custom per evitare troppi stretch (valutare poi se mantenere le stesse dimensioni per tutti e variare solo l'immagine. Molix ############# )
         repeatEffect = true,
     }))
 
@@ -97,10 +143,10 @@ local function AddMexAdvancedFX(unitID, strength)
             end
         end
         -- CALORE
-        table.insert(particleIDs[unitID], LupsAddFX("ShieldJitter", {
-            unit = unitID, pos = {0, 40, 0}, size = 50, precision = 22,
-            strength = 0.004, life = math.huge, repeatEffect = true,
-        }))
+ --       table.insert(particleIDs[unitID], LupsAddFX("ShieldJitter", {
+--            unit = unitID, pos = {0, 40, 0}, size = 50, precision = 22,
+ --           strength = 0.004, life = math.huge, repeatEffect = true,
+--        }))
     end
 end
 
