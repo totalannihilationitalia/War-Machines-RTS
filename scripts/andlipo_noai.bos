@@ -114,7 +114,6 @@ StopMoving() 	/////////////// aggiungere questa parte
 	bMoving = FALSE;
 }
 
-
 AimPrimary(heading, pitch)
 {
 	signal SIG_AIM;
