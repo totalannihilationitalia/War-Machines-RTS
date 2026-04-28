@@ -7,88 +7,139 @@ function widget:GetInfo()
     enabled   = true,
   }
 end
--- todo
--- caricare un immagine per ogni tipologia di marker (esempio attacco, difesa, ecc)
+
+-- 28/04/2026 =	diversificate icone. Molix
+-- 				aggiunta diversificazione tra aurea (che sta sotto la unità) e icona (che sta sopra le unità)
+--				
+-- Lista icone
+-- type = 1 -> icone di attacco
+-- type = 2 -> icone di difesa
+-- type = 3 -> icone di movimento
+-- type = 4 -> icona di costruzione (ad esempio per tutorial) -- ######## to do 28/04/2026
 
 -- Config immagini
-local icon_attack = "LuaUI/Images/objectives/target.png"
+local icon_attack = "LuaUI/Images/menu/objectives/icon_attack.png"
 local aura_attack = "LuaUI/Images/menu/objectives/marker_attack.png"
+local icon_defend = "LuaUI/Images/menu/objectives/icon_attack.png"
+local aura_defend = "LuaUI/Images/menu/objectives/marker_attack.png"
+local icon_move = "LuaUI/Images/menu/objectives/icon_attack.png"
+local aura_move = "LuaUI/Images/menu/objectives/marker_attack.png"
 
 -- Limite massimo di punti fissi contemporanei (per ottimizzazione)
 local MAX_FIXED_POINTS = 10 
 
 --------------------------------------------------------------------------------
 
-local function DrawMarker(x, y, z, type, height, isFixed)
+-- funzione per disegnare l'aurea (che dovrà essere disegnata "dietro" le unità)
+local function DrawAura(x, y, z, type)
     local time = Spring.GetGameSeconds()
-    local bounce = math.sin(time * 3) * 8
     local pulse = 0.5 + math.sin(time * 2) * 0.2
-
-    -- 1. AUREA A TERRA
-    gl.DepthMask(true)
-    if type == 1 then 				-- type = 1 attacco
-	    gl.PushMatrix()
-		gl.Color(1, 1, 1, pulse) 	-- Definisco colore rosso per type == 1
+	local rotation = time * 60 
+    gl.DepthMask(true)  -- Permette al depth buffer di funzionare
+    gl.DepthTest(true)
+	gl.PushMatrix()    
+    if type == 1 then gl.Color(1, 0, 0, pulse) 		-- aurea di attacco
+		gl.Color(1, 1, 1, pulse) 	
 		gl.Texture(aura_attack)
-		gl.Translate(x, y + 5, z) 		-- coordinate relative all'unità
-		gl.Rotate(90, 1, 0, 0)
+		gl.Translate(x, y + 5, z) 					-- coordinate relative all'unità
+		gl.Rotate(rotation,0 , 1, 0)
+		gl.Rotate(90, 1, 0, 0) 
 		gl.TexRect(-85, -85, 85, 85)
- 		gl.PopMatrix()
-    
     elseif type == 2 then 
-		gl.Color(0, 1, 0, pulse) 	-- Definisco colore rosso per type == 2
-		gl.TexRect(-45, -45, 45, 45)
+		gl.Color(1, 1, 1, pulse) 	
+		gl.Texture(aura_defend)
+		gl.Translate(x, y + 5, z) 					-- coordinate relative all'unità
+		gl.Rotate(rotation,0 , 1, 0)
+		gl.Rotate(90, 1, 0, 0) 
+		gl.TexRect(-85, -85, 85, 85)
+	elseif type == 3 then 
+		gl.Color(1, 1, 1, pulse) 	
+		gl.Texture(aura_move)
+		gl.Translate(x, y + 5, z) 					-- coordinate relative all'unità
+		gl.Rotate(rotation,0 , 1, 0)
+		gl.Rotate(90, 1, 0, 0) 
+		gl.TexRect(-85, -85, 85, 85)	
     else 
-		gl.Color(1, 1, 0, pulse) 	-- Definisco colore giallo per type == 3
-		gl.TexRect(-45, -45, 45, 45)
-	end 				
-  	    gl.Texture(false)	  		-- chiudo la texture
-
-
-
-
-
-
-    -- 2. ICONA (Billboard)
-    gl.PushMatrix()
-    gl.Translate(x, y + height + 25 + bounce, z)
-    gl.Billboard()
-    gl.Color(1, 1, 1, 1) -- Colore pieno per l'icona
-    gl.Texture(icon_attack)
-    gl.TexRect(-20, -20+40, 20, 20+40)
+		gl.Color(1, 1, 0, pulse) 					-- ######### continuare
+	end
+    
     gl.Texture(false)
     gl.PopMatrix()
-    
-    gl.DepthMask(true)
 end
 
-function widget:DrawWorld()
-    -- --- PARTE 1: UNITÀ ---
+-- funzione per disegnare l'icona (che verrà disegnata davanti a tutte le unità)
+local function DrawIcon(x, y, z, height, type)
+    local time = Spring.GetGameSeconds()
+    local bounce = math.sin(time * 3) * 8
+
+    gl.DepthMask(false)
+    gl.DepthTest(false) -- L'icona si vede anche attraverso le montagne se vuoi
+ 	gl.PushMatrix()   
+    if type == 1 then 				-- type = 1 -> attacco	
+		gl.Translate(x, y + height + 25 + bounce, z)
+		gl.Billboard()
+		gl.Color(1, 1, 1, 1)
+		gl.Texture(icon_attack)
+		gl.TexRect(-30, -20+40, 30, 20+40+20)
+	elseif type == 2 then 			-- type = 2 -> difesa
+		gl.Translate(x, y + height + 25 + bounce, z)
+		gl.Billboard()
+		gl.Color(1, 1, 1, 1)
+		gl.Texture(icon_defend)
+		gl.TexRect(-30, -20+40, 30, 20+40+20)									
+	elseif type == 3 then 			-- type = 3 -> move
+		gl.Translate(x, y + height + 25 + bounce, z)
+		gl.Billboard()
+		gl.Color(1, 1, 1, 1)
+		gl.Texture(icon_move)
+		gl.TexRect(-30, -20+40, 30, 20+40+20)									-- continuare			############		
+	end	
+	gl.Texture(false)
+	gl.PopMatrix()
+end
+
+-- funzione per disegnare le immagini sotto le unità
+function widget:DrawWorldPreUnit()
     local visibleUnits = Spring.GetVisibleUnits()
+    
+    -- Disegna Auree Unità
     for i=1, #visibleUnits do
         local uID = visibleUnits[i]
         local objType = Spring.GetUnitRulesParam(uID, "obj_type")
-        
         if objType and objType > 0 then
             local x, y, z = Spring.GetUnitPosition(uID)
-            local unitDefID = Spring.GetUnitDefID(uID)
-            local h = (UnitDefs[unitDefID] and UnitDefs[unitDefID].height or 30)
-            DrawMarker(x, y, z, objType, h, false)
+            DrawAura(x, y, z, objType)
         end
     end
 
-    -- --- PARTE 2: PUNTI FISSI ---
+    -- Disegna Auree Punti Fissi
     for i=1, MAX_FIXED_POINTS do
         local prefix = "obj_marker_" .. i
-		-- se il prefisso è 1 ->
         if (Spring.GetGameRulesParam(prefix .. "_active") or 0) == 1 then
             local px = Spring.GetGameRulesParam(prefix .. "_x") or 0
             local py = Spring.GetGameRulesParam(prefix .. "_y") or 0
             local pz = Spring.GetGameRulesParam(prefix .. "_z") or 0
             local pt = Spring.GetGameRulesParam(prefix .. "_type") or 3
-            DrawMarker(px, py, pz, pt, 40, true) -- Altezza fissa 40 per i punti
+            DrawAura(px, py, pz, pt)
         end
     end
+end
+
+
+-- funzione per disegnare le immagini sopra le unità
+function widget:DrawWorld()
+    local visibleUnits = Spring.GetVisibleUnits()
     
-    gl.Color(1,1,1,1)
+    for i=1, #visibleUnits do
+        local uID = visibleUnits[i]
+        local objType = Spring.GetUnitRulesParam(uID, "obj_type")
+        if objType and objType > 0 then
+            local x, y, z = Spring.GetUnitPosition(uID)
+            local unitDefID = Spring.GetUnitDefID(uID)
+            local h = (UnitDefs[unitDefID] and UnitDefs[unitDefID].height or 30)
+            DrawIcon(x, y, z, h, objType)
+        end
+    end
+
+    -- valuare se inserire le icone ai punti fissi, nel caso farlo qui (magari alcune tipologie necessitano dell'icona, da valutare man mano si fanno le missioni) Molix
 end
