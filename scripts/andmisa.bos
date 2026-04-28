@@ -5,7 +5,7 @@
 
 piece  flare1, flare2, base, launcher, portacannon, turret, wake1, wake2;
 
-static-var  restore_delay, gun_1, bMoving, Static_Var_3, Static_Var_4, Static_Var_5;
+static-var  restore_delay, gun_1, bMoving, Static_Var_6;
 
 // Signal definitions
 #define SIG_AIM				2
@@ -15,26 +15,26 @@ EmitSFX()
 {
 	while( TRUE )
 	{
-		if( Static_Var_3 )
+		if( bMoving )
 		{
-			if( Static_Var_5 == 3 )
+			if( Static_Var_6 == 3 )
 			{
 				emit-sfx 3 from wake2;
 				emit-sfx 3 from wake1;
 			}
-			if( Static_Var_5 == 2 )
+			if( Static_Var_6 == 2 )
 			{
 				emit-sfx 3 from wake2;
 				emit-sfx 3 from wake1;
 			}
-			if( Static_Var_5 == 1 )
+			if( Static_Var_6 == 1 )
 			{
 				emit-sfx 3 from wake2;
 				emit-sfx 3 from wake1;
 			}
 			sleep 150;
 		}
-		if( ( !Static_Var_3 ) AND Static_Var_5 == 3 )
+		if( ( !bMoving ) AND Static_Var_6 == 3 )
 		{
 			emit-sfx 259 from wake1;
 			sleep 700;
@@ -44,8 +44,6 @@ EmitSFX()
 		sleep 200;
 	}
 }
-
-
 
 SmokeUnit(healthpercent, sleeptime, smoketype)
 {
@@ -84,12 +82,12 @@ HitByWeapon(Func_Var_1, Func_Var_2)
 	turn base to x-axis <0.000000> speed <30.005495>;
 }
 
-StartMoving() 	/////////////// aggiungere questa parte
+StartMoving()
 {
 	bMoving = TRUE;
 }
 
-StopMoving() 	/////////////// aggiungere questa parte
+StopMoving()
 {
 	bMoving = FALSE;
 }
@@ -100,7 +98,7 @@ Create()
 	hide flare2;
 	gun_1 = flare1;
 	restore_delay = 3000;
-	Static_Var_4 = 1;	/////////////// aggiungere questa parte	
+	Static_Var_6 = 1;
 	start-script SmokeUnit();
 	start-script EmitSFX();
 }

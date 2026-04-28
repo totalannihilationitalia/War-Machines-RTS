@@ -5,7 +5,7 @@
 
 piece  flare, turret, base, portacannon, gun, sleeve, wake1, wake2;
 
-static-var  restore_delay, bMoving, Static_Var_2, Static_Var_3, Static_Var_4;
+static-var  restore_delay, bMoving, Static_Var_5;
 
 // Signal definitions
 #define SIG_AIM				2
@@ -15,26 +15,26 @@ EmitSFX()
 {
 	while( TRUE )
 	{
-		if( Static_Var_2 )
+		if( bMoving )
 		{
-			if( Static_Var_4 == 3 )
+			if( Static_Var_5 == 3 )
 			{
 				emit-sfx 3 from wake2;
 				emit-sfx 3 from wake1;
 			}
-			if( Static_Var_4 == 2 )
+			if( Static_Var_5 == 2 )
 			{
 				emit-sfx 3 from wake2;
 				emit-sfx 3 from wake1;
 			}
-			if( Static_Var_4 == 1 )
+			if( Static_Var_5 == 1 )
 			{
 				emit-sfx 3 from wake2;
 				emit-sfx 3 from wake1;
 			}
 			sleep 150;
 		}
-		if( ( !Static_Var_2 ) AND Static_Var_4 == 3 )
+		if( ( !bMoving ) AND Static_Var_5 == 3 )
 		{
 			emit-sfx 259 from wake1;
 			sleep 700;
@@ -98,17 +98,17 @@ Create()
 	dont-shade flare;
 	hide flare;
 	restore_delay = 3000;
-	Static_Var_4 = 1;	/////////////// aggiungere questa parte	
+	Static_Var_5 = 1;
 	start-script SmokeUnit();
 	start-script EmitSFX();
 }
 
-StartMoving() 	/////////////// aggiungere questa parte
+StartMoving()
 {
 	bMoving = TRUE;
 }
 
-StopMoving() 	/////////////// aggiungere questa parte
+StopMoving()
 {
 	bMoving = FALSE;
 }
