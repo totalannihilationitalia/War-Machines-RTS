@@ -20,10 +20,10 @@ end
 -- Config immagini
 local icon_attack = "LuaUI/Images/menu/objectives/icon_attack.png"
 local aura_attack = "LuaUI/Images/menu/objectives/marker_attack.png"
-local icon_defend = "LuaUI/Images/menu/objectives/icon_attack.png"
-local aura_defend = "LuaUI/Images/menu/objectives/marker_attack.png"
-local icon_move = "LuaUI/Images/menu/objectives/icon_attack.png"
-local aura_move = "LuaUI/Images/menu/objectives/marker_attack.png"
+local icon_defend = "LuaUI/Images/menu/objectives/icon_defend.png"
+local aura_defend = "LuaUI/Images/menu/objectives/marker_defend.png"
+local icon_move = "LuaUI/Images/menu/objectives/icon_move.png"
+local aura_move = "LuaUI/Images/menu/objectives/marker_move.png"
 
 -- Limite massimo di punti fissi contemporanei (per ottimizzazione)
 local MAX_FIXED_POINTS = 10 
@@ -60,7 +60,7 @@ local function DrawAura(x, y, z, type)
 		gl.Rotate(90, 1, 0, 0) 
 		gl.TexRect(-85, -85, 85, 85)	
     else 
-		gl.Color(1, 1, 0, pulse) 					-- ######### continuare
+		Spring.Echo("ATTENZIONE: non esiste questo type!!!!")		-- warning
 	end
     
     gl.Texture(false)
