@@ -204,15 +204,11 @@ FireSecondary()
 {
 	if( gun_2 == 0 )
 	{
-//		show flare1;
 		sleep 75;
-//		hide flare1;
 	}
 	if( gun_2 == 1 )
 	{
-//		show flare2;
 		sleep 75;
-//		hide flare2;
 	}
 	++gun_2;
 	if( gun_2 == 2 )
