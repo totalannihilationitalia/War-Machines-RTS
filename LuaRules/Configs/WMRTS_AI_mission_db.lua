@@ -498,6 +498,7 @@ local UNIT_DB = {
 ["bigb"] = { type = "ground" },
 ["ebigb"] = { type = "ground" },
 ["andkill"] = { type = "ground" },
+["andairkill"] = { type = "ground" },
 ["interceptor"] = { type = "ground" },
 ["armpraet"] = { type = "ground" },
 

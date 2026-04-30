@@ -676,11 +676,11 @@ local SQUAD_TEMPLATES = {
 	},			
 -- andgant
 	["AND_andgant_medium_patrol_1"] = {
-		units = { "bigb", "bigb", "andkill" }, 
+		units = { "bigb", "bigb", "andkill", "andairkill" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
 	["AND_andgant_medium_patrol_2"] = {
-		units = { "bigb", "bigb", "andkill", "bigb", "interceptor", "interceptor" }, 
+		units = { "bigb", "bigb", "andkill", "bigb", "interceptor", "andairkill", "interceptor" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
 	["AND_andgant_medium_patrol_3"] = {
@@ -688,11 +688,11 @@ local SQUAD_TEMPLATES = {
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
 	["AND_andgant_medium_patrol_4"] = {
-		units = { "cordem", "bigb","bigb" }, 
+		units = { "cordem", "andairkill", "bigb","bigb" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},			
 	["AND_andgant_medium_patrol_5"] = {
-		units = { "interceptor", "andkill", "bigb","bigb" }, 
+		units = { "interceptor", "andairkill", "andkill", "bigb","bigb" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},		
 } -- end tabella squadre
