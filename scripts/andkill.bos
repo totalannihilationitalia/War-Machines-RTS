@@ -4,7 +4,7 @@
 #include "exptype.h"
 
 piece  base, hip, body, lupleg, rupleg, lloleg, rloleg, lfoot,
-       rfoot, firept1, firept2, flare1, flare2, lgun, rgun, barrel1,
+       rfoot, firept1, firept2, lgun, rgun, barrel1,
        barrel2;
 
 static-var  bMoving, Static_Var_2, Static_Var_3, gun_1, gun_2;
@@ -112,12 +112,8 @@ Create()
 {
 	dont-cache firept1;
 	dont-cache firept2;
-	dont-cache flare1;
-	dont-cache flare2;
 	hide firept1;
 	hide firept2;
-	hide flare1;
-	hide flare2;
 	bMoving = FALSE;
 	Static_Var_2 = 0;
 	Static_Var_3 = 1;
@@ -147,8 +143,6 @@ RestoreAfterDelay()
 	move barrel2 to z-axis [0.000000] now;
 	hide firept1;
 	hide firept2;
-	hide flare1;
-	hide flare2;
 	Static_Var_2 = 0;
 }
 
@@ -166,16 +160,7 @@ AimPrimary(heading, pitch)
 	return (1);
 }
 
-AimSecondary(heading, pitch)
-{
-	signal SIG_AIM_2;
-	set-signal-mask SIG_AIM_2;
-	wait-for-turn lgun around x-axis;
-	wait-for-turn rgun around x-axis;
-	wait-for-turn body around y-axis;
-	start-script RestoreAfterDelay();
-	return (1);
-}
+
 
 FirePrimary()
 {
@@ -200,22 +185,7 @@ FirePrimary()
 	}
 }
 
-FireSecondary()
-{
-	if( gun_2 == 0 )
-	{
-		sleep 75;
-	}
-	if( gun_2 == 1 )
-	{
-		sleep 75;
-	}
-	++gun_2;
-	if( gun_2 == 2 )
-	{
-		gun_2 = base;
-	}
-}
+
 
 AimFromPrimary(piecenum)
 {
@@ -241,29 +211,7 @@ QueryPrimary(piecenum)
 	}
 }
 
-AimFromSecondary(piecenum)
-{
-	if( gun_2 == 0 )
-	{
-		piecenum = flare1;
-	}
-	if( gun_2 == 1 )
-	{
-		piecenum = flare2;
-	}
-}
 
-QuerySecondary(piecenum)
-{
-	if( gun_2 == 0 )
-	{
-		piecenum = flare1;
-	}
-	if( gun_2 == 1 )
-	{
-		piecenum = flare2;
-	}
-}
 
 SweetSpot(piecenum)
 {
@@ -274,8 +222,6 @@ Killed(severity, corpsetype)
 {
 	hide firept1;
 	hide firept2;
-	hide flare1;
-	hide flare2;
 	if( severity <= 25 )
 	{
 		corpsetype = 1;
