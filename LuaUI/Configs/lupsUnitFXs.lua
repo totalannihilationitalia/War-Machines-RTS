@@ -425,6 +425,22 @@ andhawk= {
 	{class='ShieldSphere', options=MergeTable(valkShieldSphere, {piece="bladesbottom", onActive=true})},
     {class='StaticParticles', options=MergeTable(valkCorona, {piece="bladesbottom", onActive=true})},
   	  },
+  eufresonator = {
+	{class='ShieldSphere', options=MergeTable(valkShieldSphere, {piece="spota", onActive=true})},
+	{class='ShieldSphere', options=MergeTable(valkShieldSphere, {piece="spotb", onActive=true})},
+	{class='ShieldSphere', options=MergeTable(valkShieldSphere, {piece="spotc", onActive=true})},
+	{class='ShieldSphere', options=MergeTable(valkShieldSphere, {piece="spotd", onActive=true})},
+	{class='ShieldSphere', options=MergeTable(valkShieldSphere, {piece="spote", onActive=true})},
+	{class='ShieldSphere', options=MergeTable(valkShieldSphere, {piece="spotf", onActive=true})},	
+
+    {class='StaticParticles', options=MergeTable(valkCorona, {piece="spota", onActive=true})},
+    {class='StaticParticles', options=MergeTable(valkCorona, {piece="spotb", onActive=true})},
+    {class='StaticParticles', options=MergeTable(valkCorona, {piece="spotc", onActive=true})},		
+    {class='StaticParticles', options=MergeTable(valkCorona, {piece="spotd", onActive=true})},
+    {class='StaticParticles', options=MergeTable(valkCorona, {piece="spote", onActive=true})},
+    {class='StaticParticles', options=MergeTable(valkCorona, {piece="spotf", onActive=true})},	
+  	  },
+	  
   orcl = {
 	{class='ShieldSphere', options=MergeTable(ffficuthrust, {piece="thrust", onActive=true})},
 	{class='ShieldSphere', options=MergeTable(ffficuthrust, {piece="thrust2", onActive=true})},
