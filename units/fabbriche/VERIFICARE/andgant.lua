@@ -57,13 +57,12 @@ return {
 --- INSERT BUILDLIST
 -----------------------------------
                buildoptions = { 
-			[1] = "cordem",			-- unità lanciafiamme
---			[2] = "conartist", 		-- unità aliena
-			[2] = "bigb",			-- simile a raven + aggiungere raggio laser
---			[4] = "ebigb",			-- unità aliena
-			[3] = "andkill",			-- fare hvy machinesgun
-			[4] = "interceptor",			
-			[5] = "armpraet",
+			[1] = "cordem",			
+			[2] = "bigb",			
+			[3] = "andkill",			
+			[4] = "andairkill",			
+			[5] = "interceptor",			
+			[6] = "armpraet",
 		},
 -----------------------------------------------------------
 --- Units wreckage and heaps

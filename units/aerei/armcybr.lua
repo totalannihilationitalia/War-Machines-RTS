@@ -14,10 +14,12 @@ return {
 		canfly = true,
 		canguard = true,
 		canmove = true,
-		canLoopbackAttack = true,				-- 15/04/2026 aggiunto molix
+--		canLoopbackAttack = true,				-- 15/04/2026 aggiunto molix -- 30/04/2026 tolto dopo test :)
 		canpatrol = true,
 		canstop = 1,
 		category = "ALL WEAPON NOTSUB VTOL",
+		cloakcost = 100,
+		cloakcostmoving = 1000,		
 		collide = false,
 		cruisealt = 150,
 		defaultmissiontype = "VTOL_standby",
@@ -39,6 +41,7 @@ return {
 		maxvelocity = 10.35,
 		maxwaterdepth = 0,
 		metalstorage = 0,
+		mincloakdistance = 100,		
 		mobilestandorders = 1,
 		moverate1 = 9,
 		name = "Liche",

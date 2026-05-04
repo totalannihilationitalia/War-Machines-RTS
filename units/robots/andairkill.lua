@@ -139,7 +139,7 @@ weapondefs = {
 		armrl_missile = {
                      areaofeffect = 150,
                      avoidfeature = true,
-                     burst = 7, -- lua:salvoSize					 
+                     burst = 10, -- lua:salvoSize					 
                      canattackground = false,
 --                     cegTag = "",
 --                     craterareaofeffect =  ,
@@ -154,7 +154,7 @@ weapondefs = {
                      model = "missile",
                      name= "Missiles",
                      noselfdamage = true,
-                     range = 775,
+                     range = 830,
                      reloadtime = 1.7,
                      smoketrail = true,
                      soundhit = "xplomed2",
@@ -173,7 +173,7 @@ weapondefs = {
                      weapontype = "MissileLauncher",
                      weaponvelocity  = 750,
                      damage = {
-                         default = 113,
+                         default = 125,
                      }, -- close damage
              }, --close single weapon definitions
 }, -- close weapon definition		 
