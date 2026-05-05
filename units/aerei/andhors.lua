@@ -45,7 +45,7 @@ return {
                name = "Flying Ray",
                noAutoFire = false,
                nochasecategory = "VTOL",
-               objectname = "corhors",
+               objectname = "andhors.s3o",
                radardistance = 1300,
                selfdestructas = "BIG_UNIT",
                sightdistance = 500,

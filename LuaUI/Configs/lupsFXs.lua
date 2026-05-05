@@ -277,6 +277,15 @@ ffficuthrust = {
   repeatEffect=true
 }
 
+andvtolthrust = {
+  life=20,
+  pos={0,0,0},
+  size=10,
+  colormap1 = { {1, 0.8, 0, 0.75},{1, 0.8, 0, 1.0},{1, 0.8, 0, 1.0},{1, 0.8, 0, 0.75} },
+  colormap2 = { {0.9, 0.6, 0, 0.7},{0.9, 0.6, 0, 0.75},{0.9, 0.6, 0, 0.75},{0.9, 0.6, 0, 0.7} },
+  repeatEffect=true
+}
+
 commandShieldSphere = {
   life			= math.huge,
   heightFactor	= 0.75,
@@ -455,6 +464,19 @@ fffCorona = {
   count       = 1,
   repeatEffect = true,
 }
+
+andvtolCorona = {
+  pos	      = {0,0,0},
+  life        = math.huge,
+  lifeSpread  = 0,
+  size        = 45,
+  sizeGrowth  = 0,
+  colormap    = { {1, 0.4, 0.2, 0.01} },
+  texture     = 'bitmaps/GPL/groundflash.tga',
+  count       = 1,
+  repeatEffect = true,
+}
+
 
 commandCoronaWhite = {
   heightFactor = 0.75,

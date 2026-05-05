@@ -481,7 +481,13 @@ andhawk= {
     {class='StaticParticles', options=MergeTable(fffCorona, {piece="thrust3", onActive=true})},
 
   	  },
+  anddragon = {
+    {class='ShieldSphere', options=MergeTable(andvtolthrust, {piece="fx1", onActive=true})},
+    {class='StaticParticles', options=MergeTable(andvtolCorona, {piece="fx1", onActive=true})},
+    {class='ShieldSphere', options=MergeTable(andvtolthrust, {piece="fx2", onActive=true})},
+    {class='StaticParticles', options=MergeTable(andvtolCorona, {piece="fx2", onActive=true})},
 
+  	  },
 
   cirr = {
     {class='AirJet', options={color={0.6,0.1,0.0}, width=3.5, length=55, piece="thrust1", texture2=":c:bitmaps/gpl/lups/jet2.bmp", onActive=true}},
