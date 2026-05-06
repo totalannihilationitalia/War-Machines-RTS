@@ -13,7 +13,7 @@ return {
                builder = true,
                buildpic = "da_fare.png",
                buildtime  = 4066,
-	       canAttack = false,
+	           canAttack = false,
                canGuard = true,
                canmove = true,
                canPatrol = true,

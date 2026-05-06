@@ -148,7 +148,7 @@ weapondefs = {
                      soundstart = "CORSNIPE_laser",
                      turret  = true, 
                      weapontype = "LaserCannon",
-                     weaponvelocity  = 1000,
+                     weaponvelocity  = 2000,
                      damage = {
                          default = 450,
                      }, -- close damage
