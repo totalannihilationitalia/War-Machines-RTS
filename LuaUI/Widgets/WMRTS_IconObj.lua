@@ -10,12 +10,16 @@ end
 
 -- 28/04/2026 =	diversificate icone. Molix
 -- 				aggiunta diversificazione tra aurea (che sta sotto la unità) e icona (che sta sopra le unità)
--- 29/04/2026 = ottimizzato il codice e aggiunto il testo ai marker				
+-- 29/04/2026 = ottimizzato il codice e aggiunto il testo ai marker		
+-- 06/04/2026 = aggiunte icone "build" e "select"		
 -- Lista icone
 -- type = 1 -> icone di attacco
 -- type = 2 -> icone di difesa
 -- type = 3 -> icone di movimento
--- type = 4 -> icona di costruzione (ad esempio per tutorial) -- ######## to do 28/04/2026
+-- type = 4 -> icona di costruzione ( factory -> unità)
+-- type = 5 -> icona di selezione unità
+-- type = 6 -> icona di costruzione ( unità -> building)
+-- type = 7 -> icona di "DANGER", pericolo
 
 -- Config immagini
 local icon_attack = "LuaUI/Images/menu/objectives/icon_attack.png"
@@ -24,6 +28,14 @@ local icon_defend = "LuaUI/Images/menu/objectives/icon_defend.png"
 local aura_defend = "LuaUI/Images/menu/objectives/marker_defend.png"
 local icon_move   = "LuaUI/Images/menu/objectives/icon_move.png"
 local aura_move   = "LuaUI/Images/menu/objectives/marker_move.png"
+local icon_build   = "LuaUI/Images/menu/objectives/icon_build.png" 			--	rev 06/05/2026 aggiunto
+local aura_build   = "LuaUI/Images/menu/objectives/marker_build.png"		--	rev 06/05/2026 aggiunto
+local icon_select   = "LuaUI/Images/menu/objectives/icon_select.png"		--	rev 06/05/2026 aggiunto
+local aura_select   = "LuaUI/Images/menu/objectives/marker_select.png"		--	rev 06/05/2026 aggiunto
+local icon_construct   = "LuaUI/Images/menu/objectives/icon_select.png"		--	rev 06/05/2026 aggiunto
+local aura_construct   = "LuaUI/Images/menu/objectives/marker_select.png"	--	rev 06/05/2026 aggiunto
+local icon_danger   = "LuaUI/Images/menu/objectives/icon_danger.png"		--	rev 06/05/2026 aggiunto
+local aura_danger   = "LuaUI/Images/menu/objectives/marker_danger.png"		--	rev 06/05/2026 aggiunto
 
 -- Tabella per i testi automatici delle unità basata sul tipo
 local typeToText = {
@@ -31,6 +43,9 @@ local typeToText = {
     [2] = "DEFEND",
     [3] = "MOVE",
     [4] = "BUILD",
+    [5] = "SELECT",	
+    [6] = "BUILD",			-- ########## sarebbe costruire edificio,
+    [7] = "DANGER",		
 }
 
 -- Limite massimo di punti fissi
@@ -69,7 +84,12 @@ local function DrawAura(x, y, z, type)
     local tex = aura_move
     if type == 1 then tex = aura_attack
     elseif type == 2 then tex = aura_defend
-    elseif type == 3 then tex = aura_move end
+    elseif type == 3 then tex = aura_move 
+    elseif type == 4 then tex = aura_build 		--	rev 06/05/2026 aggiunto
+    elseif type == 5 then tex = aura_select 	--	rev 06/05/2026 aggiunto
+    elseif type == 6 then tex = aura_build 		--	rev 06/05/2026 aggiunto
+    elseif type == 7 then tex = aura_danger 	--	rev 06/05/2026 aggiunto	
+	end
     
     gl.Color(1, 1, 1, pulse) 	
     gl.Texture(tex)
@@ -94,7 +114,12 @@ local function DrawIcon(x, y, z, height, type)
     local tex = icon_move
     if type == 1 then tex = icon_attack
     elseif type == 2 then tex = icon_defend
-    elseif type == 3 then tex = icon_move end
+    elseif type == 3 then tex = icon_move 
+    elseif type == 4 then tex = icon_build 	
+    elseif type == 5 then tex = icon_select 		
+    elseif type == 6 then tex = icon_build				-- ####### sistemare e mettere icona di costruzione unità->building 	
+    elseif type == 7 then tex = icon_danger 			--	rev 06/05/2026 aggiunto	
+	end
 
     gl.Translate(x, y + height + 25 + bounce, z)
     gl.Billboard()
