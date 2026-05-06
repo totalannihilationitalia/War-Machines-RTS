@@ -458,6 +458,13 @@ andhawk= {
     {class='AirJet', options={color={0.6,0.1,0.0}, width=3.5, length=55, piece="thust4", texture2=":c:bitmaps/gpl/lups/jet2.bmp", onActive=true}},
   	  },
 
+  andhors = {
+    {class='AirJet', options={color={0.6,0.1,0.0}, width=3.5, length=55, piece="flame1", texture2=":c:bitmaps/gpl/lups/jet2.bmp", onActive=true}},
+    {class='AirJet', options={color={0.6,0.1,0.0}, width=3.5, length=55, piece="flame2", texture2=":c:bitmaps/gpl/lups/jet2.bmp", onActive=true}},
+    {class='AirJet', options={color={0.6,0.1,0.0}, width=3.5, length=55, piece="flame3", texture2=":c:bitmaps/gpl/lups/jet2.bmp", onActive=true}},
+    {class='AirJet', options={color={0.6,0.1,0.0}, width=3.5, length=55, piece="flame4", texture2=":c:bitmaps/gpl/lups/jet2.bmp", onActive=true}},
+  	  },
+
   taln = {
     {class='AirJet', options={color={0.6,0.1,0.0}, width=3.5, length=55, piece="thrust1", texture2=":c:bitmaps/gpl/lups/jet2.bmp", onActive=true}},
     {class='AirJet', options={color={0.6,0.1,0.0}, width=3.5, length=55, piece="thrust2", texture2=":c:bitmaps/gpl/lups/jet2.bmp", onActive=true}},

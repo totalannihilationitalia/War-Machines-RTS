@@ -3,14 +3,14 @@
 #include "sfxtype.h"
 #include "exptype.h"
 
-piece  body, turret, sleeve1, gun1, flare1, sleeve2,
-       gun2, flare2, sleeve3, gun3, flare3, flame1,
-       flame2, flame3, flame4;
+piece  body, turret, sleeve1, gun1, flare1, sleeve2, gun2, flare2,
+       sleeve3, gun3, flare3, flame1, flame2, flame3, flame4;
 
 static-var  Static_Var_1, restore_delay, Static_Var_3, statechg_DesiredState, statechg_StateChanging;
 
 // Signal definitions
 #define SIG_AIM				2
+
 
 activatescr()
 {
@@ -28,7 +28,6 @@ deactivatescr()
 		Static_Var_3 = 0;
 	}
 }
-
 
 ProcessFlames()
 {
@@ -60,8 +59,6 @@ HitByWeapon(Func_Var_1, Func_Var_2)
 	wait-for-turn body around x-axis;
 	turn body to z-axis <0.000000> speed <30.000000>;
 	turn body to x-axis <0.000000> speed <30.000000>;
-	return (0);
-	// Build by COBBLER Ver4.0 Copyright @1998 DIGITAL CONCEPT SOFTWARE (MANU@inext.fr) /   
 }
 
 InitState()
@@ -123,7 +120,6 @@ SmokeUnit(healthpercent, sleeptime, smoketype)
 	}
 }
 
-
 MoveRate1()
 {
 	signal 8;
@@ -184,8 +180,6 @@ Deactivate()
 	start-script RequestState(1);
 }
 
-
-
 AimPrimary(heading, pitch)
 {
 	signal SIG_AIM;
@@ -219,30 +213,33 @@ FirePrimary()
 {
 	if( Static_Var_1 == 1 )
 	{
+		emit-sfx 1024 + 0 from flare1;	
 		move gun1 to z-axis [-3.000000] speed [500.000000];
 		wait-for-move gun1 along z-axis;
 		move gun1 to z-axis [0.000000] speed [3.000000];
-		show flare1;
+//		show flare1;
 		sleep 150;
-		hide flare1;
+//		hide flare1;
 	}
 	if( Static_Var_1 == 2 )
 	{
+		emit-sfx 1024 + 0 from flare2;	
 		move gun2 to z-axis [-3.000000] speed [500.000000];
 		wait-for-move gun2 along z-axis;
 		move gun2 to z-axis [0.000000] speed [3.000000];
-		show flare2;
+//		show flare2;
 		sleep 150;
-		hide flare2;
+//		hide flare2;
 	}
 	if( Static_Var_1 == 3 )
 	{
+		emit-sfx 1024 + 0 from flare3;	
 		move gun3 to z-axis [-3.000000] speed [500.000000];
 		wait-for-move gun3 along z-axis;
 		move gun3 to z-axis [0.000000] speed [3.000000];
-		show flare3;
+//		show flare3;
 		sleep 150;
-		hide flare3;
+//		hide flare3;
 	}
 }
 
