@@ -3,7 +3,8 @@
 #include "sfxtype.h"
 #include "exptype.h"
 
-piece  base, beam, door1, door2, plate, arm, nano, turret, ruote, ruote1, ruote2;
+piece  base, beam, door1, door2, plate, arm, nano, turret,
+       ruote, ruote1, ruote2;
 
 static-var  Static_Var_1, bMoving, Static_Var_3, Static_Var_4, Static_Var_5,
             statechg_DesiredState, statechg_StateChanging;
@@ -30,13 +31,13 @@ activatescr()
 	}
 	if( TRUE )
 	{
-		move door1 to y-axis [-2.350000] speed [6.041132];
-		move door2 to y-axis [-2.250000] speed [5.784058];
+//		move door1 to y-axis [-2.350000] speed [6.041132];
+//		move door2 to y-axis [-2.250000] speed [5.784058];
 		sleep 40;
 	}
 	if( TRUE )
 	{
-		move plate to y-axis [4.450000] speed [11.439600];
+		move plate to y-axis [3.90000] speed [11.439600];
 		sleep 40;
 	}
 	if( TRUE )
@@ -52,9 +53,9 @@ deactivatescr()
 {
 	if( TRUE )
 	{
-		move plate to y-axis [4.450000] now;
-		move door1 to y-axis [-2.350000] now;
-		move door2 to y-axis [-2.250000] now;
+		move plate to y-axis [3.90000] now;
+//		move door1 to y-axis [-2.350000] now;
+//		move door2 to y-axis [-2.250000] now;
 		turn door1 to z-axis <-70.659341> now;
 		turn door2 to z-axis <70.659341> now;
 		turn arm to x-axis <90.016484> now;
@@ -70,8 +71,8 @@ deactivatescr()
 	}
 	if( TRUE )
 	{
-		move door1 to y-axis [0.000000] speed [6.041132];
-		move door2 to y-axis [0.000000] speed [5.784058];
+//		move door1 to y-axis [0.000000] speed [6.041132];
+//		move door2 to y-axis [0.000000] speed [5.784058];
 		sleep 40;
 	}
 	if( TRUE )
@@ -251,7 +252,7 @@ StartMoving()
 	bMoving = TRUE;
 	spin ruote around x-axis speed <200.016484>;
 	spin ruote1 around x-axis speed <200.016484>;
-	spin ruote2 around x-axis speed <200.016484>;	
+	spin ruote2 around x-axis speed <200.016484>;
 }
 
 StopMoving()
@@ -259,7 +260,7 @@ StopMoving()
 	bMoving = FALSE;
 	spin ruote around x-axis speed <0.000000>;
 	spin ruote1 around x-axis speed <0.000000>;
-	spin ruote2 around x-axis speed <0.000000>;	
+	spin ruote2 around x-axis speed <0.000000>;
 }
 
 QueryNanoPiece(piecenum)
