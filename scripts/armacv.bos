@@ -3,7 +3,7 @@
 #include "sfxtype.h"
 #include "exptype.h"
 
-piece  base, beam, door1, door2, plate, arm, nano, turret;
+piece  base, beam, door1, door2, plate, arm, nano, turret, ruote, ruote1, ruote2;
 
 static-var  Static_Var_1, bMoving, Static_Var_3, Static_Var_4, Static_Var_5,
             statechg_DesiredState, statechg_StateChanging;
@@ -249,11 +249,17 @@ StopBuilding()
 StartMoving()
 {
 	bMoving = TRUE;
+	spin ruote around x-axis speed <200.016484>;
+	spin ruote1 around x-axis speed <200.016484>;
+	spin ruote2 around x-axis speed <200.016484>;	
 }
 
 StopMoving()
 {
 	bMoving = FALSE;
+	spin ruote around x-axis speed <0.000000>;
+	spin ruote1 around x-axis speed <0.000000>;
+	spin ruote2 around x-axis speed <0.000000>;	
 }
 
 QueryNanoPiece(piecenum)
