@@ -96,7 +96,7 @@ local function DrawAura(x, y, z, type)
     gl.Translate(x, y + 5, z)
     gl.Rotate(rotation, 0, 1, 0)
     gl.Rotate(90, 1, 0, 0) 
-    gl.TexRect(-85, -85, 85, 85)
+    gl.TexRect(-50, -50, 50, 50)
     gl.DepthMask(true)	-- riattivo la scrittura di profondità    
     gl.Texture(false)
     gl.PopMatrix()
