@@ -444,6 +444,7 @@ local UNIT_DB = {
 ["andaplat"] = { type = "building" },
 ["andainc"] = { type = "building" },
 ["andgant"] = { type = "strategicbuilding" },
+["andincgant"] = { type = "strategicbuilding" }, 
 
 -- Unità prodotte da andlab 
 ["andcsp"] = { type = "ground", ignore = true  },
@@ -468,7 +469,7 @@ local UNIT_DB = {
 ["andmerv"] = { type = "air" },
 
 -- Unità prodotte da andinc
--- sono le stesse di andlab + andhp
+-- sono le stesse di andlab + andhp, pertanto già dichiarate
 
 -- Unità prodotte da andalab 
 ["andacsp"] = { type = "ground", ignore = true  },
@@ -503,7 +504,10 @@ local UNIT_DB = {
 ["armpraet"] = { type = "ground" },
 
 -- Unità prodotte da andainc
--- sono le stesse prodotte da andalab + andahp
+-- sono le stesse prodotte da andalab + andahp, pertanto già dichiarate
+
+-- Unità prodotte da andincgant
+-- sono le stesse prodotte da andgant, pertanto già dichiarate
 
 	--------------------------------------------------------------------------------
 	-- EUF
