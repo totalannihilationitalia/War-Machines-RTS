@@ -10,17 +10,8 @@ function gadget:GetInfo()
   }
 end
 
--- 07/05/2026 scrivo meglio la lista dei comandanti. Questa versione sostituisce mo_comgate.luaold1 - Molix
 -------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------
-
-local commanders = {
-  icucom = true,
-  nfacom = true,
-  knfacom = true,
-  kicucom = true,
-  andcom = true,  
-}
 
 local enabled = tonumber(Spring.GetModOptions().mo_comgate) or 0
 
@@ -39,8 +30,7 @@ local initdone = false
 local gameStart = false
 
 function gadget:UnitCreated(unitID, unitDefID, unitTeam)
-  local uDef = UnitDefs[unitDefID]
-  if (not gameStart) and commanders[uDef.name] then
+  if (not gameStart) and (UnitDefs[unitDefID].name == 'icucom') or (UnitDefs[unitDefID].name == 'nfacom') or (UnitDefs[unitDefID].name == 'knfacom') or (UnitDefs[unitDefID].name == 'kicucom') then
     Spring.SetUnitNoDraw(unitID, true)
     Spring.SetUnitNeutral(unitID, true)
     Spring.SetUnitNoMinimap(unitID, true)
