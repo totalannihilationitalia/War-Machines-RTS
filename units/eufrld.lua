@@ -106,6 +106,7 @@ featuredefs = {
 sfxtypes = {
   explosiongenerators = {
                [1]="custom:greenflare",
+               [2]="custom:POPUPFLAREFAST",			   
                }, -- close effects list
 }, -- close section sfxtypes
 -----------------------------------------------------------

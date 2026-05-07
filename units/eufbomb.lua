@@ -70,8 +70,13 @@ featuredefs = {
                },  -- Close Dead Features
 },  --  Wreckage and heaps
 -----------------------------------------------------------
---- NO EFFECTS
+--- EFFECTS
 -----------------------------------------------------------
+sfxtypes = {
+  explosiongenerators = {
+               [1]="custom:berthaflare",
+               }, -- close effects list
+}, -- close section sfxtypes
 -----------------------------------------------------------
 --- UNITS SOUND
 -----------------------------------------------------------

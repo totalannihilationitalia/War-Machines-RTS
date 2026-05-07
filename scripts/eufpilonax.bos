@@ -82,7 +82,7 @@ AimPrimary(heading, pitch)
 	signal SIG_AIM;
 	set-signal-mask SIG_AIM;
 	turn body to y-axis heading speed <40.005495>;
-	turn barrel to x-axis <0.000000> - pitch speed <50.010989>;
+	turn barrel to x-axis <0.000000> - pitch speed <50.005495>;
 	wait-for-turn body around y-axis;
 	wait-for-turn barrel around x-axis;
 	start-script RestoreAfterDelay();
@@ -95,8 +95,7 @@ FirePrimary()
 	{
 		emit-sfx 1024 + 0 from flare;
 		sleep 220;
-//		hide flare;
-		turn gun to z-axis <60.010989> speed <180.043956>;
+		turn gun to z-axis <60.005495> speed <180.038462>;
 		wait-for-turn gun around z-axis;
 		gun_1 = base;
 		return (0);
@@ -105,8 +104,7 @@ FirePrimary()
 	{
 		emit-sfx 1024 + 0 from flare;
 		sleep 220;
-//		hide flare;
-		turn gun to z-axis <120.027473> speed <180.043956>;
+		turn gun to z-axis <120.027473> speed <180.038462>;
 		wait-for-turn gun around z-axis;
 		gun_1 = flare;
 		return (0);
@@ -115,8 +113,7 @@ FirePrimary()
 	{
 		emit-sfx 1024 + 0 from flare;
 		sleep 220;
-//		hide flare;
-		turn gun to z-axis <180.043956> speed <180.043956>;
+		turn gun to z-axis <180.038462> speed <180.038462>;
 		wait-for-turn gun around z-axis;
 		gun_1 = body;
 		return (0);
@@ -125,8 +122,7 @@ FirePrimary()
 	{
 		emit-sfx 1024 + 0 from flare;
 		sleep 220;
-//		hide flare;
-		turn gun to z-axis <240.054945> speed <180.043956>;
+		turn gun to z-axis <240.049451> speed <180.038462>;
 		wait-for-turn gun around z-axis;
 		gun_1 = gun;
 		return (0);
@@ -135,8 +131,7 @@ FirePrimary()
 	{
 		emit-sfx 1024 + 0 from flare;
 		sleep 220;
-//		hide flare;
-		turn gun to z-axis <300.071429> speed <180.043956>;
+		turn gun to z-axis <300.071429> speed <180.038462>;
 		wait-for-turn gun around z-axis;
 		gun_1 = barrel;
 		return (0);
@@ -145,8 +140,7 @@ FirePrimary()
 	{
 		emit-sfx 1024 + 0 from flare;
 		sleep 220;
-//		hide flare;
-		turn gun to z-axis <0.000000> speed <180.043956>;
+		turn gun to z-axis <0.000000> speed <180.038462>;
 		wait-for-turn gun around z-axis;
 		gun_1 = fire;
 		return (0);
@@ -155,7 +149,6 @@ FirePrimary()
 
 Killed(severity, corpsetype)
 {
-//	hide flare;
 	if( severity <= 25 )
 	{
 		corpsetype = 1;
@@ -170,7 +163,9 @@ Killed(severity, corpsetype)
 	}
 	if( severity <= 40 )
 	{
-		corpsetype = 2;
-		explode aim type SMOKE;
-		explode fire type SMOKE;
-		explode base type BITMAPONLY | BITMAP3;
+	}
+	corpsetype = 2;
+	explode aim type SMOKE;
+	explode fire type SMOKE;
+	explode base type BITMAPONLY | BITMAP3;
+}
