@@ -9,7 +9,7 @@ return {
 --               badTargetCategory = VTOL,
                brakerate  = 0.4,
                buildcostenergy = 66000,
-               buildcostmetal = 3700,
+               buildcostmetal = 2700,
                buildpic = "warhammer.png",
                buildtime  = 58000,
                canAttack = true,
