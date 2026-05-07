@@ -5,7 +5,7 @@
 
 piece  base, cannon, flare, portacannon, wake1, wake2;
 
-static-var  restore_delay, bMoving, Static_Var_4, Static_Var_5;
+static-var  restore_delay, bMoving, Static_Var_3, Static_Var_4;
 
 // Signal definitions
 #define SIG_AIM				2
@@ -17,24 +17,24 @@ EmitSFX()
 	{
 		if( bMoving )
 		{
-			if( Static_Var_5 == 3 )
+			if( Static_Var_4 == 3 )
 			{
 				emit-sfx 3 from wake2;
 				emit-sfx 3 from wake1;
 			}
-			if( Static_Var_5 == 2 )
+			if( Static_Var_4 == 2 )
 			{
 				emit-sfx 3 from wake2;
 				emit-sfx 3 from wake1;
 			}
-			if( Static_Var_5 == 1 )
+			if( Static_Var_4 == 1 )
 			{
 				emit-sfx 3 from wake2;
 				emit-sfx 3 from wake1;
 			}
 			sleep 150;
 		}
-		if( ( !bMoving ) AND Static_Var_5 == 3 )
+		if( ( !bMoving ) AND Static_Var_4 == 3 )
 		{
 			emit-sfx 259 from wake1;
 			sleep 700;
@@ -86,7 +86,7 @@ Create()
 {
 	hide flare;
 	restore_delay = 3000;
-	Static_Var_5 = 1;
+	Static_Var_4 = 1;
 	start-script SmokeUnit();
 	start-script EmitSFX();
 }
@@ -120,6 +120,12 @@ AimPrimary(heading, pitch)
 	wait-for-turn cannon around y-axis;
 	start-script RestoreAfterDelay();
 	return (1);
+}
+
+ShotPrimary()
+{
+	emit-sfx 1024 + 0 from flare;
+	sleep 1500;
 }
 
 FirePrimary()
