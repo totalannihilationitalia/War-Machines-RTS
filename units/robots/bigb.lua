@@ -62,7 +62,7 @@ return {
 --- Units wreckage and heaps
 -----------------------------------------------------------
 featuredefs = {
-  ebigb_dead = {
+  dead = {
 --               collisionvolumeoffsets = ,
 --               collisionvolumescales = ,
 --               collisionvolumetype = ,
@@ -102,18 +102,23 @@ weapondefs = {
 		banthaar_fire = {
                      areaofeffect = 125,
                      avoidfeature = true,
+                     burst = 1, -- lua:salvoSize
+                     burstrate = 0, -- lua: salvoDelay					 
 --                     cegTag = "",
 --                     craterareaofeffect =  ,
+                     firestarter = 70,
 					 maneuverability = 0,
                      model = "BPulse.s3o",
                      name= "Anti-Tank Pulse Cannon",
                      range = 598,
                      reloadtime = .6,
+                     smoketrail = false,					 
                      soundhit = "lasrmas1",
  --                   soundhitdry = "",
 --                    soundhitwet = "",
 --                    soundhitwetvolume = "",
                      soundstart = "lasrhvy1",
+                     startvelocity = 378,					 
                      texture2 = "andsmoketrail",
                      tolerance = 500,
 					 tracks = false,					 
