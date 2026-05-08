@@ -3,7 +3,7 @@ function widget:GetInfo()
     name      = "WMRTS Mission Marker",
     desc      = "Icone, Auree e Testo per Unità e Punti Mappa",
     author    = "Molix",
-    layer     = -100, -- 3 
+    layer     = 3,
     enabled   = true,
   }
 end
@@ -12,8 +12,6 @@ end
 -- 				aggiunta diversificazione tra aurea (che sta sotto la unità) e icona (che sta sopra le unità)
 -- 29/04/2026 = ottimizzato il codice e aggiunto il testo ai marker		
 -- 06/04/2026 = aggiunte icone "build" e "select"		
--- 08/05/2026 = aggiungo indicatore per marker, quando sono fuori dalla vista della telecamera, appaiono indicatori per segnalare marcatori. questa versione sostituisce WMRTS_IconObj.luarev1
-
 -- Lista icone
 -- type = 1 -> icone di attacco
 -- type = 2 -> icone di difesa
@@ -23,7 +21,7 @@ end
 -- type = 6 -> icona di costruzione ( unità -> building)
 -- type = 7 -> icona di "DANGER", pericolo
 
--- Config immagini icone e marcatori
+-- Config immagini
 local icon_attack = "LuaUI/Images/menu/objectives/icon_attack.png"
 local aura_attack = "LuaUI/Images/menu/objectives/marker_attack.png"
 local icon_defend = "LuaUI/Images/menu/objectives/icon_defend.png"
@@ -39,15 +37,6 @@ local aura_construct   = "LuaUI/Images/menu/objectives/marker_select.png"	--	rev
 local icon_danger   = "LuaUI/Images/menu/objectives/icon_danger.png"		--	rev 06/05/2026 aggiunto
 local aura_danger   = "LuaUI/Images/menu/objectives/marker_danger.png"		--	rev 06/05/2026 aggiunto
 
--- Config immagine indicatore
-local img_edge_attack = "LuaUI/Images/menu/objectives/edge_arrow_attack.png" 
-local img_edge_defend = "LuaUI/Images/menu/objectives/edge_arrow_defend.png" 
-local img_edge_move = "LuaUI/Images/menu/objectives/edge_arrow_move.png" 
-local img_edge_build = "LuaUI/Images/menu/objectives/edge_arrow_build.png" 
-local img_edge_select = "LuaUI/Images/menu/objectives/edge_arrow_select.png" 
-local img_edge_construct= "LuaUI/Images/menu/objectives/edge_arrow_construct.png" 
-local img_edge_danger = "LuaUI/Images/menu/objectives/edge_arrow_danger.png" 
-
 -- Tabella per i testi automatici delle unità basata sul tipo
 local typeToText = {
     [1] = "DESTROY",
@@ -59,18 +48,10 @@ local typeToText = {
     [7] = "DANGER",		
 }
 
-
-local MAX_FIXED_POINTS = 10 					-- Limite massimo di punti fissi
-local vsx, vsy = widgetHandler:GetViewSizes()	-- cattura la dimensione dello schermo
+-- Limite massimo di punti fissi
+local MAX_FIXED_POINTS = 10 
 
 --------------------------------------------------------------------------------
-
--- funzione per rilevare la dimensione dello schermo (risoluzione)
-function widget:ViewResize(viewSizeX, viewSizeY)
-    vsx = viewSizeX
-    vsy = viewSizeY
-end
-
 
 -- Funzione per disegnare il testo
 local function DrawLabel(x, y, z, height, text)
@@ -151,68 +132,6 @@ local function DrawIcon(x, y, z, height, type)
     gl.PopMatrix()
 end
 
--- funzione per disegnare i marcatori laterali
-local function DrawEdgeMarker(wx, wy, wz, type)
-    local sx, sy, sz = Spring.WorldToScreenCoords(wx, wy, wz)
-    local margin = 40 -- Distanza dal bordo dello schermo
-    
-    -- Se sz > 1 l'oggetto è dietro la telecamera
-    -- Se sx/sy sono fuori dai limiti [0, vsx] l'oggetto è fuori schermo
-    if sz > 1 or sx < 0 or sx > vsx or sy < 0 or sy > vsy then
-        local centerX, centerY = vsx * 0.5, vsy * 0.5
-        local dx, dy = sx - centerX, sy - centerY
-        
-        -- Se l'oggetto è dietro, invertiamo i vettori
-        if sz > 1 then
-            dx, dy = -dx, -dy
-        end
-        
-        -- Calcolo dell'angolo per la rotazione della freccia
-        local angle = math.atan2(dy, dx)
-        local angleDeg = math.deg(angle)
-        
-        -- Troviamo il punto d'intersezione col bordo dello schermo (clamping)
-        local edgeX = centerX + dx
-        local edgeY = centerY + dy
-        
-        local ratioX = (vsx * 0.5 - margin) / math.abs(dx)
-        local ratioY = (vsy * 0.5 - margin) / math.abs(dy)
-        local ratio = math.min(ratioX, ratioY)
-        
-        edgeX = centerX + dx * ratio
-        edgeY = centerY + dy * ratio
-
-        -- selezione l'immagine da mostrare
-        local edgeTex = img_edge_move 
-        if type == 1 then edgeTex = img_edge_attack
-        elseif type == 2 then edgeTex = img_edge_defend
-        elseif type == 3 then edgeTex = img_edge_move		
-        elseif type == 4 then edgeTex = img_edge_build
-        elseif type == 5 then edgeTex =img_edge_select
-        elseif type == 6 then edgeTex =img_edge_construct		
-        elseif type == 7 then edgeTex = img_edge_danger
-        end
-
-        -- logica del lampegggio 
-        local time = Spring.GetGameSeconds()
-        local blink = 0.65 + math.sin(time * 10) * 0.35 
-        -- Scegliamo il colore in base al tipo (opzionale, qui bianco)
-		
-		
-        gl.Color(1, 1, 1, blink)
-        gl.Texture(edgeTex)
-        
-        gl.PushMatrix()
-        gl.Translate(edgeX, edgeY, 0)
-        gl.Rotate(angleDeg - 90, 0, 0, 1) -- Ruota verso l'obiettivo (assume freccia punti UP)
-        gl.TexRect(-20, -20, 20, 20)
-        gl.PopMatrix()
-        
-        gl.Texture(false)
-        gl.Color(1, 1, 1, 1)
-    end
-end
-
 -- Disegna le auree (Sotto le unità)
 function widget:DrawWorldPreUnit()
     -- Auree Unità
@@ -276,32 +195,6 @@ function widget:DrawWorld()
             if pText then
                 DrawLabel(px, py, pz, 0, pText)
             end
-        end
-    end
-end
-
--- disegna l'indicatore sull' HUD
-function widget:DrawScreen()
-    -- 1. Unità Obbiettivo
-    local allUnits = Spring.GetAllUnits() -- Dobbiamo controllare tutte, non solo le visibili
-    for i=1, #allUnits do
-        local uID = allUnits[i]
-        local objType = Spring.GetUnitRulesParam(uID, "obj_type")
-        if objType and objType > 0 then
-            local x, y, z = Spring.GetUnitPosition(uID)
-            DrawEdgeMarker(x, y, z, objType)
-        end
-    end
-
-    -- 2. Punti Fissi Obbiettivo
-    for i=1, MAX_FIXED_POINTS do
-        local prefix = "obj_marker_" .. i
-        if (Spring.GetGameRulesParam(prefix .. "_active") or 0) == 1 then
-            local px = Spring.GetGameRulesParam(prefix .. "_x") or 0
-            local py = Spring.GetGameRulesParam(prefix .. "_y") or 0
-            local pz = Spring.GetGameRulesParam(prefix .. "_z") or 0
-			local pt = Spring.GetGameRulesParam(prefix .. "_type") or 3
-            DrawEdgeMarker(px, py, pz, pt)
         end
     end
 end
