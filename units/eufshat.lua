@@ -33,7 +33,7 @@ return {
                footprintz = 4,
 --               maneuverleashlength  = 640,
 --               mass = 0 --definire massa,
-               maxdamage = 1120,
+               maxdamage = 7000,
                maxslope = 16,
                maxvelocity = 1.25,
                maxwaterdepth = 12,
@@ -98,8 +98,7 @@ featuredefs = {
 -----------------------------------------------------------
 sfxtypes = {
   explosiongenerators = {
-               [1]="custom:plasmaflare",
-               [2]="custom:rocketflare",
+               [1]="custom:rocketflare",
                }, -- close effects list
 }, -- close section sfxtypes
 -----------------------------------------------------------
@@ -147,7 +146,7 @@ weapondefs = {
                      name= "Heavy Missiles",
                      noselfdamage = true,
                      range = 650,
-                     reloadtime = 0.5,
+                     reloadtime = 0.3,
                      smoketrail = true,
                      soundhit = "TAWF114b",
  --                   soundhitdry = "",
@@ -165,7 +164,7 @@ weapondefs = {
                      weapontype = "MissileLauncher",
                      weaponvelocity  = 520,
                      damage = {
-                         default = 65,
+                         default = 120,
                      }, -- close damage
              }, --close single weapon definitions
 

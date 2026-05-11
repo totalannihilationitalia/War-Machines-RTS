@@ -99,7 +99,7 @@ featuredefs = {
 -----------------------------------------------------------
 sfxtypes = {
   explosiongenerators = {
-               [1]="custom:greenflare",
+               [1]="custom:azzurroflare",
                }, -- close effects list
 }, -- close section sfxtypes
 -----------------------------------------------------------

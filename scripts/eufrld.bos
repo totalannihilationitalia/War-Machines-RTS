@@ -110,9 +110,8 @@ AimPrimary(heading, pitch)
 FirePrimary()
 {
 	move barrel to z-axis [-2.000000] now;
-//	show flare;
+	emit-sfx 1024 + 0 from flare;		
 	sleep 150;
-//	hide flare;
 	move barrel to z-axis [0.000000] speed [2.000000];
 }
 
@@ -138,28 +137,25 @@ FireSecondary()
 	if( gun_2 == 0 )
 	{
 		gun_2 = body;
-		show flare2;
+		emit-sfx 1024 + 1 from flare2;
 		sleep 150;
-		hide flare2;
+//		hide flare2;
 		move flare2 to x-axis [-2.200000] now;
 		return (0);
 	}
 	if( gun_2 == 1 )
 	{
 		gun_2 = turret;
-		emit-sfx 1024 + 1 from flare2;		
+		emit-sfx 1024 + 1 from flare2;
 		sleep 150;
-//hide flare2;
 		move flare2 to x-axis [-4.400000] now;
 		return (0);
 	}
 	if( gun_2 == 2 )
 	{
 		gun_2 = base;
-//show flare2;
-		emit-sfx 1024 + 1 from flare2;	
+		emit-sfx 1024 + 1 from flare2;
 		sleep 150;
-//		hide flare2;
 		move flare2 to x-axis [0.000000] now;
 		return (0);
 	}
