@@ -40,7 +40,7 @@ return {
 --               mobilestandorders= 1,
                name = "Teleport units",
                noAutoFire = false,
-               objectname = "andincubator1.s3o",
+               objectname = "andlab.s3o",
                radardistance = 50,
                seismicsignature = 0,
                selfdestructas = "LARGE_BUILDING",
