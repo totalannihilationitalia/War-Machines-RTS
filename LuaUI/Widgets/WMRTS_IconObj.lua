@@ -99,9 +99,7 @@ local function DrawAura(x, y, z, type)
     local pulse = 0.5 + math.sin(time * 2) * 0.2
     local rotation = time * 60 
     
-    gl.DepthMask(false) -- disabilito la scrittura della profondità
-    gl.DepthTest(true)
-    gl.PushMatrix()    
+
     
     local tex = aura_move
     if type == 1 then tex = aura_attack
@@ -112,7 +110,12 @@ local function DrawAura(x, y, z, type)
     elseif type == 6 then tex = aura_build 		--	rev 06/05/2026 aggiunto
     elseif type == 7 then tex = aura_danger 	--	rev 06/05/2026 aggiunto	
 	end
-    
+
+    gl.DepthMask(false) -- disabilito la scrittura della profondità
+    gl.DepthTest(true)
+    gl.Blending(true)
+    gl.BlendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA)	
+    gl.PushMatrix()        
     gl.Color(1, 1, 1, pulse) 	
     gl.Texture(tex)
     gl.Translate(x, y + 5, z)
@@ -121,6 +124,7 @@ local function DrawAura(x, y, z, type)
     gl.TexRect(-50, -50, 50, 50)
     gl.DepthMask(true)	-- riattivo la scrittura di profondità    
     gl.Texture(false)
+    gl.Blending(false)   -- Disabilita blending per non sporcare altri widget	
     gl.PopMatrix()
 end
 
