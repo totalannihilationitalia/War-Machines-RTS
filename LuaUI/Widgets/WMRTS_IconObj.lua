@@ -56,7 +56,10 @@ local typeToText = {
     [4] = "BUILD",
     [5] = "SELECT",	
     [6] = "BUILD",			-- ########## sarebbe costruire edificio,
-    [7] = "DANGER",		
+    [7] = "WARNING",		
+    [8] = "INSERTION",	
+    [9] = "EXTRACTION",	
+    [10] = "ESCORT",		
 }
 
 
@@ -102,7 +105,7 @@ local function DrawAura(x, y, z, type)
     
     local tex = aura_move
     if type == 1 then tex = aura_attack
-    elseif type == 2 then tex = aura_defend
+    elseif type == 2 or ype == 10 then tex = aura_defend
     elseif type == 3 then tex = aura_move 
     elseif type == 4 then tex = aura_build 		--	rev 06/05/2026 aggiunto
     elseif type == 5 then tex = aura_select 	--	rev 06/05/2026 aggiunto
@@ -132,7 +135,7 @@ local function DrawIcon(x, y, z, height, type)
     
     local tex = icon_move
     if type == 1 then tex = icon_attack
-    elseif type == 2 then tex = icon_defend
+    elseif type == 2 or type == 10 then tex = icon_defend
     elseif type == 3 then tex = icon_move 
     elseif type == 4 then tex = icon_build 	
     elseif type == 5 then tex = icon_select 		
@@ -185,7 +188,7 @@ local function DrawEdgeMarker(wx, wy, wz, type)
         -- selezione l'immagine da mostrare
         local edgeTex = img_edge_move 
         if type == 1 then edgeTex = img_edge_attack
-        elseif type == 2 then edgeTex = img_edge_defend
+        elseif type == 2 or type == 10 then edgeTex = img_edge_defend
         elseif type == 3 then edgeTex = img_edge_move		
         elseif type == 4 then edgeTex = img_edge_build
         elseif type == 5 then edgeTex =img_edge_select
