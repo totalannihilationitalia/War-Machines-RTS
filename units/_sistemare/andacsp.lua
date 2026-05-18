@@ -46,7 +46,7 @@ return {
                name = "Advanced Construction Spider",
                noAutoFire = false,
                nochasecategory = "VTOL",
-               objectname = "andcsp.s3o",
+               objectname = "andacsp.s3o",
 	       pushResistant = true,
                seismicsignature = 0,
                selfdestructas = "BIG_UNIT",
