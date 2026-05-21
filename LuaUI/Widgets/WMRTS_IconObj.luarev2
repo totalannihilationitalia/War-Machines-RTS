@@ -13,7 +13,6 @@ end
 -- 29/04/2026 = ottimizzato il codice e aggiunto il testo ai marker		
 -- 06/04/2026 = aggiunte icone "build" e "select"		
 -- 08/05/2026 = aggiungo indicatore per marker, quando sono fuori dalla vista della telecamera, appaiono indicatori per segnalare marcatori. questa versione sostituisce WMRTS_IconObj.luarev1
--- 21/05/2026 = revisione sostituisce "WMRTS_IconObj.luarev2". Si accorpa la logica di Marker per gli estrattori di metallo influenzati dai resonator (verrà loro applicato un marker a seconda che il resonator sia attivo o disattivato, se dentro il suo raggio di funzionamento)
 
 -- Lista icone
 -- type = 1 -> icone di attacco
@@ -24,7 +23,7 @@ end
 -- type = 6 -> icona di costruzione ( unità -> building)
 -- type = 7 -> icona di "DANGER", pericolo
 
--- Config immagini icone e marcatori per missioni
+-- Config immagini icone e marcatori
 local icon_attack = "LuaUI/Images/menu/objectives/icon_attack.png"
 local aura_attack = "LuaUI/Images/menu/objectives/marker_attack.png"
 local icon_defend = "LuaUI/Images/menu/objectives/icon_defend.png"
@@ -40,7 +39,7 @@ local aura_construct   = "LuaUI/Images/menu/objectives/marker_select.png"	--	rev
 local icon_danger   = "LuaUI/Images/menu/objectives/icon_danger.png"		--	rev 06/05/2026 aggiunto
 local aura_danger   = "LuaUI/Images/menu/objectives/marker_danger.png"		--	rev 06/05/2026 aggiunto
 
--- Config immagine indicatore laterale per missioni
+-- Config immagine indicatore
 local img_edge_attack = "LuaUI/Images/menu/objectives/edge_arrow_attack.png" 
 local img_edge_defend = "LuaUI/Images/menu/objectives/edge_arrow_defend.png" 
 local img_edge_move = "LuaUI/Images/menu/objectives/edge_arrow_move.png" 
@@ -48,12 +47,6 @@ local img_edge_build = "LuaUI/Images/menu/objectives/edge_arrow_build.png"
 local img_edge_select = "LuaUI/Images/menu/objectives/edge_arrow_select.png" 
 local img_edge_construct= "LuaUI/Images/menu/objectives/edge_arrow_construct.png" 
 local img_edge_danger = "LuaUI/Images/menu/objectives/edge_arrow_danger.png" 
-
--- Config immagini icone e marcatori per estrattori di metallo nel range dei resonator
-local icon_extr_on = "LuaUI/Images/menu/objectives/icon_extron.png"
-local icon_extr_off = "LuaUI/Images/menu/objectives/icon_extroff.png"
-local aura_extr_on = "LuaUI/Images/menu/objectives/marker_extron.png"
-local aura_extr_off = "LuaUI/Images/menu/objectives/marker_extroff.png"
 
 -- Tabella per i testi automatici delle unità basata sul tipo
 local typeToText = {
@@ -68,6 +61,7 @@ local typeToText = {
     [9] = "EXTRACTION",	
     [10] = "ESCORT",		
 }
+
 
 local MAX_FIXED_POINTS = 10 					-- Limite massimo di punti fissi
 local vsx, vsy = widgetHandler:GetViewSizes()	-- cattura la dimensione dello schermo
@@ -99,47 +93,24 @@ local function DrawLabel(x, y, z, height, text)
     gl.PopMatrix()
 end
 
--- Funzione per disegnare l'aurea degli obiettivi (sotto l'unità)
+-- Funzione per disegnare l'aurea (sotto l'unità)
 local function DrawAura(x, y, z, type)
     local time = Spring.GetGameSeconds()
     local pulse = 0.5 + math.sin(time * 2) * 0.2
     local rotation = time * 60 
-    local tex = aura_move
-		if type == 1 then tex = aura_attack
-		elseif type == 2 or type == 10 then tex = aura_defend
-		elseif type == 3 then tex = aura_move 
-		elseif type == 4 then tex = aura_build 		--	rev 06/05/2026 aggiunto
-		elseif type == 5 then tex = aura_select 	--	rev 06/05/2026 aggiunto
-		elseif type == 6 then tex = aura_build 		--	rev 06/05/2026 aggiunto
-		elseif type == 7 then tex = aura_danger 	--	rev 06/05/2026 aggiunto	
-		end
-    gl.DepthMask(false) -- disabilito la scrittura della profondità
-    gl.DepthTest(true)
-    gl.Blending(true)
-    gl.BlendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA)	
-    gl.PushMatrix()        
-    gl.Color(1, 1, 1, pulse) 	
-    gl.Texture(tex)
-    gl.Translate(x, y + 5, z)
-    gl.Rotate(rotation, 0, 1, 0)
-    gl.Rotate(90, 1, 0, 0) 
-    gl.TexRect(-50, -50, 50, 50)
-    gl.DepthMask(true)	-- riattivo la scrittura di profondità    
-    gl.Texture(false)
-    gl.Blending(false)   -- Disabilita blending per non sporcare altri widget	
-    gl.PopMatrix()
-end
+    
 
--- Funzione per disegnare l'aurea degli estrattori di metallo (sotto l'unità)
-local function DrawMetalAura(x, y, z, type)
--- type sarà 2.0 o 3.0 , quando verrà chiamato questa funzione locale #################################################################################
-    local time = Spring.GetGameSeconds()
-    local pulse = 0.5 + math.sin(time * 2) * 0.2
-    local rotation = time * 60 
-    local tex = aura_extr_off
-		if type == 2.0 then tex = aura_extr_off
-		elseif type == 3.0 then tex = aura_extr_on
-		end
+    
+    local tex = aura_move
+    if type == 1 then tex = aura_attack
+    elseif type == 2 or ype == 10 then tex = aura_defend
+    elseif type == 3 then tex = aura_move 
+    elseif type == 4 then tex = aura_build 		--	rev 06/05/2026 aggiunto
+    elseif type == 5 then tex = aura_select 	--	rev 06/05/2026 aggiunto
+    elseif type == 6 then tex = aura_build 		--	rev 06/05/2026 aggiunto
+    elseif type == 7 then tex = aura_danger 	--	rev 06/05/2026 aggiunto	
+	end
+
     gl.DepthMask(false) -- disabilito la scrittura della profondità
     gl.DepthTest(true)
     gl.Blending(true)
@@ -173,35 +144,10 @@ local function DrawIcon(x, y, z, height, type)
     elseif type == 4 then tex = icon_build 	
     elseif type == 5 then tex = icon_select 		
     elseif type == 6 then tex = icon_build				-- ####### sistemare e mettere icona di costruzione unità->building 	
-    elseif type == 7 then tex = icon_danger 			-- rev 06/05/2026 aggiunto	
+    elseif type == 7 then tex = icon_danger 			--	rev 06/05/2026 aggiunto	
 	end
 
     gl.Translate(x, y + height + 25 + bounce, z)
-    gl.Billboard()
-    gl.Color(1, 1, 1, 1)
-    gl.Texture(tex)
-    -- Disegna l'icona leggermente alzata rispetto al centro del billboard
-    gl.TexRect(-30, 20, 30, 80) 
-    
-    gl.Texture(false)
-    gl.PopMatrix()
-end
-
--- Funzione per disegnare l'icona (sopra l'unità)
-local function DrawMetalIcon(x, y, z, height, type)
---    local time = Spring.GetGameSeconds()
---    local bounce = math.sin(time * 3) * 8 			-- non deve rimbalzare ma rimanere statica
-
-    gl.DepthMask(false)
-    gl.DepthTest(false) 
-    gl.PushMatrix()   
-    
-    local tex = icon_extr_off
-    if type == 2.0 then tex = icon_extr_off
-    elseif type == 3.0 then tex = icon_extr_on
-	end
-
-    gl.Translate(x, y + height + 25, z)
     gl.Billboard()
     gl.Color(1, 1, 1, 1)
     gl.Texture(tex)
@@ -280,18 +226,11 @@ function widget:DrawWorldPreUnit()
     local visibleUnits = Spring.GetVisibleUnits()
     for i=1, #visibleUnits do
         local uID = visibleUnits[i]
-		-- obiettivi di missione (UnitRulesParam = obj_type )
         local objType = Spring.GetUnitRulesParam(uID, "obj_type")
         if objType and objType > 0 then
             local x, y, z = Spring.GetUnitPosition(uID)
             DrawAura(x, y, z, objType)
         end
-		-- estrattori di metallo con resonator (UnitRulesParam = resonator_status )
-        local extractorType = Spring.GetUnitRulesParam(uID, "resonator_status")
-        if extractorType and extractorType > 1.0 then		
-            local x, y, z = Spring.GetUnitPosition(uID)
-            DrawMetalAura(x, y, z, extractorType)
-        end		
     end
 
     -- Auree Punti Fissi
@@ -314,7 +253,6 @@ function widget:DrawWorld()
     -- 1. Gestione UNITA'
     for i=1, #visibleUnits do
         local uID = visibleUnits[i]
-		-- obiettivi di missione (UnitRulesParam = obj_type )
         local objType = Spring.GetUnitRulesParam(uID, "obj_type")
         if objType and objType > 0 then
             local x, y, z = Spring.GetUnitPosition(uID)
@@ -325,17 +263,6 @@ function widget:DrawWorld()
             DrawIcon(x, y, z, h, objType)
             -- Disegna Testo automatico (ATTACK, DEFEND, ecc)
             DrawLabel(x, y, z, h, typeToText[objType])
-        end
-		-- estrattori di metallo con resonator (UnitRulesParam = resonator_status )
-        local extractorType = Spring.GetUnitRulesParam(uID, "resonator_status")
-        if extractorType and extractorType > 1.0 then
-            local x, y, z = Spring.GetUnitPosition(uID)
-            local unitDefID = Spring.GetUnitDefID(uID)
-            local h = (UnitDefs[unitDefID] and UnitDefs[unitDefID].height or 30)
-            -- Disegna Icona
-            DrawMetalIcon(x, y, z, h, extractorType)
-            -- Disegna Testo automatico
-            -- DrawLabel(x, y, z, h, typeToText[extractorType]) -- il testo lo disabilito per ora, non mi interessa che appaia sugli estrattori. Molix 21/05/2026
         end
     end
 
@@ -363,7 +290,7 @@ end
 -- disegna l'indicatore sull' HUD
 function widget:DrawScreen()
     -- 1. Unità Obbiettivo
-    local allUnits = Spring.GetAllUnits() -- Qui controlla tutte le unità ogni frame, e non solo le visibili ############################################### creare una tabella "allUnits" da aggiornare in in widget:Update() ogni "n" secondi. attualmente il sistema aggiorna tutte le unità ogni frame, creando lag ######################
+    local allUnits = Spring.GetAllUnits() -- Dobbiamo controllare tutte, non solo le visibili
     for i=1, #allUnits do
         local uID = allUnits[i]
         local objType = Spring.GetUnitRulesParam(uID, "obj_type")
