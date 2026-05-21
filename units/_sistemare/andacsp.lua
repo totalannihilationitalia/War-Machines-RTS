@@ -142,8 +142,10 @@ featuredefs = {
 -----------------------------------------------------------
 sfxtypes = {
   explosiongenerators = {
-		[1]="custom:Nano",
-               [2]="custom:linkbeam",
+			   [1]="custom:Nano",
+               [2]="custom:spray_and",
+               [3]="custom:linkbeam",			   
+			   
                }, -- close effects list
 }, -- close section sfxtypes
 -----------------------------------------------------------
