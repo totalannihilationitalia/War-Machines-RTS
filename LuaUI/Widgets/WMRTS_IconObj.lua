@@ -206,7 +206,7 @@ local function DrawMetalIcon(x, y, z, height, type)
     gl.Color(1, 1, 1, 1)
     gl.Texture(tex)
     -- Disegna l'icona leggermente alzata rispetto al centro del billboard
-    gl.TexRect(-30, 20, 30, 80) 
+    gl.TexRect(-32, 16, 32, 48) 
     
     gl.Texture(false)
     gl.PopMatrix()
