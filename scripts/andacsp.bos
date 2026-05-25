@@ -3,7 +3,7 @@
 #include "sfxtype.h"
 #include "exptype.h"
 
-piece  base, leg1, leg3, leg4, leg6, box, flare1;
+piece  base, leg1, leg3, leg4, leg6, box, flare1, box2, flare2;
 
 static-var  Static_Var_1, bMoving, Static_Var_3, Static_Var_4, Static_Var_5,
             Static_Var_6, statechg_DesiredState, statechg_StateChanging;
@@ -12,11 +12,13 @@ static-var  Static_Var_1, bMoving, Static_Var_3, Static_Var_4, Static_Var_5,
 Build2()
 {
 	turn box to y-axis Static_Var_1 speed <300.000000>;
+	turn box2 to y-axis Static_Var_1 speed <300.000000>;
 	wait-for-turn box around y-axis;
 	Static_Var_6 = 1;
 	while( Static_Var_6 == 1 )
 	{
 		emit-sfx 2048 from flare1;
+		emit-sfx 2048 from flare2;
 		sleep 60;
 	}
 }
@@ -134,6 +136,7 @@ Stop()
 {
 	set INBUILDSTANCE to 0;
 	turn box to y-axis <0.000000> speed <350.000000>;
+	turn box2 to y-axis <0.000000> speed <350.000000>;	
 	wait-for-turn box around y-axis;
 	if( TRUE )
 	{
@@ -269,6 +272,7 @@ Killed(severity, corpsetype)
 		explode leg4 type BITMAPONLY | BITMAP4;
 		explode leg6 type BITMAPONLY | BITMAP1;
 		explode box type BITMAPONLY | BITMAP2;
+		explode box2 type BITMAPONLY | BITMAP2;		
 		return (0);
 	}
 	if( severity <= 50 )
@@ -280,6 +284,7 @@ Killed(severity, corpsetype)
 		explode leg4 type FALL | BITMAP4;
 		explode leg6 type FALL | BITMAP1;
 		explode box type SHATTER | BITMAP2;
+		explode box2 type SHATTER | BITMAP2;		
 		return (0);
 	}
 	if( severity <= 99 )
@@ -291,6 +296,7 @@ Killed(severity, corpsetype)
 		explode leg4 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
 		explode leg6 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
 		explode box type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		explode box2 type SHATTER | BITMAP2;		
 		return (0);
 	}
 	corpsetype = 3;
@@ -300,4 +306,5 @@ Killed(severity, corpsetype)
 	explode leg4 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
 	explode leg6 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
 	explode box type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+	explode box2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;	
 }
