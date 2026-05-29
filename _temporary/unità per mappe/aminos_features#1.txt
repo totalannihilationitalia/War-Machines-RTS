@@ -1,4 +1,3 @@
-{y=221,x=3440,name="icucom",z=9658,rot=0},
 {y=42,x=7704,name="palma002",z=7768,rot="north"},
 {y=43,x=7784,name="palma003",z=7752,rot="north"},
 {y=43,x=7752,name="palma005",z=7816,rot="north"},
