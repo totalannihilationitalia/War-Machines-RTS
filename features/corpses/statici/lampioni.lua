@@ -1,7 +1,7 @@
 return {
   lampione_feature_sud =
   {
-    description = "A factory",
+    description = "Street lamp",
     blocking = true,
     damage = 100,
     energy = 50,
@@ -22,7 +22,7 @@ return {
 
   lampione_feature_nord =
   {
-    description = "A factory",
+    description = "Street lamp",
     blocking = true,
     damage = 100,
     energy = 50,
@@ -43,7 +43,7 @@ return {
 
   lampione_feature_dx =
   {
-    description = "A factory",
+    description = "Street lamp",
     blocking = true,
     damage = 100,
     energy = 50,
@@ -64,7 +64,7 @@ return {
 
   lampione_feature_sx =
   {
-    description = "A factory",
+    description = "Street lamp",
     blocking = true,
     damage = 100,
     energy = 50,
