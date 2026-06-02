@@ -116,7 +116,7 @@ local function AddMexAdvancedFX(unitID, strength)
     }))
 ]]--
 
-
+--[[
     -- 1. L'AUREA A TERRA (Sempre presente se strength >= 2.0)
     table.insert(particleIDs[unitID], LupsAddFX("GroundFlash", {
         unit = unitID,
@@ -128,7 +128,7 @@ local function AddMexAdvancedFX(unitID, strength)
         texture = ":n:LuaUI/Images/units/" .. customTexture,  -- :n:".."LuaUI/Images/units/resonator_aurea.png", --"bitmaps/GPL/Lups/groundringBW.png", -- anche qui imposto texture custom per evitare troppi stretch (valutare poi se mantenere le stesse dimensioni per tutti e variare solo l'immagine. Molix ############# )
         repeatEffect = true,
     }))
-
+]]--
     -- 2. GLI EFFETTI EXTRA (Solo se attivo/Verde)
     if showExtra then
         -- SFRE (Verdi)

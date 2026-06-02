@@ -187,7 +187,7 @@ local function DrawIcon(x, y, z, height, type)
     gl.PopMatrix()
 end
 
--- Funzione per disegnare l'icona (sopra l'unità)
+-- Funzione per disegnare l'icona (sopra il resonator)
 local function DrawMetalIcon(x, y, z, height, type)
 --    local time = Spring.GetGameSeconds()
 --    local bounce = math.sin(time * 3) * 8 			-- non deve rimbalzare ma rimanere statica
@@ -206,7 +206,7 @@ local function DrawMetalIcon(x, y, z, height, type)
     gl.Color(1, 1, 1, 1)
     gl.Texture(tex)
     -- Disegna l'icona leggermente alzata rispetto al centro del billboard
-    gl.TexRect(-32, 16, 32, 48) 
+    gl.TexRect(-15, 6, 15, 20) 
     
     gl.Texture(false)
     gl.PopMatrix()
