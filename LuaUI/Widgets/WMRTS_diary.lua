@@ -248,16 +248,16 @@ local function primanews()
 		pagcur_maps = 1
 	end
 	if pagtot_story > 0 then
-		pagtot_story = 1
+		pagcur_story = 1			-- 17/06/2026 corretto da pagtot a pagcur, molix
 	end
-	if pagtot_hints  > 0 then
-		pagtot_hints = 1
+	if pagtot_hints  > 0 then		
+		pagcur_hints = 1			-- 17/06/2026 corretto da pagtot a pagcur, molix
 	end
-	if pagtot_character  > 0 then
-		pagtot_character = 1
+	if pagtot_character  > 0 then	
+		pagcur_character = 1		-- 17/06/2026 corretto da pagtot a pagcur, molix
 	end
 	if pagtot_units  > 0 then
-		pagtot_units = 1
+		pagcur_units = 1			-- 17/06/2026 corretto da pagtot a pagcur, molix
 	end	
 end
 
