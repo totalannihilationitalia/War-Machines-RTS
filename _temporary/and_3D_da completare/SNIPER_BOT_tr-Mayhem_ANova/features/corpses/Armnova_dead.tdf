@@ -1,0 +1,36 @@
+[armnova_dead]
+	{
+	World=All Worlds;
+	Description=Nova Wreckage;
+	Category=arm_corpses;
+	Object=armnova_dead;
+	FeatureDead=armnova_heap;
+	FootPrintx=3;
+	FootPrintz=3;
+	Height=20;
+	Blocking=1;
+	HitDensity=100;
+	Metal=2400;
+	Damage=2370;
+	Reclaimable=1;
+	FeatureReclamate=smudge01;
+	SeqNameReclamate=tree1reclamate;
+	}
+
+[armnova_heap]
+	{
+	World=All Worlds;
+	Description=Wreckage;
+	Category=heaps;
+	Object=3x3b;
+	FootPrintx=3;
+	FootPrintz=3;
+	Height=4;
+	Blocking=0;
+	HitDensity=100;
+	Metal=1200;
+	Damage=3170;
+	Reclaimable=1;
+	FeatureReclamate=smudge01;
+	SeqNameReclamate=tree1reclamate;
+	}

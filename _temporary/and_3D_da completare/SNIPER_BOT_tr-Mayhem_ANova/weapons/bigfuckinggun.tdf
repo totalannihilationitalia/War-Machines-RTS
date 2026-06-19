@@ -1,0 +1,39 @@
+[ARM_BFG10000]
+{
+ID=247;
+name=Big Freakin Gun;
+rendertype=1;
+lineofsight=1;
+turret=1;
+model=bfg;
+propeller=1;
+range=760;
+weapontimer=1;
+reloadtime=10;
+energypershot=2000;
+weaponvelocity=250;
+startvelocity=250;
+acceleration=250;
+flighttime=3.1;
+selfprop=1;
+burnblow=1;
+areaofeffect=128;
+edgeffectiveness=0.2;
+soundstart=BFG__X1B;
+soundhit=cent1hit;
+explosiongaf=abboom;
+explosionart=abboom;
+waterexplosiongaf=abboom;
+waterexplosionart=abboom;
+lavaexplosiongaf=abboom;
+lavaexplosionart=abboom;
+startsmoke=0;
+[DAMAGE]
+	{
+	default=1800;
+armcom=900;
+corcom=900;
+armdecom=900;
+cordecom=900;
+	}
+}

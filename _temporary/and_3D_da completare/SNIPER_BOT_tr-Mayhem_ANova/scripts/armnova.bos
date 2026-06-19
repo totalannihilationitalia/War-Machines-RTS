@@ -1,0 +1,1157 @@
+#define TA			// This is a TA script
+
+#include "sfxtype.h"
+#include "exptype.h"
+
+piece  Pelvis, UpArm1, UpArm2, Torso, Upleg1, Lowleg1, Upleg2, Lowleg2, 
+       Foot1, Foot2, MidArm1, LowArm1, Flare, MidArm2, LowArm2,
+       BFG, light, backgun, Finger1a, Finger1b, Finger2a, Finger2b, rockpt;
+
+static-var  bMoving, bAiming, CanAim_3, walkin, Holstered_5, health_6, oldhealth_7, arm2,
+            arm1, armdead1, armdead2;
+
+
+SmokeUnit(healthpercent, sleeptime, smoketype)
+{
+	var randpiece;
+	while( TRUE )
+	{
+		healthpercent = get HEALTH;
+		if( !Arm1 )
+		{
+			if( healthpercent >= 65 )
+			{
+				show UpArm1;
+				show MidArm1;
+			}
+			if( healthpercent >= 70 )
+			{
+				show LowArm1;
+				show Finger1a;
+				show Finger1b;
+				Armdead1 = 0;
+				if( Holstered_5 )
+				{
+					Arm1 = 1;
+				}					
+			}
+			if( healthpercent >= 75 )
+			{
+				show backgun;
+				Holstered_5 = 1;
+				Arm1 = 1;
+			}
+		}
+		if( !Arm2 )
+		{
+			if( healthpercent >= 80 )
+			{
+				show UpArm2;
+				show MidArm2;
+			}
+			if( healthpercent >= 85 )
+			{
+				show LowArm2;
+				Armdead2 = 0;
+			}
+			if( healthpercent >= 90 )
+			{
+				Arm2 = 1;
+				show Finger2a;
+				show Finger2b;
+			}
+		}				
+		if( healthpercent < 66 )
+		{
+			smoketype = 256 | 2;
+			randpiece = rand( 0, 3 );
+			if( Rand( 1, 66 ) < healthpercent )
+			{
+				smoketype = 256 | 1;
+			}
+			if( !randpiece )
+			{
+				emit-sfx smoketype from pelvis;
+			}
+			if( randpiece == 1 )
+			{
+				emit-sfx smoketype from uparm1;
+			}
+			if( randpiece == 2 )
+			{
+				emit-sfx smoketype from uparm2;
+			}
+			if( randpiece == 3 )
+			{
+				emit-sfx smoketype from torso;
+			}
+		}
+		sleeptime = healthpercent * 50;
+		if( sleeptime < 200 )
+		{
+			sleeptime = 200;
+		}
+		sleep sleeptime;
+	}
+}
+
+ArmExplode()
+{
+	while( TRUE )
+	{
+		if( !arm1 and !armdead1 )
+		{
+			armdead1 = 1;
+			bAiming = 1;
+			hide BFG;
+			hide light;
+			hide MidArm1;
+			hide UpArm1;
+			hide LowArm1;
+			hide Finger1a;
+			hide Finger1b;
+			if( !Holstered_5 )
+			{
+				hide backgun;
+				explode BFG type FALL | FIRE | EXPLODE_ON_HIT | BITMAP3;
+				explode light type FALL | FIRE | EXPLODE_ON_HIT | BITMAP3;
+			}
+			explode UpArm1 type FALL | FIRE | EXPLODE_ON_HIT | BITMAP3;
+			explode MidArm1 type FALL | FIRE | BITMAP4;
+			explode LowArm1 type FALL | FIRE | EXPLODE_ON_HIT | BITMAP4;
+			explode Finger1a type FALL | FIRE | BITMAP4;
+			explode Finger1b type SHATTER | FIRE | BITMAP4;
+			signal 2;
+			sleep 1000;
+			bAiming = 0;
+		}
+		if( !arm2 and !armdead2 )
+		{
+			armdead2 = 1;
+			hide MidArm2;
+			hide LowArm2;
+			hide Finger2a;
+			hide Finger2b;
+			explode UpArm2 type FALL | FIRE | EXPLODE_ON_HIT | BITMAP3;
+			explode MidArm2 type FALL | BITMAP4;
+			explode LowArm2 type FALL | BITMAP4;
+			explode Finger2a type FALL | BITMAP4;
+			explode Finger2b type SHATTER | FIRE | BITMAP4;
+		}
+		sleep 200;
+	}
+	return(0);
+}
+
+Walk()
+{
+	walkin = TRUE;
+	while( bMoving )
+	{
+		if( bAiming )
+		{
+			CanAim_3 = 1;
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Pelvis to z-axis [0] now;
+				move Upleg1 to y-axis [1.5] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg1 to y-axis [1.5] now;
+				turn Upleg1 to x-axis <-19> now;
+				turn Lowleg1 to x-axis <26.005495> now;
+				sleep 128;
+			}
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg1 to y-axis [0] now;
+				turn Pelvis to x-axis <3> now;
+				turn Upleg1 to x-axis <-34.005495> now;
+				turn Upleg2 to x-axis <6> now;
+				turn Lowleg2 to x-axis <-9> now;
+				turn Lowleg1 to x-axis <20> now;
+				sleep 118;
+			}
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [-1.5] now;
+				move Lowleg1 to y-axis [0] now;
+				turn Pelvis to x-axis <6> now;
+				turn Upleg1 to x-axis <-50.010989> now;
+				turn Upleg2 to x-axis <12> now;
+				turn Lowleg2 to x-axis <-18> now;
+				turn Lowleg1 to x-axis <13> now;
+				sleep 96;
+			}
+			if( bMoving )
+			{
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg1 to y-axis [0] now;
+				turn Pelvis to x-axis <8> now;
+				turn Upleg1 to x-axis <-52.010989> now;
+				turn Upleg2 to x-axis <17> now;
+				turn Lowleg2 to x-axis <-13> now;
+				turn Lowleg1 to x-axis <6> now;
+				sleep 92;
+			}
+			if( bMoving )
+			{
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg1 to y-axis [0] now;
+				turn Pelvis to x-axis <11> now;
+				turn Upleg1 to x-axis <-53.010989> now;
+				turn Upleg2 to x-axis <22> now;
+				turn Lowleg2 to x-axis <-7> now;
+				turn Lowleg1 to x-axis <0> now;
+				sleep 92;
+			}
+			if( bMoving )
+			{
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				turn Pelvis to x-axis <14> now;
+				turn Upleg1 to x-axis <-53.010989> now;
+				turn Lowleg2 to x-axis <10> now;
+				turn Lowleg1 to x-axis <17> now;
+				sleep 92;
+			}
+			if( bMoving )
+			{
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				turn Pelvis to x-axis <18> now;
+				turn Upleg1 to x-axis <-53.010989> now;
+				turn Lowleg2 to x-axis <29.005495> now;
+				turn Lowleg1 to x-axis <35.005495> now;
+				sleep 81;
+			}
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg2 to y-axis [0] now;
+				turn Pelvis to x-axis <13> now;
+				turn Upleg1 to x-axis <-39.005495> now;
+				turn Upleg2 to x-axis <12> now;
+				turn Lowleg2 to x-axis <28.005495> now;
+				turn Lowleg1 to x-axis <26.005495> now;
+				sleep 105;
+			}
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg2 to y-axis [0] now;
+				turn Pelvis to x-axis <9> now;
+				turn Upleg1 to x-axis <-26.005495> now;
+				turn Upleg2 to x-axis <1> now;
+				turn Lowleg2 to x-axis <27.005495> now;
+				turn Lowleg1 to x-axis <17> now;
+				sleep 122;
+			}
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg2 to y-axis [0] now;
+				turn Pelvis to x-axis <4> now;
+				turn Upleg1 to x-axis <-13> now;
+				turn Upleg2 to x-axis <-8> now;
+				turn Lowleg2 to x-axis <27.005495> now;
+				turn Lowleg1 to x-axis <8> now;
+				sleep 122;
+			}
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [1.5] now;
+				move Lowleg2 to y-axis [1.5] now;
+				turn Pelvis to x-axis <0> now;
+				turn Upleg1 to x-axis <0> now;
+				turn Upleg2 to x-axis <-19> now;
+				turn Lowleg2 to x-axis <26.005495> now;
+				turn Lowleg1 to x-axis <0> now;
+				sleep 132;
+			}
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg2 to y-axis [0] now;
+				turn Pelvis to x-axis <3> now;
+				turn Upleg1 to x-axis <6> now;
+				turn Upleg2 to x-axis <-34.005495> now;
+				turn Lowleg2 to x-axis <19> now;
+				turn Lowleg1 to x-axis <-9> now;
+				sleep 116;
+			}
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Upleg1 to y-axis [-1.5] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg2 to y-axis [0] now;
+				turn Pelvis to x-axis <6> now;
+				turn Upleg1 to x-axis <12> now;
+				turn Upleg2 to x-axis <-50.010989> now;
+				turn Lowleg2 to x-axis <13> now;
+				turn Lowleg1 to x-axis <-18> now;
+				sleep 108;
+			}
+			if( bMoving )
+			{
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [-1.5] now;
+				move Lowleg2 to y-axis [0] now;
+				turn Pelvis to x-axis <8> now;
+				turn Upleg1 to x-axis <17> now;
+				turn Upleg2 to x-axis <-51.010989> now;
+				turn Lowleg2 to x-axis <6> now;
+				turn Lowleg1 to x-axis <-12> now;
+				sleep 110;
+			}
+			if( bMoving )
+			{
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg2 to y-axis [0] now;
+				turn Pelvis to x-axis <11> now;
+				turn Upleg1 to x-axis <22> now;
+				turn Upleg2 to x-axis <-53.010989> now;
+				turn Lowleg2 to x-axis <0> now;
+				turn Lowleg1 to x-axis <-7> now;
+				sleep 107;
+			}
+			if( bMoving )
+			{
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				turn Pelvis to x-axis <14> now;
+				turn Upleg1 to x-axis <22> now;
+				turn Upleg2 to x-axis <-53.010989> now;
+				turn Lowleg2 to x-axis <17> now;
+				turn Lowleg1 to x-axis <10> now;
+				sleep 108;
+			}
+			if( bMoving )
+			{
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				turn Pelvis to x-axis <18> now;
+				turn Upleg1 to x-axis <22> now;
+				turn Upleg2 to x-axis <-53.010989> now;
+				turn Lowleg2 to x-axis <35.005495> now;
+				turn Lowleg1 to x-axis <29.005495> now;
+				sleep 65;
+			}
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg1 to y-axis [0] now;
+				turn Pelvis to x-axis <13> now;
+				turn Upleg1 to x-axis <11> now;
+				turn Upleg2 to x-axis <-40.005495> now;
+				turn Lowleg2 to x-axis <26.005495> now;
+				turn Lowleg1 to x-axis <28.005495> now;
+				sleep 67;
+			}
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg1 to y-axis [0] now;
+				turn Pelvis to x-axis <9> now;
+				turn Upleg1 to x-axis <1> now;
+				turn Upleg2 to x-axis <-26.005495> now;
+				turn Lowleg2 to x-axis <17> now;
+				turn Lowleg1 to x-axis <27.005495> now;
+				sleep 88;
+			}
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg1 to y-axis [0] now;
+				turn Pelvis to x-axis <4> now;
+				turn Upleg1 to x-axis <-8> now;
+				turn Upleg2 to x-axis <-13> now;
+				turn Lowleg2 to x-axis <8> now;
+				turn Lowleg1 to x-axis <27.005495> now;
+			}
+		}
+		if( !bAiming )
+		{
+			if( bMoving )
+			{
+				CanAim_3 = 0;
+				move Pelvis to y-axis [0] now;
+				move Pelvis to z-axis [0] now;
+				move Torso to y-axis [0] now;
+				move Upleg1 to y-axis [1.5] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg1 to y-axis [1.5] now;
+				move MidArm2 to x-axis [0] now;
+				move MidArm1 to x-axis [0] now;
+				turn Upleg1 to x-axis <-19> now;
+				turn Lowleg1 to x-axis <26.005495> now;
+				turn UpArm1 to x-axis <16> now;
+				turn UpArm2 to x-axis <-17> now;
+				turn MidArm2 to z-axis <-15> now;
+				turn LowArm2 to x-axis <-14> now;
+				turn MidArm1 to z-axis <15> now;
+				turn LowArm1 to x-axis <-26.005495> now;
+				sleep 128;
+			}
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg1 to y-axis [0] now;
+				turn Pelvis to x-axis <3> now;
+				turn Torso to y-axis <-1> now;
+				turn Upleg1 to x-axis <-34.005495> now;
+				turn Upleg2 to x-axis <6> now;
+				turn Lowleg2 to x-axis <-9> now;
+				turn Lowleg1 to x-axis <20> now;
+				turn UpArm1 to x-axis <25.005495> now;
+				turn UpArm2 to x-axis <-24.005495> now;
+				turn MidArm2 to z-axis <-11> now;
+				turn LowArm2 to x-axis <-20> now;
+				turn MidArm1 to z-axis <13> now;
+				turn LowArm1 to x-axis <-38.005495> now;
+				sleep 118;
+			}
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [-1.5] now;
+				move Lowleg1 to y-axis [0] now;
+				turn Pelvis to x-axis <6> now;
+				turn Torso to y-axis <-3> now;
+				turn Upleg1 to x-axis <-50.010989> now;
+				turn Upleg2 to x-axis <12> now;
+				turn Lowleg2 to x-axis <-18> now;
+				turn Lowleg1 to x-axis <13> now;
+				turn UpArm1 to x-axis <34.005495> now;
+				turn UpArm2 to x-axis <-30.005495> now;
+				turn MidArm2 to z-axis <-7> now;
+				turn LowArm2 to x-axis <-27.005495> now;
+				turn MidArm1 to z-axis <11> now;
+				turn LowArm1 to x-axis <-51.010989> now;
+				sleep 96;
+			}
+			if( bMoving )
+			{
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg1 to y-axis [0] now;
+				turn Pelvis to x-axis <8> now;
+				turn Torso to y-axis <-5> now;
+				turn Upleg1 to x-axis <-52.010989> now;
+				turn Upleg2 to x-axis <17> now;
+				turn Lowleg2 to x-axis <-13> now;
+				turn Lowleg1 to x-axis <6> now;
+				turn UpArm1 to x-axis <44.005495> now;
+				turn UpArm2 to x-axis <-38.005495> now;
+				turn MidArm2 to z-axis <-3> now;
+				turn LowArm2 to x-axis <-16> now;
+				turn MidArm1 to z-axis <10> now;
+				turn LowArm1 to x-axis <-60.010989> now;
+				sleep 92;
+			}
+			if( bMoving )
+			{
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg1 to y-axis [0] now;
+				turn Pelvis to x-axis <11> now;
+				turn Torso to y-axis <-7> now;
+				turn Upleg1 to x-axis <-53.010989> now;
+				turn Upleg2 to x-axis <22> now;
+				turn Lowleg2 to x-axis <-7> now;
+				turn Lowleg1 to x-axis <0> now;
+				turn UpArm1 to x-axis <54.010989> now;
+				turn UpArm2 to x-axis <-45.010989> now;
+				turn MidArm2 to z-axis <0> now;
+				turn LowArm2 to x-axis <-6> now;
+				turn MidArm1 to z-axis <9> now;
+				turn LowArm1 to x-axis <-69.016484> now;
+				sleep 92;
+			}
+			if( bMoving )
+			{
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				turn Pelvis to x-axis <14> now;
+				turn Torso to y-axis <-5> now;
+				turn Upleg1 to x-axis <-53.010989> now;
+				turn Lowleg2 to x-axis <10> now;
+				turn Lowleg1 to x-axis <17> now;
+				turn UpArm1 to x-axis <45.010989> now;
+				turn UpArm2 to x-axis <-40.005495> now;
+				turn MidArm2 to z-axis <-4> now;
+				turn LowArm2 to x-axis <-14> now;
+				turn MidArm1 to z-axis <12> now;
+				sleep 92;
+			}
+			if( bMoving )
+			{
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				turn Pelvis to x-axis <18> now;
+				turn Torso to y-axis <-3> now;
+				turn Upleg1 to x-axis <-53.010989> now;
+				turn Lowleg2 to x-axis <29.005495> now;
+				turn Lowleg1 to x-axis <35.005495> now;
+				turn UpArm1 to x-axis <35.005495> now;
+				turn UpArm2 to x-axis <-35.005495> now;
+				turn MidArm2 to z-axis <-9> now;
+				turn LowArm2 to x-axis <-22> now;
+				turn MidArm1 to z-axis <15> now;
+				sleep 81;
+			}
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg2 to y-axis [0] now;
+				turn Pelvis to x-axis <13> now;
+				turn Torso to y-axis <-2> now;
+				turn Upleg1 to x-axis <-39.005495> now;
+				turn Upleg2 to x-axis <12> now;
+				turn Lowleg2 to x-axis <28.005495> now;
+				turn Lowleg1 to x-axis <26.005495> now;
+				turn UpArm1 to x-axis <22> now;
+				turn UpArm2 to x-axis <-22> now;
+				turn MidArm2 to z-axis <-11> now;
+				turn LowArm2 to x-axis <-23.005495> now;
+				turn MidArm1 to z-axis <15> now;
+				turn LowArm1 to x-axis <-55.010989> now;
+				sleep 87;
+			}
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg2 to y-axis [0] now;
+				turn Pelvis to x-axis <9> now;
+				turn Torso to y-axis <-1> now;
+				turn Upleg1 to x-axis <-26.005495> now;
+				turn Upleg2 to x-axis <1> now;
+				turn Lowleg2 to x-axis <27.005495> now;
+				turn Lowleg1 to x-axis <17> now;
+				turn UpArm1 to x-axis <9> now;
+				turn UpArm2 to x-axis <-9> now;
+				turn MidArm2 to z-axis <-12> now;
+				turn LowArm2 to x-axis <-24.005495> now;
+				turn MidArm1 to z-axis <15> now;
+				turn LowArm1 to x-axis <-41.005495> now;
+				sleep 122;
+			}
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg2 to y-axis [0] now;
+				turn Pelvis to x-axis <4> now;
+				turn Torso to y-axis <0> now;
+				turn Upleg1 to x-axis <-13> now;
+				turn Upleg2 to x-axis <-8> now;
+				turn Lowleg2 to x-axis <27.005495> now;
+				turn Lowleg1 to x-axis <8> now;
+				turn UpArm1 to x-axis <-4> now;
+				turn UpArm2 to x-axis <3> now;
+				turn MidArm2 to z-axis <-13> now;
+				turn LowArm2 to x-axis <-25.005495> now;
+				turn MidArm1 to z-axis <15> now;
+				turn LowArm1 to x-axis <-28.005495> now;
+				sleep 122;
+			}
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [1.5] now;
+				move Lowleg2 to y-axis [1.5] now;
+				turn Pelvis to x-axis <0> now;
+				turn Torso to y-axis <0> now;
+				turn Upleg1 to x-axis <0> now;
+				turn Upleg2 to x-axis <-19> now;
+				turn Lowleg2 to x-axis <26.005495> now;
+				turn Lowleg1 to x-axis <0> now;
+				turn UpArm1 to x-axis <-17> now;
+				turn UpArm2 to x-axis <16> now;
+				turn MidArm2 to z-axis <-15> now;
+				turn LowArm2 to x-axis <-26.005495> now;
+				turn MidArm1 to z-axis <15> now;
+				turn LowArm1 to x-axis <-14> now;
+				sleep 132;
+			}
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg2 to y-axis [0] now;
+				turn Pelvis to x-axis <3> now;
+				turn Torso to y-axis <2> now;
+				turn Upleg1 to x-axis <6> now;
+				turn Upleg2 to x-axis <-34.005495> now;
+				turn Lowleg2 to x-axis <19> now;
+				turn Lowleg1 to x-axis <-9> now;
+				turn UpArm1 to x-axis <-24.005495> now;
+				turn UpArm2 to x-axis <25.005495> now;
+				turn MidArm2 to z-axis <-13> now;
+				turn LowArm2 to x-axis <-38.005495> now;
+				turn MidArm1 to z-axis <11> now;
+				turn LowArm1 to x-axis <-20> now;
+				sleep 116;
+			}
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Upleg1 to y-axis [-1.5] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg2 to y-axis [0] now;
+				turn Pelvis to x-axis <6> now;
+				turn Torso to y-axis <4> now;
+				turn Upleg1 to x-axis <12> now;
+				turn Upleg2 to x-axis <-50.010989> now;
+				turn Lowleg2 to x-axis <13> now;
+				turn Lowleg1 to x-axis <-18> now;
+				turn UpArm1 to x-axis <-30.005495> now;
+				turn UpArm2 to x-axis <34.005495> now;
+				turn MidArm2 to z-axis <-11> now;
+				turn LowArm2 to x-axis <-51.010989> now;
+				turn MidArm1 to z-axis <7> now;
+				turn LowArm1 to x-axis <-27.005495> now;
+				sleep 108;
+			}
+			if( bMoving )
+			{
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] - [0.000031] now;
+				move Lowleg2 to y-axis [0] now;
+				turn Pelvis to x-axis <8> now;
+				turn Torso to y-axis <6> now;
+				turn Upleg1 to x-axis <17> now;
+				turn Upleg2 to x-axis <-51.010989> now;
+				turn Lowleg2 to x-axis <6> now;
+				turn Lowleg1 to x-axis <-12> now;
+				turn UpArm1 to x-axis <-37.005495> now;
+				turn UpArm2 to x-axis <44.005495> now;
+				turn MidArm2 to z-axis <-10> now;
+				turn LowArm2 to x-axis <-60.010989> now;
+				turn MidArm1 to z-axis <3> now;
+				turn LowArm1 to x-axis <-16> now;
+				sleep 110;
+			}
+			if( bMoving )
+			{
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg2 to y-axis [0] now;
+				turn Pelvis to x-axis <11> now;
+				turn Torso to y-axis <8> now;
+				turn Upleg1 to x-axis <22> now;
+				turn Upleg2 to x-axis <-53.010989> now;
+				turn Lowleg2 to x-axis <0> now;
+				turn Lowleg1 to x-axis <-7> now;
+				turn UpArm1 to x-axis <-45.010989> now;
+				turn UpArm2 to x-axis <54.010989> now;
+				turn MidArm2 to z-axis <-9> now;
+				turn LowArm2 to x-axis <-69.016484> now;
+				turn MidArm1 to z-axis <0> now;
+				turn LowArm1 to x-axis <-6> now;
+				sleep 107;
+			}
+			if( bMoving )
+			{
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				turn Pelvis to x-axis <14> now;
+				turn Torso to y-axis <6> now;
+				turn Upleg1 to x-axis <22> now;
+				turn Upleg2 to x-axis <-53.010989> now;
+				turn Lowleg2 to x-axis <17> now;
+				turn Lowleg1 to x-axis <10> now;
+				turn UpArm1 to x-axis <-40.005495> now;
+				turn UpArm2 to x-axis <44.005495> now;
+				turn MidArm2 to z-axis <-12> now;
+				turn LowArm2 to x-axis <-69.016484> now;
+				turn MidArm1 to z-axis <4> now;
+				turn LowArm1 to x-axis <-19> now;
+				sleep 108;
+			}
+			if( bMoving )
+			{
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				turn Pelvis to x-axis <18> now;
+				turn Torso to y-axis <4> now;
+				turn Upleg1 to x-axis <22> now;
+				turn Upleg2 to x-axis <-53.010989> now;
+				turn Lowleg2 to x-axis <35.005495> now;
+				turn Lowleg1 to x-axis <29.005495> now;
+				turn UpArm1 to x-axis <-35.005495> now;
+				turn UpArm2 to x-axis <35.005495> now;
+				turn MidArm2 to z-axis <-15> now;
+				turn LowArm2 to x-axis <-69.016484> now;
+				turn MidArm1 to z-axis <9> now;
+				turn LowArm1 to x-axis <-32.005495> now;
+				sleep 65;
+			}
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg1 to y-axis [0] now;
+				turn Pelvis to x-axis <13> now;
+				turn Torso to y-axis <3> now;
+				turn Upleg1 to x-axis <11> now;
+				turn Upleg2 to x-axis <-40.005495> now;
+				turn Lowleg2 to x-axis <26.005495> now;
+				turn Lowleg1 to x-axis <28.005495> now;
+				turn UpArm1 to x-axis <-22> now;
+				turn UpArm2 to x-axis <21> now;
+				turn LowArm2 to x-axis <-55.010989> now;
+				turn MidArm1 to z-axis <11> now;
+				turn LowArm1 to x-axis <-31.005495> now;
+				sleep 66;
+			}
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg1 to y-axis [0] now;
+				turn Pelvis to x-axis <9> now;
+				turn Torso to y-axis <2> now;
+				turn Upleg1 to x-axis <1> now;
+				turn Upleg2 to x-axis <-26.005495> now;
+				turn Lowleg2 to x-axis <17> now;
+				turn Lowleg1 to x-axis <27.005495> now;
+				turn UpArm1 to x-axis <-9> now;
+				turn UpArm2 to x-axis <8> now;
+				turn LowArm2 to x-axis <-41.005495> now;
+				turn MidArm1 to z-axis <12> now;
+				turn LowArm1 to x-axis <-29.005495> now;
+				sleep 88;
+			}
+			if( bMoving )
+			{
+				move Pelvis to y-axis [0] now;
+				move Upleg1 to y-axis [0] now;
+				move Upleg2 to y-axis [0] now;
+				move Lowleg1 to y-axis [0] now;
+				turn Pelvis to x-axis <4> now;
+				turn Torso to y-axis <1> now;
+				turn Upleg1 to x-axis <-8> now;
+				turn Upleg2 to x-axis <-13> now;
+				turn Lowleg2 to x-axis <8> now;
+				turn Lowleg1 to x-axis <27.005495> now;
+				turn UpArm1 to x-axis <3> now;
+				turn UpArm2 to x-axis <-4> now;
+				turn LowArm2 to x-axis <-27.005495> now;
+				turn MidArm1 to z-axis <13> now;
+				turn LowArm1 to x-axis <-27.005495> now;
+			}
+		}
+		sleep 86;
+	}
+	walkin = FALSE;
+	CanAim_3 = 1;
+	move Pelvis to y-axis [0] speed [-40];
+	turn Pelvis to x-axis <0> speed <150>;
+	turn Upleg1 to x-axis <0> speed <150>;
+	turn Lowleg1 to x-axis <0> speed <150>;
+	turn Upleg2 to x-axis <0> speed <150>;
+	turn Lowleg2 to x-axis <0> speed <150>;
+	if( !bAiming )
+	{
+		turn Torso to y-axis <0> speed <90.021978>;
+		turn LowArm1 to x-axis <0> speed <150>;
+		turn MidArm1 to x-axis <0> speed <150>;
+		turn LowArm2 to x-axis <0> speed <150>;
+		turn MidArm2 to x-axis <0> speed <150>;
+		turn LowArm1 to z-axis <0> speed <150>;
+		turn MidArm1 to z-axis <7> speed <150>;
+		turn LowArm2 to z-axis <0> speed <150>;
+		turn MidArm2 to z-axis <-7> speed <150>;
+		turn MidArm2 to y-axis <0> speed <150>;
+		turn MidArm1 to y-axis <0> speed <150>;
+		turn UpArm2 to x-axis <0> speed <150>;
+		turn UpArm1 to x-axis <0> speed <150>;
+	}
+	return(0);
+}
+
+RockUnit(anglex, anglez)
+{
+	turn rockpt to x-axis (anglex * 2) speed <90.000000>;
+	turn rockpt to z-axis (anglez * 2) speed <90.000000>;
+	wait-for-turn rockpt around z-axis;
+	wait-for-turn rockpt around x-axis;
+	turn rockpt to z-axis <0.000000> speed <20.000000>;
+	turn rockpt to x-axis <0.000000> speed <20.000000>;
+	return(0);
+}
+	
+HitByWeapon(anglex, anglez)
+{
+	OldHealth_7 = Health_6;
+	Health_6 = get HEALTH;	
+	if(( OldHealth_7 - Health_6 ) >= 4 )
+	{
+		if((( Health_6 <= 50 ) AND ( Health_6 > 20 ))  AND Arm2 )
+		{
+			Arm2 = 0;
+			return(0);
+		}
+		if(( Health_6 <= 20 ) AND Arm1 )
+		{
+			Arm1 = 0;
+			return(0);
+		}
+	}
+	return(0);
+}	
+
+Create()
+{
+	hide Flare;
+	dont-cache Flare;
+	dont-shade Flare;
+	dont-cache light;
+	dont-shade light;
+	spin flare around y-axis speed <500>;
+	bMoving = FALSE;
+	bAiming = FALSE;
+	CanAim_3 = 1;
+	walkin = 0;
+	Holstered_5 = 1;
+	Arm2 = 1;
+	Arm1 = 1;
+	Armdead2 = 0;
+	Armdead1 = 0;
+	hide BFG;
+	hide light;
+	while( get BUILD_PERCENT_LEFT )
+	{
+		sleep 400;
+	}
+	Health_6 = get HEALTH;
+	start-script SmokeUnit();
+	start-script ArmExplode();
+	return(0);
+}
+
+StartMoving()
+{
+	bMoving = TRUE;
+	if( !walkin )
+	{
+		start-script Walk();
+	}
+	return(0);
+}
+
+StopMoving()
+{
+	bMoving = FALSE;
+	return(0);
+}
+
+RestoreAfterDelay()
+{	
+	sleep 10000;
+	dont-cache light;
+	turn Torso to y-axis <0> speed <120>;
+	turn Torso to x-axis <0> speed <80>;
+	turn upArm1 to x-axis <0> speed <120>;
+	turn MidArm1 to z-axis <0> speed <20>;
+	turn LowArm1 to y-axis <0> speed <30>;
+	sleep 500;
+	if( !Holstered_5 AND Arm1 )
+	{
+		set-signal-mask 2;
+		turn Midarm1 to z-axis <-30> speed <160>;
+		turn Midarm2 to z-axis <0> speed <60>;
+		turn Midarm2 to y-axis <0> speed <150>;
+		turn UpArm2 to x-axis <-50> speed <120>;
+		if( !Arm2 )
+		{
+			sleep 500;
+		}
+		turn UpArm1 to x-axis <-160> speed <300>;
+		turn Lowarm1 to x-axis <-90> speed <200>;
+		turn Midarm1 to y-axis <0> speed <150>;
+		wait-for-turn UpArm1 around x-axis;
+		wait-for-turn Lowarm1 around x-axis;
+		hide BFG;
+		hide light;
+	 	show backgun;
+		Holstered_5 = TRUE;
+		turn BFG to z-axis <0> speed <150>;
+		turn Midarm2 to z-axis <0> speed <60>;
+		turn Lowarm2 to z-axis <0> speed <160>;
+		turn Lowarm2 to y-axis <0> speed <160>;
+		turn Midarm1 to y-axis <0> speed <40.005495>;
+		turn Lowarm1 to z-axis <0> speed <160>;
+		turn Lowarm1 to x-axis <0> speed <60>;
+		if( !Arm2 )
+		{
+			sleep 500;
+		}
+		turn UpArm1 to x-axis <0> speed <150>;
+		turn Lowarm2 to x-axis <0> speed <150>;
+		turn UpArm2 to x-axis <0> speed <120>;
+		turn Midarm1 to z-axis <0> speed <150>;
+		turn Midarm2 to x-axis <0> speed <150>;
+		turn Lowarm2 to x-axis <0> speed <75>;
+		turn Midarm2 to y-axis <0> speed <150>;
+		turn Midarm1 to x-axis <0> speed <150>;
+	}
+	bAiming = 0;
+	Return(0);
+}
+
+SweetSpot(piecenum)
+{
+	piecenum = Torso;
+}
+
+QueryPrimary(piecenum)
+{
+	piecenum = Flare;
+}
+
+AimFromPrimary(piecenum)
+{
+	piecenum = UpArm1;
+}
+
+AimPrimary(heading, pitch)
+{
+	bAiming = TRUE;
+	signal 2;
+	set-signal-mask 2;
+	while( !CanAim_3 )
+	{
+		sleep 200;
+	}
+	if( Arm1 )
+	{
+		if( Holstered_5 )
+		{
+			turn Lowarm2 to z-axis <20> speed <80>;
+			turn Lowarm2 to z-axis <30> speed <75>;
+			turn Lowarm2 to x-axis <0> speed <75>;
+			turn Lowarm2 to y-axis <45> speed <75>;
+			turn Midarm2 to z-axis <40> speed <80>;
+			turn UpArm2 to x-axis <-50> speed <120>;
+			turn UpArm1 to x-axis <-160> speed <300>;
+			if( !Arm2 )
+			{
+				sleep 750;
+			}
+			turn Lowarm1 to x-axis <-90> speed <200>;
+			wait-for-turn UpArm1 around x-axis;
+			wait-for-turn Lowarm1 around x-axis;
+			show BFG;
+			show light;
+			hide backgun;
+			Holstered_5 = FALSE;
+			//sleep 1000;
+		}
+		turn Lowarm1 to x-axis <0> speed <200>;
+		turn UpArm2 to x-axis <-50> speed <120>;
+		if( !Arm2 )
+		{
+			sleep 750;
+		}
+		turn MidArm1 to z-axis <-30> speed <30>;
+		turn UpArm1 to x-axis <-90> speed <180>;
+		wait-for-turn UpArm2 around x-axis;
+		wait-for-turn Lowarm2 around z-axis;
+		wait-for-turn Lowarm1 around x-axis;
+		wait-for-turn UpArm1 around x-axis;
+	}
+	turn LowArm1 to y-axis <15> speed <30>;
+	if( Arm2 )
+	{
+		turn Torso to y-axis (heading - <30>) speed <150>;
+		turn Torso to x-axis <0> - pitch speed <100>;
+	}
+	if( !Arm2 )
+	{
+		turn Torso to y-axis (heading - <30>) speed <90>;
+		turn Torso to x-axis <0> - pitch speed <75>;
+	}
+	wait-for-turn LowArm1 around y-axis;
+	wait-for-turn Torso around y-axis;
+	wait-for-turn Torso around x-axis;
+	start-script RestoreAfterDelay();
+	while( !Arm1 )
+	{
+		sleep 2000;
+	}
+	return (1);
+}
+
+FirePrimary()
+{
+	cache light;
+	show flare;
+	sleep 150;
+	turn LowArm1 to x-axis <-45> speed <180>;
+	turn UpArm2 to z-axis <-30> speed <90>;
+	turn UpArm2 to x-axis <-80> speed <90>;
+	hide flare;
+	sleep 500;
+	turn UpArm2 to z-axis <0> speed <30>;
+	turn UpArm2 to x-axis <-30> speed <40>;	
+	turn LowArm1 to x-axis <0> speed <45>;
+	sleep 1500;
+	dont-cache light;
+	return(0);
+}
+
+Killed(severity, corpsetype)
+{
+	hide Flare;
+	if( !armdead1 and !armdead2 )
+	{
+		if( severity <= 25 )
+		{
+			corpsetype = 1;
+			explode Pelvis type BITMAPONLY | BITMAP3;
+			explode Upleg1 type BITMAPONLY | BITMAP1;
+			explode Foot1 type BITMAPONLY | BITMAP1;
+			explode Upleg2 type BITMAPONLY | BITMAP1;
+			explode Foot2 type BITMAPONLY | BITMAP1;
+			explode Torso type BITMAPONLY | BITMAP1;
+			explode MidArm1 type BITMAPONLY | BITMAP1;
+			explode LowArm1 type BITMAPONLY | BITMAP1;
+			explode MidArm2 type BITMAPONLY | BITMAP1;
+			explode LowArm2 type BITMAPONLY | BITMAP1;
+			if( !Holstered_5 AND Arm1 )
+			{
+				explode BFG type FALL | FIRE | EXPLODE_ON_HIT | BITMAP4;
+				explode light type FALL | FIRE | EXPLODE_ON_HIT | BITMAP3;
+				return (0);
+			}
+			explode backgun type FALL | FIRE | EXPLODE_ON_HIT | BITMAP4;
+			return (0);
+		}
+	}
+	if( severity <= 50 )
+	{
+		corpsetype = 2;
+		explode Pelvis type FALL | BITMAP5;
+		explode Upleg1 type FALL | BITMAP1;
+		explode Foot1 type BITMAPONLY | BITMAP4;
+		explode Upleg2 type FALL | BITMAP1;
+		explode Foot2 type BITMAPONLY | BITMAP4;
+		explode Torso type BITMAPONLY | BITMAP3;
+		if( !Armdead2 )
+		{
+			explode UpArm2 type FALL | FIRE | BITMAP3;
+			explode LowArm2 type SHATTER | BITMAP4;
+		}
+		if( !Armdead1 )
+		{
+			explode UpArm1 type FALL | FIRE | BITMAP4;
+			explode MidArm1 type FALL | BITMAP4;
+			explode LowArm1 type FALL | BITMAP4;
+			if( !Holstered_5 AND Arm1 )
+			{
+				explode BFG type FALL | FIRE | EXPLODE_ON_HIT | BITMAP4;
+				explode light type FALL | FIRE | EXPLODE_ON_HIT | BITMAP3;
+				return (0);
+			}
+			explode backgun type FALL | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		}
+		return (0);
+	}
+	if( severity <= 99 )
+	{
+		corpsetype = 3;
+		explode Pelvis type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode Upleg1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		explode Foot1 type SHATTER | EXPLODE_ON_HIT | BITMAP4;
+		explode Upleg2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+		explode Foot2 type SHATTER | EXPLODE_ON_HIT | BITMAP4;
+		explode Torso type BITMAPONLY | BITMAP2;
+		if( !Armdead2 )
+		{
+			explode UpArm2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+			explode MidArm2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+			explode LowArm2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		}
+		if( !Armdead1 )
+		{		
+			explode UpArm1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+			explode MidArm1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+			explode LowArm1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+			if( !Holstered_5 AND Arm1 )
+			{
+				explode BFG type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+				explode light type FALL | FIRE | EXPLODE_ON_HIT | BITMAP3;
+				return(0);
+			}
+			explode backgun type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		}
+		return (0);
+	}
+	corpsetype = 3;
+	explode Pelvis type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+	explode Upleg1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+	explode Foot1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+	explode Lowleg1 type SHATTER | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	explode Upleg2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
+	explode Foot2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+	explode LowLeg2 type SHATTER | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	explode Torso type BITMAPONLY | BITMAP2;
+	if( !Armdead2 )
+	{
+		explode UpArm2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
+		explode MidArm2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+		explode LowArm2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	}
+	if( !Armdead1 )
+	{
+		explode UpArm1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP4;
+		explode MidArm1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+		explode LowArm1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+		if( !Holstered_5 AND Arm1 )
+		{
+			explode BFG type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+			explode light type FALL | FIRE | EXPLODE_ON_HIT | BITMAP3;
+			Return(0);
+		}
+		explode backgun type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
+	}
+}

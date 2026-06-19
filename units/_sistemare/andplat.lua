@@ -60,8 +60,7 @@ return {
 			[1] = "andca",
 			[2] = "andfig",
 			[3] = "andbomb",
-			[4] = "andstr",
-			[5] = "andmerv",			
+			[4] = "andmerv",			
                },
 
 
