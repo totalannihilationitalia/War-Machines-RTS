@@ -3,7 +3,7 @@
 	UnitName=armarch;
 	Version=3.0;
 	Side=ARM;
-	Objectname=armarch;
+	Objectname=eufarch.s3o;
 	Designation=ARM-GUARD;
 	Name=Arch;
 	Description=Heavy Gatling Plasma Battery;
