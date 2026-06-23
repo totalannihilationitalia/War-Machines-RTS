@@ -17,7 +17,7 @@ return {
                buildinggrounddecalsizex= 4,
                buildinggrounddecalsizey = 4,
                buildinggrounddecaltype = "Pavimentazione3.png",
-               buildpic = "ICUAMB.PNG",
+               buildpic = "icuamb.png",
                buildtime  = 27072,
                canAttack = true,
 --               canstop = 1,
