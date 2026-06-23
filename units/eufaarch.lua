@@ -4,7 +4,7 @@ return {
 -----------------------------------------------------------
 --- UNITS FEATURES
 -----------------------------------------------------------
-  armaarch= {
+  eufaarch= {
                acceleration = 0,
                activatewhenbuilt = true,
 --               badTargetCategory = VTOL,
@@ -17,7 +17,7 @@ return {
                buildinggrounddecalsizex= 4,
                buildinggrounddecalsizey = 4,
                buildinggrounddecaltype = "Pavimentazione3.png",
-               buildpic = "armaarch.png",
+               buildpic = "eufaarch.png",
                buildtime  = 27072,
                canAttack = true,
 --               canstop = 1,
@@ -25,7 +25,7 @@ return {
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
-               corpse = "armaarch_dead",
+               corpse = "eufaarch_dead",
                damagemodifier = 0.25,
 --               defaultmissiontype = GUARD_NOMOVE,
                description = "Heavy Plasma Cannon",
@@ -48,7 +48,7 @@ return {
                name = "2 lvl Arch",
                noAutoFire = false,
                nochasecategory = "MOBILE",
-               objectname = "armaarch.s3o",
+               objectname = "eufaarch.s3o",
                seismicsignature = 0,
                selfdestructas = "LARGE_BUILDING",
                sightdistance = 442,
@@ -68,8 +68,8 @@ featuredefs = {
                world = "All Worlds",
                description = "Ambusher Wreckage",
                category = "corpses",
-               object = "armaarch_DEAD1",
-               featuredead = "armaarch_heap",
+               object = "eufaarch_DEAD1",
+               featuredead = "eufaarch_heap",
                featurereclamate = "SMUDGE01",
                footprintx = 3,
                footprintz = 3,
@@ -89,7 +89,7 @@ featuredefs = {
                world = "All Worlds",
                description = "Ambusher Wreckage",
                category = "corpses",
-               object = "armaarch_DEAD2",
+               object = "eufaarch_DEAD2",
                footprintx = 3,
                footprintz = 3,
                height = 20,
@@ -141,7 +141,7 @@ sounds = {
 --- WEAPONS DEFINITION
 -----------------------------------------------------------
 weapondefs = {
-		armaarch_gun = {
+		eufaarch_gun = {
                      accuracy = 400,
                      areaofeffect = 152,
                      avoidfeature = true,
@@ -170,7 +170,7 @@ weapondefs = {
                      }, -- close damage
              }, --close single weapon definitions
 
-		armaarch_gun_high = {
+		eufaarch_gun_high = {
                      accuracy = 400,
                      areaofeffect = 224,
                      avoidfeature = true,
@@ -207,14 +207,14 @@ weapondefs = {
 weapons = {
                  [1] = {
                  badtargetcategory = "VTOL",
-                 def = "armaarch_gun",
+                 def = "eufaarch_gun",
                  onlytargetcategory = "SURFACE",
                  maxAngleDif = 230,
                  maindir = "0 1 0",
                  },
                  [2] = {
                  badtargetcategory = "VTOL",
-                 def = "armaarch_gun_high",
+                 def = "eufaarch_gun_high",
                  onlytargetcategory = "SURFACE",
                  },
 }, -- close weapon usage

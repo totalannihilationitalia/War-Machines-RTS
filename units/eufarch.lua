@@ -4,7 +4,7 @@ return {
 -----------------------------------------------------------
 --- UNITS FEATURES
 -----------------------------------------------------------
-  armarch= {
+  eufarch= {
                acceleration = 0,
 --               badTargetCategory = VTOL,
                brakerate  = 0,
@@ -24,7 +24,7 @@ return {
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
-               corpse = "armarch_dead",
+               corpse = "eufarch_dead",
 --               defaultmissiontype = GUARD_NOMOVE,
                description = "Medium Range Plasma Battery",
 --               firestandorders = 1,
@@ -46,7 +46,7 @@ return {
                name = "1 lvl Arch",
                noAutoFire = false,
                nochasecategory = "MOBILE",
-               objectname = "armarch.s3o",
+               objectname = "eufarch.s3o",
                seismicsignature = 0,
                selfdestructas = "MEDIUM_BUILDING",
                sightdistance = 455,
@@ -66,8 +66,8 @@ featuredefs = {
                world = "All Worlds",
                description = "1 lvl Arch Wreckage",
                category = "corpses",
-               object = "armarch_DEAD",
-               featuredead = "armarch_heap",
+               object = "eufarch_DEAD",
+               featuredead = "eufarch_heap",
                featurereclamate = "SMUDGE01",
                footprintx = 3,
                footprintz = 3,

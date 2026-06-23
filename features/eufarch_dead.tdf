@@ -1,4 +1,4 @@
-[armarch_dead]
+[eufarch_dead]
 	{
 	world=All Worlds;
 	description=Wreckage;
@@ -17,7 +17,7 @@
       	seqnamereclamate=tree1reclamate;
 	}
 
-[armarch_heap]
+[eufarch_heap]
 	{
 	world=All Worlds;
 	description=Wreckage;
