@@ -526,7 +526,7 @@ local UNIT_DB = {
 ["eufpathsmall"] = { type = "building", ignore = true },
 ["eufsnpr"] = { type = "building", ignore = true },
 ["eufpath"] = { type = "building", ignore = true },
-["armarch"] = { type = "building", ignore = true },
+["eufarch"] = { type = "building", ignore = true },
 ["eufloony"] = { type = "building", ignore = true },
 ["euf_fence_gate"] = { type = "building", ignore = true },
 ["euf_fence_wall"] = { type = "building", ignore = true },
@@ -534,6 +534,7 @@ local UNIT_DB = {
 -- Costruzioni Tier 2
 ["eufadvmetex"] = { type = "building", ignore = true },
 ["eufresonator"] = { type = "strategicbuilding", ignore = true },
+["eufaarch"] = { type = "building", ignore = true },
 
 -- Fabbriche Tier 1
 ["eufvp"] = { type = "building" },

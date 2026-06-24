@@ -77,7 +77,7 @@ return {
 		[10] = "eufpathsmall",
 		[11]= "eufsnpr",
 		[12]= "eufpath",
-		[13] = "armarch", ------ fare versione "small"
+		[13] = "eufarch", 
 		[14]= "eufloony",
 ------------------- creare il jammer
 ------------------- creare il sonar

@@ -79,7 +79,7 @@ return {
 		[9] = "eufpathsmall",
 		[10]= "eufsnpr",
 		[11]= "eufpath",
-		[12] = "armarch", ------ fare versione "small"
+		[12] = "eufaarch", 
 		[13]= "eufloony",
 		[14] = "eufblab", -------------------- non funziona sistemare ################
 		[15]= "euf_fence_gate",
