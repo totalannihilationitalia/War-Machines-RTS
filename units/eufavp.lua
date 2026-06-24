@@ -66,6 +66,7 @@ return {
 --			[8] = "eufbigfoot",
 			[9] = "eufkaat",
 			[10] = "eufpilonax",
+			[11] = "euf_harvester",			
                },
 -----------------------------------------------------------
 --- Units wreckage and heaps

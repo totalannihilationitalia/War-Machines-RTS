@@ -15,7 +15,7 @@ return {
                buildinggrounddecalsizex= 13,
                buildinggrounddecalsizey = 13,
                buildinggrounddecaltype = "Pavimentazione.png",
-               buildpic = "icualab.png",
+               buildpic = "armalab.png",
                buildtime  = 16224,
                canmove = true,
                canPatrol = true,

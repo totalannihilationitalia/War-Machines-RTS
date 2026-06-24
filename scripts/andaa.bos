@@ -3,7 +3,7 @@
 #include "sfxtype.h"
 #include "exptype.h"
 
-piece  base, turret,  sleeve, flare1, flare2, flare3, flare4;
+piece  base, turret, sleeve, flare1, flare2, flare3, flare4;
 
 static-var  Static_Var_1, restore_delay, bAiming, statechg_DesiredState, statechg_StateChanging,
             Static_Var_6, Static_Var_7, Static_Var_8;
@@ -16,12 +16,6 @@ activatescr()
 {
 	if( TRUE )
 	{
-//		turn door1 to z-axis <0.000000> speed <110.000000>;
-//		turn door2 to z-axis <0.000000> speed <110.000000>;
-//		turn door3 to z-axis <0.000000> speed <110.000000>;
-//		turn door4 to z-axis <0.000000> speed <110.000000>;
-//		turn door5 to x-axis <0.000000> speed <110.000000>;
-//		turn door6 to x-axis <0.000000> speed <110.000000>;
 		sleep 650;
 		move turret to y-axis [0.000000] speed [15.000000];
 		sleep 600;
@@ -42,11 +36,6 @@ deactivatescr()
 	}
 	if( TRUE )
 	{
-//		turn door1 to z-axis <120.000000> speed <110.000000>;
-//		turn door2 to z-axis <120.000000> speed <110.000000>;
-//		turn door3 to z-axis <-120.000000> speed <110.000000>;
-//		turn door4 to z-axis <-120.000000> speed <110.000000>;
-//		turn door6 to x-axis <-120.000000> speed <110.000000>;
 	}
 	sleep 10;
 }
@@ -59,8 +48,6 @@ HitByWeapon(Func_Var_1, Func_Var_2, Func_Var_3)
 		if( Static_Var_6 == 0 )
 		{
 			Static_Var_6 = 1;
-//			hide door1;
-//			explode door1 type FALL | SHATTER | SMOKE | BITMAP2;
 		}
 	}
 	if( Func_Var_3 <= 50 )
@@ -68,8 +55,6 @@ HitByWeapon(Func_Var_1, Func_Var_2, Func_Var_3)
 		if( Static_Var_7 == 0 )
 		{
 			Static_Var_7 = 1;
-//			hide door3;
-//			explode door3 type FALL | SHATTER | SMOKE | BITMAP2;
 		}
 	}
 	if( Func_Var_3 <= 35 )
@@ -77,8 +62,6 @@ HitByWeapon(Func_Var_1, Func_Var_2, Func_Var_3)
 		if( Static_Var_8 == 0 )
 		{
 			Static_Var_8 = 1;
-//			hide door4;
-//			explode door4 type FALL | SHATTER | SMOKE | BITMAP2;
 		}
 	}
 }
@@ -100,7 +83,6 @@ SmokeUnit(healthpercent, sleeptime, smoketype)
 			if( Static_Var_8 == 1 )
 			{
 				Static_Var_8 = 0;
-//				show door4;
 			}
 		}
 		if( healthpercent >= 60 )
@@ -108,7 +90,6 @@ SmokeUnit(healthpercent, sleeptime, smoketype)
 			if( Static_Var_7 == 1 )
 			{
 				Static_Var_7 = 0;
-//				show door3;
 			}
 		}
 		if( healthpercent >= 75 )
@@ -116,7 +97,6 @@ SmokeUnit(healthpercent, sleeptime, smoketype)
 			if( Static_Var_6 == 1 )
 			{
 				Static_Var_6 = 0;
-//				show door1;
 			}
 		}
 		if( healthpercent < 66 )
@@ -139,8 +119,6 @@ SmokeUnit(healthpercent, sleeptime, smoketype)
 
 Go()
 {
-//	dont-cache door1;
-
 	dont-cache sleeve;
 	dont-cache turret;
 	if( !Static_Var_1 )
@@ -156,12 +134,6 @@ Stop()
 	set ARMORED to 1;
 	Static_Var_1 = 0;
 	call-script deactivatescr();
-//	cache door1;
-//	cache door2;
-//	cache door3;
-//	cache door4;
-//	cache door5;
-//	cache door6;
 	cache sleeve;
 	cache turret;
 }
@@ -217,7 +189,6 @@ RestoreAfterDelay()
 
 Create()
 {
-
 	dont-shade sleeve;
 	dont-shade turret;
 	hide flare1;
@@ -300,7 +271,6 @@ Killed(severity, corpsetype)
 		{
 			corpsetype = 2;
 		}
-
 		explode sleeve type BITMAPONLY | BITMAP1;
 		explode turret type BITMAPONLY | BITMAP3;
 	}
@@ -315,7 +285,6 @@ Killed(severity, corpsetype)
 			corpsetype = 3;
 		}
 		explode turret type BITMAPONLY | BITMAP2;
-
 		explode sleeve type BITMAPONLY | BITMAP4;
 		return (0);
 	}
@@ -330,12 +299,10 @@ Killed(severity, corpsetype)
 			corpsetype = 4;
 		}
 		explode turret type BITMAPONLY | BITMAP2;
-
 		explode sleeve type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP3;
 		return (0);
 	}
 	corpsetype = 4;
 	explode turret type BITMAPONLY | BITMAP2;
-
 	explode sleeve type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP2;
 }
