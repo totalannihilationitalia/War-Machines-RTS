@@ -11,7 +11,7 @@ return {
                buildcostmetal = 370,			   
                builddistance = 150,
 --               builder = true,
-               buildpic = "da_fare.png",
+               buildpic = "eufmobmstor.png",
                buildtime  = 3225,
                canGuard = true,
                canmove = true,
