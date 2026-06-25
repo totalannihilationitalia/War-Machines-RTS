@@ -4,15 +4,15 @@ return {
 -----------------------------------------------------------
 --- UNITS FEATURES
 -----------------------------------------------------------
-  ruspa_builder= {
+  eufmobestor= {
                acceleration = 0.0605,
                brakerate  = 0.2068,
-               buildcostenergy = 1802,
-               buildcostmetal = 128,
+               buildcostenergy = 1759,
+               buildcostmetal = 266,		   
                builddistance = 150,
-               builder = true,
-               buildpic = "ruspa_builder.png",
-               buildtime  = 4066,
+--               builder = true,
+               buildpic = "da_fare.png",
+               buildtime  = 4257,
                canGuard = true,
                canmove = true,
                canPatrol = true,
@@ -22,7 +22,7 @@ return {
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
-               corpse = "armcv_dead",
+               corpse = "eufmobmstor_dead",
 --               defaultmissiontype = Standby,
                description = "Tech Level 1",
                energymake = 10,
@@ -41,12 +41,12 @@ return {
                maxvelocity = 1.925,
                maxwaterdepth = 18,
                metalmake = 0.1,
-               metalStorage = 50,
+               metalStorage = 3000,
 --               mobilestandorders= 1,
                movementclass = "TANK3",
-               name = "Construction Vehicle",
+               name = "Mobile Livrium Storage Vehicle",
                noAutoFire = false,
-               objectname = "ruspa_builder.s3o",
+               objectname = "eufmobestor.s3o",
                radardistance = 50,
                seismicsignature = 0,
                selfdestructas = "BIG_UNIT",
@@ -67,20 +67,20 @@ return {
 -----------------------------------
 --- BUILDLIST
 -----------------------------------
-               buildoptions = { 
-		[1] = "controllo_spazioporto",
-		[2] = "eufhq",
-               },
+--               buildoptions = { 
+--		[1] = "controllo_spazioporto",
+--		[2] = "eufhq",
+--               },
 -----------------------------------------------------------
 --- Units wreckage and heaps
 -----------------------------------------------------------
 featuredefs = {
   dead = {
                world = "All Worlds",
-               description = "Construction Vehicle Wreckage",
+               description = "Storage Vehicle Wreckage",
                category = "corpses",
                object = "ARMCV_DEAD",
-               featuredead = "armcv_heap",
+               featuredead = "eufmobmstor_heap",
                featurereclamate = "SMUDGE01",
                footprintx = 3,
                footprintz = 3,
@@ -98,7 +98,7 @@ featuredefs = {
                },  -- Close Dead Features
   heap = {
                world = "All Worlds",
-               description = "Construction Vehicle Heap",
+               description = "Storage Vehicle Heap",
                category = "heaps",
                object = "3X3C",
                footprintx = 3,
@@ -119,11 +119,11 @@ featuredefs = {
 -----------------------------------------------------------
 --- EFFECTS
 -----------------------------------------------------------
-sfxtypes = {
-  explosiongenerators = {
-               [1]="custom:Nano",
-               }, -- close effects list
-}, -- close section sfxtypes
+--sfxtypes = {
+--  explosiongenerators = {
+--               [1]="custom:Nano",
+--               }, -- close effects list
+--}, -- close section sfxtypes
 -----------------------------------------------------------
 --- UNITS SOUND
 -----------------------------------------------------------
