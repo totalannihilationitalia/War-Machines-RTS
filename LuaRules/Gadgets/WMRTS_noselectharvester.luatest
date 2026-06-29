@@ -1,0 +1,29 @@
+function gadget:GetInfo()
+  return {
+    name      = "Unselectable Havester",
+    desc      = "Rende non selezionabili gli harvester",
+    author    = "molix",
+    date      = "29/06/2026",
+    license   = "GNU GPL, v2 or later",
+    layer     = 0,
+    enabled   = true
+  }
+end
+
+-- solo su lato sync
+if (not gadgetHandler:IsSyncedCode()) then
+  return
+end
+
+-- Elenco harvester
+local UNSELECTABLE_UNITS = {
+  [UnitDefNames["euf_harvester"].id] = true,
+  [UnitDefNames["xxxx"].id] = true, 			-- inserire AND ###################################
+}
+
+-- Applichiamo il blocco non appena l'unità viene creata sulla mappa
+function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
+  if UNSELECTABLE_UNITS[unitDefID] then
+    Spring.SetUnitNoSelect(unitID, true)
+  end
+end
