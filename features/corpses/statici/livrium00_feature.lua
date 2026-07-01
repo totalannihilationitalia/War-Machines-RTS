@@ -15,7 +15,7 @@ return {
     reclaimable = false,
     upright = true,
     crushResistance = 10000,
-    collisionvolumeoffsets = "0 2 0",
+    collisionvolumeoffsets = "0 -100 0",
     collisionvolumescales = "35 4 35",
     collisionvolumetype = "Box",
   },
@@ -36,7 +36,7 @@ return {
     upright = true,
     crushResistance = 10000,
     collisionvolumeoffsets = "0 2 0",
-    collisionvolumescales = "35 4 35",
+    collisionvolumescales = "35 -100 35",
     collisionvolumetype = "Box",
   },
 }
