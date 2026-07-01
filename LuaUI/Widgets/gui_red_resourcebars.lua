@@ -25,13 +25,13 @@ local Config = {
 			px = 902, py = -0.5, -- Coordinate di fallback
 			sx = 260, sy = 29,   -- Dimensioni dello sfondo
 			ancora_x = 7,        -- Allineato a sinistra con metallo ed energia
-			ancora_y = 97,       -- Stack verticale (131 - 34 = 97)
+			ancora_y = 199,      -- Stack verticale (165 + 34 = )
 			barsy = 5,
 			fontsize = 11,
 			margin = 5,
 			
 			expensefadetime = 0.25,
-			background_texture = ":n:"..LUAUI_DIRNAME.."images/menu/resourcesmenu/livrium_bkgnd.png", -- Sfondo personalizzato
+			background_texture = ":n:"..LUAUI_DIRNAME.."images/menu/resourcesmenu/energy_bkgnd.png", -- ##################################sistemare
 			cbackground = {0,0,0,0},
 			cborder =  {0,0,0,0},
 			cbarbackground = {0,0,0,1},
@@ -44,7 +44,7 @@ local Config = {
 			ccurrent = {1,1,1,1},
 			cstorage = {1,1,1,1},
 
-			cicona = ":n:"..LUAUI_DIRNAME.."Images/menu/resourcesmenu/livrium_icon.png",	-- Icona personalizzata
+			cicona = ":n:"..LUAUI_DIRNAME.."Images/menu/resourcesmenu/livrium_icon.png",	-- ##################################sistemare
 			dragbutton = {2},
 			tooltip = {
 				background ="In CTRL+F11 mode: Hold \255\255\255\1middle mouse button\255\255\255\255 to drag the resource bar.",
@@ -534,13 +534,13 @@ function widget:Initialize()
 	
 	metal = createbar(Config.metal)				-- creo barra metallo
 	energy = createbar(Config.energy)			-- creo barra energia
-	-- logica per verificare fazione ed, eventualmente, creare la barra di livrium
-	local myTeamID = Spring.GetMyTeamID()
-	local _, _, _, _, mySide = Spring.GetTeamInfo(myTeamID) -- prelevo la fazione
-	local sideLower = mySide and mySide:lower() or ""		-- Converto fazione in minuscolo
-	if sideLower == "euf" or sideLower == "and" then	    -- se fazione and o euf allora creo la barra del livrium
+	-- logica per verificare fazione ed, eventualmente, creare la barra di livrium ################################################################ logica rimossa per test, rimettere!!!!!!!!!!!!!!!! ##################
+--	local myTeamID = Spring.GetMyTeamID()
+--	local _, _, _, _, mySide = Spring.GetTeamInfo(myTeamID) -- prelevo la fazione
+--	local sideLower = mySide and mySide:lower() or ""		-- Converto fazione in minuscolo
+--	if sideLower == "euf" or sideLower == "and" then	    -- se fazione and o euf allora creo la barra del livrium
 		livrium = createbar(Config.livrium)					
-	end
+--	end
 	
 	
 	metal.barbackground.mouseheld = {
@@ -575,9 +575,10 @@ function widget:Update()
 	if (gameFrame ~= lastFrame) then
 		updatebar(energy,"energy")
 		updatebar(metal,"metal")
-		if livrium then 					-- se livrium è stata inizializzata, allora aggiorna la barra del livrium
+--      logica rimossa per test, rimettere #####################################################################################################################
+--		if livrium then 					-- se livrium è stata inizializzata, allora aggiorna la barra del livrium
 			updatebar_livrium(livrium)
-		end
+--		end
 		lastFrame = gameFrame
 	end
 end
