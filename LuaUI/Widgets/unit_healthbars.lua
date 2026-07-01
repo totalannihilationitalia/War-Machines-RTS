@@ -82,6 +82,7 @@ local barColors = {
   reload  = { 0.00,0.60,0.60,barAlpha },
   jump    = { 0.10,0.80,0.50,barAlpha },
   shield  = { 0.20,0.60,0.60,barAlpha },
+  cargo   = { 0.70,0.15,0.90,barAlpha }, -- aggiunto per gli harvester
 
   resurrect = { 1.00,0.50,0.00,featureBarAlpha },
   reclaim   = { 0.75,0.75,0.75,featureBarAlpha },
@@ -606,6 +607,38 @@ do
           AddBar("jump",jumpReload,"jump",(fullText and floor(jumpReload*100)..'%') or '')
         end
       end
+
+      --// CARICO HARVESTER (molix, rev1)
+--[[	  
+      if (ud.name == "euf_harvester" or ud.name == "and_harvester") then
+        local cargo = GetUnitRulesParam(unitID, "quantita_raccolta") or 0
+        if (cargo > 0) then
+          local maxCargo = 3000 -- Capacità massima fissa impostata ######################################################################## prelevarlo successivamente dal tipo di unità, potrei volerlo fare custom per unità
+          local percent = cargo / maxCargo
+          if (percent > 1) then percent = 1 end
+          
+          -- Aggiunge la barra con il testo "quantità/3000" se la telecamera è vicina
+          AddBar("cargo", percent, "cargo", (fullText and floor(cargo) .. '/' .. maxCargo) or '')
+        end
+      end	  
+]]--
+      if (ud.name == "euf_harvester" or ud.name == "and_harvester") then
+        -- Controlla se l'unita appartiene alla stessa squadra alleata del giocatore locale
+        local myAllyTeamID = Spring.GetMyAllyTeamID()
+        local unitAllyTeamID = Spring.GetUnitAllyTeam(unitID)
+        
+        if (myAllyTeamID == unitAllyTeamID) then
+          local cargo = GetUnitRulesParam(unitID, "quantita_raccolta") or 0
+          if (cargo > 0) then
+            local maxCargo = 3000 -- Capacità massima fissa impostata
+            local percent = cargo / maxCargo
+            if (percent > 1) then percent = 1 end
+            
+            -- Aggiunge la barra con il testo "quantità/3000" se la telecamera è vicina
+            AddBar("cargo", percent, "cargo", (fullText and floor(cargo) .. '/' .. maxCargo) or '')
+          end
+        end
+      end	  
 
     if (barsN>0)or(numStockpiled) then
       glPushMatrix()
