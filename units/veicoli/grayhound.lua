@@ -10,7 +10,7 @@ return {
                buildcostenergy = 6935,
                buildcostmetal = 793,
                builder = false,
-               buildpic = "da_fare.png",
+               buildpic = "grayhound.png",
                buildtime  = 13013,
                canAttack = true,
                canGuard = true,

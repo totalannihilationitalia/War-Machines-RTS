@@ -11,7 +11,7 @@ return {
                buildcostmetal = 128,
                builddistance = 150,
                builder = false,
-               buildpic = "da_fare.png", -- "euf_saving_vehicle.png",
+               buildpic = "euf_harvester.png", -- "euf_saving_vehicle.png",
                buildtime  = 4066,
                canGuard = true,
                canmove = true,
