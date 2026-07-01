@@ -9,7 +9,7 @@ return {
                brakerate  = 0.2068,
                buildcostenergy = 1802,
                buildcostmetal = 128,
-               builddistance = 150,
+               builddistance = 300,
                builder = true,
                buildpic = "ruspa_builder.png",
                buildtime  = 4066,
@@ -22,9 +22,9 @@ return {
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
-               corpse = "armcv_dead",
+               corpse = "ruspa_builder_dead",
 --               defaultmissiontype = Standby,
-               description = "Tech Level 1",
+               description = "Combat Engineering Vehicle",
                energymake = 10,
                energystorage = 50,
                energyUse = 10,
@@ -44,7 +44,7 @@ return {
                metalStorage = 50,
 --               mobilestandorders= 1,
                movementclass = "TANK3",
-               name = "Construction Vehicle",
+               name = "Euf CEV",
                noAutoFire = false,
                objectname = "ruspa_builder.s3o",
                radardistance = 50,
@@ -70,6 +70,10 @@ return {
                buildoptions = { 
 		[1] = "controllo_spazioporto",
 		[2] = "eufhq",
+		[3] = "euf_harvester_factory", 		
+-- inserire raffineria		
+		[4] = "eufresonator", 	
+		
                },
 -----------------------------------------------------------
 --- Units wreckage and heaps
@@ -77,10 +81,10 @@ return {
 featuredefs = {
   dead = {
                world = "All Worlds",
-               description = "Construction Vehicle Wreckage",
+               description = "Combat Engineering Vehicle Wreckage",
                category = "corpses",
                object = "ARMCV_DEAD",
-               featuredead = "armcv_heap",
+               featuredead = "ruspa_builder_heap",
                featurereclamate = "SMUDGE01",
                footprintx = 3,
                footprintz = 3,
@@ -98,7 +102,7 @@ featuredefs = {
                },  -- Close Dead Features
   heap = {
                world = "All Worlds",
-               description = "Construction Vehicle Heap",
+               description = "Combat Engineering Vehicle Heap",
                category = "heaps",
                object = "3X3C",
                footprintx = 3,
