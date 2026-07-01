@@ -11,8 +11,7 @@ function widget:GetInfo()
 	}
 end
 
--- 08/04/2026 -- rev0 modificato da molix, eliminato il fattore "scaling" per rendere più nitide le immagini. Utilizzati background images. 
--- 01/07/2026 -- rev1 Aggiungo la barra del livrium SE la fazione del giocatore è EUF o AND
+-- 08/04/2026 -- modificato da molix, eliminato il fattore "scaling" per rendere più nitide le immagini. Utilizzati background images. 
 
 local barTexture = LUAUI_DIRNAME.."Images/resbar.dds"
 
@@ -21,42 +20,6 @@ local CanvasX,CanvasY = 1280,734 --resolution in which the widget was made (for 
 --1272,734 == 1280,768 windowed
 
 local Config = {
-	livrium = {
-			px = 902, py = -0.5, -- Coordinate di fallback
-			sx = 260, sy = 29,   -- Dimensioni dello sfondo
-			ancora_x = 7,        -- Allineato a sinistra con metallo ed energia
-			ancora_y = 97,       -- Stack verticale (131 - 34 = 97)
-			barsy = 5,
-			fontsize = 11,
-			margin = 5,
-			
-			expensefadetime = 0.25,
-			background_texture = ":n:"..LUAUI_DIRNAME.."images/menu/resourcesmenu/livrium_bkgnd.png", -- Sfondo personalizzato
-			cbackground = {0,0,0,0},
-			cborder =  {0,0,0,0},
-			cbarbackground = {0,0,0,1},
-			cbar = {0.6, 0.1, 0.8, 1}, 	-- Colore viola/violaceo per il Livrium
-			cindicator = {1,0,0,0.8},
-			
-			cincome = {0,1,0,1},
-			cpull = {1,0,0,1},
-			cexpense = {1,0,0,1},
-			ccurrent = {1,1,1,1},
-			cstorage = {1,1,1,1},
-
-			cicona = ":n:"..LUAUI_DIRNAME.."Images/menu/resourcesmenu/livrium_icon.png",	-- Icona personalizzata
-			dragbutton = {2},
-			tooltip = {
-				background ="In CTRL+F11 mode: Hold \255\255\255\1middle mouse button\255\255\255\255 to drag the resource bar.",
-				income = "Your Livrium income.",
-				pull = "Your Livrium pull.",
-				expense = "Your Livrium expense.",
-				storage = "Your maximum Livrium storage.",
-				current = "Your current Livrium storage.",
-			},
-		},
-
-
 	metal = {
 		px = 370,py = -0.5, --default start position
 		sx = 260,sy = 29, --background size
@@ -142,7 +105,6 @@ local sGetMyTeamID = Spring.GetMyTeamID
 local sGetTeamResources = Spring.GetTeamResources
 local sSetShareLevel = Spring.SetShareLevel
 local sformat = string.format
-local livrium = nil -- rev1 inizializzo come nil questa variabile, servirà ad attivare la barra del livrium (ad esempio se la fazione del giocatore è EUF o AND)
 
 local function IncludeRedUIFrameworkFunctions()
 	New = WG.Red.New(widget)
@@ -457,44 +419,6 @@ local function createbar(r)
 	}
 end
 
-local function updatebar_livrium(b)
-	local teamID = sGetMyTeamID()
-	
-	-- Leggiamo i valori aggiornati dal nostro gadget del Livrium
-	local cur = Spring.GetTeamRulesParam(teamID, "livrium_current") or 0
-	local cap = Spring.GetTeamRulesParam(teamID, "livrium_max") or 0
-	
-	local barbackpx = b.barbackground.px
-	local barbacksx = b.barbackground.sx
-	
-	-- Calcolo della percentuale di riempimento della barra
-	if cap > 0 then
-		b.bar.sx = (cur / cap) * barbacksx
-	else
-		b.bar.sx = 0
-	end
-	
-	if (b.bar.sx > barbacksx) then
-		b.bar.sx = barbacksx
-	end
-	
-	-- Al momento non tracciamo entrate/uscite (income/pull) per il Livrium, quindi le mostriamo a 0
-	b.income.caption = "+ "..short(0)
-	b.pull.caption = "- "..short(0)
-	b.current.caption = short(cur)
-	b.storage.caption = short(cap)
-	
-	-- Allineamento dei testi (copiato dalla logica originale del widget)
-	b.income.px = barbackpx - b.income.getwidth() - b.margin*2.2
-	b.pull.px = barbackpx - b.pull.getwidth() - b.margin*2.2
-	b.current.px = barbackpx + barbacksx/2 - b.current.getwidth()/2
-	b.storage.px = barbackpx + barbacksx - b.storage.getwidth()
-	
-	-- Disattiviamo l'indicatore di condivisione risorsa (visto che il Livrium non è condivisibile nativamente)
-	b.shareindicator.active = false
-	b.expense.active = false
-end
-
 local function updatebar(b,res)
 	local r = {sGetTeamResources(sGetMyTeamID(),res)} -- 1 = cur 2 = cap 3 = pull 4 = income 5 = expense 6 = share
 	local barbackpx = b.barbackground.px
@@ -532,16 +456,8 @@ function widget:Initialize()
 	PassedStartupCheck = RedUIchecks()
 	if (not PassedStartupCheck) then return end
 	
-	metal = createbar(Config.metal)				-- creo barra metallo
-	energy = createbar(Config.energy)			-- creo barra energia
-	-- logica per verificare fazione ed, eventualmente, creare la barra di livrium
-	local myTeamID = Spring.GetMyTeamID()
-	local _, _, _, _, mySide = Spring.GetTeamInfo(myTeamID) -- prelevo la fazione
-	local sideLower = mySide and mySide:lower() or ""		-- Converto fazione in minuscolo
-	if sideLower == "euf" or sideLower == "and" then	    -- se fazione and o euf allora creo la barra del livrium
-		livrium = createbar(Config.livrium)					
-	end
-	
+	metal = createbar(Config.metal)
+	energy = createbar(Config.energy)
 	
 	metal.barbackground.mouseheld = {
 		{1,function(mx,my,self)
@@ -555,7 +471,7 @@ function widget:Initialize()
 			updatebar(energy,"energy")
 		end},
 	}
-	-- aggiungere livrium?? per ora non faccio in modo che sia condivisibile
+	
 	Spring.SendCommands("resbar 0")
 	AutoResizeObjects()
 end
@@ -575,9 +491,6 @@ function widget:Update()
 	if (gameFrame ~= lastFrame) then
 		updatebar(energy,"energy")
 		updatebar(metal,"metal")
-		if livrium then 					-- se livrium è stata inizializzata, allora aggiorna la barra del livrium
-			updatebar_livrium(livrium)
-		end
 		lastFrame = gameFrame
 	end
 end
