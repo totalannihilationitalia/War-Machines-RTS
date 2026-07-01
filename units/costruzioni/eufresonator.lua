@@ -12,7 +12,7 @@ return {
                buildcostenergy = 30000,
                buildcostmetal = 2200,
                builder = false,
-               buildpic = "da_fare.png",
+               buildpic = "eufresonator.png",
                buildtime  = 35000,
                canAttack = false,
                category = "OGGETTISTATICI",
