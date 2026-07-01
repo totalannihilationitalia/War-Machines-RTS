@@ -84,9 +84,7 @@ return {
 		[14] = "eufblab", -------------------- non funziona sistemare ################
 		[15]= "euf_fence_gate",
 		[16]= "euf_fence_wall",
-		[17] = "eufadvmetex", 
-		[18] = "eufresonator", 		
-		[19] = "euf_harvester_factory", 				
+		[17] = "eufadvmetex", 					
                },
 
 -----------------------------------------------------------
