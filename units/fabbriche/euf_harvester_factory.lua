@@ -42,8 +42,10 @@ return {
 --               maneuverleashlength  = 640,
 --               mass = 0 --definire massa,
                maxdamage = 11010,
+			   maxSlope = 15, 			   
 --               maxvelocity = 3.34,
                metalStorage = 0,
+			   
 --               minWaterDepth= 12,
 --               mobilestandorders= 1,
 --               movementclass = "BOAT5",
