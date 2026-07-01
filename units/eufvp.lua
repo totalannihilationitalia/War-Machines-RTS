@@ -61,6 +61,7 @@ return {
 			[1] = "eufcd",
 			[2] = "eufthorn",
 			[3] = "eufsab",
+			[4] = "ruspa_builder",			
 		},
 -----------------------------------------------------------
 --- Units wreckage and heaps
