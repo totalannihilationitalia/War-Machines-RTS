@@ -27,7 +27,7 @@ return {
                description = "Produces Energy",
                energymake = 0,
                energystorage = 50,
-               energyUse = -20,
+               energyUse = -25,
                explodeas = "SMALL_BUILDINGEX",
                footprintx = 4,
                footprintz = 4,
