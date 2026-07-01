@@ -30,6 +30,9 @@ local livriumFields = {
     ["Zoty Outpost"] = {
         {x = 364, z = 1550, radius = 400},
     },
+    ["Aminos Island"] = {
+        {x = 3822, z = 6554, radius = 200},
+    },	
 }
 
 local currentMap = Game.mapName
