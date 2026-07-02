@@ -119,6 +119,7 @@ featuredefs = {
 sfxtypes = {
   explosiongenerators = {
                [1]="custom:Nano",
+               [2]="custom:DirtBALLTRAIL",			   
                }, -- close effects list
 }, -- close section sfxtypes
 -----------------------------------------------------------
