@@ -14,8 +14,9 @@ end
 -- 06/04/2026 = aggiunte icone "build" e "select"		
 -- 08/05/2026 = aggiungo indicatore per marker, quando sono fuori dalla vista della telecamera, appaiono indicatori per segnalare marcatori. questa versione sostituisce WMRTS_IconObj.luarev1
 -- 21/05/2026 = revisione sostituisce "WMRTS_IconObj.luarev2". Si accorpa la logica di Marker per gli estrattori di metallo influenzati dai resonator (verrà loro applicato un marker a seconda che il resonator sia attivo o disattivato, se dentro il suo raggio di funzionamento)
+-- 02/07/2026 = si aggiungono le icone degli harvester. Molix
 
--- Lista icone
+-- Lista icone x missioni
 -- type = 1 -> icone di attacco
 -- type = 2 -> icone di difesa
 -- type = 3 -> icone di movimento
@@ -54,6 +55,14 @@ local icon_extr_on = "LuaUI/Images/menu/objectives/icon_extron.png"
 local icon_extr_off = "LuaUI/Images/menu/objectives/icon_extroff.png"
 local aura_extr_on = "LuaUI/Images/menu/objectives/marker_extron.png"
 local aura_extr_off = "LuaUI/Images/menu/objectives/marker_extroff.png"
+
+-- Config immagini icone di stato per harvester di livrium 
+local icon_harv_0 = "LuaUI/Images/menu/objectives/icon_harv0.png"
+local icon_harv_1 = "LuaUI/Images/menu/objectives/icon_harv1.png"
+local icon_harv_1bis = "LuaUI/Images/menu/objectives/icon_harv1bis.png"
+local icon_harv_2 = "LuaUI/Images/menu/objectives/icon_harv2.png"
+local icon_harv_3 = "LuaUI/Images/menu/objectives/icon_harv3.png"
+local icon_harv_4 = "LuaUI/Images/menu/objectives/icon_harv4.png"
 
 -- Tabella per i testi automatici delle unità basata sul tipo
 local typeToText = {
@@ -188,7 +197,7 @@ local function DrawIcon(x, y, z, height, type)
 end
 
 -- Funzione per disegnare l'icona (sopra il resonator)
-local function DrawMetalIcon(x, y, z, height, type)
+local function DrawResonatorIcon(x, y, z, height, type)
 --    local time = Spring.GetGameSeconds()
 --    local bounce = math.sin(time * 3) * 8 			-- non deve rimbalzare ma rimanere statica
 
@@ -211,6 +220,36 @@ local function DrawMetalIcon(x, y, z, height, type)
     gl.Texture(false)
     gl.PopMatrix()
 end
+
+-- Funzione per disegnare l'icona sopra l'harvester
+local function DrawHarvesterIcon(x, y, z, height, status, harvesting)
+--    local time = Spring.GetGameSeconds()
+--    local bounce = math.sin(time * 3) * 8 			-- non deve rimbalzare ma rimanere statica
+
+    gl.DepthMask(false)
+    gl.DepthTest(false) 
+    gl.PushMatrix()   
+    
+    local tex = icon_harv_0
+    if status == 0 then tex = icon_harv_0
+    elseif status == 1 and harvesting ==0 then tex = icon_harv_1		-- ossia l'harvester va verso il campo di livrium
+	elseif status == 1 and harvesting ==1 then tex = icon_harv_1bis		-- ossia l'harvester sta raccogliendo nel campo di livrium
+    elseif status == 2 then tex = icon_harv_2							-- ossia l'harvester torna a casa					
+    elseif status == 3 then tex = icon_harv_3							-- ossia l'harvester viene raccolto dalla fabbrica
+    elseif status == 4 then tex = icon_harv_4							-- ossia l'harvester viene scaricato dalla fabbrica
+	end
+
+    gl.Translate(x, y + height + 25, z)
+    gl.Billboard()
+    gl.Color(1, 1, 1, 1)
+    gl.Texture(tex)
+    -- Disegna l'icona leggermente alzata rispetto al centro del billboard
+    gl.TexRect(-15, 6, 15, 20) 
+    
+    gl.Texture(false)
+    gl.PopMatrix()
+end
+
 
 -- funzione per disegnare i marcatori laterali
 local function DrawEdgeMarker(wx, wy, wz, type)
@@ -333,10 +372,23 @@ function widget:DrawWorld()
             local unitDefID = Spring.GetUnitDefID(uID)
             local h = (UnitDefs[unitDefID] and UnitDefs[unitDefID].height or 30)
             -- Disegna Icona
-            DrawMetalIcon(x, y, z, h, extractorType)
+            DrawResonatorIcon(x, y, z, h, extractorType)
             -- Disegna Testo automatico
             -- DrawLabel(x, y, z, h, typeToText[extractorType]) -- il testo lo disabilito per ora, non mi interessa che appaia sugli estrattori. Molix 21/05/2026
         end
+		-- livrium harvester (UnitRulesParam = stato_raccolta ). In base allo stato raccolta disegno l'icona indicante se l'harvester sta rientrando, sta andando a raccogliere, sta raccogliendo
+        local harvesterstatus = Spring.GetUnitRulesParam(uID, "stato_raccolta")
+		local isharversting = Spring.GetUnitRulesParam(uID, "is_harversting")
+--        if harvesterstatus and harvesterstatus > 1.0 then
+        if harvesterstatus then 	-- quando non sta raccogliendo disegna le icone 1 (muovi), 2 (torna) 3 (attesa carico) o 4 (unload)
+            local x, y, z = Spring.GetUnitPosition(uID)
+            local unitDefID = Spring.GetUnitDefID(uID)
+            local h = (UnitDefs[unitDefID] and UnitDefs[unitDefID].height or 30)
+            -- Disegna Icona
+            DrawHarvesterIcon(x, y, z, h, harvesterstatus, isharversting)
+            -- Disegna Testo automatico
+            -- DrawLabel(x, y, z, h, typeToText[harvesterstatus]) -- il testo lo disabilito per ora, non mi interessa che appaia sugli estrattori. Molix 21/05/2026
+        end		
     end
 
     -- 2. Gestione PUNTI FISSI (Marker)

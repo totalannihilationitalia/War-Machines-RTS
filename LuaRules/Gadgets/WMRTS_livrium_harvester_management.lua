@@ -12,8 +12,13 @@ end
 
 -- 29/06/2026 = realizzata rev 0
 -- 01/07/2026 = rev 1 -> integrato con il WMRTS_livrium_menagement.lua. Ora il "livrium" raccolto è una risorsa vera e propria, che verrà trasformato in metal solo dalle apposite raffinerie.
+
+
 -- todo
 -- fare in modo che al loading dell'unità, vengano memorizzate le posizioni x,y,z cosi da utilizzarle per scaricare l'unità. Obiettivo: l'unità deve essere scaricata nell'esatto punto in cui l'ho prelevata
+-- aggiungere effetto unità durante la raccolta
+-- Sistemare logica di funzionamento. Es se vengono eliminate tutte le fabbriche, i veicoli devono rimanere allo stato "x" indicante: manca la fabbrica madre.
+
 if not gadgetHandler:IsSyncedCode() then return end
 
 -- =============================================================================
@@ -144,10 +149,13 @@ function gadget:GameFrame(n)
                         -- DA RE-IMPARTIRE SOLO SE FERMO
                         if isIdle then
                             Spring.GiveOrderToUnit(hID, CMD.MOVE, {field.x, y, field.z}, {})
+							Spring.SetUnitRulesParam(hID, "is_harversting", 0)
                         end
                     else
                         -- Siamo dentro il campo
                         local quantita = Spring.GetUnitRulesParam(hID, "quantita_raccolta") or 0
+						-- Imposto il campo ishavesting = 1 (usato per le icone)
+						Spring.SetUnitRulesParam(hID, "is_harversting", 1)
                         if quantita < MAX_LIVRIUM then
                             Spring.SetUnitRulesParam(hID, "quantita_raccolta", quantita + HARVEST_SPEED)
                             
@@ -162,6 +170,7 @@ function gadget:GameFrame(n)
                                 data.timer = 0
                             end
                         else
+							Spring.SetUnitRulesParam(hID, "is_harversting", 0)						
                             Spring.SetUnitRulesParam(hID, "stato_raccolta", 2)
                         end
                     end
@@ -180,6 +189,7 @@ function gadget:GameFrame(n)
                             Spring.GiveOrderToUnit(hID, CMD.MOVE, {fx, fy, fz}, {})
                         end
                     else
+						Spring.SetUnitRulesParam(hID, "is_harversting", 0)					
                         Spring.SetUnitRulesParam(hID, "stato_raccolta", 3)
                     end
                 end
