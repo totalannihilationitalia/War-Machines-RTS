@@ -12,11 +12,10 @@ end
 
 -- 29/06/2026 = realizzata rev 0
 -- 01/07/2026 = rev 1 -> integrato con il WMRTS_livrium_menagement.lua. Ora il "livrium" raccolto è una risorsa vera e propria, che verrà trasformato in metal solo dalle apposite raffinerie.
-
+-- 02/07/2026 = rev 2 -> aggiunto effetto fumo durante la raccolta del livrium
 
 -- todo
 -- fare in modo che al loading dell'unità, vengano memorizzate le posizioni x,y,z cosi da utilizzarle per scaricare l'unità. Obiettivo: l'unità deve essere scaricata nell'esatto punto in cui l'ho prelevata
--- aggiungere effetto unità durante la raccolta
 -- Sistemare logica di funzionamento. Es se vengono eliminate tutte le fabbriche, i veicoli devono rimanere allo stato "x" indicante: manca la fabbrica madre.
 
 if not gadgetHandler:IsSyncedCode() then return end
@@ -151,6 +150,11 @@ function gadget:GameFrame(n)
                             Spring.GiveOrderToUnit(hID, CMD.MOVE, {field.x, y, field.z}, {})
 							Spring.SetUnitRulesParam(hID, "is_harversting", 0)
                         end
+                        -- SPEGNIMENTO SCAVATORE: l'unità è fuori dal campo (in viaggio)
+                        local funcID = Spring.GetCOBScriptID(hID, "AvvioScavatore")
+                        if funcID then
+                            Spring.CallCOBScript(hID, funcID, 0, 0) -- Invia 0 per spegnere
+                        end						
                     else
                         -- Siamo dentro il campo
                         local quantita = Spring.GetUnitRulesParam(hID, "quantita_raccolta") or 0
@@ -158,7 +162,14 @@ function gadget:GameFrame(n)
 						Spring.SetUnitRulesParam(hID, "is_harversting", 1)
                         if quantita < MAX_LIVRIUM then
                             Spring.SetUnitRulesParam(hID, "quantita_raccolta", quantita + HARVEST_SPEED)
-                            
+						-- avvio lo script di animazione di raccolta dell'harvester 
+							local funcID = Spring.GetCOBScriptID(hID, "AvvioScavatore")				-- Recupera l'ID interno del thread della funzione COB per quella specifica unità
+							if funcID then															-- se ha trovato l'ID procedi con la chiamata della funzione COB
+									-- Chiamata tramite ID numerico 
+									Spring.CallCOBScript(hID, funcID, 0, 1)							-- invi la richiesta di chiamata con 0 = non attendere alcun valore di rientro e  invia la variabile 1 (on)
+								else
+									Spring.Echo("Errore: la funzione COB non è stata trovata per l'unità " .. hID)
+								end
                             -- Movimento casuale ogni 20 secondi
                             data.timer = data.timer + 1
                             if data.timer >= 20 then

@@ -3,7 +3,8 @@
 #include "sfxtype.h"
 #include "exptype.h"
 
-piece  base, turret, arm1, arm2, arm3, link, magnet, arm4, arm5, arm6, arm7;
+piece  base, turret, arm1, arm2, arm3, link, magnet, arm4,
+       arm5, arm6, arm7;
 
 static-var  Static_Var_1, Static_Var_2, Static_Var_3, Static_Var_4;
 
@@ -67,11 +68,7 @@ StartDoorOpen()
 {
 	signal 4;
 	set-signal-mask 4;
-//	turn door1 to z-axis <-90.000000> speed <50.000000>;
-//	turn door2 to z-axis <90.000000> speed <50.000000>;
 	sleep 5000;
-//	turn door1 to z-axis <0.000000> speed <20.000000>;
-//	turn door2 to z-axis <0.000000> speed <20.000000>;
 }
 
 BoomCalc(posxz, posy)
@@ -187,12 +184,8 @@ Killed(severity, corpsetype)
 		explode arm2 type BITMAPONLY | BITMAP2;
 		explode arm3 type BITMAPONLY | BITMAP5;
 		explode base type BITMAPONLY | BITMAP3;
-//		explode door1 type BITMAPONLY | BITMAP4;
-//		explode door2 type BITMAPONLY | BITMAP5;
 		explode link type BITMAPONLY | BITMAP1;
 		explode turret type BITMAPONLY | BITMAP2;
-
-		
 		return (0);
 	}
 	if( severity <= 50 )
@@ -202,12 +195,8 @@ Killed(severity, corpsetype)
 		explode arm2 type SHATTER | BITMAP2;
 		explode arm3 type SHATTER | BITMAP4;
 		explode base type BITMAPONLY | BITMAP3;
-//		explode door1 type BITMAPONLY | BITMAP4;
-//		explode door2 type BITMAPONLY | BITMAP5;
 		explode link type FALL | BITMAP1;
 		explode turret type BITMAPONLY | BITMAP2;
-
-
 		return (0);
 	}
 	if( severity <= 99 )
@@ -217,12 +206,8 @@ Killed(severity, corpsetype)
 		explode arm2 type SHATTER | BITMAP2;
 		explode arm3 type SHATTER | BITMAP4;
 		explode base type BITMAPONLY | BITMAP3;
-//		explode door1 type BITMAPONLY | BITMAP4;
-//		explode door2 type BITMAPONLY | BITMAP5;
 		explode link type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
 		explode turret type BITMAPONLY | BITMAP2;
-
-
 		return (0);
 	}
 	corpsetype = 3;
@@ -230,10 +215,6 @@ Killed(severity, corpsetype)
 	explode arm2 type SHATTER | EXPLODE_ON_HIT | BITMAP2;
 	explode arm3 type SHATTER | BITMAP4;
 	explode base type BITMAPONLY | BITMAP3;
-//	explode door1 type BITMAPONLY | BITMAP4;
-//	explode door2 type BITMAPONLY | BITMAP5;
 	explode link type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP1;
 	explode turret type BITMAPONLY | BITMAP2;
-
-
 }
