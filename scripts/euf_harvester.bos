@@ -3,14 +3,27 @@
 #include "sfxtype.h"
 #include "exptype.h"
 
-piece  base, cingoli, spot1, spot2;
+piece  base, rullo, reggipala, cingoli, spot1, spot2;
 
 static-var  Static_Var_1, Static_Var_2, statechg_DesiredState, statechg_StateChanging, inazione;
+
 
 
 AvvioScavatore(param1)
 {
     inazione = param1;
+	if (inazione == 1)
+	{
+	spin rullo around x-axis speed 8500 accelerate 1200;
+//	turn reggipala to x-axis <0.000000> speed <100>;
+	
+	}
+	else
+	{
+	stop-spin rullo around x-axis decelerate 1200;
+//	turn reggipala to x-axis <-10.000000> speed <100>;	
+	}    
+    
 }    
 
 Scavatore()
@@ -166,6 +179,9 @@ Create()
 	start-script SmokeUnit();
 	inazione = 0;
 	start-script Scavatore();	
+//	turn reggipala to x-axis <-10.000000> now;
+		
+	
 }
 
 Activate()
