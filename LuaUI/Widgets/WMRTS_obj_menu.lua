@@ -42,13 +42,13 @@ to do list
 local Echo 							= Spring.Echo 
 -- definizione variabili di posizione e lunghezza menu e icone
 local vsx, vsy = widgetHandler:GetViewSizes()
-local altezza_briefing 						 = 70 -- 140
+local altezza_briefing 					 = 70 		-- 140
 local larghezza_menu 			 		 = 400
 local posx_menu = vsx/2 - larghezza_menu/2 			-- parte da sx
-local posy_menu = vsy/2 - altezza_briefing/2 			-- parte dal basso
+local posy_menu = vsy/2 - altezza_briefing/2 		-- parte dal basso
 local mostra_objsetting = false 					-- show obj options
 local larghezza_menu_buttons 		     = 76		-- like back button, close button
-local altezza_briefing_buttons				 = 25		-- like back button, close button
+local altezza_briefing_buttons			 = 25		-- like back button, close button
 local posx_menu_button 					 = 11		-- position x of first menu button (from 0 ,0 of main menu)
 local posy_menu_button					 = -10		-- position y of first menu button (from 0 ,0 of main menu)
 local distance_x_menu_button 			 = 300		-- x distance between menu buttons
