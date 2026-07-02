@@ -153,7 +153,7 @@ function gadget:GameFrame(n)
                         -- SPEGNIMENTO SCAVATORE: l'unità è fuori dal campo (in viaggio)
                         local funcID = Spring.GetCOBScriptID(hID, "AvvioScavatore")
                         if funcID then
-                            Spring.CallCOBScript(hID, funcID, 0, 0) -- Invia 0 per spegnere
+                            Spring.CallCOBScript(hID, funcID, 0, 0) -- Invia x,x,x, 0 per spegnere
                         end						
                     else
                         -- Siamo dentro il campo
