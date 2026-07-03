@@ -11,6 +11,7 @@ function gadget:GetInfo()
 end
 
 -- rev0 = generato questo gadget per la conversione Livrium -> metal
+-- rev1 = 03/07/2026 aggiungo la variabile "stato_raffineria" che verrà poi utilizzata per mostrare le etichette di stato. molix
 
 if not gadgetHandler:IsSyncedCode() then 
     return 
@@ -43,28 +44,34 @@ local refineryConfigs = {}  -- refineryConfigs[unitDefID] = config_elaborata
 
 local function ProcessRefinery(unitID, data)
     -- Controlla se la raffineria e attiva (non e paralizzata, ha energia nativa ed e accesa)
-    if not Spring.GetUnitIsActive(unitID) then
-        return
+    if not Spring.GetUnitIsActive(unitID) then	-- se la raffineria è spenta...
+	    Spring.SetUnitRulesParam(unitID, "stato_raffineria", 3) -- 3 = Spenta / OFF, per etichette
+        return				-- esci da questa funzione
     end
 
     local teamID = data.teamID
     local config = data.config
 
-    -- 1. Controlla se il team ha abbastanza Energia
-    local currentEnergy = Spring.GetTeamResources(teamID, "energy")
-    if not currentEnergy or currentEnergy < config.energy_consumption then
-        return -- Energia insufficiente, la conversione salta per questo ciclo
-    end
-
-    -- 2. Controlla se il team ha abbastanza Livrium (tramite il gadget del Punto 1)
+    -- 1. Controlla se il team ha abbastanza Livrium (tramite il gadget del Punto 1)
     if not GG.GetTeamLivrium then
         return -- Il modulo di gestione Livrium non e caricato
-    end
+	end
     
     local currentLivrium, _ = GG.GetTeamLivrium(teamID)
     if not currentLivrium or currentLivrium < config.livrium_bruciato then
+		Spring.SetUnitRulesParam(unitID, "stato_raffineria", 2) -- 2 = No Livrium, per etichette
         return -- Livrium insufficiente, la conversione salta per questo ciclo
     end
+
+    -- 2. Controlla se il team ha abbastanza Energia
+    local currentEnergy = Spring.GetTeamResources(teamID, "energy")
+    if not currentEnergy or currentEnergy < config.energy_consumption then
+		Spring.SetUnitRulesParam(unitID, "stato_raffineria", 1) -- 1 = no energia, per etichette
+		return -- Energia insufficiente, la conversione salta per questo ciclo
+    end
+
+    -- 3. Se arriva qui, le risorse ci sono e avviene la conversione
+    Spring.SetUnitRulesParam(unitID, "stato_raffineria", 0) -- 0 = Funzionamento OK, per etichette	
 
     -- 3. Esegui la conversione
     -- Consuma prima il Livrium (se l'operazione va a buon fine, procediamo)
