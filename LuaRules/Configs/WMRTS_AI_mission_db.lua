@@ -543,11 +543,19 @@ local UNIT_DB = {
 
 -- Fabbriche Tier 2
 ["eufavp"] = { type = "building" },
+["controllo_spazioporto"] = { type = "building", ignore = true },
+["eufhq"] = { type = "building", ignore = true },
+["euf_harvester_factory"] = { type = "strategicbuilding", ignore = true },
+["eufrafinery"] = { type = "building", ignore = true },
+["euflstor"] = { type = "building", ignore = true },
+["eufresonator"] = { type = "building", ignore = true },
+	
 
 -- Unità prodotte da eufvp
 ["eufcd"] = { type = "ground", ignore = true  },
 ["eufthorn"] = { type = "ground" },
 ["eufsab"] = { type = "ground" },
+["ruspa_builder"] = { type = "ground", ignore = true  },
 
 -- Unità prodotte da eufap
 ["euffig"] = { type = "air" },
