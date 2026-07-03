@@ -70,10 +70,10 @@ return {
                buildoptions = { 
 		[1] = "controllo_spazioporto",
 		[2] = "eufhq",
-		[3] = "euf_harvester_factory", 		
--- inserire raffineria		
-		[4] = "eufresonator", 	
-		
+		[3] = "euf_harvester_factory", 	
+		[4] = "eufrafinery", 	
+		[5] = "euflstor", 			
+		[6] = "eufresonator", 			
                },
 -----------------------------------------------------------
 --- Units wreckage and heaps
