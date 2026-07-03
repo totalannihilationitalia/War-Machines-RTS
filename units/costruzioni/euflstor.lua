@@ -4,7 +4,7 @@ return {
 -----------------------------------------------------------
 --- UNITS FEATURES
 -----------------------------------------------------------
-  icuestor= {
+  euflstor= {
                acceleration = 0,
                activatewhenbuilt = true,
                brakerate  = 0,
@@ -16,15 +16,15 @@ return {
                buildinggrounddecalsizex= 4,
                buildinggrounddecalsizey = 4,
                buildinggrounddecaltype = "Pavimentazione3.png",
-               buildpic = "icuestor.png",
+               buildpic = "da_fare.png",
                buildtime  = 4119,
                category = "ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE",
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
-               corpse = "icuestor_dead",
-               description = "Increases Energy Storage (6000)",
-               energystorage = 6000,
+               corpse = "euflstor_dead",
+               description = "Increases Livrium Storage (2000)",
+               energystorage = 0,
                energyUse = 0,
                explodeas = "ESTOR_BUILDINGEX",
                footprintx = 3,
@@ -38,16 +38,16 @@ return {
                maxvelocity = 0,
                maxwaterdepth = 0,
                metalStorage = 0,
-               name = "ICU Energy Storage",
+               name = "ICU livrium Storage",
                noAutoFire = false,
-               objectname = "icuestorage.s3o",
+               objectname = "euflstor.s3o",
                seismicsignature = 0,
                selfdestructas = "ESTOR_BUILDING",
                sightdistance = 273,
 --               soundcategory= "ARM_ESTOR",
                TEDClass = "ENERGY", -- verificare se necessario
                turnrate = 0,
-	       usebuildinggrounddecal = true,
+	           usebuildinggrounddecal = false,
                workertime = 0,
                YardMap= "ooooooooo",
 -----------------------------------------------------------
@@ -56,9 +56,9 @@ return {
 featuredefs = {
   dead = {
                world = "All Worlds",
-               description = "Energy Storage Wreckage",
+               description = "Livrium Storage Wreckage",
                category = "corpses",
-               object = "icuestor_dead",
+               object = "euflstor_dead",
                featuredead = "icuestor_heap",
                featurereclamate = "SMUDGE01",
                footprintx = 4,
@@ -77,7 +77,7 @@ featuredefs = {
                },  -- Close Dead Features
   heap = {
                world = "All Worlds",
-               description = "Energy Storage Heap",
+               description = "Livrium Storage Heap",
                category = "heaps",
                object = "4X4C",
                footprintx = 4,
