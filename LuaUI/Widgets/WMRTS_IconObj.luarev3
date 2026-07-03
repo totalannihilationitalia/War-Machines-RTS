@@ -221,34 +221,6 @@ local function DrawResonatorIcon(x, y, z, height, type)
     gl.PopMatrix()
 end
 
--- Funzione per disegnare l'icona (sopra le raffinerie)
-local function DrawRafineryIcon(x, y, z, height, status)
---    local time = Spring.GetGameSeconds()
---    local bounce = math.sin(time * 3) * 8 			-- non deve rimbalzare ma rimanere statica
-
-    gl.DepthMask(false)
-    gl.DepthTest(false) 
-    gl.PushMatrix()   
-    
-    local tex = icon_extr_off
-    if status == 0 then tex = icon_extr_off
-    elseif status == 1 then tex = icon_extr_on
-    elseif status == 2 then tex = icon_extr_on
-    elseif status == 3 then tex = icon_extr_on	
-	end
-
-    gl.Translate(x, y + height + 25, z)
-    gl.Billboard()
-    gl.Color(1, 1, 1, 1)
-    gl.Texture(tex)
-    -- Disegna l'icona leggermente alzata rispetto al centro del billboard
-    gl.TexRect(-15, 6, 15, 20) 
-    
-    gl.Texture(false)
-    gl.PopMatrix()
-end
-
-
 -- Funzione per disegnare l'icona sopra l'harvester
 local function DrawHarvesterIcon(x, y, z, height, status, harvesting)
 --    local time = Spring.GetGameSeconds()
@@ -395,18 +367,14 @@ function widget:DrawWorld()
         end
 		-- raffinerie di livrium
 	    local rafinery = Spring.GetUnitRulesParam(uID, "stato_raffineria")	
-		if rafinery then 	-- disegna lo stato della raffineria ON in base al valore "rafinery"
-			local active = Spring.GetUnitIsActive(unitID)	-- verifica se la raffineria è on o off
-			if not active then
-				rafinery = 3 -- spenta
-			end
-				local x, y, z = Spring.GetUnitPosition(uID)
-				local unitDefID = Spring.GetUnitDefID(uID)
-				local h = (UnitDefs[unitDefID] and UnitDefs[unitDefID].height or 30)
-				-- Disegna Icona
-				DrawRafineryIcon(x, y, z, h, rafinery) -- ######################## creare la funzione!!!!!! 
-				-- Disegna Testo automatico
-				-- DrawLabel(x, y, z, h, typeToText[harvesterstatus]) -- il testo lo disabilito per ora, non mi interessa che appaia sugli estrattori. Molix 21/05/2026
+		if rafinery then 	-- disegna lo stato della raffineria
+			local x, y, z = Spring.GetUnitPosition(uID)
+			local unitDefID = Spring.GetUnitDefID(uID)
+			local h = (UnitDefs[unitDefID] and UnitDefs[unitDefID].height or 30)
+			-- Disegna Icona
+			DrawrafineryIcon(x, y, z, h, rafinery) -- ######################## creare la funzione!!!!!! 
+			-- Disegna Testo automatico
+			-- DrawLabel(x, y, z, h, typeToText[harvesterstatus]) -- il testo lo disabilito per ora, non mi interessa che appaia sugli estrattori. Molix 21/05/2026
 		end				
 		
 		-- estrattori di metallo con resonator (UnitRulesParam = resonator_status )

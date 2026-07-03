@@ -45,7 +45,7 @@ local refineryConfigs = {}  -- refineryConfigs[unitDefID] = config_elaborata
 local function ProcessRefinery(unitID, data)
     -- Controlla se la raffineria e attiva (non e paralizzata, ha energia nativa ed e accesa)
     if not Spring.GetUnitIsActive(unitID) then	-- se la raffineria è spenta...
-	    Spring.SetUnitRulesParam(unitID, "stato_raffineria", 3) -- 3 = Spenta / OFF, per etichette
+	    Spring.SetUnitRulesParam(unitID, "stato_raffineria", 3) -- 3 = Spenta / OFF, per etichette  ######################### valutare perchè forse è inutile, il widget delle etichette guarda direttamente se l'unità è attiva e nel caso contrario applica direttamente l'etichetta off
         return				-- esci da questa funzione
     end
 
