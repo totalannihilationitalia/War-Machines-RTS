@@ -17,7 +17,7 @@ return {
                buildinggrounddecalsizey = 4,
                buildinggrounddecaltype = "Pavimentazione3.png",
                buildpic = "da_fare.png",
-               buildtime  = 4119,
+               buildtime  = 5000,
                category = "ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE",
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
