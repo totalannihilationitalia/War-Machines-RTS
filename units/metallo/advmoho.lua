@@ -20,7 +20,7 @@ return {
                description = "Advanced Moho Metal Extractor",
                energymake = 0,
                energystorage = 0,
-               energyUse = 200,
+               energyUse = 350, -- 200 
                explodeas = "LARGE_BUILDINGEX",
 			ExtractsMetal=0.0100,
                footprintx = 6,
