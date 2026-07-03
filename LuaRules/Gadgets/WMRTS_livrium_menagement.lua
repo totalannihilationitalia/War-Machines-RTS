@@ -37,8 +37,8 @@ local STARTING_LIVRIUM  = 0   -- Quantita di Livrium iniziale con cui parte ogni
 
 -- Tabella dei magazzini e relativa capacita di stoccaggio aggiuntiva
 local storageUnitNames = {
-    uflstore = 1000,
-    euf_harvester_factory = 2000,
+    euflstor = 2000,
+    euf_harvester_factory = 1000,
 }
 
 -- =========================================================================
