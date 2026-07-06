@@ -88,6 +88,7 @@ local lastFrame  = -1
 local prevHeight = nil
 local myID
 local posLoaded = false
+local offset_libriumBar = 0			-- se è presente la barra del livrium, prenderà il valore di quanto le barre degli alleati devono traslare.
 
 local background_texture = ":n:"..LUAUI_DIRNAME.."images/menu/resourcesmenu/ally_bkgnd.png" 
 --------------------------------------------------------------------------------
@@ -109,14 +110,22 @@ end
 
 function widget:Initialize()
   viewSizeX, viewSizeY = gl.GetViewSizes()
+-- logica per verificare fazione ed, eventualmente, creare la barra di livrium 
+	local myTeamID = Spring.GetMyTeamID()
+	local _, _, _, _, mySide = Spring.GetTeamInfo(myTeamID) -- prelevo la fazione
+	local sideLower = mySide and mySide:lower() or ""		-- Converto fazione in minuscolo
+	if sideLower == "euf" or sideLower == "and" then	    -- se fazione and o euf allora creo la barra del livrium
+		offset_libriumBar = 34				
+	end    
 --[[ rev0 rimosso
   if not posLoaded then
     x1 = (viewSizeX - w)
     y1 = (viewSizeY * 5)
   end
 ]]--  
+-- Posizione X e Y delle barre incluso offset in caso di apparizione della barra del livrium
   x1 = OFFSET_X
-  y1 = OFFSET_Y
+  y1 = OFFSET_Y + offset_libriumBar
   myID = GetMyTeamID()
 end
 
@@ -518,7 +527,7 @@ function widget:ViewResize(vsx, vsy)
 --  if (y1 < 0) then y1 = 0 elseif ((y1+h) > viewSizeY) then y1 = (viewSizeY-h) end
 -- Aggiorno le coordinate fisse al ridimensionamento dello schermo
   x1 = OFFSET_X
-  y1 = OFFSET_Y
+  y1 = OFFSET_Y + offset_libriumBar
   updateBars()
   updateStatics()
 end
