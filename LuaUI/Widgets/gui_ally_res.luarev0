@@ -20,15 +20,10 @@ function widget:GetInfo()
   }
 end
 
--- rev1 = 	Fixed bar positions. 06/07/2026 Molix
-
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
 local TOOL_TIPS = true
--- IMPOSTAZIONI DI POSIZIONE FISSA (in pixel)
-local OFFSET_X = 15  -- Distanza dal bordo sinistro dello schermo
-local OFFSET_Y = 170  -- Distanza dal bordo inferiore dello schermo
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -55,7 +50,7 @@ local staticList
 local viewSizeX, viewSizeY = 0,0
 local BAR_HEIGHT       = 6
 local BAR_SPACER       = 3
-local BAR_WIDTH        = 234
+local BAR_WIDTH        = 200
 local BAR_GAP          = 5 --7
 local TOTAL_BAR_HEIGHT = (BAR_SPACER + BAR_HEIGHT + BAR_HEIGHT)
 local TOP_HEIGHT       = (BAR_GAP + BAR_GAP)
@@ -88,9 +83,7 @@ local lastFrame  = -1
 local prevHeight = nil
 local myID
 local posLoaded = false
-local offset_libriumBar = 0			-- se è presente la barra del livrium, prenderà il valore di quanto le barre degli alleati devono traslare.
 
-local background_texture = ":n:"..LUAUI_DIRNAME.."images/menu/resourcesmenu/ally_bkgnd.png" 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
@@ -110,22 +103,10 @@ end
 
 function widget:Initialize()
   viewSizeX, viewSizeY = gl.GetViewSizes()
--- logica per verificare fazione ed, eventualmente, creare la barra di livrium 
-	local myTeamID = Spring.GetMyTeamID()
-	local _, _, _, _, mySide = Spring.GetTeamInfo(myTeamID) -- prelevo la fazione
-	local sideLower = mySide and mySide:lower() or ""		-- Converto fazione in minuscolo
-	if sideLower == "euf" or sideLower == "and" then	    -- se fazione and o euf allora creo la barra del livrium
-		offset_libriumBar = 34				
-	end    
---[[ rev0 rimosso
   if not posLoaded then
     x1 = (viewSizeX - w)
     y1 = (viewSizeY * 5)
   end
-]]--  
--- Posizione X e Y delle barre incluso offset in caso di apparizione della barra del livrium
-  x1 = OFFSET_X
-  y1 = OFFSET_Y + offset_libriumBar
   myID = GetMyTeamID()
 end
 
@@ -167,16 +148,9 @@ local function updateStatics()
   if (staticList) then gl.DeleteList(staticList) end
   staticList = gl.CreateList( function()
 	gl.PushMatrix()
-
-    gl.Color(0.03, 0.18, 0.3, 0.45)
+    gl.Color(0.0, 0.0, 0.3, 0.45)
     gl.Rect(x1, y1, x1+w,y1+h)
---	test rettangolo
---	 gl.Color(1, 1, 1, 1) -- Mantieni 1, 1, 1, 1 se vuoi l'immagine originale, oppure riduci l'ultimo valore (es. 0.8) per la trasparenza
---   gl.Texture(background_texture) -- Sostituisci con il percorso della tua immagine di sfondo
---   gl.TexRect(x1, y1, x1+w, y1+h)
---   gl.Texture(false) -- Rilascia la texture
-	
-    gl.Color(0.04, 0.68, 0.98, 1)
+    gl.Color(0.0, 0.0, 0, 0.8)
     gl.Shape(GL.LINE_LOOP, {
       { v = { x1 + 0.5, y1 + 0.5 }, t = { 0, 1 } },
       { v = { x1+w + 0.5, y1 + 0.5}, t = { 1, 1 } },
@@ -245,17 +219,12 @@ local function updateBars()
   end
   if (height ~= 0) then
     h = (h - height)
---[[ rev0 rimosso
     if prevHeight then
       y1 = y1 - (h-prevHeight)
       prevHeight = nil
     else
       y1 = (y1 + height)
     end
-]]--
-    -- Mantengo fisso l'ancoraggio in basso a sinistra (y1 non deve traslare)
-    y1 = OFFSET_Y
-    prevHeight = nil	
     updateStatics()
   end
   if (displayList) then gl.DeleteList(displayList) end
@@ -263,20 +232,20 @@ local function updateBars()
 	gl.PushMatrix()
     for _,d in pairs(teamRes) do
       if d.eRec then
-        gl.Color(0.8, 0, 0, 0.8)		-- sfondo barra: rosso se stai inviando energia a quell'alleato
+        gl.Color(0.8, 0, 0, 0.8)
       else
-        gl.Color(0.8, 0.8, 0, 0.3)		-- sfondo barra: Colore giallo scuro/semi-trasparente di base
+        gl.Color(0.8, 0.8, 0, 0.3)
       end
       gl.Rect(d.ex1,d.ey1,d.ex2,d.ey2)
-      gl.Color(0.33,0.45,0.81,1)		-- colore barra energia - grigio/azzurro
+      gl.Color(1, 1, 0, 1)
       gl.Rect(d.ex1,d.ey1,d.ex2b,d.ey2) 
       if d.mRec then
-        gl.Color(0.8, 0, 0, 0.8)		-- sfondo barra: Colore rosso se stai inviando metallo a quell'alleato
+        gl.Color(0.8, 0, 0, 0.8)
       else
-        gl.Color(0.8, 0.8, 0.8, 0.3)	-- sfondo barra: Colore grigio semi-trasparente di base
+        gl.Color(0.8, 0.8, 0.8, 0.3)
       end
       gl.Rect(d.mx1,d.my1,d.mx2,d.my2)
-      gl.Color(1,0.8,0,1)				-- colore barra metallo - arancio
+      gl.Color(1, 1, 1, 1)
       gl.Rect(d.mx1,d.my1,d.mx2b,d.my2)
     end
     gl.PopMatrix()
@@ -374,7 +343,6 @@ function widget:Update()
 			    local _, _, _, mInc, _, _, _, mRec = GetTeamResources(teamID, "metal")   
 			    eRec = eRec + (trnsEnergy[teamID] or 0)
 			    mRec = mRec + (trnsMetal[teamID] or 0)      
---[[				
 			    labelText[1] = 
 			    {
 				  label=defs.name,
@@ -391,23 +359,6 @@ function widget:Update()
 				  size=TOTAL_BAR_HEIGHT/1.25, 
 				  config="orn",
 			    }
-]]--
-labelText[1] = 
-			    {
-				  label=defs.name,
-				  x=x1 + w + 10, -- Spostato sul lato destro (x1 + larghezza widget + 10 pixel di margine)
-				  y=defs.iy1-BAR_SPACER,
-				  size=TOTAL_BAR_HEIGHT,
-				  config="on",  -- Cambiato da "orn" a "on" per allinearlo a sinistra
-			    }
-			    labelText[2] = 
-			    {
-				  label="(E: +"..sF("%.1f",eInc+eRec) ..", M: +"..sF("%.2f",mInc+mRec)..")", 
-				  x=x1 + w + 10, -- Spostato sul lato destro
-				  y=defs.iy1-BAR_SPACER-TOTAL_BAR_HEIGHT, 
-				  size=TOTAL_BAR_HEIGHT/1.25, 
-				  config="on",  -- Cambiato da "orn" a "on" per allinearlo a sinistra
-			    }				
 			    return
 			  end
 		    end
@@ -447,7 +398,6 @@ end
 
 function widget:MouseMove(x, y, dx, dy, button)
   if (enabled) then
---[[  
     if moving then
       x1 = x1 + dx
       y1 = y1 + dy
@@ -456,9 +406,6 @@ function widget:MouseMove(x, y, dx, dy, button)
       updateBars()
       updateStatics()
     elseif transferring then
-]]--	
-    -- Logica "moving" rimossa per disattivare il trascinamento manuale
-    if transferring then
       transferTeam = nil
       if (x > (x1+BAR_OFFSET)) and (x < (x1+BAR_OFFSET+BAR_WIDTH)) then
         if (transferType == "energy") then
@@ -483,14 +430,11 @@ end
 
 function widget:MousePress(x, y, button)
   if (enabled) and ((x > x1) and (y > y1) and (x < (x1 + w)) and (y < (y1 + h))) then
-  --[[ rev0 - Rimosso il blocco che consentiva il movimento tramite clic centrale o intestazione
     if (button == 2) or (y > (y1 + h - TOP_HEIGHT)) then
       capture = true
       moving  = true
       return capture
     end
-]]--
-	
     if GetSpectatingState() or IsReplay() then
       return false
     end
@@ -515,7 +459,7 @@ end
 
 function widget:MouseRelease(x, y, button)
   capture = nil
---  moving  = nil  --rev0 rimosso
+  moving  = nil
   transferring = false
   transferTeam = nil
   return capture
@@ -523,29 +467,23 @@ end
 
 function widget:ViewResize(vsx, vsy)
   viewSizeX, viewSizeY = vsx, vsy
---  if (x1 < 0) then x1 = 0 elseif ((x1+w) > viewSizeX) then x1 = (viewSizeX-w) end
---  if (y1 < 0) then y1 = 0 elseif ((y1+h) > viewSizeY) then y1 = (viewSizeY-h) end
--- Aggiorno le coordinate fisse al ridimensionamento dello schermo
-  x1 = OFFSET_X
-  y1 = OFFSET_Y + offset_libriumBar
+  if (x1 < 0) then x1 = 0 elseif ((x1+w) > viewSizeX) then x1 = (viewSizeX-w) end
+  if (y1 < 0) then y1 = 0 elseif ((y1+h) > viewSizeY) then y1 = (viewSizeY-h) end
   updateBars()
   updateStatics()
 end
 
 function widget:GetConfigData() --save config
---  return {x1=x1, y1=y1, h=h}
-	return nil -- Ritorna nil per ignorare il salvataggio della posizione nei file di configurazione locali
+  return {x1=x1, y1=y1, h=h}
 end
 
 function widget:SetConfigData(data) --load config
---[[  rev0 -- Disabilitato per evitare che posizioni precedentemente salvate sovrascrivano i valori fissi
-	if (data.x1) and (data.y1) and (data.h) then
+  if (data.x1) and (data.y1) and (data.h) then
     x1 = data.x1
     y1 = data.y1
     prevHeight = data.h
     posLoaded = true
   end
-]]--  
 end
 
 --------------------------------------------------------------------------------
