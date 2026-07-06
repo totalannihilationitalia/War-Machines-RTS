@@ -22,6 +22,8 @@ function widget:GetInfo()
   }
 end
 
+-- rev 03/07/2026 aggiunta barra livrium
+
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
@@ -630,7 +632,7 @@ do
         if (myAllyTeamID == unitAllyTeamID) then
           local cargo = GetUnitRulesParam(unitID, "quantita_raccolta") or 0
           if (cargo > 0) then
-            local maxCargo = 3000 -- Capacità massima fissa impostata
+            local maxCargo = 1000 -- Capacità massima fissa impostata -- ############# nel caso determinarlo direttamente leggendo il valore max nel gadget
             local percent = cargo / maxCargo
             if (percent > 1) then percent = 1 end
             
