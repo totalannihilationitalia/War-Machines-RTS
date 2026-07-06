@@ -20,7 +20,7 @@ return {
                corpse = "eufametex_dead",
                description = "Extracts Metal",
                energystorage = 0,
-               energyUse = 3,
+               energyUse = 15,
                explodeas = "TINY_BUILDINGEX",
                ExtractsMetal = 0.002,
                footprintx = 3,
