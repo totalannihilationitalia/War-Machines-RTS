@@ -61,7 +61,7 @@ local Config = {
 		px = 370,py = -0.5, --default start position
 		sx = 260,sy = 29, --background size
 		ancora_x = 7,  
-		ancora_y = 165,   
+		ancora_y = 131, --165,   
 		barsy = 5, --width of the actual bar
 		fontsize = 11,
 		
@@ -101,7 +101,7 @@ local Config = {
 		px = 636,py = -0.5,
 		sx = 260,sy = 29, --background size
 		ancora_x = 7,  
-		ancora_y = 131,   
+		ancora_y = 165, --131,   
 		barsy = 5, --width of the actual bar
 		fontsize = 11,
 		
