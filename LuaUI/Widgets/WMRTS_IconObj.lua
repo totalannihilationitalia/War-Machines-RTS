@@ -56,6 +56,13 @@ local icon_extr_off = "LuaUI/Images/menu/objectives/icon_extroff.png"
 local aura_extr_on = "LuaUI/Images/menu/objectives/marker_extron.png"
 local aura_extr_off = "LuaUI/Images/menu/objectives/marker_extroff.png"
 
+-- Config immagini icone per raffinerie di livrium
+local rafinery0 = "LuaUI/Images/menu/objectives/rafinery0.png"
+local rafinery1 = "LuaUI/Images/menu/objectives/rafinery1.png"
+local rafinery2 = "LuaUI/Images/menu/objectives/rafinery2.png"
+local rafinery3 = "LuaUI/Images/menu/objectives/rafinery3.png"
+
+
 -- Config immagini icone di stato per harvester di livrium 
 local icon_harv_0 = "LuaUI/Images/menu/objectives/icon_harv0.png"
 local icon_harv_1 = "LuaUI/Images/menu/objectives/icon_harv1.png"
@@ -231,10 +238,10 @@ local function DrawRafineryIcon(x, y, z, height, status)
     gl.PushMatrix()   
     
     local tex = icon_extr_off
-    if status == 0 then tex = icon_extr_off
-    elseif status == 1 then tex = icon_extr_on
-    elseif status == 2 then tex = icon_extr_on
-    elseif status == 3 then tex = icon_extr_on	
+    if status == 0 then tex = rafinery0
+    elseif status == 1 then tex = rafinery1
+    elseif status == 2 then tex = rafinery2
+    elseif status == 3 then tex = rafinery3	
 	end
 
     gl.Translate(x, y + height + 25, z)
@@ -396,7 +403,7 @@ function widget:DrawWorld()
 		-- raffinerie di livrium
 	    local rafinery = Spring.GetUnitRulesParam(uID, "stato_raffineria")	
 		if rafinery then 	-- disegna lo stato della raffineria ON in base al valore "rafinery"
-			local active = Spring.GetUnitIsActive(unitID)	-- verifica se la raffineria è on o off
+			local active = Spring.GetUnitIsActive(uID)	-- verifica se la raffineria è on o off
 			if not active then
 				rafinery = 3 -- spenta
 			end
