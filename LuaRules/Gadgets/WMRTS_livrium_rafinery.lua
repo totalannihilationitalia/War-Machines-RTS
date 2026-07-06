@@ -24,7 +24,7 @@ end
 local refineryConfig = {
     eufrafinery = {
         energy_consumption = 1000, -- Consumo di energia richiesto per ogni conversione
-        livrium_bruciato   = 10,   -- Unita di Livrium perse ad ogni ciclo
+        livrium_bruciato   = 50,   -- Unita di Livrium perse ad ogni ciclo
         metal_ottenuto     = 50,   -- Metallo ottenuto ad ogni ciclo
         frequenza_sec      = 2     -- Frequenza in secondi del ciclo di conversione
     }
