@@ -66,19 +66,20 @@ return {
 --- INSERT BUILDLIST
 -----------------------------------
 		[1]= "eufsolar",
-		[2]= "eufmstor",
-		[3]= "eufestor",
-		[4]= "eufmetex",
-		[5]= "eufametex",
-		[6] = "eufavp",
-		[7] = "eufvp",
-		[8] = "eufap",
-		[9]= "euf_radar",
-		[10] = "eufpathsmall",
-		[11]= "eufsnpr",
-		[12]= "eufpath",
-		[13] = "eufarch", 
-		[14]= "eufloony",
+		[2]= "icuadvsol",		
+		[3]= "eufmstor",
+		[4]= "eufestor",
+		[5]= "eufmetex",
+		[6]= "eufametex",
+		[7] = "eufavp",
+		[8] = "eufvp",
+		[9] = "eufap",
+		[10]= "euf_radar",
+		[11] = "eufpathsmall",
+		[12]= "eufsnpr",
+		[13]= "eufpath",
+		[14] = "eufarch", 
+		[15]= "eufloony",
 ------------------- creare il jammer
 ------------------- creare il sonar
 ------------------- creare il torpedol
