@@ -213,33 +213,27 @@ FirePrimary()
 {
 	if( Static_Var_1 == 1 )
 	{
-		emit-sfx 1024 + 0 from flare1;	
+		emit-sfx 1024 + 0 from flare1;
 		move gun1 to z-axis [-3.000000] speed [500.000000];
 		wait-for-move gun1 along z-axis;
 		move gun1 to z-axis [0.000000] speed [3.000000];
-//		show flare1;
 		sleep 150;
-//		hide flare1;
 	}
 	if( Static_Var_1 == 2 )
 	{
-		emit-sfx 1024 + 0 from flare2;	
+		emit-sfx 1024 + 0 from flare2;
 		move gun2 to z-axis [-3.000000] speed [500.000000];
 		wait-for-move gun2 along z-axis;
 		move gun2 to z-axis [0.000000] speed [3.000000];
-//		show flare2;
 		sleep 150;
-//		hide flare2;
 	}
 	if( Static_Var_1 == 3 )
 	{
-		emit-sfx 1024 + 0 from flare3;	
+		emit-sfx 1024 + 0 from flare3;
 		move gun3 to z-axis [-3.000000] speed [500.000000];
 		wait-for-move gun3 along z-axis;
 		move gun3 to z-axis [0.000000] speed [3.000000];
-//		show flare3;
 		sleep 150;
-//		hide flare3;
 	}
 }
 
