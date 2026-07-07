@@ -1,0 +1,5 @@
+for next version:
+fixed Eridlon-Aminos metalspot
+fixed eufarch textures
+fixed eufaarch textures
+changed scenario and mission lobby layout
