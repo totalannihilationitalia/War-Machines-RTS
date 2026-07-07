@@ -535,6 +535,7 @@ local UNIT_DB = {
 ["eufadvmetex"] = { type = "building", ignore = true },
 ["eufresonator"] = { type = "strategicbuilding", ignore = true },
 ["eufaarch"] = { type = "building", ignore = true },
+["extraction_point"] = { type = "strategicbuilding", ignore = true },
 
 -- Fabbriche Tier 1
 ["eufvp"] = { type = "building" },
