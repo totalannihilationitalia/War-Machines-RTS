@@ -105,7 +105,7 @@ function gadget:GameFrame(n)
     SendToUnsynced("ParlatoGateEvent", vala)
 	gadgetHandler:RemoveGadget()
 ----------------	vala=0 -- resetto la variabile
-   Spring.Echo("test3")
+--   Spring.Echo("test3")
 --  gadgetHandler:RemoveGadget()
       end
     
