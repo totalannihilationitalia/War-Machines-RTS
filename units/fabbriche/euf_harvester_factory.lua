@@ -71,7 +71,7 @@ return {
 --- Units wreckage and heaps
 -----------------------------------------------------------
 featuredefs = {
-  armtship_dead = {
+  dead = {
                world = "All Worlds",
                description = "Hulk Wreckage",
                category = "corpses",
@@ -91,7 +91,7 @@ featuredefs = {
 --               collisionvolumescales = ,
 --               collisionvolumetype = ,
                },  -- Close Dead Features
-  armtship_heap = {
+  heap = {
                world = "All Worlds",
                description = "Hulk Heap",
                category = "heaps",
