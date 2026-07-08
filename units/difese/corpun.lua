@@ -16,7 +16,7 @@ return {
                buildinggrounddecalsizex= 4,
                buildinggrounddecalsizey = 4,
                buildinggrounddecaltype = "Pavimentazione_nfa_ap.png",
-               buildpic = "nfapun.png",
+               buildpic = "corpun.png",
                buildtime  = 19268,
                canAttack = true,
 --               canstop = 1,

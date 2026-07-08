@@ -17,7 +17,7 @@ return {
                buildinggrounddecalsizex= 4,
                buildinggrounddecalsizey = 4,
                buildinggrounddecaltype = "Pavimentazione_nfa_ap.png",
-               buildpic = "nfatoast.png",
+               buildpic = "cortoast.png",
                buildtime  = 25717,
                canAttack = true,
 --               canstop = 1,
