@@ -13,6 +13,7 @@ function gadget:GetInfo()
 end
 
 -- rev 0 del 24/10/2025 by molix: Creo il gadget
+-- rev 1 del 08/07/2026 by molix: Aggiunto setunitparam cosi da poter etichettare le unità col widget delle etichette
 
 -- VARIABILI
 local spawnCoorx = 0														-- coordinata x di spawn del comandante, cambierà valore poi nello script
@@ -104,7 +105,7 @@ function gadget:Initialize()
 	if slota_playername  then																																											-- se giocatore proprietario degli slotA esiste
 	  local teamID_slota = GetTeamIDFromPlayerName(slota_playername) 																																	-- richiamo la funzione per verificare a quale ID appartiene il giocatore a (settato poi da client)
 	  if teamID_slota then 			 																																									-- se ha trovato corrispondenza assegna le unità al giocatore a
-		if (slot_1a ~= 1 and slot_1a ~= "1") and (slot_1a ~= 0 and slot_1a ~= "1") then 																												-- se nello slot 1 è presente il nome dell'unità (e non è ne 1 o 0 sia numero che stringa "1" o "0") 				
+		if (slot_1a ~= 1 and slot_1a ~= "1") and (slot_1a ~= 0 and slot_1a ~= "0") then 																												-- se nello slot 1 è presente il nome dell'unità (e non è ne 1 o 0 sia numero che stringa "1" o "0") 				
 --		 unitID_slot_1a = Spring.CreateUnit(slot_1a,spawnCoorx+deploy_radius,0,spawnCoorz,0,teamID_slota)		-- spostato in gamestart altrimenti risultano unità "comandante" che incidono sull' endgame	-- creo l'unità dello slot1a definendone l'ID dell'unità (memorizzata in unitID_slot_1a). Per la posizione ho usato il teorema dei seni, in lua però devo convertire gli angoli in radianti
 		 Spring.SetGameRulesParam("ud_unitnameslot1a", slot_1a)																																			-- setto il gamerule per lo slot1a = nome unità assegnata (verrà poi letto dal widget)
 		 Spring.SetGameRulesParam("ud_statusslot1a", "active")	
@@ -273,8 +274,11 @@ O O O O O
 	  local teamID_slota = GetTeamIDFromPlayerName(slota_playername) -- richiamo la funzione per verificare a quale ID appartiene il giocatore a (settato poi da client)
 	  if teamID_slota then 			 																																									-- se ha trovato corrispondenza assegna le unità al giocatore a
 		 Spring.Echo( "Trovato! Il giocatore '" .. slota_playername .. "' è nel team con ID: " .. tostring(teamID_slota).." e che parte dalla posizione x:" .. tostring(spawnCoorx).. " e z: ".. tostring(spawnCoorz) ) 	-- debug
-		if (slot_1a ~= 1 and slot_1a ~= "1") and (slot_1a ~= 0 and slot_1a ~= "1") then 																												-- se nello slot 1 è presente il nome dell'unità (e non è ne 1 o 0 sia numero che stringa "1" o "0") 				
+		if (slot_1a ~= 1 and slot_1a ~= "1") and (slot_1a ~= 0 and slot_1a ~= "0") then 																												-- se nello slot 1 è presente il nome dell'unità (e non è ne 1 o 0 sia numero che stringa "1" o "0") 				
 		 unitID_slot_1a = Spring.CreateUnit(slot_1a,spawnCoorx+deploy_radius,0,spawnCoorz,0,teamID_slota)							 																	-- creo l'unità dello slot1a definendone l'ID dell'unità (memorizzata in unitID_slot_1a). Per la posizione ho usato il teorema dei seni, in lua però devo convertire gli angoli in radianti
+			if unitID_slot_1a then																						-- assegno la variabile isgarage all'unità cosi da identificarla nel widget delle etichette
+				Spring.SetUnitRulesParam(unitID_slot_1a, "isgarage", 1, {public = true})
+			end
 		 Spring.SetGameRulesParam("ud_unitnameslot1a", slot_1a)																																			-- setto il gamerule per lo slot1a = nome unità assegnata (verrà poi letto dal widget)
 		 Spring.SetGameRulesParam("ud_statusslot1a", "ACTIVE")			 																																-- setto il gamerulo per lo stato dello slotXa (attivo, distrutto)
 		 Spring.SetGameRulesParam("ud_idslot1a", unitID_slot_1a)																																		-- setto il gamerule per l'ID dell' unità assegnata allo slot1a (verrà poi letto dal widget per catturare le informazioni sulla posizione dell'unita x)
@@ -283,6 +287,9 @@ O O O O O
 		end
 		if (slot_2a ~= 1 and slot_2a ~= "1") and (slot_2a ~= 0 and slot_2a ~= "0") then 																												
 		 unitID_slot_2a= Spring.CreateUnit(slot_2a,spawnCoorx+deploy_radius* math.sin(math.rad(45)),0,spawnCoorz+deploy_radius * math.sin(math.rad(45)),0,teamID_slota)									-- imposto lo slot2a 
+			if unitID_slot_2a then																						-- assegno la variabile isgarage all'unità cosi da identificarla nel widget delle etichette
+				Spring.SetUnitRulesParam(unitID_slot_2a, "isgarage", 1, {public = true})
+			end
 		 Spring.SetGameRulesParam("ud_unitnameslot2a", slot_2a)	
 		 Spring.SetGameRulesParam("ud_statusslot2a", "ACTIVE")			 
 		 Spring.SetGameRulesParam("ud_idslot2a", unitID_slot_2a)		 
@@ -291,6 +298,9 @@ O O O O O
 		end
 		if (slot_3a ~= 1 and slot_3a ~= "1") and (slot_3a ~= 0 and slot_3a ~= "0") then 	
 		 unitID_slot_3a= Spring.CreateUnit(slot_3a,spawnCoorx,0,spawnCoorz+deploy_radius,0,teamID_slota)																								-- imposto lo slot3a
+			if unitID_slot_3a then																						-- assegno la variabile isgarage all'unità cosi da identificarla nel widget delle etichette
+				Spring.SetUnitRulesParam(unitID_slot_3a, "isgarage", 1, {public = true})
+			end
 		 Spring.SetGameRulesParam("ud_unitnameslot3a", slot_3a)	
 		 Spring.SetGameRulesParam("ud_statusslot3a", "ACTIVE")			 
 		 Spring.SetGameRulesParam("ud_idslot3a", unitID_slot_3a)		 		 
@@ -299,6 +309,9 @@ O O O O O
 		end
 		if (slot_4a ~= 1 and slot_4a ~= "1") and (slot_4a ~= 0 and slot_4a ~= "0") then 	
 		 unitID_slot_4a= Spring.CreateUnit(slot_4a,spawnCoorx-deploy_radius* math.sin(math.rad(45)),0,spawnCoorz+deploy_radius * math.sin(math.rad(45)),0,teamID_slota)									-- imposto lo slot4a
+			if unitID_slot_4a then																						-- assegno la variabile isgarage all'unità cosi da identificarla nel widget delle etichette
+				Spring.SetUnitRulesParam(unitID_slot_4a, "isgarage", 1, {public = true})
+			end
 		 Spring.SetGameRulesParam("ud_unitnameslot4a", slot_4a)	
 		 Spring.SetGameRulesParam("ud_statusslot4a", "ACTIVE")			 
 		 Spring.SetGameRulesParam("ud_idslot4a", unitID_slot_4a)		 		 
@@ -307,6 +320,9 @@ O O O O O
 		end
 		if (slot_5a ~= 1 and slot_5a ~= "1") and (slot_5a ~= 0 and slot_5a ~= "0") then 	
 		 unitID_slot_5a= Spring.CreateUnit(slot_5a,spawnCoorx-deploy_radius,0,spawnCoorz,0,teamID_slota)																								-- imposto lo slot5a
+			if unitID_slot_5a then																						-- assegno la variabile isgarage all'unità cosi da identificarla nel widget delle etichette
+				Spring.SetUnitRulesParam(unitID_slot_5a, "isgarage", 1, {public = true})
+			end
 		 Spring.SetGameRulesParam("ud_unitnameslot5a", slot_5a)	
 		 Spring.SetGameRulesParam("ud_statusslot5a", "ACTIVE")			 
 		 Spring.SetGameRulesParam("ud_idslot5a", unitID_slot_5a)		 		 
@@ -315,6 +331,9 @@ O O O O O
 		end
 		if (slot_6a ~= 1 and slot_6a ~= "1") and (slot_6a ~= 0 and slot_6a ~= "0") then 	
 		 unitID_slot_6a= Spring.CreateUnit(slot_6a,spawnCoorx-deploy_radius* math.sin(math.rad(45)),0,spawnCoorz-deploy_radius * math.sin(math.rad(45)),0,teamID_slota)									-- imposto lo slot6a
+			if unitID_slot_6a then																						-- assegno la variabile isgarage all'unità cosi da identificarla nel widget delle etichette
+				Spring.SetUnitRulesParam(unitID_slot_6a, "isgarage", 1, {public = true})
+			end
 		 Spring.SetGameRulesParam("ud_unitnameslot6a", slot_6a)	
 		 Spring.SetGameRulesParam("ud_statusslot6a", "ACTIVE")			 
 		 Spring.SetGameRulesParam("ud_idslot6a", unitID_slot_6a)		 		 
@@ -323,6 +342,9 @@ O O O O O
 		end
 		if (slot_7a ~= 1 and slot_7a ~= "1") and (slot_7a ~= 0 and slot_7a ~= "0") then 	
 		 unitID_slot_7a= Spring.CreateUnit(slot_7a,spawnCoorx,0,spawnCoorz-deploy_radius,0,teamID_slota)																								-- imposto lo slot7a
+			if unitID_slot_7a then																						-- assegno la variabile isgarage all'unità cosi da identificarla nel widget delle etichette
+				Spring.SetUnitRulesParam(unitID_slot_7a, "isgarage", 1, {public = true})
+			end
 		 Spring.SetGameRulesParam("ud_unitnameslot7a", slot_7a)	
 		 Spring.SetGameRulesParam("ud_statusslot7a", "ACTIVE")			 
 		 Spring.SetGameRulesParam("ud_idslot7a", unitID_slot_7a)		 		 
@@ -331,6 +353,9 @@ O O O O O
 		end
 		if (slot_8a ~= 1 and slot_8a ~= "1") and (slot_8a ~= 0 and slot_8a ~= "0") then 		 
 		 unitID_slot_8a= Spring.CreateUnit(slot_8a,spawnCoorx+deploy_radius* math.sin(math.rad(45)),0,spawnCoorz-deploy_radius * math.sin(math.rad(45)),0,teamID_slota)									-- imposto lo slot8a
+			if unitID_slot_8a then																						-- assegno la variabile isgarage all'unità cosi da identificarla nel widget delle etichette
+				Spring.SetUnitRulesParam(unitID_slot_8a, "isgarage", 1, {public = true})
+			end
 		 Spring.SetGameRulesParam("ud_unitnameslot8a", slot_8a)	
 		 Spring.SetGameRulesParam("ud_statusslot8a", "ACTIVE")			 
 		 Spring.SetGameRulesParam("ud_idslot8a", unitID_slot_8a)		 		 		 
