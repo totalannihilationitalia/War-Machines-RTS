@@ -1,5 +1,7 @@
 for next version:
 fixed Eridlon-Aminos metalspot
-fixed eufarch textures
-fixed eufaarch textures
+fixed eufarch textures, weapon fx and animations
+fixed eufaarch textures, weapon fx and animations
 changed scenario and mission lobby layout
+add icon to deployed units
+retexturized EUF KAAT and add weapon fx
