@@ -1,7 +1,7 @@
 function widget:GetInfo()
   return {
     name      = "WMRTS Mission Marker",
-    desc      = "Icone, Auree e Testo per Unità e Punti Mappa",
+    desc      = "Icons and marker for units and maps",
     author    = "Molix",
     layer     = -100, -- 3 
     enabled   = true,
@@ -15,6 +15,7 @@ end
 -- 08/05/2026 = aggiungo indicatore per marker, quando sono fuori dalla vista della telecamera, appaiono indicatori per segnalare marcatori. questa versione sostituisce WMRTS_IconObj.luarev1
 -- 21/05/2026 = revisione sostituisce "WMRTS_IconObj.luarev2". Si accorpa la logica di Marker per gli estrattori di metallo influenzati dai resonator (verrà loro applicato un marker a seconda che il resonator sia attivo o disattivato, se dentro il suo raggio di funzionamento)
 -- 02/07/2026 = si aggiungono le icone degli harvester. Molix
+-- 08/07/2026 = si aggiungono le icone delle unit deployed (garage)
 
 -- Lista icone x missioni
 -- type = 1 -> icone di attacco
@@ -255,7 +256,6 @@ local function DrawRafineryIcon(x, y, z, height, status)
     gl.PopMatrix()
 end
 
-
 -- Funzione per disegnare l'icona sopra l'harvester
 local function DrawHarvesterIcon(x, y, z, height, status, harvesting)
 --    local time = Spring.GetGameSeconds()
@@ -285,6 +285,25 @@ local function DrawHarvesterIcon(x, y, z, height, status, harvesting)
     gl.PopMatrix()
 end
 
+-- Funzione per disegnare l'icona sopra le unità dispiegate
+local function DrawGarageIcon(x, y, z, height)
+
+    gl.DepthMask(false)
+    gl.DepthTest(false) 
+    gl.PushMatrix()   
+    
+    local tex = icon_garage 											-- icona del garage
+
+    gl.Translate(x, y + height + 25, z)
+    gl.Billboard()
+    gl.Color(1, 1, 1, 1)
+    gl.Texture(tex)
+    -- Disegna l'icona leggermente alzata rispetto al centro del billboard
+    gl.TexRect(-15, 6, 15, 20) 
+    
+    gl.Texture(false)
+    gl.PopMatrix()
+end
 
 -- funzione per disegnare i marcatori laterali
 local function DrawEdgeMarker(wx, wy, wz, type)
@@ -388,7 +407,9 @@ function widget:DrawWorld()
     -- 1. Gestione UNITA'
     for i=1, #visibleUnits do
         local uID = visibleUnits[i]
+		----------------------------------		
 		-- obiettivi di missione (UnitRulesParam = obj_type )
+		----------------------------------		
         local objType = Spring.GetUnitRulesParam(uID, "obj_type")
         if objType and objType > 0 then
             local x, y, z = Spring.GetUnitPosition(uID)
@@ -400,7 +421,9 @@ function widget:DrawWorld()
             -- Disegna Testo automatico (ATTACK, DEFEND, ecc)
             DrawLabel(x, y, z, h, typeToText[objType])
         end
+		----------------------------------		
 		-- raffinerie di livrium
+		----------------------------------		
 	    local rafinery = Spring.GetUnitRulesParam(uID, "stato_raffineria")	
 		if rafinery then 	-- disegna lo stato della raffineria ON in base al valore "rafinery"
 			local active = Spring.GetUnitIsActive(uID)	-- verifica se la raffineria è on o off
@@ -415,8 +438,9 @@ function widget:DrawWorld()
 				-- Disegna Testo automatico
 				-- DrawLabel(x, y, z, h, typeToText[harvesterstatus]) -- il testo lo disabilito per ora, non mi interessa che appaia sugli estrattori. Molix 21/05/2026
 		end				
-		
+		----------------------------------
 		-- estrattori di metallo con resonator (UnitRulesParam = resonator_status )
+		----------------------------------		
         local extractorType = Spring.GetUnitRulesParam(uID, "resonator_status")
         if extractorType and extractorType > 1.0 then
             local x, y, z = Spring.GetUnitPosition(uID)
@@ -427,7 +451,9 @@ function widget:DrawWorld()
             -- Disegna Testo automatico
             -- DrawLabel(x, y, z, h, typeToText[extractorType]) -- il testo lo disabilito per ora, non mi interessa che appaia sugli estrattori. Molix 21/05/2026
         end
+		----------------------------------		
 		-- livrium harvester (UnitRulesParam = stato_raccolta ). In base allo stato raccolta disegno l'icona indicante se l'harvester sta rientrando, sta andando a raccogliere, sta raccogliendo
+		----------------------------------		
         local harvesterstatus = Spring.GetUnitRulesParam(uID, "stato_raccolta")
 		local isharversting = Spring.GetUnitRulesParam(uID, "is_harversting")
 --        if harvesterstatus and harvesterstatus > 1.0 then
@@ -440,6 +466,17 @@ function widget:DrawWorld()
             -- Disegna Testo automatico
             -- DrawLabel(x, y, z, h, typeToText[harvesterstatus]) -- il testo lo disabilito per ora, non mi interessa che appaia sugli estrattori. Molix 21/05/2026
         end		
+		----------------------------------		
+		-- unità dispiegate del garage
+		----------------------------------		
+        local garagestatus = Spring.GetUnitRulesParam(uID, "isgarage")
+        if garagestatus == 1 then 	-- se l'unità è del gruppo unitdeployed
+            local x, y, z = Spring.GetUnitPosition(uID)
+            local unitDefID = Spring.GetUnitDefID(uID)
+            local h = (UnitDefs[unitDefID] and UnitDefs[unitDefID].height or 30)
+            -- Disegna Icona
+            DrawGarageIcon(x, y, z, h)
+        end				
     end
 
     -- 2. Gestione PUNTI FISSI (Marker)
