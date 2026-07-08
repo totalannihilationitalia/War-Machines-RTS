@@ -72,6 +72,10 @@ local icon_harv_2 = "LuaUI/Images/menu/objectives/icon_harv2.png"
 local icon_harv_3 = "LuaUI/Images/menu/objectives/icon_harv3.png"
 local icon_harv_4 = "LuaUI/Images/menu/objectives/icon_harv4.png"
 
+-- Config immagini icone di stato per harvester di livrium 
+local icon_garage = "LuaUI/Images/menu/objectives/icon_unitgarage.png"
+
+
 -- Tabella per i testi automatici delle unità basata sul tipo
 local typeToText = {
     [1] = "DESTROY",
