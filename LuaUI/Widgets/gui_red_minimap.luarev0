@@ -11,11 +11,6 @@ function widget:GetInfo()
 	handler   = true, --can use widgetHandler:x()
 	}
 end
--- rev1 = 	13/07/2026	Molix, eliminato autoresize
---						Modificati pulsanti move e scale
---						Aggiunti pulsanti: reset minimap scale e pulsanti on/off camera 1, 2 e 3 (pip widget)
-
-
 local rescalevalue = 1.26
 local buttonScale = 1
 local NeededFrameworkVersion = 8
@@ -58,13 +53,6 @@ local sSendCommands = Spring.SendCommands
 local sGetMiniMapGeometry = Spring.GetMiniMapGeometry
 local sGetCameraState = Spring.GetCameraState
 local sceduleMinimapGeometry = false
--- aggiunti con rev 1
-local rResetButton
-local rCameraButton
-local rResizeButton
-local rMoveButton
-local cameraIsOpen = false
----------------------
 
 local function IncludeRedUIFrameworkFunctions()
 	New = WG.Red.New(widget)
@@ -189,7 +177,6 @@ local function AutoResizeObjects()
 end
 
 local function createminimap(r)
-		
 	local minimap = {"rectangle",
 		px=r.px,py=r.py,
 		sx=r.sx,sy=r.sy,
@@ -249,142 +236,12 @@ local function createminimap(r)
 			fadeout_at_deactivation = r.fadetime,
 		},
 	}
-	-- rev1: Bottone Reset (posizionato a sinistra di "move")
-	resetbutton = {"rectangle",
-		px=r.px+r.sx-r.bsx*3+2 + offsetcorrection,py=r.py+r.sy-1,
-		sx=r.bsx*buttonScale,sy=r.bsy*buttonScale,
-		
-		color={0.8,0.2,0.2,0.6},
-		texturecolor={1,1,1,1},
-		texture="luaui/images/redminimap/reset.png",
-		border=r.cborder,
-		obeyscreenedge = true,
-		overridecursor = true,
-		overrideclick = r.dragbutton,
-		roundedsize = math.floor(r.bsy*0.15),
-		onlyTweakUi = false,
-		
-		effects = {
-			fadein_at_activation = r.fadetime,
-			fadeout_at_deactivation = r.fadetime,
-		},
-		
-		-- Gestione click nativa del framework (tasto 1 = sinistro)
-		mouseclick = {
-			{1, function(mx, my, self)
-				local default_px = Config.minimap.ancora_x or 5
-				local default_py = Config.minimap.ancora_y or 5
-				local default_sx = Config.minimap.sx or 180
-				local default_sy = Config.minimap.sy or 180
-				local bsx = Config.minimap.bsx or 15
-				
-				minimap.px = default_px
-				minimap.py = default_py
-				minimap.sx = default_sx
-				minimap.sy = default_sy
-				
-				local localOffset = bsx - (bsx * buttonScale)
-				
-				resizebutton.px = default_px + default_sx - bsx
-				resizebutton.py = default_py + default_sy - 1
-				
-				movebutton.px = default_px + default_sx - bsx*2+1 + localOffset
-				movebutton.py = default_py + default_sy - 1
-				
-				self.px = default_px + default_sx - bsx*3+2 + localOffset
-				self.py = default_py + default_sy - 1
-				
-				camerabutton.px = default_px + default_sx - bsx*4+3 + localOffset
-				camerabutton.py = default_py + default_sy - 1
-				
-				sceduleMinimapGeometry = true
-				Spring.PlaySoundFile("sounds/click.wav", 1.0, 'ui')
-			end}
-		}
-	}
-	-- rev1: Bottone Camera (posizionato a sinistra di "reset")
-	camerabutton = {"rectangle",
-		px=r.px+r.sx-r.bsx*4+3 + offsetcorrection,py=r.py+r.sy-1,
-		sx=r.bsx*buttonScale,sy=r.bsy*buttonScale,
-		
-		color={0.2,0.6,0.8,0.6},
-		texturecolor={1,1,1,1},
-		texture="luaui/images/redminimap/camera.png",
-		border=r.cborder,
-		obeyscreenedge = true,
-		overridecursor = true,
-		overrideclick = r.dragbutton,
-		roundedsize = math.floor(r.bsy*0.15),
-		onlyTweakUi = false,
-		
-		effects = {
-			fadein_at_activation = r.fadetime,
-			fadeout_at_deactivation = r.fadetime,
-		},
-		
-		-- Gestione click nativa del framework (tasto 1 = sinistro)
-		mouseclick = {
-			{1, function(mx, my, self)
-				if (cameraIsOpen) then
-					Spring.SendCommands("close_WMRTS_camera_1")
-					cameraIsOpen = false
-					Spring.Echo("Secondary Camera Closed")
-				else
-					Spring.SendCommands("open_WMRTS_camera_1")
-					cameraIsOpen = true
-					Spring.Echo("Secondary Camera Opened")
-				end
-				Spring.PlaySoundFile("sounds/click.wav", 1.0, 'ui')
-			end}
-		}
-	}
-
 	
 	New(movebutton)
 	New(resizebutton)
-	New(resetbutton)   -- rev1 resetSizebutton
-	New(camerabutton)  -- rev1 camera1button
 	New(minimap)
 --	New(minimapbg)
-
-	-- Salvataggio dei riferimenti nelle variabili a livello di file
-	rMoveButton = movebutton
-	rResizeButton = resizebutton
-	rResetButton = resetbutton
-	rCameraButton = camerabutton
-
-	-- Hover effects per Reset
-	resetbutton.mouseover = function(mx,my,self)
-		self.active = nil
-		if (not self._mouseover) then
-			self._color4 = self.color[4]
-			self.color[4] = 1
-		end
-		self._mouseover = true
-	end
-	resetbutton.mousenotover = function(mx,my,self)
-		if (self._mouseover) then
-			self.color[4] = self._color4
-		end
-		self._mouseover = nil
-	end
-
-	-- Hover effects per Camera
-	camerabutton.mouseover = function(mx,my,self)
-		self.active = nil
-		if (not self._mouseover) then
-			self._color4 = self.color[4]
-			self.color[4] = 1
-		end
-		self._mouseover = true
-	end
-	camerabutton.mousenotover = function(mx,my,self)
-		if (self._mouseover) then
-			self.color[4] = self._color4
-		end
-		self._mouseover = nil
-	end
-	-- Hover effects per Resize	
+	
 	resizebutton.mouseover = function(mx,my,self)
 		self.active = nil
 		movebutton.active = nil
@@ -467,10 +324,10 @@ local function createminimap(r)
 		movebutton,
 	}
 	movebutton.movableslaves = {
-		minimap,resizebutton, resetbutton, camerabutton,	-- rev1 aggiungo i pulsanti reset e camera_1
-	}	
+		minimap,resizebutton,
+	}
 	resizebutton.movableslaves = {
-		movebutton, resetbutton, camerabutton,				-- rev1 aggiungo i pulsanti reset e camera_1
+		movebutton,
 	}
 	
 	return minimap
@@ -512,29 +369,19 @@ function widget:Update()
 	
 	if (minimized) then
 		rMinimap.active = false
-		if rResetButton then rResetButton.active = false end
-		if rCameraButton then rCameraButton.active = false end		
 		--hack to reset state minimap
 		gl.SlaveMiniMap(false) 
 		gl.SlaveMiniMap(true)
 		----
 	else
 		rMinimap.active = nil
-		if rResetButton then rResetButton.active = nil end
-		if rCameraButton then rCameraButton.active = nil end		
 	end
 	
 	local st = sGetCameraState()
 	if (st.name == "ov") then --overview camera
 		rMinimap.active = false
-		if rResetButton then rResetButton.active = false end
-		if rCameraButton then rCameraButton.active = false end		
 	else
-		if not minimized then
-			rMinimap.active = nil
-			if rResetButton then rResetButton.active = nil end
-			if rCameraButton then rCameraButton.active = nil end
-		end
+		rMinimap.active = nil
 	end
 
 	AutoResizeObjects()
