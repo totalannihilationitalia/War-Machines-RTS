@@ -16,7 +16,7 @@ end
 --						Aggiunti pulsanti: reset minimap scale e pulsanti on/off camera 1, 2 e 3 (pip widget)
 
 
-local rescalevalue = 1.26
+local rescalevalue = 1
 local buttonScale = 1
 local NeededFrameworkVersion = 8
 local CanvasX,CanvasY = 1272/rescalevalue,734/rescalevalue --resolution in which the widget was made (for 1:1 size)
@@ -24,22 +24,22 @@ local CanvasX,CanvasY = 1272/rescalevalue,734/rescalevalue --resolution in which
 
 local Config = {
 	minimap = {
-		ancora_x = 5,  			-- 5 pixel da sinistra
-		ancora_y = 5,  			-- 5 pixel dal TOP	
-		px = -0.5,py = -0.5, 	--default start position
+		ancora_x = 2,  			-- 5 pixel da sinistra
+		ancora_y = 2,  			-- 5 pixel dal TOP	
+		px = 5,py = 5, 			--default start position
 		sx = 180, 				--math.min(135*Game.mapX/Game.mapY,270),		--background size
 		sy = 180, 				--135, 											--background size
 		
-		bsx = 15,bsy = 15, 		--button size
+		bsx = 23,bsy = 23, 		--button size
 
 		fadetime = 0.10, --fade effect time, in seconds
 		fadedistance = 100, --distance from cursor at which console shows up when empty
 		
-		cresizebackground = {0.9,0.9,0.9,0.5}, --color {r,g,b,alpha} {0.9,0.9,0.9,0.5}
-		cresizecolor = {1,0,0,1},
+		cresizebackground = {0.9,0.9,0.9,0}, --color {r,g,b,alpha} {0.9,0.9,0.9,0.5}
+		cresizecolor = {1,1,1,1},
 		
-		cmovebackground = {0,1,0,0.5},
-		cmovecolor = {1,0,0,1},
+		cmovebackground = {0,1,0,0},
+		cmovecolor = {1,1,1,1},
 		
 
 --		cbackground = {0,0.67,0.99,0}, -- sfondo -- rimosso
@@ -94,98 +94,6 @@ local function RedUIchecks()
 	end
 	IncludeRedUIFrameworkFunctions()
 	return true
-end
-
---[[
-local function AutoResizeObjects() --autoresize v2
-	if (LastAutoResizeX==nil) then
-		LastAutoResizeX = CanvasX
-		LastAutoResizeY = CanvasY
-	end
-	local lx,ly = LastAutoResizeX,LastAutoResizeY
-	local vsx,vsy = Screen.vsx,Screen.vsy
-	if ((lx ~= vsx) or (ly ~= vsy)) then
-		local objects = GetWidgetObjects(widget)
-		local scale = vsy/ly
-		local skippedobjects = {}
-		for i=1,#objects do
-			local o = objects[i]
-			local adjust = 0
-			if ((o.movableslaves) and (#o.movableslaves > 0)) then
-				adjust = (o.px*scale+o.sx*scale)-vsx
-				if (((o.px+o.sx)-lx) == 0) then
-					o._moveduetoresize = true
-				end
-			end
-			if (o.px) then o.px = o.px * scale end
-			if (o.py) then o.py = o.py * scale end
-			if (o.sx) then o.sx = o.sx * scale end
-			if (o.sy) then o.sy = o.sy * scale end
-			if (o.fontsize) then o.fontsize = o.fontsize * scale end
-			if (adjust > 0) then
-				o._moveduetoresize = true
-				o.px = o.px - adjust
-				for j=1,#o.movableslaves do
-					local s = o.movableslaves[j]
-					s.px = s.px - adjust/scale
-				end
-			elseif ((adjust < 0) and o._moveduetoresize) then
-				o._moveduetoresize = nil
-				o.px = o.px - adjust
-				for j=1,#o.movableslaves do
-					local s = o.movableslaves[j]
-					s.px = s.px - adjust/scale
-				end
-			end
-		end
-		LastAutoResizeX,LastAutoResizeY = vsx,vsy
-	end
-end
-]]--
-
-local function AutoResizeObjects()
-	if (LastAutoResizeX==nil) then
-		LastAutoResizeX = CanvasX
-		LastAutoResizeY = CanvasY
-	end
-	local vsx,vsy = Screen.vsx,Screen.vsy
-	
-	if ((LastAutoResizeX ~= vsx) or (LastAutoResizeY ~= vsy)) then
-		local objects = GetWidgetObjects(widget)
-		local isSlave = {}
-		for i=1,#objects do
-			local o = objects[i]
-			if (o.movableslaves) then
-				for j=1,#o.movableslaves do isSlave[o.movableslaves[j]] = true end
-			end
-		end
-
-		for i=1,#objects do
-			local o = objects[i]
-			if not isSlave[o] then
-				local oldPx, oldPy = o.px, o.py
-				
-				-- ANCORAGGIO TOP-LEFT
-				if (o.ancora_x) then 
-					o.px = math.floor(o.ancora_x + 0.5) 
-				end
-				if (o.ancora_y) then 
-					o.py = math.floor(o.ancora_y + 0.5)
-				end
-
-				if (o.movableslaves) then
-					local dx = o.px - oldPx
-					local dy = o.py - oldPy
-					for j=1,#o.movableslaves do
-						local s = o.movableslaves[j]
-						if (s.px) then s.px = math.floor(s.px + dx + 0.5) end
-						if (s.py) then s.py = math.floor(s.py + dy + 0.5) end
-					end
-				end
-			end
-		end
-		LastAutoResizeX,LastAutoResizeY = vsx,vsy
-	end
 end
 
 local function createminimap(r)
@@ -398,7 +306,7 @@ local function createminimap(r)
 	end
 	resizebutton.mousenotover = function(mx,my,self)
 		if ((not minimap._mouseover) and (not movebutton._mouseover)) then
-			self.active = false --deactivate
+--			self.active = false --deactivate			-- rev 1 rimosso (sparisce se il cursore è fuori dalla mappa, cosi rimane sempre visibile)
 		end
 		
 		if (self._mouseover) then
@@ -421,7 +329,7 @@ local function createminimap(r)
 	end
 	movebutton.mousenotover = function(mx,my,self)
 		if ((not minimap._mouseover) and (not resizebutton._mouseover)) then
-			self.active = false --deactivate
+--			self.active = false --deactivate			-- rev 1 rimosso (sparisce se il cursore è fuori dalla mappa, cosi rimane sempre visibile)
 		end
 		
 		if (self._mouseover) then
@@ -490,7 +398,7 @@ function widget:Initialize()
 	
 	gl.SlaveMiniMap(true)
 	
-	AutoResizeObjects() --fix for displacement on crash issue
+--	AutoResizeObjects() --fix for displacement on crash issue
 end
 
 local lastPos = {}
@@ -537,12 +445,12 @@ function widget:Update()
 		end
 	end
 
-	AutoResizeObjects()
+--	AutoResizeObjects()
 	if ((lastPos.px ~= rMinimap.px) or (lastPos.py ~= rMinimap.py) or (lastPos.sx ~= rMinimap.sx) or (lastPos.sy ~= rMinimap.sy) or sceduleMinimapGeometry) then
 		local borderPadding = 2 -- Distanza in pixel tra la mappa e il bordo esterno
 		
-		local out_px = math.floor(rMinimap.px + 0.5) + borderPadding
-		local out_py = math.floor(rMinimap.py + 0.5) + borderPadding
+		local out_px = math.floor(rMinimap.px + 0.5)  + borderPadding
+		local out_py = math.floor(rMinimap.py + 0.5)  + borderPadding
 		local out_sx = math.floor(rMinimap.sx + 0.5) - (borderPadding * 2)
 		local out_sy = math.floor(rMinimap.sy + 0.5) - (borderPadding * 2)
 		

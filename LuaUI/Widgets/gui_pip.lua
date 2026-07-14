@@ -19,6 +19,7 @@ end
 -- Saving all config (Done !)
 
 -- rev1:	14/07/2026	aggiunto springsendcommand per avvisare redminimap che camera1 è accesa o spenta. Molix
+-- rev2:	1407/2026	aggiunto resetState
 
 ----------------------------------------------------------------------------------------------------
 -- Todo
@@ -38,7 +39,7 @@ local panelBorderColorLight = {0, 1, 0, 1}
 local panelBorderColorDark = {0, 0.15, 0, 1}
 local minPanelSize = 175
 local buttonSize = 16
-local fontSize = 16 -- Currently only for the 'Tracking #' text
+local fontSize = 12 -- Currently only for the 'Tracking #' text
 
 local zoomWheel = 2 -- Factor for mousewheel zoom
 local zoomRate = 4 -- magnification multiplication per second
@@ -54,7 +55,9 @@ local simpleColorEnemy	= {0.9, 0.2, 0.2, 1} -- Red
 -- Globals
 ----------------------------------------------------------------------------------------------------
 -- Base variables
-local pl, pr, pb, pt = 200, 400, 200, 400
+local DEFAULT_PL, DEFAULT_PR, DEFAULT_PB, DEFAULT_PT = 185, 381, 828, 1006
+local pl, pr, pb, pt = DEFAULT_PL, DEFAULT_PR, DEFAULT_PB, DEFAULT_PT		-- pl,pr,pb,pt sono variaibli che definiscono la posizione della finestra e che variano in base al trascinamento e al resize da parte dell'utente
+--local pl, pr, pb, pt = 200, 400, 200, 400
 local zoom = 0.25
 local wcx, wcz = 1000, 1000
 
@@ -845,7 +848,7 @@ function widget:DrawScreen()
 	
 	if areTracking then
 		--glText('\255\128\255\128Tracking ' .. #areTracking, pr - buttonSize, pb, fontSize, 'rdo')
-		glText('\255\128\255\128Tracking ' .. #areTracking .. ' units', pl, pt, fontSize, 'do')
+		glText('\255\128\255\128Tracking ' .. #areTracking .. ' units', pl+3, pt-18, fontSize, 'do')
 	end
 	
 	glColor(1, 1, 1, 1)
@@ -970,11 +973,11 @@ function widget:MousePress(mx, my, mButton)
 		   my >= minModeB and my <= minModeB + buttonSize then
 			inMinMode = false
 			return true
-		]]--
-		return false	-- rev1: ritorna false. Molix
 		end
+		]]--
+
 		-- Nothing else to click while in minMode
-		return
+		return false	-- rev1: ritorna false. Molix
 	end
 	
 	-- Did we click within the pip window ?
@@ -1109,6 +1112,17 @@ function widget:TextCommand(cmd)
 	elseif cmd == "close_WMRTS_camera_1" then
 		inMinMode = true -- Nasconde la telecamera
 		return true
+	-- rev2: comandi da remoto per resettare dimensione e posizione delle finestre. Molix
+	elseif cmd == "reset_camera1_state" then
+		pl, pr, pb, pt = DEFAULT_PL, DEFAULT_PR, DEFAULT_PB, DEFAULT_PT
+		inMinMode = false -- Opzionale: riapre la finestra se era minimizzata
+		
+		-- Ricalcola le coordinate del mondo e della texture del terreno
+		RecalculateWorldCoordinates()
+		RecalculateGroundTextureCoordinates()
+		
+		Spring.Echo("PiP: Position reset to default")
+		return true	
 	end
 
 	for i = 1, #buttons do
