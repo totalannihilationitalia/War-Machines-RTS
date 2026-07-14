@@ -22,18 +22,18 @@ local fadeDuration = 10.0 -- Durata del fade in secondi
 local splashTex = LUAUI_DIRNAME.."Images/weather/rain_splash.png"
 local rainKeywords = {'rain', 'tropical', 'swamp', 'wet', 'jungle', 'water', 'river', 'delta', 'marsh', 'island', 'lake'}
 
-local intensityMin     = 0.3
-local intensityMax     = 1.0
+local intensityMin     = 0.15		-- 0.3
+local intensityMax     = 0.5		-- 1.0
 local cycleSpeed       = 0.0005
 
 local particleMultiplier = 0.04 
 local rainLineLength     = 35.0
 local rainLineWidth      = 1.0
-local rainColor          = {0.7, 0.7, 0.9, 0.35}
+local rainColor          = {0.7, 0.7, 0.9, 0.15}	-- {0.7, 0.7, 0.9, 0.35}
 
 local showSplashes      = true
 local splashSize        = 15.0   
-local splashOpacity     = 0.45   
+local splashOpacity     = 0.35  	-- 0.45 
 local splashDensity     = 0.1    
 local splashMaxDistance = 3500.0 
 

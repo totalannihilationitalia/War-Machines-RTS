@@ -309,7 +309,7 @@ local function createminimap(r)
 		
 		color={0.2,0.6,0.8,0.6},
 		texturecolor={1,1,1,1},
-		texture="luaui/images/redminimap/camera.png",
+		texture="luaui/images/redminimap/camera1.png",
 		border=r.cborder,
 		obeyscreenedge = true,
 		overridecursor = true,
@@ -328,11 +328,11 @@ local function createminimap(r)
 				if (cameraIsOpen) then
 					Spring.SendCommands("close_WMRTS_camera_1")
 					cameraIsOpen = false
-					Spring.Echo("Secondary Camera Closed")
+					Spring.Echo("WMRTS_Debug:Secondary Camera Closed") -- ####### rimuovere
 				else
 					Spring.SendCommands("open_WMRTS_camera_1")
 					cameraIsOpen = true
-					Spring.Echo("Secondary Camera Opened")
+					Spring.Echo("WMRTS_Debug:Secondary Camera Opened") -- ####### rimuovere
 				end
 				Spring.PlaySoundFile("sounds/click.wav", 1.0, 'ui')
 			end}

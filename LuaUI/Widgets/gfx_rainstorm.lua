@@ -14,7 +14,7 @@ end
 -- 02/01/2026 add fade in and fadeout, command /stopstorm (fadeout) and /startstorm (start with fadein) -- for missions
 
 -- to do --
--- 1) linkare le variabili a gamnerules cosi da modificarle da mission editor
+-- 1) linkare le variabili a gamnerules cosi da modificarle da mission editor ###################################
 
 --------------------------------------------------------------------------------
 -- CONFIGURAZIONE
@@ -52,8 +52,8 @@ local splashMaxDistance      = 3500.0
 -- Ciclo Meteo e Oscuramento
 local darknessAtMinRain = 1.50   
 local darknessAtMaxRain = 0.82  
-local intensityMin      = 0.2    
-local intensityMax      = 1.0
+local intensityMin      = 0.1		--0.2
+local intensityMax      = 0.5		--1
 local cycleSpeed        = 0.0005 
 local stormColor        = {0.4, 0.4, 0.5}
 
@@ -66,7 +66,7 @@ local flashFadeSpeed   = 0.12
 local particleMultiplier = 0.045 
 local rainLineLength     = 35.0
 local rainLineWidth      = 1.0
-local rainColor          = {0.7, 0.7, 0.9, 0.3}
+local rainColor          = {0.7, 0.7, 0.9, 0.25}	-- {0.7, 0.7, 0.9, 0.3}
 
 --------------------------------------------------------------------------------
 -- VARIABILI INTERNE

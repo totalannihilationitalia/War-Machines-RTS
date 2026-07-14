@@ -18,8 +18,6 @@ end
 -- Start points (Done !)
 -- Saving all config (Done !)
 
--- rev1:	14/07/2026	aggiunto springsendcommand per avvisare redminimap che camera1 è accesa o spenta. Molix
-
 ----------------------------------------------------------------------------------------------------
 -- Todo
 ----------------------------------------------------------------------------------------------------
@@ -34,8 +32,8 @@ end
 -- Config
 ----------------------------------------------------------------------------------------------------
 local panelBackColor = {0.5, 0.5, 0.5, 0.5} -- {0.4, 0.4, 0.4, 1}
-local panelBorderColorLight = {0, 1, 0, 1}
-local panelBorderColorDark = {0, 0.15, 0, 1}
+local panelBorderColorLight = {0.75, 0.75, 0.75, 1}
+local panelBorderColorDark = {0.15, 0.15, 0.15, 1}
 local minPanelSize = 175
 local buttonSize = 16
 local fontSize = 16 -- Currently only for the 'Tracking #' text
@@ -722,13 +720,10 @@ end
 function widget:DrawScreen()
 	
 	if inMinMode then
-	-- rev1: rimuovo l'icona minimized, utilizzerò quella disegnata in red_minimap. Molix
-	--[[ 
 		DrawPanel(minModeL, minModeL + buttonSize, minModeB, minModeB + buttonSize)
 		glTexture('LuaUI/Images/PipMaximize.png')
 		glTexRect(minModeL, minModeB, minModeL + buttonSize, minModeB + buttonSize)
 		glTexture(false)
-	]]--
 		return
 	end
 	
@@ -852,7 +847,7 @@ function widget:DrawScreen()
 end
 function widget:DrawWorld()
 	if inMinMode then return end
-	glColor(0, 1, 0, 0.25)
+	glColor(1, 1, 0, 0.25)
 	glLineWidth(1.49)
 	glDepthTest(true)
 	glBeginEnd(GL_LINE_STRIP, DrawGroundBox, wl, wr, wb, wt)
@@ -963,15 +958,12 @@ function widget:MousePress(mx, my, mButton)
 	
 	-- Check if we are in min mode
 	if inMinMode then
-		--[[
 		-- Was maximize clicked?
 		if mButton == 1 and
 		   mx >= minModeL and mx <= minModeL + buttonSize and
 		   my >= minModeB and my <= minModeB + buttonSize then
 			inMinMode = false
 			return true
-		]]--
-		return false	-- rev1: ritorna false. Molix
 		end
 		-- Nothing else to click while in minMode
 		return
@@ -998,8 +990,6 @@ function widget:MousePress(mx, my, mButton)
 				else
 					minModeB = pt - buttonSize
 				end
-				-- rev1: aggiunto comando in spring per avvisare di chiudere camera1 (per red_minimap). Molix
-				Spring.SendCommands("close_WMRTS_camera_1")				
 				return true
 			end
 			
@@ -1102,15 +1092,6 @@ function widget:MouseRelease(mx, my, mButton)
 end
 
 function widget:TextCommand(cmd)
-	-- rev1: comandi da remoto per gestire l'apertura e chiusura (ad esempio da redminimap). Molix
-	if cmd == "open_WMRTS_camera_1" then
-		inMinMode = false -- Mostra la telecamera 
-		return true
-	elseif cmd == "close_WMRTS_camera_1" then
-		inMinMode = true -- Nasconde la telecamera
-		return true
-	end
-
 	for i = 1, #buttons do
 		local button = buttons[i]
 		if cmd == button.command then
