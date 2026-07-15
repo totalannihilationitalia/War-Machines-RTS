@@ -35,8 +35,8 @@ end
 -- Config
 ----------------------------------------------------------------------------------------------------
 local panelBackColor = {0.5, 0.5, 0.5, 0.5} -- {0.4, 0.4, 0.4, 1}
-local panelBorderColorLight = {0, 1, 0, 1}
-local panelBorderColorDark = {0, 0.15, 0, 1}
+local panelBorderColorLight = {0, 1, 0, 1}		-- verde
+local panelBorderColorDark = {0, 0.5, 0, 1}	-- verde scuro
 local minPanelSize = 175
 local buttonSize = 16
 local fontSize = 12 -- Currently only for the 'Tracking #' text
@@ -1121,7 +1121,7 @@ function widget:TextCommand(cmd)
 		RecalculateWorldCoordinates()
 		RecalculateGroundTextureCoordinates()
 		
-		Spring.Echo("PiP: Position reset to default")
+--		Spring.Echo("PiP: Position reset to default")
 		return true	
 	end
 

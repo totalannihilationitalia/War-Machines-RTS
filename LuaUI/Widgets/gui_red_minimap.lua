@@ -60,10 +60,14 @@ local sGetCameraState = Spring.GetCameraState
 local sceduleMinimapGeometry = false
 -- aggiunti con rev 1
 local rResetButton
-local rCameraButton
+local rcamerabutton_1
+local rcamerabutton_2
+local rcamerabutton_3
 local rResizeButton
 local rMoveButton
-local cameraIsOpen = false
+local camera1IsOpen = false
+local camera2IsOpen = false
+local camera3IsOpen = false
 ---------------------
 
 local function IncludeRedUIFrameworkFunctions()
@@ -202,17 +206,95 @@ local function createminimap(r)
 				self.px = default_px + default_sx - bsx*3+2 + localOffset
 				self.py = default_py + default_sy - 1
 				
-				camerabutton.px = default_px + default_sx - bsx*4+3 + localOffset
-				camerabutton.py = default_py + default_sy - 1
+				camerabutton_1.px = default_px + default_sx - bsx*6+5 + localOffset
+				camerabutton_1.py = default_py + default_sy - 1
+				
+				camerabutton_2.px = default_px + default_sx - bsx*5+4 + localOffset
+				camerabutton_2.py = default_py + default_sy - 1
+
+				camerabutton_3.px = default_px + default_sx - bsx*4+3 + localOffset
+				camerabutton_3.py = default_py + default_sy - 1				
 				
 				sceduleMinimapGeometry = true
 				Spring.PlaySoundFile("sounds/click.wav", 1.0, 'ui')
 			end}
 		}
 	}
-	-- rev1: Bottone Camera (posizionato a sinistra di "reset")
-	camerabutton = {"rectangle",
+	-- rev1: Bottone Camera 3 
+	camerabutton_3 = {"rectangle",
 		px=r.px+r.sx-r.bsx*4+3 + offsetcorrection,py=r.py+r.sy-1,
+		sx=r.bsx*buttonScale,sy=r.bsy*buttonScale,
+		
+		color={0.2,0.6,0.8,0.6},
+		texturecolor={1,1,1,1},
+		texture="luaui/images/redminimap/camera3.png",
+		border=r.cborder,
+		obeyscreenedge = true,
+		overridecursor = true,
+		overrideclick = r.dragbutton,
+		roundedsize = math.floor(r.bsy*0.15),
+		onlyTweakUi = false,
+		
+		effects = {
+			fadein_at_activation = r.fadetime,
+			fadeout_at_deactivation = r.fadetime,
+		},
+		
+		-- Gestione click nativa del framework (tasto 1 = sinistro)
+		mouseclick = {
+			{1, function(mx, my, self)
+				if (camera3IsOpen) then
+					Spring.SendCommands("close_WMRTS_camera_3")
+					camera3IsOpen = false
+				else
+					Spring.SendCommands("open_WMRTS_camera_3")
+					camera3IsOpen = true
+				end
+				Spring.PlaySoundFile("sounds/click.wav", 1.0, 'ui')
+			end}
+		}
+	}
+	
+	-- rev1: Bottone Camera 2 
+	camerabutton_2 = {"rectangle",
+		px=r.px+r.sx-r.bsx*5+4 + offsetcorrection,py=r.py+r.sy-1,
+		sx=r.bsx*buttonScale,sy=r.bsy*buttonScale,
+		
+		color={0.2,0.6,0.8,0.6},
+		texturecolor={1,1,1,1},
+		texture="luaui/images/redminimap/camera2.png",
+		border=r.cborder,
+		obeyscreenedge = true,
+		overridecursor = true,
+		overrideclick = r.dragbutton,
+		roundedsize = math.floor(r.bsy*0.15),
+		onlyTweakUi = false,
+		
+		effects = {
+			fadein_at_activation = r.fadetime,
+			fadeout_at_deactivation = r.fadetime,
+		},
+		
+		-- Gestione click nativa del framework (tasto 1 = sinistro)
+		mouseclick = {
+			{1, function(mx, my, self)
+				if (camera2IsOpen) then
+					Spring.SendCommands("close_WMRTS_camera_2")
+					camera2IsOpen = false
+--					Spring.Echo("WMRTS_Debug:Secondary Camera Closed") -- ####### rimuovere
+				else
+					Spring.SendCommands("open_WMRTS_camera_2")
+					camera2IsOpen = true
+--					Spring.Echo("WMRTS_Debug:Secondary Camera Opened") -- ####### rimuovere
+				end
+				Spring.PlaySoundFile("sounds/click.wav", 1.0, 'ui')
+			end}
+		}
+	}
+
+	-- rev1: Bottone Camera 1 
+	camerabutton_1 = {"rectangle",
+		px=r.px+r.sx-r.bsx*6+5 + offsetcorrection,py=r.py+r.sy-1,
 		sx=r.bsx*buttonScale,sy=r.bsy*buttonScale,
 		
 		color={0.2,0.6,0.8,0.6},
@@ -233,25 +315,27 @@ local function createminimap(r)
 		-- Gestione click nativa del framework (tasto 1 = sinistro)
 		mouseclick = {
 			{1, function(mx, my, self)
-				if (cameraIsOpen) then
+				if (camera1IsOpen) then
 					Spring.SendCommands("close_WMRTS_camera_1")
-					cameraIsOpen = false
+					camera1IsOpen = false
 					Spring.Echo("WMRTS_Debug:Secondary Camera Closed") -- ####### rimuovere
 				else
 					Spring.SendCommands("open_WMRTS_camera_1")
-					cameraIsOpen = true
+					camera1IsOpen = true
 					Spring.Echo("WMRTS_Debug:Secondary Camera Opened") -- ####### rimuovere
 				end
 				Spring.PlaySoundFile("sounds/click.wav", 1.0, 'ui')
 			end}
 		}
-	}
+	}	
 
 	
 	New(movebutton)
 	New(resizebutton)
 	New(resetbutton)   -- rev1 resetSizebutton
-	New(camerabutton)  -- rev1 camera1button
+	New(camerabutton_1)  -- rev1 camera1button
+	New(camerabutton_2)  -- rev1 camera1button
+	New(camerabutton_3)  -- rev1 camera1button	
 	New(minimap)
 --	New(minimapbg)
 
@@ -259,7 +343,9 @@ local function createminimap(r)
 	rMoveButton = movebutton
 	rResizeButton = resizebutton
 	rResetButton = resetbutton
-	rCameraButton = camerabutton
+	rcamerabutton_1 = camerabutton_1
+	rcamerabutton_2 = camerabutton_2
+	rcamerabutton_3 = camerabutton_3	
 
 	-- Hover effects per Reset
 	resetbutton.mouseover = function(mx,my,self)
@@ -277,8 +363,8 @@ local function createminimap(r)
 		self._mouseover = nil
 	end
 
-	-- Hover effects per Camera
-	camerabutton.mouseover = function(mx,my,self)
+	-- Hover effects per Camera 1
+	camerabutton_1.mouseover = function(mx,my,self)
 		self.active = nil
 		if (not self._mouseover) then
 			self._color4 = self.color[4]
@@ -286,12 +372,42 @@ local function createminimap(r)
 		end
 		self._mouseover = true
 	end
-	camerabutton.mousenotover = function(mx,my,self)
+	camerabutton_1.mousenotover = function(mx,my,self)
 		if (self._mouseover) then
 			self.color[4] = self._color4
 		end
 		self._mouseover = nil
 	end
+	-- Hover effects per Camera 2
+	camerabutton_2.mouseover = function(mx,my,self)
+		self.active = nil
+		if (not self._mouseover) then
+			self._color4 = self.color[4]
+			self.color[4] = 1
+		end
+		self._mouseover = true
+	end
+	camerabutton_2.mousenotover = function(mx,my,self)
+		if (self._mouseover) then
+			self.color[4] = self._color4
+		end
+		self._mouseover = nil
+	end	
+	-- Hover effects per Camera 3
+	camerabutton_3.mouseover = function(mx,my,self)
+		self.active = nil
+		if (not self._mouseover) then
+			self._color4 = self.color[4]
+			self.color[4] = 1
+		end
+		self._mouseover = true
+	end
+	camerabutton_3.mousenotover = function(mx,my,self)
+		if (self._mouseover) then
+			self.color[4] = self._color4
+		end
+		self._mouseover = nil
+	end	
 	-- Hover effects per Resize	
 	resizebutton.mouseover = function(mx,my,self)
 		self.active = nil
@@ -375,10 +491,10 @@ local function createminimap(r)
 		movebutton,
 	}
 	movebutton.movableslaves = {
-		minimap,resizebutton, resetbutton, camerabutton,	-- rev1 aggiungo i pulsanti reset e camera_1
+		minimap,resizebutton, resetbutton, camerabutton_1, camerabutton_2, camerabutton_3,		-- rev1 aggiungo i pulsanti reset e camera_x
 	}	
 	resizebutton.movableslaves = {
-		movebutton, resetbutton, camerabutton,				-- rev1 aggiungo i pulsanti reset e camera_1
+		movebutton, resetbutton, camerabutton_1,  camerabutton_2, camerabutton_3,				-- rev1 aggiungo i pulsanti reset e camera_x
 	}
 	
 	return minimap
@@ -421,7 +537,9 @@ function widget:Update()
 	if (minimized) then
 		rMinimap.active = false
 		if rResetButton then rResetButton.active = false end
-		if rCameraButton then rCameraButton.active = false end		
+		if rcamerabutton_1 then rcamerabutton_1.active = false end		
+		if rcamerabutton_2 then rcamerabutton_2.active = false end		
+		if rcamerabutton_3 then rcamerabutton_3.active = false end				
 		--hack to reset state minimap
 		gl.SlaveMiniMap(false) 
 		gl.SlaveMiniMap(true)
@@ -429,19 +547,25 @@ function widget:Update()
 	else
 		rMinimap.active = nil
 		if rResetButton then rResetButton.active = nil end
-		if rCameraButton then rCameraButton.active = nil end		
+		if rcamerabutton_1 then rcamerabutton_1.active = nil end		
+		if rcamerabutton_2 then rcamerabutton_2.active = nil end	
+		if rcamerabutton_3 then rcamerabutton_3.active = nil end			
 	end
 	
 	local st = sGetCameraState()
 	if (st.name == "ov") then --overview camera
 		rMinimap.active = false
 		if rResetButton then rResetButton.active = false end
-		if rCameraButton then rCameraButton.active = false end		
+		if rcamerabutton_1 then rcamerabutton_1.active = false end		
+		if rcamerabutton_2 then rcamerabutton_2.active = false end	
+		if rcamerabutton_3 then rcamerabutton_3.active = false end			
 	else
 		if not minimized then
 			rMinimap.active = nil
 			if rResetButton then rResetButton.active = nil end
-			if rCameraButton then rCameraButton.active = nil end
+			if rcamerabutton_1 then rcamerabutton_1.active = nil end
+			if rcamerabutton_2 then rcamerabutton_2.active = nil end
+			if rcamerabutton_3 then rcamerabutton_3.active = nil end			
 		end
 	end
 
