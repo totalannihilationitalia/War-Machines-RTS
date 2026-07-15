@@ -55,7 +55,7 @@ local simpleColorEnemy	= {0.9, 0.2, 0.2, 1} -- Red
 -- Globals
 ----------------------------------------------------------------------------------------------------
 -- Base variables
-local DEFAULT_PL, DEFAULT_PR, DEFAULT_PB, DEFAULT_PT = 185, 381, 828, 1006
+local DEFAULT_PL, DEFAULT_PR, DEFAULT_PB, DEFAULT_PT = 381+3, 577+3, 828, 1006
 local pl, pr, pb, pt = DEFAULT_PL, DEFAULT_PR, DEFAULT_PB, DEFAULT_PT		-- pl,pr,pb,pt sono variaibli che definiscono la posizione della finestra e che variano in base al trascinamento e al resize da parte dell'utente
 --local pl, pr, pb, pt = 200, 400, 200, 400
 local zoom = 0.25
