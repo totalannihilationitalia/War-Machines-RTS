@@ -5,3 +5,8 @@ fixed eufaarch textures, weapon fx and animations
 changed scenario and mission lobby layout
 add icon to deployed units
 retexturized EUF KAAT and add weapon fx
+add PIP widget, now inegrated with redminimap
+Fix allied resources bars
+retexturized euf Kaat
+
+
