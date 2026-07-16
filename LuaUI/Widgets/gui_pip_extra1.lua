@@ -715,7 +715,7 @@ function widget:SetConfigData(data)
 	zoom = data.zoom or zoom
 	inMinMode = data.inMinMode or inMinMode
 	minModeL = data.minModeL or minModeL
-	minModeB = data.minModeB or minModeL
+	minModeB = data.minModeB or minModeB					-- corretto da minModeL a minModeB 16/07/2026 Molix
 	drawingGround = data.drawingGround or drawingGround
 	drawBlipsOnly = data.drawBlipsOnly or drawBlipsOnly
 	usingLightBorder = data.usingLightBorder or usingLightBorder
@@ -887,6 +887,7 @@ end
 
 function widget:IsAbove(mx, my)
 	if inMinMode then
+		if not minModeL or not minModeB then return false end	-- Aggiunto controllo: se le variabili sono nil, il mouse non è "sopra" l'icona (evita il crash). Molix
 		return mx >= minModeL and mx <= minModeL + buttonSize and my >= minModeB and my <= minModeB + buttonSize
 	end
 	return mx >= pl and mx <= pr and my >= pb and my <= pt and (GetTooltip(self, mx, my) ~= nil)
@@ -1002,7 +1003,7 @@ function widget:MousePress(mx, my, mButton)
 					minModeB = pt - buttonSize
 				end
 				-- rev1: aggiunto comando in spring per avvisare di chiudere camera1 (per red_minimap). Molix
-				Spring.SendCommands("close_WMRTS_camera_1")				
+				Spring.SendCommands("close_WMRTS_camera_2")				
 				return true
 			end
 			
@@ -1111,9 +1112,14 @@ function widget:TextCommand(cmd)
 		return true
 	elseif cmd == "close_WMRTS_camera_2" then
 		inMinMode = true -- Nasconde la telecamera
+		-- Calcola posizione di default se non esiste (evita il nil error)
+		if not minModeL or not minModeB then
+			minModeL = pl
+			minModeB = pt - buttonSize
+		end		
 		return true
 	-- rev2: comandi da remoto per resettare dimensione e posizione delle finestre. Molix
-	elseif cmd == "reset_camera1_state" then
+	elseif cmd == "reset_camera2_state" then
 		pl, pr, pb, pt = DEFAULT_PL, DEFAULT_PR, DEFAULT_PB, DEFAULT_PT
 		inMinMode = false -- Opzionale: riapre la finestra se era minimizzata
 		

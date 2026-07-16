@@ -216,6 +216,9 @@ local function createminimap(r)
 				camerabutton_3.py = default_py + default_sy - 1				
 				
 				sceduleMinimapGeometry = true
+				Spring.SendCommands("reset_camera1_state")
+				Spring.SendCommands("reset_camera2_state")				
+				Spring.SendCommands("reset_camera3_state")
 				Spring.PlaySoundFile("sounds/click.wav", 1.0, 'ui')
 			end}
 		}
@@ -281,11 +284,12 @@ local function createminimap(r)
 				if (camera2IsOpen) then
 					Spring.SendCommands("close_WMRTS_camera_2")
 					camera2IsOpen = false
---					Spring.Echo("WMRTS_Debug:Secondary Camera Closed") -- ####### rimuovere
+					Spring.Echo("WMRTS_Debug:Secondary Camera Closed") -- ####### rimuovere
 				else
 					Spring.SendCommands("open_WMRTS_camera_2")
 					camera2IsOpen = true
---					Spring.Echo("WMRTS_Debug:Secondary Camera Opened") -- ####### rimuovere
+					Spring.Echo("WMRTS_Debug:Secondary Camera Opened") -- ####### rimuovere
+
 				end
 				Spring.PlaySoundFile("sounds/click.wav", 1.0, 'ui')
 			end}
@@ -318,11 +322,11 @@ local function createminimap(r)
 				if (camera1IsOpen) then
 					Spring.SendCommands("close_WMRTS_camera_1")
 					camera1IsOpen = false
-					Spring.Echo("WMRTS_Debug:Secondary Camera Closed") -- ####### rimuovere
+					Spring.Echo("WMRTS_Debug:Primary Camera Closed") -- ####### rimuovere
 				else
 					Spring.SendCommands("open_WMRTS_camera_1")
 					camera1IsOpen = true
-					Spring.Echo("WMRTS_Debug:Secondary Camera Opened") -- ####### rimuovere
+					Spring.Echo("WMRTS_Debug:Primary Camera Opened") -- ####### rimuovere
 				end
 				Spring.PlaySoundFile("sounds/click.wav", 1.0, 'ui')
 			end}
