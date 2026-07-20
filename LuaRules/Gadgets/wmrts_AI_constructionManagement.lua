@@ -241,7 +241,7 @@ nanotower o costruttori aiutanti???
 				{cat = "CAT_ENERGY_T1",         count = 1},		-- importanti per la logica RESET LIVELLO !! estrattori T1, energia T1 e fabbrica T1 devono essere inclusi in questo livello per andare al successivo, altrimenti la logica del core entra in loop
 				{cat = "CAT_MEX_T1",            count = 1},		-- importanti per la logica RESET LIVELLO !! estrattori T1, energia T1 e fabbrica T1 devono essere inclusi in questo livello per andare al successivo, altrimenti la logica del core entra in loop
 				{cat = "CAT_ENERGY_T1",         count = 2},		-- importanti per la logica RESET LIVELLO !! estrattori T1, energia T1 e fabbrica T1 devono essere inclusi in questo livello per andare al successivo, altrimenti la logica del core entra in loop			
-				{cat = "CAT_MEX_T1",            count = 3}, 
+				{cat = "CAT_MEX_T1",            count = 2}, 
 				{cat = "CAT_ENERGY_T1",         count = 3},		
 				{cat = "CAT_FACTORY_T1",        count = 1}, 	
 			} 	-- end requisiti di livello
@@ -257,7 +257,7 @@ nanotower o costruttori aiutanti???
 				{cat = "CAT_LASER_T1", 			count = 1},		
 				{cat = "CAT_AA_T1", 			count = 1},		
 				{cat = "CAT_ENERGY_T1",         count = 7},						
-				{cat = "CAT_MEX_T1",            count = 6},
+				{cat = "CAT_MEX_T1",            count = 2},
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]
 		[2] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
@@ -269,7 +269,7 @@ nanotower o costruttori aiutanti???
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},		
 				{cat = "CAT_ENERGY_T1_2",       count = 1},
 				{cat = "CAT_FACTORY_T1", 		count = 3},
-	            {cat = "CAT_MEX_T1",            count = 6},
+	            {cat = "CAT_MEX_T1",            count = 3},
 				{cat = "CAT_LASER_T1", 			count = 2},		
 				{cat = "CAT_AA_T1", 			count = 2},			
 			} 	-- end requisiti di livello
@@ -281,7 +281,7 @@ nanotower o costruttori aiutanti???
 			T2metalBuildType = "new",			
 			requisiti = {
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
-				{cat = "CAT_MEX_T1",            count = 6},		
+				{cat = "CAT_MEX_T1",            count = 3},		
 				{cat = "CAT_FACTORY_T1", 		count = 3},			
 				{cat = "CAT_ENERGY_T1_2",       count = 2},
 				{cat = "CAT_AA_T1_2", 			count = 1},					
@@ -295,7 +295,7 @@ nanotower o costruttori aiutanti???
 			T2metalBuildType = "upgrade",			
 			requisiti = {
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 2},	
-				{cat = "CAT_MEX_T1",            count = 3},		
+				{cat = "CAT_MEX_T1",            count = 2},		
 				{cat = "CAT_ENERGY_T1_2",       count = 3},				
 				{cat = "CAT_MEX_T2",            count = 1},	
 				{cat = "CAT_ENERGY_T2",      	count = 1},					
@@ -315,7 +315,8 @@ nanotower o costruttori aiutanti???
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 2},			
 				{cat = "CAT_ENERGY_T1_2",       count = 2},
-				{cat = "CAT_MEX_T1",            count = 7},		
+				{cat = "CAT_MEX_T1",            count = 2},		
+				{cat = "CAT_MEX_T2",            count = 1},					
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]		
 		[6] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
@@ -329,8 +330,8 @@ nanotower o costruttori aiutanti???
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 3},			
 				{cat = "CAT_ENERGY_T1_2",       count = 3},
+				{cat = "CAT_MEX_T1",            count = 1},		
 				{cat = "CAT_MEX_T2",            count = 2},					
-				{cat = "CAT_MEX_T1",            count = 3},		
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]			
 		[7] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
@@ -345,8 +346,8 @@ nanotower o costruttori aiutanti???
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 3},			
 --				{cat = "CAT_ENERGY_T1_2",       count = 3},
+				{cat = "CAT_MEX_T1",            count = 1},		
 				{cat = "CAT_MEX_T2",            count = 2},					
-				{cat = "CAT_MEX_T1",            count = 2},		
 				{cat = "CAT_AA_T2", 			count = 1},					
 --				{cat = "CAT_LASER_T2", 			count = 1},							
 			} 	-- end requisiti di livello
@@ -369,13 +370,13 @@ nanotower o costruttori aiutanti???
 			simultanea = 9,								
 			fattoreVariazioneRaggio = 2,						
 			combehaviour = "patrolbase",	
-			T2metalBuildType = "upgrade",				
+			T2metalBuildType = "new",				
 			requisiti = {
 				{cat = "CAT_FACTORY_T2", 		count = 5},		
 				{cat = "CAT_FACTORY_T1", 		count = 9},	
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 5},			
-				{cat = "CAT_MEX_T2",            count = 4},					
+				{cat = "CAT_MEX_T2",            count = 3},					
 				{cat = "CAT_ENERGY_T2",         count = 3},	
 				{cat = "CAT_CANNON_T2",         count = 3},		
 				{cat = "CAT_AA_T2", 			count = 2},						
@@ -386,14 +387,14 @@ nanotower o costruttori aiutanti???
 			simultanea = 9,								
 			fattoreVariazioneRaggio = 3,						
 			combehaviour = "patrolbase",	
-			T2metalBuildType = "upgrade",				
+			T2metalBuildType = "new",				
 			requisiti = {
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 5},			
 				{cat = "CAT_FACTORY_T2", 		count = 6},		
 				{cat = "CAT_LASER_T2", 			count = 1},					
 				{cat = "CAT_FACTORY_T1", 		count = 10},	
-				{cat = "CAT_MEX_T2",            count = 5},	
+				{cat = "CAT_MEX_T2",            count = 3},	
 				{cat = "CAT_SHIELD", 			count = 1},						
 				{cat = "CAT_ENERGY_T2",         count = 4},		
 				{cat = "CAT_AA_T2", 			count = 4},		
@@ -407,7 +408,7 @@ nanotower o costruttori aiutanti???
 			simultanea = 9,								
 			fattoreVariazioneRaggio = 4,						
 			combehaviour = "patrolbase",	
-			T2metalBuildType = "upgrade",				
+			T2metalBuildType = "new",				
 			requisiti = {
 				{cat = "CAT_SHIELD", 			count = 3},				
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
@@ -416,7 +417,7 @@ nanotower o costruttori aiutanti???
 				{cat = "CAT_FACTORY_T3", 		count = 2},						
 				{cat = "CAT_FACTORY_T2", 		count = 6},		
 				{cat = "CAT_FACTORY_T1", 		count = 10},	
-				{cat = "CAT_MEX_T2",            count = 5},					
+				{cat = "CAT_MEX_T2",            count = 4},					
 				{cat = "CAT_ENERGY_T2",         count = 5},	
 				{cat = "CAT_LONG_CANNON", 		count = 2},								
 				{cat = "CAT_LASER_T2", 			count = 4},	
@@ -430,7 +431,7 @@ nanotower o costruttori aiutanti???
 			simultanea = 9,								
 			fattoreVariazioneRaggio = 7,						
 			combehaviour = "patrolbase",	
-			T2metalBuildType = "upgrade",				
+			T2metalBuildType = "new",					
 			requisiti = {			
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 5},	

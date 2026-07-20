@@ -13,6 +13,7 @@ return {
                builder = true,
                buildpic = "eufmedic.png",
                buildtime  = 2489,
+               canAssist = false,			   
                canAttack = false,
 --               cancapture = true,
                canGuard = true,
