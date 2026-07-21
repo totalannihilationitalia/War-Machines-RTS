@@ -1,0 +1,167 @@
+function gadget:GetInfo()
+  return {
+    name      = "EUF Support resonator",
+    desc      = "Area Metal Booster",
+    author    = "Molix with AI",
+    layer     = 0,
+    enabled   = true
+  }
+end
+
+--[[ 
+15/04/2026 = realizzato questo widget. Molix
+Questo widget imposta un UnitRules agli estrattori di metallo seguendo questa logica:
+1.0 (Stato Base): L'estrattore NON è nel raggio di alcun Resonator 																		-->		Effetto: Nessuna grafica (Aurea spenta).
+2.0 (Stato "Standby" - GIALLO): L'estrattore È nel raggio, ma il Resonator è SPENTO oppure NON ha abbastanza energia per potenziarlo. 	-->		Effetto: Appare l'anello Giallo (indica che il collegamento c'è, ma non sta producendo extra).
+3.0 (Stato "Boost" - VERDE): L'estrattore È nel raggio E il Resonator è ATTIVO E ha energia sufficiente.								-->		Effetto: L'anello diventa Verde + appaiono le sfere + appare l'effetto calore/vapore.
+Questo gadget imposta solo gli unitrules, per gli effetti vedere il widget 
+17/04/2026 = sistemato spegnimento forzato, prima prendeva il valore del magazzino (indipendentemente dall'energia a disposizione), ora preleva il valore reale di energia (current) in possesso. Se sotto il fabbisogno dei resonator, questi si spengono.
+21/07/2026 = ottimizzato il codice (viene fatto girare con meno cicli rispetto a prima)
+]]--
+
+ 
+if (not gadgetHandler:IsSyncedCode()) then return end
+
+local RESONATOR_UNIT = "eufresonator" 
+local RADIUS          = 600    
+local METAL_MULT      = 3.0    
+local COST_PER_MEX    = 250    
+local TABELLA_MEX     = { 	
+	["cormex"] = true,
+	["corexp"] = true,
+	["cormoho"] = true,		
+	["cormexp"] = true,	
+	["icumetex"] = true,
+	["armamex"] = true,							
+	["armmoho"] = true,
+	["advmoho"] = true,			
+	["eufmetex"] = true,
+	["eufametex"] = true,	
+	["eufadvmetex"] = true,	
+	["andmexun"] = true,	
+	["andmex"] = true,	
+	["andametex"] = true	
+						}
+
+local resonators = {} 
+local mexUnitIDs = {} -- Tabella per tradurre i nomi in ID numerici
+local activeMexes = {} -- Lista dei Mex attualmente vivi sulla mappa
+
+function gadget:Initialize()
+    -- Convertiamo i nomi della TABELLA_MEX in ID numerici per essere velocissimi
+    for name, _ in pairs(TABELLA_MEX) do
+        local ud = UnitDefNames[name]
+        if ud then
+            mexUnitIDs[ud.id] = true
+        end
+    end
+    -- AGGIUNTA: Rileva unità già esistenti all'avvio (es. caricamento o mappe speciali)
+    local allUnits = Spring.GetAllUnits()
+    for i = 1, #allUnits do
+        local uID = allUnits[i]
+        local uDefID = Spring.GetUnitDefID(uID)
+        
+        -- Registra Mex esistenti
+        if mexUnitIDs[uDefID] then
+            activeMexes[uID] = true
+        end
+        -- Registra Risonatori esistenti
+        if UnitDefs[uDefID].name == RESONATOR_UNIT then
+            resonators[uID] = Spring.GetUnitTeam(uID)
+        end
+    end	
+end
+
+-- Teniamo traccia dei Mex che vengono creati/distrutti
+function gadget:UnitFinished(unitID, unitDefID, unitTeam)
+    if mexUnitIDs[unitDefID] then
+        activeMexes[unitID] = true
+    end
+    -- Gestione risonatore 
+    if UnitDefs[unitDefID].name == RESONATOR_UNIT then
+        resonators[unitID] = unitTeam
+    end
+end
+
+function gadget:UnitDestroyed(unitID, unitDefID, unitTeam)
+    activeMexes[unitID] = nil
+    resonators[unitID] = nil
+end
+
+function gadget:GameFrame(n)
+    if (n % 30 ~= 0) then return end 
+
+    -- OTTIMIZZAZIONE 1: Se non ci sono risonatori, non fare nulla (OTTIMO!)
+    if next(resonators) == nil then return end
+
+    -- OTTIMIZZAZIONE 2: Invece di GetAllUnits (migliaia di unità), 
+    -- cicliamo solo sui Mex (poche decine). Molto più leggero!
+    for mID, _ in pairs(activeMexes) do
+        Spring.SetUnitRulesParam(mID, "resonator_status", 1.0)
+    end
+
+    -- Ciclo sui risonatori (il resto del tuo codice)
+    for oID, ownerTeam in pairs(resonators) do
+        local states = Spring.GetUnitStates(oID)
+        local isActive = states and (states.active == true or states.active == 1)
+        
+        if isActive then
+            local ux, uy, uz = Spring.GetUnitPosition(oID)
+            -- Spring.GetUnitsInCylinder è già veloce, va bene così
+            local nearbyUnits = Spring.GetUnitsInCylinder(ux, uz, RADIUS)
+            local validMexes = {}
+            -- 1. Identifichiamo i Mex pronti per il boost
+            for i=1, #nearbyUnits do
+                local mID = nearbyUnits[i]
+                local mDefID = Spring.GetUnitDefID(mID)
+                
+                -- Usiamo l'ID numerico: istantaneo!
+                if mexUnitIDs[mDefID] and Spring.AreTeamsAllied(ownerTeam, Spring.GetUnitTeam(mID)) then
+                    local metalMake = Spring.GetUnitResources(mID)
+                    local _, isBuilding = Spring.GetUnitIsBuilding(mID)
+                    if not isBuilding and metalMake and metalMake > 0 then
+                        table.insert(validMexes, {id = mID, income = metalMake})
+                    end
+                end
+            end
+
+            -- 2. Calcoliamo il costo TOTALE
+            local totalCost = #validMexes * COST_PER_MEX
+--            local _, energyStored = Spring.GetTeamResources(ownerTeam, "energy") 			-- sostituisco dallo storage al current level: se non hai energia, smette di funzionare. Prima era, se hai storage, funziona comunque anche se non hai energia
+            local energyStored = Spring.GetTeamResources(ownerTeam, "energy") -- return: nil | number currentLevel, number storage, number pull, number income, number expense, number share, number sent, number received
+
+--[[ --DEBUG molix
+			local debugcurrent, debugstorage = Spring.GetTeamResources(ownerTeam, "energy")
+			Spring.Echo("DEBUG current: "..debugcurrent)
+			Spring.Echo("DEBUG storage: "..debugstorage)			
+---- end debug
+]]--
+
+            if #validMexes > 0 then
+                if energyStored >= totalCost then
+                    -- ABBIAMO ENERGIA PER TUTTI: Applichiamo boost e consumiamo
+                    Spring.UseTeamResource(ownerTeam, "energy", totalCost)
+                    for _, mex in ipairs(validMexes) do
+                        Spring.SetUnitRulesParam(mex.id, "resonator_status", 3.0)
+                        Spring.AddTeamResource(ownerTeam, "metal", mex.income * (METAL_MULT - 1))
+                    end
+                else
+                    -- NON ABBIAMO ENERGIA: Spegnimento forzato del Resonator
+                    Spring.GiveOrderToUnit(oID, CMD.ONOFF, {0}, {})
+                    Spring.SendMessageToTeam(ownerTeam, "\255\255\050\050[EUF] Resonator Tower Emergency Shutdown: Low Energy!") -- ############################### inviare questa stringa al WARNING MESSAGE Widget ##### Molix
+                end
+            end
+        else
+            -- RESONATOR SPENTO: imposta il luarules = 2.0 
+            local ux, uy, uz = Spring.GetUnitPosition(oID)
+            local nearbyUnits = Spring.GetUnitsInCylinder(ux, uz, RADIUS)
+            for i=1, #nearbyUnits do
+                local mID = nearbyUnits[i]
+                 local mDefID = Spring.GetUnitDefID(mID)
+                if mexUnitIDs[mDefID] then
+                    Spring.SetUnitRulesParam(mID, "resonator_status", 2.0)
+                end
+            end
+        end
+    end
+end

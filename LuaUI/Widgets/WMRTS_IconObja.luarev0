@@ -16,7 +16,6 @@ end
 -- 21/05/2026 = revisione sostituisce "WMRTS_IconObj.luarev2". Si accorpa la logica di Marker per gli estrattori di metallo influenzati dai resonator (verrà loro applicato un marker a seconda che il resonator sia attivo o disattivato, se dentro il suo raggio di funzionamento)
 -- 02/07/2026 = si aggiungono le icone degli harvester. Molix
 -- 08/07/2026 = si aggiungono le icone delle unit deployed (garage)
--- 21/07/2026 = miglioro il codice, cerco di non fare un check su tutte le unità, ma creo una tabella con le sole unità da controllare, per alleggerire il codice. Molix
 
 -- Lista icone x missioni
 -- type = 1 -> icone di attacco
@@ -93,7 +92,7 @@ local typeToText = {
 
 local MAX_FIXED_POINTS = 10 					-- Limite massimo di punti fissi
 local vsx, vsy = widgetHandler:GetViewSizes()	-- cattura la dimensione dello schermo
-local unitsWithIcons = {} 						-- Tabella unità con icone: [unitID] = {type, height, status, ecc}
+
 --------------------------------------------------------------------------------
 
 -- funzione per rilevare la dimensione dello schermo (risoluzione)
@@ -374,19 +373,22 @@ end
 
 -- Disegna le auree (Sotto le unità)
 function widget:DrawWorldPreUnit()
-    for uID, data in pairs(unitsWithIcons) do
-		if Spring.ValidUnitID(uID) then		-- e l'unità è ancora viva
-			-- Disegniamo l'aurea solo se l'unità è effettivamente visibile alla telecamera
-			if Spring.IsUnitVisible(uID) then
-				local x, y, z = Spring.GetUnitPosition(uID)
-				if data.objType > 0 then
-					DrawAura(x, y, z, data.objType)
-				end
-				if data.extType > 1.0 then
-					DrawMetalAura(x, y, z, data.extType)
-				end
-			end
-		end
+    -- Auree Unità
+    local visibleUnits = Spring.GetVisibleUnits()
+    for i=1, #visibleUnits do
+        local uID = visibleUnits[i]
+		-- obiettivi di missione (UnitRulesParam = obj_type )
+        local objType = Spring.GetUnitRulesParam(uID, "obj_type")
+        if objType and objType > 0 then
+            local x, y, z = Spring.GetUnitPosition(uID)
+            DrawAura(x, y, z, objType)
+        end
+		-- estrattori di metallo con resonator (UnitRulesParam = resonator_status )
+        local extractorType = Spring.GetUnitRulesParam(uID, "resonator_status")
+        if extractorType and extractorType > 1.0 then		
+            local x, y, z = Spring.GetUnitPosition(uID)
+            DrawMetalAura(x, y, z, extractorType)
+        end		
     end
 
     -- Auree Punti Fissi
@@ -404,35 +406,81 @@ end
 
 -- Disegna Icone e Testi (Sopra le unità)
 function widget:DrawWorld()
+    local visibleUnits = Spring.GetVisibleUnits()
     
     -- 1. Gestione UNITA'
-    for uID, data in pairs(unitsWithIcons) do
-        if Spring.IsUnitVisible(uID) then
+    for i=1, #visibleUnits do
+        local uID = visibleUnits[i]
+		----------------------------------		
+		-- obiettivi di missione (UnitRulesParam = obj_type )
+		----------------------------------		
+        local objType = Spring.GetUnitRulesParam(uID, "obj_type")
+        if objType and objType > 0 then
             local x, y, z = Spring.GetUnitPosition(uID)
-            local h = data.height
-
-            if data.objType > 0 then
-                DrawIcon(x, y, z, h, data.objType)
-                DrawLabel(x, y, z, h, typeToText[data.objType])
-            end
+            local unitDefID = Spring.GetUnitDefID(uID)
+            local h = (UnitDefs[unitDefID] and UnitDefs[unitDefID].height or 30)
             
-            if data.rafStat then
-                local s = data.isActive and data.rafStat or 3
-                DrawRafineryIcon(x, y, z, h, s)
-            end
-
-            if data.extType > 1.0 then
-                DrawResonatorIcon(x, y, z, h, data.extType)
-            end
-
-            if data.harvStat then
-                DrawHarvesterIcon(x, y, z, h, data.harvStat, data.isHarv)
-            end
-
-            if data.isGarage == 1 then
-                DrawGarageIcon(x, y, z, h)
-            end
+            -- Disegna Icona
+            DrawIcon(x, y, z, h, objType)
+            -- Disegna Testo automatico (ATTACK, DEFEND, ecc)
+            DrawLabel(x, y, z, h, typeToText[objType])
         end
+		----------------------------------		
+		-- raffinerie di livrium
+		----------------------------------		
+	    local rafinery = Spring.GetUnitRulesParam(uID, "stato_raffineria")	
+		if rafinery then 	-- disegna lo stato della raffineria ON in base al valore "rafinery"
+			local active = Spring.GetUnitIsActive(uID)	-- verifica se la raffineria è on o off
+			if not active then
+				rafinery = 3 -- spenta
+			end
+				local x, y, z = Spring.GetUnitPosition(uID)
+				local unitDefID = Spring.GetUnitDefID(uID)
+				local h = (UnitDefs[unitDefID] and UnitDefs[unitDefID].height or 30)
+				-- Disegna Icona
+				DrawRafineryIcon(x, y, z, h, rafinery) -- ######################## creare la funzione!!!!!! 
+				-- Disegna Testo automatico
+				-- DrawLabel(x, y, z, h, typeToText[harvesterstatus]) -- il testo lo disabilito per ora, non mi interessa che appaia sugli estrattori. Molix 21/05/2026
+		end				
+		----------------------------------
+		-- estrattori di metallo con resonator (UnitRulesParam = resonator_status )
+		----------------------------------		
+        local extractorType = Spring.GetUnitRulesParam(uID, "resonator_status")
+        if extractorType and extractorType > 1.0 then
+            local x, y, z = Spring.GetUnitPosition(uID)
+            local unitDefID = Spring.GetUnitDefID(uID)
+            local h = (UnitDefs[unitDefID] and UnitDefs[unitDefID].height or 30)
+            -- Disegna Icona
+            DrawResonatorIcon(x, y, z, h, extractorType)
+            -- Disegna Testo automatico
+            -- DrawLabel(x, y, z, h, typeToText[extractorType]) -- il testo lo disabilito per ora, non mi interessa che appaia sugli estrattori. Molix 21/05/2026
+        end
+		----------------------------------		
+		-- livrium harvester (UnitRulesParam = stato_raccolta ). In base allo stato raccolta disegno l'icona indicante se l'harvester sta rientrando, sta andando a raccogliere, sta raccogliendo
+		----------------------------------		
+        local harvesterstatus = Spring.GetUnitRulesParam(uID, "stato_raccolta")
+		local isharversting = Spring.GetUnitRulesParam(uID, "is_harversting")
+--        if harvesterstatus and harvesterstatus > 1.0 then
+        if harvesterstatus then 	-- quando non sta raccogliendo disegna le icone 1 (muovi), 2 (torna) 3 (attesa carico) o 4 (unload)
+            local x, y, z = Spring.GetUnitPosition(uID)
+            local unitDefID = Spring.GetUnitDefID(uID)
+            local h = (UnitDefs[unitDefID] and UnitDefs[unitDefID].height or 30)
+            -- Disegna Icona
+            DrawHarvesterIcon(x, y, z, h, harvesterstatus, isharversting)
+            -- Disegna Testo automatico
+            -- DrawLabel(x, y, z, h, typeToText[harvesterstatus]) -- il testo lo disabilito per ora, non mi interessa che appaia sugli estrattori. Molix 21/05/2026
+        end		
+		----------------------------------		
+		-- unità dispiegate del garage
+		----------------------------------		
+        local garagestatus = Spring.GetUnitRulesParam(uID, "isgarage")
+        if garagestatus == 1 then 	-- se l'unità è del gruppo unitdeployed
+            local x, y, z = Spring.GetUnitPosition(uID)
+            local unitDefID = Spring.GetUnitDefID(uID)
+            local h = (UnitDefs[unitDefID] and UnitDefs[unitDefID].height or 30)
+            -- Disegna Icona
+            DrawGarageIcon(x, y, z, h)
+        end				
     end
 
     -- 2. Gestione PUNTI FISSI (Marker)
@@ -456,47 +504,16 @@ function widget:DrawWorld()
     end
 end
 
--- 1. AGGIORNAMENTO LENTO (Ogni 15 frame / 0.5 sec)
--- Invece di GetAllUnits ogni frame, lo facciamo raramente
-function widget:Update()
-    if (Spring.GetGameFrame() % 15 ~= 0) then return end
-    
-    unitsWithIcons = {}
-    local allUnits = Spring.GetAllUnits()
-    
-    for i=1, #allUnits do
-        local uID = allUnits[i]
-        local objType = Spring.GetUnitRulesParam(uID, "obj_type") or 0
-        local extType = Spring.GetUnitRulesParam(uID, "resonator_status") or 0
-        local rafStat = Spring.GetUnitRulesParam(uID, "stato_raffineria")
-        local harvStat = Spring.GetUnitRulesParam(uID, "stato_raccolta")
-        local isGarage = Spring.GetUnitRulesParam(uID, "isgarage")
-
-        -- Salviamo solo se l'unità ha qualcosa da mostrare
-        if objType > 0 or extType > 1.0 or rafStat or harvStat or isGarage == 1 then
-            local udid = Spring.GetUnitDefID(uID)
-            unitsWithIcons[uID] = {
-                objType = objType,
-                extType = extType,
-                rafStat = rafStat,
-                harvStat = harvStat,
-                isHarv = Spring.GetUnitRulesParam(uID, "is_harversting") or 0,
-                isGarage = isGarage,
-                height = (UnitDefs[udid] and UnitDefs[udid].height or 30),
-                isActive = Spring.GetUnitIsActive(uID)
-            }
-        end
-    end
-end
-
-
 -- disegna l'indicatore sull' HUD
 function widget:DrawScreen()
     -- 1. Unità Obbiettivo
-    for uID, data in pairs(unitsWithIcons) do
-        if data.objType > 0 then
+    local allUnits = Spring.GetAllUnits() -- Qui controlla tutte le unità ogni frame, e non solo le visibili ############################################### creare una tabella "allUnits" da aggiornare in in widget:Update() ogni "n" secondi. attualmente il sistema aggiorna tutte le unità ogni frame, creando lag ######################
+    for i=1, #allUnits do
+        local uID = allUnits[i]
+        local objType = Spring.GetUnitRulesParam(uID, "obj_type")
+        if objType and objType > 0 then
             local x, y, z = Spring.GetUnitPosition(uID)
-            DrawEdgeMarker(x, y, z, data.objType)
+            DrawEdgeMarker(x, y, z, objType)
         end
     end
 
@@ -507,7 +524,7 @@ function widget:DrawScreen()
             local px = Spring.GetGameRulesParam(prefix .. "_x") or 0
             local py = Spring.GetGameRulesParam(prefix .. "_y") or 0
             local pz = Spring.GetGameRulesParam(prefix .. "_z") or 0
-            local pt = Spring.GetGameRulesParam(prefix .. "_type") or 3
+			local pt = Spring.GetGameRulesParam(prefix .. "_type") or 3
             DrawEdgeMarker(px, py, pz, pt)
         end
     end
