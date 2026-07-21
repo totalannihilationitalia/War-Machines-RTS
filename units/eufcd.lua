@@ -77,9 +77,8 @@ return {
 		[10]= "euf_radar",
 		[11] = "eufpathsmall",
 		[12]= "eufsnpr",
-		[13]= "eufpath",
-		[14] = "eufarch", 
-		[15]= "eufloony",
+		[13] = "eufarch", 
+		[14]= "eufloony",
 ------------------- creare il jammer
 ------------------- creare il sonar
 ------------------- creare il torpedol
