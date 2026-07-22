@@ -11,6 +11,7 @@ function gadget:GetInfo()
         enabled   = true
     }
 end
+-- 22/ luglio 2026:		Aggiunto EUF. Molix
 
 ----------------------------------------------------------------
 -- Synced only
@@ -33,6 +34,7 @@ local nfacomDefID = UnitDefNames.nfacom.id
 local kicucomDefID = UnitDefNames.kicucom.id
 local knfacomDefID = UnitDefNames.knfacom.id
 local andcomDefID = UnitDefNames.andcom.id
+local eufcdDefID = UnitDefNames.eufcd.id
 
 local validStartUnits = {
     [icucomDefID] = true,
@@ -40,7 +42,7 @@ local validStartUnits = {
     [kicucomDefID] = true,
     [knfacomDefID] = true,
     [andcomDefID] = true,
-
+    [eufcdDefID] = true,
 }
 local spawnTeams = {} -- spawnTeams[teamID] = allyID
 
@@ -90,7 +92,9 @@ function gadget:Initialize()
 		elseif teamSide == 'and' then
 				spSetTeamRulesParam(teamID, startUnitParamName, andcomDefID)
 
-
+		elseif teamSide == 'euf' then
+				spSetTeamRulesParam(teamID, startUnitParamName, eufcdDefID)
+				
           else
                 spSetTeamRulesParam(teamID, startUnitParamName, icucomDefID)
             end
