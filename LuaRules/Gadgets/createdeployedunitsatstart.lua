@@ -93,7 +93,7 @@ function gadget:Initialize()
 
 -- controllo se l'opzione unit deploy è abilitata nel file script.txt (impostato dalla lobby), in caso negativo chiudo il gadget
   if (isunitsdeployed == 0) 	then
-	Spring.Echo("Gadged disabled<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<") -- ########################### testare ########################
+	Spring.Echo("WMRTS Deploy Units System disabled") -- ########################### testare ########################
     gadgetHandler:RemoveGadget()
 	return false -- disattivo il gadget
   end
