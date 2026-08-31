@@ -45,7 +45,7 @@ return {
                nochasecategory = "VTOL",
                objectname = "icutigre.s3o",
                radardistance = 230,
-	       explodeas = "MECH_BLASTSML",
+			   explodeas = "MECH_BLASTSML",
                sightdistance = 400,
                sonardistance = 230,
 --               soundcategory= "KROGOTH",

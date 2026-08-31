@@ -11,7 +11,7 @@ return {
                buildcostenergy = 54739,
                buildcostmetal = 3120,
                builder = false,
-               buildpic = "ARMSHOCK.DDS",
+               buildpic = "armshock.dds",
                buildtime  = 101218,
                canAttack = true,
                canGuard = true,

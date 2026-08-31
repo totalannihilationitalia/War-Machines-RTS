@@ -12,7 +12,7 @@ return {
                buildcostenergy = 24230,
                buildcostmetal = 1058,
                builder = false,
-               buildpic = "icugmm.PNG",
+               buildpic = "icugmm.png",
                buildtime  = 41347,
                category = "ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE",
                --collisionvolumeoffsets = "",

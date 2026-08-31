@@ -12,7 +12,7 @@ return {
                buildcostenergy = 5849,
                buildcostmetal = 253,
                builder = false,
-               buildpic = "ICUFIDO.PNG",
+               buildpic = "icufido.png",
                buildtime  = 7693,
                canAttack = true,
                canGuard = true,

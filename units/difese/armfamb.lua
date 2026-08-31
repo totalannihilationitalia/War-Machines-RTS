@@ -43,7 +43,7 @@ return {
                metalStorage = 0,
                mincloakdistance = 70,
                minWaterDepth= 10,
-               name = "Ambusher",
+               name = "Floating Ambusher",
                noAutoFire = false,
                nochasecategory = "MOBILE",
                objectname = "icufamb.s3o",

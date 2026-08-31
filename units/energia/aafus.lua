@@ -16,7 +16,7 @@ return {
                buildinggrounddecalsizex= 13,
                buildinggrounddecalsizey = 9,
                buildinggrounddecaltype = "Pavimentazione2.png",
-               buildpic = "AAFUS.PNG",
+               buildpic = "aafus.png",
                buildtime  = 157529,
                category = "ALL NOTSUB NOWEAPON SPECIAL NOTAIR SURFACE",
                --collisionvolumeoffsets = "",

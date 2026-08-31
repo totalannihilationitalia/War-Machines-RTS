@@ -40,7 +40,7 @@ return {
                maxvelocity = 0,
                minWaterDepth= 10,
                metalStorage = 0,
-               name = "Annihilator",
+               name = "Floating Annihilator",
                nochasecategory = "MOBILE",
                objectname = "icufanni.s3o",
                onoffable = true,
