@@ -18,6 +18,8 @@ end
 --send 300 units per frame, if more, send next frame
 --"hot" units
 
+-- Rev0 = fix code for some ATI graphics card. Molix 09/09/2026
+
 local floor                 = math.floor
 local abs					= math.abs
 
@@ -60,6 +62,7 @@ local glBeginEnd			= gl.BeginEnd
 local glScale				= gl.Scale
 local glVertex              = gl.Vertex
 local glCallList   			= gl.CallList
+local glTexture 			= gl.Texture -- rev0 added line
 
 local GL_LINE_LOOP			= GL.LINE_LOOP
 
@@ -140,7 +143,9 @@ function calcCircleLines(divs)
 end
 
 function widget:Shutdown()
-	gl.DeleteList(circleLines)
+--	gl.DeleteList(circleLines) --rev 0 removed line
+	if circleLinesCoop then gl.DeleteList(circleLinesCoop) end
+	if circleLinesAlly then gl.DeleteList(circleLinesAlly) end
 end
 
 function widget:CommandsChanged( id, params, options )
@@ -447,6 +452,7 @@ end
 
 function DrawSelectedUnits()
 	glDepthTest(false)
+	glTexture(false)	-- rev0 added line
 	glColor(0.0, 1.0, 0.0, 1.0 )
 	glLineWidth( 1.5 )
 	
@@ -474,14 +480,16 @@ function DrawSelectedUnits()
 			end
 		end
 	end
-	
-	glDepthTest(false)
+
+	glTexture(true) 	-- rev0 added line
+	glDepthTest(true)	-- rev0 from false to true (why was false??)
  	glColor(1, 1, 1, 1)
 	glLineWidth( 1 )
 end
 
 function DrawHotUnits()
 	glDepthTest(false)
+	glTexture(false)	-- rev0 added line	
 	glLineWidth( 2 )
 
 	local toDelete = {}
@@ -528,8 +536,8 @@ function DrawHotUnits()
 	for unitID, val in pairs( toDelete ) do
 		hotUnits[unitID] = nil
 	end
-	
-	glDepthTest(false)
+	glTexture(true)	-- rev0 added line	
+	glDepthTest(true)	-- rev0 from false to true (why was false?? )
  	glColor(1, 1, 1, 1)
 	glLineWidth( 1 )
 end
