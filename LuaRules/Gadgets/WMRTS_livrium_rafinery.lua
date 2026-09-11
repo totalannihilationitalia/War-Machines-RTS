@@ -12,7 +12,18 @@ end
 
 -- rev0 = generato questo gadget per la conversione Livrium -> metal
 -- rev1 = 03/07/2026 aggiungo la variabile "stato_raffineria" che verrà poi utilizzata per mostrare le etichette di stato. molix
-
+-- rev2 = 11/09/2026 aggiungo il magazzino livrium interno. La gestione del livrium sarà più complessa: dovra essere trasportato tramite mezzi dall'harvester factory alla raffineria
+--[[
+Come modificare i parametro da gadget esterno (Ricerche):
+if GG.SetRefineryTeamMultiplier then
+    -- Riduce il consumo energetico delle raffinerie del team a 70% (sconto del 30%)
+    GG.SetRefineryTeamMultiplier(teamID, "energy", 0.70)
+end
+Le variabili modificabili sono:
+"livrium"	-- livrium consumato per la conversione livrium/metal
+"metal"		-- metallo prodotto
+"energy"	-- energia consumata per la conversione livrium/metal
+]]--
 if not gadgetHandler:IsSyncedCode() then 
     return 
 end
@@ -23,10 +34,11 @@ end
 
 local refineryConfig = {
     eufrafinery = {
-        energy_consumption = 1000, -- Consumo di energia richiesto per ogni conversione
-        livrium_bruciato   = 50,   -- Unita di Livrium perse ad ogni ciclo
-        metal_ottenuto     = 50,   -- Metallo ottenuto ad ogni ciclo
-        frequenza_sec      = 2     -- Frequenza in secondi del ciclo di conversione
+        energy_consumption = 1000, 	-- Consumo di energia richiesto per ogni conversione
+        livrium_bruciato   = 50,   	-- Unita di Livrium perse ad ogni ciclo
+        metal_ottenuto     = 50,   	-- Metallo ottenuto ad ogni ciclo
+        frequenza_sec      = 2,     -- Frequenza in secondi del ciclo di conversione
+		livrium_storage_max= 500,	-- capienza massima di livrium nel serbatoio interno la raffineria
     }
     -- aggiugnere le varianti ############## AND ###################
 }
@@ -35,55 +47,96 @@ local refineryConfig = {
 -- VARIABILI DI STATO (SYNCED)
 -- =============================================================================
 
-local activeRefineries = {} -- activeRefineries[unitID] = { teamID, config, timer }
+local activeRefineries = {} -- activeRefineries[unitID] = { teamID, config, timer, livrium_storage }
 local refineryConfigs = {}  -- refineryConfigs[unitDefID] = config_elaborata
+local teamModifiers = {}    -- teamModifiers[teamID] = { energy = 1.0, livrium = 1.0, metal = 1.0 }
+
+-- =============================================================================
+-- INTERFACCIA GLOBALE (GG) PER ALTRI GADGET
+-- =============================================================================
+
+-- 1. Chiamato dal gadget RICERCHE per modificare l'efficienza di un Team
+-- statName può essere: "energy", "livrium", "metal"
+-- mult è il moltiplicatore (es: 0.8 per -20% consumo, 1.2 per +20% produzione)
+GG.SetRefineryTeamMultiplier = function(teamID, statName, mult)
+    if not teamModifiers[teamID] then
+        teamModifiers[teamID] = { energy = 1.0, livrium = 1.0, metal = 1.0 }
+    end
+    teamModifiers[teamID][statName] = mult
+end
+
+-- 2. Chiamato dal gadget dei CAMION per scaricare il Livrium nella raffineria
+-- Ritorna la quantità effettivamente scaricata
+GG.AddRefineryLivrium = function(unitID, amount)
+    local data = activeRefineries[unitID]
+    if not data then return 0 end
+
+    local maxCap = data.config.livrium_storage_max
+    local spaceAvailable = maxCap - data.livrium_storage
+    local amountToAdd = math.min(amount, spaceAvailable)
+
+    if amountToAdd > 0 then
+        data.livrium_storage = data.livrium_storage + amountToAdd
+        Spring.SetUnitRulesParam(unitID, "livrium_storage", data.livrium_storage)
+        return amountToAdd
+    end
+    return 0
+end
+
+-- 3. Chiamato dal gadget dei CAMION per sapere lo stato del serbatoio
+GG.GetRefineryLivrium = function(unitID)
+    local data = activeRefineries[unitID]
+    if not data then return nil, nil end
+    return data.livrium_storage, data.config.livrium_storage_max
+end
 
 -- =============================================================================
 -- LOGICA DI CONVERSIONE
 -- =============================================================================
 
 local function ProcessRefinery(unitID, data)
-    -- Controlla se la raffineria e attiva (non e paralizzata, ha energia nativa ed e accesa)
-    if not Spring.GetUnitIsActive(unitID) then	-- se la raffineria è spenta...
-	    Spring.SetUnitRulesParam(unitID, "stato_raffineria", 3) -- 3 = Spenta / OFF, per etichette  ######################### valutare perchè forse è inutile, il widget delle etichette guarda direttamente se l'unità è attiva e nel caso contrario applica direttamente l'etichetta off
-        return				-- esci da questa funzione
+    -- Controlla se la raffineria è attiva
+    if not Spring.GetUnitIsActive(unitID) then
+        Spring.SetUnitRulesParam(unitID, "stato_raffineria", 3) -- 3 = Spenta
+        return
     end
 
     local teamID = data.teamID
     local config = data.config
 
-    -- 1. Controlla se il team ha abbastanza Livrium (tramite il gadget del Punto 1)
-    if not GG.GetTeamLivrium then
-        return -- Il modulo di gestione Livrium non e caricato
-	end
-    
-    local currentLivrium, _ = GG.GetTeamLivrium(teamID)
-    if not currentLivrium or currentLivrium < config.livrium_bruciato then
-		Spring.SetUnitRulesParam(unitID, "stato_raffineria", 2) -- 2 = No Livrium, per etichette
-        return -- Livrium insufficiente, la conversione salta per questo ciclo
+    -- Recupera o crea i moltiplicatori per questo team (default 1.0)
+    local mods = teamModifiers[teamID] or { energy = 1.0, livrium = 1.0, metal = 1.0 }
+
+    -- Calcola i valori effettivi per questo ciclo
+    local energyReq  = math.floor(config.energy_consumption * (mods.energy or 1.0))
+    local livriumReq = math.floor(config.livrium_bruciato * (mods.livrium or 1.0))
+    local metalProd  = math.floor(config.metal_ottenuto * (mods.metal or 1.0))
+
+    -- 1. Controlla il serbatoio locale di Livrium
+    if data.livrium_storage < livriumReq then
+        Spring.SetUnitRulesParam(unitID, "stato_raffineria", 2) -- 2 = No Livrium
+        return
     end
 
-    -- 2. Controlla se il team ha abbastanza Energia
+    -- 2. Controlla l'Energia del Team
     local currentEnergy = Spring.GetTeamResources(teamID, "energy")
-    if not currentEnergy or currentEnergy < config.energy_consumption then
-		Spring.SetUnitRulesParam(unitID, "stato_raffineria", 1) -- 1 = no energia, per etichette
-		return -- Energia insufficiente, la conversione salta per questo ciclo
+    if not currentEnergy or currentEnergy < energyReq then
+        Spring.SetUnitRulesParam(unitID, "stato_raffineria", 1) -- 1 = No Energia
+        return
     end
-
-    -- 3. Se arriva qui, le risorse ci sono e avviene la conversione
-    Spring.SetUnitRulesParam(unitID, "stato_raffineria", 0) -- 0 = Funzionamento OK, per etichette	
 
     -- 3. Esegui la conversione
-    -- Consuma prima il Livrium (se l'operazione va a buon fine, procediamo)
-    if GG.UseTeamLivrium(teamID, config.livrium_bruciato) then
-        -- Consuma l'energia richiesta
-        Spring.UseTeamResource(teamID, "energy", config.energy_consumption)
-        
-        -- Accredita il metallo ottenuto al team
-        -- Nota: il motore Spring gestisce automaticamente lo stoccaggio massimo del metallo,
-        -- quindi se il giocatore non ha abbastanza magazzini di metallo, l'eccedenza verra persa.
-        Spring.AddTeamResource(teamID, "metal", config.metal_ottenuto)
-    end
+    Spring.SetUnitRulesParam(unitID, "stato_raffineria", 0) -- 0 = OK
+
+    -- Consuma Livrium locale
+    data.livrium_storage = data.livrium_storage - livriumReq
+    Spring.SetUnitRulesParam(unitID, "livrium_storage", data.livrium_storage)
+
+    -- Consuma Energia globale
+    Spring.UseTeamResource(teamID, "energy", energyReq)
+
+    -- Aggiungi Metallo al team
+    Spring.AddTeamResource(teamID, "metal", metalProd)
 end
 
 -- =============================================================================
@@ -99,6 +152,7 @@ function gadget:Initialize()
                 energy_consumption = cfg.energy_consumption,
                 livrium_bruciato   = cfg.livrium_bruciato,
                 metal_ottenuto     = cfg.metal_ottenuto,
+				livrium_storage_max = cfg.livrium_storage_max or 500, 
                 frequenza_frames   = cfg.frequenza_sec * 30 -- 30 frame di Spring equivalgono a 1 secondo
             }
         else
@@ -116,11 +170,14 @@ function gadget:Initialize()
             local _, _, _, _, buildProgress = Spring.GetUnitHealth(unitID)
             if buildProgress and buildProgress >= 1.0 then
                 local teamID = Spring.GetUnitTeam(unitID)
-                activeRefineries[unitID] = {
-                    teamID = teamID,
-                    config = cfg,
-                    timer  = 0
-                }
+				activeRefineries[unitID] = {
+					teamID          = teamID,
+					config          = cfg,
+					timer           = 0,
+					livrium_storage = 0 
+				}
+Spring.SetUnitRulesParam(unitID, "livrium_storage", 0)
+Spring.SetUnitRulesParam(unitID, "livrium_storage_max", cfg.livrium_storage_max or 500)
             end
         end
     end
@@ -129,11 +186,14 @@ end
 function gadget:UnitFinished(unitID, unitDefID, unitTeam)
     local cfg = refineryConfigs[unitDefID]
     if cfg then
-        activeRefineries[unitID] = {
-            teamID = unitTeam,
-            config = cfg,
-            timer  = 0
-        }
+		activeRefineries[unitID] = {
+			teamID          = unitTeam,
+			config          = cfg,
+			timer           = 0,
+			livrium_storage = 0 
+		}
+		Spring.SetUnitRulesParam(unitID, "livrium_storage", 0)
+		Spring.SetUnitRulesParam(unitID, "livrium_storage_max", cfg.livrium_storage_max or 500)
     end
 end
 
