@@ -25,7 +25,7 @@ if not gadgetHandler:IsSyncedCode() then return end
 -- =============================================================================
 
 local MAX_LIVRIUM = 1000		--  capacità max di raccolta di ciascun harvester
-local HARVEST_SPEED = 25 		--  velocità di raccolta (100 unità al ciclo)
+local HARVEST_SPEED = 25 		--  velocità di raccolta livrium dell'harvester sul giacimento (x unità al ciclo)
 local CHECK_INTERVAL = 30 		--  frequenza di aggiornamento ciclo (1 ciclo al secondo)
 local UNLOAD_DISTANCE = 350		--  distanza di load/unload unit dalla fabbrica
 local LOAD_TIME = 150 			--  tempo di elaborazione e scarico richiesto dalla fabbrica, espresso in game frame
