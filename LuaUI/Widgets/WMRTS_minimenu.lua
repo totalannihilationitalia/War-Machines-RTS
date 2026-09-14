@@ -41,6 +41,7 @@ to do list
 -- rev 6 by molix -- 04/11/2025 -- aggiunto unit's deployment system 
 -- rev 7 by molix -- 04/11/2025 -- change code logic due upvalue, using tables, the variables are becoming many
 -- rev 8 by molix -- 10/02/2026 -- update objective code
+-- rev 9 by molix -- 14/09/2026 -- added spaceport_button
 
 -- definizione pulsanti minimenu
 local larghezza_main_minimenu_button 	= 50 	-- larghezza del pulsante "main menu" del minimenu (più largo degli altri)
@@ -64,6 +65,7 @@ local Button_ ={
 	{ name = "wind_button", showMiniButton = true, showMenu = false, isBlinking= false, mouseOver = false, Pos_x_button = 5},				-- Button_[8].
 	{ name = "tidal_button", showMiniButton = true, showMenu = false, isBlinking= false, mouseOver = false, Pos_x_button = 5},				-- Button_[9].
 	{ name = "resources_button", showMiniButton = true, showMenu = false, isBlinking= false, mouseOver = false, Pos_x_button = 5},			-- Button_[10].
+	{ name = "spaceport_button", showMiniButton = false, showMenu = false, isBlinking= false, mouseOver = false, Pos_x_button = 5},			-- Button_[11].
 }  
 local missione_attiva					= 0						-- se 0 partita skirmish, se 1 partita WMRTSmission, se 2 partita FLEAmission. Definira quali pulsanti devono apparire o meno (OBJ e diary)
 local deploy_attiva						= 0						-- se 0 la partita non utilizza le deploy units, pertanto nascono il pulsante. Il valore verrà caricato in itinitalize.
@@ -113,6 +115,8 @@ local selettore_mainmini = ":n:".."LuaUI/Images/menu/minimenu/selettore_main.png
 local selettore_minibutton = ":n:".."LuaUI/Images/menu/minimenu/selettore_btn.png"
 local resourcebutton_on = ":n:".."LuaUI/Images/menu/minimenu/resourcesbutton_on.png"
 local resourcebutton_off = ":n:".."LuaUI/Images/menu/minimenu/resourcesbutton_off.png"
+local spaceportbutton_on = ":n:".."LuaUI/Images/menu/minimenu/resourcesbutton_on.png"		-- ################ creare immagine
+local spaceportbutton_off = ":n:".."LuaUI/Images/menu/minimenu/resourcesbutton_off.png"		-- ################ creare immagine
 
 local show_selettore_mainmini = false			-- mostra o no il selettore arancione sul mainmini
 local show_selettore_minibutton = false			-- mostra o no il selettore arancione sui minibutton
@@ -511,6 +515,20 @@ function widget:TextCommand(command)
 	if command == 'close_WMRTS_buildermenu' then
 		Button_[7].showMenu = false
 	end			
+-- apertura e chiusura spaceport panel
+	if command == 'open_WMRTS_spaceportmenu' then
+		Button_[11].showMenu = true
+	end
+	if command == 'close_WMRTS_spaceportmenu' then
+		Button_[11].showMenu = false
+	end		
+-- mostra o nascondi il bottone spaceport
+	if command == 'show_WMRTS_spaceportbutton' then
+		Button_[11].showMiniButton = true						
+	end
+	if command == 'hide_WMRTS_spaceportbutton' then
+		Button_[11].showMiniButton = false					
+	end			
 end				
 		
 --------------------------------------
@@ -867,6 +885,26 @@ local function DrawMapDataMinimenu()
 				gl.Texture(resourcebutton_on)			-- mostra il pulsante acceso
 				else
 				gl.Texture(resourcebutton_off)			-- altrimenti mostra il pulsante spento	
+				end
+	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
+	gl.Texture(false)	-- fine texture	
+	Pos_x_next_button_drawing = Pos_x_next_button_drawing - interspazio_buttons - larghezza_minimenu_buttons -- traslo la posizione di partenza per disegnare il pulsante successivo (se sarà presente)
+		end		
+
+-- inserisco spaceport minipulsante, se abilitato #################################### collaudare ##############
+------------------------------------
+		if Button_[11].showMiniButton then 				-- se il minipulsante è attivo per vederlo nel minimenù:
+	Button_[11].Pos_x_button = Pos_x_next_button_drawing			-- questa variabile verrà utilizzata per funzioni come click con il mouse sinistro (per identificare la posizione x iniziale del pulsante)		
+	-- sfondo del blocco, se attivo
+	gl.Color(1,1,1,1)
+	gl.Texture(minimenu_bkgnd_btn)	
+	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button-margine_giu_minimenu,Pos_x_next_button_drawing+larghezza_minimenu_buttons+interspazio_buttons,vsy)	
+	gl.Texture(false)	-- fine texture	
+	-- pulsante			
+				if Button_[11].showMenu then 				-- se la finestra (o funzione) di resources è attiva:
+				gl.Texture(spaceportbutton_on)			-- mostra il pulsante acceso
+				else
+				gl.Texture(spaceportbutton_off)			-- altrimenti mostra il pulsante spento	
 				end
 	gl.TexRect(	Pos_x_next_button_drawing,Pos_y_minimenu_button,Pos_x_next_button_drawing+larghezza_minimenu_buttons,Pos_y_minimenu_button+altezza_minimenu_buttons)	
 	gl.Texture(false)	-- fine texture	
