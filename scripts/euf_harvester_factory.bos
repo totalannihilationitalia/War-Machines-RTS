@@ -75,7 +75,7 @@ BoomCalc(posxz, posy)
 {
 	var Func_Var_3, Func_Var_4, Func_Var_5;
 	Func_Var_3 = get PIECE_XZ(turret) - posxz;
-	Func_Var_4 = posy - get PIECE_Y(turret) - [20.000000];
+	Func_Var_4 = posy - get PIECE_Y(turret)+[10.000000];
 	Func_Var_5 = get XZ_HYPOT(Func_Var_3);
 	Static_Var_1 = get HYPOT(Func_Var_5,Func_Var_4) - [20.000000];
 	Static_Var_2 = get XZ_ATAN(Func_Var_3);
@@ -145,7 +145,7 @@ BoomToPad()
 
 TransportPickup(unitid)
 {
-	call-script BoomCalc(get UNIT_XZ(unitid),get UNIT_Y(unitid) + get UNIT_HEIGHT(unitid));
+	call-script BoomCalc(get UNIT_XZ(unitid),get UNIT_Y(unitid) + get UNIT_HEIGHT(unitid)+ [5.000000]);
 	if( Static_Var_4 AND get UNKNOWN_UNIT_VALUE(74)(unitid) == get UNKNOWN_UNIT_VALUE(74)(get UNKNOWN_UNIT_VALUE(71)) )
 	{
 		set BUSY to 1;
@@ -161,7 +161,7 @@ TransportPickup(unitid)
 
 TransportDrop(unitid, position)
 {
-	call-script BoomCalc(position,get GROUND_HEIGHT(position) + get UNIT_HEIGHT(unitid));
+	call-script BoomCalc(position,get GROUND_HEIGHT(position) + get UNIT_HEIGHT(unitid)+ [5.000000]);
 	if( Static_Var_4 )
 	{
 		set BUSY to 1;

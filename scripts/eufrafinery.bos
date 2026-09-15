@@ -3,8 +3,9 @@
 #include "sfxtype.h"
 #include "exptype.h"
 
-piece  base,camino,tubi,caldaia,fumo_1;
+piece  base, camino, tubi, caldaia, fumo_1, portellone, rotator, link_slider, link;
 
+#define SIG_LOAD			2
 
 SmokeUnit(healthpercent, sleeptime, smoketype)
 {
@@ -31,6 +32,112 @@ SmokeUnit(healthpercent, sleeptime, smoketype)
 		}
 		sleep sleeptime;
 	}
+}
+
+TransportPickup(unitid)
+{
+	var deltaX, pickup_angle, dist;
+	
+	signal SIG_LOAD;
+	set-signal-mask SIG_LOAD;
+	set BUSY to 1;
+
+	// Calcola la posizione del camion rispetto al centro
+	deltaX = get PIECE_XZ(base) - get UNIT_XZ(unitid);
+	pickup_angle = get XZ_ATAN(deltaX);
+	dist = get XZ_HYPOT(deltaX);
+
+	// Posiziona istantaneamente il perno sotto il camion ovunque sia a 360°
+	turn rotator to y-axis pickup_angle now;
+	move link_slider to z-axis dist now;
+	turn link to y-axis <-90.000000> now; 
+
+	// Aggancia il camion
+	attach-unit unitid to link;
+
+	// 1) Il camion curva seguendo la traiettoria circolare fino all'asse d'ingresso (0°)
+	turn rotator to y-axis <0.000000> speed <25.000000>;
+	wait-for-turn rotator around y-axis;
+
+	// 2) Si apre il portellone (si solleva in alto di 25 unità)
+	move portellone to y-axis [25.000000] speed [30.000000];
+	wait-for-move portellone along y-axis;
+
+	// 3) Il camion ruota di 180° su se stesso (fa manovra)
+	turn link to y-axis <180.000000> speed <60.000000>;
+	wait-for-turn link around y-axis;
+
+	// 4) Entra in retromarcia nella fabbrica
+	move link_slider to z-axis [0.000000] speed [20.000000];
+	wait-for-move link_slider along z-axis;
+
+	// Chiude il portellone
+	move portellone to y-axis [0.000000] speed [30.000000];
+	wait-for-move portellone along y-axis;
+
+	// Stiva il camion all'interno dell'edificio
+	attach-unit unitid to 0 - 1;
+
+	// Resetta i perni invisibili
+	turn link to y-axis <0> now;
+
+	set BUSY to 0;
+}
+
+TransportDrop(unitid, position)
+{
+	var deltaX, drop_angle, dist;
+
+	signal SIG_LOAD;
+	set-signal-mask SIG_LOAD;
+	set BUSY to 1;
+
+	// 1. Prepara il camion dentro la stiva (al centro della fabbrica)
+	turn rotator to y-axis <0.000000> now;
+	move link_slider to z-axis [0.000000] now;
+	turn link to y-axis <0.000000> now; // Il muso guarda già verso il portellone
+
+	// Riaggancia il camion al perno prima di farlo uscire
+	attach-unit unitid to link;
+
+	// 2. Apre il portellone
+	move portellone to y-axis [25.000000] speed [30.000000];
+	wait-for-move portellone along y-axis;
+
+	// 3. Il camion esce dritto in marcia avanti sul piazzale frontale
+	move link_slider to z-axis [60.000000] speed [25.000000];
+	wait-for-move link_slider along z-axis;
+
+	// Chiude il portellone alle sue spalle
+	move portellone to y-axis [0.000000] speed [30.000000];
+
+	// 4. Calcola il punto di scarico ordinato sulla mappa (a 360°)
+	deltaX = get PIECE_XZ(base) - position;
+	drop_angle = get XZ_ATAN(deltaX);
+	dist = get XZ_HYPOT(deltaX);
+
+	// Orienta il camion per sterzare lungo la curva circolare
+	turn link to y-axis <90.000000> speed <60.000000>;
+	wait-for-turn link around y-axis;
+
+	// 5. Curva in cerchio fino all'angolo di destinazione e raggiunge la distanza
+	turn rotator to y-axis drop_angle speed <25.000000>;
+	move link_slider to z-axis dist speed [25.000000];
+	wait-for-turn rotator around y-axis;
+	wait-for-move link_slider along z-axis;
+
+	// 6. Raddrizza il camion verso l'esterno per lasciarlo andare
+	turn link to y-axis <0.000000> speed <60.000000>;
+	wait-for-turn link around y-axis;
+
+	// Rilascia fisicamente il camion a terra
+	drop-unit unitid;
+
+	// Resetta le variabili e il perno
+	move link_slider to z-axis [0.000000] now;
+	turn rotator to y-axis <0.000000> now;
+
+	set BUSY to 0;
 }
 
 Create()
