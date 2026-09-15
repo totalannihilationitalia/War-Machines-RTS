@@ -17,6 +17,7 @@ end
 -- 02/07/2026 = si aggiungono le icone degli harvester. Molix
 -- 08/07/2026 = si aggiungono le icone delle unit deployed (garage)
 -- 21/07/2026 = miglioro il codice, cerco di non fare un check su tutte le unità, ma creo una tabella con le sole unità da controllare, per alleggerire il codice. Molix
+-- 15/09/2026 = Aggiungo le icone ai truck di trasporto livrium. Molix
 
 -- Lista icone x missioni
 -- type = 1 -> icone di attacco
@@ -72,6 +73,13 @@ local icon_harv_1bis = "LuaUI/Images/menu/objectives/icon_harv1bis.png"
 local icon_harv_2 = "LuaUI/Images/menu/objectives/icon_harv2.png"
 local icon_harv_3 = "LuaUI/Images/menu/objectives/icon_harv3.png"
 local icon_harv_4 = "LuaUI/Images/menu/objectives/icon_harv4.png"
+
+-- confif immagini icone di stato per truck di trasporto livrium
+local icon_truck_0 = "LuaUI/Images/menu/objectives/icon_truck0.png"
+local icon_truck_1 = "LuaUI/Images/menu/objectives/icon_truck1.png"
+local icon_truck_2 = "LuaUI/Images/menu/objectives/icon_truck2.png"
+local icon_truck_3 = "LuaUI/Images/menu/objectives/icon_truck3.png"
+local icon_truck_4 = "LuaUI/Images/menu/objectives/icon_truck4.png"
 
 -- Config immagini icone di stato per harvester di livrium 
 local icon_garage = "LuaUI/Images/menu/objectives/icon_unitgarage.png"
@@ -290,6 +298,34 @@ local function DrawHarvesterIcon(x, y, z, height, status, harvesting)
     gl.PopMatrix()
 end
 
+-- Funzione per disegnare l'icona sopra i camion di trasporto livrium
+local function DrawTruckIcon(x, y, z, height, status)		
+--    local time = Spring.GetGameSeconds()
+--    local bounce = math.sin(time * 3) * 8 			-- non deve rimbalzare ma rimanere statica
+
+    gl.DepthMask(false)
+    gl.DepthTest(false) 
+    gl.PushMatrix()   
+    
+    local tex = icon_harv_0
+    if status == 0 then tex = icon_truck_0								-- ossia in attesa / idle
+    elseif status == 1 then tex = icon_truck_1							-- ossia il camion si dirige verso la fabbrica				
+    elseif status == 2 then tex = icon_truck_2							-- ossia il camion è dentro la fabbrica per il caricamento		
+    elseif status == 3 then tex = icon_truck_3							-- ossia il camion è carico e si dirige verso la raffineria
+    elseif status == 4 then tex = icon_truck_4							-- ossia il camion è dentro la raffineria per lo scaricamento, poi torna idle (stato = 0)
+	end
+
+    gl.Translate(x, y + height + 25, z)
+    gl.Billboard()
+    gl.Color(1, 1, 1, 1)
+    gl.Texture(tex)
+    -- Disegna l'icona leggermente alzata rispetto al centro del billboard
+    gl.TexRect(-15, 6, 15, 20) 
+    
+    gl.Texture(false)
+    gl.PopMatrix()
+end
+
 -- Funzione per disegnare l'icona sopra le unità dispiegate
 local function DrawGarageIcon(x, y, z, height)
 
@@ -428,6 +464,10 @@ function widget:DrawWorld()
             if data.harvStat then
                 DrawHarvesterIcon(x, y, z, h, data.harvStat, data.isHarv)
             end
+			
+            if data.truckStat then
+                DrawTruckIcon(x, y, z, h, data.truckStat) 
+            end			
 
             if data.isGarage == 1 then
                 DrawGarageIcon(x, y, z, h)
@@ -470,10 +510,11 @@ function widget:Update()
         local extType = Spring.GetUnitRulesParam(uID, "resonator_status") or 0
         local rafStat = Spring.GetUnitRulesParam(uID, "stato_raffineria")
         local harvStat = Spring.GetUnitRulesParam(uID, "stato_raccolta")
+		local truckStat = Spring.GetUnitRulesParam(uID, "stato_camion")
         local isGarage = Spring.GetUnitRulesParam(uID, "isgarage")
 
         -- Salviamo solo se l'unità ha qualcosa da mostrare
-        if objType > 0 or extType > 1.0 or rafStat or harvStat or isGarage == 1 then
+        if objType > 0 or extType > 1.0 or rafStat or harvStat or truckStat or isGarage == 1 then
             local udid = Spring.GetUnitDefID(uID)
             unitsWithIcons[uID] = {
                 objType = objType,
@@ -481,6 +522,7 @@ function widget:Update()
                 rafStat = rafStat,
                 harvStat = harvStat,
                 isHarv = Spring.GetUnitRulesParam(uID, "is_harversting") or 0,
+				truckStat = truckStat,
                 isGarage = isGarage,
                 height = (UnitDefs[udid] and UnitDefs[udid].height or 30),
                 isActive = Spring.GetUnitIsActive(uID)
