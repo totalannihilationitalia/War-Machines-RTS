@@ -24,7 +24,7 @@ return {
                --collisionvolumeoffsets = "",
                --collisionvolumescales = "",
                --collisionvolumetype = "",
-               corpse = "armtship_dead",
+               corpse = "euf_harvester_factory_dead",
 --               defaultmissiontype = Standby,
                description = "Harvester Factory",
 --               firestandorders = 1,
@@ -73,10 +73,10 @@ return {
 featuredefs = {
   dead = {
                world = "All Worlds",
-               description = "Hulk Wreckage",
+               description = "Harvester Factory Wreckage",
                category = "corpses",
                object = "ARMTSHIP_DEAD",
-               featuredead = "armtship_heap",
+               featuredead = "euf_harvester_factory_heap",
                footprintx = 5,
                footprintz = 5,
                height = 4,
@@ -93,7 +93,7 @@ featuredefs = {
                },  -- Close Dead Features
   heap = {
                world = "All Worlds",
-               description = "Hulk Heap",
+               description = "Harvester Factory Heap",
                category = "heaps",
                object = "5X5A",
                footprintx = 2,
