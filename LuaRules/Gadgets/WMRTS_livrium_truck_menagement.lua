@@ -19,21 +19,22 @@ end
 -- =============================================================================
 
 local CHECK_INTERVAL   = 30   -- Frequenza del ciclo logico (30 frame = 1 secondo)
-local DOCK_DISTANCE    = 320  -- Distanza minima per impartire il comando LOAD_UNITS
-local DEFAULT_LOAD_TIME = 150 -- Frame di sosta dentro la struttura (150 frame = 5 secondi)
+local DOCK_DISTANCE_refineries  = 235  	-- Distanza minima dalla raffineria per impartire il comando LOAD_UNITS
+local DOCK_DISTANCE_factory		= 350		-- Distanza minima dalla harvester factory per impartire il comando load/unload
+local DEFAULT_LOAD_TIME = 300 -- Frame di sosta dentro la struttura (150 frame = 5 secondi)
 
 local TRUCK_TYPES = {
     ruspa_camion = {
-        capacity    = 200,
+        capacity    = 200,							-- meglio mantenere multipli di 200 per la logica WMRTS
         factories   = {"euf_harvester_factory"},
         refineries  = {"eufrafinery", "eufrafineryenergy"},
-        loadTime    = 150
+        loadTime    = 300
     },
     and_camion = {
-        capacity    = 200,
+        capacity    = 200,							-- meglio mantenere multipli di 200 per la logica WMRTS
         factories   = {"and_harvester_factory"},
         refineries  = {"and_refinery"},
-        loadTime    = 150
+        loadTime    = 300
     }
 }
 
@@ -323,7 +324,7 @@ function gadget:GameFrame(n)
                     local fx, fy, fz = Spring.GetUnitPosition(factID)
                     local dist = GetDistance(x, z, fx, fz)
 
-                    if dist > DOCK_DISTANCE then
+                    if dist > DOCK_DISTANCE_factory then
                         if isIdle then
                             Spring.GiveOrderToUnit(truckID, CMD.MOVE, {fx, fy, fz}, {})
                         end
@@ -347,7 +348,7 @@ function gadget:GameFrame(n)
                 local rx, ry, rz = Spring.GetUnitPosition(refID)
                 local dist = GetDistance(x, z, rx, rz)
 
-                if dist > DOCK_DISTANCE then
+                if dist > DOCK_DISTANCE_refineries then
                     if isIdle then
                         Spring.GiveOrderToUnit(truckID, CMD.MOVE, {rx, ry, rz}, {})
                     end
