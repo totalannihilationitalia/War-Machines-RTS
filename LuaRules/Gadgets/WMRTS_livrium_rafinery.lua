@@ -35,10 +35,10 @@ end
 local refineryConfig = {
     eufrafinery = {
         energy_consumption = 1000, 	-- Consumo di energia richiesto per ogni conversione
-        livrium_bruciato   = 50,   	-- Unita di Livrium perse ad ogni ciclo
-        metal_ottenuto     = 50,   	-- Metallo ottenuto ad ogni ciclo
+        livrium_bruciato   = 5,   	-- Unita di Livrium perse ad ogni ciclo
+        metal_ottenuto     = 5,   	-- Metallo ottenuto ad ogni ciclo
         frequenza_sec      = 2,     -- Frequenza in secondi del ciclo di conversione
-		livrium_storage_max= 500,	-- capienza massima di livrium nel serbatoio interno la raffineria
+		livrium_storage_max= 400,	-- capienza massima di livrium nel serbatoio interno la raffineria - meglio mantenere multipli di 200 per la logica WMRTS
     }
     -- aggiugnere le varianti ############## AND ###################
 }
