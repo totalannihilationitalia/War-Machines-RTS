@@ -22,7 +22,9 @@ function widget:GetInfo()
   }
 end
 
--- rev 03/07/2026 aggiunta barra livrium
+-- rev 1 03/07/2026 aggiunta barra livrium per l'harvester
+-- rev 2 15/09/2026 leggo ora la capacità max trasportabile del livrium (prima era settata a 1000)
+-- rev 3 15/09/2026 aggiungo barra livrium per i truck di trapsorto e per le raffinerie
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -611,19 +613,6 @@ do
       end
 
       --// CARICO HARVESTER (molix, rev1)
---[[	  
-      if (ud.name == "euf_harvester" or ud.name == "and_harvester") then
-        local cargo = GetUnitRulesParam(unitID, "quantita_raccolta") or 0
-        if (cargo > 0) then
-          local maxCargo = 3000 -- Capacità massima fissa impostata ######################################################################## prelevarlo successivamente dal tipo di unità, potrei volerlo fare custom per unità
-          local percent = cargo / maxCargo
-          if (percent > 1) then percent = 1 end
-          
-          -- Aggiunge la barra con il testo "quantità/3000" se la telecamera è vicina
-          AddBar("cargo", percent, "cargo", (fullText and floor(cargo) .. '/' .. maxCargo) or '')
-        end
-      end	  
-]]--
       if (ud.name == "euf_harvester" or ud.name == "and_harvester") then
         -- Controlla se l'unita appartiene alla stessa squadra alleata del giocatore locale
         local myAllyTeamID = Spring.GetMyAllyTeamID()
@@ -632,7 +621,7 @@ do
         if (myAllyTeamID == unitAllyTeamID) then
           local cargo = GetUnitRulesParam(unitID, "quantita_raccolta") or 0
           if (cargo > 0) then
-            local maxCargo = 1000 -- Capacità massima fissa impostata -- ############# nel caso determinarlo direttamente leggendo il valore max nel gadget
+            local maxCargo = GetUnitRulesParam(unitID, "max_livrium") or 1000 -- rev 1 15/09/2026
             local percent = cargo / maxCargo
             if (percent > 1) then percent = 1 end
             
@@ -641,6 +630,44 @@ do
           end
         end
       end	  
+	  
+      --// CARICO trucks (molix, rev3)
+      if (ud.name == "ruspa_camion" or ud.name == "and_camion") then
+        -- Controlla se l'unita appartiene alla stessa squadra alleata del giocatore locale
+        local myAllyTeamID = Spring.GetMyAllyTeamID()
+        local unitAllyTeamID = Spring.GetUnitAllyTeam(unitID)
+        
+        if (myAllyTeamID == unitAllyTeamID) then
+          local cargo = GetUnitRulesParam(unitID, "livrium_trasportato") or 0
+          if (cargo > 0) then
+            local maxCargo = GetUnitRulesParam(unitID, "livrium_max") or 200 
+            local percent = cargo / maxCargo
+            if (percent > 1) then percent = 1 end
+            
+            -- Aggiunge la barra con il testo "quantità/3000" se la telecamera è vicina
+            AddBar("cargo", percent, "cargo", (fullText and floor(cargo) .. '/' .. maxCargo) or '')
+          end
+        end
+      end	 	 
+
+      --// Quantità di livrium nelle raffinerie (molix, rev3)
+      if (ud.name == "eufrafinery" or ud.name == "andrafinery") then
+        -- Controlla se l'unita appartiene alla stessa squadra alleata del giocatore locale
+        local myAllyTeamID = Spring.GetMyAllyTeamID()
+        local unitAllyTeamID = Spring.GetUnitAllyTeam(unitID)
+        
+        if (myAllyTeamID == unitAllyTeamID) then
+          local cargo = GetUnitRulesParam(unitID, "livrium_storage") or 0
+          if (cargo > 0) then
+            local maxCargo = GetUnitRulesParam(unitID, "livrium_storage_max") or 400 
+            local percent = cargo / maxCargo
+            if (percent > 1) then percent = 1 end
+            
+            -- Aggiunge la barra con il testo "quantità/3000" se la telecamera è vicina
+            AddBar("cargo", percent, "cargo", (fullText and floor(cargo) .. '/' .. maxCargo) or '')
+          end
+        end
+      end	 	  
 
     if (barsN>0)or(numStockpiled) then
       glPushMatrix()

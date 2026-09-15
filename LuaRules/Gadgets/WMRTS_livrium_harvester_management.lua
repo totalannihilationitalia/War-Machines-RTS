@@ -13,6 +13,7 @@ end
 -- 29/06/2026 = realizzata rev 0
 -- 01/07/2026 = rev 1 -> integrato con il WMRTS_livrium_menagement.lua. Ora il "livrium" raccolto è una risorsa vera e propria, che verrà trasformato in metal solo dalle apposite raffinerie.
 -- 02/07/2026 = rev 2 -> aggiunto effetto fumo durante la raccolta del livrium
+-- 15/09/2026 = rev 3 -> aggiungo uno unitparam inerente alla capacità max di trasporto livrium, cosi la barra indicante la quantità di livrium trasportato sarà aggiornata (gestita da unit_healtbars)
 
 -- todo
 -- fare in modo che al loading dell'unità, vengano memorizzate le posizioni x,y,z cosi da utilizzarle per scaricare l'unità. Obiettivo: l'unità deve essere scaricata nell'esatto punto in cui l'ho prelevata
@@ -24,7 +25,7 @@ if not gadgetHandler:IsSyncedCode() then return end
 -- CONFIGURAZIONE E COSTANTI
 -- =============================================================================
 
-local MAX_LIVRIUM = 1000		--  capacità max di raccolta di ciascun harvester
+local MAX_LIVRIUM = 1000		--  capacità max di raccolta di ciascun harvester -- multipli di 200, meglio per la logica di WMRTS
 local HARVEST_SPEED = 25 		--  velocità di raccolta livrium dell'harvester sul giacimento (x unità al ciclo)
 local CHECK_INTERVAL = 30 		--  frequenza di aggiornamento ciclo (1 ciclo al secondo)
 local UNLOAD_DISTANCE = 350		--  distanza di load/unload unit dalla fabbrica
@@ -96,6 +97,8 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam)
     if uDef.name == "euf_harvester" then
         Spring.SetUnitRulesParam(unitID, "stato_raccolta", 1)
         Spring.SetUnitRulesParam(unitID, "quantita_raccolta", 0)
+        -- AGGIUNTO: Invia la capacità massima come parametro dell'unità
+        Spring.SetUnitRulesParam(unitID, "max_livrium", MAX_LIVRIUM)		
         harvesters[unitID] = {timer = 0}
     elseif uDef.name == "euf_harvester_factory" then
         factories[unitID] = {isProcessing = false, timer = 0, processingUnit = nil}
