@@ -268,6 +268,7 @@ function gadget:GameFrame(n)
                         Spring.SetUnitRulesParam(truckID, "livrium_trasportato", capacity)
                         tData.state = 3 -- Pronto a viaggiare verso la raffineria
                         Spring.SetUnitRulesParam(truckID, "stato_camion", 3)
+						Spring.CallCOBScript(truckID, "ChangeStatusFromLUA", 0, 1)	-- imposto il comando in .cob per mostrare il livrium trasportato --> 1 = show livrium object, 0 = hide livrium object. Guarda il modello.s3o e lo script .cob
 
                     elseif bData.actionType == "UNLOAD" then
                         -- Deposita nel serbatoio interno della raffineria
@@ -279,6 +280,7 @@ function gadget:GameFrame(n)
                         Spring.SetUnitRulesParam(truckID, "livrium_trasportato", 0)
                         tData.state = 0 -- Torna IDLE
                         Spring.SetUnitRulesParam(truckID, "stato_camion", 0)
+						Spring.CallCOBScript(truckID, "ChangeStatusFromLUA", 0, 0)	-- imposto il comando in .cob per mostrare il livrium trasportato --> 1 = show livrium object, 0 = hide livrium object. Guarda il modello.s3o e lo script .cob
                     end
 
                     -- Scarica il camion fuori dalla struttura
