@@ -547,8 +547,8 @@ local UNIT_DB = {
 ["controllo_spazioporto"] = { type = "building", ignore = true },
 ["eufhq"] = { type = "building", ignore = true },
 ["euf_harvester_factory"] = { type = "strategicbuilding", ignore = true },
-["eufrafinery"] = { type = "building", ignore = true },
-["euflstor"] = { type = "building", ignore = true },
+["eufrafinery"] = { type = "strategicbuilding", ignore = true },
+["euflstor"] = { type = "strategicbuilding", ignore = true },
 ["eufresonator"] = { type = "building", ignore = true },
 	
 
@@ -557,6 +557,7 @@ local UNIT_DB = {
 ["eufthorn"] = { type = "ground" },
 ["eufsab"] = { type = "ground" },
 ["ruspa_builder"] = { type = "ground", ignore = true  },
+["ruspa_camion"] = { type = "ground", ignore = true  },
 
 -- Unità prodotte da eufap
 ["euffig"] = { type = "air" },
