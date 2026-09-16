@@ -62,7 +62,8 @@ return {
 			[2] = "eufthorn",
 			[3] = "eufsab",
 			[4] = "ruspa_builder",	
-			[5] = "euf_harvester",					
+			[5] = "euf_harvester",		
+			[6] = "ruspa_camion",				
 		},
 -----------------------------------------------------------
 --- Units wreckage and heaps
