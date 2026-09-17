@@ -3,25 +3,23 @@
 #include "sfxtype.h"
 #include "exptype.h"
 
-piece  base, turret, telaio, ruote, ruote1, ruote2, livrium;
+piece  base, telaio, ruote, ruote1, ruote2, livrium, cassone;
 
-static-var  Static_Var_1, statechg_DesiredState, statechg_StateChanging, Static_Var_4, livrium_status;
+static-var  Static_Var_1, statechg_DesiredState, statechg_StateChanging, Static_Var_4, Static_Var_5;
 
 
-ChangeStatusFromLUA(receivedfromlua)
+ChangeStatusFromLUA(Func_Var_1)
 {
-livrium_status = receivedfromlua;
-if (livrium_status == 1)
+	Static_Var_5 = Func_Var_1;
+	if( Static_Var_5 == 1 )
 	{
-	show livrium;
+		show livrium;
 	}
-if (livrium_status == 0)
+	if( Static_Var_5 == 0 )
 	{
-	hide livrium;	
+		hide livrium;
 	}
 }
-
-
 
 activatescr()
 {
@@ -104,18 +102,18 @@ SmokeUnit(healthpercent, sleeptime, smoketype)
 Go()
 {
 	call-script activatescr();
-	move turret to z-axis [2.000000] speed [7.840619];
-	turn turret to y-axis Static_Var_1 speed <160.038462>;
-	wait-for-turn turret around y-axis;
+//	move cassone to z-axis [2.000000] speed [7.840619];
+//	turn turret to y-axis Static_Var_1 speed <160.038462>;
+//	wait-for-turn turret around y-axis;
 	set INBUILDSTANCE to 1;
 }
 
 Stop()
 {
 	set INBUILDSTANCE to 0;
-	move turret to z-axis [0.000000] speed [7.840619];
-	turn turret to y-axis <0.000000> speed <160.038462>;
-	wait-for-turn turret around y-axis;
+//	move turret to z-axis [0.000000] speed [7.840619];
+//	turn turret to y-axis <0.000000> speed <160.038462>;
+//	wait-for-turn turret around y-axis;
 	call-script deactivatescr();
 }
 
@@ -167,11 +165,10 @@ StopMoving()
 
 Create()
 {
-	hide livrium;	
+	hide livrium;
 	Static_Var_1 = 0;
 	call-script InitState();
 	start-script SmokeUnit();
-	
 }
 
 Activate()
@@ -188,9 +185,6 @@ TargetHeading(Func_Var_1)
 {
 	Static_Var_1 = 0 - Func_Var_1;
 }
-
-
-
 
 QueryNanoPiece(piecenum)
 {
@@ -209,7 +203,7 @@ Killed(severity, corpsetype)
 		corpsetype = 1;
 		explode base type BITMAPONLY | BITMAP2;
 		explode telaio type BITMAPONLY | BITMAP2;
-		explode turret type BITMAPONLY | BITMAP2;
+		explode cassone type BITMAPONLY | BITMAP2;
 		return (0);
 	}
 	if( severity <= 50 )
@@ -217,8 +211,7 @@ Killed(severity, corpsetype)
 		corpsetype = 2;
 		explode base type BITMAPONLY | BITMAP2;
 		explode telaio type BITMAPONLY | BITMAP2;
-
-		explode turret type SHATTER | BITMAP2;
+		explode cassone type SHATTER | BITMAP2;
 		return (0);
 	}
 	if( severity <= 99 )
@@ -226,13 +219,11 @@ Killed(severity, corpsetype)
 		corpsetype = 3;
 		explode base type BITMAPONLY | BITMAP2;
 		explode telaio type BITMAPONLY | BITMAP2;
-
-		explode turret type SHATTER | BITMAP2;
+		explode cassone type SHATTER | BITMAP2;
 		return (0);
 	}
 	corpsetype = 3;
 	explode base type BITMAPONLY | BITMAP2;
 	explode telaio type BITMAPONLY | BITMAP2;
-
-	explode turret type SHATTER | EXPLODE_ON_HIT | BITMAP2;
+	explode cassone type SHATTER | EXPLODE_ON_HIT | BITMAP2;
 }
