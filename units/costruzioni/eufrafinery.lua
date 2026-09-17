@@ -13,8 +13,8 @@ return {
                buildcostmetal = 900,
                builder = false,
                buildinggrounddecaldecayspeed= 0.01,
-               buildinggrounddecalsizex= 4,
-               buildinggrounddecalsizey = 4,
+               buildinggrounddecalsizex= 6,
+               buildinggrounddecalsizey = 6,
                buildinggrounddecaltype = "Pavimentazione3.png",
                buildpic = "eufrafinery.png",
                buildtime  = 7000,
@@ -27,8 +27,8 @@ return {
                energystorage = 0,
                energyUse = 0,
                explodeas = "ESTOR_BUILDINGEX",
-               footprintx = 7,
-               footprintz = 7,
+               footprintx = 4,	-- era 7 17/09/2026
+               footprintz = 4,	-- era 7 17/09/2026
 		holdSteady = true,				   
                icontype = "building",
                idleautoheal = 5,
@@ -55,7 +55,7 @@ return {
                turnrate = 0,
 	           usebuildinggrounddecal = fasle,
                workertime = 0,
-               YardMap= "ooooooooo",
+               YardMap= "oooooooooooo",
 -----------------------------------------------------------
 --- Units wreckage and heaps
 -----------------------------------------------------------
@@ -64,7 +64,7 @@ featuredefs = {
                world = "All Worlds",
                description = "Livrium Rafinery Wreckage",
                category = "corpses",
-               object = "eufrafinery_dead",
+               object = "4X4C", -- realizzare eufrafinery_dead
                featuredead = "eufrafinery_heap",
                featurereclamate = "SMUDGE01",
                footprintx = 4,
