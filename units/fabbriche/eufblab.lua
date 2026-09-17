@@ -33,7 +33,7 @@ return {
 --               mobilestandorders= 1,
                name = "Bio Lab",
                noAutoFire = false,
-               objectname = "ARMBLAB",
+               objectname = "eufblab",
                radardistance = 0,
                selfdestructas = "MEDIUM_BUILDING",
                sightdistance = 202,
@@ -46,7 +46,7 @@ return {
 --- INSERT BUILDLIST
 -----------------------------------
                buildoptions = { 
-		[1]= "armmedic",
+					[1]= "armmedic",
                },
 
 -----------------------------------------------------------
