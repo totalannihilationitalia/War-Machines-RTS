@@ -3,7 +3,7 @@
 	UnitName=CORDEM;
 	Version=1.2;
 	Side=CORE;
-	Objectname=CORDEM;
+	Objectname=anddem.s3o;
 	Designation=COR-DMN;
 	Name=Archdemon;
 	Description=Experimental Kbot;
