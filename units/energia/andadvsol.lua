@@ -16,7 +16,7 @@ return {
 --               buildinggrounddecalsizex= 5,
 --               buildinggrounddecalsizey = 5,
 --               buildinggrounddecaltype = "Pavimentazione3.png",
-               buildpic = "da_fare.png",
+               buildpic = "andadvsol.png",
                buildtime  = 7945,
                category = "ALL NOTSUB NOWEAPON NOTAIR SURFACE",
                --collisionvolumeoffsets = "",

@@ -10,7 +10,7 @@ return {
  --              buildinggrounddecalsizex= 4,
  --              buildinggrounddecalsizey = 4,
  --              buildinggrounddecaltype = "Pavimentazione3.png",
-		buildpic = "da_fare.png",
+		buildpic = "andaa.png",
 		buildtime = 5810,
 		category = "ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE",
 		cloakcost = 12,

@@ -12,7 +12,7 @@ return {
                buildcostenergy = 33562,
                buildcostmetal = 2020,
                builder = false,
-               buildpic = "",
+               buildpic = "andogre.png",
                buildtime  = 50975,
                canAttack = true,
 --               canDGun = true,

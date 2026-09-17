@@ -10,7 +10,7 @@ return {
                buildcostenergy = 1772,
                buildcostmetal = 723,
                builder = true,
-               buildpic = "andincubator1.png",
+               buildpic = "andlab.png",
                buildtime  = 7151,
                canmove = true,
                canPatrol = true,

@@ -9,7 +9,7 @@ return {
 --		buildinggrounddecalsizex = 3,
 --		buildinggrounddecalsizey = 3,
 --		buildinggrounddecaltype = "Pavimentazione_nfa_ap.png",
-		buildpic = "da_fare.png",
+		buildpic = "andrl.png",
 		buildtime = 1749,
 		category = "ALL NOTLAND WEAPON NOTSUB NOTSHIP NOTAIR NOTHOVER SURFACE",
 		collisionvolumeoffsets = "0 1 0",
