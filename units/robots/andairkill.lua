@@ -61,7 +61,7 @@ return {
 featuredefs = {
   dead = {
                world = "All Worlds",
-               description = "Air KillerMech Wreckage",
+               description = "Air Killer Mech Wreckage",
                category = "corpses",
                object = "andkill_dead",
                featuredead = "andairkill_heap",
@@ -82,7 +82,7 @@ featuredefs = {
                },  -- Close Dead Features
   heap = {
                world = "All Worlds",
-               description = "Air KillerMech Heap",
+               description = "Air Killer Mech Heap",
                category = "heaps",
                object = "3X3B",
                footprintx = 3,
