@@ -688,7 +688,7 @@ local SQUAD_TEMPLATES = {
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
 	["AND_andgant_medium_patrol_4"] = {
-		units = { "cordem", "andairkill", "bigb","bigb" }, 
+		units = { "anddem", "andairkill", "bigb","bigb" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},			
 	["AND_andgant_medium_patrol_5"] = {
