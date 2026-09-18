@@ -98,6 +98,7 @@ local function ProcessRefinery(unitID, data)
     -- Controlla se la raffineria è attiva
     if not Spring.GetUnitIsActive(unitID) then
         Spring.SetUnitRulesParam(unitID, "stato_raffineria", 3) -- 3 = Spenta
+		Spring.CallCOBScript(unitID, "ChangeStatusFromLUA", 0, 0) -- imposto il fumo OFF in .cob
         return
     end
 
@@ -115,6 +116,7 @@ local function ProcessRefinery(unitID, data)
     -- 1. Controlla il serbatoio locale di Livrium
     if data.livrium_storage < livriumReq then
         Spring.SetUnitRulesParam(unitID, "stato_raffineria", 2) -- 2 = No Livrium
+		Spring.CallCOBScript(unitID, "ChangeStatusFromLUA", 0, 0) -- imposto il fumo OFF in .cob
         return
     end
 
@@ -122,11 +124,13 @@ local function ProcessRefinery(unitID, data)
     local currentEnergy = Spring.GetTeamResources(teamID, "energy")
     if not currentEnergy or currentEnergy < energyReq then
         Spring.SetUnitRulesParam(unitID, "stato_raffineria", 1) -- 1 = No Energia
+		Spring.CallCOBScript(unitID, "ChangeStatusFromLUA", 0, 0) -- imposto il fumo OFF in .cob		
         return
     end
 
     -- 3. Esegui la conversione
     Spring.SetUnitRulesParam(unitID, "stato_raffineria", 0) -- 0 = OK
+	Spring.CallCOBScript(unitID, "ChangeStatusFromLUA", 0, 0) -- imposto il fumo ON in .cob	
 
     -- Consuma Livrium locale
     data.livrium_storage = data.livrium_storage - livriumReq

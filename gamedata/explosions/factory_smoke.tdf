@@ -1,0 +1,41 @@
+[factory_chimney_smoke]
+{
+	[smoke_plume]
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+			sizeGrowth=0.35;         // Il fumo si allarga mentre sale
+			sizeMod=1.0;
+			pos=0, 0, 0; 
+			gravity=0, 0.08, 0;      // Spinta verso l'alto (galleggiamento termico)
+		
+			Texture=smoke;           // Texture del fumo
+			airdrag=0.92;            // Attrito dell'aria che rallenta la spinta iniziale
+
+			// Variazione casuale (rende ogni sbuffo naturale e non identico)
+			particleLifeSpread=30; 
+			particleSpeedSpread=0.4;  
+			particleSizeSpread=4;   
+			
+			particleLife=110;        // Durata di vita di ogni sbuffo (~3.6 secondi a 30fps)
+			numParticles=1;          // FONDAMENTALE: 1 sola particella per ogni impulso
+			particleSpeed=1.2;       // Velocità iniziale di uscita dal tubo
+			particleSize=10;         // Dimensione iniziale (adatta al diametro del comignolo)
+			
+			emitVector=0, 1, 0;      // Emette verso l'alto (asse Y)
+			emitRot=0;
+			emitRotSpread=10;        // Piccolo angolo a cono (10 gradi)
+			directional=0; 
+			alwaysVisible=0;
+
+			// Transizione colore e dissolvenza (R G B Alfa):
+			// Esce grigio scuro denso -> diventa grigio chiaro -> sfuma in trasparenza totale
+			colorMap=0.25 0.25 0.25 0.6   0.45 0.45 0.45 0.4   0.6 0.6 0.6 0.15   0.7 0.7 0.7 0.0;
+		}
+		air=1;
+		water=1;
+		ground=1;
+		count=1;
+	}
+}

@@ -102,18 +102,12 @@ SmokeUnit(healthpercent, sleeptime, smoketype)
 Go()
 {
 	call-script activatescr();
-//	move cassone to z-axis [2.000000] speed [7.840619];
-//	turn turret to y-axis Static_Var_1 speed <160.038462>;
-//	wait-for-turn turret around y-axis;
 	set INBUILDSTANCE to 1;
 }
 
 Stop()
 {
 	set INBUILDSTANCE to 0;
-//	move turret to z-axis [0.000000] speed [7.840619];
-//	turn turret to y-axis <0.000000> speed <160.038462>;
-//	wait-for-turn turret around y-axis;
 	call-script deactivatescr();
 }
 
