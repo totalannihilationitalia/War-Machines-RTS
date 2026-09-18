@@ -14,6 +14,7 @@ end
 -- 01/07/2026 = rev 1 -> integrato con il WMRTS_livrium_menagement.lua. Ora il "livrium" raccolto è una risorsa vera e propria, che verrà trasformato in metal solo dalle apposite raffinerie.
 -- 02/07/2026 = rev 2 -> aggiunto effetto fumo durante la raccolta del livrium
 -- 15/09/2026 = rev 3 -> aggiungo uno unitparam inerente alla capacità max di trasporto livrium, cosi la barra indicante la quantità di livrium trasportato sarà aggiornata (gestita da unit_healtbars)
+-- 18/09/2026 = rev 4 -> aggiunti effetti fumo dalla raffineria, quando questa lavora. molix
 
 -- todo
 -- fare in modo che al loading dell'unità, vengano memorizzate le posizioni x,y,z cosi da utilizzarle per scaricare l'unità. Obiettivo: l'unità deve essere scaricata nell'esatto punto in cui l'ho prelevata
@@ -112,6 +113,7 @@ function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTe
             factories[transportID].timer = LOAD_TIME
             factories[transportID].processingUnit = unitID
             Spring.SetUnitRulesParam(unitID, "stato_raccolta", 4)
+			Spring.CallCOBScript(transportID, "ChangeStatusFromLUA", 0, 1)		-- attiva fumo dalla raffineria
         end
     end
 end
@@ -224,7 +226,7 @@ function gadget:GameFrame(n)
         end
     end
 
-    -- GESTIONE FABBRICHE (Rimane quasi uguale)
+    -- GESTIONE FABBRICHE 
     for fID, data in pairs(factories) do
         if data.isProcessing then
             data.timer = data.timer - CHECK_INTERVAL
@@ -247,6 +249,7 @@ function gadget:GameFrame(n)
                     Spring.SetUnitRulesParam(hID, "quantita_raccolta", 0)
                     Spring.SetUnitRulesParam(hID, "stato_raccolta", 1)
                 end
+				Spring.CallCOBScript(fID, "ChangeStatusFromLUA", 0, 0)	-- spegni il fumo dalla fabbrica
                 data.isProcessing = false
                 data.processingUnit = nil
             end

@@ -13,6 +13,7 @@ end
 -- rev0 = generato questo gadget per la conversione Livrium -> metal
 -- rev1 = 03/07/2026 aggiungo la variabile "stato_raffineria" che verrà poi utilizzata per mostrare le etichette di stato. molix
 -- rev2 = 11/09/2026 aggiungo il magazzino livrium interno. La gestione del livrium sarà più complessa: dovra essere trasportato tramite mezzi dall'harvester factory alla raffineria
+-- rev3 = 18/09/2026 aggiunti effetti fumo dai comignoli della raffineria, quando questa lavora. molix
 --[[
 Come modificare i parametro da gadget esterno (Ricerche):
 if GG.SetRefineryTeamMultiplier then

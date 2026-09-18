@@ -4,12 +4,30 @@
 #include "exptype.h"
 
 piece  base, turret, arm1, arm2, arm3, link, magnet, arm4,
-       arm5, arm6, arm7;
+       arm5, arm6, arm7, fumo_1, fumo_2;
 
-static-var  Static_Var_1, Static_Var_2, Static_Var_3, Static_Var_4;
+static-var  Static_Var_1, Static_Var_2, Static_Var_3, Static_Var_4, Static_Var_5;
 
 // Signal definitions
 #define SIG_MOVE			2
+
+ChangeStatusFromLUA(Func_Var_1)
+{
+	Static_Var_5 = Func_Var_1;
+}
+
+
+GeneraFumo()
+{
+	while( TRUE )
+	{
+		if( Static_Var_5 == 1 )
+		{
+			emit-sfx 1024 from fumo_1;
+		}
+		sleep 1200; //portare uguale al valore del test
+	}
+}
 
 
 SmokeUnit(healthpercent, sleeptime, smoketype)
@@ -42,6 +60,7 @@ SmokeUnit(healthpercent, sleeptime, smoketype)
 Create()
 {
 	start-script SmokeUnit();
+	start-script GeneraFumo();	
 }
 
 StartMoving()
@@ -75,7 +94,7 @@ BoomCalc(posxz, posy)
 {
 	var Func_Var_3, Func_Var_4, Func_Var_5;
 	Func_Var_3 = get PIECE_XZ(turret) - posxz;
-	Func_Var_4 = posy - get PIECE_Y(turret)+[10.000000];
+	Func_Var_4 = posy - get PIECE_Y(turret) + [10.000000];
 	Func_Var_5 = get XZ_HYPOT(Func_Var_3);
 	Static_Var_1 = get HYPOT(Func_Var_5,Func_Var_4) - [20.000000];
 	Static_Var_2 = get XZ_ATAN(Func_Var_3);
@@ -145,7 +164,7 @@ BoomToPad()
 
 TransportPickup(unitid)
 {
-	call-script BoomCalc(get UNIT_XZ(unitid),get UNIT_Y(unitid) + get UNIT_HEIGHT(unitid)+ [5.000000]);
+	call-script BoomCalc(get UNIT_XZ(unitid),get UNIT_Y(unitid) + get UNIT_HEIGHT(unitid) + [5.000000]);
 	if( Static_Var_4 AND get UNKNOWN_UNIT_VALUE(74)(unitid) == get UNKNOWN_UNIT_VALUE(74)(get UNKNOWN_UNIT_VALUE(71)) )
 	{
 		set BUSY to 1;
@@ -161,7 +180,7 @@ TransportPickup(unitid)
 
 TransportDrop(unitid, position)
 {
-	call-script BoomCalc(position,get GROUND_HEIGHT(position) + get UNIT_HEIGHT(unitid)+ [5.000000]);
+	call-script BoomCalc(position,get GROUND_HEIGHT(position) + get UNIT_HEIGHT(unitid) + [5.000000]);
 	if( Static_Var_4 )
 	{
 		set BUSY to 1;
