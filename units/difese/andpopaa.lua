@@ -21,7 +21,7 @@ return {
                corpse = "andpopaa_dead",
                damagemodifier = 0.25,
 --               defaultmissiontype = GUARD_NOMOVE,
-               description = "Pop-up Anti-Air Missile Launcher",
+               description = "Medium Range Plasma Battery",
 --               firestandorders = 1,
                energystorage = 0,
                energyUse = 0,
