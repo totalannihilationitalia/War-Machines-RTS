@@ -40,7 +40,7 @@ return {
 --               mobilestandorders= 1,
                name = "Teleport units",
                noAutoFire = false,
-               objectname = "andincubator2.s3o",
+               objectname = "andincgant.s3o",
                radardistance = 50,
                seismicsignature = 0,
                selfdestructas = "LARGE_BUILDING",
@@ -62,7 +62,7 @@ return {
 			[3] = "andkill",			
 			[4] = "andairkill",			
 			[5] = "interceptor",			
-			[6] = "armpraet",
+			[6] = "armpraet"
 		},
 -----------------------------------------------------------
 --- Units wreckage and heaps
@@ -135,6 +135,6 @@ sounds = {
                         },
                unitcomplete = "untdone",
                underattack = "warning1",
-}, --close sound section
+		}, --close sound section
 }, -- close unit data 
 } -- close total

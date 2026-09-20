@@ -60,7 +60,7 @@ return {
 --- INSERT BUILDLIST
 -----------------------------------
                buildoptions = { 
-			[1] = "cordem",			
+			[1] = "anddem",			
 			[2] = "bigb",			
 			[3] = "andkill",			
 			[4] = "andairkill",			

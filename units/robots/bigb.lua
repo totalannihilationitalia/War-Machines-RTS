@@ -11,7 +11,7 @@ return {
                buildcostenergy = 63286,
                buildcostmetal = 3700,
                builder = false,
-               buildpic = "",
+               buildpic = "bigb.png",
                buildtime  = 88566,
                canAttack = true,
                canGuard = true,
