@@ -11,11 +11,11 @@ static-var  Static_Var_1, Static_Var_2, Static_Var_3, Static_Var_4, Static_Var_5
 // Signal definitions
 #define SIG_MOVE			2
 
+
 ChangeStatusFromLUA(Func_Var_1)
 {
 	Static_Var_5 = Func_Var_1;
 }
-
 
 GeneraFumo()
 {
@@ -24,11 +24,11 @@ GeneraFumo()
 		if( Static_Var_5 == 1 )
 		{
 			emit-sfx 1024 from fumo_1;
+			emit-sfx 1024 from fumo_2;			
 		}
-		sleep 1200; //portare uguale al valore del test
+		sleep 1200;
 	}
 }
-
 
 SmokeUnit(healthpercent, sleeptime, smoketype)
 {
@@ -60,7 +60,7 @@ SmokeUnit(healthpercent, sleeptime, smoketype)
 Create()
 {
 	start-script SmokeUnit();
-	start-script GeneraFumo();	
+	start-script GeneraFumo();
 }
 
 StartMoving()

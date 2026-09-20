@@ -7,7 +7,7 @@ return {
     energy = 0,
     flammable = false,
     featureDead ="livrium00_feature",
-    noselect = false,
+    noselect = true,
     metal = 550,
     footprintx = 1,
     footprintz = 1,

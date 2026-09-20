@@ -3,29 +3,30 @@
 #include "sfxtype.h"
 #include "exptype.h"
 
-piece  base, camino, tubi, caldaia, fumo_1, fumo_2, fumo_3, portellone, rotator, link_slider,
-       link;
+piece  base, camino, tubi, caldaia, fumo_1, fumo_2, fumo_3, portellone,
+       rotator, link_slider, link;
 
-static-var Static_Var_5;
+static-var  Static_Var_1;
+
 
 ChangeStatusFromLUA(Func_Var_1)
 {
-	Static_Var_5 = Func_Var_1;
+	Static_Var_1 = Func_Var_1;
 }
-
 
 GeneraFumo()
 {
 	while( TRUE )
 	{
-		if( Static_Var_5 == 1 )
+		if( Static_Var_1 == 1 )
 		{
 			emit-sfx 1024 from fumo_1;
+			emit-sfx 1024 from fumo_2;
+			emit-sfx 1024 from fumo_3;						
 		}
-		sleep 1200; //portare uguale al valore del test
+		sleep 1200;
 	}
 }
-
 
 SmokeUnit(healthpercent, sleeptime, smoketype)
 {
@@ -117,7 +118,7 @@ TransportDrop(unitid, position)
 Create()
 {
 	start-script SmokeUnit();
-	start-script GeneraFumo();	
+	start-script GeneraFumo();
 }
 
 SweetSpot(piecenum)

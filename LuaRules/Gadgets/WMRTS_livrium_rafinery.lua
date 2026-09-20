@@ -131,7 +131,7 @@ local function ProcessRefinery(unitID, data)
 
     -- 3. Esegui la conversione
     Spring.SetUnitRulesParam(unitID, "stato_raffineria", 0) -- 0 = OK
-	Spring.CallCOBScript(unitID, "ChangeStatusFromLUA", 0, 0) -- imposto il fumo ON in .cob	
+	Spring.CallCOBScript(unitID, "ChangeStatusFromLUA", 0, 1) -- imposto il fumo ON in .cob	
 
     -- Consuma Livrium locale
     data.livrium_storage = data.livrium_storage - livriumReq
