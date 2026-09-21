@@ -13,7 +13,7 @@ return {
                canmove = true,
                canPatrol = true,
 --               canstop = 1,
-               category = "CORE PLANT CTRL_F LEVEL3 NOWEAPON NOTAIR NOTSUB",
+               category = "CORE PLANT CTRL_F LEVEL3 NOWEAPON NOTAIR NOTSUB",	-- ################### sistemare categorie
                cloakcost = 1,
                cloakcostmoving = 1,
                --collisionvolumeoffsets = "",
