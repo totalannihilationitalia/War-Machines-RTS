@@ -3,7 +3,7 @@
 #include "sfxtype.h"
 #include "exptype.h"
 
-piece  base, camino, tubi, caldaia, fumo_1, fumo_2, fumo_3, portellone,
+piece  base, camino, tubi, caldaia, fumo_1, fumo_2, fumo_3, portellone, garage,
        rotator, link_slider, link;
 
 static-var  Static_Var_1;
@@ -22,7 +22,7 @@ GeneraFumo()
 		{
 			emit-sfx 1024 from fumo_1;
 			emit-sfx 1024 from fumo_2;
-			emit-sfx 1024 from fumo_3;						
+			emit-sfx 1024 from fumo_3;
 		}
 		sleep 1200;
 	}
@@ -68,7 +68,7 @@ TransportPickup(unitid)
 	move link_slider to z-axis Func_Var_4 now;
 	turn link to y-axis <-90.000000> now;
 	attach-unit unitid to link;
-	turn rotator to y-axis <0.000000> speed <25.000000>;
+	turn rotator to y-axis <0.000000> speed <20.000000>;
 	wait-for-turn rotator around y-axis;
 	move portellone to y-axis [25.000000] speed [30.000000];
 	wait-for-move portellone along y-axis;
@@ -103,7 +103,7 @@ TransportDrop(unitid, position)
 	Func_Var_5 = get XZ_HYPOT(Func_Var_3);
 	turn link to y-axis <90.000000> speed <60.000000>;
 	wait-for-turn link around y-axis;
-	turn rotator to y-axis Func_Var_4 speed <25.000000>;
+	turn rotator to y-axis Func_Var_4 speed <20.000000>;
 	move link_slider to z-axis Func_Var_5 speed [25.000000];
 	wait-for-turn rotator around y-axis;
 	wait-for-move link_slider along z-axis;
