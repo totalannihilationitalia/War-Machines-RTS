@@ -495,8 +495,7 @@ local UNIT_DB = {
 
 
 -- Unità prodotte da andgant
-["cordem"] = { type = "ground" },
-["conartist"] = { type = "ground" },
+["anddem"] = { type = "ground" },
 ["bigb"] = { type = "ground" },
 ["ebigb"] = { type = "ground" },
 ["andkill"] = { type = "ground" },
