@@ -10,8 +10,6 @@ function gadget:GetInfo()
   }
 end
 
--- rev 1	= 21/09/2026	gli ordini di movimento vengono ora impartiti ad una distanza x dalle fabbriche (DOCK_DISTANCE_xxxx) onde evitare che impartendolo a 0,0,0 l'unità si blocchi. Molix
-
 if not gadgetHandler:IsSyncedCode() then 
     return 
 end
@@ -20,25 +18,23 @@ end
 -- CONFIGURAZIONE
 -- =============================================================================
 
-local CHECK_INTERVAL   = 30   			-- Frequenza del ciclo logico (30 frame = 1 secondo)
-local DOCK_DISTANCE_refineries  = 195  	-- Distanza minima dalla raffineria affinchè a quest'ultima venga impartito il comando LOAD_UNITS
-local DOCK_TARGET_refineries    = 140   -- Bersaglio del comando MOVE verso la raffineria (a distanza di x dal centro della fabbrica)
-local DOCK_DISTANCE_factory		= 350	-- Distanza minima dalla harvester factory affinchè a quest'ultima venga impartito il comando LOAD_UNITS
-local DOCK_TARGET_factory       = 295   -- Bersaglio del comando MOVE verso la factory (a distanza di x dal centro della fabbrica)
-local DEFAULT_LOAD_TIME = 600 			-- Frame di sosta dentro la struttura (150 frame = 5 secondi)
+local CHECK_INTERVAL   = 30   -- Frequenza del ciclo logico (30 frame = 1 secondo)
+local DOCK_DISTANCE_refineries  = 235  	-- Distanza minima dalla raffineria per impartire il comando LOAD_UNITS
+local DOCK_DISTANCE_factory		= 350		-- Distanza minima dalla harvester factory per impartire il comando load/unload
+local DEFAULT_LOAD_TIME = 300 -- Frame di sosta dentro la struttura (150 frame = 5 secondi)
 
 local TRUCK_TYPES = {
     ruspa_camion = {
         capacity    = 200,							-- meglio mantenere multipli di 200 per la logica WMRTS
         factories   = {"euf_harvester_factory"},
         refineries  = {"eufrafinery", "eufrafineryenergy"},
-        loadTime    = 600
+        loadTime    = 300
     },
     and_camion = {
         capacity    = 200,							-- meglio mantenere multipli di 200 per la logica WMRTS
         factories   = {"and_harvester_factory"},
         refineries  = {"and_refinery"},
-        loadTime    = 600
+        loadTime    = 300
     }
 }
 
@@ -198,15 +194,13 @@ function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTe
     if not tData then return end
 
     local transDefID = Spring.GetUnitDefID(transportID)
-	local ux, uy, uz = Spring.GetUnitPosition(unitID)	-- prelevo la posizione dell'unità
 
     -- 1. Imbarcato nella Fabbrica (Inizio carico)
     if factoryDefs[transDefID] then
         processingBuildings[transportID] = {
             timer      = tData.config.loadTime or DEFAULT_LOAD_TIME,
             truckID    = unitID,
-            actionType = "LOAD",							-- Il camion è dentro la fabbrica per caricarsi di Livrium
-			unloadPos  = {ux, uy, uz}					-- determino la posizione di prelievo dell'unità cosi viene rilasciata nella stessa posizione
+            actionType = "LOAD"
         }
         tData.state = 2
         Spring.SetUnitRulesParam(unitID, "stato_camion", 2)
@@ -216,8 +210,7 @@ function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTe
         processingBuildings[transportID] = {
             timer      = tData.config.loadTime or DEFAULT_LOAD_TIME,
             truckID    = unitID,
-            actionType = "UNLOAD",						-- Il camion è dentro la raffineria per scaricare/svuotare il Livrium
-			unloadPos  = {ux, uy, uz}					-- determino la posizione di prelievo dell'unità cosi viene rilasciata nella stessa posizione
+            actionType = "UNLOAD"
         }
         tData.state = 4
         Spring.SetUnitRulesParam(unitID, "stato_camion", 4)
@@ -290,11 +283,8 @@ function gadget:GameFrame(n)
 						Spring.CallCOBScript(truckID, "ChangeStatusFromLUA", 0, 0)	-- imposto il comando in .cob per mostrare il livrium trasportato --> 1 = show livrium object, 0 = hide livrium object. Guarda il modello.s3o e lo script .cob
                     end
 
-                    
-                    -- rimosso --Spring.GiveOrderToUnit(bID, CMD.UNLOAD_UNITS, {bx + 160, by, bz + 160, 100}, {}) -- Scarica il camion fuori dalla struttura
-					-- Scarica il camion fuori dalla struttura nel punto esatto di prelievo
-                    local pos = bData.unloadPos or {bx + 160, by, bz + 160}
-                    Spring.GiveOrderToUnit(bID, CMD.UNLOAD_UNITS, {pos[1], pos[2], pos[3], 50}, {})
+                    -- Scarica il camion fuori dalla struttura
+                    Spring.GiveOrderToUnit(bID, CMD.UNLOAD_UNITS, {bx + 160, by, bz + 160, 100}, {})
                 end
 
                 processingBuildings[bID] = nil
@@ -323,7 +313,7 @@ function gadget:GameFrame(n)
                 end
             end
 
- -- STATO 1: VAI ALLA HARVESTER FACTORY
+        -- STATO 1: VAI ALLA HARVESTER FACTORY
         elseif data.state == 1 then
             Spring.SetUnitRulesParam(truckID, "stato_camion", 1)
             
@@ -337,16 +327,10 @@ function gadget:GameFrame(n)
                     local dist = GetDistance(x, z, fx, fz)
 
                     if dist > DOCK_DISTANCE_factory then
-                        if isIdle and dist > 0 then
-                            local dirX = (x - fx) / dist
-                            local dirZ = (z - fz) / dist
-                            local tx = fx + dirX * DOCK_TARGET_factory
-                            local tz = fz + dirZ * DOCK_TARGET_factory
-                            local ty = Spring.GetGroundHeight(tx, tz)
-                            Spring.GiveOrderToUnit(truckID, CMD.MOVE, {tx, ty, tz}, {})
+                        if isIdle then
+                            Spring.GiveOrderToUnit(truckID, CMD.MOVE, {fx, fy, fz}, {})
                         end
                     else
-                        Spring.GiveOrderToUnit(truckID, CMD.STOP, {}, {})
                         local fQueue = Spring.GetUnitCommands(factID, 1)
                         if #fQueue == 0 and not processingBuildings[factID] then
                             Spring.GiveOrderToUnit(factID, CMD.LOAD_UNITS, { truckID }, {})
@@ -355,7 +339,7 @@ function gadget:GameFrame(n)
                 end
             end
 
--- STATO 3: VAI ALLA RAFFINERIA
+        -- STATO 3: VAI ALLA RAFFINERIA
         elseif data.state == 3 then
             Spring.SetUnitRulesParam(truckID, "stato_camion", 3)
             
@@ -367,16 +351,10 @@ function gadget:GameFrame(n)
                 local dist = GetDistance(x, z, rx, rz)
 
                 if dist > DOCK_DISTANCE_refineries then
-                    if isIdle and dist > 0 then
-                        local dirX = (x - rx) / dist
-                        local dirZ = (z - rz) / dist
-                        local tx = rx + dirX * DOCK_TARGET_refineries
-                        local tz = rz + dirZ * DOCK_TARGET_refineries
-                        local ty = Spring.GetGroundHeight(tx, tz)
-                        Spring.GiveOrderToUnit(truckID, CMD.MOVE, {tx, ty, tz}, {})
+                    if isIdle then
+                        Spring.GiveOrderToUnit(truckID, CMD.MOVE, {rx, ry, rz}, {})
                     end
                 else
-                    Spring.GiveOrderToUnit(truckID, CMD.STOP, {}, {})
                     local rQueue = Spring.GetUnitCommands(refID, 1)
                     if #rQueue == 0 and not processingBuildings[refID] then
                         Spring.GiveOrderToUnit(refID, CMD.LOAD_UNITS, { truckID }, {})

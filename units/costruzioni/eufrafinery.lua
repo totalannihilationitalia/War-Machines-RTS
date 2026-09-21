@@ -50,8 +50,8 @@ return {
                sightdistance = 273,
 --               soundcategory= "ARM_ESTOR",
                TEDClass = "ENERGY", -- verificare se necessario
-               transportCapacity = 40,
-               transportSize= 4,			   
+               transportCapacity = 3,
+               transportSize= 3,			   
                turnrate = 0,
 	           usebuildinggrounddecal = fasle,
                workertime = 0,

@@ -62,8 +62,8 @@ return {
 --               steeringmode= 1,
 --               standingmoveorder = 1,
                TEDClass = "PLANT", -- verificare se necessario
-               transportCapacity = 40,
-               transportSize= 4,
+               transportCapacity = 3,
+               transportSize= 3,
 --               turnrate = 361,
                workertime = 0,
                wpri_badtargetcategory = "ANTILASER",

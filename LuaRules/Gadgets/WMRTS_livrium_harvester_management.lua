@@ -14,7 +14,8 @@ end
 -- 01/07/2026 = rev 1 -> integrato con il WMRTS_livrium_menagement.lua. Ora il "livrium" raccolto è una risorsa vera e propria, che verrà trasformato in metal solo dalle apposite raffinerie.
 -- 02/07/2026 = rev 2 -> aggiunto effetto fumo durante la raccolta del livrium
 -- 15/09/2026 = rev 3 -> aggiungo uno unitparam inerente alla capacità max di trasporto livrium, cosi la barra indicante la quantità di livrium trasportato sarà aggiornata (gestita da unit_healtbars)
--- 18/09/2026 = rev 4 -> aggiunti effetti fumo dalla raffineria, quando questa lavora. molix
+-- 18/09/2026 = rev 4 -> aggiunti effetti fumo dalla raffineria, quando questa riceve il livrium. molix
+-- 21/09/2026 = rev 5 -> sistemato l'ordine MOVE dell'harvester, non più a 0,0,0 della factory per evitare stallo
 
 -- todo
 -- fare in modo che al loading dell'unità, vengano memorizzate le posizioni x,y,z cosi da utilizzarle per scaricare l'unità. Obiettivo: l'unità deve essere scaricata nell'esatto punto in cui l'ho prelevata
@@ -26,11 +27,12 @@ if not gadgetHandler:IsSyncedCode() then return end
 -- CONFIGURAZIONE E COSTANTI
 -- =============================================================================
 
-local MAX_LIVRIUM = 1000		--  capacità max di raccolta di ciascun harvester -- multipli di 200, meglio per la logica di WMRTS
-local HARVEST_SPEED = 25 		--  velocità di raccolta livrium dell'harvester sul giacimento (x unità al ciclo)
-local CHECK_INTERVAL = 30 		--  frequenza di aggiornamento ciclo (1 ciclo al secondo)
-local UNLOAD_DISTANCE = 350		--  distanza di load/unload unit dalla fabbrica
-local LOAD_TIME = 150 			--  tempo di elaborazione e scarico richiesto dalla fabbrica, espresso in game frame
+local MAX_LIVRIUM = 1000			--  capacità max di raccolta di ciascun harvester -- multipli di 200, meglio per la logica di WMRTS
+local HARVEST_SPEED = 25 			--  velocità di raccolta livrium dell'harvester sul giacimento (x unità al ciclo)
+local CHECK_INTERVAL = 30 			--  frequenza di aggiornamento ciclo (1 ciclo al secondo)
+local UNLOAD_DISTANCE = 350			--  distanza di load/unload unit dalla fabbrica
+local DOCKING_TARGET_DIST = 295 	--  L'harvester riceverà un comando muovi a questa distanza dalla fabbrica che serve ad evitare 0,0,0 dalla fabbrica (con problemi di comando) e comunque a farla entrare nell'area di carico (UNLOAD_DISTANCE)
+local LOAD_TIME = 150 				--  tempo di elaborazione e scarico richiesto dalla fabbrica, espresso in game frame
 
 local livriumFields = {
     ["Aminos Island"] = {
@@ -102,16 +104,18 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam)
         Spring.SetUnitRulesParam(unitID, "max_livrium", MAX_LIVRIUM)		
         harvesters[unitID] = {timer = 0}
     elseif uDef.name == "euf_harvester_factory" then
-        factories[unitID] = {isProcessing = false, timer = 0, processingUnit = nil}
+        factories[unitID] = {isProcessing = false, timer = 0, processingUnit = nil, unloadPos = nil}
     end
 end
 
 function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
     if UnitDefs[unitDefID].name == "euf_harvester" then
         if factories[transportID] then
+			local ux, uy, uz = Spring.GetUnitPosition(unitID)					-- memorizza la posizione di prelievo unità (utile più avanti per scaricarla nello stesso punto)
             factories[transportID].isProcessing = true
             factories[transportID].timer = LOAD_TIME
             factories[transportID].processingUnit = unitID
+			factories[transportID].unloadPos = {ux, uy, uz}						-- definisci la posizione di scarico dell'unità
             Spring.SetUnitRulesParam(unitID, "stato_raccolta", 4)
 			Spring.CallCOBScript(transportID, "ChangeStatusFromLUA", 0, 1)		-- attiva fumo dalla raffineria
         end
@@ -192,7 +196,7 @@ function gadget:GameFrame(n)
                     end
                 end
 
-            -- STATO 2: TORNA ALLA FABBRICA
+-- STATO 2: TORNA ALLA FABBRICA
             elseif stato == 2 then
                 local factID = GetNearestFactory(hID)
                 if factID then
@@ -200,12 +204,19 @@ function gadget:GameFrame(n)
                     local distToFact = GetDistance(x, z, fx, fz)
                     
                     if distToFact > UNLOAD_DISTANCE then
-                        -- DA RE-IMPARTIRE SOLO SE FERMO
-                        if isIdle then
-                            Spring.GiveOrderToUnit(hID, CMD.MOVE, {fx, fy, fz}, {})
+                        -- Calcola la coordinata all'interno della corona lungo la direttrice harvester-fabbrica
+                        if isIdle and distToFact > 0 then
+                            local dirX = (x - fx) / distToFact
+                            local dirZ = (z - fz) / distToFact
+                            local tx = fx + dirX * DOCKING_TARGET_DIST
+                            local tz = fz + dirZ * DOCKING_TARGET_DIST
+                            local ty = Spring.GetGroundHeight(tx, tz)
+                            Spring.GiveOrderToUnit(hID, CMD.MOVE, {tx, ty, tz}, {})
                         end
                     else
-						Spring.SetUnitRulesParam(hID, "is_harversting", 0)					
+                        -- Entrato nella corona: stop al movimento e passaggio allo stato di carico
+                        Spring.GiveOrderToUnit(hID, CMD.STOP, {}, {})
+                        Spring.SetUnitRulesParam(hID, "is_harversting", 0)					
                         Spring.SetUnitRulesParam(hID, "stato_raccolta", 3)
                     end
                 end
@@ -242,9 +253,10 @@ function gadget:GameFrame(n)
                     else
                         Spring.Echo("WMRTS Harvester Logic Error: Il gadget di gestione Livrium non e attivo!") -- debug in caso di errore!!!!!!!!!!!
                     end                    
-                    local fx, fy, fz = Spring.GetUnitPosition(fID)
+                    local fx, fy, fz = Spring.GetUnitPosition(fID)			-- preleva la posizione della fabbrica
+					local pos = data.unloadPos or {fx + 150, fy, fz + 150}	-- imposta la posizione di scarico, altrimenti metti di default la posizione a +150 + 150 dalla fabbrica
                     -- Scarica l'unità
-                    Spring.GiveOrderToUnit(fID, CMD.UNLOAD_UNITS, {fx + 150, fy, fz + 150, 100}, {})
+                    Spring.GiveOrderToUnit(fID, CMD.UNLOAD_UNITS, {pos[1], pos[2], pos[3], 50}, {})
                     
                     Spring.SetUnitRulesParam(hID, "quantita_raccolta", 0)
                     Spring.SetUnitRulesParam(hID, "stato_raccolta", 1)
@@ -252,6 +264,7 @@ function gadget:GameFrame(n)
 				Spring.CallCOBScript(fID, "ChangeStatusFromLUA", 0, 0)	-- spegni il fumo dalla fabbrica
                 data.isProcessing = false
                 data.processingUnit = nil
+				data.unloadPos = nil		-- resetto la posizione di scarico precedentemente memorizzata (non serve ma per sicurezza la includo)
             end
         end
     end
