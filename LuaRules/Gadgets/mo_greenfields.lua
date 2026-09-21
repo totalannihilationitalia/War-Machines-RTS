@@ -9,7 +9,13 @@ function gadget:GetInfo()
     enabled   = true  --  loaded by default?
   }
 end
-
+--[[
+Qual è lo scopo di gioco di "Green Fields"?
+In questa modalità, se abilitata, nessun estrattore di metallo (Mex) può produrre risorse dalla mappa:
+I giacimenti di metallo sul terreno diventano completamente inutili.
+I giocatori sono costretti a produrre metallo solo tramite convertitori di energia (Metal Makers) o riciclando relitti/alberi (Reclaim).
+È una modalità alternativa pensata per cambiare radicalmente la strategia economica della partita.
+]]--
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
