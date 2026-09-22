@@ -19,7 +19,8 @@ end
 -- Saving all config (Done !)
 
 -- rev1:	14/07/2026	aggiunto springsendcommand per avvisare redminimap che camera1 è accesa o spenta. Molix
--- rev2:	1407/2026	aggiunto resetState
+-- rev2:	14/07/2026	aggiunto resetState
+-- rev3:	22/09/2026	sistemato da local uCmds = Spring.GetUnitCommands(uID) a local uCmds = Spring.GetUnitCommands(uID, 50) onde prevenire ingame warning
 
 ----------------------------------------------------------------------------------------------------
 -- Todo
@@ -554,8 +555,10 @@ local function GetIDAtPoint(wx, wz)
 	if fID then return fID + Game.maxUnits end
 end
 local function UnitQueueVertices(uID)
-	local uCmds = Spring.GetUnitCommands(uID)
-	if #uCmds == 0 then return end
+--	local uCmds = Spring.GetUnitCommands(uID)
+--	if #uCmds == 0 then return end
+	local uCmds = Spring.GetUnitCommands(uID, 10)
+	if not uCmds or #uCmds == 0 then return end
 	local ux, uy, uz = spGetUnitPosition(uID)
 	local px, pz = WorldToPipCoords(ux, uz)
 	for i = 1, #uCmds do
