@@ -1,240 +1,158 @@
-#define TA			// This is a TA script
+// DUE Nanolather Facility
 
-#include "sfxtype.h"
+piece base,lights,covers,pad,pipes,nanoring,electrode1,electrode2,nanospot1,nanospot2,nanobox1,nanobox2,boxlathe1,boxlathe2,gearbox1,gearbox2,gear1,gear2;
+
+static-var spray_0;
+
+#define	SIG_ACTIVATE	2
+#define SMOKEPIECE1 base
+#define ANIM_VARIABLE TRUE
+
+#include "StateChg.h"
+#include "smokeunit.h"
 #include "exptype.h"
-
-piece  base, nano, smoke, portasud, portanord, explosion;
-
-static-var  Static_Var_1, unitviewer, Static_Var_3, Static_Var_4, statechg_DesiredState,
-            statechg_StateChanging;
-
-// Signal definitions
-#define SIG_ACTIVATE			4
-
-
-
-activatescr()
-{
-	if( TRUE )
-	{
-		sleep 398;
-	}
-	if( TRUE )
-	{
-		sleep 398;
-	}
-	sleep 48;
-}
-
-deactivatescr()
-{
-	if( TRUE )
-	{
-		sleep 998;
-	}
-	if( TRUE )
-	{
-		sleep 998;
-	}
-	sleep 48;
-}
-
-SmokeUnit(healthpercent, sleeptime, smoketype)
-{
-	while( get BUILD_PERCENT_LEFT )
-	{
-		sleep 400;
-	}
-	while( TRUE )
-	{
-		healthpercent = get HEALTH;
-		if( healthpercent < 66 )
-		{
-			smoketype = 256 | 2;
-			if( Rand( 1, 66 ) < healthpercent )
-			{
-				smoketype = 256 | 1;
-			}
-			emit-sfx smoketype from smoke;
-		}
-		sleeptime = healthpercent * 50;
-		if( sleeptime < 200 )
-		{
-			sleeptime = 200;
-		}
-		sleep sleeptime;
-	}
-}
-
-OpenYard()
-{
-	set YARD_OPEN to 1;
-	while( !get YARD_OPEN )
-	{
-		set BUGGER_OFF to 1;
-		sleep 1500;
-		set YARD_OPEN to 1;
-	}
-	set BUGGER_OFF to 0;
-}
-
-CloseYard()
-{
-	set YARD_OPEN to 0;
-	while( get YARD_OPEN )
-	{
-		set BUGGER_OFF to 1;
-		sleep 1500;
-		set YARD_OPEN to 0;
-	}
-	set BUGGER_OFF to 0;
-}
+#include "yard.h"
 
 Go()
-{
-	Static_Var_4 = 0;
+	{
 	call-script activatescr();
 	call-script OpenYard();
-	set INBUILDSTANCE to 1;
-}
+	set INBUILDSTANCE to TRUE;
+	}
+
+activatescr()
+	{
+	move nanobox1 to x-axis [20] speed [15];
+	move nanobox2 to x-axis [-20] speed [15];
+	wait-for-move nanobox2 to x-axis;
+	spin gear1 around y-axis speed <200>;
+	spin gear2 around y-axis speed <200>;
+	spin nanoring around y-axis speed <50>;
+	}
+
+deactivatescr()
+	{
+	move nanobox1 to x-axis [0] speed [25];
+	move nanobox2 to x-axis [0] speed [25];
+	wait-for-move nanobox2 to x-axis;
+	spin gear1 around y-axis speed <0>;
+	spin gear2 around y-axis speed <0>;
+	spin nanoring around y-axis speed <0>;
+	}
 
 Stop()
-{
-	set INBUILDSTANCE to 0;
+	{
+	set INBUILDSTANCE to FALSE;
 	call-script CloseYard();
 	call-script deactivatescr();
-	Static_Var_4 = 1;
-}
-
-InitState()
-{
-	statechg_DesiredState = TRUE;
-	statechg_StateChanging = FALSE;
-}
-
-RequestState(requestedstate, currentstate)
-{
-	if( statechg_StateChanging )
-	{
-		statechg_DesiredState = requestedstate;
-		return (0);
 	}
-	statechg_StateChanging = TRUE;
-	currentstate = statechg_DesiredState;
-	statechg_DesiredState = requestedstate;
-	while( statechg_DesiredState != currentstate )
-	{
-		if( statechg_DesiredState == 0 )
-		{
-			call-script Go();
-			currentstate = 0;
-		}
-		if( statechg_DesiredState == 1 )
-		{
-			call-script Stop();
-			currentstate = 1;
-		}
-	}
-	statechg_StateChanging = FALSE;
-}
+
+#define ACTIVATECMD call-script Go();
+#define DEACTIVATECMD call-script Stop();
+#include "StateChg.h"
 
 Create()
-{
-//	move base to y-axis [1000.000000] now;
-//	start-script SpecialEffects();
-//	Static_Var_7 = 1;
-//	move base to y-axis [0.000000] speed [220.000000];
-//	wait-for-move base along y-axis;
-//	Static_Var_7 = 0;
-//	emit-sfx 1024 + 1 from explosion;
-//	sleep 500;
-	turn portasud to x-axis <-106.000000> speed <30.000000>;
-	turn portanord to x-axis <106.000000> speed <30.000000>;
-	unitviewer = FALSE;
-	Static_Var_3 = 0;
-	Static_Var_1 = 0;
-	Static_Var_4 = 1;
+	{
+	cache base;
+	cache pipes;
+	cache covers;
+	dont-cache electrode1;
+	dont-cache electrode2;
+	dont-cache nanobox1;
+	dont-cache nanobox2;
+	dont-cache nanoring;
+	dont-cache lights;
+	dont-cache gear1;
+	dont-cache gear2;
+	spin electrode1 around y-axis speed <7>;
+	spin electrode2 around y-axis speed <-7>;
+	spray_0 = 1;
 	call-script InitState();
 	start-script SmokeUnit();
-}
+	}
 
 QueryNanoPiece(piecenum)
-{
-	if( Static_Var_1 == 0 )
 	{
-		piecenum = nano;
+	IF (spray_0 == 1 )
+		{
+		piecenum = boxlathe1;
+		}
+	IF (spray_0 == 2 )
+		{
+		piecenum = boxlathe2;
+		}
+	IF (spray_0 == 3 )
+		{
+		piecenum = nanospot1;
+		}
+	IF (spray_0 == 4 )
+		{
+		piecenum = nanospot2;
+		}
+	spray_0 = spray_0 + 1 ;
+	IF (spray_0 == 5 )
+		{
+		spray_0 = 1;
+		}
 	}
-	if( Static_Var_1 == 1 )
-	{
-		piecenum = nano;
-	}
-	++Static_Var_1;
-	if( Static_Var_1 >= 2 )
-	{
-		Static_Var_1 = 0;
-	}
-}
-
-Demo()
-{
-	unitviewer = TRUE;
-}
 
 Activate()
-{
+	{
 	signal SIG_ACTIVATE;
-	start-script RequestState(0);
-}
+	start-script RequestState( ACTIVE );
+	}
 
 Deactivate()
-{
+	{
 	signal SIG_ACTIVATE;
 	set-signal-mask SIG_ACTIVATE;
-	if( !unitviewer )
-	{
-		sleep 5000;
-	}
 	set-signal-mask 0;
-	start-script RequestState(1);
-}
+	start-script RequestState( INACTIVE );
+	}
 
 StartBuilding()
-{
-	sleep 200;
-}
+	{
+	}
+
 
 StopBuilding()
-{
-	stop-spin nano around y-axis;
-	sleep 200;
-}
+	{
+	}
 
 QueryBuildInfo(piecenum)
-{
-	piecenum = base;
-}
+	{
+	piecenum=pad;
+	}
 
 SweetSpot(piecenum)
-{
-	piecenum = base;
-}
+	{
+	piecenum=base;
+	}
 
-Killed(severity, corpsetype)
-{
-	if( severity <= 25 )
+Killed( severity, corpsetype )
 	{
+	if (severity <= 25)
+		{
 		corpsetype = 1;
-		return (0);
-	}
-	if( severity <= 50 )
-	{
+		explode base type	BITMAPONLY | BITMAP1;
+		return( 0 );
+		}
+
+	if (severity <= 50)
+		{
 		corpsetype = 2;
-		return (0);
-	}
-	if( severity <= 99 )
-	{
+		explode base type	BITMAPONLY | BITMAP1;
+		return( 0 );
+		}
+
+	if (severity <= 99)
+		{
 		corpsetype = 3;
-		return (0);
-	}
+		explode base type	BITMAPONLY | BITMAP1;
+		return( 0 );
+		}
+
 	corpsetype = 3;
-}
+	explode base type	BITMAPONLY | BITMAP1;
+	return( 0 );
+	}

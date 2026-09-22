@@ -26,7 +26,7 @@ return {
                energyUse = 0,
                explodeas = "LARGE_BUILDINGEX",
                footprintx = 9,
-               footprintz = 7,
+               footprintz = 9,
                icontype = "factory",
                idleautoheal = 5,
                idletime = 1800,
@@ -40,7 +40,7 @@ return {
 --               mobilestandorders= 1,
                name = "Teleport units",
                noAutoFire = false,
-               objectname = "andincgant.s3o",
+               objectname = "andgant",
                radardistance = 50,
                seismicsignature = 0,
                selfdestructas = "LARGE_BUILDING",
@@ -52,7 +52,7 @@ return {
                turnrate = 0,
 --               waterline = 5,
                workertime = 100,
-               YardMap= "oocccccoo oocccccoo oocccccoo oocccccoo oocccccoo oocccccoo oocccccoo",
+               YardMap= "ooooooooo ooooooooo oocccccoo oocccccoo oocccccoo oocccccoo oocccccoo oocccccoo oocccccoo",
 -----------------------------------
 --- INSERT BUILDLIST
 -----------------------------------
