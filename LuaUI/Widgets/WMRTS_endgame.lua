@@ -35,7 +35,7 @@ to do list
 -- 11/03/2026 = aggiungo il tempo in frame e lo stato spettatore "true/false". molix
 
 -- Lista delle variabili
-local nomeFile = "WMRST_winninglist.wmr"  		-- definisco il file che voglio scrivere
+local nomeFile = "WMRTS_winninglist.wmr"  		-- definisco il file che voglio scrivere
 
 local startframe = 0							-- definisco il frame iniziale della partita
 local endframe = 0								-- definisco il frame finale della partita
