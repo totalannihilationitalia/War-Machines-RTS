@@ -7,11 +7,11 @@ return {
   andgant = {
                acceleration = 0,
                brakerate  = 0,
-               buildcostenergy = 1772,
-               buildcostmetal = 723,
+               buildcostenergy = 58524,
+               buildcostmetal = 7848,
                builder = true,
                buildpic = "andgant.png",
-               buildtime  = 7151,
+               buildtime  = 67321,
                canmove = true,
                canPatrol = true,
 --               canstop = 1,
@@ -32,7 +32,7 @@ return {
                idletime = 1800,
 --               mass = 0 --definire massa,
                maxdamage = 16000,
-               maxslope = 15,
+               maxslope = 18,
                maxvelocity = 0,
                maxwaterdepth = 0,
                metalStorage = 800,
@@ -40,18 +40,18 @@ return {
 --               mobilestandorders= 1,
                name = "Teleport units",
                noAutoFire = false,
-               objectname = "andgant",
+               objectname = "andgant.s3o",
                radardistance = 50,
                seismicsignature = 0,
                selfdestructas = "LARGE_BUILDING",
-               sightdistance = 280,
+               sightdistance = 273,
 --               soundcategory= "ARM_HOVER_PLANT",
 --               standingfireorder = 2,
 --               standingmoveorder = 1,
                TEDClass = "PLANT", -- verificare se necessario
                turnrate = 0,
 --               waterline = 5,
-               workertime = 100,
+               workertime = 600,
                YardMap= "ooooooooo ooooooooo oocccccoo oocccccoo oocccccoo oocccccoo oocccccoo oocccccoo oocccccoo",
 -----------------------------------
 --- INSERT BUILDLIST
@@ -112,8 +112,9 @@ featuredefs = {
 -----------------------------------------------------------
 sfxtypes = {
   explosiongenerators = {
-               [1]="custom:fleanuklearmini",
-               [2]="custom:fleafireLanding",
+		[1]="custom:Nano",
+--                [3]="custom:linkbeam",
+--                [4]="custom:linkbeam",
                }, -- close effects list
 }, -- close section sfxtypes
 -----------------------------------------------------------

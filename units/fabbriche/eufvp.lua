@@ -45,6 +45,7 @@ return {
                objectname = "eufvp.s3o",
                radardistance = 50,
                selfdestructas = "LARGE_BUILDING",
+	       showNanoSpray = false,			   
                sightdistance = 270,
 --               soundcategory= "ARM_HOVER_PLANT",
 --               standingfireorder = 2,
@@ -109,8 +110,16 @@ featuredefs = {
                },  -- Close heap
 },  --  Wreckage and heaps
 -----------------------------------------------------------
---- NO EFFECTS
+--- EFFECTS
 -----------------------------------------------------------
+sfxtypes = {
+  explosiongenerators = {
+		[1]="custom:Nano",
+		[2]="custom:Nano",
+--                [3]="custom:linkbeam",
+--                [4]="custom:linkbeam",
+               }, -- close effects list
+}, -- close section sfxtypes
 -----------------------------------------------------------
 --- UNITS SOUND
 -----------------------------------------------------------
