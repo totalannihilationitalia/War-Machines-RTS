@@ -3,8 +3,8 @@
 #include "sfxtype.h"
 #include "exptype.h"
 
-piece  body, door1, door2, nanodoor1, nanodoor2, holder, nanos,
-       beam1, beam2, flashers;
+piece  body, door1, door2, nanodoor1, nanodoor2, holder, nanos, beam1,
+       beam2, flashers;
 
 static-var  Static_Var_1, spray, unitviewer, statechg_DesiredState, statechg_StateChanging;
 
@@ -243,7 +243,6 @@ Deactivate()
 
 StartBuilding()
 {
-
 	Static_Var_1 = 1;
 	start-script Build();
 }
@@ -251,7 +250,6 @@ StartBuilding()
 StopBuilding()
 {
 	Static_Var_1 = 0;
-
 }
 
 QueryBuildInfo(piecenum)
