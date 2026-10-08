@@ -36,11 +36,20 @@ local LOAD_TIME = 150 				--  tempo di elaborazione e scarico richiesto dalla fa
 
 local livriumFields = {
     ["Aminos Island"] = {
-        {x = 3822, z = 6554, radius = 200},
+        {x = 3822, z = 6554, radius = 200}
     },	
     ["Eridlon Aminos Islands"] = {
-        {x = 16103, z = 8593, radius = 200},
-    },		
+        {x = 16103, z = 8593, radius = 200}
+    },	
+    ["TMA-2026"] = {
+        {x = 2730, z = 8733, radius = 150},
+        {x = 2772, z = 5791, radius = 150},	
+        {x = 2995, z = 2959, radius = 150},			
+		{x = 8629, z = 3151, radius = 150},		
+		{x = 9762, z = 6876, radius = 150},		
+		{x = 5662, z = 6166, radius = 150},		
+		{x = 8621, z = 9419, radius = 150}	
+    },			
 }
 
 local currentMap = Game.mapName
