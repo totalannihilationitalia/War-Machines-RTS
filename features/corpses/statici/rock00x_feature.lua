@@ -1,4 +1,5 @@
 return {
+-- Brown rock
   rock001_feature =
   {
     description = "A rock",
@@ -79,5 +80,85 @@ return {
 --    collisionvolumetype = "Box",
   },
 
+-- lunar rock
+  rock001_lunar_feature =
+  {
+    description = "A rock",
+    blocking = true,
+    damage = 700,
+    energy = 0,
+    flammable = false,
+--    featureDead ="",
+    noselect = false,
+    metal = 100,
+    footprintx = 1,
+    footprintz = 1,
+    object = "rock001_lunar.s3o",
+    reclaimable = true,
+    upright = false,
+--    collisionvolumeoffsets = "0 0 0",
+--    collisionvolumescales = "5 50 5",
+--    collisionvolumetype = "Box",
+  },
+
+  rock002_lunar_feature =
+  {
+    description = "A rock",
+    blocking = true,
+    damage = 700,
+    energy = 0,
+    flammable = false,
+--    featureDead ="",
+    noselect = false,
+    metal = 100,
+    footprintx = 1,
+    footprintz = 1,
+    object = "rock002_lunar.s3o",
+    reclaimable = true,
+    upright = false,
+--    collisionvolumeoffsets = "0 0 0",
+--    collisionvolumescales = "5 50 5",
+--    collisionvolumetype = "Box",
+  },
+
+  rock003_lunar_feature =
+  {
+    description = "A rock",
+    blocking = true,
+    damage = 700,
+    energy = 0,
+    flammable = false,
+--    featureDead ="",
+    noselect = false,
+    metal = 100,
+    footprintx = 1,
+    footprintz = 1,
+    object = "rock003_lunar.s3o",
+    reclaimable = true,
+    upright = false,
+--    collisionvolumeoffsets = "0 0 0",
+--    collisionvolumescales = "5 50 5",
+--    collisionvolumetype = "Box",
+  },
+
+  rock004_lunar_feature =
+  {
+    description = "A rock",
+    blocking = true,
+    damage = 700,
+    energy = 0,
+    flammable = false,
+--    featureDead ="",
+    noselect = false,
+    metal = 100,
+    footprintx = 1,
+    footprintz = 1,
+    object = "rock004_lunar.s3o",
+    reclaimable = true,
+    upright = false,
+--    collisionvolumeoffsets = "0 0 0",
+--    collisionvolumescales = "5 50 5",
+--    collisionvolumetype = "Box",
+  },
 
 }

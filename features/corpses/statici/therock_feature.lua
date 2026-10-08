@@ -1,4 +1,6 @@
 return {
+--desert
+---------------------------------------
   therock001_feature =
   {
     description = "A rock",
@@ -158,5 +160,169 @@ return {
 --    collisionvolumescales = "5 50 5",
 --    collisionvolumetype = "Box",
   },
+
+
+--lunar
+---------------------------------------
+  therock001_lunar_feature =
+  {
+    description = "A rock",
+    blocking = true,
+    damage = 700,
+    energy = 0,
+    flammable = false,
+--    featureDead ="",
+    noselect = false,
+    metal = 100,
+    footprintx = 1,
+    footprintz = 1,
+    object = "therock_lunar_1.s3o",
+    reclaimable = true,
+    upright = false,
+--    collisionvolumeoffsets = "0 0 0",
+--    collisionvolumescales = "5 50 5",
+--    collisionvolumetype = "Box",
+  },
+
+  therock002_lunar_feature =
+  {
+    description = "A rock",
+    blocking = true,
+    damage = 700,
+    energy = 0,
+    flammable = false,
+--    featureDead ="",
+    noselect = false,
+    metal = 100,
+    footprintx = 1,
+    footprintz = 1,
+    object = "therock_lunar_2.s3o",
+    reclaimable = true,
+    upright = false,
+--    collisionvolumeoffsets = "0 0 0",
+--    collisionvolumescales = "5 50 5",
+--    collisionvolumetype = "Box",
+  },
+
+  therock003_lunar_feature =
+  {
+    description = "A rock",
+    blocking = true,
+    damage = 700,
+    energy = 0,
+    flammable = false,
+--    featureDead ="",
+    noselect = false,
+    metal = 100,
+    footprintx = 1,
+    footprintz = 1,
+    object = "therock_lunar_3.s3o",
+    reclaimable = true,
+    upright = false,
+--    collisionvolumeoffsets = "0 0 0",
+--    collisionvolumescales = "5 50 5",
+--    collisionvolumetype = "Box",
+  },
+
+  therock004_lunar_feature =
+  {
+    description = "A rock",
+    blocking = true,
+    damage = 700,
+    energy = 0,
+    flammable = false,
+--    featureDead ="",
+    noselect = false,
+    metal = 100,
+    footprintx = 1,
+    footprintz = 1,
+    object = "therock_lunar_4.s3o",
+    reclaimable = true,
+    upright = false,
+--    collisionvolumeoffsets = "0 0 0",
+--    collisionvolumescales = "5 50 5",
+--    collisionvolumetype = "Box",
+  },
+
+  therock005_lunar_feature =
+  {
+    description = "A rock",
+    blocking = true,
+    damage = 700,
+    energy = 0,
+    flammable = false,
+--    featureDead ="",
+    noselect = false,
+    metal = 100,
+    footprintx = 1,
+    footprintz = 1,
+    object = "therock_lunar_5.s3o",
+    reclaimable = true,
+    upright = false,
+--    collisionvolumeoffsets = "0 0 0",
+--    collisionvolumescales = "5 50 5",
+--    collisionvolumetype = "Box",
+  },
+
+  therock006_lunar_feature =
+  {
+    description = "A rock",
+    blocking = true,
+    damage = 700,
+    energy = 0,
+    flammable = false,
+--    featureDead ="",
+    noselect = false,
+    metal = 100,
+    footprintx = 1,
+    footprintz = 1,
+    object = "therock_lunar_6.s3o",
+    reclaimable = true,
+    upright = false,
+--    collisionvolumeoffsets = "0 0 0",
+--    collisionvolumescales = "5 50 5",
+--    collisionvolumetype = "Box",
+  },
+
+  therock007_lunar_feature =
+  {
+    description = "A rock",
+    blocking = true,
+    damage = 700,
+    energy = 0,
+    flammable = false,
+--    featureDead ="",
+    noselect = false,
+    metal = 100,
+    footprintx = 1,
+    footprintz = 1,
+    object = "therock_lunar_7.s3o",
+    reclaimable = true,
+    upright = false,
+--    collisionvolumeoffsets = "0 0 0",
+--    collisionvolumescales = "5 50 5",
+--    collisionvolumetype = "Box",
+  },
+
+  therock008_lunar_feature =
+  {
+    description = "A rock",
+    blocking = true,
+    damage = 700,
+    energy = 0,
+    flammable = false,
+--    featureDead ="",
+    noselect = false,
+    metal = 100,
+    footprintx = 1,
+    footprintz = 1,
+    object = "therock_lunar_8.s3o",
+    reclaimable = true,
+    upright = false,
+--    collisionvolumeoffsets = "0 0 0",
+--    collisionvolumescales = "5 50 5",
+--    collisionvolumetype = "Box",
+  },
+
 
 }
