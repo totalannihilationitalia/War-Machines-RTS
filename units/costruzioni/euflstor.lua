@@ -13,9 +13,9 @@ return {
                buildcostmetal = 159,
                builder = false,
                buildinggrounddecaldecayspeed= 0.01,
-               buildinggrounddecalsizex= 4,
-               buildinggrounddecalsizey = 4,
-               buildinggrounddecaltype = "Pavimentazione3.png",
+               buildinggrounddecalsizex= 11,
+               buildinggrounddecalsizey = 11,
+               buildinggrounddecaltype = "pavimentazione_medioeuf.png",
                buildpic = "euflstor.png",
                buildtime  = 5000,
                category = "ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE",
@@ -47,7 +47,7 @@ return {
 --               soundcategory= "ARM_ESTOR",
                TEDClass = "ENERGY", -- verificare se necessario
                turnrate = 0,
-	           usebuildinggrounddecal = false,
+	           usebuildinggrounddecal = true,
                workertime = 0,
                YardMap= "ooooooooo",
 -----------------------------------------------------------

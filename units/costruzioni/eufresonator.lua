@@ -12,6 +12,10 @@ return {
                buildcostenergy = 30000,
                buildcostmetal = 2200,
                builder = false,
+               buildinggrounddecaldecayspeed= 0.01,
+               buildinggrounddecalsizex= 11,
+               buildinggrounddecalsizey = 11,
+               buildinggrounddecaltype = "pavimentazione_medioeuf.png",			   
                buildpic = "eufresonator.png",
                buildtime  = 35000,
                canAttack = false,
@@ -47,6 +51,7 @@ return {
 --               soundcategory= "ARM_RADAR",
                TEDClass = "SPECIAL", -- verificare se necessario
                turnrate = 0,
+	           usebuildinggrounddecal = true,			   
                workertime = 0,
                YardMap= "ooooooooooooooooooooooooo",
 -----------------------------------------------------------
