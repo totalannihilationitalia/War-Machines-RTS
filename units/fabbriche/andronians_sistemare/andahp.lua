@@ -8,6 +8,10 @@ return {
                buildcostenergy = 14000,
                buildcostmetal = 3607,
                builder = true,
+               buildinggrounddecaldecayspeed= 0.01,
+               buildinggrounddecalsizex= 13,
+               buildinggrounddecalsizey = 13,
+               buildinggrounddecaltype = "pavimentazione_and.png",			   
                buildpic = "andahp.png",
                buildtime  = 18492,
                canmove = true,
@@ -44,6 +48,7 @@ return {
 --               standingfireorder = 2,
 --               standingmoveorder = 1,
                TEDClass = "PLANT", -- verificare se necessario
+               usebuildinggrounddecal = true,			   
                workertime = 200,
                YardMap= "oocccccccoooocccccccoooocccccccoooocccccccoooocccccccoooocccccccoooocccccccoooocccccccoooocccccccoo",
 -----------------------------------

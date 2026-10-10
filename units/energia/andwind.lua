@@ -12,6 +12,10 @@ return {
                buildcostmetal = 35,
                builder = false,
                buildpic = "andwind.png",
+               buildinggrounddecaldecayspeed= 0.01,
+               buildinggrounddecalsizex= 6,
+               buildinggrounddecalsizey = 6,
+               buildinggrounddecaltype = "pavimento_piccolo_and.png",			   
                buildtime  = 1603,
                category = "ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE",
                --collisionvolumeoffsets = "",
@@ -43,6 +47,7 @@ return {
                TEDClass = "ENERGY", -- verificare se necessario
                turnrate = 0,
                windGenerator = 25,
+               usebuildinggrounddecal = true,			   
                workertime = 0,
                YardMap= "ooooooooo",
 -----------------------------------------------------------

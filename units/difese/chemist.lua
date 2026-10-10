@@ -6,10 +6,10 @@ return {
 		brakerate = 0,
 		buildcostenergy = 40362,
 		buildcostmetal = 1762,
---		buildinggrounddecaldecayspeed = 30,
---		buildinggrounddecalsizex = 6,
---		buildinggrounddecalsizey = 6,
---		buildinggrounddecaltype = "Pavimentazione_nfa_ap.png",
+               buildinggrounddecaldecayspeed= 0.01,
+               buildinggrounddecalsizex= 6,
+               buildinggrounddecalsizey = 6,
+               buildinggrounddecaltype = "pavimento_piccolo_and.png",	
 		buildpic = "chemist.png",
 		buildtime = 26280,
 		category = "ALL WEAPON NOTSUB SPECIAL NOTAIR NOTHOVER SURFACE",
@@ -29,7 +29,7 @@ return {
 		seismicsignature = 0,
 		selfdestructas = "BIG_UNIT",
 		sightdistance = 350,
---		usebuildinggrounddecal = true,
+		usebuildinggrounddecal = true,
 		yardmap = "oooooooooooooooo",
 		featuredefs = {
 			dead = {

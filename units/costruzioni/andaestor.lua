@@ -12,9 +12,10 @@ return {
                buildpic = "andaestor.png",
                buildtime  = 20416,
                category = "ALL NOTSUB NOWEAPON NOTAIR SURFACE",
-               --collisionvolumeoffsets = "",
-               --collisionvolumescales = "",
-               --collisionvolumetype = "",
+               buildinggrounddecaldecayspeed= 0.01,
+               buildinggrounddecalsizex= 6,
+               buildinggrounddecalsizey = 6,
+               buildinggrounddecaltype = "pavimento_piccolo_and.png",	
                corpse = "andaestor_dead",
                description = "Increases Energy Storage (40000)",
                energystorage = 40000,
@@ -38,6 +39,7 @@ return {
                sightdistance = 192,
 --               soundcategory= "CORE_ESTOR",
                TEDClass = "ENERGY", -- verificare se necessario
+			   usebuildinggrounddecal = true,			   
                workertime = 0,
                YardMap= "ooooooooooooooooooooooooo",
 -----------------------------------------------------------

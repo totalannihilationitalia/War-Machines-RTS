@@ -11,6 +11,10 @@ return {
                buildcostmetal = 723,
                builder = true,
                buildpic = "andalab.png",
+               buildinggrounddecaldecayspeed= 0.01,
+               buildinggrounddecalsizex= 13,
+               buildinggrounddecalsizey = 13,
+               buildinggrounddecaltype = "pavimentazione_and.png",				   
                buildtime  = 7151,
                canmove = true,
                canPatrol = true,
@@ -51,6 +55,7 @@ return {
                TEDClass = "PLANT", -- verificare se necessario
                turnrate = 0,
 --               waterline = 5,
+               usebuildinggrounddecal = true,	
                workertime = 100,
                YardMap= "oocccccoo oocccccoo oocccccoo oocccccoo oocccccoo oocccccoo oocccccoo",
 -----------------------------------

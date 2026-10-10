@@ -10,6 +10,10 @@ return {
                buildcostmetal = 7384,
                builder = false,
                buildpic = "da_fare.png",
+               buildinggrounddecaldecayspeed= 0.01,
+               buildinggrounddecalsizex= 6,
+               buildinggrounddecalsizey = 6,
+               buildinggrounddecaltype = "pavimento_piccolo_and.png",					   
                buildtime  = 89185,
                canAttack = true,
 --               canstop = 1,
@@ -40,6 +44,7 @@ return {
 --               soundcategory= "ARM_BRTHA",
 --               standingfireorder = 0,
                TEDClass = "FORT", -- verificare se necessario
+			   usebuildinggrounddecal = true,				   			   
                workertime = 0,
                wpri_badtargetcategory = "VTOL",
                YardMap= "ooooooooo",

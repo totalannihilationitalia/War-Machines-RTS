@@ -13,6 +13,10 @@ return {
                buildcostmetal = 84,
                builder = false,
                buildpic = "andlartic.png",
+               buildinggrounddecaldecayspeed= 0.01,
+               buildinggrounddecalsizex= 6,
+               buildinggrounddecalsizey = 6,
+               buildinggrounddecaltype = "pavimento_piccolo_and.png",				   
                buildtime  = 2724,
                canAttack = true,
 --               canstop = 1,
@@ -49,6 +53,7 @@ return {
 --               standingfireorder = 2,
                TEDClass = "FORT", -- verificare se necessario
                turnrate = 0,
+               usebuildinggrounddecal = true,					   
                workertime = 0,
                wpri_badtargetcategory = "ANTILASER",
                YardMap= "oooo",

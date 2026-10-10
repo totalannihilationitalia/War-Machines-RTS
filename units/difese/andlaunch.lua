@@ -10,10 +10,10 @@ return {
                buildcostenergy = 2686524,
                buildcostmetal = 120965,
                builder = false,
- --              buildinggrounddecaldecayspeed= 0.01,
-  --             buildinggrounddecalsizex= 9,
-  --             buildinggrounddecalsizey = 9,
-  --             buildinggrounddecaltype = "asphalt512c.dds",
+               buildinggrounddecaldecayspeed= 0.01,
+               buildinggrounddecalsizex= 9,
+               buildinggrounddecalsizey = 9,
+               buildinggrounddecaltype = "pavimentazione_and.png",	
                buildpic = "andlaunch.png",
                buildtime  = 1774578,
                canGuard = true,
@@ -43,7 +43,7 @@ return {
                sightdistance = 500,
 --               soundcategory= "GATE",
                TEDClass = "SPECIAL", -- verificare se necessario
---               usebuildinggrounddecal = true,
+               usebuildinggrounddecal = true,
                workertime = 0,
                YardMap= "oooooooo oooooooo oooooooo oooooooo oooooooo oooooooo oooooooo oooooooo",
 -----------------------------------------------------------

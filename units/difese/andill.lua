@@ -12,6 +12,10 @@ return {
                buildcostmetal = 3500,
                builder = false,
                buildpic = "andill.png",
+               buildinggrounddecaldecayspeed= 0.01,
+               buildinggrounddecalsizex= 6,
+               buildinggrounddecalsizey = 6,
+               buildinggrounddecaltype = "pavimento_piccolo_and.png",						   
                buildtime  = 100000,
                canAttack = true,
 --               canstop = 1,
@@ -42,6 +46,7 @@ return {
 --               soundcategory= "ARM_ANNI",
 --               standingfireorder = 2,
                TEDClass = "FORT", -- verificare se necessario
+			   usebuildinggrounddecal = true,			   
                workertime = 0,
                wpri_badtargetcategory = "VTOL",
                YardMap= "ooooooooooooooo",

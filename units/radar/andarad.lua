@@ -13,6 +13,10 @@ return {
                buildcostmetal = 54,
                builder = false,
                buildpic = "andarad.png",
+               buildinggrounddecaldecayspeed= 0.01,
+               buildinggrounddecalsizex= 6,
+               buildinggrounddecalsizey = 6,
+               buildinggrounddecaltype = "pavimento_piccolo_and.png",				   
                buildtime  = 1137,
                canAttack = false,
                category = "ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE",
@@ -49,6 +53,7 @@ return {
 --               soundcategory= "ARM_RADAR",
                TEDClass = "SPECIAL", -- verificare se necessario
                turnrate = 0,
+			   usebuildinggrounddecal = true,				   
                workertime = 0,
                YardMap= "oooo",
 -----------------------------------------------------------

@@ -13,6 +13,10 @@ return {
                buildcostmetal = 4184,
                builder = false,
                buildpic = "andangel.png",
+               buildinggrounddecaldecayspeed= 0.01,
+               buildinggrounddecalsizex= 9,
+               buildinggrounddecalsizey = 9,
+               buildinggrounddecaltype = "pavimentazione_and.png",				   
                buildtime  = 85185,
                canAttack = true,
 --               canstop = 1,
@@ -48,6 +52,7 @@ return {
 --               standingfireorder = 0,
                TEDClass = "FORT", -- verificare se necessario
                turnrate = 0,
+               usebuildinggrounddecal = true,			   
                workertime = 0,
                wpri_badtargetcategory = "MOBILE",
                YardMap= "oooooooooooooooo",

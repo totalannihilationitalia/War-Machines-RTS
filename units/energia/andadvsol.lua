@@ -12,10 +12,10 @@ return {
                buildcostenergy = 4725,
                buildcostmetal = 343,
                builder = false,
---               buildinggrounddecaldecayspeed= 0.01,
---               buildinggrounddecalsizex= 5,
---               buildinggrounddecalsizey = 5,
---               buildinggrounddecaltype = "Pavimentazione3.png",
+               buildinggrounddecaldecayspeed= 0.01,
+               buildinggrounddecalsizex= 6,
+               buildinggrounddecalsizey = 6,
+               buildinggrounddecaltype = "pavimento_piccolo_and.png",	
                buildpic = "andadvsol.png",
                buildtime  = 7945,
                category = "ALL NOTSUB NOWEAPON NOTAIR SURFACE",
@@ -50,7 +50,7 @@ return {
 --               soundcategory= "ARM_SOLAR",
                TEDClass = "ENERGY", -- verificare se necessario
                turnrate = 0,
---			   usebuildinggrounddecal = true,
+			   usebuildinggrounddecal = true,
                workertime = 0,
                YardMap= "oooooooooooooooo",
 -----------------------------------------------------------

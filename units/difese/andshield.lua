@@ -15,9 +15,10 @@ return {
                buildpic = "andshield.png",
                buildtime  = 54139,
                category = "ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE",
-               --collisionvolumeoffsets = "",
-               --collisionvolumescales = "",
-               --collisionvolumetype = "",
+               buildinggrounddecaldecayspeed= 0.01,
+               buildinggrounddecalsizex= 6,
+               buildinggrounddecalsizey = 6,
+               buildinggrounddecaltype = "pavimento_piccolo_and.png",			
                corpse = "andshield_dead",
                description = "Plasma Deflector",
                energystorage = 1500,
@@ -45,6 +46,7 @@ return {
 --               soundcategory= "GATE",
                TEDClass = "SPECIAL", -- verificare se necessario
                turnrate = 0,
+			   usebuildinggrounddecal = true,				   
                workertime = 0,
                YardMap= "oooooooooooooooo",
 -----------------------------------------------------------

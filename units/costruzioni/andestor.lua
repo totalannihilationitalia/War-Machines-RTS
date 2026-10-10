@@ -13,6 +13,10 @@ return {
                buildcostmetal = 166,
                builder = false,
                buildpic = "andestor.png",
+               buildinggrounddecaldecayspeed= 0.01,
+               buildinggrounddecalsizex= 6,
+               buildinggrounddecalsizey = 6,
+               buildinggrounddecaltype = "pavimento_piccolo_and.png",				   
                buildtime  = 4257,
                category = "ALL NOTLAND NOTSUB NOWEAPON NOTSHIP NOTAIR SURFACE",
                --collisionvolumeoffsets = "",
@@ -43,6 +47,7 @@ return {
 --               soundcategory= "CORE_ESTOR",
                TEDClass = "ENERGY", -- verificare se necessario
                turnrate = 0,
+               usebuildinggrounddecal = true,					   
                workertime = 0,
                YardMap= "oooooooooooooooo",
 -----------------------------------------------------------
