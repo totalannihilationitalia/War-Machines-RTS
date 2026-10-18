@@ -43,7 +43,7 @@ return {
                metalStorage = 0,
                name = "Radar Tower",
                noAutoFire = false,
-               objectname = "icudetector.s3o",
+               objectname = "icurad.s3o",
                onoffable = true,
                radardistance = 2100,
                radaremitheight = 250,

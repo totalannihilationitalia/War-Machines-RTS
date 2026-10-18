@@ -37,7 +37,7 @@ return {
                metalStorage = 0,
                name = "Geothermal Powerplant",
                noAutoFire = false,
-               objectname = "icugeoterm.s3o",
+               objectname = "icugeo.s3o",
                seismicsignature = 0,
                selfdestructas = "ESTOR_BUILDING",
                sightdistance = 273,

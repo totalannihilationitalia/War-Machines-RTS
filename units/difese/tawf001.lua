@@ -44,7 +44,7 @@ return {
                metalStorage = 0,
                name = "Beamer",
                noAutoFire = false,
-               objectname = "icu_laser_turret.s3o",
+               objectname = "tawf001.s3o",
                seismicsignature = 0,
                selfdestructas = "MEDIUM_BUILDING",
                sightdistance = 475,
