@@ -44,7 +44,7 @@ return {
 --               mobilestandorders= 1,
                name = "Kbot Lab",
                noAutoFire = false,
-               objectname = "armlab.s3o",
+               objectname = "iculab.s3o",
                radardistance = 50,
                seismicsignature = 0,
                selfdestructas = "LARGE_BUILDING",
