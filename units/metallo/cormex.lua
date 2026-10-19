@@ -38,7 +38,7 @@ return {
                metalStorage = 50,
                name = "NFA Metal Extractor",
                noAutoFire = false,
-               objectname = "CORMEX.s3o",
+               objectname = "nfamex.s3o",
                onoffable = true,
                seismicsignature = 0,
                selfdestructas = "TINY_BUILDINGEX",

@@ -43,7 +43,7 @@ return {
                name = "Dragon's Maw",
                noAutoFire = false,
                nochasecategory = "MOBILE",
-               objectname = "dragon_fence_tower.s3o",
+               objectname = "nfamaw.s3o",
                radarDistanceJam = 8,
                seismicsignature = 0,
                selfdestructas = "MEDIUM_BUILDING",
