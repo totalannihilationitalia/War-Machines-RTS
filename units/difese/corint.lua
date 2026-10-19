@@ -43,7 +43,7 @@ return {
                maxwaterdepth = 0,
                metalStorage = 0,
                name = "Intimidator",
-               objectname = "nfa_long_plasma_cannon.s3o",
+               objectname = "nfaint.s3o",
                seismicsignature = 0,
                selfdestructas = "ATOMIC_BLAST",
                sightdistance = 273,
