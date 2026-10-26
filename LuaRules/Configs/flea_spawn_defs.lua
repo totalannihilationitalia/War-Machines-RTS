@@ -102,7 +102,7 @@ local retardmadTypes = {
   minigoth	=  {time = 44,  squadSize = 0.5},
 }
 
--- NON VENGONO RICHIAMATI DAL CLIENT VEDI SOTTO PER LE MODALITA###########################################################################
+-- Fire Spirits Edition NON VIENE RICHIAMATO DAL CLIENT/LOBBY WMRTS PERTANTO QUESTE UNITà SARANNO INUTILIZZATE###########################################################################
 local fireTypes = { 
   order_fire      =  {time =  0,  squadSize = 0.1,  obsolete = 30},
   order_nova      =  {time =  30,  squadSize = 0.1, obsolete = 50},
