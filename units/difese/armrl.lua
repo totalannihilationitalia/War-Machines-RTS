@@ -28,7 +28,7 @@ return {
 		maxwaterdepth = 0,
 		name = "Defender",
 		nochasecategory = "ALL",
-		objectname = "icuAA.s3o",
+		objectname = "icurl.s3o",
 		seismicsignature = 0,
 		selfdestructas = "BIG_UNIT",
 		sightdistance = 455,

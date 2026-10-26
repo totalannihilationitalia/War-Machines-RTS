@@ -48,7 +48,7 @@ return {
                name = "ICU Invasor",
                noAutoFire = false,
                nochasecategory = "VTOL",
-               objectname = "iculightplasrob.s3o",
+               objectname = "icuinv.s3o",
                seismicsignature = 0,
                selfdestructas = "BIG_UNIT",
                sightdistance = 380,

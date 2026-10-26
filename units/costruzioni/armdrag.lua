@@ -35,7 +35,7 @@ return {
                maxwaterdepth = 0,
                metalStorage = 0,
                name = "Dragon's Teeth",
-               objectname = "icufort.s3o",
+               objectname = "icudrag.s3o",
                seismicsignature = 0,
                selfdestructas = "",
                sightdistance = 1,

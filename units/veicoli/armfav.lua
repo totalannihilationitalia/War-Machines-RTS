@@ -47,7 +47,7 @@ return {
                name = "Jeffy",
                noAutoFire = false,
                nochasecategory = "VTOL",
-               objectname = "ARMFAV.s3o",
+               objectname = "icufav.s3o",
                seismicsignature = 0,
                selfdestructas = "SMALL_UNIT",
                sightdistance = 585,

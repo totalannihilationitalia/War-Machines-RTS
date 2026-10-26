@@ -41,7 +41,7 @@ return {
                mincloakdistance = 36,
                name = "Dragon's Eye",
                noAutoFire = false,
-               objectname = "icu_camera.s3o",
+               objectname = "icueyes.s3o",
                onoffable = false,
                seismicsignature = 0,
                selfdestructas = "",

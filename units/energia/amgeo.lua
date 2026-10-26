@@ -36,7 +36,7 @@ return {
                metalStorage = 0,
                name = "Moho Geothermal Powerplant",
                noAutoFire = false,
-               objectname = "icugeo.s3o",
+               objectname = "icuamgeo.s3o",
                seismicsignature = 0,
                selfdestructas = "NUCLEAR_MISSILE",
                sightdistance = 273,

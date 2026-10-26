@@ -47,7 +47,7 @@ return {
                name = "Warlord",
                noAutoFire = false,
                nochasecategory = "VTOL",
-               objectname = "nfa_nave001.s3o",
+               objectname = "nfabats.s3o", 
                seismicsignature = 0,
                selfdestructas = "BIG_UNIT",
                sightdistance = 455,

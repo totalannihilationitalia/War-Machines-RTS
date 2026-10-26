@@ -44,7 +44,7 @@ return {
                maxwaterdepth = 0,
                metalStorage = 0,
                name = "Buzzsaw",
-               objectname = "nfa_circular_cannon.s3o",
+               objectname = "nfabuzz.s3o",
                seismicsignature = 0,
                selfdestructas = "ATOMIC_BLAST",
                sightdistance = 273,

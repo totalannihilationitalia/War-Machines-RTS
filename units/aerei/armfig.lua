@@ -46,7 +46,7 @@ return {
 --               mobilestandorders= 1,
                name = "Freedom Fighter",
                noAutoFire = false,
-               objectname = "icu_fight.s3o",
+               objectname = "icufig.s3o",
                seismicsignature = 0,
                selfdestructas = "SMALL_UNIT",
                sightdistance = 530,

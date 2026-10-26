@@ -26,7 +26,7 @@ return {
 		movementclass = "AKBOT2",
 		name = "Jethro",
 		nochasecategory = "ALL",
-		objectname = "icu_AAKbot.s3o",
+		objectname = "icujeth.s3o",
 		seismicsignature = 0,
 		selfdestructas = "BIG_UNIT",
 		sightdistance = 377,

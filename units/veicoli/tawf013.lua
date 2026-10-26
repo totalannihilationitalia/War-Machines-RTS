@@ -48,7 +48,7 @@ return {
                name = "Shellshocker",
                noAutoFire = false,
                nochasecategory = "VTOL",
-               objectname = "icuarty.s3o",
+               objectname = "tawf013.s3o",
                seismicsignature = 0,
                selfdestructas = "BIG_UNIT",
                sightdistance = 364,

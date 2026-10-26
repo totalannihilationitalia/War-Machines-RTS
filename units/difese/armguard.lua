@@ -46,7 +46,7 @@ return {
                name = "Guardian",
                noAutoFire = false,
                nochasecategory = "MOBILE",
-               objectname = "icu_plascannon.s3o",
+               objectname = "icuguard.s3o",
                seismicsignature = 0,
                selfdestructas = "MEDIUM_BUILDING",
                sightdistance = 455,

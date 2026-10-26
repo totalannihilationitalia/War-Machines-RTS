@@ -39,7 +39,7 @@ return {
 --               mobilestandorders= 1,
                name = "Shipyard",
                noAutoFire = false,
-               objectname = "ICUSY.s3o",
+               objectname = "icusy.s3o",
                radardistance = 50,
                seismicsignature = 0,
                selfdestructas = "LARGE_BUILDING",

@@ -45,7 +45,7 @@ return {
                name = "Gaat Gun",
                noAutoFire = false,
                nochasecategory = "MOBILE",
-               objectname = "nfahvyturr.s3o",
+               objectname = "nfahlt.s3o",
                seismicsignature = 0,
                selfdestructas = "MEDIUM_BUILDING",
                sightdistance = 455,
