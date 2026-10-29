@@ -46,7 +46,7 @@ return {
                name = "Pit",
                noAutoFire = false,
                nochasecategory = "MOBILE",
-               objectname = "corpun.s3o",
+               objectname = "nfapun.s3o",
                seismicsignature = 0,
                selfdestructas = "MEDIUM_BUILDING",
                sightdistance = 455,

@@ -44,7 +44,7 @@ return {
 --               mobilestandorders= 1,
                name = "Vehicle Plant",
                noAutoFire = false,
-               objectname = "nfavf.s3o",
+               objectname = "nfavp.s3o",
                radardistance = 50,
                seismicsignature = 0,
                selfdestructas = "LARGE_BUILDING",

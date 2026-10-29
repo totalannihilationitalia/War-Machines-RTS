@@ -44,7 +44,7 @@ return {
 --               mobilestandorders= 1,
                name = "Advanced Kbot Lab",
                noAutoFire = false,
-               objectname = "nfalab.s3o",
+               objectname = "nfaalab.s3o",
                radardistance = 50,
                seismicsignature = 0,
                selfdestructas = "LARGE_BUILDING",

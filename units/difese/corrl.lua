@@ -28,7 +28,7 @@ return {
 		maxwaterdepth = 0,
 		name = "Pulverizer",
 		nochasecategory = "ALL",
-		objectname = "anti_air_basic_tower.s3o",
+		objectname = "nfarl.s3o",
 		seismicsignature = 0,
 		selfdestructas = "BIG_UNIT",
 		sightdistance = 455,
