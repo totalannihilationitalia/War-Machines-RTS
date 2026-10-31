@@ -44,7 +44,7 @@ return {
                maxwaterdepth = 0,
                metalStorage = 0,
                name = "Big Bertha",
-               objectname = "iculongplasma.s3o",
+               objectname = "icubrtha.s3o",
                seismicsignature = 0,
                selfdestructas = "ATOMIC_BLAST",
                sightdistance = 273,
