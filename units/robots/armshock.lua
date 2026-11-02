@@ -44,7 +44,7 @@ return {
                name = "Vanguard",
                noAutoFire = false,
                nochasecategory = "VTOL",
-               objectname = "ARMSHOCK",
+               objectname = "icushock.s3o",
                seismicsignature = 0,
                selfdestructas = "SHOCKER",
                sightdistance = 625,
