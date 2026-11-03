@@ -26,7 +26,7 @@ return {
 		movementclass = "AKBOT2",
 		name = "Crasher",
 		nochasecategory = "ALL",
-		objectname = "nfafear.s3o",
+		objectname = "nfacrash.s3o",
 		seismicsignature = 0,
 		selfdestructas = "BIG_UNIT",
 		sightdistance = 379.60000610352,

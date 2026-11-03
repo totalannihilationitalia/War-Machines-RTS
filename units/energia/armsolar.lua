@@ -42,7 +42,7 @@ return {
                metalStorage = 0,
                name = "Solar Collector",
                noAutoFire = false,
-               objectname = "ARMSOLAR.s3o",
+               objectname = "icusolar.s3o",
                onoffable = true,
                seismicsignature = 0,
                selfdestructas = "SMALL_BUILDING",

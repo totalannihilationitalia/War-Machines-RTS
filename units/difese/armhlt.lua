@@ -45,7 +45,7 @@ return {
                name = "Sentinel",
                noAutoFire = false,
                nochasecategory = "MOBILE",
-               objectname = "ARMHLT.s3o",
+               objectname = "icuhlt.s3o",
                seismicsignature = 0,
                selfdestructas = "MEDIUM_BUILDING",
                sightdistance = 494,

@@ -43,7 +43,7 @@ return {
                name = "Moho Exploiter",
                noAutoFire = false,
                nochasecategory = "MOBILE",
-               objectname = "cormexp.s3o",
+               objectname = "nfamexp.s3o",
                onoffable = true,
                seismicsignature = 0,
                selfdestructas = "SMALL_BUILDING",

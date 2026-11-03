@@ -40,7 +40,7 @@ return {
                mincloakdistance = 36,
                name = "Dragon's Eye",
                noAutoFire = false,
-               objectname = "nfa_stealth_camera.s3o",
+               objectname = "nfaeyes.s3o",
                onoffable = false,
                seismicsignature = 0,
 --               selfdestructas = "",
