@@ -47,7 +47,7 @@ return {
 		name = "Krow",
 		noautofire = false,
 		nochasecategory = "SUB VTOL",
-		objectname = "nfa_paladin.s3o",
+		objectname = "nfacrw.s3o",
 		radaremitheight = 28.8,
 		scale = 1,
 		seismicsignature = 0,
