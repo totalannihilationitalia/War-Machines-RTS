@@ -44,7 +44,7 @@ return {
 --               mobilestandorders= 1,
                name = "Aircraft Plant",
                noAutoFire = false,
-               objectname = "andaplat",
+               objectname = "andaplat.s3o",
                radardistance = 500,
                seismicsignature = 0,
                selfdestructas = "LARGE_BUILDING",

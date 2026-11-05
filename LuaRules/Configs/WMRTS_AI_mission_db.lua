@@ -70,6 +70,7 @@ local UNIT_DB = {
 ["packo"] = { type = "defence", ignore = true },
 ["armjamt"] = { type = "building", ignore = true },
 ["armtl"] = { type = "navalbuilding", ignore = true },
+["fhllt"] = { type = "defence", ignore = true },
 ["armfrad"] = { type = "navalbuilding", ignore = true },
 ["armfrl"] = { type = "navalbuilding", ignore = true }, 		-- ### creare floating defence????
 ["armfllt"] = { type = "navalbuilding", ignore = true },		-- ### creare floating defence????

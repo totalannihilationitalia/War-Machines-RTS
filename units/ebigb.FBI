@@ -3,7 +3,7 @@
 	UnitName=ebigb;
 	Version=1;
 	Side=ARM;
-	Objectname=ebigb;
+	Objectname=ebigb.s3o;
 	Designation=arm_BMF;
 	Name=Encryptonator;
 	Description=Advanced Tactical K-bot;

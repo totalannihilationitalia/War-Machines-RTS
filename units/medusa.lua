@@ -39,7 +39,7 @@ return {
                metalStorage = 0,
                name = "Medusa",
                noAutoFire = false,
-               objectname = "MEDUSA",
+               objectname = "andmedusa.s3o",
                radardistance = 0,
                selfdestructas = "MEDIUM_BUILDING",
                sightdistance = 380,

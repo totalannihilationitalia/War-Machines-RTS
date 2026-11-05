@@ -37,7 +37,7 @@ return {
                metalStorage = 0,
                name = "Ernie",
                noAutoFire = true,
-               objectname = "andernie",
+               objectname = "andernie.s3o",
                radardistance = 0,
                selfdestructas = "ATOMIC_BLAST",
                sightdistance = 240,
