@@ -33,7 +33,7 @@ return {
 --               mobilestandorders= 1,
                name = "Bio Lab",
                noAutoFire = false,
-               objectname = "eufblab",
+               objectname = "eufblab.s3o",
                radardistance = 0,
                selfdestructas = "MEDIUM_BUILDING",
                sightdistance = 202,
