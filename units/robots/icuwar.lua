@@ -47,7 +47,7 @@ return {
                name = "Warrior",
                noAutoFire = false,
                nochasecategory = "VTOL",
-               objectname = "icu_lethal.s3o",
+               objectname = "icuwar.s3o",
                seismicsignature = 0,
                selfdestructas = "SMALL_UNIT",
                sightdistance = 350,

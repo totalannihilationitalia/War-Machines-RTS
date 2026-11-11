@@ -47,7 +47,7 @@ return {
 --               mobilestandorders= 1,
                name = "Construction Aircraft",
                noAutoFire = false,
-               objectname = "ICUCA.s3o",
+               objectname = "icuca.s3o",
 --               scale = 0.8,
                seismicsignature = 0,
                selfdestructas = "SMALL_UNIT",
