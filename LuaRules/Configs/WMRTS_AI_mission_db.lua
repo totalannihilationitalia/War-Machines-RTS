@@ -47,6 +47,7 @@ local UNIT_DB = {
 	--------------------------------------------------------------------------------	
 -- Commander
 ["icucom"] = { type = "ground", ignore = true },
+["kicucom"] = { type = "ground", ignore = true },
 
 -- Costruzioni Tier 1
 ["armsolar"] = { type = "building", ignore = true },
@@ -227,6 +228,7 @@ local UNIT_DB = {
 	--------------------------------------------------------------------------------
 -- Commander
 ["nfacom"] = { type = "ground", ignore = true  },	
+["knfacom"] = { type = "ground", ignore = true  },	
 
 -- Costruzioni Tier 1
 ["corsolar"] = { type = "building", ignore = true },
@@ -559,6 +561,7 @@ local UNIT_DB = {
 
 -- Unità prodotte da eufap
 ["euffig"] = { type = "air" },
+["eufca"] = { type = "air", ignore = true  },
 
 -- Unità prodotte da eufblab -- ########################## implementare
 ["armmedic"] = { type = "ground", ignore = true  },
