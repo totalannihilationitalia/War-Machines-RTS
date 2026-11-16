@@ -557,6 +557,7 @@ local UNIT_DB = {
 ["eufthorn"] = { type = "ground" },
 ["eufsab"] = { type = "ground" },
 ["ruspa_builder"] = { type = "ground", ignore = true  },
+["euf_harvester"] = { type = "strategicbuilding", ignore = true },
 ["ruspa_camion"] = { type = "ground", ignore = true  },
 
 -- Unità prodotte da eufap
@@ -577,7 +578,7 @@ local UNIT_DB = {
 ["eufbigfoot"] = { type = "ground" },
 ["eufkaat"] = { type = "ground" },
 ["eufpilonax"] = { type = "ground" },
-
+["grayhound"] = { type = "ground" },
 
 }
 
