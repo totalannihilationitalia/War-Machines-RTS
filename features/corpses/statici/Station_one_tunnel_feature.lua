@@ -1,24 +1,24 @@
 return {
-  Station_one_tunnel_e_feature =
+  station_one_tunnel_e_feature =
   {
     description = "A bracket",
     blocking = true,
     damage = 1500,
     energy = 750,
     flammable = false,
-    featureDead ="Station_one_tunnel_e_feature_dead",
+    featureDead ="station_one_tunnel_e_feature_dead",
     noselect = false,
     metal = 375,
     footprintx = 1,
     footprintz = 1,
-    object = "Station_one_tunnel_e.s3o",
+    object = "station_one_tunnel_e.s3o",
     reclaimable = true,
     upright = true,
 --    collisionvolumeoffsets = "0 0 0",
 --    collisionvolumescales = "5 50 5",
 --    collisionvolumetype = "Box",
   },
-  Station_one_tunnel_e_feature_dead =
+  station_one_tunnel_e_feature_dead =
   {
     description = "Wreckage of a bracket",
     blocking = true,
@@ -30,7 +30,7 @@ return {
     metal = 125,
     footprintx = 1,
     footprintz = 1,
-    object = "Station_one_tunnel_rottami_e.s3o",
+    object = "station_one_tunnel_rottami_e.s3o",
     reclaimable = true,
     upright = true,
 --    collisionvolumeoffsets = "0 0 0",
@@ -38,26 +38,26 @@ return {
 --    collisionvolumetype = "Box",
   },
 
- Station_one_tunnel_o_feature =
+ station_one_tunnel_o_feature =
   {
     description = "A bracket",
     blocking = true,
     damage = 1500,
     energy = 750,
     flammable = false,
-    featureDead ="Station_one_tunnel_o_feature_dead",
+    featureDead ="station_one_tunnel_o_feature_dead",
     noselect = false,
     metal = 375,
     footprintx = 1,
     footprintz = 1,
-    object = "Station_one_tunnel_o.s3o",
+    object = "station_one_tunnel_o.s3o",
     reclaimable = true,
     upright = true,
 --    collisionvolumeoffsets = "0 0 0",
 --    collisionvolumescales = "5 50 5",
 --    collisionvolumetype = "Box",
   },
-  Station_one_tunnel_o_feature_dead =
+  station_one_tunnel_o_feature_dead =
   {
     description = "Wreckage of a bracket",
     blocking = true,
@@ -69,7 +69,7 @@ return {
     metal = 125,
     footprintx = 1,
     footprintz = 1,
-    object = "Station_one_tunnel_rottami_o.s3o",
+    object = "station_one_tunnel_rottami_o.s3o",
     reclaimable = true,
     upright = true,
 --    collisionvolumeoffsets = "0 0 0",
@@ -77,26 +77,26 @@ return {
 --    collisionvolumetype = "Box",
   },
 
- Station_one_tunnel_n_feature =
+ station_one_tunnel_n_feature =
   {
     description = "A bracket",
     blocking = true,
     damage = 1500,
     energy = 750,
     flammable = false,
-    featureDead ="Station_one_tunnel_n_feature_dead",
+    featureDead ="station_one_tunnel_n_feature_dead",
     noselect = false,
     metal = 375,
     footprintx = 1,
     footprintz = 1,
-    object = "Station_one_tunnel_n.s3o",
+    object = "station_one_tunnel_n.s3o",
     reclaimable = true,
     upright = true,
 --    collisionvolumeoffsets = "0 0 0",
 --    collisionvolumescales = "5 50 5",
 --    collisionvolumetype = "Box",
   },
-  Station_one_tunnel_n_feature_dead =
+  station_one_tunnel_n_feature_dead =
   {
     description = "Wreckage of a bracket",
     blocking = true,
@@ -108,7 +108,7 @@ return {
     metal = 125,
     footprintx = 1,
     footprintz = 1,
-    object = "Station_one_tunnel_rottami_n.s3o",
+    object = "station_one_tunnel_rottami_n.s3o",
     reclaimable = true,
     upright = true,
 --    collisionvolumeoffsets = "0 0 0",
@@ -116,26 +116,26 @@ return {
 --    collisionvolumetype = "Box",
   },
 
- Station_one_tunnel_s_feature =
+ station_one_tunnel_s_feature =
   {
     description = "A bracket",
     blocking = true,
     damage = 1500,
     energy = 750,
     flammable = false,
-    featureDead ="Station_one_tunnel_s_feature_dead",
+    featureDead ="station_one_tunnel_s_feature_dead",
     noselect = false,
     metal = 375,
     footprintx = 1,
     footprintz = 1,
-    object = "Station_one_tunnel_s.s3o",
+    object = "station_one_tunnel_s.s3o",
     reclaimable = true,
     upright = true,
 --    collisionvolumeoffsets = "0 0 0",
 --    collisionvolumescales = "5 50 5",
 --    collisionvolumetype = "Box",
   },
-  Station_one_tunnel_s_feature_dead =
+  station_one_tunnel_s_feature_dead =
   {
     description = "Wreckage of a bracket",
     blocking = true,
@@ -147,7 +147,7 @@ return {
     metal = 125,
     footprintx = 1,
     footprintz = 1,
-    object = "Station_one_tunnel_rottami_s.s3o",
+    object = "station_one_tunnel_rottami_s.s3o",
     reclaimable = true,
     upright = true,
 --    collisionvolumeoffsets = "0 0 0",

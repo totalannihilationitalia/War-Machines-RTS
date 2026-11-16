@@ -1,0 +1,86 @@
+[wreck_sparks]
+{
+	usedefaultexplosions=0;	
+	[groundflash]
+	{
+      		flashSize = 43;
+      		flashAlpha = 0.3;
+      		circleGrowth = 0.3;
+      		circleAlpha = 0.15;
+      		ttl = 17;
+      		color = 0, 0.5, 1;
+		air=1;
+     		ground=1;
+      	water=1;
+
+	}
+
+	[heatcloud]
+   		{
+      		[properties]
+      		{
+      		heat = 5;
+      		maxheat = 5;
+      		heatFalloff = 0.8;
+      		size = 0.35;
+      		sizeGrowth = 0.3;
+      		sizemod = 0;
+      		sizemodmod = 0;
+      		speed = -0.2 r0.4, -0.2 r0.4, -0.2 r0.4;
+      		pos = 0.1 r-0.2, 0.1 r-0.2, 0.1 r-0.2;
+      		}
+	air=1;
+      	water=1;
+      	ground=1;
+      	count=7;
+	}
+	[spikes]
+	{
+		class=explspike;
+		[properties]
+		{
+			dir=-45 r90,-45 r90,-45 r90;
+			width=8; //9;
+			length=0.8; //1;
+			alpha=0.7;
+			alphadecay=0.1 r0.3;
+			color=0, 0.5, 1;
+
+		}
+		air=1;
+		water=1;
+		ground=1;
+  		count=7; 
+	}
+	[burnstuff]  // scintille di impatto del proiettile col terreno
+	{
+		class=CSimpleParticleSystem;
+		[properties]
+		{
+		sizeGrowth=0;
+		sizeMod=1.0;
+		pos=0, 0, 0; 
+		emitVector=0, 1, 0;
+	      gravity=0, -0.4, 0;  
+		colorMap=0 0.5 1 0.01   0 0.2 0.7 0.01   0 0 0 0.01;
+		Texture=flamespark;  
+		airdrag=0.94;
+		particleLife=28;
+		particleLifeSpread=1;
+		numParticles=25;
+		particleSpeed=4.5;
+		particleSpeedSpread=1.8;
+		particleSize=2.1;
+		particleSizeSpread=2.4;
+		emitRot=30;
+		emitRotSpread=65;
+		directional=1;
+		alwaysVisible=1;
+		}
+	air=1;
+	water=1;
+	ground=1;
+	count=1;
+	}
+
+}

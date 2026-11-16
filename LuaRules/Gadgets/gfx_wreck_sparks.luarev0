@@ -1,0 +1,135 @@
+function gadget:GetInfo()
+    return {
+        name    = "Sparks FX on wreck",
+        desc    = "Spawna scintille randomiche sui rottami",
+        author  = "Molix",
+        date    = "2026",
+        license = "GPLv2",
+        layer   = 0,
+        enabled = true,
+    }
+end
+
+if not gadgetHandler:IsSyncedCode() then
+    return
+end
+
+-- Configurazione
+local DEBUG         = true              -- Metti false quando hai verificato che si vedono
+local CEG_NAME      = "gatorazzurro"    -- Se non si vede, prova "Gatorazzurro" e controlla infolog.txt
+local CEG_RADIUS    = 50                -- Evita 0 se il CEG scala su raggio/danno
+local CEG_DAMAGE    = 100
+local SPARK_CHANCE  = 1                 -- 1 = 100%, 0.35 = 35%
+local MIN_DELAY     = 15
+local MAX_DELAY     = 110
+
+-- Nomi (lowercase) dei FeatureDef interessati
+local TARGET_CORPSES = {
+    ["station_one_tunnel_e_feature_dead"] = true,
+    ["station_one_tunnel_o_feature_dead"] = true,
+    ["station_one_tunnel_n_feature_dead"] = true,
+    ["station_one_tunnel_s_feature_dead"] = true,
+}
+
+-- (Opzionale) Coordinate locali {x, y, z} rispetto al centro/base del modello .s3o
+-- Se lasci vuoto {} per un rottame, usera' il centro (midPos) + offset casuale.
+-- Esempio:
+-- ["station_one_tunnel_e_feature_dead"] = { {0, 25, 10}, {-12, 18, -5} },
+local SPARK_OFFSETS = {
+    ["station_one_tunnel_e_feature_dead"] = {},
+    ["station_one_tunnel_o_feature_dead"] = {},
+    ["station_one_tunnel_n_feature_dead"] = {},
+    ["station_one_tunnel_s_feature_dead"] = {},
+}
+
+local sparkingFeatures = {}
+
+local function LocalToWorld(bx, by, bz, fx, fz, lx, ly, lz)
+    -- Normalizza direzione orizzontale del feature (Spring 104)
+    local len = math.sqrt(fx * fx + fz * fz)
+    if len > 0.0001 then
+        fx, fz = fx / len, fz / len
+    else
+        fx, fz = 0, 1
+    end
+    -- Asse X locale perpendicolare a front (fx, fz)
+    local rx, rz = fz, -fx
+    return bx + lx * rx + lz * fx, by + ly, bz + lx * rz + lz * fz
+end
+
+local function TryRegisterFeature(featureID)
+    local defID = Spring.GetFeatureDefID(featureID)
+    if not defID then return end
+
+    local fDef = FeatureDefs[defID]
+    if not fDef or not fDef.name then return end
+
+    local fName = string.lower(fDef.name)
+    if not TARGET_CORPSES[fName] then return end
+
+    if math.random() > SPARK_CHANCE then return end
+
+    sparkingFeatures[featureID] = {
+        defName   = fName,
+        radius    = Spring.GetFeatureRadius(featureID) or 20,
+        height    = Spring.GetFeatureHeight(featureID) or 30,
+        nextFrame = Spring.GetGameFrame() + math.random(5, MAX_DELAY),
+    }
+
+    if DEBUG then
+        Spring.Echo("[SparksFX] Registrato rottame:", featureID, fName)
+    end
+end
+
+function gadget:Initialize()
+    for _, featureID in ipairs(Spring.GetAllFeatures()) do
+        TryRegisterFeature(featureID)
+    end
+end
+
+function gadget:FeatureCreated(featureID, allyTeamID)
+    TryRegisterFeature(featureID)
+end
+
+function gadget:FeatureDestroyed(featureID)
+    sparkingFeatures[featureID] = nil
+end
+
+function gadget:GameFrame(frame)
+    for featureID, data in pairs(sparkingFeatures) do
+        if not Spring.ValidFeatureID(featureID) then
+            sparkingFeatures[featureID] = nil
+        elseif frame >= data.nextFrame then
+            local bx, by, bz, mx, my, mz = Spring.GetFeaturePosition(featureID, true)
+            if bx then
+                local px, py, pz
+                local offsets = SPARK_OFFSETS[data.defName]
+
+                if offsets and #offsets > 0 then
+                    local pt = offsets[math.random(#offsets)]
+                    local fx, _, fz = Spring.GetFeatureDirection(featureID)
+                    px, py, pz = LocalToWorld(bx, by, bz, fx or 0, fz or 1, pt[1], pt[2], pt[3])
+                else
+                    -- Fallback automatico attorno al centro (midPos) del rottame
+                    local r = data.radius * 0.4
+                    px = (mx or bx) + (math.random() * 2 - 1) * r
+                    py = (my or (by + data.height * 0.5)) + math.random() * (data.height * 0.25)
+                    pz = (mz or bz) + (math.random() * 2 - 1) * r
+                end
+
+                -- Direzione casuale verso l'alto per le scintille
+                local dx = (math.random() * 2 - 1) * 0.4
+                local dy = 0.8 + math.random() * 0.2
+                local dz = (math.random() * 2 - 1) * 0.4
+
+                if DEBUG then
+                    Spring.Echo(string.format("[SparksFX] SpawnCEG('%s') a (%.1f, %.1f, %.1f)", CEG_NAME, px, py, pz))
+                end
+
+                Spring.SpawnCEG(CEG_NAME, px, py, pz, dx, dy, dz, CEG_RADIUS, CEG_DAMAGE)
+            end
+
+            data.nextFrame = frame + math.random(MIN_DELAY, MAX_DELAY)
+        end
+    end
+end

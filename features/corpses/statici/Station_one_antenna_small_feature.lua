@@ -1,24 +1,24 @@
 return {
-  Station_one_antenna_small_no_feature =
+  station_one_antenna_small_no_feature =
   {
     description = "An antenna",
     blocking = true,
     damage = 6000,
     energy = 3000,
     flammable = false,
-    featureDead ="Station_one_antenna_small_no_feature_dead",
+    featureDead ="station_one_antenna_small_no_feature_dead",
     noselect = false,
     metal = 1500,
     footprintx = 1,
     footprintz = 1,
-    object = "Station_one_antenna_small_no.s3o",
+    object = "station_one_antenna_small_no.s3o",
     reclaimable = true,
     upright = true,
 --    collisionvolumeoffsets = "0 0 0",
 --    collisionvolumescales = "5 50 5",
 --    collisionvolumetype = "Box",
   },
-  Station_one_antenna_small_no_feature_dead =
+  station_one_antenna_small_no_feature_dead =
   {
     description = "Wreckage of an antenna",
     blocking = true,
@@ -30,7 +30,7 @@ return {
     metal = 750,
     footprintx = 1,
     footprintz = 1,
-    object = "Station_one_antenna_small_rottami_no.s3o",
+    object = "station_one_antenna_small_rottami_no.s3o",
     reclaimable = true,
     upright = true,
 --    collisionvolumeoffsets = "0 0 0",
@@ -39,26 +39,26 @@ return {
   },
 
 
- Station_one_antenna_small_ne_feature =
+ station_one_antenna_small_ne_feature =
   {
     description = "An antenna",
     blocking = true,
     damage = 6000,
     energy = 3000,
     flammable = false,
-    featureDead ="Station_one_antenna_small_ne_feature_dead",
+    featureDead ="station_one_antenna_small_ne_feature_dead",
     noselect = false,
     metal = 1500,
     footprintx = 1,
     footprintz = 1,
-    object = "Station_one_antenna_small_ne.s3o",
+    object = "station_one_antenna_small_ne.s3o",
     reclaimable = true,
     upright = true,
 --    collisionvolumeoffsets = "0 0 0",
 --    collisionvolumescales = "5 50 5",
 --    collisionvolumetype = "Box",
   },
-  Station_one_antenna_small_ne_feature_dead =
+  station_one_antenna_small_ne_feature_dead =
   {
     description = "Wreckage of an antenna",
     blocking = true,
@@ -70,7 +70,7 @@ return {
     metal = 750,
     footprintx = 1,
     footprintz = 1,
-    object = "Station_one_antenna_small_rottami_ne.s3o",
+    object = "station_one_antenna_small_rottami_ne.s3o",
     reclaimable = true,
     upright = true,
 --    collisionvolumeoffsets = "0 0 0",
@@ -80,26 +80,26 @@ return {
 
 
 
- Station_one_antenna_small_se_feature =
+ station_one_antenna_small_se_feature =
   {
     description = "An antenna",
     blocking = true,
     damage = 6000,
     energy = 3000,
     flammable = false,
-    featureDead ="Station_one_antenna_small_se_feature_dead",
+    featureDead ="station_one_antenna_small_se_feature_dead",
     noselect = false,
     metal = 1500,
     footprintx = 1,
     footprintz = 1,
-    object = "Station_one_antenna_small_se.s3o",
+    object = "station_one_antenna_small_se.s3o",
     reclaimable = true,
     upright = true,
 --    collisionvolumeoffsets = "0 0 0",
 --    collisionvolumescales = "5 50 5",
 --    collisionvolumetype = "Box",
   },
-  Station_one_antenna_small_se_feature_dead =
+  station_one_antenna_small_se_feature_dead =
   {
     description = "Wreckage of an antenna",
     blocking = true,
@@ -111,7 +111,7 @@ return {
     metal = 750,
     footprintx = 1,
     footprintz = 1,
-    object = "Station_one_antenna_small_rottami_se.s3o",
+    object = "station_one_antenna_small_rottami_se.s3o",
     reclaimable = true,
     upright = true,
 --    collisionvolumeoffsets = "0 0 0",
@@ -119,26 +119,26 @@ return {
 --    collisionvolumetype = "Box",
   },
 
- Station_one_antenna_small_so_feature =
+ station_one_antenna_small_so_feature =
   {
     description = "An antenna",
     blocking = true,
     damage = 6000,
     energy = 3000,
     flammable = false,
-    featureDead ="Station_one_antenna_small_so_feature_dead",
+    featureDead ="station_one_antenna_small_so_feature_dead",
     noselect = false,
     metal = 1500,
     footprintx = 1,
     footprintz = 1,
-    object = "Station_one_antenna_small_so.s3o",
+    object = "station_one_antenna_small_so.s3o",
     reclaimable = true,
     upright = true,
 --    collisionvolumeoffsets = "0 0 0",
 --    collisionvolumescales = "5 50 5",
 --    collisionvolumetype = "Box",
   },
-  Station_one_antenna_small_so_feature_dead =
+  station_one_antenna_small_so_feature_dead =
   {
     description = "Wreckage of an antenna",
     blocking = true,
@@ -150,7 +150,7 @@ return {
     metal = 750,
     footprintx = 1,
     footprintz = 1,
-    object = "Station_one_antenna_small_rottami_so.s3o",
+    object = "station_one_antenna_small_rottami_so.s3o",
     reclaimable = true,
     upright = true,
 --    collisionvolumeoffsets = "0 0 0",

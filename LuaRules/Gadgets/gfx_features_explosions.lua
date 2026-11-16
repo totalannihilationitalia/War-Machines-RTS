@@ -26,20 +26,6 @@ end
 
 -- tabella / feature -> effetto esplosione, qui associo ad ogni feature la relativa esplosione
 local config = {
---[[
-  pala001_feature   = "building_destruction_heavy", 
-  pala002_feature   = "building_destruction_heavy",
-  pala003_feature   = "building_destruction_heavy",
-  pala004_feature   = "building_destruction_heavy",
-  pala005_feature   = "building_destruction_heavy",
-  pala006_feature   = "building_destruction_heavy",
-  pala007_feature   = "building_destruction_heavy",
-  pala008_feature   = "building_destruction_heavy",
-  pala009_feature   = "building_destruction_heavy",
-  pala010_feature   = "building_destruction_heavy",
-  pala011_feature   = "building_destruction_heavy",
-  pala001_feature   = "fleaesplosionipostatterraggio", 
-]]-- 
   pala001_feature   = "building_effects",  
   pala002_feature   = "building_effects",
   pala003_feature   = "building_effects",
@@ -51,9 +37,19 @@ local config = {
   pala009_feature   = "building_effects",
   pala010_feature   = "building_effects",
   pala011_feature   = "building_effects",  
-  Station_one_antenna_feature = "FLASH224",
-  -- ########## continuare la lista #########################################
-  
+  Station_one_antenna_feature = "COMMANDER_BLAST", -- ################### Inserire anche la versione dinamica!!!!! ##########
+  station_one_tunnel_n_feature = "building_effects",
+  station_one_tunnel_s_feature = "building_effects",
+  station_one_tunnel_o_feature = "building_effects",
+  station_one_tunnel_e_feature = "building_effects", 
+  station_one_scudi_n_feature = "building_effects", 
+  station_one_scudi_s_feature = "building_effects", 
+  station_one_scudi_o_feature = "building_effects", 
+  station_one_scudi_e_feature = "building_effects",   
+  station_one_antenna_small_no_feature = "building_effects",   
+  station_one_antenna_small_ne_feature = "building_effects",     
+  station_one_antenna_small_so_feature = "building_effects",   
+  station_one_antenna_small_se_feature = "building_effects"     
 }
 
 -- tabella utilizzata per ID feature sulla mappa -> relativa CeG (ossia all'inizio il gadget esegue un ciclo for di tutte le featuresMap per prelevarne l'ID, se essa è presente nella tabella config, le scrive nella tabella featureNamesToCEG con la relativa esplosione da creare quando la feature muore)
