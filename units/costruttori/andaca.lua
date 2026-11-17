@@ -26,7 +26,7 @@ return {
                --collisionvolumetype = "",
                cruiseAlt = 120, --70
 --               defaultmissiontype = VTOL_standby,
-               description = "Tech Level 1",
+               description = "Tech Level 2",
                energymake = 5,
                energystorage = 25,
                energyUse = 5,
