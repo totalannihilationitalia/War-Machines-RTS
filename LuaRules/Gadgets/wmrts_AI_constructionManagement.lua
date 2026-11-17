@@ -1075,14 +1075,248 @@ local function CountUnitsInQueues(teamID, category, faction)
 	return totalInQueue
 end	
 
-	--------------------------------------------------------------------------------
-	-- 4) GADGET CORE
-	--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- 4) GADGET CORE
+--------------------------------------------------------------------------------
+
+	local function ProcessAITeam(teamID, n)
+		-- Se il team AI è stato sconfitto/eliminato, non processarlo (esce solo da questo team!)
+		local isDead = select(3, Spring.GetTeamInfo(teamID))
+		if isDead then return end
+
+		local faction = teamFactions[teamID]
+		if not faction or not CATEGORY_TO_UNIT[faction] then return end
+
+		CheckStuckBuilders(teamID, n) -- Chiama la funzione di controllo costruttori bloccati
+
+		if not teamBasePos[teamID] then
+			local units = Spring.GetTeamUnits(teamID)
+			if units and #units > 0 then
+				local x, y, z = Spring.GetUnitPosition(units[1])
+				teamBasePos[teamID] = {x = x, y = y, z = z}
+			else
+				return -- Ora esce SOLO da ProcessAITeam, non blocca le altre AI!
+			end
+		end
+
+		local currentLvl = teamLevels[teamID]
+
+		------------------------------------------------------------------------
+		-- LOGICA DI RESET LIVELLO di tipo B: Ritorno al Livello 0 se: le fabbriche sono distrutte oppure abbiamo meno di x estrattori oppure abbiamo meno di y fabbriche di energia
+		------------------------------------------------------------------------
+		if currentLvl > 0 then
+			-- Contiamo tutti i tipi di fabbriche, Mex e Energia 
+			local nFabbriche = CountUnitsInCategory(teamID, "CAT_FACTORY_T1", faction)
+			local nMex = CountUnitsInCategory(teamID, "CAT_MEX_T1", faction) + CountUnitsInCategory(teamID, "CAT_MEX_T2", faction)
+			local nEnergia = CountUnitsInCategory(teamID, "CAT_ENERGY_T1", faction) + CountUnitsInCategory(teamID, "CAT_ENERGY_T2", faction)
+
+			-- Condizioni di fallimento critico:
+			local fallimentoFabbriche = (nFabbriche == 0)
+			local fallimentoMetallo   = (nMex < 2)
+			local fallimentoEnergia   = (nEnergia < 2)
+
+			if fallimentoFabbriche or fallimentoMetallo or fallimentoEnergia then
+				teamLevels[teamID] = 0
+				if commanderCurrentBehaviour[teamID] ~= "constructor" then
+					local comID = GetCommanderID(teamID, faction)
+					if comID then Spring.GiveOrderToUnit(comID, CMD.STOP, {}, {}) end
+				end
+				commanderCurrentBehaviour[teamID] = "constructor"
+
+				if GG.WMRTS_Levels then GG.WMRTS_Levels[teamID] = 0 end
+
+--				local motivo = fallimentoFabbriche and "No Factories" or (fallimentoMetallo and "Low Metal" or "Low Energy")
+--				Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Critical Failure (" .. motivo .. ")! Reverting to Level 0.")
+				currentLvl = 0
+			end
+		end
+		------------------------------------------------------------------------
+
+		local config = AI_BUILD_LEVELS[currentLvl]
+		if not config then return end
+
+		-- Calcolo dinamico dei raggi della base (entro cui l'AI può costruire), basato sul "fattoreVariazioneRaggio" impostato per ogni livello
+		local fvr = config.fattoreVariazioneRaggio or 0
+		local raggioDinamicoStrutture = 600 + (fvr * 150)
+		local raggioDinamicoFactory   = 700 + (fvr * 200)
+		UpdateTeamWarStatus(teamID, teamBasePos[teamID], raggioDinamicoFactory)
+
+		------------------------------------------------------------------------
+		-- LOGICA COMPORTAMENTO COMANDANTE (combehaviour)
+		------------------------------------------------------------------------
+		local targetBehaviour = config.combehaviour or "constructor"
+
+		-- Eseguiamo il comando solo se il comportamento è cambiato
+		if commanderCurrentBehaviour[teamID] ~= targetBehaviour then
+			local comID = GetCommanderID(teamID, faction)
+
+			if comID then
+				if targetBehaviour == "patrolbase" then
+					Spring.GiveOrderToUnit(comID, CMD.STOP, {}, {})
+					local bp = teamBasePos[teamID]
+					-- Creiamo un triangolo di pattuglia attorno alla base
+					Spring.GiveOrderToUnit(comID, CMD.PATROL, {bp.x + 150, bp.y, bp.z + 150}, {"shift"})
+					Spring.GiveOrderToUnit(comID, CMD.PATROL, {bp.x - 150, bp.y, bp.z - 150}, {"shift"})
+--					Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Comandante (" .. UnitDefs[Spring.GetUnitDefID(comID)].name .. ") in PATROL MODE")
+
+				elseif targetBehaviour == "constructor" then
+					Spring.GiveOrderToUnit(comID, CMD.STOP, {}, {})
+--					Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Comandante in BUILDER MODE")
+				end
+
+				commanderCurrentBehaviour[teamID] = targetBehaviour
+			end
+		end
+
+		-- Logica Avanzamento Livello
+		local levelBroken = false
+		for _, req in ipairs(config.requisiti) do
+			if CountUnitsInCategory(teamID, req.cat, faction) < req.count then
+				levelBroken = true
+				break
+			end
+		end
+		if not levelBroken and AI_BUILD_LEVELS[currentLvl + 1] then
+			teamLevels[teamID] = currentLvl + 1
+			if not GG.WMRTS_Levels then GG.WMRTS_Levels = {} end
+			GG.WMRTS_Levels[teamID] = teamLevels[teamID]
+			Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Level Up -> " .. teamLevels[teamID])
+			return
+		end
+
+		-- Identificazione Costruttori e Fabbriche
+		local builders = {}
+		local factories = {}
+		local teamUnits = Spring.GetTeamUnits(teamID)
+		for _, uID in ipairs(teamUnits) do
+			local ud = UnitDefs[Spring.GetUnitDefID(uID)]
+			if ud then
+				if ud.canBuild or ud.isBuilder then
+					if Spring.GetCommandQueue(uID, 0) == 0 and not Spring.GetUnitIsBuilding(uID) then
+						table.insert(builders, uID)
+					end
+				end
+				if ud.isFactory then table.insert(factories, uID) end
+			end
+		end
+
+		-- Esecuzione Requisiti
+		local started = 0
+		for _, req in ipairs(config.requisiti) do
+			if started >= config.simultanea then break end
+
+			local totalPresent = CountUnitsInCategory(teamID, req.cat, faction)
+			local totalPending = CountUnitsInQueues(teamID, req.cat, faction)
+
+			if (totalPresent + totalPending) < req.count then
+				local unitName = GetRandomUnitFromCat(faction, req.cat)
+				local uDef = unitName and UnitDefNames[unitName]
+
+				if uDef then
+					-- CASO A: È una STRUTTURA (Richiede un Builder)
+					if uDef.isBuilding or uDef.isStructure then
+						local assigned = false
+						local totalFree = #builders
+						local capableFound = false
+
+						if totalFree > 0 then
+							-- cerchiamo tra tutti i builders disponibili
+							for i = #builders, 1, -1 do -- Ciclo inverso per poter rimuovere l'elemento
+								local bID = builders[i]
+								if CanBuilderBuildThis(bID, uDef.id) then
+									capableFound = true
+									local bx, by, bz
+									local targetUpgradeMexID, mx, my, mz
+									local T2metalBuildType = config.T2metalBuildType or "new"
+
+									-- LOGICA di costruzione ESTRATTORI T1 e T2
+									if req.cat == "CAT_MEX_T1" or req.cat == "CAT_MEX_T2" then
+										if req.cat == "CAT_MEX_T2" and T2metalBuildType == "upgrade" then
+											targetUpgradeMexID, mx, my, mz = GetMexT1ToUpgrade(teamID, faction, teamBasePos[teamID])
+											if targetUpgradeMexID then
+												bx, by, bz = mx, my, mz
+											end
+										end
+										if not bx then
+											local bx_curr, by_curr, bz_curr = Spring.GetUnitPosition(bID)
+											bx, by, bz = GetClosestMetalSpot(bx_curr, bz_curr, bID, faction, teamID)
+										end
+									-- LOGICA di costruzione fabbriche
+									elseif req.cat == "CAT_FACTORY_T1" or req.cat == "CAT_FACTORY_T2" or req.cat == "CAT_FACTORY_T3" then
+										bx, by, bz = GetSafeBuildPosFactory(uDef.id, teamBasePos[teamID], metalSpots, raggioDinamicoFactory)
+									-- LOGICA di costruzione di tutte le altre strutture
+									else
+										bx, by, bz = GetSafeBuildPos(uDef.id, teamBasePos[teamID], metalSpots, raggioDinamicoStrutture)
+									end
+
+									-- controllo se l'unità riesce a raggiungere la posizione
+									if bx and CanBuilderReachPos(bID, bx, by, bz, faction) then
+										if targetUpgradeMexID then
+											Spring.GiveOrderToUnit(bID, CMD.INSERT, {0, CMD.RECLAIM, 0, targetUpgradeMexID}, {"alt"})
+											Spring.GiveOrderToUnit(bID, CMD.INSERT, {1, -uDef.id, 0, mx, my, mz, 1}, {"alt"})
+										else
+											Spring.GiveOrderToUnit(bID, -uDef.id, {bx, by, bz, 0}, {})
+										end
+
+										table.remove(builders, i)
+										started = started + 1
+										assigned = true
+										break
+									end -- fine if raggiungibilità
+								end -- fine if CanBuilderBuild
+							end -- fine for builders
+						end -- fine if totalFree
+
+						-- LOG DI DEBUG AVANZATO
+						if not assigned and (n % 450 == 0) then
+							if totalFree == 0 then
+--								Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - STALLO: Nessun costruttore LIBERO per costruire " .. unitName)
+							elseif not capableFound then
+--								Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - ERRORE COSTRUTTORE: " .. totalFree .. " costruttori liberi, ma NESSUNO sa costruire " .. unitName)
+							else
+--								Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - SPAZIO PIENO: Costruttori pronti, ma non trovo una posizione valida (SafePos) per " .. unitName)
+							end
+						end
+
+					-- CASO B: È un'UNITA' MOBILE COSTRUTTRICE CHE RICHIEDE UNA FABBRICA
+					else
+						for _, fID in ipairs(factories) do
+							local fud = UnitDefs[Spring.GetUnitDefID(fID)]
+							local canProduce = false
+							if fud and fud.buildOptions then
+								for _, optID in ipairs(fud.buildOptions) do
+									if optID == uDef.id then canProduce = true; break end
+								end
+							end
+
+							if canProduce then
+								-- Evita di spammare se la fabbrica ha già l'unità in coda
+								local alreadyBuilding = false
+								local q = Spring.GetFullBuildQueue(fID)
+								if q then
+									for _, item in ipairs(q) do
+										if item[uDef.id] then alreadyBuilding = true; break end
+									end
+								end
+
+								if not alreadyBuilding then
+--									Spring.Echo("WMRTS_contrMngm_AI: Factory " .. fID .. " priority production: inietto l'unità " .. unitName)
+									Spring.GiveOrderToUnit(fID, CMD.INSERT, {1, -uDef.id, 0}, {"alt", "ctrl"})
+									started = started + 1
+									break
+								end
+							end -- fine canProduce
+						end -- fine for factories
+					end -- fine if isBuilding / else
+				end -- fine if uDef
+			end -- fine if totalPresent
+		end -- fine for requisiti
+	end -- fine ProcessAITeam
 
 	function gadget:GameFrame(n)
-		if n < 35 then return end 
+		if n < 35 then return end
 		if not scanDone then AnalyzeMetalMap() end
-		if (n % 150 ~= 0) then return end 
+		if (n % 150 ~= 0) then return end
 
 		-- IDENTIFICAZIONE TEAM (Solo quelli con la tua IA specifica)
 		local teamList = Spring.GetTeamList()
@@ -1100,7 +1334,7 @@ end
 					elseif string.find(lowerSide, "nfa") then
 						teamFactions[teamID] = "NFA"
 					elseif string.find(lowerSide, "euf") then
-						teamFactions[teamID] = "EUF"						
+						teamFactions[teamID] = "EUF"
 					else
 						teamFactions[teamID] = "ICU" -- Default se non trova nulla o è ICU
 					end
@@ -1110,231 +1344,6 @@ end
 		end
 
 		for teamID, _ in pairs(aiTeamIDs) do
-			local faction = teamFactions[teamID]
-	 
-			CheckStuckBuilders(teamID, n) -- Chiama la funzione di controllo costruttori bloccati
-
-			if not teamBasePos[teamID] then
-				local units = Spring.GetTeamUnits(teamID)
-				if units and #units > 0 then
-					local x,y,z = Spring.GetUnitPosition(units[1])
-					teamBasePos[teamID] = {x=x, y=y, z=z}
-				else return end
-			end
-
-			local currentLvl = teamLevels[teamID]
-		
-			------------------------------------------------------------------------
-			-- LOGICA DI RESET LIVELLO di tipo B: Ritorno al Livello 0 se:  le fabbriche sono distrutte oppure abbiamo meno di x estrattori oppure abbiamo meno di y fabbriche di energia
-			------------------------------------------------------------------------
-			if currentLvl > 0 then
-				-- Contiamo tutti i tipi di fabbriche, Mex e Energia 
-				local nFabbriche = CountUnitsInCategory(teamID, "CAT_FACTORY_T1", faction) 															-- per ora ho messo solo le fabbriche T1
-				local nMex = CountUnitsInCategory(teamID, "CAT_MEX_T1", faction)+CountUnitsInCategory(teamID, "CAT_MEX_T2", faction) 				-- sommo gli estrattori delle categorie T1 e T2
-				local nEnergia = CountUnitsInCategory(teamID, "CAT_ENERGY_T1", faction) + CountUnitsInCategory(teamID, "CAT_ENERGY_T2", faction) 	-- sommo le fabbriche di energia delle categorie T1 e T2
-				
-				-- Condizioni di fallimento critico:
-				local fallimentoFabbriche = (nFabbriche == 0)		-- Se le fabbriche T0 sono totalmente distrutte
-				local fallimentoMetallo   = (nMex < 2)       		-- Se scende sotto i 2 estrattori di metallo
-				local fallimentoEnergia   = (nEnergia < 2)   		-- Se scende sotto i 2 powerplant
-
-				if fallimentoFabbriche or fallimentoMetallo or fallimentoEnergia then 	-- Se è presente una di queste condizioni...
-					teamLevels[teamID] = 0												-- ... livello AI torna a 0
-					if commanderCurrentBehaviour[teamID] ~= "constructor" then							-- ... il comandante viene forzato a diventare costruttore ######## verificare se serve perchè a lvl è impostato come costruttore per cui non dovrebbe servire questa logica
-						local comID = GetCommanderID(teamID, faction)									-- ... il comandante viene forzato a diventare costruttore ######## verificare se serve perchè a lvl è impostato come costruttore per cui non dovrebbe servire questa logica
-						if comID then Spring.GiveOrderToUnit(comID, CMD.STOP, {}, {}) end				-- ... il comandante viene forzato a diventare costruttore ######## verificare se serve perchè a lvl è impostato come costruttore per cui non dovrebbe servire questa logica
-					end																					-- ... il comandante viene forzato a diventare costruttore ######## verificare se serve perchè a lvl è impostato come costruttore per cui non dovrebbe servire questa logica
-				commanderCurrentBehaviour[teamID] = "constructor" -- Forza il ritorno a costruttore		-- ... il comandante viene forzato a diventare costruttore ######## verificare se serve perchè a lvl è impostato come costruttore per cui non dovrebbe servire questa logica
-					
-					if GG.WMRTS_Levels then GG.WMRTS_Levels[teamID] = 0 end
-					
-					local motivo = fallimentoFabbriche and "No Factories" or (fallimentoMetallo and "Low Metal" or "Low Energy")
---					Spring.Echo(string.char(255, 0, 0, 0))
---					Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Critical Failure (" .. motivo .. ")! Reverting to Level 0.")
-					currentLvl = 0 
-				end
-			end
-			------------------------------------------------------------------------		
-			
-			
-			local config = AI_BUILD_LEVELS[currentLvl]
-			if not config then return end
-
-			-- Calcolo dinamico dei raggi della base (entro cui l'AI può costruire), basato sul "fattoreVariazioneRaggio " impostato per ogni livello
-			local fvr = config.fattoreVariazioneRaggio or 0 						-- Se dimentichi di scriverlo nel livello, usa 0
-			local raggioDinamicoStrutture = 600 + (fvr * 150) 						-- Ogni punto fattore aggiunge 150 elmos
-			local raggioDinamicoFactory   = 700 + (fvr * 200) 						-- Le fabbriche si allargano di più
-			UpdateTeamWarStatus(teamID, teamBasePos[teamID], raggioDinamicoFactory) -- Richiamo la funzione helper per aggiornare lo stato di guerra e i raggi della base e la posizione
-    ------------------------------------------------------------------------			
-
-	------------------------------------------------------------------------
-			-- LOGICA COMPORTAMENTO COMANDANTE (combehaviour)
-			------------------------------------------------------------------------
-			local targetBehaviour = config.combehaviour or "constructor" 				-- constructor come comportamento di default
-			
-			-- Eseguiamo il comando solo se il comportamento è cambiato
-			if commanderCurrentBehaviour[teamID] ~= targetBehaviour then
-				local comID = GetCommanderID(teamID, faction)
-				
-				if comID then
-					if targetBehaviour == "patrolbase" then								-- se il livello richiede patrolbase, gli dai un ordine di PATROL....
-						Spring.GiveOrderToUnit(comID, CMD.STOP, {}, {})					-- ... prima "stoppa" qualunque funzione stesse facendo)
-						local bp = teamBasePos[teamID]									-- preleva la posizione della base
-						-- Creiamo un triangolo di pattuglia attorno alla base
-						Spring.GiveOrderToUnit(comID, CMD.PATROL, {bp.x + 150, bp.y, bp.z + 150}, {"shift"})
-						Spring.GiveOrderToUnit(comID, CMD.PATROL, {bp.x - 150, bp.y, bp.z - 150}, {"shift"})
---						Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Comandante (" .. UnitDefs[Spring.GetUnitDefID(comID)].name .. ") in PATROL MODE")
-					
-					elseif targetBehaviour == "constructor" then						-- se il livello richiede constructor...
-						Spring.GiveOrderToUnit(comID, CMD.STOP, {}, {})					-- ... dai al comandante un ordine di stop, lui rimarrà idle, il resto della logica lo vedrà fermo e lo impiegherà come costruttore.
---						Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Comandante in BUILDER MODE")
-					end
-					
-					commanderCurrentBehaviour[teamID] = targetBehaviour
-				end
-			end
-
-			-- Logica Avanzamento Livello
-			local levelBroken = false
-			for _, req in ipairs(config.requisiti) do
-				if CountUnitsInCategory(teamID, req.cat, faction) < req.count then
-					levelBroken = true; break
-				end
-			end
-			if not levelBroken and AI_BUILD_LEVELS[currentLvl + 1] then
-				teamLevels[teamID] = currentLvl + 1
-				if not GG.WMRTS_Levels then GG.WMRTS_Levels = {} end
-				GG.WMRTS_Levels[teamID] = teamLevels[teamID]
---				Spring.Echo(string.char(0, 255, 0, 0))
-				Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Level Up -> " .. teamLevels[teamID])
-				return
-			end
-
-			-- Identificazione Costruttori e Fabbriche
-			local builders = {}
-			local factories = {}
-			local teamUnits = Spring.GetTeamUnits(teamID)
-			for _, uID in ipairs(teamUnits) do
-				local ud = UnitDefs[Spring.GetUnitDefID(uID)]
-				if ud then
-					if ud.canBuild or ud.isBuilder then
-						if Spring.GetCommandQueue(uID, 0) == 0 and not Spring.GetUnitIsBuilding(uID) then -- Se il costruttore non ha ordini in coda (GetCommandQueue == 0) ...
-							table.insert(builders, uID) --...allora consideralo libero e dagli un ordine
-						end
-					end
-					if ud.isFactory then table.insert(factories, uID) end
-				end
-			end
-
-			-- Esecuzione Requisiti
-			local started = 0
-			for _, req in ipairs(config.requisiti) do
-				if started >= config.simultanea then break end
-				
-				local totalPresent = CountUnitsInCategory(teamID, req.cat, faction)
-				local totalPending = CountUnitsInQueues(teamID, req.cat, faction)
-
-				if (totalPresent + totalPending) < req.count then
-					local unitName = GetRandomUnitFromCat(faction, req.cat)
-					local uDef = UnitDefNames[unitName]
---					local targetUpgradeMexID = nil
-					
-					if uDef then
-						-- CASO A: È una STRUTTURA (Richiede un Builder)		
-						if uDef.isBuilding or uDef.isStructure then
-							local assigned = false
-							local totalFree = #builders
-							local capableFound = false
-
-							if totalFree > 0 then
-							-- cerchiamo tra tutti i builders disponibili
-								for i = #builders, 1, -1 do -- Ciclo inverso per poter rimuovere l'elemento
-									local bID = builders[i]
-									if CanBuilderBuildThis(bID, uDef.id) then
-										capableFound = true
-										local bx, by, bz
-										local targetUpgradeMexID, mx, my, mz
-										local T2metalBuildType = config.T2metalBuildType or "new" -- chiamo la variabile T2metalBuildType dalla tabella dei livelli
-										-- LOGICA di costruzione ESTRATTORI T1 e T2 (definite dalla tabella AI_BUILD_LEVELS) ----------------------------------------------------------------
-										if req.cat == "CAT_MEX_T1" or req.cat == "CAT_MEX_T2" then 				-- se la logica richiede un "CAT_MEX_T1" o "CAT_MEX_T2"...
-											if req.cat == "CAT_MEX_T2" and T2metalBuildType == "upgrade" then 	-- se la logica richiede un "CAT_MEX_T2" in modalità "upgrade"...
-												-- ...esegui la funzione per eseguire l'upgrade
-												targetUpgradeMexID, mx, my, mz = GetMexT1ToUpgrade(teamID, faction, teamBasePos[teamID]) -- prendi dalla funzione l'id dell'estrattore T1 e la relativa posizione						
-												if targetUpgradeMexID then 		-- se ha trovato un estrattore upgradabile...
-													bx, by, bz = mx, my, mz -- ...salva le coordinate per dopo (l'upgrade, che funziona prima "richiamando" l'estrattore T1 reamite ID e poi costurendo l'estrattore T2 in mx,my mz
-												end
-											end
-											if not bx then -- se non ha trovato le coordinate per l'upgrade... vuol dire che l'AI non trova alcun Mex T1 da potenziare (magari sono già tutti T2), a questo punto...
-												local bx_curr, by_curr, bz_curr = Spring.GetUnitPosition(bID) 				-- ...salva le coordinate del builder per la funzione "GetClosestMetalSpot"...
-												bx, by, bz = GetClosestMetalSpot(bx_curr, bz_curr, bID, faction, teamID) 	-- ... e preleva le coordinate dello spot più vicino per costruire l'estrattore ( raticamente come se T2metalBuildType fosse impostato su "new" perchè ha gia eseguito tutti gli "upgrade" possibili)
-											end			-- fine modalità upgrade
-										-- LOGICA di costruzione fabbriche	----------------------------------------------------------------------------------------------------------------
-										elseif req.cat == "CAT_FACTORY_T1" or req.cat == "CAT_FACTORY_T2" or req.cat == "CAT_FACTORY_T3" then
-												bx, by, bz = GetSafeBuildPosFactory(uDef.id, teamBasePos[teamID], metalSpots, raggioDinamicoFactory)
-										-- LOGICA di costruzione di tutte le altre strutture -----------------------------------------------------------------------------------------------
-										else
-											bx, by, bz = GetSafeBuildPos(uDef.id, teamBasePos[teamID], metalSpots, raggioDinamicoStrutture)
-										end
-
-									-- controllo se l'unità riesce a raggiungere la posizione 
-									if bx and CanBuilderReachPos(bID, bx, by, bz, faction) then 
-										if targetUpgradeMexID then 			-- nel caso stia facendo un upgrade ad un estrattore di metallo
-											Spring.GiveOrderToUnit(bID, CMD.INSERT, {0, CMD.RECLAIM, 0, targetUpgradeMexID}, {"alt"})
-											Spring.GiveOrderToUnit(bID, CMD.INSERT, {1, -uDef.id, 0, mx, 0, mz, 1}, {"alt"})
-										else 								-- nel caso stia costruendo normalmente una delle costruzioni definite dalla logica sopra (un costruttore da nuovo, una fabbrica o una delle altre strutture )
-											Spring.GiveOrderToUnit(bID, -uDef.id, {bx, by, bz, 0}, {})
-										end
-
-										table.remove(builders, i)
-										started = started + 1
-										assigned = true
-										break 
-									end -- fine if raggiungibilità
-								end -- fine if CanBuilderBuild
-							end -- fine for builders
-						end -- fine if totalFree
-						
-						-- LOG DI DEBUG AVANZATO
-						if not assigned and (n % 450 == 0) then -- Notifica ogni 15 secondi per non intasare
-							if totalFree == 0 then
---									Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - STALLO: Nessun costruttore LIBERO per costruire " .. unitName)
-							elseif not capableFound then
---									Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - ERRORE COSTRUTTORE: " .. totalFree .. " costruttori liberi, ma NESSUNO sa costruire " .. unitName)
-							else
---								Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - SPAZIO PIENO: Costruttori pronti, ma non trovo una posizione valida (SafePos) per " .. unitName)
-							end
-						end
-					-- CASO B: È un UNITA' MOBILE COSTRUTTRICE CHE RICHIEDE UNA FABBRICA
-					else
-						for _, fID in ipairs(factories) do
-							local fud = UnitDefs[Spring.GetUnitDefID(fID)]
-							local canProduce = false
-							for _, optID in ipairs(fud.buildOptions) do
-								if optID == uDef.id then canProduce = true; break end
-							end
-							
-							if canProduce then
-								-- Evita di spammare se la fabbrica ha già l'unità in coda
-								local alreadyBuilding = false
-								local q = Spring.GetFullBuildQueue(fID)
-								if q then
-									for _, item in ipairs(q) do
-										if item[uDef.id] then alreadyBuilding = true; break end
-									end
-								end
-
-								if not alreadyBuilding then
---									Spring.Echo("WMRTS_contrMngm_AI: Factory " .. fID .. " priority production: inietto l'unità " .. unitName)
---										Spring.GiveOrderToUnit(fID, -uDef.id, {}, {"alt"}) 			-- elimino questa priorità, altrimenti interferirebbe con la formazione di gruppi nel target military, devo inserire l'unità senza interrompere quella che sta facendo
-									Spring.GiveOrderToUnit(fID, CMD.INSERT, {1, -uDef.id, 0}, {"alt", "ctrl"})
-									started = started + 1
-									break 
-								end
-							end -- fine canproduce
-						end -- fine for factories
-					end -- fine if isBuilding / else
-				end -- fine if uDef
-			end -- fine if totalPresent
-		end -- fine for requisiti
-	end -- fine for teamIDs
-end -- fine function
+			ProcessAITeam(teamID, n)
+		end
+	end -- fine function
