@@ -37,7 +37,9 @@ local TARGET_CORPSES = {
     ["station_one_scudi_n_feature_dead"] = true,
     ["station_one_scudi_s_feature_dead"] = true,
     ["station_one_scudi_o_feature_dead"] = true,
-    ["station_one_scudi_e_feature_dead"] = true,		
+    ["station_one_scudi_e_feature_dead"] = true,	
+    ["Station_one_antenna_feature_dead"] = true,		
+	
 }
 
 local sparkingFeatures = {}
