@@ -57,12 +57,14 @@ nanotower o costruttori aiutanti???
 	--    ["Zoty Outpost"] = { land = true, air = true, sea = false },		-- cancello perchè è come default
 	}
 
-	-- tabella per monitorare la posizione nel tempo delle unità indicate, serve alla logica per monitorare la posizione dei costruttori e individuare quelli che sono bloccati (perchè non raggiungono una posizione per la costruzione dell'estrattore di metallo)
+	-- tabella per monitorare la posizione nel tempo delle unità indicate (tutti i costruttori non volanti!!), serve alla logica per monitorare la posizione dei costruttori e individuare quelli che sono bloccati (perchè non raggiungono una posizione prestabilita per la costruzione dell'estrattore di metallo)
 	local LIMITED_CONSTRUCTORS = {
 		-- ICU
-		["icucom"] = true, ["icuck"] = true, ["armcv"] = true, ["armcs"] = true, ["kicucom"] = true,
+		["icucom"] = true, ["icuck"] = true, ["armcv"] = true, ["armcs"] = true, ["kicucom"] = true, ["armack"] = true, ["armacv"] = true, ["armacsub"] = true,
+		-- NFA
+		["nfacom"] = true, ["corck"] = true, ["corcv"] = true, ["corcs"] = true, ["knfacom"] = true, ["corack"] = true, ["coracv"] = true, ["coracsub"] = true,		
 		-- AND
-		["andcom"] = true, ["andcon"] = true, ["andcv"] = true, ["andcs"] = true, -- ######################### sistemare la tabella AND #######################
+		["andcom"] = true, ["andcsp"] = true, ["andch"] = true, ["andacsp"] = true, ["andach"] = true
 	}
 
 	-- tabella dei comandanti, serve alla logica per capire quali sono i comandanti e controllarne il comportamento in funzione della variabile "combehaviour" in "local AI_BUILD_LEVELS"
@@ -70,6 +72,7 @@ nanotower o costruttori aiutanti???
 		["ICU"] = { ["icucom"] = true, ["kicucom"] = true },
 		["NFA"] = { ["nfacom"] = true, ["knfacom"] = true },
 		["AND"] = { ["andcom"] = true }, 
+		-- ################################################### INSERIRE =EUF=   ########################################################
 	}
 	-- Tabella per la Blacklist degli spot (se una delle unità definite in LIMITED_CONSTRUCTORS rimarra bloccata nel tentativo di costruire un giacimento, metteremo quel giacimento nella blacklist)
 	local blacklistedSpots = {} -- [teamID][spotIndex] = true
@@ -87,7 +90,7 @@ nanotower o costruttori aiutanti???
 	----------------------------
 		["ICU"] = {
 	-- categorie per le FUNZIONI - utilizzate nelle funzioni helper o nella logica CORE del gadget. ATTENZIONE, QUANDO SI MODIFICA UNA DI QUESTE CATEGORIE, VERIFICARE SEMPRE DOVE VIENE USATA NELLA LOGICA!!!!
-			["CAT_ALL_CONSTRUCTORS"] 		= { "icucom", "icuck", "armcv", "armca", "armcs" }, 	-- categoria con tutti i costruttori (incluso il comandante), la uso al livello 0 per due motivi: 1) in caso di distruzione totale, quando l'AI torna a 0, se uno dei costruttori elencati è sopravvissuto, lo usa per ripartire con le costruzioni dal livello 0. 2) col game start, si parte col comandante, che è incluso nella lista. Soddisfa quindi il requisito del lvl 0.	
+			["CAT_ALL_CONSTRUCTORS"] 		= { "icucom", "icuck", "armcv", "armca", "armcs" }, 	-- categoria con tutti i costruttori (incluso il comandante e aerei), la uso al livello 0 per due motivi: 1) in caso di distruzione totale, quando l'AI torna a 0, se uno dei costruttori elencati è sopravvissuto, lo usa per ripartire con le costruzioni dal livello 0. 2) col game start, si parte col comandante, che è incluso nella lista. Soddisfa quindi il requisito del lvl 0.	
 			["CAT_ALL_AIR_CONSTRUCTORS"] 	= { "armca", "armaca" }, 								-- categoria con tutti gli aerei costruttori, necessaria ad ignorare le unità indicate nella funzione per il calcolo del pathfinding durante la costruzione dell'estrattore più vicino. Vanno direttamente a costruire in quel punto x,y,z preferendo la "linea d'aria"
 	-- categorie per le costruzioni
 			["CAT_MEX_T1"]          = { "icumetex" },				-- estrattori T1			
@@ -132,7 +135,7 @@ nanotower o costruttori aiutanti???
 	----------------------------		
 		["NFA"] = {
 	-- categorie per le FUNZIONI - utilizzate nelle funzioni helper o nella logica CORE del gadget. ATTENZIONE, QUANDO SI MODIFICA UNA DI QUESTE CATEGORIE, VERIFICARE SEMPRE DOVE VIENE USATA NELLA LOGICA!!!!
-			["CAT_ALL_CONSTRUCTORS"] 		= { "nfacom", "corck", "corcv", "corca", "corcs" }, 	-- categoria con tutti i costruttori (incluso il comandante), la uso al livello 0 per due motivi: 1) in caso di distruzione totale, quando l'AI torna a 0, se uno dei costruttori elencati è sopravvissuto, lo usa per ripartire con le costruzioni dal livello 0. 2) col game start, si parte col comandante, che è incluso nella lista. Soddisfa quindi il requisito del lvl 0.	
+			["CAT_ALL_CONSTRUCTORS"] 		= { "nfacom", "corck", "corcv", "corca", "corcs" }, 	-- categoria con tutti i costruttori (incluso il comandante e aerei), la uso al livello 0 per due motivi: 1) in caso di distruzione totale, quando l'AI torna a 0, se uno dei costruttori elencati è sopravvissuto, lo usa per ripartire con le costruzioni dal livello 0. 2) col game start, si parte col comandante, che è incluso nella lista. Soddisfa quindi il requisito del lvl 0.	
 			["CAT_ALL_AIR_CONSTRUCTORS"] 	= { "corca", "coraca" }, 								-- categoria con tutti gli aerei costruttori, necessaria ad ignorare le unità indicate nella funzione per il calcolo del pathfinding durante la costruzione dell'estrattore più vicino. Vanno direttamente a costruire in quel punto x,y,z preferendo la "linea d'aria"
 	-- categorie per le costruzioni
 			["CAT_MEX_T1"]          = { "cormex" },					-- estrattori T1			
@@ -177,8 +180,8 @@ nanotower o costruttori aiutanti???
 	----------------------------
 		["AND"] = {
 	-- categorie per le FUNZIONI - utilizzate nelle funzioni helper o nella logica CORE del gadget. ATTENZIONE, QUANDO SI MODIFICA UNA DI QUESTE CATEGORIE, VERIFICARE SEMPRE DOVE VIENE USATA NELLA LOGICA!!!!
-			["CAT_ALL_CONSTRUCTORS"] 		= { "andcom", "andcsp", "andch", "andca" }, 			-- categoria con tutti i costruttori (incluso il comandante), la uso al livello 0 per due motivi: 1) in caso di distruzione totale, quando l'AI torna a 0, se uno dei costruttori elencati è sopravvissuto, lo usa per ripartire con le costruzioni dal livello 0. 2) col game start, si parte col comandante, che è incluso nella lista. Soddisfa quindi il requisito del lvl 0.	
-			["CAT_ALL_AIR_CONSTRUCTORS"] 	= { "andca", "andaca" }, 								-- categoria con tutti gli aerei costruttori, necessaria ad ignorare le unità indicate nella funzione per il calcolo del pathfinding durante la costruzione dell'estrattore più vicino. Vanno direttamente a costruire in quel punto x,y,z preferendo la "linea d'aria"
+			["CAT_ALL_CONSTRUCTORS"] 		= { "andcom", "andcsp", "andch", "andca" }, 	-- categoria con tutti i costruttori (incluso il comandante e aerei), la uso al livello 0 per due motivi: 1) in caso di distruzione totale, quando l'AI torna a 0, se uno dei costruttori elencati è sopravvissuto, lo usa per ripartire con le costruzioni dal livello 0. 2) col game start, si parte col comandante, che è incluso nella lista. Soddisfa quindi il requisito del lvl 0.	
+			["CAT_ALL_AIR_CONSTRUCTORS"] 	= { "andca", "andaca" }, 						-- categoria con tutti gli aerei costruttori, necessaria ad ignorare le unità indicate nella funzione per il calcolo del pathfinding durante la costruzione dell'estrattore più vicino. Vanno direttamente a costruire in quel punto x,y,z preferendo la "linea d'aria"
 	-- categorie per le costruzioni
 			["CAT_MEX_T1"]          = { "andmexun" },									-- estrattori T1			
 			["CAT_MEX_T2"]          = { "andametex" },									-- estrattori T2	
@@ -695,7 +698,7 @@ end
 					local exitClear = true
 					for _, p in ipairs(points) do
 						-- Testiamo se un'unità generica (es. un tank) può stare in quei punti
-						if Spring.TestBuildOrder(UnitDefNames["icuck"].id, p[1], Spring.GetGroundHeight(p[1], p[2]), p[2], 0) <= 0 then
+						if Spring.TestBuildOrder(UnitDefNames["icuck"].id, p[1], Spring.GetGroundHeight(p[1], p[2]), p[2], 0) <= 0 then		-- in questo caso il sistema controlla un unità di terra. Chiaramente se l'AI si utilizzerà per unità navali, non funzionerà. Attualmente l'AI non supporta unità di mare!! nel caso implementare ################
 							exitClear = false; break
 						end
 					end

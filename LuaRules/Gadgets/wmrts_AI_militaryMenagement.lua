@@ -785,7 +785,7 @@ local factories = {}
 -- 	  groupSize = 0,
 --    bucket = {} -- Qui finiscono gli ID delle unità mentre vengono create
 -- }
-local squads = {}     		-- [sID] = { units = {}, targetSize, state, type, myTeam, etc }
+local squads = {}     		-- [sID] = { units = {}, targetSize, warMode , type, myTeam, etc }
 local basePoint = {}		-- Tabella: [teamID] = coordinate del punto base per ogni singolo team (0, 1, 2...)
 local baseRadius = {}		-- Tabella: [teamID] = raggio di difesa della base per ogni singolo team (0, 1, 2...)
 local warStatus = {}		-- Tabella: [teamID] = stato di guerra  per ogni singolo team (0, 1, 2...), può essere "attacco", "difesa_leggera", "difesa_pesante". Si veda "wmrts_AI_constructionManagement.lua" per maggiori dettagli        
@@ -954,7 +954,7 @@ local function GetSmartEnemyTarget(myTeamID, squadType)
 	return { x = Game.mapSizeX/2, y = 0, z = Game.mapSizeZ/2 }	-- decidere come impegnare le unità senza target
 end
 
--- Funzione per trovare il bersaglio nel raggio della base (verrà utilizzata nella modalità difesa). Se non troverà alcun bersaglio all'interno dell'area (perchè ha distrutto tutto), chiama la funzione GetSmartEnemyTarget che è quella per l'attacco.
+-- Funzione per trovare il bersaglio nel raggio della base (verrà utilizzata nella modalità difesa). Se non troverà alcun bersaglio all'interno dell'area (perchè non ci sono più nemici), chiama la funzione GetSmartEnemyTarget che è quella per l'attacco.
 local function GetSmartEnemyTargetInBaseRadious(myTeamID, squadType)
 	local bPos = basePoint[myTeamID]
 	local bRad = baseRadius[myTeamID]
@@ -1290,10 +1290,11 @@ function gadget:GameFrame(n)
                 local newSquadID = fID .. "_" .. fData.nProgressivo
                 squads[newSquadID] = {
                     units = fData.bucket,		 -- elenca questa riga con tutte le unità elencate nella riga bucket, facenti parte del gruppo che la fabbrica ha scelto e creato
-                    state = "attacking_monitor", -- Le unità sono già tutte finite, partono subito
-                    myTeam = fData.teamID,
+                    state = "attacking_monitor", -- Le unità sono già tutte finite, partono subito	-- ######### eliminare, non viene più utilizzato ######################
+                    warMode = warStatus[fData.teamID],
+					myTeam = fData.teamID,
                     type = fData.squadType,
-                    startTime = Spring.GetGameSeconds()
+                    startTime = Spring.GetGameSeconds()		-- ######### eliminare, non viene più utilizzato ######################
                 }
 --                Spring.Echo(string.format("AI [Gruppo %s]: Gruppo pronto (%d unità). All'attacco!", newSquadID, #fData.bucket))
                 
