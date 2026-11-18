@@ -1,7 +1,7 @@
 function gadget:GetInfo()
 	return {
 		name      = "WMRTS Squad Commander AI",
-		desc      = "AI V17-18 for War Machnines RTS",
+		desc      = "AI V20 for War Machnines RTS",
 		author    = "molix",
 		date      = "2025",
 		license   = "GPL",
@@ -28,6 +28,7 @@ end
 -- 03/03/2026 = road to V20 - alcune fabbriche rimangono in standby e non producono più, variata logica per renderle libere
 -- 03/03/2026 = inserita gestione "recupero orfani", ossia quelle unità che per qualche ragione di guerra (fabbrica distrutta, sotto attacco ecc) non riesce ad inserirsi in un gruppo e quindi non riceverebbe ordini
 -- 06/03/2026 = irrobustito il codice (la gestione delle unità ora viene fatta esclusivamente da tabelle cosi da avere i gruppi corretti). Rimossa temporaneamente la gestione del recupero orfani in quanto con le tabelle esisteranno orfani solo se le fabbriche vengono distrutte durante la produzione del gruppo
+-- 18/11/2026 = road to V21, aggiungo la funzione GiveDefenceOrder (voglio diversificare le azioni attacco in attacco e attacco in difesa)
 
 
 -- to do LIST ################################
@@ -160,12 +161,12 @@ local SQUAD_TEMPLATES = {
 	},	
 -- armaap
 	["ICU_armaap_light_patrol_1"] = {
-		units = { "armhawk", "armhawk", "armhawk" }, 
+		units = { "armbrawl", "armbrawl", "armbrawl" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["ICU_armaap_light_patrol_2"] = {
-		units = { "armhawk", "armhawk"}, 
-		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+		units = { "armhawk", "armhawk" }, 
+		type = "air_toair" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},		
 	
 ---------------
@@ -226,12 +227,12 @@ local SQUAD_TEMPLATES = {
 	},	
 -- coraap
 	["NFA_coraap_light_patrol_1"] = {
-		units = { "corvamp", "corvamp", "corvamp" }, 
+		units = { "corcrw" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["NFA_coraap_light_patrol_2"] = {
 		units = { "corvamp", "corvamp"}, 
-		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
+		type = "air_toair" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},		
 	
 ---------------
@@ -283,11 +284,11 @@ local SQUAD_TEMPLATES = {
 	},	
 -- andahp
 	["AND_andahp_light_patrol_1"] = {
-		units = { "armmart", "armmart", "armlatnk", "andahaa" }, 
+		units = { "andtanko", "androck", "andtesla", "andahaa" }, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},
 	["AND_andahp_light_patrol_2"] = {
-		units = { "armlatnk", "armlatnk", "andahaa"}, 
+		units = { "andtesla", "andtesla", "andahaa"}, 
 		type = "ground" -- squadtype, nella logica di targeting (punto 4) andrà a definire cosa attaccare 
 	},	
 -- andaplat
@@ -854,7 +855,7 @@ local function GetSmartEnemyTarget(myTeamID, squadType)
 	
 	-- Variabili per la logica di priorità dei bombardieri 
 	local bestTarget = nil
-	local highestPriority = -1
+	local highestPriority = -1 	-- ############# meglio = 0 ?????????
 
 	for i = 1, #allUnits do
 		local uID = allUnits[i]
@@ -964,7 +965,7 @@ local function GetSmartEnemyTargetInBaseRadious(myTeamID, squadType)
 	local gaiaTeamID = Spring.GetGaiaTeamID()
 	local radSq = bRad * bRad -- Usiamo il quadrato del raggio per evitare math.sqrt (ottimizzazione)
 	local bestTarget = nil
-	local highestPriority = -1
+	local highestPriority = -1	-- ############# meglio = 0 ?????????
 	for i = 1, #allUnits do
 		local uID = allUnits[i]
 		local uTeam = Spring.GetUnitTeam(uID)
@@ -1268,7 +1269,7 @@ function gadget:GameFrame(n)
                     fData.squadType = template.type
                     fData.nProgressivo = fData.nProgressivo + 1
                     fData.bucket = {} 
-                    fData.groupSize = #template.units 									-- la variabile groupsize = quante entità ci sono nel gruuppo (in lua # restituisce il numero di entità nella tabella)
+                    fData.groupSize = #template.units 									-- la variabile groupsize = quante entità ci sono nel gruppo (in lua # restituisce il numero di entità nella tabella)
 
                     for i, uName in ipairs(template.units) do							-- Avvia un loop da ripetere i volte in base a quante unità ci sono nel tamplate (nel gruppo che ho scelto) -- ipairs(template.units): Prende la lista delle unità (es. {"icupatroller", "icupatroller", "icurock", "icurock"}); i: È l'indice del ciclo (1, 2, 3, 4); uName: È il nome dell'unità in quel momento (es. al primo giro è "icupatroller").
                         local uDef = UnitDefNames[uName]								-- per ogni ciclo assegna uDef al nome dell'unità
@@ -1287,24 +1288,35 @@ function gadget:GameFrame(n)
         -- STATO B: Fabbrica IDLE ma RISULTA IN USO -> Scarica Secchiello e Crea Squadra!
         elseif fData.inUso and (#fData.bucket >= (fData.groupSize or 1)) then
             if #fData.bucket > 0 then
+				local currentWarMode = warStatus[fData.teamID] or "attacco" -- imposta la modalità di attacco della AI (difesa_leggera, pesante o attacco)
                 local newSquadID = fID .. "_" .. fData.nProgressivo
                 squads[newSquadID] = {
                     units = fData.bucket,		 -- elenca questa riga con tutte le unità elencate nella riga bucket, facenti parte del gruppo che la fabbrica ha scelto e creato
                     state = "attacking_monitor", -- Le unità sono già tutte finite, partono subito	-- ######### eliminare, non viene più utilizzato ######################
-                    warMode = warStatus[fData.teamID],
+                    warMode = currentWarMode,	
 					myTeam = fData.teamID,
                     type = fData.squadType,
                     startTime = Spring.GetGameSeconds()		-- ######### eliminare, non viene più utilizzato ######################
                 }
 --                Spring.Echo(string.format("AI [Gruppo %s]: Gruppo pronto (%d unità). All'attacco!", newSquadID, #fData.bucket))
                 
-                -- Primo ordine d'attacco immediato
-                local target = GetSmartEnemyTarget(fData.teamID, fData.squadType)
-                for _, uID in ipairs(fData.bucket) do
-                    if Spring.ValidUnitID(uID) then GiveAttackOrder(uID, target, fData.squadType) end
-                end
-            end
-            fData.inUso = false
+                -- Primo ordine d'attacco a gruppo completato in base allo stato di guerra (in realtà quando l'ultima unità del gruppo è in costruzione) ###
+				local target = nil													-- creo variabile locale (la imposto nil temporaneamente)
+				if currentWarMode == "attacco" then									-- imposto target attacco se siamo in fase di attacco
+					target = GetSmartEnemyTarget(fData.teamID, fData.squadType)		-- tramite la funzione attackEnemtTarget scelgo il target in attatto
+				elseif currentWarMode == "difesa_leggera" or currentWarMode == "difesa_pesante" then	-- imposto un target in difesa se siamo in fase di difesa leggera o pesante, cosi i nuovi gruppi vanno a difendere la base
+					target = GetSmartEnemyTargetInBaseRadious(fData.teamID, fData.squadType)
+				end
+				
+				if target then
+					for _, uID in ipairs(fData.bucket) do
+						if Spring.ValidUnitID(uID) then 
+							GiveAttackOrder(uID, target, fData.squadType) 
+						end
+					end
+				end
+			end
+			fData.inUso = false
             fData.bucket = {}
 			fData.groupSize = 0 -- Resettiamo il gruppo
         end
@@ -1315,7 +1327,7 @@ function gadget:GameFrame(n)
     if n % 90 == 0 then
         for sID, sData in pairs(squads) do
             local anyAlive = false
-            local anyIdle = false
+            local anyIdle = false		-- c'è almeno un'unità idle in questa squadra? per idle si intende che non ha ordini in "queque" (l'ordine verrà poi dato alla singola unità idle)
             local teamID = sData.myTeam
 
             -- Pulizia morti e check Idle
@@ -1329,21 +1341,27 @@ function gadget:GameFrame(n)
                 end
             end
 
-            if anyAlive then
-                if anyIdle then
-                    local targetAttack = GetSmartEnemyTarget(teamID, sData.type)
-                    local targetDefence = GetSmartEnemyTargetInBaseRadious(teamID, sData.type)
-                    local insideUnits, outsideUnits = SplitUnitsByRadius(sData.units, basePoint[teamID], baseRadius[teamID])
-                    
-                    -- Logica Attacco/Difesa
+            if anyAlive then 	-- se le unità sono vive
+				if warStatus[teamID] == "difesa_pesante" then	-- spostato fuori da anyidle, le unità devono rientrare sempre (attenzione alla frequenza del comando 3 sec. Va testato per vedere se le unità si fermano e ripartono
+					local target = GetSmartEnemyTargetInBaseRadious(teamID, sData.type) or basePoint[teamID] -- il target in modalità "difesa_pesante" è stabilito dalla funzione GetSmartEnemyTargetInBaseRadious. è stato implementato con "or basePoint[teamID]" perchè  se una di queste unità non ha un target (ad esempio se un aereo anti aereo non ha aerei nella base, esegue comunque un comando fight attorno alla base).
+                    for _, uID in ipairs(sData.units) do	-- per tutte le unità...
+--                        if Spring.GetCommandQueue(uID, 0) == 0 then GiveAttackOrder(uID, target, sData.type) end -- diventa come riga successiva
+					GiveAttackOrder(uID, target, sData.type) -- do direttamente il comando di attacco in difesa,  ### ATTENZIONE: in questa fase di difesa pesante,  do il comando a tutte le unità ogni 3 secondi tramite la funzione GiveAttackOrder, funzione che contiene un comando di stop. questo fa si che tutte le unità si stoppano e riprendono...  o si toglie il comando stop nella funzione, o si crea un'ulteriore funzione GiveDefenseOrder
+                    end
+--				end
+                elseif anyIdle then	-- se warStatus non è "difesa_pesante" e nel caso in cui le unità diventano idle
+                    local targetAttack = GetSmartEnemyTarget(teamID, sData.type)					
+                    local targetDefence = GetSmartEnemyTargetInBaseRadious(teamID, sData.type)	
+                    local insideUnits, outsideUnits = SplitUnitsByRadius(sData.units, basePoint[teamID], baseRadius[teamID]) 	                    
+                    -- In base allo stato di WarStatus Attacco/Difesaleggera, per le unità vive e idle
                     if warStatus[teamID] == "attacco" then
                         for _, uID in ipairs(sData.units) do
                             if Spring.GetCommandQueue(uID, 0) == 0 then GiveAttackOrder(uID, targetAttack, sData.type) end
                         end
-                    elseif warStatus[teamID] == "difesa_leggera" or warStatus[teamID] == "difesa_pesante" then
+                    elseif warStatus[teamID] == "difesa_leggera" then -- or warStatus[teamID] == "difesa_pesante" then -- sposto il caso di difesa pesante fuori da anyidle, le unità devono rientrare subito a difendere
                         local target = targetDefence or targetAttack
-                        for _, uID in ipairs(sData.units) do
-                            if Spring.GetCommandQueue(uID, 0) == 0 then GiveAttackOrder(uID, target, sData.type) end
+                        for _, uID in ipairs(sData.units) do -- per tutte le unità...
+                            if Spring.GetCommandQueue(uID, 0) == 0 then GiveAttackOrder(uID, target, sData.type) end -- se la commandQueque è vuota -> dai l'ordine di attacco
                         end
                     end
                 end
