@@ -234,6 +234,20 @@ nanotower o costruttori aiutanti???
 	-- "T2metalBuildType" gestisce come vengono costruiti gli estrattori T2:
 	--			= new,				default - l'estrattore T2 viene costruito su uno spot di metallo libero
 	--			= upgrade,			l'AI preferirà potenziare i mex esistenti a partire da quelli più vicino alla base
+--[[ 
+	-- "fattoreVariazioneRaggio=" rappresenta la variazione dei raggio (in elmos) entro cui l'ai costruisce rispettivamente strutture, fabbriche e imposta il raggio di difesa (che definisce lo stato di guerra)
+fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
+1	750		900		2900
+2	900		1100	3100
+3	1050	1300	3300
+4	1200	1500	3500
+5	1350	1700	3700
+6	1500	1900	3900
+7	1650	2100	4100
+8	1800	2300	4300
+9	1950	2500	4500
+10	2100	2700	4700
+]]--	
 		[0] = { 												-- livello di partenza. può diventare anche livello di RESET LIVELLO AI quando subisce pesanti attacchi (vedere sotto logica di RESET LIVELLO). E' importante che vi siano, in questo livello, le costruzioni che, in loro assenza/mancato numero (definito dalla logica di "RESET LIVELLO") resettino l'AI, altrimenti si entra in un LOOP infinito di salto livello (0 -> 1 e torna subito a 0)
 			simultanea = 1,
 			fattoreVariazioneRaggio = 0,			
@@ -339,7 +353,7 @@ nanotower o costruttori aiutanti???
 		},		-- end livello  [n]			
 		[7] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 7,
-			fattoreVariazioneRaggio = 1,						
+			fattoreVariazioneRaggio = 2,						
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "upgrade",				
 			requisiti = {
@@ -371,7 +385,7 @@ nanotower o costruttori aiutanti???
 		},		-- end livello  [n]			
 		[9] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 9,								
-			fattoreVariazioneRaggio = 2,						
+			fattoreVariazioneRaggio = 3,						
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "new",				
 			requisiti = {
@@ -388,7 +402,7 @@ nanotower o costruttori aiutanti???
 		},		-- end livello  [n]			
 		[10] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 9,								
-			fattoreVariazioneRaggio = 3,						
+			fattoreVariazioneRaggio = 4,						
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "new",				
 			requisiti = {
@@ -409,7 +423,7 @@ nanotower o costruttori aiutanti???
 		},		-- end livello  [n]	
 		[11] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 9,								
-			fattoreVariazioneRaggio = 4,						
+			fattoreVariazioneRaggio = 5,						
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "new",				
 			requisiti = {
@@ -1176,6 +1190,10 @@ end
 		for _, req in ipairs(config.requisiti) do
 			if CountUnitsInCategory(teamID, req.cat, faction) < req.count then
 				levelBroken = true
+				-- aggiungo debug sotto
+				if (n % 450 == 0) then	-- inizio debug
+					Spring.Echo("AI Team " .. teamID .. " Lvl " .. currentLvl .. " bloccato su: " .. req.cat .. " (" .. CountUnitsInCategory(teamID, req.cat, faction) .. "/" .. req.count .. ")")	-- commento di debug
+				end	-- fine debug
 				break
 			end
 		end
@@ -1191,7 +1209,8 @@ end
 		local builders = {}
 		local factories = {}
 		local teamUnits = Spring.GetTeamUnits(teamID)
-		for _, uID in ipairs(teamUnits) do
+-- rimuovo il ciclo dei costruttori per aggiungere dei filtri ed evitare che le fabbriche possano costruire (andando in errore) building
+--[[		for _, uID in ipairs(teamUnits) do
 			local ud = UnitDefs[Spring.GetUnitDefID(uID)]
 			if ud then
 				if ud.canBuild or ud.isBuilder then
@@ -1202,7 +1221,19 @@ end
 				if ud.isFactory then table.insert(factories, uID) end
 			end
 		end
-
+]]--
+		for _, uID in ipairs(teamUnits) do
+			local ud = UnitDefs[Spring.GetUnitDefID(uID)]
+			if ud then
+				if ud.isFactory then
+					table.insert(factories, uID)
+				elseif (not ud.isImmobile) and (ud.canBuild or ud.isBuilder) and ud.buildOptions and (#ud.buildOptions > 0) then
+					if Spring.GetCommandQueue(uID, 0) == 0 and not Spring.GetUnitIsBuilding(uID) then
+						table.insert(builders, uID)
+					end
+				end
+			end
+		end
 		-- Esecuzione Requisiti
 		local started = 0
 		for _, req in ipairs(config.requisiti) do
@@ -1273,11 +1304,12 @@ end
 						-- LOG DI DEBUG AVANZATO
 						if not assigned and (n % 450 == 0) then
 							if totalFree == 0 then
---								Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - STALLO: Nessun costruttore LIBERO per costruire " .. unitName)
+								Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - STALLO: Nessun costruttore LIBERO per costruire " .. unitName)
 							elseif not capableFound then
 --								Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - ERRORE COSTRUTTORE: " .. totalFree .. " costruttori liberi, ma NESSUNO sa costruire " .. unitName)
+								Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - ERRORE COSTRUTTORE: " .. totalFree .. " costruttori liberi (primo: " .. UnitDefs[Spring.GetUnitDefID(builders[1])].name .. "), ma NESSUNO sa costruire " .. unitName) -- versione più strutturata
 							else
---								Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - SPAZIO PIENO: Costruttori pronti, ma non trovo una posizione valida (SafePos) per " .. unitName)
+								Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - SPAZIO PIENO: Costruttori pronti, ma non trovo una posizione valida (SafePos) per " .. unitName)
 							end
 						end
 
