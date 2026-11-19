@@ -28,6 +28,7 @@
 	-- 02/03/2026 = V18 aggiunte unità nella lista dei livelli - cambio nome della AI da "WarMachinesRTSmissionAI" a "WMAI", per inserirlo nella lobby del gioco
 	-- 06/03/2026 = V20, aggiungo un test di raggiungimento della destinazione per i builder, non solo per la costruzione del metallo, ma anche per tutte le altre unità.
 	-- 19/03/2026 = Added Andronians faction. Molix
+	-- 19/11/2026 = Implementati controlli di raggiungimento metalspot/upgrademetal. Molix
 	
 	-- TO DO
 
@@ -293,7 +294,7 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 		},		-- end livello  [n]	
 		[3] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 4,
-			fattoreVariazioneRaggio = 0,						
+			fattoreVariazioneRaggio = 1,						
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "new",			
 			requisiti = {
@@ -307,7 +308,7 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 		},		-- end livello  [n]	
 		[4] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 5,
-			fattoreVariazioneRaggio = 1,						
+			fattoreVariazioneRaggio = 2,						
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "upgrade",			
 			requisiti = {
@@ -323,7 +324,7 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 		},		-- end livello  [n]		
 		[5] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 6,
-			fattoreVariazioneRaggio = 1,						
+			fattoreVariazioneRaggio = 2,						
 			combehaviour = "patrolbase",		
 			T2metalBuildType = "upgrade",			
 			requisiti = {
@@ -338,7 +339,7 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 		},		-- end livello  [n]		
 		[6] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 7,
-			fattoreVariazioneRaggio = 1,						
+			fattoreVariazioneRaggio = 2,						
 			combehaviour = "patrolbase",
 			T2metalBuildType = "upgrade",				
 			requisiti = {
@@ -353,7 +354,7 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 		},		-- end livello  [n]			
 		[7] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 7,
-			fattoreVariazioneRaggio = 2,						
+			fattoreVariazioneRaggio = 3,						
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "upgrade",				
 			requisiti = {
@@ -371,7 +372,7 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 		},		-- end livello  [n]			
 		[8] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 8,							
-			fattoreVariazioneRaggio = 2,						
+			fattoreVariazioneRaggio = 3,						
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "upgrade",			
 			requisiti = {
@@ -385,7 +386,7 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 		},		-- end livello  [n]			
 		[9] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 9,								
-			fattoreVariazioneRaggio = 3,						
+			fattoreVariazioneRaggio = 4,						
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "new",				
 			requisiti = {
@@ -402,7 +403,7 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 		},		-- end livello  [n]			
 		[10] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 9,								
-			fattoreVariazioneRaggio = 4,						
+			fattoreVariazioneRaggio = 5,						
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "new",				
 			requisiti = {
@@ -423,7 +424,7 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 		},		-- end livello  [n]	
 		[11] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 9,								
-			fattoreVariazioneRaggio = 5,						
+			fattoreVariazioneRaggio = 6,						
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "new",				
 			requisiti = {
@@ -446,7 +447,7 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 		},		-- end livello  [n]		
 		[12] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 9,								
-			fattoreVariazioneRaggio = 7,						
+			fattoreVariazioneRaggio = 8,						
 			combehaviour = "patrolbase",	
 			T2metalBuildType = "new",					
 			requisiti = {			
@@ -521,30 +522,61 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 	--------------------------------------------------------------------------------
 	-- 3) FUNZIONI DI SUPPORTO
 	--------------------------------------------------------------------------------
--- Funzione per verificare se un builder specifico può raggiungere una posizione X, Y, Z dalla posizione in cui è al momento
+-- Verifica se un costruttore (builderID) è in grado di raggiungere il punto di destinazione (tx, ty, tz)
+-- Restituisce: true se può raggiungerlo (o è già a portata), false se il percorso è bloccato o non valido.
 local function CanBuilderReachPos(builderID, tx, ty, tz, faction)
-    local udID = Spring.GetUnitDefID(builderID)
-    if not udID then return false end
-    
-    local ud = UnitDefs[udID]
-    local udName = ud.name
 
-    -- Se è un aereo, può raggiungere qualsiasi punto (salta il test) ------- verificare però, perchè se l'aereo costruisce una base di terra e lo può fare sul cocuzzolo, poi le unità non scendono, pertanto usare (nel caso dell'aereo) un unità di terra per il test???? ---------------- molix #######################
-    local isAirConstructor = false
+    -- 1. Recupera l'ID del "progetto/tipo" dell'unità (es. ID di "armack", "icucom", ecc.)
+    local udID = Spring.GetUnitDefID(builderID)
+    if not udID then return false end -- Se l'unità non esiste più o è morta, esce subito
+
+    -- 2. Legge dalla tabella globale UnitDefs tutte le caratteristiche di quel tipo di unità
+    local ud = UnitDefs[udID]
+    if not ud then return false end
+
+    -- 3. Controllo costruttori AEREI:
+    -- Gli aerei volano sopra fiumi, montagne e muri, quindi non usano il pathfinder di terra.
+    -- Cerchiamo il nome dell'unità (ud.name) nella lista dei costruttori aerei della fazione.
     local airList = CATEGORY_TO_UNIT[faction]["CAT_ALL_AIR_CONSTRUCTORS"]
     if airList then
         for _, name in ipairs(airList) do
-            if name == udName then isAirConstructor = true; break end
+            if name == ud.name then
+                return true -- È un aereo: può arrivare ovunque senza controlli sul terreno
+            end
         end
     end
-    if isAirConstructor then return true end
 
-    -- Se è un'unità di terra/mare, eseguiamo il TestMoveOrder -- con l'unità corrente
+    -- 4. Legge la posizione attuale (X, Y, Z) del costruttore sulla mappa
     local bx, by, bz = Spring.GetUnitPosition(builderID)
-    -- TestMoveOrder restituisce true se il pathfinder trova un passaggio
-    local isReachable = Spring.TestMoveOrder(udID, bx, by, bz, tx, ty, tz)
-    
-    return isReachable
+
+    -- Legge il raggio di costruzione del builder (di default 128 elmos se non definito).
+    -- Al costruttore NON serve camminare esattamente sopra il centro (tx, tz):
+    -- gli basta avvicinarsi abbastanza da poter usare il raggio di costruzione.
+    local goalRadius = ud.buildDistance or 128
+
+    -- 5. Controllo veloce: il costruttore è GIA' dentro il raggio di costruzione?
+    -- Usiamo il teorema di Pitagora senza radice quadrata (distanza^2 <= raggio^2)
+    -- perché evitare math.sqrt() rende il calcolo molto più veloce.
+    local dx, dz = tx - bx, tz - bz
+    if (dx * dx + dz * dz) <= (goalRadius * goalRadius) then
+        return true -- Non deve nemmeno muoversi, può già costruire da dov'è
+    end
+
+    -- 6. Controllo del percorso reale (Pathfinding) per unità di terra / anfibi / navi:
+    -- "ud.moveDef" contiene i dati di movimento dell'unità (pendenza max, profondità acqua, dimensioni).
+    -- Gli edifici immobili o gli aerei non hanno un moveDef terrestre/navale.
+    if ud.moveDef and ud.moveDef.id then
+        -- Spring.RequestPath chiede al motore di Spring:
+        -- "Un'unità con questo moveDef riesce ad andare da (bx,by,bz) fino a entro 'goalRadius' da (tx,ty,tz)?"
+        local path = Spring.RequestPath(ud.moveDef.id, bx, by, bz, tx, ty, tz, goalRadius)
+
+        -- Se il percorso esiste, 'path' è un oggetto valido -> restituisce true.
+        -- Se il percorso è impossibile (isola, dirupo insuperabile, fiume senza guado), 'path' è nil -> restituisce false.
+        return path ~= nil
+    end
+
+    -- 7. Se l'unità non è un aereo e non ha un moveDef valido (es. unità immobile), non può muoversi fino a lì
+    return false
 end
 
 -- Questa funzione serve per aggiornare la variabile globale "stato di guerra" e il raggio di difesa (che varia in funzione del livello) per il team specificato. Cosi da comunicarlo ad altri gadget (ad esempio al "wmrts_AI_militaryMenagement.lua")
@@ -880,7 +912,7 @@ end
 			local step = 32
 			for z = 16, Game.mapSizeZ, step do
 				for x = 16, Game.mapSizeX, step do
-					if Spring.GetMetalAmount(x, z) > 0.1 then
+					if Spring.GetMetalAmount(math.floor(x / 16), math.floor(z / 16)) > 0.1 then
 						table.insert(metalSpots, {x = x, z = z})
 					end
 				end
@@ -940,30 +972,21 @@ end
 			if occupied then
 				occupiedCount = occupiedCount + 1
 			else
-				local isReachable = false
-				
-				if isAirConstructor then
-					-- Se è nella tua lista AIR, salta il pathfinding
-					isReachable = true 
-				else
-					-- Altrimenti usa il pathfinding standard per testare se l'unità arriva a destinazione (il motore non controlla però gli ostacoli quali features, unità in mezzo ecc)
-					isReachable = Spring.TestMoveOrder(udID, cx, Spring.GetGroundHeight(cx, cz), cz, sx, sy, sz )
-				end
-
-				if isReachable then
-					reachableCount = reachableCount + 1
 					local dx, dz = cx - sx, cz - sz
 					local distSq = dx*dx + dz*dz
 					if distSq < minDist then
+						if isAirConstructor or CanBuilderReachPos(builderID, sx, sy, sz, faction) then
+						reachableCount = reachableCount + 1
 						minDist = distSq
 						bestSpot = spot
+						else
+						unreachableCount = unreachableCount + 1					
+						end
 					end
-				else
-					unreachableCount = unreachableCount + 1
 				end
 			end
 		end
-		end
+--		end
 		
 		------ LOG DI ISPEZIONE ---
 		local logType = isAirConstructor and "ARIA (Ignora Path)" or "TERRA/MARE (Pathfinding)"
@@ -1267,8 +1290,10 @@ end
 									if req.cat == "CAT_MEX_T1" or req.cat == "CAT_MEX_T2" then
 										if req.cat == "CAT_MEX_T2" and T2metalBuildType == "upgrade" then
 											targetUpgradeMexID, mx, my, mz = GetMexT1ToUpgrade(teamID, faction, teamBasePos[teamID])
-											if targetUpgradeMexID then
+											if targetUpgradeMexID and CanBuilderReachPos(bID, mx, my, mz, faction) then
 												bx, by, bz = mx, my, mz
+											else
+											targetUpgradeMexID = nil
 											end
 										end
 										if not bx then
@@ -1300,8 +1325,8 @@ end
 								end -- fine if CanBuilderBuild
 							end -- fine for builders
 						end -- fine if totalFree
-
-						-- LOG DI DEBUG AVANZATO
+--[[ --------------------------------------------------------------------------
+						-- LOG DI DEBUG AVANZATO ## prima versione
 						if not assigned and (n % 450 == 0) then
 							if totalFree == 0 then
 								Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - STALLO: Nessun costruttore LIBERO per costruire " .. unitName)
@@ -1312,6 +1337,20 @@ end
 								Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - SPAZIO PIENO: Costruttori pronti, ma non trovo una posizione valida (SafePos) per " .. unitName)
 							end
 						end
+]]--
+						-- LOG DI DEBUG AVANZATO ## seconda versione
+						if not assigned and (n % 450 == 0) then
+							if totalFree == 0 then
+								Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - STALLO: Nessun costruttore LIBERO per costruire " .. unitName)
+							elseif not capableFound then
+								Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - ERRORE COSTRUTTORE: " .. totalFree .. " costruttori liberi (primo: " .. UnitDefs[Spring.GetUnitDefID(builders[1])].name .. "), ma NESSUNO sa costruire " .. unitName) -- versione più strutturata
+							elseif req.cat == "CAT_MEX_T1" or req.cat == "CAT_MEX_T2" then
+								Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - NESSUNO SPOT: Nessun giacimento libero/raggiungibile per " .. unitName)
+							else
+								Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " - SPAZIO PIENO: Costruttori pronti, ma non trovo una posizione valida (SafePos) per " .. unitName)
+							end
+						end
+
 
 					-- CASO B: È un'UNITA' MOBILE COSTRUTTRICE CHE RICHIEDE UNA FABBRICA
 					else
