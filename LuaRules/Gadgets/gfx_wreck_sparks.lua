@@ -19,34 +19,34 @@ local DEBUG         = false              -- Debug
 local CEG_NAME      = "wreck_sparks"
 local CEG_RADIUS    = 50
 local CEG_DAMAGE    = 100
-local SPARK_CHANCE  = 1                 -- 1 = 100%, 0.35 = 35%
+local SPARK_CHANCE  = 1                  -- 1 = 100%, 0.35 = 35%
 local MIN_DELAY     = 15
 local MAX_DELAY     = 110
 local PIECE_PREFIX  = "^wspark"
 
 -- Nomi (lowercase) dei FeatureDef interessati
 local TARGET_CORPSES = {
-    ["station_one_tunnel_e_feature_dead"] = true,
-    ["station_one_tunnel_o_feature_dead"] = true,
-    ["station_one_tunnel_n_feature_dead"] = true,
-    ["station_one_tunnel_s_feature_dead"] = true,
-    ["station_one_antenna_small_se_feature_dead"] = true,	
-    ["station_one_antenna_small_so_feature_dead"] = true,	
-    ["station_one_antenna_small_ne_feature_dead"] = true,	
-    ["station_one_antenna_small_no_feature_dead"] = true,
-    ["station_one_scudi_n_feature_dead"] = true,
-    ["station_one_scudi_s_feature_dead"] = true,
-    ["station_one_scudi_o_feature_dead"] = true,
-    ["station_one_scudi_e_feature_dead"] = true,	
-    ["Station_one_antenna_feature_dead"] = true,		
-	
+    ["station_one_tunnel_e_feature_dead"]           = true,
+    ["station_one_tunnel_o_feature_dead"]           = true,
+    ["station_one_tunnel_n_feature_dead"]           = true,
+    ["station_one_tunnel_s_feature_dead"]           = true,
+    ["station_one_antenna_small_se_feature_dead"]   = true,
+    ["station_one_antenna_small_so_feature_dead"]   = true,
+    ["station_one_antenna_small_ne_feature_dead"]   = true,
+    ["station_one_antenna_small_no_feature_dead"]   = true,
+    ["station_one_scudi_n_feature_dead"]            = true,
+    ["station_one_scudi_s_feature_dead"]            = true,
+    ["station_one_scudi_o_feature_dead"]            = true,
+    ["station_one_scudi_e_feature_dead"]            = true,
+    ["station_one_antenna_feature_dead"]            = true,
 }
 
-local sparkingFeatures = {}
-local s3oSparksCache   = {} -- Cache per FeatureDefID: evita di rileggere il .s3o ogni volta
+local sparkingList   = {} -- Array sequenziale per iterazione deterministica (sync-safe)
+local sparkingIndex  = {} -- Mappa: featureID -> indice in sparkingList
+local s3oSparksCache = {} -- Cache per FeatureDefID: evita di rileggere il .s3o ogni volta
 
 --------------------------------------------------------------------------------
--- Parser binario .s3o (compatibile Lua 5.1 / Spring 104)
+-- Parser binario .s3o (compatibile Lua 5.1 / Spring 100+)
 --------------------------------------------------------------------------------
 local function ReadUInt32LE(data, off0)
     local b1, b2, b3, b4 = string.byte(data, off0 + 1, off0 + 4)
@@ -102,8 +102,9 @@ local function LoadS3OData(fDef)
     addCandidate(fDef.modelname)
 
     for _, path in ipairs(candidates) do
-        if VFS.FileExists(path) then
-            local raw = VFS.LoadFile(path)
+        -- VFS.ZIP esclude eventuali file sciolti locali (VFS.RAW) evitando desync
+        if VFS.FileExists(path, VFS.ZIP) then
+            local raw = VFS.LoadFile(path, VFS.ZIP)
             if raw and #raw >= 52 and string.sub(raw, 1, 11) == "Spring unit" then
                 return raw, path
             end
@@ -121,8 +122,8 @@ local function ExtractS3OSparkPoints(defID, fDef)
     local data, loadedPath = LoadS3OData(fDef)
 
     if data then
-        local function WalkPiece(pieceOff, px, py, pz)
-            if pieceOff <= 0 or pieceOff + 52 > #data then return end
+        local function WalkPiece(pieceOff, px, py, pz, depth)
+            if depth > 64 or pieceOff <= 0 or pieceOff + 52 > #data then return end
 
             local nameOff       = ReadUInt32LE(data, pieceOff + 0)
             local numChildren   = ReadUInt32LE(data, pieceOff + 4)
@@ -158,14 +159,14 @@ local function ExtractS3OSparkPoints(defID, fDef)
                     local entryOff = childTableOff + i * 4
                     if entryOff + 4 <= #data then
                         local childOff = ReadUInt32LE(data, entryOff)
-                        WalkPiece(childOff, wx, wy, wz)
+                        WalkPiece(childOff, wx, wy, wz, depth + 1)
                     end
                 end
             end
         end
 
         local rootOff = ReadUInt32LE(data, 36)
-        WalkPiece(rootOff, 0, 0, 0)
+        WalkPiece(rootOff, 0, 0, 0, 0)
     end
 
     if DEBUG then
@@ -193,7 +194,21 @@ local function LocalToWorld(bx, by, bz, fx, fz, lx, ly, lz)
     return bx + lx * rx + lz * fx, by + ly, bz + lx * rz + lz * fz
 end
 
+local function RemoveSparkingByIndex(i)
+    local lastIdx = #sparkingList
+    local removedID = sparkingList[i].id
+    if i ~= lastIdx then
+        local lastEntry = sparkingList[lastIdx]
+        sparkingList[i] = lastEntry
+        sparkingIndex[lastEntry.id] = i
+    end
+    sparkingList[lastIdx] = nil
+    sparkingIndex[removedID] = nil
+end
+
 local function TryRegisterFeature(featureID)
+    if sparkingIndex[featureID] then return end
+
     local defID = Spring.GetFeatureDefID(featureID)
     if not defID then return end
 
@@ -202,15 +217,17 @@ local function TryRegisterFeature(featureID)
 
     local fName = string.lower(fDef.name)
     if not TARGET_CORPSES[fName] then return end
-    if math.random() > SPARK_CHANCE then return end
+    if SPARK_CHANCE < 1 and math.random() > SPARK_CHANCE then return end
 
     local points = ExtractS3OSparkPoints(defID, fDef)
-
-    sparkingFeatures[featureID] = {
+    local idx = #sparkingList + 1
+    sparkingList[idx] = {
+        id        = featureID,
         points    = points,
         height    = Spring.GetFeatureHeight(featureID) or 30,
         nextFrame = Spring.GetGameFrame() + math.random(5, MAX_DELAY),
     }
+    sparkingIndex[featureID] = idx
 end
 
 function gadget:Initialize()
@@ -224,13 +241,19 @@ function gadget:FeatureCreated(featureID, allyTeamID)
 end
 
 function gadget:FeatureDestroyed(featureID)
-    sparkingFeatures[featureID] = nil
+    local idx = sparkingIndex[featureID]
+    if idx then
+        RemoveSparkingByIndex(idx)
+    end
 end
 
 function gadget:GameFrame(frame)
-    for featureID, data in pairs(sparkingFeatures) do
+    for i = #sparkingList, 1, -1 do
+        local data = sparkingList[i]
+        local featureID = data.id
+
         if not Spring.ValidFeatureID(featureID) then
-            sparkingFeatures[featureID] = nil
+            RemoveSparkingByIndex(i)
         elseif frame >= data.nextFrame then
             local bx, by, bz = Spring.GetFeaturePosition(featureID)
             if bx then
