@@ -76,6 +76,14 @@ return {
 		                collisionvolumetype = "cylY",
 			},
 		},
+-----------------------------------------------------------
+--- EFFECTS
+-----------------------------------------------------------
+sfxtypes = {
+  explosiongenerators = {
+               [1]="custom:FLAKFLARE",
+               }, -- close effects list
+}, -- close section sfxtypes			
 		sounds = {
 			canceldestruct = "cancel2",
 			cloak = "kloak1",
