@@ -495,7 +495,7 @@ local UNIT_DB = {
 ["andhors"] = { type = "air" },
 ["andhawk"] = { type = "air" },
 ["andabomb"] = { type = "air" },
-
+["andafig"] = { type = "air" },
 
 -- Unità prodotte da andgant
 ["anddem"] = { type = "ground" },
@@ -505,6 +505,7 @@ local UNIT_DB = {
 ["andairkill"] = { type = "ground" },
 ["interceptor"] = { type = "ground" },
 ["armpraet"] = { type = "ground" },
+["armmcv"] = { type = "ground" },
 
 -- Unità prodotte da andainc
 -- sono le stesse prodotte da andalab + andahp, pertanto già dichiarate
