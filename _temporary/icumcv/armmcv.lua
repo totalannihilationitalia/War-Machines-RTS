@@ -4,7 +4,7 @@ return {
 -----------------------------------------------------------
 --- UNITS FEATURES
 -----------------------------------------------------------
-  ARMMCV= {
+  armmcv= {
                acceleration = 0.09,
                activatewhenbuilt = true,
 --               amphibious = 1,
