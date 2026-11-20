@@ -1,7 +1,7 @@
 	function gadget:GetInfo()
 		return {
 			name      = "WMRTS Construction Manager AI",
-			desc      = "Gestore costruzioni V17 - War Machines RTS",
+			desc      = "Gestore costruzioni V21 - War Machines RTS",
 			author    = "molix & AI",
 			date      = "2026",
 			license   = "GPL",
@@ -29,6 +29,7 @@
 	-- 06/03/2026 = V20, aggiungo un test di raggiungimento della destinazione per i builder, non solo per la costruzione del metallo, ma anche per tutte le altre unità.
 	-- 19/03/2026 = Added Andronians faction. Molix
 	-- 19/11/2026 = Implementati controlli di raggiungimento metalspot/upgrademetal. Molix
+	-- 20/11/2026 = V21Implementato impiego di costruttori idle, ora, tramite le configurazioni, è possibile scegliere quanti costruttori andranno ad aiutare le costruzioni piuttosto che rimanere idle
 	
 	-- TO DO
 
@@ -37,10 +38,9 @@
 	-- creare funzione behaviour ai costruttori fermi, come con il comandante: Patrol/costruisci. La prima gira attorno alla base se non ci sono più ordini da eseguire.
 	-- ridurre il timeout nel caso i costruttori rimangano fermi per costruire giacimenti di metallo. ## -> 02/02/2025 fatto per ora lo teniamo cosi molix
 	--[[ ########################## to do
-	costruire missili e antimissili
 costruire air repair
 costruire logica espansiva della base (al livello 10 e anche prima arrivi ad aver già occupato lo spazio massimo ammissibile)
-nanotower o costruttori aiutanti???
+nanotower
 ########################################
 	--]]
 
@@ -223,7 +223,10 @@ nanotower o costruttori aiutanti???
 		} -- end AND
 	} -- end "CATEGORY_TO_UNIT"
 
-	local AI_BUILD_LEVELS = {
+----------------------------------------------------------------------------------------------------------------------
+------------------------------IMPOSTAZIONE DEI LIVELLI DI ESPANSIONE TECNOLOGICA AI ----------------------------------
+----------------------------------------------------------------------------------------------------------------------
+
 	-- il numero [0] o [1] rappresenta il livello della AI. L'AI parte sempre dal livello 0. Per ogni livello vengono specificate quante unità devono essere costruite. l'AI sale di livello una volta che ha completato tutte le unità di quel livello. Se vengono distrutte le unità, e i requisiti di un livello non vengono rispettati, l'AI scende di livello per "recuperare" i requisiti che lo soddisfano.
 	-- REMINDER: ogni volta che si aggiunge o toglie il livello a questo gadget, aggiornare anche i livelli in wmrts_AI_militaryMenagement.lua !!!!!!!
 	-- "simultanea ="  ad ogni ciclo di controllo (150 frame / 5 secondi), questa variabile definisce il numero massimo di ordini simultanei da impartire ai costruttori fermi( es simultanea = 6 -> in quel livello l'AI cercherà di "mettere al lavoro" fino a 6 costruttori diversi contemporaneamente in quel singolo ciclo.)
@@ -235,6 +238,17 @@ nanotower o costruttori aiutanti???
 	-- "T2metalBuildType" gestisce come vengono costruiti gli estrattori T2:
 	--			= new,				default - l'estrattore T2 viene costruito su uno spot di metallo libero
 	--			= upgrade,			l'AI preferirà potenziare i mex esistenti a partire da quelli più vicino alla base
+	-- "builderT1CanHelp" = 2, 	numero massimo assoluto di costruttori idle T1 (idle, cioè che non hanno ordini in corso e son fermi a far niente) che possono essere impiegati per altre mansioni (raccogliere, aiutare, riparare).(Se omesso vale 0)						
+	-- "builderT2CanHelp" = 2, 	numero massimo assoluto di costruttori idle T2 (idle,  cioè che non hanno ordini in corso e son fermi a far niente) che possono essere impiegati per altre mansioni (raccogliere, aiutare, riparare).(Se omesso vale 0)	
+	-- "builderBehaviour" definisce la mansione che possono avere i suddetti costruttori e sono:
+	--			= "helpFactory": aiuta la fabbrica più vicina (a finire la fabbrica stessa se è in costruzione, oppure ad accelerare una sola unità in produzione nella fabbrica e poi torna idle). 
+	--			= "repair": ripara l'edificio o l'unità danneggiata (o in costruzione) più vicina. 
+	--			= "helpUnits": aiuta a finire i cantieri aperti (buildProgress < 1) più vicini. 
+	--			= "raccolta": raccoglie (reclaim) un relitto di metallo alla volta vicino alla base e poi torna idle. (se omesso o nil, non fanno nulla e restano idle).						
+	-- "onlyStructureHelp" = true,	-- (opzionale, default false) — se true:
+--																			con "helpUnits": aiuta solo i cantieri di strutture (ignora le unità mobili in produzione dentro le fabbriche). 
+--																			con "repair":ripara solo strutture danneggiate o in costruzione (ignora tank/bot/aerei danneggiati). 
+--																			con "helpFactory":  aiuta solo la fabbrica stessa mentre viene costruita (e non le unità che sta producendo).
 --[[ 
 	-- "fattoreVariazioneRaggio=" rappresenta la variazione dei raggio (in elmos) entro cui l'ai costruisce rispettivamente strutture, fabbriche e imposta il raggio di difesa (che definisce lo stato di guerra)
 fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
@@ -249,45 +263,58 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 9	1950	2500	4500
 10	2100	2700	4700
 ]]--	
+	local AI_BUILD_LEVELS = {
 		[0] = { 												-- livello di partenza. può diventare anche livello di RESET LIVELLO AI quando subisce pesanti attacchi (vedere sotto logica di RESET LIVELLO). E' importante che vi siano, in questo livello, le costruzioni che, in loro assenza/mancato numero (definito dalla logica di "RESET LIVELLO") resettino l'AI, altrimenti si entra in un LOOP infinito di salto livello (0 -> 1 e torna subito a 0)
 			simultanea = 1,
 			fattoreVariazioneRaggio = 0,			
 			combehaviour = "constructor",
 			T2metalBuildType = "new",
+			builderT1CanHelp = 2, 								
+			builderT2CanHelp = 2, 								
+			builderBehaviour = "repair",						
+			onlyStructureHelp = true,							
 			requisiti = {
 				{cat = "CAT_ALL_CONSTRUCTORS", 	count = 1}, 	-- al livello 0 ne deve avere almeno 1 in totale. In fase di start skirmish è il comandante. In caso di restart AI, può essere qualunque costruttore, se presente. Ecco il motivo per cui metto la categoria "CAT_ALL_CONSTRUCTORS"
 				{cat = "CAT_ENERGY_T1",         count = 1},		-- importanti per la logica RESET LIVELLO !! estrattori T1, energia T1 e fabbrica T1 devono essere inclusi in questo livello per andare al successivo, altrimenti la logica del core entra in loop
 				{cat = "CAT_MEX_T1",            count = 1},		-- importanti per la logica RESET LIVELLO !! estrattori T1, energia T1 e fabbrica T1 devono essere inclusi in questo livello per andare al successivo, altrimenti la logica del core entra in loop
 				{cat = "CAT_ENERGY_T1",         count = 2},		-- importanti per la logica RESET LIVELLO !! estrattori T1, energia T1 e fabbrica T1 devono essere inclusi in questo livello per andare al successivo, altrimenti la logica del core entra in loop			
-				{cat = "CAT_MEX_T1",            count = 2}, 
+				{cat = "CAT_MEX_T1",            count = 3}, 
 				{cat = "CAT_ENERGY_T1",         count = 3},		
 				{cat = "CAT_FACTORY_T1",        count = 1}, 	
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]
 		[1] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
-			simultanea = 4,
+			simultanea = 3,
 			fattoreVariazioneRaggio = 0,						
-			combehaviour = "patrolbase",	
-			T2metalBuildType = "new",			
+			combehaviour = "constructor",	
+			T2metalBuildType = "new",		
+			builderT1CanHelp = 2, 							
+			builderT2CanHelp = 2, 								
+			builderBehaviour = "helpUnits",						
+			onlyStructureHelp = true,				
 			requisiti = {
-				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
-				{cat = "CAT_FACTORY_T1",        count = 3}, 				
+				{cat = "CAT_CONSTRUCTORS_T1", 	count = 3},
+				{cat = "CAT_ENERGY_T1",         count = 3},						
+				{cat = "CAT_FACTORY_T1",        count = 2}, 				
 				{cat = "CAT_LASER_T1", 			count = 1},		
-				{cat = "CAT_AA_T1", 			count = 1},		
-				{cat = "CAT_ENERGY_T1",         count = 7},						
-				{cat = "CAT_MEX_T1",            count = 3},
+				{cat = "CAT_AA_T1", 			count = 1},					
+				{cat = "CAT_MEX_T1",            count = 4},				
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]
 		[2] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
 			simultanea = 4,
 			fattoreVariazioneRaggio = 0,						
 			combehaviour = "patrolbase",	
-			T2metalBuildType = "new",			
+			T2metalBuildType = "new",	
+			builderT1CanHelp = 2, 							
+			builderT2CanHelp = 2, 								
+			builderBehaviour = "helpUnits",						
+			onlyStructureHelp = true,				
 			requisiti = {		
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},		
-				{cat = "CAT_ENERGY_T1_2",       count = 1},
+				{cat = "CAT_ENERGY_T1_2",       count = 2},
 				{cat = "CAT_FACTORY_T1", 		count = 3},
-	            {cat = "CAT_MEX_T1",            count = 3},
+	            {cat = "CAT_MEX_T1",            count = 4},	
 				{cat = "CAT_LASER_T1", 			count = 2},		
 				{cat = "CAT_AA_T1", 			count = 2},			
 			} 	-- end requisiti di livello
@@ -296,12 +323,16 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 			simultanea = 4,
 			fattoreVariazioneRaggio = 1,						
 			combehaviour = "patrolbase",	
-			T2metalBuildType = "new",			
+			T2metalBuildType = "new",	
+			builderT1CanHelp = 2, 							
+			builderT2CanHelp = 2, 								
+			builderBehaviour = "helpUnits",						
+			onlyStructureHelp = true,				
 			requisiti = {
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
-				{cat = "CAT_MEX_T1",            count = 3},		
+				{cat = "CAT_MEX_T1",            count = 5},		
 				{cat = "CAT_FACTORY_T1", 		count = 3},			
-				{cat = "CAT_ENERGY_T1_2",       count = 2},
+				{cat = "CAT_ENERGY_T1_2",       count = 3},
 				{cat = "CAT_AA_T1_2", 			count = 1},					
 				{cat = "CAT_FACTORY_T2", 		count = 1},						
 			} 	-- end requisiti di livello
@@ -310,15 +341,19 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 			simultanea = 5,
 			fattoreVariazioneRaggio = 2,						
 			combehaviour = "patrolbase",	
-			T2metalBuildType = "upgrade",			
+			T2metalBuildType = "upgrade",	
+			builderT1CanHelp = 2, 							
+			builderT2CanHelp = 2, 								
+			builderBehaviour = "helpUnits",						
+			onlyStructureHelp = true,				
 			requisiti = {
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 2},	
-				{cat = "CAT_MEX_T1",            count = 2},		
-				{cat = "CAT_ENERGY_T1_2",       count = 3},				
+				{cat = "CAT_ENERGY_T1_2",       count = 5},				
 				{cat = "CAT_MEX_T2",            count = 1},	
 				{cat = "CAT_ENERGY_T2",      	count = 1},					
 				{cat = "CAT_FACTORY_T1", 		count = 4},			
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
+				{cat = "CAT_MEX_T1",            count = 2},		-- gli altri fatti in precedenza se vengono distrutti "pazienza"				
 				{cat = "CAT_LASER_T1_2", 		count = 1},						
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]		
@@ -326,13 +361,17 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 			simultanea = 6,
 			fattoreVariazioneRaggio = 2,						
 			combehaviour = "patrolbase",		
-			T2metalBuildType = "upgrade",			
+			T2metalBuildType = "upgrade",	
+			builderT1CanHelp = 2, 							
+			builderT2CanHelp = 2, 								
+			builderBehaviour = "helpUnits",						
+			onlyStructureHelp = true,				
 			requisiti = {
 				{cat = "CAT_FACTORY_T2", 		count = 1},		
 				{cat = "CAT_FACTORY_T1", 		count = 5},	
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 2},			
-				{cat = "CAT_ENERGY_T1_2",       count = 2},
+				{cat = "CAT_ENERGY_T1_2",       count = 2},		-- gli altri fatti in precedenza se vengono distrutti "pazienza"
 				{cat = "CAT_MEX_T1",            count = 2},		
 				{cat = "CAT_MEX_T2",            count = 1},					
 			} 	-- end requisiti di livello
@@ -341,8 +380,13 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 			simultanea = 7,
 			fattoreVariazioneRaggio = 2,						
 			combehaviour = "patrolbase",
-			T2metalBuildType = "upgrade",				
+			T2metalBuildType = "upgrade",	
+			builderT1CanHelp = 2, 							
+			builderT2CanHelp = 2, 								
+			builderBehaviour = "helpUnits",						
+			onlyStructureHelp = true,				
 			requisiti = {
+				{cat = "CAT_ENERGY_T2",      	count = 2},				
 				{cat = "CAT_FACTORY_T2", 		count = 1},		
 				{cat = "CAT_FACTORY_T1", 		count = 4},	
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
@@ -356,15 +400,20 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 			simultanea = 7,
 			fattoreVariazioneRaggio = 3,						
 			combehaviour = "patrolbase",	
-			T2metalBuildType = "upgrade",				
+			T2metalBuildType = "upgrade",	
+			builderT1CanHelp = 2, 							
+			builderT2CanHelp = 2, 								
+			builderBehaviour = "helpUnits",						
+			onlyStructureHelp = true,				
 			requisiti = {
 				{cat = "CAT_ENERGY_T2",      	count = 2},	
 				{cat = "CAT_FACTORY_T2", 		count = 2},		
 				{cat = "CAT_FACTORY_T1", 		count = 6},	
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 3},			
---				{cat = "CAT_ENERGY_T1_2",       count = 3},
+				{cat = "CAT_ENERGY_T1_2",       count = 4},
 				{cat = "CAT_MEX_T1",            count = 1},		
+				{cat = "CAT_ENERGY_T1_2",       count = 5},
 				{cat = "CAT_MEX_T2",            count = 2},					
 				{cat = "CAT_AA_T2", 			count = 1},					
 --				{cat = "CAT_LASER_T2", 			count = 1},							
@@ -374,7 +423,11 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 			simultanea = 8,							
 			fattoreVariazioneRaggio = 3,						
 			combehaviour = "patrolbase",	
-			T2metalBuildType = "upgrade",			
+			T2metalBuildType = "upgrade",	
+			builderT1CanHelp = 3, 							
+			builderT2CanHelp = 3, 								
+			builderBehaviour = "helpUnits",						
+			onlyStructureHelp = true,				
 			requisiti = {
 				{cat = "CAT_FACTORY_T2", 		count = 4},		
 				{cat = "CAT_FACTORY_T1", 		count = 8},	
@@ -388,7 +441,11 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 			simultanea = 9,								
 			fattoreVariazioneRaggio = 4,						
 			combehaviour = "patrolbase",	
-			T2metalBuildType = "new",				
+			T2metalBuildType = "new",	
+			builderT1CanHelp = 3, 							
+			builderT2CanHelp = 3, 								
+			builderBehaviour = "helpUnits",						
+			onlyStructureHelp = true,				
 			requisiti = {
 				{cat = "CAT_FACTORY_T2", 		count = 5},		
 				{cat = "CAT_FACTORY_T1", 		count = 9},	
@@ -405,7 +462,11 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 			simultanea = 9,								
 			fattoreVariazioneRaggio = 5,						
 			combehaviour = "patrolbase",	
-			T2metalBuildType = "new",				
+			T2metalBuildType = "new",		
+			builderT1CanHelp = 3, 							
+			builderT2CanHelp = 3, 								
+			builderBehaviour = "helpUnits",						
+			onlyStructureHelp = true,				
 			requisiti = {
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 5},			
@@ -426,7 +487,11 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 			simultanea = 9,								
 			fattoreVariazioneRaggio = 6,						
 			combehaviour = "patrolbase",	
-			T2metalBuildType = "new",				
+			T2metalBuildType = "new",			
+			builderT1CanHelp = 4, 							
+			builderT2CanHelp = 4, 								
+			builderBehaviour = "helpUnits",						
+			onlyStructureHelp = true,				
 			requisiti = {
 				{cat = "CAT_SHIELD", 			count = 3},				
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
@@ -449,7 +514,11 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 			simultanea = 9,								
 			fattoreVariazioneRaggio = 8,						
 			combehaviour = "patrolbase",	
-			T2metalBuildType = "new",					
+			T2metalBuildType = "new",		
+			builderT1CanHelp = 4, 							
+			builderT2CanHelp = 4, 								
+			builderBehaviour = "helpUnits",						
+			onlyStructureHelp = false,				
 			requisiti = {			
 				{cat = "CAT_CONSTRUCTORS_T1", 	count = 4},
 				{cat = "CAT_CONSTRUCTORS_T2", 	count = 5},	
@@ -636,7 +705,7 @@ local function UpdateTeamWarStatus(teamID, basePos, currentFactoryRadius)
     GG.AI_BasePos[teamID] = { x = basePos.x, y = basePos.y, z = basePos.z }
     
     -- Debug per vedere cosa sta contando
-    -- Spring.Echo(string.format("AI Team %d: Nemici Pericolosi (Ground/Naval) = %d -> Stato: %s", teamID, enemyCount, statoGuerra))
+     Spring.Echo(string.format("AI Team %d: Nemici Pericolosi (Ground/Naval) = %d -> Stato: %s", teamID, enemyCount, statoGuerra))
 end
 
 -- Questa funzione serve per effettuare l'upgrade degli estrattori di metallo T1. Restituisce l'ID dell'estrattore T1 da upgradare, e le sue posizioni x y e z
@@ -806,7 +875,7 @@ end
 								
 								-- Se non si è mosso (meno di 30 pixel) E non sta costruendo (già verificato sopra)
 								if movedDist < 30 then
---									Spring.Echo("WMRTS_contrMngm_AI: Team "..teamID.." - builder " .. udName .. " bloccato e NON sta costruendo! Blacklisto spot.") -- L'UNITA' E' BLOCCATA!
+									Spring.Echo("WMRTS_contrMngm_AI: Team "..teamID.." - builder " .. udName .. " bloccato e NON sta costruendo! Blacklisto spot.") -- L'UNITA' E' BLOCCATA!
 									
 									for i, spot in ipairs(metalSpots) do -- Trova quale spot era (confrontando le coordinate tx, tz)
 										if math.abs(spot.x - tx) < 10 and math.abs(spot.z - tz) < 10 then
@@ -836,6 +905,7 @@ end
 		end
 	end
 
+--[[	-- funzione in disuso, la commento 20/11/2026
 	-- Misura la distanza reale sommando i segmenti del sentiero calcolato dal motore, dopo aver ricevuto l'ordine di costruzione
 	local function GetRealDistAfterOrder(unitID)
 		-- Spring.GetUnitEstimatedPath restituisce 2 tabelle, a noi serve la prima (waypoints)
@@ -866,6 +936,7 @@ end
 		
 		return totalDist
 	end
+]]--
 
 	-- Questa funzione serve a non costruire gli edifici sopra un giacimento di metallo entro un raggio di 150, onde evitare di mandare in stallo l'AI
 	local function GetSafeBuildPos(uDefID, basePos, metalSpots, maxRadius)
@@ -992,9 +1063,9 @@ end
 		local logType = isAirConstructor and "ARIA (Ignora Path)" or "TERRA/MARE (Pathfinding)"
 		if bestSpot then
 			local dLin = math.sqrt(minDist)
---			Spring.Echo(string.format("WMRTS_contrMngm_AI: [%s] Team %d - %s: Spot TROVATO! x:%.0f z:%.0f | Dist. Linea Aria: %.0f", udName, teamID, logType, bestSpot.x, bestSpot.z, dLin))
+			Spring.Echo(string.format("WMRTS_contrMngm_AI: [%s] Team %d - %s: Spot TROVATO! x:%.0f z:%.0f | Dist. Linea Aria: %.0f", udName, teamID, logType, bestSpot.x, bestSpot.z, dLin))
 		else
---			Spring.Echo(string.format("WMRTS_contrMngm_AI: [%s] Team %d - %s: NESSUN SPOT DISPONIBILE!", udName, teamID, logType))
+			Spring.Echo(string.format("WMRTS_contrMngm_AI: [%s] Team %d - %s: NESSUN SPOT DISPONIBILE!", udName, teamID, logType))
 		end
 		---------------------------
 		if bestSpot then 
@@ -1115,6 +1186,191 @@ local function CountUnitsInQueues(teamID, category, faction)
 	return totalInQueue
 end	
 
+-- Helper: determina se un builder è T1 o T2 usando le categorie già presenti (servirà ad assegnare ai costruttori Idle, determinate funzioni dettate dalla tabella BUILDER_BEHAVIOURS in base a come sono impostati in AI_BUILD_LEVELS i comportamenti per livello
+local function GetBuilderTier(udName, faction)
+	local catT1 = CATEGORY_TO_UNIT[faction]["CAT_CONSTRUCTORS_T1"]		--  verifico e se è T1 restituisco T1
+	if catT1 then
+		for _, name in ipairs(catT1) do
+			if name == udName then return "T1" end
+		end
+	end
+	local catT2 = CATEGORY_TO_UNIT[faction]["CAT_CONSTRUCTORS_T2"]		--  verifico e se è T2 restituisco T2
+	if catT2 then
+		for _, name in ipairs(catT2) do
+			if name == udName then return "T2" end
+		end
+	end
+	return nil 			-- es. Comandante (puoi decidere se farlo valere come "T1" o escluderlo), vautare in futuro (per ora è già parzialmente impostato)
+end
+
+-- Tabella modulare dei comportamenti per costruttori idle, utilizzata poi nella funzione "HandleIdleBuildersBehaviour"
+local BUILDER_BEHAVIOURS = {
+
+	-- 1) Aiuta fabbrica (1 unità alla volta) o cantiere fabbrica
+	["helpFactory"] = function(bID, teamID, faction, factories, basePos, config)
+		local bx, _, bz = Spring.GetUnitPosition(bID)
+		local bestTarget, minDistSq = nil, math.huge
+
+		for _, fID in ipairs(factories) do
+			local fx, fy, fz = Spring.GetUnitPosition(fID)
+			local distSq = (fx - bx)^2 + (fz - bz)^2
+			if distSq < minDistSq then
+				local _, _, _, _, buildProg = Spring.GetUnitHealth(fID)
+				local targetID = nil
+				if buildProg and buildProg < 1 then
+					targetID = fID -- Fabbrica stessa ancora in costruzione
+				elseif not config.onlyStructureHelp then
+					local buildee = Spring.GetUnitIsBuilding(fID)
+					if buildee then
+						local _, _, _, _, uProg = Spring.GetUnitHealth(buildee)
+						if uProg and uProg < 0.95 then
+							targetID = buildee -- Aiuta solo questa unità in produzione
+						end
+					end
+				end
+
+				if targetID and CanBuilderReachPos(bID, fx, fy, fz, faction) then
+					bestTarget = targetID
+					minDistSq = distSq
+				end
+			end
+		end
+
+		if bestTarget then
+			Spring.GiveOrderToUnit(bID, CMD.REPAIR, {bestTarget}, {})
+			return true
+		end
+		return false
+	end,
+
+	-- 2) Ripara strutture o unità danneggiate (e cantieri aperti se buildProg < 1)
+	["repair"] = function(bID, teamID, faction, factories, basePos, config)
+		local bx, _, bz = Spring.GetUnitPosition(bID)
+		local bestTarget, minDistSq = nil, math.huge
+		local myUnits = Spring.GetTeamUnits(teamID)
+
+		for _, uID in ipairs(myUnits) do
+			if uID ~= bID then
+				local hp, maxHp, _, _, buildProg = Spring.GetUnitHealth(uID)
+				if hp and maxHp and (hp < maxHp or buildProg < 1) then
+					local ud = UnitDefs[Spring.GetUnitDefID(uID)]
+					local isStruct = ud and (ud.isBuilding or ud.isStructure)
+					if (not config.onlyStructureHelp) or isStruct then
+						local ux, uy, uz = Spring.GetUnitPosition(uID)
+						local distSq = (ux - bx)^2 + (uz - bz)^2
+						if distSq < minDistSq and CanBuilderReachPos(bID, ux, uy, uz, faction) then
+							bestTarget = uID
+							minDistSq = distSq
+						end
+					end
+				end
+			end
+		end
+
+		if bestTarget then
+			Spring.GiveOrderToUnit(bID, CMD.REPAIR, {bestTarget}, {})
+			return true
+		end
+		return false
+	end,
+
+	-- 3) Aiuta solo cantieri in costruzione (strutture o unità non ancora finite)
+	["helpUnits"] = function(bID, teamID, faction, factories, basePos, config)
+		local bx, _, bz = Spring.GetUnitPosition(bID)
+		local bestTarget, minDistSq = nil, math.huge
+		local myUnits = Spring.GetTeamUnits(teamID)
+
+		for _, uID in ipairs(myUnits) do
+			local _, _, _, _, buildProg = Spring.GetUnitHealth(uID)
+			if buildProg and buildProg < 1 then
+				local ud = UnitDefs[Spring.GetUnitDefID(uID)]
+				local isStruct = ud and (ud.isBuilding or ud.isStructure)
+				if (not config.onlyStructureHelp) or isStruct then
+					local ux, uy, uz = Spring.GetUnitPosition(uID)
+					local distSq = (ux - bx)^2 + (uz - bz)^2
+					if distSq < minDistSq and CanBuilderReachPos(bID, ux, uy, uz, faction) then
+						bestTarget = uID
+						minDistSq = distSq
+					end
+				end
+			end
+		end
+
+		if bestTarget then
+			Spring.GiveOrderToUnit(bID, CMD.REPAIR, {bestTarget}, {})
+			return true
+		end
+		return false
+	end,
+
+	-- 4) Raccoglie 1 relitto di metallo alla volta intorno alla base, poi torna idle
+	["raccolta"] = function(bID, teamID, faction, factories, basePos, config)
+		local bx, _, bz = Spring.GetUnitPosition(bID)
+		local searchRadius = 1500 + ((config.fattoreVariazioneRaggio or 0) * 200)
+		local features = Spring.GetFeaturesInSphere(basePos.x, basePos.y, basePos.z, searchRadius)
+		local bestFeat, minDistSq = nil, math.huge
+
+		for _, fID in ipairs(features) do
+			local metal = Spring.GetFeatureResources(fID) -- primo valore = metallo
+			if metal and metal > 10 then
+				local fx, fy, fz = Spring.GetFeaturePosition(fID)
+				local distSq = (fx - bx)^2 + (fz - bz)^2
+				if distSq < minDistSq and CanBuilderReachPos(bID, fx, fy, fz, faction) then
+					bestFeat = fID
+					minDistSq = distSq
+				end
+			end
+		end
+
+		if bestFeat then
+			-- In Spring, per reclamare una singola feature si passa Game.maxUnits + featureID
+			Spring.GiveOrderToUnit(bID, CMD.RECLAIM, {Game.maxUnits + bestFeat}, {}) --
+			return true
+		end
+		return false
+	end,
+}
+
+local function HandleIdleBuildersBehaviour(teamID, faction, idleBuilders, factories, config, basePos)
+	local behaviourName = config.builderBehaviour
+	if not behaviourName or #idleBuilders == 0 then return end
+
+	local behaviourFn = BUILDER_BEHAVIOURS[behaviourName]
+	if not behaviourFn then return end
+
+	local maxT1 = config.builderT1CanHelp or 0
+	local maxT2 = config.builderT2CanHelp or 0
+	if maxT1 == 0 and maxT2 == 0 then return end
+
+	-- 1. Contiamo quanti T1/T2 stanno GIA' eseguendo un ordine di aiuto (REPAIR o RECLAIM)
+	local activeT1, activeT2 = 0, 0
+	for _, uID in ipairs(Spring.GetTeamUnits(teamID)) do
+		local cmd = Spring.GetUnitCommands(uID, 1)
+		if cmd and #cmd > 0 and (cmd[1].id == CMD.REPAIR or cmd[1].id == CMD.RECLAIM) then
+			local udName = UnitDefs[Spring.GetUnitDefID(uID)].name
+			local tier = GetBuilderTier(udName, faction)
+			if tier == "T1" then activeT1 = activeT1 + 1
+			elseif tier == "T2" then activeT2 = activeT2 + 1 end
+		end
+	end
+
+	-- 2. Assegniamo il comportamento ai builder ancora idle fino al raggiungimento del tetto
+	for _, bID in ipairs(idleBuilders) do
+		local udName = UnitDefs[Spring.GetUnitDefID(bID)].name
+		local tier = GetBuilderTier(udName, faction)
+
+		if tier == "T1" and activeT1 < maxT1 then
+			if behaviourFn(bID, teamID, faction, factories, basePos, config) then
+				activeT1 = activeT1 + 1
+			end
+		elseif tier == "T2" and activeT2 < maxT2 then
+			if behaviourFn(bID, teamID, faction, factories, basePos, config) then
+				activeT2 = activeT2 + 1
+			end
+		end
+	end
+end
+
 --------------------------------------------------------------------------------
 -- 4) GADGET CORE
 --------------------------------------------------------------------------------
@@ -1165,8 +1421,8 @@ end
 
 				if GG.WMRTS_Levels then GG.WMRTS_Levels[teamID] = 0 end
 
---				local motivo = fallimentoFabbriche and "No Factories" or (fallimentoMetallo and "Low Metal" or "Low Energy")
---				Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Critical Failure (" .. motivo .. ")! Reverting to Level 0.")
+				local motivo = fallimentoFabbriche and "No Factories" or (fallimentoMetallo and "Low Metal" or "Low Energy") 			--  variabile per debub successivo
+				Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Critical Failure (" .. motivo .. ")! Reverting to Level 0.")		--  Debug
 				currentLvl = 0
 			end
 		end
@@ -1197,11 +1453,11 @@ end
 					-- Creiamo un triangolo di pattuglia attorno alla base
 					Spring.GiveOrderToUnit(comID, CMD.PATROL, {bp.x + 150, bp.y, bp.z + 150}, {"shift"})
 					Spring.GiveOrderToUnit(comID, CMD.PATROL, {bp.x - 150, bp.y, bp.z - 150}, {"shift"})
---					Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Comandante (" .. UnitDefs[Spring.GetUnitDefID(comID)].name .. ") in PATROL MODE")
+					Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Comandante (" .. UnitDefs[Spring.GetUnitDefID(comID)].name .. ") in PATROL MODE")
 
 				elseif targetBehaviour == "constructor" then
 					Spring.GiveOrderToUnit(comID, CMD.STOP, {}, {})
---					Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Comandante in BUILDER MODE")
+					Spring.Echo("WMRTS_contrMngm_AI: Team " .. teamID .. " Comandante rimane idle, per essere impegnato come costruttore al prossimo ciclo")
 				end
 
 				commanderCurrentBehaviour[teamID] = targetBehaviour
@@ -1250,8 +1506,8 @@ end
 			if ud then
 				if ud.isFactory then
 					table.insert(factories, uID)
-				elseif (not ud.isImmobile) and (ud.canBuild or ud.isBuilder) and ud.buildOptions and (#ud.buildOptions > 0) then
-					if Spring.GetCommandQueue(uID, 0) == 0 and not Spring.GetUnitIsBuilding(uID) then
+				elseif (not ud.isImmobile) and (ud.canBuild or ud.isBuilder) and ud.buildOptions and (#ud.buildOptions > 0) then 	-- se l'unità è mobile & può costruire o è builder & ha delle buildoption ) {...} 
+					if Spring.GetCommandQueue(uID, 0) == 0 and not Spring.GetUnitIsBuilding(uID) then								-- se tra le precedenti unità questa ha la queque list vuota e non sta costruendo
 						table.insert(builders, uID)
 					end
 				end
@@ -1385,6 +1641,10 @@ end
 				end -- fine if uDef
 			end -- fine if totalPresent
 		end -- fine for requisiti
+		------------------
+		-- da qui in poi sono rimasti  effettivamente tutti gli altri costruttori che rimangono idle, sfuttarli "da questa riga in poi"
+		------------------
+		HandleIdleBuildersBehaviour(teamID, faction, builders, factories, config, teamBasePos[teamID])
 	end -- fine ProcessAITeam
 
 	function gadget:GameFrame(n)
