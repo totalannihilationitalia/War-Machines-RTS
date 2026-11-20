@@ -45,7 +45,7 @@ return {
 --               mobilestandorders= 1,
                name = "Advance Fighter",
                noAutoFire = false,
-               objectname = "andfight.s3o",
+               objectname = "andafig.s3o",
                seismicsignature = 0,
                selfdestructas = "SMALL_UNIT",
                sightdistance = 700,
