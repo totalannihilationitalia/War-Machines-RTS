@@ -275,7 +275,7 @@ fattoreVariazioneRaggio|Strutture|Fabbriche|AI_RaggioDifesa
 				{cat = "CAT_LASER_T1", 			count = 1},		
 				{cat = "CAT_AA_T1", 			count = 1},		
 				{cat = "CAT_ENERGY_T1",         count = 7},						
-				{cat = "CAT_MEX_T1",            count = 2},
+				{cat = "CAT_MEX_T1",            count = 3},
 			} 	-- end requisiti di livello
 		},		-- end livello  [n]
 		[2] = {													-- reminder: aggiorna anche le costruzioni di livello corrispondente nel gadget military
